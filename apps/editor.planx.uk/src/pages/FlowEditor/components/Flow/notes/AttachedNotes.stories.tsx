@@ -1,13 +1,20 @@
 import "pages/FlowEditor/floweditor.scss";
 
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  Outlet,
+  RouterProvider,
+} from "@tanstack/react-router";
 import type { FlowNote } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { AttachedNotes } from "./AttachedNotes";
 import { FlowNotesContext } from "./FlowNotesContext";
-import { NoteEditorDialog } from "./NoteEditorDialog";
 
 const notes: FlowNote[] = [
   {
@@ -53,39 +60,63 @@ const AttachedNotesDemo: React.FC<{ notes: FlowNote[] }> = ({
     },
   });
 
-  const noteEditorOpen = useStore((state) => state.noteEditorOpen);
-
-  return (
-    <FlowNotesContext.Provider
-      value={{
-        attached: new Map([["node-a", notesToRender]]),
-        positioned: new Map(),
-        loading: false,
-      }}
-    >
-      <ul
-        style={{
-          display: "flex",
-          gap: 24,
-          alignItems: "flex-start",
-          listStyle: "none",
-          padding: 0,
-          margin: 0,
+  // disable the edit modal by registering a no-op child route for it
+  const rootRoute = createRootRoute();
+  const authenticatedRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    id: "_authenticated",
+  });
+  const flowRoute = createRoute({
+    getParentRoute: () => authenticatedRoute,
+    path: "app/$team/$flow",
+    component: () => (
+      <FlowNotesContext.Provider
+        value={{
+          attached: new Map([["node-a", notesToRender]]),
+          positioned: new Map(),
+          loading: false,
         }}
       >
-        <li className="card decision type-Question">
-          <div className="card-wrapper">
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- decorative mock of the real node markup */}
-            <a>
-              <span>A node with an attached note</span>
-            </a>
-            <AttachedNotes nodeId="node-a" />
-          </div>
-        </li>
-        {noteEditorOpen && <NoteEditorDialog />}
-      </ul>
-    </FlowNotesContext.Provider>
-  );
+        <ul
+          style={{
+            display: "flex",
+            gap: 24,
+            alignItems: "flex-start",
+            listStyle: "none",
+            padding: 0,
+            margin: 0,
+          }}
+        >
+          <li className="card decision type-Question">
+            <div className="card-wrapper">
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- decorative mock of the real node markup */}
+              <a>
+                <span>A node with an attached note</span>
+              </a>
+              <AttachedNotes nodeId="node-a" />
+            </div>
+          </li>
+        </ul>
+        <Outlet />
+      </FlowNotesContext.Provider>
+    ),
+  });
+  const noteEditRoute = createRoute({
+    getParentRoute: () => flowRoute,
+    path: "note/$id/edit",
+    component: () => null,
+  });
+
+  const router = createRouter({
+    routeTree: rootRoute.addChildren([
+      authenticatedRoute.addChildren([flowRoute.addChildren([noteEditRoute])]),
+    ]),
+    history: createMemoryHistory({
+      initialEntries: ["/app/test-team/test-flow"],
+    }),
+  });
+
+  return <RouterProvider router={router} />;
 };
 
 export const Default = {

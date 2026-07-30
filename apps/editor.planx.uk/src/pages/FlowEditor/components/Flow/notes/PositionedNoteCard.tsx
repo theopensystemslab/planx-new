@@ -1,5 +1,5 @@
+import { useNavigate, useParams } from "@tanstack/react-router";
 import type { FlowNote } from "hooks/data/useFlowNotes";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 interface Props {
@@ -7,13 +7,19 @@ interface Props {
 }
 
 export const PositionedNoteCard: React.FC<Props> = ({ note }) => {
-  const openNoteEditor = useStore((state) => state.openNoteEditor);
+  const navigate = useNavigate();
+  const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   return (
     <li className="note-card">
       <button
         type="button"
-        onClick={() => openNoteEditor({ mode: "edit", note })}
+        onClick={() =>
+          navigate({
+            to: "/app/$team/$flow/note/$id/edit",
+            params: { team, flow, id: note.id },
+          })
+        }
       >
         <span className="note-text">{note.text || "Untitled note"}</span>
       </button>

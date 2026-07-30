@@ -1,9 +1,6 @@
 import Popover from "@mui/material/Popover";
-import { ROOT_NODE_KEY } from "@planx/graph";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { hasFeatureFlag } from "lib/featureFlags";
-import { resolveNotePlacement } from "pages/FlowEditor/components/Flow/notes/lib/notePlacement";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback, useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { getNodeRoute } from "utils/routeUtils/utils";
@@ -34,7 +31,6 @@ const AddComponentModal: React.FC<Props> = ({
 
   const navigate = useNavigate();
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
-  const flowGraph = useStore((state) => state.flow);
 
   const [activeTab, setActiveTab] = useState<ModalTab>("components");
   const popoverWidth =
@@ -61,15 +57,12 @@ const AddComponentModal: React.FC<Props> = ({
 
   const handleSelectNote = useCallback(() => {
     onClose();
-    useStore.getState().openNoteEditor({
-      mode: "create",
-      placement: resolveNotePlacement(
-        flowGraph,
-        parent ?? ROOT_NODE_KEY,
-        before,
-      ),
+    navigate({
+      to: "/app/$team/$flow/note/add",
+      params: { team, flow },
+      search: { parent, before },
     });
-  }, [flowGraph, parent, before, onClose]);
+  }, [navigate, team, flow, parent, before, onClose]);
 
   // Flip the popover above the hanger when there isn't room below it
   const rect = anchorEl?.getBoundingClientRect();

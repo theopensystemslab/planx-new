@@ -35,11 +35,6 @@ const currentUser = {
 beforeEach(() => {
   useStore.setState({
     user: currentUser,
-    noteEditorOpen: true,
-    noteEditorMode: null,
-    noteEditorNote: undefined,
-    noteEditorNodeId: undefined,
-    noteEditorPlacement: undefined,
     createFlowNote: vi.fn().mockResolvedValue("new-id"),
     updateFlowNote: vi.fn().mockResolvedValue(undefined),
     deleteFlowNote: vi.fn().mockResolvedValue(undefined),
@@ -48,9 +43,7 @@ beforeEach(() => {
 
 describe("create mode", () => {
   it("shows a Create button, not Update", async () => {
-    useStore.setState({ noteEditorMode: "create" });
-
-    await setup(<NoteEditorDialog />);
+    await setup(<NoteEditorDialog mode="create" onClose={vi.fn()} />);
 
     expect(screen.getByRole("button", { name: /create/i })).toBeInTheDocument();
     expect(
@@ -59,12 +52,9 @@ describe("create mode", () => {
   });
 
   it("calls createFlowNote with the node id and entered text on save", async () => {
-    useStore.setState({
-      noteEditorMode: "create",
-      noteEditorNodeId: "node-a",
-    });
-
-    const { user } = await setup(<NoteEditorDialog />);
+    const { user } = await setup(
+      <NoteEditorDialog mode="create" nodeId="node-a" onClose={vi.fn()} />,
+    );
 
     await user.type(screen.getByRole("textbox"), "A brand new note");
     await user.click(screen.getByRole("button", { name: /create/i }));
@@ -75,26 +65,26 @@ describe("create mode", () => {
   });
 
   it("closes the editor after saving", async () => {
-    useStore.setState({
-      noteEditorMode: "create",
-      noteEditorPlacement: {
-        parent: "root",
-        parentIsContainer: true,
-        before: "node-a",
-      },
-    });
-
-    const { user } = await setup(<NoteEditorDialog />);
+    const onClose = vi.fn();
+    const { user } = await setup(
+      <NoteEditorDialog
+        mode="create"
+        placement={{
+          parent: "root",
+          parentIsContainer: true,
+          before: "node-a",
+        }}
+        onClose={onClose}
+      />,
+    );
     await user.type(screen.getByRole("textbox"), "A brand new note");
     await user.click(screen.getByRole("button", { name: /create/i }));
 
-    expect(useStore.getState().noteEditorOpen).toBe(false);
+    expect(onClose).toHaveBeenCalled();
   });
 
   it("has no delete button", async () => {
-    useStore.setState({ noteEditorMode: "create" });
-
-    await setup(<NoteEditorDialog />);
+    await setup(<NoteEditorDialog mode="create" onClose={vi.fn()} />);
 
     expect(
       screen.queryByRole("button", { name: /delete/i }),
@@ -102,17 +92,15 @@ describe("create mode", () => {
   });
 
   it("disables the Create button while the note is empty", async () => {
-    useStore.setState({ noteEditorMode: "create" });
-
-    await setup(<NoteEditorDialog />);
+    await setup(<NoteEditorDialog mode="create" onClose={vi.fn()} />);
 
     expect(screen.getByRole("button", { name: /create/i })).toBeDisabled();
   });
 
   it("enables the Create button once text is entered, and disables it again if cleared", async () => {
-    useStore.setState({ noteEditorMode: "create" });
-
-    const { user } = await setup(<NoteEditorDialog />);
+    const { user } = await setup(
+      <NoteEditorDialog mode="create" onClose={vi.fn()} />,
+    );
     const createButton = screen.getByRole("button", { name: /create/i });
     const textbox = screen.getByRole("textbox");
 
@@ -124,19 +112,20 @@ describe("create mode", () => {
   });
 
   it("does not call createFlowNote when the note is empty", async () => {
-    useStore.setState({ noteEditorMode: "create" });
-
-    const { user } = await setup(<NoteEditorDialog />);
+    const onClose = vi.fn();
+    const { user } = await setup(
+      <NoteEditorDialog mode="create" onClose={onClose} />,
+    );
     await user.click(screen.getByRole("button", { name: /create/i }));
 
     expect(useStore.getState().createFlowNote).not.toHaveBeenCalled();
-    expect(useStore.getState().noteEditorOpen).toBe(true);
+    expect(onClose).not.toHaveBeenCalled();
   });
 
   it("shows a validation error once an empty note is touched", async () => {
-    useStore.setState({ noteEditorMode: "create" });
-
-    const { user } = await setup(<NoteEditorDialog />);
+    const { user } = await setup(
+      <NoteEditorDialog mode="create" onClose={vi.fn()} />,
+    );
     const textbox = screen.getByRole("textbox");
 
     await user.click(textbox);
@@ -148,17 +137,17 @@ describe("create mode", () => {
 
 describe("edit mode - own note", () => {
   it("pre-fills the existing note text", async () => {
-    useStore.setState({ noteEditorMode: "edit", noteEditorNote: makeNote() });
-
-    await setup(<NoteEditorDialog />);
+    await setup(
+      <NoteEditorDialog mode="edit" note={makeNote()} onClose={vi.fn()} />,
+    );
 
     expect(screen.getByDisplayValue("Existing note text")).toBeInTheDocument();
   });
 
   it("calls updateFlowNote with the note id on save", async () => {
-    useStore.setState({ noteEditorMode: "edit", noteEditorNote: makeNote() });
-
-    const { user } = await setup(<NoteEditorDialog />);
+    const { user } = await setup(
+      <NoteEditorDialog mode="edit" note={makeNote()} onClose={vi.fn()} />,
+    );
     await user.clear(screen.getByRole("textbox"));
     await user.type(screen.getByRole("textbox"), "Updated text");
     await user.click(screen.getByRole("button", { name: /update/i }));
@@ -170,24 +159,26 @@ describe("edit mode - own note", () => {
   });
 
   it("calls deleteFlowNote and closes the editor when Delete is clicked", async () => {
-    useStore.setState({ noteEditorMode: "edit", noteEditorNote: makeNote() });
-
-    const { user } = await setup(<NoteEditorDialog />);
+    const onClose = vi.fn();
+    const { user } = await setup(
+      <NoteEditorDialog mode="edit" note={makeNote()} onClose={onClose} />,
+    );
     await user.click(screen.getByRole("button", { name: /delete/i }));
 
     expect(useStore.getState().deleteFlowNote).toHaveBeenCalledWith("note-1");
-    expect(useStore.getState().noteEditorOpen).toBe(false);
+    expect(onClose).toHaveBeenCalled();
   });
 });
 
 describe("edit mode - another author's note", () => {
   it("still allows editing and deleting, since notes are shared across the team", async () => {
-    useStore.setState({
-      noteEditorMode: "edit",
-      noteEditorNote: makeNote({ createdBy: 999 }),
-    });
-
-    const { user } = await setup(<NoteEditorDialog />);
+    const { user } = await setup(
+      <NoteEditorDialog
+        mode="edit"
+        note={makeNote({ createdBy: 999 })}
+        onClose={vi.fn()}
+      />,
+    );
 
     expect(screen.getByRole("button", { name: /delete/i })).toBeEnabled();
     expect(screen.getByRole("button", { name: /update/i })).toBeEnabled();

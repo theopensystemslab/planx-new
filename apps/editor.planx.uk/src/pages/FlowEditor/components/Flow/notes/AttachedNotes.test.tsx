@@ -1,11 +1,23 @@
+import { fireEvent, screen } from "@testing-library/react";
 import type { FlowNote } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "test/utils";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AttachedNotes } from "./AttachedNotes";
 import { FlowNotesContext } from "./FlowNotesContext";
+
+const navigate = vi.fn();
+
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual("@tanstack/react-router");
+  return {
+    ...actual,
+    useParams: () => ({ team: "test-team", flow: "test-flow" }),
+    useNavigate: () => navigate,
+  };
+});
 
 const makeNote = (overrides: Partial<FlowNote> = {}): FlowNote =>
   ({
@@ -36,6 +48,7 @@ const renderWithNotes = async (
 
 beforeEach(() => {
   useStore.setState({ showNotes: true });
+  navigate.mockClear();
 });
 
 describe("AttachedNotes", () => {
@@ -81,5 +94,22 @@ describe("AttachedNotes", () => {
 
     expect(getByText("First note")).toBeInTheDocument();
     expect(getByText("Second note")).toBeInTheDocument();
+  });
+
+  it("navigates to the note's edit route when clicked", async () => {
+    const attached = new Map([
+      ["node-a", [makeNote({ id: "note-1", text: "Remember to check this" })]],
+    ]);
+
+    await renderWithNotes("node-a", attached);
+
+    fireEvent.click(screen.getByText("Remember to check this"));
+
+    expect(navigate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: "/app/$team/$flow/note/$id/edit",
+        params: { team: "test-team", flow: "test-flow", id: "note-1" },
+      }),
+    );
   });
 });

@@ -10,6 +10,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
+import type { FlowNote, NotePlacement } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Input from "ui/shared/Input/Input";
@@ -23,30 +24,28 @@ const validationSchema = object().shape({
   text: string().trim().required("Enter a note"),
 });
 
-export const NoteEditorDialog: React.FC = () => {
-  const [
-    noteEditorOpen,
-    noteEditorMode,
-    note,
-    nodeId,
-    placement,
-    closeNoteEditor,
-    createFlowNote,
-    updateFlowNote,
-    deleteFlowNote,
-  ] = useStore((state) => [
-    state.noteEditorOpen,
-    state.noteEditorMode,
-    state.noteEditorNote,
-    state.noteEditorNodeId,
-    state.noteEditorPlacement,
-    state.closeNoteEditor,
+interface NoteEditorDialogProps {
+  mode: "create" | "edit";
+  note?: FlowNote;
+  nodeId?: string;
+  placement?: NotePlacement;
+  onClose: () => void;
+}
+
+export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = ({
+  mode,
+  note,
+  nodeId,
+  placement,
+  onClose,
+}) => {
+  const [createFlowNote, updateFlowNote, deleteFlowNote] = useStore((state) => [
     state.createFlowNote,
     state.updateFlowNote,
     state.deleteFlowNote,
   ]);
 
-  const isEditing = noteEditorMode === "edit";
+  const isEditing = mode === "edit";
 
   const formik = useFormik<NoteForm>({
     initialValues: { text: note?.text ?? "" },
@@ -58,20 +57,18 @@ export const NoteEditorDialog: React.FC = () => {
       } else {
         await createFlowNote({ nodeId, placement, text });
       }
-      closeNoteEditor();
+      onClose();
     },
   });
-
-  if (!noteEditorOpen) return null;
 
   const handleDelete = async () => {
     if (!note) return;
     await deleteFlowNote(note.id);
-    closeNoteEditor();
+    onClose();
   };
 
   return (
-    <Dialog open fullWidth onClose={closeNoteEditor}>
+    <Dialog open fullWidth onClose={onClose}>
       <DialogTitle
         sx={{
           py: 1,
@@ -89,7 +86,7 @@ export const NoteEditorDialog: React.FC = () => {
         </Box>
         <IconButton
           aria-label="close"
-          onClick={closeNoteEditor}
+          onClick={onClose}
           size="large"
           sx={{ color: "grey.600" }}
         >

@@ -28,30 +28,22 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Create = {
-  render: () => {
+  args: { mode: "create", nodeId: "node-a", onClose: () => {} },
+  render: (args) => {
     useStore.setState({
-      noteEditorOpen: true,
-      noteEditorMode: "create",
-      noteEditorNote: undefined,
-      noteEditorNodeId: "node-a",
-      noteEditorPlacement: undefined,
       createFlowNote: async (input) => {
         console.log("createFlowNote", input);
         return "new-note-id";
       },
     });
-    return <NoteEditorDialog />;
+    return <NoteEditorDialog {...args} />;
   },
 } satisfies Story;
 
 export const Edit = {
-  render: () => {
+  args: { mode: "edit", note, onClose: () => {} },
+  render: (args) => {
     useStore.setState({
-      noteEditorOpen: true,
-      noteEditorMode: "edit",
-      noteEditorNote: note,
-      noteEditorNodeId: undefined,
-      noteEditorPlacement: undefined,
       updateFlowNote: async (id, patch) => {
         console.log("updateFlowNote", id, patch);
       },
@@ -59,6 +51,6 @@ export const Edit = {
         console.log("deleteFlowNote", id);
       },
     });
-    return <NoteEditorDialog />;
+    return <NoteEditorDialog {...args} />;
   },
 } satisfies Story;

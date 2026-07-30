@@ -10,6 +10,7 @@ import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import {
@@ -19,8 +20,6 @@ import {
 import * as React from "react";
 import CloneIcon from "ui/icons/Clone";
 import CopyIcon from "ui/icons/Copy";
-
-import { resolveNotePlacement } from "../notes/lib/notePlacement";
 
 export type ContextMenuSource = "node" | "hanger" | null;
 
@@ -60,7 +59,6 @@ export const ContextMenu: React.FC = () => {
     copyHelpText,
     getCopiedHelpText,
     pasteHelpText,
-    openNoteEditor,
   ] = useStore((state) => [
     state.contextMenuSource,
     state.contextMenuPosition,
@@ -83,8 +81,12 @@ export const ContextMenu: React.FC = () => {
     state.copyHelpText,
     state.getCopiedHelpText(),
     state.pasteHelpText,
-    state.openNoteEditor,
   ]);
+
+  const navigate = useNavigate();
+  const { team, flow: flowSlug } = useParams({
+    from: "/_authenticated/app/$team/$flow",
+  });
 
   const handleCopy = () => {
     if (!self)
@@ -138,14 +140,19 @@ export const ContextMenu: React.FC = () => {
         "Unable to attach note, missing value for relationship 'self' (nodeId)",
       );
 
-    openNoteEditor({ mode: "create", nodeId: self });
+    navigate({
+      to: "/app/$team/$flow/note/add",
+      params: { team, flow: flowSlug },
+      search: { nodeId: self },
+    });
     closeMenu();
   };
 
   const handleAddNote = () => {
-    openNoteEditor({
-      mode: "create",
-      placement: resolveNotePlacement(flow, parent, before),
+    navigate({
+      to: "/app/$team/$flow/note/add",
+      params: { team, flow: flowSlug },
+      search: { parent, before },
     });
     closeMenu();
   };
