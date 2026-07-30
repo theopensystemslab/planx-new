@@ -21,6 +21,12 @@ const note: FlowNote = {
   updatedAt: "2026-01-01T00:00:00Z",
 };
 
+const longNote: FlowNote = {
+  ...note,
+  id: "note-2",
+  text: "This note has a lot more text in it than usual, so long in fact that it must be truncated with ellipses and line clamping, the full version is visible in the note editor.",
+};
+
 const meta = {
   title: "Editor Components/Graph/Notes/PositionedNoteCard",
   component: PositionedNoteCard,
@@ -30,7 +36,9 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const PositionedNoteCardDemo: React.FC = () => {
+const PositionedNoteCardDemo: React.FC<{ note: FlowNote }> = ({
+  note: noteToRender,
+}) => {
   useStore.setState({
     updateFlowNote: async (id, patch) => {
       console.log("updateFlowNote", id, patch);
@@ -65,7 +73,7 @@ const PositionedNoteCardDemo: React.FC = () => {
       <li className="hanger">
         <button type="button" />
       </li>
-      <PositionedNoteCard note={note} />
+      <PositionedNoteCard note={noteToRender} />
       <li className="hanger">
         <button type="button" />
       </li>
@@ -84,5 +92,10 @@ const PositionedNoteCardDemo: React.FC = () => {
 
 export const Default = {
   args: { note },
-  render: () => <PositionedNoteCardDemo />,
+  render: () => <PositionedNoteCardDemo note={note} />,
+} satisfies Story;
+
+export const LongText = {
+  args: { note: longNote },
+  render: () => <PositionedNoteCardDemo note={longNote} />,
 } satisfies Story;

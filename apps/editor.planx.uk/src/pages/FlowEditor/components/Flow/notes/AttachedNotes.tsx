@@ -30,7 +30,7 @@ export const AttachedNotes: React.FC<Props> = ({ nodeId }) => {
             openNoteEditor({ mode: "edit", note });
           }}
         >
-          {note.text || "Untitled note"}
+          <span className="note-text">{note.text || "Untitled note"}</span>
         </button>
       ))}
     </>

@@ -84,6 +84,16 @@ $fontMonospace: "Source Code Pro", monospace;
   border-right: $size solid transparent;
 }
 
+// truncating styles for long notes
+@mixin lineClamp($lines: 3, $lineHeight: 1.4) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: $lineHeight;
+}
+
 @mixin cloneStyle {
   content: "";
   position: absolute;
@@ -348,8 +358,12 @@ $fontMonospace: "Source Code Pro", monospace;
     border-top: none;
     background: $noteBackground;
     cursor: pointer;
-    overflow-wrap: break-word;
-    word-break: break-word;
+
+    & .note-text {
+      overflow-wrap: break-word;
+      word-break: break-word;
+      @include lineClamp(3);
+    }
 
     &::before {
       @include paperFoldFront;
@@ -622,8 +636,12 @@ $fontMonospace: "Source Code Pro", monospace;
     cursor: pointer;
     max-width: $nodeMaxWidth;
     padding: 8px 20px 8px 8px;
-    overflow-wrap: break-word;
-    word-break: break-word;
+
+    & .note-text {
+      overflow-wrap: break-word;
+      word-break: break-word;
+      @include lineClamp(3);
+    }
 
     &::before {
       @include paperFoldFront($size: 10px);
