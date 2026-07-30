@@ -2,10 +2,10 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
-import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -22,6 +22,7 @@ import Caret from "ui/icons/Caret";
 
 import type { SubscriptionProps } from "../types";
 import {
+  downloadServiceChargesCsv,
   formatUKFiscalYear,
   getUKFiscalYear,
   getUKFiscalYearQuarter,
@@ -96,11 +97,20 @@ const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
         />
       </Box>
       <Box sx={{ mt: 2, textAlign: "right" }}>
-        <Link component="button" onClick={() => console.log("todo")}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() =>
+            downloadServiceChargesCsv(
+              serviceChargesInActiveYear,
+              `planx-service-charges-${activeYear}.csv`,
+            )
+          }
+        >
           <Typography variant="body2">
             {"Download service charge payment records (.csv)"}
           </Typography>
-        </Link>
+        </Button>
       </Box>
     </>
   );
