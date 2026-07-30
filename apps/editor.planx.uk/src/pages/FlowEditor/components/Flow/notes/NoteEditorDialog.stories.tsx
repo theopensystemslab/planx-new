@@ -43,7 +43,7 @@ export const Create = {
     },
   },
   render: (args) => {
-    useStore.setState({ id: "flow-1", user: { id: 1 } as any });
+    useStore.setState({ id: "flow-1" });
     return <NoteEditorDialog {...args} />;
   },
 } satisfies Story;
@@ -69,7 +69,7 @@ export const Edit = {
     },
   },
   render: (args) => {
-    useStore.setState({ id: "flow-1", user: { id: 1 } as any });
+    useStore.setState({ id: "flow-1" });
     return <NoteEditorDialog {...args} />;
   },
 } satisfies Story;

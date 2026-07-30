@@ -22,7 +22,6 @@ interface CreateFlowNoteResult {
 
 export const useCreateFlowNote = () => {
   const flowId = useStore((state) => state.id);
-  const userId = useStore((state) => state.user?.id);
   const [mutate, mutationState] =
     useMutation<CreateFlowNoteResult>(CREATE_FLOW_NOTE);
 
@@ -31,7 +30,7 @@ export const useCreateFlowNote = () => {
     placement,
     text,
   }: CreateFlowNoteInput) => {
-    if (!flowId || !userId) return undefined;
+    if (!flowId) return undefined;
 
     const { data } = await mutate({
       variables: {
@@ -40,8 +39,6 @@ export const useCreateFlowNote = () => {
           node_id: nodeId ?? null,
           placement: placement ?? null,
           text,
-          created_by: userId,
-          updated_by: userId,
         },
       },
     });

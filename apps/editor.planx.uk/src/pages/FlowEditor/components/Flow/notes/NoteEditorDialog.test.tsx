@@ -23,23 +23,12 @@ const makeNote = (overrides: Partial<AttachedNote> = {}): AttachedNote => ({
   ...overrides,
 });
 
-const currentUser = {
-  id: 1,
-  isPlatformAdmin: false,
-  isAnalyst: false,
-  teams: [],
-  firstName: "Test",
-  lastName: "User",
-  email: "test@example.com",
-  defaultTeamId: null,
-} as any;
-
 let createFlowNote: (object: unknown) => void;
 let updateFlowNote: (id: unknown, set: unknown) => void;
 let deleteFlowNote: (id: unknown) => void;
 
 beforeEach(() => {
-  useStore.setState({ id: "flow-1", user: currentUser });
+  useStore.setState({ id: "flow-1" });
 
   createFlowNote = vi.fn();
   updateFlowNote = vi.fn();

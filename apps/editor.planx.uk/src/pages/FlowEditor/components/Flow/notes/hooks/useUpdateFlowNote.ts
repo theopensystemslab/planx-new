@@ -1,5 +1,4 @@
 import { gql, useMutation } from "@apollo/client";
-import { useStore } from "pages/FlowEditor/lib/store";
 
 const UPDATE_FLOW_NOTE = gql`
   mutation UpdateFlowNote($id: uuid!, $set: flow_notes_set_input!) {
@@ -10,15 +9,10 @@ const UPDATE_FLOW_NOTE = gql`
 `;
 
 export const useUpdateFlowNote = () => {
-  const userId = useStore((state) => state.user?.id);
   const [mutate, mutationState] = useMutation(UPDATE_FLOW_NOTE);
 
   const updateFlowNote = async (id: string, patch: { text?: string }) => {
-    if (!userId) return;
-
-    await mutate({
-      variables: { id, set: { ...patch, updated_by: userId } },
-    });
+    await mutate({ variables: { id, set: patch } });
   };
 
   return { updateFlowNote, ...mutationState };

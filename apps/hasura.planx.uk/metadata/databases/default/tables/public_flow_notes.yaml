@@ -33,37 +33,36 @@ insert_permissions:
   - role: platformAdmin
     permission:
       check: {}
+      set:
+        created_by: x-hasura-user-id
+        updated_by: x-hasura-user-id
       columns:
         - flow_id
         - node_id
         - placement
         - text
         - color
-        - created_by
-        - updated_by
     comment: ""
   - role: teamEditor
     permission:
       check:
-        _and:
-          - created_by:
-              _eq: x-hasura-user-id
-          - flow:
-              team:
-                members:
-                  _and:
-                    - user_id:
-                        _eq: x-hasura-user-id
-                    - role:
-                        _eq: teamEditor
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      set:
+        created_by: x-hasura-user-id
+        updated_by: x-hasura-user-id
       columns:
         - flow_id
         - node_id
         - placement
         - text
         - color
-        - created_by
-        - updated_by
     comment: ""
 select_permissions:
   - role: platformAdmin
@@ -112,7 +111,8 @@ update_permissions:
         - placement
         - text
         - color
-        - updated_by
+      set:
+        updated_by: x-hasura-user-id
       filter: {}
       check: {}
     comment: ""
@@ -123,7 +123,8 @@ update_permissions:
         - placement
         - text
         - color
-        - updated_by
+      set:
+        updated_by: x-hasura-user-id
       filter:
         flow:
           team:
