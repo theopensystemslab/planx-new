@@ -8,6 +8,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
@@ -181,7 +182,7 @@ const AnnualServiceChargeCards = ({
     }}
   >
     {years.map((year) => (
-      <Card>
+      <Card key={year}>
         <CardActionArea
           onClick={() => setActiveYear(year)}
           data-active={activeYear === year ? "" : undefined}
@@ -238,17 +239,19 @@ const ServiceChargesByQuarterAccordion = ({
         <TableContainer>
           <StyledTable>
             <Header />
-            {quarters.map((q) => (
-              <StyledTableRow>
-                <TableCell>{`Q${q}`}</TableCell>
-                <TableCell align="right">
-                  {sumServiceCharges(
-                    serviceCharges.filter((sc) => sc.quarter === q),
-                  )}
-                </TableCell>
-              </StyledTableRow>
-            ))}
-            <TotalRow serviceCharges={serviceCharges} />
+            <TableBody>
+              {quarters.map((q) => (
+                <StyledTableRow key={q}>
+                  <TableCell>{`Q${q}`}</TableCell>
+                  <TableCell align="right">
+                    {sumServiceCharges(
+                      serviceCharges.filter((sc) => sc.quarter === q),
+                    )}
+                  </TableCell>
+                </StyledTableRow>
+              ))}
+              <TotalRow serviceCharges={serviceCharges} />
+            </TableBody>
           </StyledTable>
         </TableContainer>
       </AccordionDetails>
@@ -276,17 +279,19 @@ const ServiceChargesByMonthAccordion = ({
         <TableContainer>
           <StyledTable>
             <Header />
-            {months.map((m) => (
-              <StyledTableRow>
-                <TableCell>{m}</TableCell>
-                <TableCell align="right">
-                  {sumServiceCharges(
-                    serviceCharges.filter((sc) => sc.monthText === m),
-                  )}
-                </TableCell>
-              </StyledTableRow>
-            ))}
-            <TotalRow serviceCharges={serviceCharges} />
+            <TableBody>
+              {months.map((m) => (
+                <StyledTableRow key={m}>
+                  <TableCell>{m}</TableCell>
+                  <TableCell align="right">
+                    {sumServiceCharges(
+                      serviceCharges.filter((sc) => sc.monthText === m),
+                    )}
+                  </TableCell>
+                </StyledTableRow>
+              ))}
+              <TotalRow serviceCharges={serviceCharges} />
+            </TableBody>
           </StyledTable>
         </TableContainer>
       </AccordionDetails>
@@ -314,17 +319,19 @@ const ServiceChargeByFlowAccordion = ({
         <TableContainer>
           <StyledTable>
             <Header />
-            {flows.map((f) => (
-              <StyledTableRow>
-                <TableCell>{f}</TableCell>
-                <TableCell align="right">
-                  {sumServiceCharges(
-                    serviceCharges.filter((sc) => sc.flowName === f),
-                  )}
-                </TableCell>
-              </StyledTableRow>
-            ))}
-            <TotalRow serviceCharges={serviceCharges} />
+            <TableBody>
+              {flows.map((f) => (
+                <StyledTableRow key={f}>
+                  <TableCell>{f}</TableCell>
+                  <TableCell align="right">
+                    {sumServiceCharges(
+                      serviceCharges.filter((sc) => sc.flowName === f),
+                    )}
+                  </TableCell>
+                </StyledTableRow>
+              ))}
+              <TotalRow serviceCharges={serviceCharges} />
+            </TableBody>
           </StyledTable>
         </TableContainer>
       </AccordionDetails>
