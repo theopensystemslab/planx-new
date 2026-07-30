@@ -22,6 +22,7 @@ import Caret from "ui/icons/Caret";
 
 import type { SubscriptionProps } from "../types";
 import {
+  downloadServiceChargesCsv,
   formatUKFiscalYear,
   getUKFiscalYear,
   getUKFiscalYearQuarter,
@@ -96,7 +97,15 @@ const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
         />
       </Box>
       <Box sx={{ mt: 2, textAlign: "right" }}>
-        <Link component="button" onClick={() => console.log("todo")}>
+        <Link
+          component="button"
+          onClick={() =>
+            downloadServiceChargesCsv(
+              serviceChargesInActiveYear,
+              `planx-service-charges-${activeYear}.csv`,
+            )
+          }
+        >
           <Typography variant="body2">
             {"Download service charge payment records (.csv)"}
           </Typography>

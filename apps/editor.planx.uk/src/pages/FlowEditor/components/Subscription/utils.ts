@@ -1,4 +1,5 @@
 import { formattedPriceWithCurrencySymbol } from "@planx/components/Pay/model";
+import { stringify } from "csv-stringify/sync";
 import sumBy from "lodash/sumBy";
 
 import type { ServiceCharge } from "./types";
@@ -34,4 +35,32 @@ export const getUKFiscalYear = (fyQuarter: number, calendarYear: number) => {
 export const formatUKFiscalYear = (fiscalYear: number): string => {
   const abbreviatedYear = Number(fiscalYear.toString().slice(-2));
   return `FY ${fiscalYear}/${abbreviatedYear + 1}`;
+};
+
+export const generateServiceChargesCsv = (
+  serviceCharges: ServiceCharge[],
+): string =>
+  stringify(serviceCharges, {
+    header: true,
+    columns: [
+      { key: "flowName", header: "Flow name" },
+      { key: "sessionId", header: "Session ID" },
+      { key: "paymentId", header: "Payment ID" },
+      { key: "amount", header: "Amount (excl VAT)" },
+      { key: "paidAt", header: "Paid at" },
+    ],
+  });
+
+export const downloadServiceChargesCsv = (
+  serviceCharges: ServiceCharge[],
+  filename: string,
+): void => {
+  const csv = generateServiceChargesCsv(serviceCharges);
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
 };
