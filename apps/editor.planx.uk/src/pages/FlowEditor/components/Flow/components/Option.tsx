@@ -6,6 +6,7 @@ import classNames from "classnames";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
+import { getParentId } from "../lib/utils";
 import { AttachedNotes } from "../notes/AttachedNotes";
 import { DataField } from "./DataField";
 import { FlagBand, NoFlagBand } from "./FlagBand";
@@ -16,6 +17,9 @@ import { Thumbnail } from "./Thumbnail";
 const Option: React.FC<any> = (props) => {
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
   const childNodes = useStore((state) => state.childNodesOf(props.id));
+
+  // The folder containing the Question/Checklist this Option belongs to -
+  const containerFolderId = getParentId(props.containerFolderId);
 
   let flags: Flag[] | undefined;
 
@@ -42,11 +46,16 @@ const Option: React.FC<any> = (props) => {
       onContextMenu={(e) => e.preventDefault()}
     >
       <Link
-        to="/app/$team/$flow/nodes/$id/edit"
+        to={
+          containerFolderId
+            ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
+            : "/app/$team/$flow/nodes/$id/edit"
+        }
         params={{
           team,
           flow,
           id: props.parent,
+          ...(containerFolderId && { parent: containerFolderId }),
         }}
         hash={props.id}
         preload={false}

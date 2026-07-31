@@ -186,6 +186,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
                   {children.map((child) => (
                     <Node
                       parent={props.id}
+                      containerFolderId={parent}
                       key={child.id}
                       {...child}
                       showTemplatedNodeStatus={props.showTemplatedNodeStatus}
@@ -200,6 +201,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             {childNodes.map((child) => (
               <Node
                 parent={props.id}
+                containerFolderId={parent}
                 key={child.id}
                 {...child}
                 showTemplatedNodeStatus={props.showTemplatedNodeStatus}
