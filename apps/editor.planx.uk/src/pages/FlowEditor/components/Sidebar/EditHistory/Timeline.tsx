@@ -18,10 +18,10 @@ import type {
   PublishHistoryItem,
 } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { formatLastEditDate } from "pages/FlowEditor/utils";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Permission from "ui/editor/Permission";
+import { RelativeTime } from "ui/shared/RelativeTime";
 
 import {
   CommentTimelineItem,
@@ -181,7 +181,7 @@ export const EditHistoryTimeline = ({
                       operation: "Edited",
                     }[op.type]
                   }`}</strong>{" "}
-                  {`${formatLastEditDate(op.createdAt)}`}
+                  <RelativeTime date={op.createdAt} placement="right" />
                 </Typography>
               </Box>
               {showUndoButton(op, i) && (
