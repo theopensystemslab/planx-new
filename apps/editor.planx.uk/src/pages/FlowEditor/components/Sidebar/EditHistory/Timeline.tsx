@@ -11,7 +11,6 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import type { OT } from "@planx/graph/types";
-import { format, parseISO } from "date-fns";
 import type {
   CommentHistoryItem,
   HistoryItem,
@@ -19,10 +18,10 @@ import type {
   PublishHistoryItem,
 } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { formatLastEditDate } from "pages/FlowEditor/utils";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Permission from "ui/editor/Permission";
+import { RelativeTime } from "ui/shared/RelativeTime";
 
 import {
   CommentTimelineItem,
@@ -163,32 +162,27 @@ export const EditHistoryTimeline = ({
                       : `Created flow`
                   }`}
                 </Typography>
-                <Tooltip
-                  placement="right"
-                  title={format(parseISO(op.createdAt), "MMM d, yyyy, HH:mm O")}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "small",
+                    pt: 0.25,
+                    pb: 0.75,
+                    color:
+                      inUndoScope(i) && isUndoType(op.type)
+                        ? "GrayText"
+                        : "text.secondary",
+                  }}
                 >
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontSize: "small",
-                      pt: 0.25,
-                      pb: 0.75,
-                      color:
-                        inUndoScope(i) && isUndoType(op.type)
-                          ? "GrayText"
-                          : "text.secondary",
-                    }}
-                  >
-                    <strong>{`${
-                      {
-                        publish: "Published",
-                        comment: "Commented",
-                        operation: "Edited",
-                      }[op.type]
-                    }`}</strong>{" "}
-                    {formatLastEditDate(op.createdAt)}
-                  </Typography>
-                </Tooltip>
+                  <strong>{`${
+                    {
+                      publish: "Published",
+                      comment: "Commented",
+                      operation: "Edited",
+                    }[op.type]
+                  }`}</strong>{" "}
+                  <RelativeTime date={op.createdAt} placement="right" />
+                </Typography>
               </Box>
               {showUndoButton(op, i) && (
                 <Permission.CanEdit>
