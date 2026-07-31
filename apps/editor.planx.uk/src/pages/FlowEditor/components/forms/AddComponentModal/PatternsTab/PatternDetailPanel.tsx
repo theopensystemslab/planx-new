@@ -34,7 +34,7 @@ export const PatternDetailPanel: React.FC<Props> = ({
       : null;
 
   // A pattern needs at least one component to be insertable
-  // We should aim to catch this when a pattern is "shared" (turned online)
+  // We should aim to catch this when a pattern is made copyable
   const isEmpty = componentCount !== null && componentCount < 1;
   const canInsert = Boolean(graph) && !isEmpty && !error;
 

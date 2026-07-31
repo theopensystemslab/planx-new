@@ -7,7 +7,7 @@ export const GET_PATTERNS = gql`
       where: {
         is_pattern: { _eq: true }
         archived_at: { _is_null: true }
-        status: { _eq: online }
+        can_create_from_copy: { _eq: true }
       }
       order_by: { name: asc }
     ) {
