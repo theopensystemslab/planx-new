@@ -10,6 +10,7 @@ const flow = {
   id: "flow-123",
   name: "Apply for a lawful development certificate",
   slug: "apply-for-a-lawful-development-certificate",
+  isService: true,
 };
 
 const renameFlowSpy = vi.fn();
@@ -86,6 +87,34 @@ describe("RenameDialog confirmation step", () => {
     await user.click(screen.getByRole("button", { name: "Rename flow" }));
 
     await screen.findByText("Renaming will break existing links");
+    await user.click(screen.getByRole("button", { name: "Rename flow" }));
+
+    await waitFor(() => expect(renameFlowSpy).toHaveBeenCalledTimes(1));
+    expect(renameFlowSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        flowId: flow.id,
+        newName: "A brand new name",
+        newSlug: "a-brand-new-name",
+      }),
+    );
+    await waitFor(() => expect(handleClose).toHaveBeenCalled());
+  });
+
+  it("does not display the warning if a flow is not a service", async () => {
+    const handleClose = vi.fn();
+    const { user } = await setup(
+      <RenameDialog
+        mode="rename"
+        isDialogOpen
+        handleClose={handleClose}
+        flow={{ ...flow, isService: false }}
+        teamId={1}
+      />,
+    );
+
+    const nameInput = screen.getByLabelText("Flow name");
+    await user.clear(nameInput);
+    await user.type(nameInput, "A brand new name");
     await user.click(screen.getByRole("button", { name: "Rename flow" }));
 
     await waitFor(() => expect(renameFlowSpy).toHaveBeenCalledTimes(1));

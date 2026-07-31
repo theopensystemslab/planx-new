@@ -105,6 +105,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
             name: flow.name,
             slug: flow.slug,
             id: flow.id,
+            isService: flow.isService,
           }}
           teamId={teamId}
         />
