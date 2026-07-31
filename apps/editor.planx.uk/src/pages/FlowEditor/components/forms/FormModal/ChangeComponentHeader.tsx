@@ -1,11 +1,14 @@
 import Link from "@mui/material/Link";
 import Popover from "@mui/material/Popover";
 import type { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { fromSlug } from "pages/FlowEditor/data/types";
 import React, { useState } from "react";
 import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 
-import { fromSlug } from "../../data/types";
-import { AddComponentModalContent } from "./AddComponentModal";
+import {
+  componentListFrameSx,
+  ComponentsTab,
+} from "../AddComponentModal/ComponentsTab";
 
 interface Props {
   type: string;
@@ -53,19 +56,11 @@ const ChangeComponentHeader: React.FC<Props> = ({
         disableScrollLock
         slotProps={{
           paper: {
-            sx: {
-              width: 300,
-              maxHeight: "min(480px, 85vh)",
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-              border: 1,
-              borderColor: "divider",
-            },
+            sx: componentListFrameSx,
           },
         }}
       >
-        <AddComponentModalContent onSelect={handleSelect} />
+        <ComponentsTab onSelect={handleSelect} />
       </Popover>
     </>
   );
