@@ -37,6 +37,7 @@ interface Props {
     name: string;
     slug: string;
     id: string;
+    isService: boolean;
   };
   teamId: number;
 }
@@ -50,32 +51,28 @@ const RenameWarning: React.FC = () => (
   <ErrorSummary format="warning" heading="Renaming will break existing links">
     <Typography variant="body2" sx={{ mt: 2 }}>
       If applicable:
-      <List>
-        <ListItem>
-          <CheckCircleIcon color="success" fontSize="small" sx={{ mr: 1 }} />
-          Any nested flow references will update automatically
-        </ListItem>
-        <ListItem>
-          <CheckCircleIcon color="success" fontSize="small" sx={{ mr: 1 }} />
-          Local Planning Services (LPS) listing will update automatically
-        </ListItem>
-        <ListItem>
-          <WarningAmber color="warning" fontSize="small" sx={{ mr: 1 }} />
-          Any links to this service on your council website will need to be
-          updated by your IT team
-        </ListItem>
-        <ListItem>
-          <WarningAmber color="warning" fontSize="small" sx={{ mr: 1 }} />
-          Any Next Steps components pointing to this service will need to be
-          updated and published
-        </ListItem>
-        <ListItem>
-          <WarningAmber color="warning" fontSize="small" sx={{ mr: 1 }} />
-          Any users with active magic links or bookmarks will get an error if
-          this is a public-facing service and need to be manually redirected.
-        </ListItem>
-      </List>
     </Typography>
+    <List>
+      <ListItem>
+        <CheckCircleIcon color="success" fontSize="small" sx={{ mr: 1 }} />
+        Local Planning Services (LPS) listing will update automatically
+      </ListItem>
+      <ListItem>
+        <WarningAmber color="warning" fontSize="small" sx={{ mr: 1 }} />
+        Any links to this service on your council website will need to be
+        updated by your IT team
+      </ListItem>
+      <ListItem>
+        <WarningAmber color="warning" fontSize="small" sx={{ mr: 1 }} />
+        Any Next Steps components pointing to this service will need to be
+        updated and published
+      </ListItem>
+      <ListItem>
+        <WarningAmber color="warning" fontSize="small" sx={{ mr: 1 }} />
+        Any users with active magic links or bookmarks will get an error if this
+        is a public-facing service and need to be manually redirected.
+      </ListItem>
+    </List>
   </ErrorSummary>
 );
 
@@ -102,7 +99,7 @@ export const RenameDialog: React.FC<Props> = ({
     { setFieldError, setSubmitting },
   ) => {
     const slugWillChange = mode === "rename" && flowSlug !== flow.slug;
-    if (slugWillChange && !isConfirming) {
+    if (slugWillChange && !isConfirming && flow.isService) {
       setIsConfirming(true);
       setSubmitting(false);
       return;
