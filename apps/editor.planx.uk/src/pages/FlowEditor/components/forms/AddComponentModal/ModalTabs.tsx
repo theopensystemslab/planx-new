@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
-import React, { useState } from "react";
+import React from "react";
 import StyledTab from "ui/editor/StyledTab";
 
 import { COMPONENT_LIST_WIDTH, ComponentsTab } from "./ComponentsTab";
@@ -24,8 +24,10 @@ const TabList = styled(Box)(({ theme }) => ({
 }));
 
 interface Props {
+  activeTab: ModalTab;
+  onTabChange: (tab: ModalTab) => void;
   onComponentSelect: (slug: string) => void;
-  onPatternSelect: (patternId: string) => void;
+  onInsertPattern: (patternId: string) => void;
 }
 
 /**
@@ -35,18 +37,18 @@ interface Props {
  * can be rendered standalone (e.g. in Storybook)
  */
 export const ModalTabs: React.FC<Props> = ({
+  activeTab,
+  onTabChange,
   onComponentSelect,
-  onPatternSelect,
+  onInsertPattern,
 }) => {
-  const [activeTab, setActiveTab] = useState<ModalTab>("components");
-
   return (
     <>
       <TabList>
         <Box sx={{ maxWidth: COMPONENT_LIST_WIDTH }}>
           <Tabs
             value={activeTab}
-            onChange={(_event, value: ModalTab) => setActiveTab(value)}
+            onChange={(_event, value: ModalTab) => onTabChange(value)}
             aria-label="Modal tabs"
             variant="fullWidth"
           >
@@ -58,7 +60,7 @@ export const ModalTabs: React.FC<Props> = ({
       {activeTab === "components" && (
         <ComponentsTab onSelect={onComponentSelect} />
       )}
-      {activeTab === "patterns" && <PatternsTab onSelect={onPatternSelect} />}
+      {activeTab === "patterns" && <PatternsTab onInsert={onInsertPattern} />}
     </>
   );
 };

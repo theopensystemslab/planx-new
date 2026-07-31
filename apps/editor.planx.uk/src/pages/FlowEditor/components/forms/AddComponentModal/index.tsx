@@ -1,12 +1,18 @@
 import Popover from "@mui/material/Popover";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { hasFeatureFlag } from "lib/featureFlags";
-import React from "react";
+import React, { useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
-import { componentListFrameSx, ComponentsTab } from "./ComponentsTab";
+import {
+  COMPONENT_LIST_WIDTH,
+  componentListFrameSx,
+  ComponentsTab,
+} from "./ComponentsTab";
+import type { ModalTab } from "./ModalTabs";
 import { ModalTabs } from "./ModalTabs";
+import { DETAIL_PANEL_WIDTH } from "./PatternsTab/PatternDetailPanel";
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -26,6 +32,12 @@ const AddComponentModal: React.FC<Props> = ({
   const navigate = useNavigate();
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
+  const [activeTab, setActiveTab] = useState<ModalTab>("components");
+  const popoverWidth =
+    showPatterns && activeTab === "patterns"
+      ? COMPONENT_LIST_WIDTH + DETAIL_PANEL_WIDTH
+      : COMPONENT_LIST_WIDTH;
+
   const handleComponentSelect = (slug: string) => {
     onClose();
     navigate({
@@ -40,7 +52,7 @@ const AddComponentModal: React.FC<Props> = ({
     });
   };
 
-  const handlePatternSelect = (patternId: string) =>
+  const handleInsertPattern = (patternId: string) =>
     console.log(`Inserting pattern ${patternId}!`);
 
   // Flip the popover above the hanger when there isn't room below it
@@ -64,7 +76,11 @@ const AddComponentModal: React.FC<Props> = ({
       disableScrollLock
       slotProps={{
         paper: {
-          sx: { ...componentListFrameSx, mt: showBelow ? "4px" : "-4px" },
+          sx: {
+            ...componentListFrameSx,
+            width: popoverWidth,
+            mt: showBelow ? "4px" : "-4px",
+          },
         },
         backdrop: {
           sx: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
@@ -73,8 +89,10 @@ const AddComponentModal: React.FC<Props> = ({
     >
       {showPatterns ? (
         <ModalTabs
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
           onComponentSelect={handleComponentSelect}
-          onPatternSelect={handlePatternSelect}
+          onInsertPattern={handleInsertPattern}
         />
       ) : (
         <ComponentsTab onSelect={handleComponentSelect} />

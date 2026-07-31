@@ -1,8 +1,11 @@
 import Paper from "@mui/material/Paper";
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
+import React, { useState } from "react";
 
-import { componentListFrameSx } from "./ComponentsTab";
+import { COMPONENT_LIST_WIDTH, componentListFrameSx } from "./ComponentsTab";
+import type { ModalTab } from "./ModalTabs";
 import { ModalTabs } from "./ModalTabs";
+import { DETAIL_PANEL_WIDTH } from "./PatternsTab/PatternDetailPanel";
 
 /**
  * Stories render the modal's tabbed content rather than the full `AddComponentModal`,
@@ -17,10 +20,39 @@ export default meta;
 
 type Story = StoryObj<typeof ModalTabs>;
 
-export const Default: Story = {
-  render: () => (
-    <Paper sx={componentListFrameSx}>
-      <ModalTabs onComponentSelect={() => {}} onPatternSelect={() => {}} />
+/**
+ * Stands in for the popover, which owns the tab state and sizes itself to the tab
+ *
+ */
+const ModalTabsWrapper: React.FC<{ initialTab: ModalTab }> = ({
+  initialTab,
+}) => {
+  const [activeTab, setActiveTab] = useState<ModalTab>(initialTab);
+
+  return (
+    <Paper
+      sx={{
+        ...componentListFrameSx,
+        width:
+          activeTab === "patterns"
+            ? COMPONENT_LIST_WIDTH + DETAIL_PANEL_WIDTH
+            : COMPONENT_LIST_WIDTH,
+      }}
+    >
+      <ModalTabs
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onComponentSelect={() => {}}
+        onInsertPattern={() => {}}
+      />
     </Paper>
-  ),
+  );
+};
+
+export const Default: Story = {
+  render: () => <ModalTabsWrapper initialTab="components" />,
+};
+
+export const Patterns: Story = {
+  render: () => <ModalTabsWrapper initialTab="patterns" />,
 };
