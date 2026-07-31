@@ -131,7 +131,7 @@
     "fake-indexeddb": "^6.2.5",
     "jsdom": "catalog:",
     "msw-storybook-addon": "^2.0.7",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.18",
     "prettier": "catalog:",
     "react-refresh": "^0.14.2",
     "sass": "^1.97.3",
