@@ -1,38 +1,22 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React, { useState } from "react";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 import { TabHeader } from "../TabHeader";
 import { PatternDetailPanel } from "./PatternDetailPanel";
 import { PatternRow } from "./PatternRow";
-
-export interface Pattern {
-  id: string;
-  slug: string;
-  name: string;
-  summary: string | null;
-  // data: Graph | null;
-}
-
-const summary =
-  "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Praesentium voluptatum excepturi at rem enim distinctio officia";
-
-// TODO: Replace mock data with a query
-const MOCK_PATTERNS: Pattern[] = [
-  { id: "1", slug: "pattern-1", name: "Pattern 1", summary },
-  { id: "2", slug: "pattern-2", name: "Pattern 2", summary },
-  { id: "3", slug: "pattern-3", name: "Pattern 3", summary },
-  { id: "4", slug: "pattern-4", name: "Pattern 4", summary },
-  { id: "5", slug: "pattern-5", name: "Pattern 5", summary },
-];
+import type { Pattern } from "./queries";
+import { usePatterns } from "./usePatterns";
 
 interface Props {
   onInsert: (patternId: string) => void;
 }
 
 export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
-  const patterns = MOCK_PATTERNS;
+  const { data, loading, error } = usePatterns();
+  const patterns = data?.patterns ?? [];
 
   const [searchedPatterns, setSearchedPatterns] = useState<Pattern[] | null>(
     null,
@@ -69,11 +53,23 @@ export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
           />
         </TabHeader>
         <Box sx={{ overflowY: "auto", minHeight: 0, pb: 2 }}>
-          {visiblePatterns.length === 0 ? (
-            <Typography color="textSecondary" variant="body2" sx={{ p: 2 }}>
-              No patterns match your search.
+          {loading && (
+            <DelayedLoadingIndicator inline text="Loading patterns" />
+          )}
+          {!loading && error && (
+            <Typography color="error" variant="body2" sx={{ p: 2 }}>
+              Couldn't load patterns.
             </Typography>
-          ) : (
+          )}
+          {!loading && !error && visiblePatterns.length === 0 && (
+            <Typography color="textSecondary" variant="body2" sx={{ p: 2 }}>
+              {patterns.length === 0
+                ? "No patterns available yet."
+                : "No patterns match your search."}
+            </Typography>
+          )}
+          {!loading &&
+            !error &&
             visiblePatterns.map((pattern) => (
               <PatternRow
                 key={pattern.id}
@@ -81,8 +77,7 @@ export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
                 selected={pattern.id === selectedPatternId}
                 onClick={() => setSelectedPatternId(pattern.id)}
               />
-            ))
-          )}
+            ))}
         </Box>
       </Box>
       <PatternDetailPanel

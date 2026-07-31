@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-import type { Pattern } from ".";
+import type { Pattern } from "./queries";
 
 interface Props {
   pattern: Pattern;
