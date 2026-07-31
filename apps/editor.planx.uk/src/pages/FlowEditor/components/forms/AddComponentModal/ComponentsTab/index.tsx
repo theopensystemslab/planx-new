@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
+import { TabHeader } from "../TabHeader";
 import type { Category, ComponentItem } from "./componentData";
 import { ALL_CATEGORIES, ALL_ITEMS } from "./componentData";
 import { ComponentRow } from "./ComponentRow";
@@ -53,15 +54,7 @@ export const ComponentsTab: React.FC<Props> = ({ onSelect }) => {
 
   return (
     <>
-      <Box
-        sx={{
-          px: 1.5,
-          py: 1.25,
-          borderBottom: 1,
-          borderColor: "divider",
-          backgroundColor: "background.paper",
-        }}
-      >
+      <TabHeader>
         <SearchBox<ComponentItem>
           records={ALL_ITEMS}
           setRecords={setSearchedItems}
@@ -71,7 +64,7 @@ export const ComponentsTab: React.FC<Props> = ({ onSelect }) => {
           fullWidth
           placeholder="Search components"
         />
-      </Box>
+      </TabHeader>
       <Box ref={listRef} sx={{ overflowY: "auto", pb: 2 }}>
         {filteredCategories.length === 0 ? (
           <Typography color="textSecondary" variant="body2" sx={{ p: 2 }}>
