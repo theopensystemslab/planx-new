@@ -9,6 +9,9 @@ import { PatternsTab } from "./PatternsTab";
 
 export type ModalTab = "components" | "patterns";
 
+const tabId = (tab: ModalTab) => `add-component-modal-tab-${tab}`;
+const panelId = (tab: ModalTab) => `add-component-modal-panel-${tab}`;
+
 const TabList = styled(Box)(({ theme }) => ({
   position: "relative",
   borderBottom: `1px solid ${theme.palette.divider}`,
@@ -52,15 +55,43 @@ export const ModalTabs: React.FC<Props> = ({
             aria-label="Modal tabs"
             variant="fullWidth"
           >
-            <StyledTab value="components" label="Components" />
-            <StyledTab value="patterns" label="Patterns" />
+            <StyledTab
+              value="components"
+              label="Components"
+              id={tabId("components")}
+              aria-controls={
+                activeTab === "components" ? panelId("components") : undefined
+              }
+            />
+            <StyledTab
+              value="patterns"
+              label="Patterns"
+              id={tabId("patterns")}
+              aria-controls={
+                activeTab === "patterns" ? panelId("patterns") : undefined
+              }
+            />
           </Tabs>
         </Box>
       </TabList>
-      {activeTab === "components" && (
-        <ComponentsTab onSelect={onComponentSelect} />
-      )}
-      {activeTab === "patterns" && <PatternsTab onInsert={onInsertPattern} />}
+      <Box
+        role="tabpanel"
+        id={panelId(activeTab)}
+        aria-labelledby={tabId(activeTab)}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+          overflow: "hidden",
+        }}
+      >
+        {activeTab === "components" ? (
+          <ComponentsTab onSelect={onComponentSelect} />
+        ) : (
+          <PatternsTab onInsert={onInsertPattern} />
+        )}
+      </Box>
     </>
   );
 };

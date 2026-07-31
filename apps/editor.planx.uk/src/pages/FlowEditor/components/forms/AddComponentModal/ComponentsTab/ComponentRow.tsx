@@ -3,7 +3,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
 import React, { useEffect, useState } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { AiChip } from "ui/editor/AiChip";
 
 import type { ComponentItem } from "./componentData";
@@ -41,6 +41,8 @@ export const ComponentRow: React.FC<Props> = ({
       slotProps={{ tooltip: { sx: { maxWidth: 240 } } }}
     >
       <Box
+        component="button"
+        type="button"
         onClick={onClick}
         data-component-type={item.type}
         sx={{
@@ -49,11 +51,18 @@ export const ComponentRow: React.FC<Props> = ({
           gap: 1,
           px: 1.5,
           py: 0.875,
+          width: "100%",
+          border: 0,
+          backgroundColor: "transparent",
+          font: "inherit",
+          color: "inherit",
+          textAlign: "left",
           cursor: "pointer",
           "&:hover": {
             backgroundColor: "action.hover",
             "& .component-title": { fontWeight: FONT_WEIGHT_SEMI_BOLD },
           },
+          "&:focus-visible": focusStyle,
         }}
       >
         {Icon && (
