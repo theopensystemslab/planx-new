@@ -2,6 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -25,7 +26,17 @@ export const PatternDetailPanel: React.FC<Props> = ({
   const { data, loading, error } = usePatternData(pattern?.id ?? null);
   const graph = data?.pattern?.data;
 
-  const componentCount = Math.max(Object.keys(graph || {}).length - 1, 0);
+  // Both null while there's no graph data (loading, error, or not yet selected)
+  const componentCount = graph ? Object.keys(graph).length - 1 : null;
+  const componentCountLabel =
+    componentCount !== null && componentCount >= 1
+      ? `${componentCount} component${componentCount === 1 ? "" : "s"}`
+      : null;
+
+  // A pattern needs at least one component to be insertable
+  // We should aim to catch this when a pattern is "shared" (turned online)
+  const isEmpty = componentCount !== null && componentCount < 1;
+  const canInsert = Boolean(graph) && !isEmpty && !error;
 
   if (!pattern) {
     return (
@@ -68,23 +79,30 @@ export const PatternDetailPanel: React.FC<Props> = ({
       {pattern.summary && (
         <Typography variant="body2">{pattern.summary}</Typography>
       )}
-      {componentCount && (
-        <Typography variant="body3" sx={{ color: "text.secondary" }}>
-          {componentCount} components
-        </Typography>
-      )}
+      <Typography
+        variant="body3"
+        sx={{ color: "text.secondary", minHeight: "1.5em" }}
+      >
+        {loading ? <Skeleton width={80} /> : componentCountLabel}
+      </Typography>
       {error && (
         <Typography color="error" variant="body2">
           Couldn't load this pattern.
         </Typography>
       )}
+      {isEmpty && (
+        <Typography color="textSecondary" variant="body2">
+          This pattern has no components to insert.
+        </Typography>
+      )}
       <Button
         variant="contained"
         size="small"
-        disabled={loading || Boolean(error) || !graph}
+        fullWidth
+        disabled={loading || !canInsert}
         onClick={() => onInsert(pattern.id)}
       >
-        {loading ? "Loading…" : "Insert pattern"}
+        Insert pattern
       </Button>
     </Box>
   );
