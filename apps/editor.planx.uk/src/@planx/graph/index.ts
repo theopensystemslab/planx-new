@@ -813,3 +813,60 @@ export const buildGraphFromNodes = (
     children: children,
   };
 };
+
+/**
+ * Insert a copy of an entire graph (e.g. a pattern or pasted content) into current graph
+ *
+ * All mutations are collected into a single set of ops (due to wrap()), so an insert
+ * is a single ShareDB transaction (and so a single "undo")
+ */
+export const insertGraph =
+  (
+    source: Graph,
+    {
+      parent = ROOT_NODE_KEY,
+      before = undefined,
+      idFn = uniqueId,
+    }: { parent?: NodeId; before?: NodeId; idFn?: () => string } = {},
+  ) =>
+  (graph: Graph = {}): [Graph, Array<OT.Op>] =>
+    wrap(graph, (draft) => {
+      const topLevelIds = source[ROOT_NODE_KEY]?.edges || [];
+      if (topLevelIds.length === 0) return;
+
+      draft[ROOT_NODE_KEY] = draft[ROOT_NODE_KEY] || {};
+
+      // Keep a map of originalId: newId allowing us to insert unique nodes and maintain our edge relationships
+      const idMap = new Map<string, string>();
+      const newNodes: { [id: string]: Store.Node } = {};
+
+      // 1. First pass: Create new nodes and build the ID map
+      Object.entries(source).forEach(([sourceId, nodeData]) => {
+        if (sourceId === ROOT_NODE_KEY) return;
+        const newId = idFn();
+        idMap.set(sourceId, newId);
+        newNodes[newId] = structuredClone(nodeData);
+      });
+
+      // 2. Second pass: Re-link edges using the ID map
+      Object.values(newNodes).forEach((node) => {
+        if (node.edges && node.edges.length > 0) {
+          node.edges = node.edges
+            .map((edgeId) => idMap.get(edgeId))
+            .filter((edgeId): edgeId is string => Boolean(edgeId));
+        }
+      });
+
+      // 3. Rebuild each top level node's hierarchy from the flat node list, keeping source order
+      const topLevelTrees = topLevelIds
+        .map((sourceId) => idMap.get(sourceId))
+        .filter((newId): newId is string => Boolean(newId))
+        .map((newId) => buildGraphFromNodes(newId, newNodes));
+
+      /**
+       * 4. Finally, insert each rebuilt node in turn and all its nested children
+       */
+      topLevelTrees.forEach(({ id, children, ...nodeData }) => {
+        _add(draft, { id, ...nodeData }, { children, parent, before });
+      });
+    });
