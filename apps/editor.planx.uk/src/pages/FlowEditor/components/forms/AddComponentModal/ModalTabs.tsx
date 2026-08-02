@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
+import type { Graph } from "@planx/graph";
 import React from "react";
 import StyledTab from "ui/editor/StyledTab";
 
@@ -31,7 +32,7 @@ interface Props {
   onTabChange: (tab: ModalTab) => void;
   onComponentSelect: (slug: string) => void;
   onSelectNote?: () => void;
-  onInsertPattern: (patternId: string) => void;
+  onInsertPattern: (graph: Graph) => void;
 }
 
 /**
