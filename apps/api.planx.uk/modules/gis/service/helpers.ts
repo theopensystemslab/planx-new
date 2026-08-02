@@ -3,7 +3,7 @@ import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDage
 import * as barnet from "./local_authorities/metadata/barnet.js";
 import * as birmingham from "./local_authorities/metadata/birmingham.js";
 import * as brent from "./local_authorities/metadata/brent.js";
-import * as bristolCity from "./local_authorities/metadata/bristolCity.js";
+import * as bristol from "./local_authorities/metadata/bristol.js";
 import * as buckinghamshire from "./local_authorities/metadata/buckinghamshire.js";
 import * as camden from "./local_authorities/metadata/camden.js";
 import * as canterbury from "./local_authorities/metadata/canterbury.js";
@@ -16,7 +16,7 @@ import * as gloucester from "./local_authorities/metadata/gloucester.js";
 import * as greaterCambridge from "./local_authorities/metadata/greaterCambridge.js";
 import * as horsham from "./local_authorities/metadata/horsham.js";
 import * as lambeth from "./local_authorities/metadata/lambeth.js";
-import * as liverpoolCity from "./local_authorities/metadata/liverpoolCity.js";
+import * as liverpool from "./local_authorities/metadata/liverpool.js";
 import * as medway from "./local_authorities/metadata/medway.js";
 import * as newcastle from "./local_authorities/metadata/newcastle.js";
 import * as northumberland from "./local_authorities/metadata/northumberland.js";
@@ -51,7 +51,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   barnet,
   birmingham,
   brent,
-  "bristol-city": bristolCity,
+  bristol,
   buckinghamshire,
   camden,
   canterbury,
@@ -64,7 +64,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "greater-cambridge-shared-planning": greaterCambridge,
   horsham,
   lambeth,
-  "liverpool-city": liverpoolCity,
+  liverpool,
   medway,
   newcastle,
   northumberland,
@@ -72,7 +72,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "south-staffordshire": southStaffordshire,
   southwark,
   "st-albans": stAlbans,
-  "stockport-metropolitan": stockport,
+  stockport,
   "stoke-on-trent": stoke,
   swale,
   tewkesbury,

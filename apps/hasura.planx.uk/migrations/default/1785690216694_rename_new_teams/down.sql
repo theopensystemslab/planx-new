@@ -1,0 +1,1 @@
+-- No 'down' migration, we never want to revert names
