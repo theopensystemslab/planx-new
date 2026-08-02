@@ -25,7 +25,7 @@ import * as southStaffordshire from "./local_authorities/metadata/southStaffords
 import * as southwark from "./local_authorities/metadata/southwark.js";
 import * as stAlbans from "./local_authorities/metadata/stAlbans.js";
 import * as stockport from "./local_authorities/metadata/stockport.js";
-import * as stoke from "./local_authorities/metadata/stoke.js";
+import * as stokeOnTrent from "./local_authorities/metadata/stokeOnTrent.js";
 import * as swale from "./local_authorities/metadata/swale.js";
 import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
 import * as torbay from "./local_authorities/metadata/torbay.js";
@@ -73,7 +73,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   southwark,
   "st-albans": stAlbans,
   stockport,
-  "stoke-on-trent": stoke,
+  "stoke-on-trent": stokeOnTrent,
   swale,
   tewkesbury,
   torbay,
