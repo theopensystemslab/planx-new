@@ -1,62 +1,84 @@
 import Box from "@mui/material/Box";
-import Typography, { typographyClasses } from "@mui/material/Typography";
+import Typography from "@mui/material/Typography";
 import React from "react";
 import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
+import { PatternPreview } from "./PatternPreview";
 import type { Pattern } from "./queries";
+import { componentCountLabel, getComponentCount } from "./utils";
+
+const PREVIEW_SIZE = 48;
 
 interface Props {
   pattern: Pattern;
-  active: boolean;
-  onPreview: () => void;
-  onSelect: () => void;
+  selected: boolean;
+  onClick: () => void;
 }
 
-export const PatternRow: React.FC<Props> = ({
-  pattern,
-  active,
-  onPreview,
-  onSelect,
-}) => {
+export const PatternRow: React.FC<Props> = ({ pattern, selected, onClick }) => {
+  const componentCount = getComponentCount(pattern.data);
+  const countLabel = componentCountLabel(componentCount);
+
   return (
     <Box
       component="button"
       type="button"
-      onClick={onSelect}
-      onMouseEnter={onPreview}
-      onFocus={onPreview}
+      onClick={onClick}
       data-testid={`pattern-${pattern.id}`}
+      aria-current={selected}
       sx={{
         display: "flex",
-        alignItems: "center",
-        gap: 1.5,
-        pl: 1.5,
-        pr: 1.5,
-        py: 1,
+        alignItems: "flex-start",
+        gap: 1,
+        px: 1,
+        py: 1.2,
         width: "100%",
         font: "inherit",
         color: "inherit",
         textAlign: "left",
         cursor: "pointer",
         border: 0,
-        backgroundColor: active ? "action.hover" : "transparent",
+        borderLeft: "4px solid",
+        borderLeftColor: selected ? "info.main" : "transparent",
+        backgroundColor: selected ? "action.selected" : "transparent",
         "&:hover": {
-          backgroundColor: "action.hover",
-          [`& .${typographyClasses.root}`]: {
-            fontWeight: FONT_WEIGHT_SEMI_BOLD,
-          },
+          backgroundColor: selected ? "action.selected" : "action.hover",
         },
         "&:focus-visible": focusStyle,
       }}
     >
+      {countLabel && (
+        <Box
+          sx={{
+            flexShrink: 0,
+            width: PREVIEW_SIZE,
+            height: PREVIEW_SIZE,
+            p: 0.5,
+            border: 1,
+            borderColor: "divider",
+            borderRadius: 0.5,
+            backgroundColor: "background.default",
+          }}
+        >
+          <PatternPreview componentCount={componentCount} />
+        </Box>
+      )}
       <Box sx={{ minWidth: 0 }}>
         <Typography
           variant="body2"
-          sx={{ fontWeight: active ? FONT_WEIGHT_SEMI_BOLD : "regular" }}
-          noWrap
+          sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD, lineHeight: 1.3, pt: 0.25 }}
         >
           {pattern.name}
         </Typography>
+        {countLabel && (
+          <Typography
+            variant="body3"
+            sx={{ color: "text.secondary", lineHeight: 1.1 }}
+            noWrap
+          >
+            {countLabel}
+          </Typography>
+        )}
       </Box>
     </Box>
   );

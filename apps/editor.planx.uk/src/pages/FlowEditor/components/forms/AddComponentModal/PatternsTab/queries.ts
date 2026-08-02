@@ -15,6 +15,7 @@ export const GET_PATTERNS = gql`
       name
       slug
       summary
+      data
     }
   }
 `;
@@ -24,28 +25,9 @@ export interface Pattern {
   name: string;
   slug: string;
   summary: string | null;
+  data: Graph;
 }
 
 export type GetPatternsQuery = {
   patterns: Pattern[];
-};
-
-export const GET_PATTERN_DATA = gql`
-  query GetPatternData($id: uuid!) {
-    pattern: flows_by_pk(id: $id) {
-      id
-      data
-    }
-  }
-`;
-
-export type GetPatternDataQuery = {
-  pattern: {
-    id: string;
-    data: Graph;
-  } | null;
-};
-
-export type GetPatternDataVars = {
-  id: string;
 };

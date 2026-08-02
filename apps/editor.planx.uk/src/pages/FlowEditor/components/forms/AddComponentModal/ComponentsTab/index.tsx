@@ -18,7 +18,7 @@ export const COMPONENT_LIST_WIDTH = 300;
  */
 export const componentListFrameSx = {
   width: COMPONENT_LIST_WIDTH,
-  maxHeight: "min(480px, 85vh)",
+  height: "min(480px, 85vh)",
   display: "flex",
   flexDirection: "column",
   overflow: "hidden",

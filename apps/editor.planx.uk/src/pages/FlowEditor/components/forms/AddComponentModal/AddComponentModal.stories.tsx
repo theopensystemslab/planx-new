@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { COMPONENT_LIST_WIDTH, componentListFrameSx } from "./ComponentsTab";
 import type { ModalTab } from "./ModalTabs";
 import { ModalTabs } from "./ModalTabs";
-import { mockPatternData, mockPatterns } from "./PatternsTab/mocks";
+import { mockPatterns } from "./PatternsTab/mocks";
 import { DETAIL_PANEL_WIDTH } from "./PatternsTab/PatternDetailPanel";
 
 /**
@@ -21,13 +21,6 @@ const meta: Meta<typeof ModalTabs> = {
       handlers: [
         graphql.query("GetPatterns", () =>
           HttpResponse.json({ data: { patterns: mockPatterns } }),
-        ),
-        graphql.query("GetPatternData", ({ variables }) =>
-          HttpResponse.json({
-            data: {
-              pattern: { id: variables.id, data: mockPatternData },
-            },
-          }),
         ),
       ],
     },
