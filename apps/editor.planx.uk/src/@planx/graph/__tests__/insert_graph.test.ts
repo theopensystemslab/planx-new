@@ -114,6 +114,25 @@ describe("inserting a graph", () => {
     });
   });
 
+  describe("onInsert callback", () => {
+    test("is called with the new top level ids, in source order", () => {
+      const onInsert = vi.fn();
+
+      insertGraph(pattern, { idFn: deterministicId, onInsert })(emptyFlow());
+
+      // question then notice, matching pattern._root.edges - not their new ids' sort order
+      expect(onInsert).toHaveBeenCalledWith(["ID_0", "ID_3"]);
+    });
+
+    test("is not called when there is nothing to insert", () => {
+      const onInsert = vi.fn();
+
+      insertGraph({}, { idFn: deterministicId, onInsert })(emptyFlow());
+
+      expect(onInsert).not.toHaveBeenCalled();
+    });
+  });
+
   // This means that the entire "insert" can be reversed by a single "undo" in the History panel
   test("batches the entire insert in a single batch of ops", () => {
     const [, ops] = insertGraph(pattern, { idFn: deterministicId })(

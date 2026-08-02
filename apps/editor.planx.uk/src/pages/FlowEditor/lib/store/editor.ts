@@ -375,8 +375,16 @@ export const editorStore: StateCreator<
   },
 
   insertPattern: (graph, parent = ROOT_NODE_KEY, before = undefined) => {
-    const [, ops] = insertGraph(graph, { parent, before })(get().flow);
+    let insertedIds: string[] = [];
+    const [, ops] = insertGraph(graph, {
+      parent,
+      before,
+      onInsert: (ids) => (insertedIds = ids),
+    })(get().flow);
     send(ops);
+    // Flash the first top level node - a pattern may add several, but the
+    // highlight mechanism is designed for one, so this is the closest match
+    if (insertedIds[0]) set({ lastAddedNodeId: insertedIds[0] });
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {
@@ -742,8 +750,14 @@ export const editorStore: StateCreator<
         throw new Error("Root node for pasting could not be found.");
       }
 
-      const [, ops] = insertGraph(source, { parent, before })(get().flow);
+      let insertedIds: string[] = [];
+      const [, ops] = insertGraph(source, {
+        parent,
+        before,
+        onInsert: (ids) => (insertedIds = ids),
+      })(get().flow);
       send(ops);
+      if (insertedIds[0]) set({ lastAddedNodeId: insertedIds[0] });
     } catch (err) {
       alert((err as Error).message);
     }
