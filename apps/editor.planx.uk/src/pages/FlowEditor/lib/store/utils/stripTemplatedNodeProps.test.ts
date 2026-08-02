@@ -1,5 +1,5 @@
-import type { Store } from "../store";
-import { stripTemplatedNodeProps } from "../store/editor";
+import type { Store } from "..";
+import { stripTemplatedNodeProps } from "./stripTemplatedNodeProps";
 
 describe("stripTemplatedNodeProps", () => {
   it("removes every templated-node prop from data", () => {

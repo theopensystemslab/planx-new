@@ -83,14 +83,14 @@ describe("PatternsTab", () => {
         "Pattern 2",
       );
 
-      await waitFor(() =>
+      await waitFor(() => {
+        expect(
+          screen.getByRole("button", { name: /Pattern 2/ }),
+        ).toBeInTheDocument();
         expect(
           screen.queryByRole("button", { name: /Pattern 1/ }),
-        ).not.toBeInTheDocument(),
-      );
-      expect(
-        screen.getByRole("button", { name: /Pattern 2/ }),
-      ).toBeInTheDocument();
+        ).not.toBeInTheDocument();
+      });
     });
 
     it("shows a distinct message when nothing matches the search", async () => {
