@@ -863,9 +863,7 @@ export const insertGraph =
         .filter((newId): newId is string => Boolean(newId))
         .map((newId) => buildGraphFromNodes(newId, newNodes));
 
-      /**
-       * 4. Finally, insert each rebuilt node in turn and all its nested children
-       */
+      // 4. Finally, insert each rebuilt node in turn and all its nested children
       topLevelTrees.forEach(({ id, children, ...nodeData }) => {
         _add(draft, { id, ...nodeData }, { children, parent, before });
       });
