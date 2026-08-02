@@ -5,7 +5,6 @@ import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFl
 import Flows from "pages/Flows";
 import type { GetAnyFlowsQuery, GetAnyFlowsVars } from "pages/Flows/queries";
 import { GET_FLOWS } from "pages/Flows/queries";
-import React from "react";
 import { z } from "zod";
 
 import { client } from "../../../../lib/graphql";
@@ -14,8 +13,12 @@ export const flowsSearchSchema = z.object({
   sort: fallback(
     z.enum(["last-edited", "last-published", "name"]),
     "last-edited",
-  ).default("last-edited"),
-  sortDirection: fallback(z.enum(["asc", "desc"]), "desc").default("desc"),
+  )
+    .default("last-edited")
+    .optional(),
+  sortDirection: fallback(z.enum(["asc", "desc"]), "desc")
+    .default("desc")
+    .optional(),
   search: z.string().optional(),
   "service-status": z.enum(["online", "offline"]).optional(),
   "flow-type": z
