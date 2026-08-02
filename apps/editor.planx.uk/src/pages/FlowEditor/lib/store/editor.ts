@@ -291,6 +291,8 @@ export interface EditorStore extends Store.Store {
   cutNode: (id: NodeId, parent: NodeId) => void;
   getCutNode: () => CutPayload | null;
   addNode: (node: any, relationships?: Relationships) => NodeId;
+  /** Insert every node of a pattern's graph, as one batch of ops */
+  insertPattern: (graph: Graph, parent?: NodeId, before?: NodeId) => void;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectToFlow: (id: NodeId) => Promise<void>;
   disconnectFromFlow: () => void;
@@ -370,6 +372,11 @@ export const editorStore: StateCreator<
     send(ops);
     set({ lastAddedNodeId: id });
     return id;
+  },
+
+  insertPattern: (graph, parent = ROOT_NODE_KEY, before = undefined) => {
+    const [, ops] = insertGraph(graph, { parent, before })(get().flow);
+    send(ops);
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {
