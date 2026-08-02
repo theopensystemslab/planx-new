@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
+import type { Graph } from "@planx/graph";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -14,7 +15,7 @@ export const DETAIL_PANEL_WIDTH = 300;
 
 interface Props {
   pattern: Pattern | null;
-  onInsert: (patternId: string) => void;
+  onInsert: (graph: Graph) => void;
   onClear: () => void;
 }
 
@@ -100,7 +101,7 @@ export const PatternDetailPanel: React.FC<Props> = ({
         size="small"
         fullWidth
         disabled={loading || !canInsert}
-        onClick={() => onInsert(pattern.id)}
+        onClick={() => graph && onInsert(graph)}
       >
         Insert pattern
       </Button>

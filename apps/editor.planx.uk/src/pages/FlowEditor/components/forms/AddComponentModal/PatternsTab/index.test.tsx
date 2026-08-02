@@ -195,7 +195,7 @@ describe("PatternsTab", () => {
       ).toBeEnabled();
     });
 
-    it("calls onInsert with the selected pattern's id", async () => {
+    it("calls onInsert with the selected pattern's graph", async () => {
       const onInsert = vi.fn();
       server.use(patternsHandler(), patternDataHandler());
       const { user } = await setup(<PatternsTab onInsert={onInsert} />);
@@ -206,7 +206,7 @@ describe("PatternsTab", () => {
 
       await user.click(screen.getByRole("button", { name: "Insert pattern" }));
 
-      expect(onInsert).toHaveBeenCalledWith("3");
+      expect(onInsert).toHaveBeenCalledWith(mockPatternData);
     });
 
     it("blocks insertion of a pattern with no components", async () => {
@@ -238,12 +238,5 @@ describe("PatternsTab", () => {
         screen.getByRole("button", { name: "Insert pattern" }),
       ).toBeDisabled();
     });
-
-    it.todo("inserts the pattern's nodes into the flow at the hanger position");
-    it.todo("assigns new ids to inserted nodes, so patterns can be reused");
-    it.todo("closes the modal once a pattern has been inserted");
-    it.todo(
-      "adds a single history entry for the whole inserted pattern, so it can be undone in one click",
-    );
   });
 });

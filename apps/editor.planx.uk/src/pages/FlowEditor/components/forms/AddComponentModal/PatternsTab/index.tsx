@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import type { Graph } from "@planx/graph";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React, { useState } from "react";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
@@ -11,7 +12,7 @@ import type { Pattern } from "./queries";
 import { usePatterns } from "./usePatterns";
 
 interface Props {
-  onInsert: (patternId: string) => void;
+  onInsert: (graph: Graph) => void;
 }
 
 export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
