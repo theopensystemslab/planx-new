@@ -832,7 +832,14 @@ export const insertGraph =
       parent = ROOT_NODE_KEY,
       before = undefined,
       idFn = uniqueId,
-    }: { parent?: NodeId; before?: NodeId; idFn?: () => string } = {},
+      onInsert,
+    }: {
+      parent?: NodeId;
+      before?: NodeId;
+      idFn?: () => string;
+      /** Called with the new ids of the inserted top level nodes, in source order */
+      onInsert?: (topLevelIds: string[]) => void;
+    } = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
     wrap(graph, (draft) => {
