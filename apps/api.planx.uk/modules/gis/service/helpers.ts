@@ -1,4 +1,4 @@
-import * as adurAndWorthing from "./local_authorities/metadata/adurAndWorthing.js";
+import * as adurWorthing from "./local_authorities/metadata/adurWorthing.js";
 import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDagenham.js";
 import * as barnet from "./local_authorities/metadata/barnet.js";
 import * as birmingham from "./local_authorities/metadata/birmingham.js";
@@ -13,7 +13,7 @@ import * as eastRidingOfYorkshire from "./local_authorities/metadata/eastRidingO
 import * as epsomAndEwell from "./local_authorities/metadata/epsomAndEwell.js";
 import * as gateshead from "./local_authorities/metadata/gateshead.js";
 import * as gloucester from "./local_authorities/metadata/gloucester.js";
-import * as greaterCambridge from "./local_authorities/metadata/greaterCambridge.js";
+import * as greaterCambridgeSharedPlanning from "./local_authorities/metadata/greaterCambridgeSharedPlanning.js";
 import * as horsham from "./local_authorities/metadata/horsham.js";
 import * as lambeth from "./local_authorities/metadata/lambeth.js";
 import * as liverpool from "./local_authorities/metadata/liverpool.js";
@@ -42,11 +42,11 @@ export interface LocalAuthorityMetadata {
 }
 
 /**
- * When a team publishes their granular Article 4 data, add them to this list. Key must match team slug
+ * When a team publishes their granular Article 4 data, add them to this list. Key must match team slug, value should by camelCased slug
  * The database column team_setting.has_article4_schema also needs to be updated via the Hasura console
  */
 export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
-  "adur-worthing": adurAndWorthing,
+  "adur-worthing": adurWorthing,
   "barking-and-dagenham": barkingAndDagenham,
   barnet,
   birmingham,
@@ -61,7 +61,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "epsom-and-ewell": epsomAndEwell,
   gateshead,
   gloucester,
-  "greater-cambridge-shared-planning": greaterCambridge,
+  "greater-cambridge-shared-planning": greaterCambridgeSharedPlanning,
   horsham,
   lambeth,
   liverpool,
