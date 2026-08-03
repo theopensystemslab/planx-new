@@ -31,7 +31,8 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
             multiline
             placeholder="Internal notes"
             rows={3}
-            disabled={disabled}
+            // disabled while migrating, to be deprecated soon !
+            disabled={true}
           />
         </InputRow>
       </ModalSectionContent>
