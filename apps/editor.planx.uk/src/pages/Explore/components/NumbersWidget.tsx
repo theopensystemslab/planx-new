@@ -6,6 +6,8 @@ import React from "react";
 import { EmptyLoadingBar, LoadingBar } from "ui/editor/LoadingBar";
 import { formatDelta } from "utils";
 
+import { useExploreStats } from "./useExploreStats";
+
 export interface NumbersWidgetStats {
   lpasOnPlanX: number;
   lpasOnPlanXPrevious: number;
@@ -132,5 +134,19 @@ export function NumbersWidget({ stats, loading = false }: NumbersWidgetProps) {
 }
 
 export default function ConnectedNumbersWidget() {
-  return <NumbersWidget />;
+  const { data, loading } = useExploreStats();
+  const platformStats = data?.platformDashboardStats[0];
+
+  const stats: NumbersWidgetStats | undefined = platformStats && {
+    lpasOnPlanX: platformStats.lpasCurrent,
+    lpasOnPlanXPrevious: platformStats.lpasPrevious,
+    onlineServices: platformStats.onlineFlowsCurrent,
+    onlineServicesPrevious: platformStats.onlineFlowsPrevious,
+    totalSessions: platformStats.sessionsCurrent,
+    totalSessionsPrevious: platformStats.sessionsPrevious,
+    totalSubmissions: platformStats.submissionsCurrent,
+    totalSubmissionsPrevious: platformStats.submissionsPrevious,
+  };
+
+  return <NumbersWidget stats={stats} loading={loading} />;
 }
