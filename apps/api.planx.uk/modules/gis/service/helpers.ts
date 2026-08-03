@@ -1,3 +1,5 @@
+import camelCase from "lodash/camelCase.js";
+
 import * as adurWorthing from "./local_authorities/metadata/adurWorthing.js";
 import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDagenham.js";
 import * as barnet from "./local_authorities/metadata/barnet.js";
@@ -111,7 +113,7 @@ export const getLocalAuthorityArticleFourSchema = (
         "articleFour"
       ]["records"],
     ),
-    ...[`articleFour.${localAuthority}.caz`],
+    ...[`articleFour.${camelCase(localAuthority)}.caz`],
   ];
 
   return granularValues.sort();
