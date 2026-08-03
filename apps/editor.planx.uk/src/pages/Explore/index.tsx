@@ -6,6 +6,7 @@ import { linkOptions } from "@tanstack/react-router";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
+import FeaturedTemplatesWidget from "./components/FeaturedTemplatesWidget";
 import NumbersWidget from "./components/NumbersWidget";
 
 export default function Explore() {
@@ -50,7 +51,7 @@ export default function Explore() {
               label: "view all templates",
             })}
           >
-            <i>templates content</i>
+            <FeaturedTemplatesWidget />
           </DashboardWidget>
         </Box>
       </Container>
