@@ -252,7 +252,7 @@ async function go(
     }
 
     // rename `articleFour.caz` to reflect localAuthority if applicable, ensuring `councilName` segment matches other A4 values (not always same as team-slug)
-    const localCaz = `articleFour.${localAuthority.includes("-") ? camelCase(localAuthority) : localAuthority}.caz`;
+    const localCaz = `articleFour.${camelCase(localAuthority)}.caz`;
 
     if (formattedResult["articleFour.caz"]) {
       formattedResult[localCaz] = formattedResult["articleFour.caz"];
