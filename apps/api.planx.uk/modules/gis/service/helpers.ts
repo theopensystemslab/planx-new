@@ -1,9 +1,9 @@
-import * as adurAndWorthing from "./local_authorities/metadata/adurAndWorthing.js";
+import * as adurWorthing from "./local_authorities/metadata/adurWorthing.js";
 import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDagenham.js";
 import * as barnet from "./local_authorities/metadata/barnet.js";
 import * as birmingham from "./local_authorities/metadata/birmingham.js";
 import * as brent from "./local_authorities/metadata/brent.js";
-import * as bristolCity from "./local_authorities/metadata/bristolCity.js";
+import * as bristol from "./local_authorities/metadata/bristol.js";
 import * as buckinghamshire from "./local_authorities/metadata/buckinghamshire.js";
 import * as camden from "./local_authorities/metadata/camden.js";
 import * as canterbury from "./local_authorities/metadata/canterbury.js";
@@ -13,10 +13,10 @@ import * as eastRidingOfYorkshire from "./local_authorities/metadata/eastRidingO
 import * as epsomAndEwell from "./local_authorities/metadata/epsomAndEwell.js";
 import * as gateshead from "./local_authorities/metadata/gateshead.js";
 import * as gloucester from "./local_authorities/metadata/gloucester.js";
-import * as greaterCambridge from "./local_authorities/metadata/greaterCambridge.js";
+import * as greaterCambridgeSharedPlanning from "./local_authorities/metadata/greaterCambridgeSharedPlanning.js";
 import * as horsham from "./local_authorities/metadata/horsham.js";
 import * as lambeth from "./local_authorities/metadata/lambeth.js";
-import * as liverpoolCity from "./local_authorities/metadata/liverpoolCity.js";
+import * as liverpool from "./local_authorities/metadata/liverpool.js";
 import * as medway from "./local_authorities/metadata/medway.js";
 import * as newcastle from "./local_authorities/metadata/newcastle.js";
 import * as northumberland from "./local_authorities/metadata/northumberland.js";
@@ -25,7 +25,7 @@ import * as southStaffordshire from "./local_authorities/metadata/southStaffords
 import * as southwark from "./local_authorities/metadata/southwark.js";
 import * as stAlbans from "./local_authorities/metadata/stAlbans.js";
 import * as stockport from "./local_authorities/metadata/stockport.js";
-import * as stoke from "./local_authorities/metadata/stoke.js";
+import * as stokeOnTrent from "./local_authorities/metadata/stokeOnTrent.js";
 import * as swale from "./local_authorities/metadata/swale.js";
 import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
 import * as torbay from "./local_authorities/metadata/torbay.js";
@@ -42,16 +42,16 @@ export interface LocalAuthorityMetadata {
 }
 
 /**
- * When a team publishes their granular Article 4 data, add them to this list. Key must match team slug
+ * When a team publishes their granular Article 4 data, add them to this list. Key must match team slug, value should by camelCased slug
  * The database column team_setting.has_article4_schema also needs to be updated via the Hasura console
  */
 export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
-  "adur-worthing": adurAndWorthing,
+  "adur-worthing": adurWorthing,
   "barking-and-dagenham": barkingAndDagenham,
   barnet,
   birmingham,
   brent,
-  "bristol-city": bristolCity,
+  bristol,
   buckinghamshire,
   camden,
   canterbury,
@@ -61,10 +61,10 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "epsom-and-ewell": epsomAndEwell,
   gateshead,
   gloucester,
-  "greater-cambridge-shared-planning": greaterCambridge,
+  "greater-cambridge-shared-planning": greaterCambridgeSharedPlanning,
   horsham,
   lambeth,
-  "liverpool-city": liverpoolCity,
+  liverpool,
   medway,
   newcastle,
   northumberland,
@@ -72,8 +72,8 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "south-staffordshire": southStaffordshire,
   southwark,
   "st-albans": stAlbans,
-  "stockport-metropolitan": stockport,
-  "stoke-on-trent": stoke,
+  stockport,
+  "stoke-on-trent": stokeOnTrent,
   swale,
   tewkesbury,
   torbay,
