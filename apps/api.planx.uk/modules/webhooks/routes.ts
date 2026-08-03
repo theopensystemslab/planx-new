@@ -14,6 +14,7 @@ import {
   deleteSessionController,
   failedSubmissionsController,
   isCleanJSONBController,
+  reconcilePaymentsController,
   sanitiseApplicationDataController,
   sendSlackMessageController,
   sendSlackNotificationController,
@@ -94,6 +95,7 @@ router.post(
   updateTemplatedFlowEditsController,
 );
 router.post("/webhooks/hasura/failed-submissions", failedSubmissionsController);
+router.post("/webhooks/hasura/reconcile-payments", reconcilePaymentsController);
 
 // TODO: Convert to the new API module structure
 router.post(

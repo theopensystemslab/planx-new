@@ -22,6 +22,8 @@ import {
   createPaymentReminderEvents,
 } from "./service/paymentRequestEvents/index.js";
 import type { CreatePaymentEventController } from "./service/paymentRequestEvents/schema.js";
+import { reconcilePayments } from "./service/reconcilePayments/index.js";
+import type { ReconcilePaymentsController } from "./service/reconcilePayments/types.js";
 import { sanitiseApplicationData } from "./service/sanitiseApplicationData/index.js";
 import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/types.js";
 import { sendSlackNotification } from "./service/sendNotification/index.js";
@@ -320,6 +322,24 @@ export const failedSubmissionsController: FailedSubmissionController = async (
     return next(
       new ServerError({
         message: `Failed to log submission failures today`,
+        cause: error,
+      }),
+    );
+  }
+};
+
+export const reconcilePaymentsController: ReconcilePaymentsController = async (
+  _req,
+  res,
+  next,
+) => {
+  try {
+    const response = await reconcilePayments();
+    return res.status(200).send(response);
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: `Failed to reconcile payments`,
         cause: error,
       }),
     );
