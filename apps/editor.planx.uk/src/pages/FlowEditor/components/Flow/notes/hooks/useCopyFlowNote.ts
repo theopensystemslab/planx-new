@@ -1,5 +1,6 @@
 import { gql, useLazyQuery } from "@apollo/client";
-import { useStore } from "pages/FlowEditor/lib/store";
+
+import { useSetCopiedFlowNote } from "./useSetCopiedFlowNote";
 
 const GET_FLOW_NOTE_CONTENT = gql`
   query GetFlowNoteContent($id: uuid!) {
@@ -19,12 +20,13 @@ export const useCopyFlowNote = () => {
     GET_FLOW_NOTE_CONTENT,
     { fetchPolicy: "network-only" },
   );
+  const { setCopiedFlowNote } = useSetCopiedFlowNote();
 
   const copyFlowNote = async (noteContentId: string) => {
     const { data } = await fetchContent({ variables: { id: noteContentId } });
     if (!data?.flow_note_content_by_pk) return;
 
-    useStore.getState().setCopiedFlowNote(data.flow_note_content_by_pk);
+    setCopiedFlowNote(data.flow_note_content_by_pk);
   };
 
   return { copyFlowNote, ...queryState };

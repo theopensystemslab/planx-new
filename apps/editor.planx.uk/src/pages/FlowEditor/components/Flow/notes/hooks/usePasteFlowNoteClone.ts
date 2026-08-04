@@ -3,6 +3,7 @@ import type { NotePlacement } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import { CREATE_FLOW_NOTE_POSITION } from "./mutations";
+import { useClonedFlowNoteId } from "./useClonedFlowNoteId";
 
 export interface PasteFlowNoteTarget {
   nodeId?: string;
@@ -18,13 +19,14 @@ export const usePasteFlowNoteClone = () => {
   const [mutate, mutationState] = useMutation<CreateFlowNotePositionResult>(
     CREATE_FLOW_NOTE_POSITION,
   );
+  const { getClonedFlowNoteId } = useClonedFlowNoteId();
 
   const pasteFlowNoteClone = async ({
     nodeId,
     placement,
   }: PasteFlowNoteTarget) => {
     const userId = useStore.getState().user?.id;
-    const noteContentId = useStore.getState().getClonedFlowNoteId();
+    const noteContentId = getClonedFlowNoteId();
     if (!flowId || !userId || !noteContentId) return undefined;
 
     const { data } = await mutate({

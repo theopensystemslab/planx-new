@@ -21,6 +21,9 @@ import * as React from "react";
 import CloneIcon from "ui/icons/Clone";
 import CopyIcon from "ui/icons/Copy";
 
+import { useClonedFlowNoteId } from "../notes/hooks/useClonedFlowNoteId";
+import { useCloneFlowNote } from "../notes/hooks/useCloneFlowNote";
+import { useCopiedFlowNote } from "../notes/hooks/useCopiedFlowNote";
 import { useCopyFlowNote } from "../notes/hooks/useCopyFlowNote";
 import { usePasteFlowNoteClone } from "../notes/hooks/usePasteFlowNoteClone";
 import { usePasteFlowNoteCopy } from "../notes/hooks/usePasteFlowNoteCopy";
@@ -64,9 +67,6 @@ export const ContextMenu: React.FC = () => {
     copyHelpText,
     getCopiedHelpText,
     pasteHelpText,
-    clonedFlowNoteId,
-    copiedFlowNote,
-    cloneFlowNote,
   ] = useStore((state) => [
     state.contextMenuSource,
     state.contextMenuPosition,
@@ -89,15 +89,17 @@ export const ContextMenu: React.FC = () => {
     state.copyHelpText,
     state.getCopiedHelpText(),
     state.pasteHelpText,
-    state.getClonedFlowNoteId(),
-    state.getCopiedFlowNote(),
-    state.cloneFlowNote,
   ]);
 
   const navigate = useNavigate();
   const { team, flow: flowSlug } = useParams({
     from: "/_authenticated/app/$team/$flow",
   });
+  const { cloneFlowNote } = useCloneFlowNote();
+  const { getClonedFlowNoteId } = useClonedFlowNoteId();
+  const { getCopiedFlowNote } = useCopiedFlowNote();
+  const clonedFlowNoteId = getClonedFlowNoteId();
+  const copiedFlowNote = getCopiedFlowNote();
   const { copyFlowNote } = useCopyFlowNote();
   const { pasteFlowNoteClone } = usePasteFlowNoteClone();
   const { pasteFlowNoteCopy } = usePasteFlowNoteCopy();

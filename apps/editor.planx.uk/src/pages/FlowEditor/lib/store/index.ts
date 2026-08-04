@@ -14,8 +14,6 @@ import type { EditorStore, EditorUIStore } from "./editor";
 import { editorStore, editorUIStore } from "./editor";
 import type { NavigationStore } from "./navigation";
 import { navigationStore } from "./navigation";
-import type { NotesStore } from "./notes";
-import { notesStore } from "./notes";
 import type { PreviewStore } from "./preview";
 import { previewStore } from "./preview";
 import type { SettingsStore } from "./settings";
@@ -70,8 +68,7 @@ export type FullStore = PublicStore &
   EditorStore &
   EditorUIStore &
   UserStore &
-  AuthStore &
-  NotesStore;
+  AuthStore;
 
 /**
  * If accessing the public preview, don't load editor store files
@@ -100,7 +97,6 @@ const createFullStore = () => {
     ...teamStore(...args),
     ...userStore(...args),
     ...authStore(...args),
-    ...notesStore(...args),
   }));
 };
 

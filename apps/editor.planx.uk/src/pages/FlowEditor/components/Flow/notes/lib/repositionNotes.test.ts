@@ -1,11 +1,14 @@
 import { graphql, HttpResponse } from "msw";
+import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useStore } from ".";
+import {
+  repositionNotesForDeletedNodes,
+  repositionNotesForMovedNode,
+} from "./repositionNotes";
 
 beforeEach(() => {
-  localStorage.clear();
   useStore.setState({
     id: "flow-1",
     jwt: "test-jwt",
@@ -19,31 +22,6 @@ beforeEach(() => {
       defaultTeamId: null,
       teams: [],
     } as any,
-  });
-});
-
-describe("cloneFlowNote / getClonedFlowNoteId", () => {
-  it("stores and reads back the cloned note's content id, clearing any copied note", () => {
-    useStore.getState().setCopiedFlowNote({ text: "hi", color: "#fffdb0" });
-
-    useStore.getState().cloneFlowNote("note-content-1");
-
-    expect(useStore.getState().getClonedFlowNoteId()).toBe("note-content-1");
-    expect(useStore.getState().getCopiedFlowNote()).toBeUndefined();
-  });
-});
-
-describe("setCopiedFlowNote / getCopiedFlowNote", () => {
-  it("stores and reads back the copied note's content, clearing any cloned note", () => {
-    useStore.getState().cloneFlowNote("note-content-1");
-
-    useStore.getState().setCopiedFlowNote({ text: "hi", color: "#fffdb0" });
-
-    expect(useStore.getState().getCopiedFlowNote()).toEqual({
-      text: "hi",
-      color: "#fffdb0",
-    });
-    expect(useStore.getState().getClonedFlowNoteId()).toBeNull();
   });
 });
 
@@ -82,9 +60,7 @@ describe("repositionNotesForDeletedNodes", () => {
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForDeletedNodes(["deleted-node"], {}, {});
+    await repositionNotesForDeletedNodes(["deleted-node"], {}, {});
 
     expect(deleteIds).toEqual(
       expect.arrayContaining(["note-attached", "note-other-author"]),
@@ -124,9 +100,11 @@ describe("repositionNotesForDeletedNodes", () => {
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForDeletedNodes(["deleted-node"], flowBefore, flowAfter);
+    await repositionNotesForDeletedNodes(
+      ["deleted-node"],
+      flowBefore,
+      flowAfter,
+    );
 
     expect(reanchored).toEqual({
       id: "note-after-deleted",
@@ -174,9 +152,11 @@ describe("repositionNotesForDeletedNodes", () => {
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForDeletedNodes(["deleted-node"], flowBefore, flowAfter);
+    await repositionNotesForDeletedNodes(
+      ["deleted-node"],
+      flowBefore,
+      flowAfter,
+    );
 
     expect(reanchored).toEqual({
       id: "note-leading",
@@ -222,13 +202,11 @@ describe("repositionNotesForDeletedNodes", () => {
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForDeletedNodes(
-        ["folder", "child"],
-        flowBefore,
-        flowAfter,
-      );
+    await repositionNotesForDeletedNodes(
+      ["folder", "child"],
+      flowBefore,
+      flowAfter,
+    );
 
     expect(deleteIds).toEqual(["note-orphaned"]);
   });
@@ -248,9 +226,7 @@ describe("repositionNotesForDeletedNodes", () => {
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForDeletedNodes(["deleted-node"], {}, {});
+    await repositionNotesForDeletedNodes(["deleted-node"], {}, {});
 
     expect(mutationCalled).toBe(false);
   });
@@ -289,13 +265,11 @@ describe("repositionNotesForMovedNode", () => {
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForMovedNode(
-        "moved-node",
-        "old-parent",
-        "new-first-child",
-      );
+    await repositionNotesForMovedNode(
+      "moved-node",
+      "old-parent",
+      "new-first-child",
+    );
 
     expect(reanchored).toEqual([
       {

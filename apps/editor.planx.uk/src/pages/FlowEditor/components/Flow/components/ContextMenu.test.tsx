@@ -57,8 +57,6 @@ describe("positioned-note context menu", () => {
   });
 
   it("clones using the note's shared content id, not its position id", async () => {
-    const cloneFlowNote = vi.spyOn(useStore.getState(), "cloneFlowNote");
-
     useStore.setState({
       contextMenuSource: "positioned-note",
       contextMenuRelationships: { self: "position-1", contentId: "content-1" },
@@ -67,7 +65,7 @@ describe("positioned-note context menu", () => {
     const { user } = await setup(<ContextMenu />);
     await user.click(screen.getByRole("menuitem", { name: /clone/i }));
 
-    expect(cloneFlowNote).toHaveBeenCalledWith("content-1");
+    expect(localStorage.getItem("clonedFlowNoteId")).toBe("content-1");
   });
 
   it("copies using the note's shared content id, not its position id", async () => {
@@ -92,7 +90,7 @@ describe("positioned-note context menu", () => {
     await user.click(screen.getByRole("menuitem", { name: /^copy$/i }));
 
     expect(queriedId).toBe("content-1");
-    expect(useStore.getState().getCopiedFlowNote()).toEqual({
+    expect(JSON.parse(localStorage.getItem("copiedFlowNote")!)).toEqual({
       text: "hi",
       color: "#fffdb0",
     });
@@ -124,7 +122,7 @@ describe("hanger context menu - paste note", () => {
       }),
     );
 
-    useStore.getState().cloneFlowNote("content-1");
+    localStorage.setItem("clonedFlowNoteId", "content-1");
     useStore.setState({
       contextMenuSource: "hanger",
       contextMenuRelationships: { parent: "_root" },
@@ -148,7 +146,10 @@ describe("hanger context menu - paste note", () => {
       }),
     );
 
-    useStore.getState().setCopiedFlowNote({ text: "hi", color: "#fffdb0" });
+    localStorage.setItem(
+      "copiedFlowNote",
+      JSON.stringify({ text: "hi", color: "#fffdb0" }),
+    );
     useStore.setState({
       contextMenuSource: "hanger",
       contextMenuRelationships: { parent: "_root" },

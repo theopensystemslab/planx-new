@@ -32,6 +32,10 @@ import type {
   ContextMenuPosition,
   ContextMenuSource,
 } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import {
+  repositionNotesForDeletedNodes,
+  repositionNotesForMovedNode,
+} from "pages/FlowEditor/components/Flow/notes/lib/repositionNotes";
 import type { Doc } from "sharedb/lib/client";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
@@ -40,7 +44,6 @@ import { FlowLayout } from "../../components/Flow";
 import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
 import type { NavigationStore } from "./navigation";
-import type { NotesStore } from "./notes";
 import type { SharedStore } from "./shared";
 
 let doc: Doc;
@@ -350,7 +353,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore & EditorUIStore & NavigationStore & NotesStore,
+  SharedStore & EditorStore & EditorUIStore & NavigationStore,
   [],
   [],
   EditorStore
@@ -656,7 +659,7 @@ export const editorStore: StateCreator<
 
       if (parent) {
         const oldParent = parent as unknown as string;
-        get().repositionNotesForMovedNode(
+        repositionNotesForMovedNode(
           id,
           oldParent,
           after[oldParent]?.edges?.[0],
@@ -770,7 +773,7 @@ export const editorStore: StateCreator<
 
     const deletedNodeIds = Object.keys(before).filter((k) => !after[k]);
     if (deletedNodeIds.length > 0) {
-      get().repositionNotesForDeletedNodes(deletedNodeIds, before, after);
+      repositionNotesForDeletedNodes(deletedNodeIds, before, after);
     }
   },
 
