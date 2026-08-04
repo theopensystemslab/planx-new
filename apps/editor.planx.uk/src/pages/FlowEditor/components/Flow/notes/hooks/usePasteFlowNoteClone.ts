@@ -1,14 +1,9 @@
 import { useMutation } from "@apollo/client";
-import type { NotePlacement } from "hooks/data/useFlowNotes";
+import type { FlowNoteTarget } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import { CREATE_FLOW_NOTE_POSITION } from "./mutations";
 import { useClonedFlowNoteId } from "./useClonedFlowNoteId";
-
-export interface PasteFlowNoteTarget {
-  nodeId?: string;
-  placement?: NotePlacement;
-}
 
 interface CreateFlowNotePositionResult {
   insert_flow_note_positions_one: { id: string } | null;
@@ -21,10 +16,7 @@ export const usePasteFlowNoteClone = () => {
   );
   const { getClonedFlowNoteId } = useClonedFlowNoteId();
 
-  const pasteFlowNoteClone = async ({
-    nodeId,
-    placement,
-  }: PasteFlowNoteTarget) => {
+  const pasteFlowNoteClone = async ({ nodeId, placement }: FlowNoteTarget) => {
     const userId = useStore.getState().user?.id;
     const noteContentId = getClonedFlowNoteId();
     if (!flowId || !userId || !noteContentId) return undefined;

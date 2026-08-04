@@ -1,14 +1,10 @@
 import { useMutation } from "@apollo/client";
-import type { NotePlacement } from "hooks/data/useFlowNotes";
+import type { FlowNoteTarget } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import { CREATE_FLOW_NOTE_POSITION } from "./mutations";
 
-export interface CreateFlowNoteInput {
-  nodeId?: string;
-  placement?: NotePlacement;
-  text: string;
-}
+export type CreateFlowNoteInput = FlowNoteTarget & { text: string };
 
 interface CreateFlowNotePositionResult {
   insert_flow_note_positions_one: { id: string } | null;

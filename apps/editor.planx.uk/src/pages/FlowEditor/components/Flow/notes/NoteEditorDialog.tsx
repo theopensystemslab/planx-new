@@ -10,7 +10,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
-import type { FlowNote, NotePlacement } from "hooks/data/useFlowNotes";
+import type { FlowNote, FlowNoteTarget } from "hooks/data/useFlowNotes";
 import { useToast } from "hooks/useToast";
 import React from "react";
 import Input from "ui/shared/Input/Input";
@@ -28,21 +28,12 @@ const validationSchema = object().shape({
   text: string().trim().required("Enter a note"),
 });
 
-interface NoteEditorDialogProps {
-  mode: "create" | "edit";
-  note?: FlowNote;
-  nodeId?: string;
-  placement?: NotePlacement;
-  onClose: () => void;
-}
+type NoteEditorDialogProps =
+  | { mode: "create"; target: FlowNoteTarget; onClose: () => void }
+  | { mode: "edit"; note: FlowNote; onClose: () => void };
 
-export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = ({
-  mode,
-  note,
-  nodeId,
-  placement,
-  onClose,
-}) => {
+export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = (props) => {
+  const { mode, onClose } = props;
   const toast = useToast();
   const { createFlowNote, loading: creating } = useCreateFlowNote();
   const { updateFlowNote, loading: updating } = useUpdateFlowNote();
@@ -55,15 +46,15 @@ export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = ({
   const submitLabel = isSaving ? savingLabel : idleLabel;
 
   const formik = useFormik<NoteForm>({
-    initialValues: { text: note?.text ?? "" },
+    initialValues: { text: props.mode === "edit" ? props.note.text : "" },
     validationSchema,
     validateOnMount: true,
     onSubmit: async ({ text }) => {
       try {
-        if (isEditing && note) {
-          await updateFlowNote(note.contentId, { text });
+        if (props.mode === "edit") {
+          await updateFlowNote(props.note.contentId, { text });
         } else {
-          await createFlowNote({ nodeId, placement, text });
+          await createFlowNote({ ...props.target, text });
         }
         onClose();
       } catch {
@@ -73,9 +64,9 @@ export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = ({
   });
 
   const handleDelete = async () => {
-    if (!note) return;
+    if (props.mode !== "edit") return;
     try {
-      await deleteFlowNote(note.positionId);
+      await deleteFlowNote(props.note.positionId);
       onClose();
     } catch {
       toast.error("Failed to delete note, try again");

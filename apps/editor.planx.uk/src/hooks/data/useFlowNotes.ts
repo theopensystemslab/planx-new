@@ -23,6 +23,14 @@ export interface ContainerAnchoredPlacement {
 export type NotePlacement =
   SiblingAnchoredPlacement | ContainerAnchoredPlacement;
 
+/**
+ * Mirrors the DB's `flow_note_positions` CHECK constraint: a note is either
+ * attached to a node or positioned in a gap, never both, never neither.
+ */
+export type FlowNoteTarget =
+  | { nodeId: string; placement?: never }
+  | { nodeId?: never; placement: NotePlacement };
+
 interface FlowNoteBase {
   /** Identifies this specific placement/clone instance - used for deletion */
   positionId: string;

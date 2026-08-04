@@ -30,7 +30,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Create = {
-  args: { mode: "create", nodeId: "node-a", onClose: () => {} },
+  args: { mode: "create", target: { nodeId: "node-a" }, onClose: () => {} },
   parameters: {
     msw: {
       handlers: [

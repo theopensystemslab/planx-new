@@ -1,6 +1,7 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
+import type { FlowNoteTarget } from "hooks/data/useFlowNotes";
 import { resolveNotePlacement } from "pages/FlowEditor/components/Flow/notes/lib/notePlacement";
 import { NoteEditorDialog } from "pages/FlowEditor/components/Flow/notes/NoteEditorDialog";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -29,16 +30,17 @@ function AddNoteModal() {
   const handleClose = () =>
     navigate({ to: "/app/$team/$flow", params: { team, flow } });
 
-  const placement = nodeId
-    ? undefined
-    : resolveNotePlacement(flowGraph, parent ?? ROOT_NODE_KEY, before);
+  const target: FlowNoteTarget = nodeId
+    ? { nodeId }
+    : {
+        placement: resolveNotePlacement(
+          flowGraph,
+          parent ?? ROOT_NODE_KEY,
+          before,
+        ),
+      };
 
   return (
-    <NoteEditorDialog
-      mode="create"
-      nodeId={nodeId}
-      placement={placement}
-      onClose={handleClose}
-    />
+    <NoteEditorDialog mode="create" target={target} onClose={handleClose} />
   );
 }
