@@ -59,62 +59,62 @@ export type FlowNote = AttachedNote | PositionedNote;
 
 const GET_FLOW_NOTES = gql`
   subscription GetFlowNotes($flowId: uuid!) {
-    flow_note_positions(
+    flowNotePositions: flow_note_positions(
       where: { flow_id: { _eq: $flowId } }
       order_by: { created_at: asc, id: asc }
     ) {
-      id
-      flow_id
-      node_id
+      positionId: id
+      flowId: flow_id
+      nodeId: node_id
       placement
       note {
-        id
+        contentId: id
         text
         color
-        created_by
-        updated_by
-        created_at
-        updated_at
+        createdBy: created_by
+        updatedBy: updated_by
+        createdAt: created_at
+        updatedAt: updated_at
       }
     }
   }
 `;
 
 interface FlowNotePositionRow {
-  id: string;
-  flow_id: string;
-  node_id: string | null;
+  positionId: string;
+  flowId: string;
+  nodeId: string | null;
   placement: NotePlacement | null;
   note: {
-    id: string;
+    contentId: string;
     text: string;
     color: string;
-    created_by: number;
-    updated_by: number;
-    created_at: string;
-    updated_at: string;
+    createdBy: number;
+    updatedBy: number;
+    createdAt: string;
+    updatedAt: string;
   };
 }
 
 interface QueryResult {
-  flow_note_positions: FlowNotePositionRow[];
+  flowNotePositions: FlowNotePositionRow[];
 }
 
 const toFlowNote = (row: FlowNotePositionRow): FlowNote => {
   const base = {
-    positionId: row.id,
-    contentId: row.note.id,
-    flowId: row.flow_id,
+    positionId: row.positionId,
+    contentId: row.note.contentId,
+    flowId: row.flowId,
     text: row.note.text,
     color: row.note.color,
-    createdBy: row.note.created_by,
-    updatedBy: row.note.updated_by,
-    createdAt: row.note.created_at,
-    updatedAt: row.note.updated_at,
+    createdBy: row.note.createdBy,
+    updatedBy: row.note.updatedBy,
+    createdAt: row.note.createdAt,
+    updatedAt: row.note.updatedAt,
   };
 
-  return row.node_id
-    ? { ...base, nodeId: row.node_id, placement: null }
+  return row.nodeId
+    ? { ...base, nodeId: row.nodeId, placement: null }
     : { ...base, nodeId: null, placement: row.placement as NotePlacement };
 };
 
@@ -135,7 +135,7 @@ export const useFlowNotes = (): UseFlowNotesResult => {
     },
   );
 
-  const notes = (data?.flow_note_positions ?? []).map(toFlowNote);
+  const notes = (data?.flowNotePositions ?? []).map(toFlowNote);
 
   return { notes, loading, error };
 };

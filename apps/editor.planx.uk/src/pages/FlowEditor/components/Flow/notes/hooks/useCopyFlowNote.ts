@@ -4,7 +4,7 @@ import { useSetCopiedFlowNote } from "./useSetCopiedFlowNote";
 
 const GET_FLOW_NOTE_CONTENT = gql`
   query GetFlowNoteContent($id: uuid!) {
-    flow_note_content_by_pk(id: $id) {
+    noteContent: flow_note_content_by_pk(id: $id) {
       text
       color
     }
@@ -12,7 +12,7 @@ const GET_FLOW_NOTE_CONTENT = gql`
 `;
 
 interface GetFlowNoteContentResult {
-  flow_note_content_by_pk: { text: string; color: string } | null;
+  noteContent: { text: string; color: string } | null;
 }
 
 export const useCopyFlowNote = () => {
@@ -24,9 +24,9 @@ export const useCopyFlowNote = () => {
 
   const copyFlowNote = async (noteContentId: string) => {
     const { data } = await fetchContent({ variables: { id: noteContentId } });
-    if (!data?.flow_note_content_by_pk) return;
+    if (!data?.noteContent) return;
 
-    setCopiedFlowNote(data.flow_note_content_by_pk);
+    setCopiedFlowNote(data.noteContent);
   };
 
   return { copyFlowNote, ...queryState };

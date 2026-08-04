@@ -65,7 +65,7 @@ beforeEach(() => {
     name: "GetFlowNotesForCopy",
     matchOnVariables: false,
     data: {
-      flow_note_positions: [],
+      flowNotePositions: [],
     },
   });
 });
@@ -225,25 +225,25 @@ it("copies a flow's notes, preserving clone relationships between notes but not 
     name: "GetFlowNotesForCopy",
     matchOnVariables: false,
     data: {
-      flow_note_positions: [
+      flowNotePositions: [
         {
           // a standalone note
-          note_id: "note-a",
-          node_id: "Yh7t91FisE",
+          noteId: "note-a",
+          nodeId: "Yh7t91FisE",
           placement: null,
           note: { text: "Solo note", color: "#fffdb0" },
         },
         {
-          // first of a clone pair - shares note_id "note-b" with the row below
-          note_id: "note-b",
-          node_id: null,
+          // first of a clone pair - shares noteId "note-b" with the row below
+          noteId: "note-b",
+          nodeId: null,
           placement: { parent: "_root", before: "kNX8Rej9rk" },
           note: { text: "Cloned note", color: "#ffd6a5" },
         },
         {
           // second of the clone pair
-          note_id: "note-b",
-          node_id: "h8DSw40zNr",
+          noteId: "note-b",
+          nodeId: "h8DSw40zNr",
           placement: null,
           note: { text: "Cloned note", color: "#ffd6a5" },
         },
@@ -271,7 +271,7 @@ it("copies a flow's notes, preserving clone relationships between notes but not 
       },
     },
     data: {
-      insert_flow_note_positions_one: { note_id: "new-note-a" },
+      insertedNotePosition: { noteId: "new-note-a" },
     },
   });
 
@@ -294,7 +294,7 @@ it("copies a flow's notes, preserving clone relationships between notes but not 
       },
     },
     data: {
-      insert_flow_note_positions_one: { note_id: "new-note-b" },
+      insertedNotePosition: { noteId: "new-note-b" },
     },
   });
 

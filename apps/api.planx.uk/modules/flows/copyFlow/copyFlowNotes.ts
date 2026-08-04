@@ -13,8 +13,8 @@ interface NotePlacement {
 }
 
 interface FlowNotePositionRow {
-  note_id: string;
-  node_id: string | null;
+  noteId: string;
+  nodeId: string | null;
   placement: NotePlacement | null;
   note: {
     text: string;
@@ -24,9 +24,11 @@ interface FlowNotePositionRow {
 
 const GET_FLOW_NOTES = gql`
   query GetFlowNotesForCopy($flowId: uuid!) {
-    flow_note_positions(where: { flow_id: { _eq: $flowId } }) {
-      note_id
-      node_id
+    flowNotePositions: flow_note_positions(
+      where: { flow_id: { _eq: $flowId } }
+    ) {
+      noteId: note_id
+      nodeId: node_id
       placement
       note {
         text
@@ -41,8 +43,8 @@ const INSERT_FLOW_NOTE_POSITION_WITH_CONTENT = gql`
   mutation InsertFlowNotePositionWithContentForCopy(
     $object: flow_note_positions_insert_input!
   ) {
-    insert_flow_note_positions_one(object: $object) {
-      note_id
+    insertedNotePosition: insert_flow_note_positions_one(object: $object) {
+      noteId: note_id
     }
   }
 `;
@@ -69,10 +71,10 @@ const remapPlacement = (
 });
 
 const remapPosition = (
-  { node_id, placement }: Pick<FlowNotePositionRow, "node_id" | "placement">,
+  { nodeId, placement }: Pick<FlowNotePositionRow, "nodeId" | "placement">,
   replaceValue: string,
 ) => ({
-  node_id: renameNodeId(node_id, replaceValue),
+  node_id: renameNodeId(nodeId, replaceValue),
   placement: placement ? remapPlacement(placement, replaceValue) : null,
 });
 
@@ -97,17 +99,17 @@ export const copyFlowNotes = async ({
 
   const { client: $client } = getClient();
 
-  const { flow_note_positions } = await $client.request<{
-    flow_note_positions: FlowNotePositionRow[];
+  const { flowNotePositions } = await $client.request<{
+    flowNotePositions: FlowNotePositionRow[];
   }>(GET_FLOW_NOTES, { flowId: sourceFlowId });
 
-  if (!flow_note_positions.length) return;
+  if (!flowNotePositions.length) return;
 
   const groupsByOriginalNoteId = new Map<string, FlowNotePositionRow[]>();
-  for (const row of flow_note_positions) {
-    const group = groupsByOriginalNoteId.get(row.note_id);
+  for (const row of flowNotePositions) {
+    const group = groupsByOriginalNoteId.get(row.noteId);
     if (group) group.push(row);
-    else groupsByOriginalNoteId.set(row.note_id, [row]);
+    else groupsByOriginalNoteId.set(row.noteId, [row]);
   }
 
   // One new flow_note_content row per unique original note, created via the first position that used it
@@ -115,8 +117,8 @@ export const copyFlowNotes = async ({
   await Promise.all(
     Array.from(groupsByOriginalNoteId.entries()).map(
       async ([originalNoteId, [first]]) => {
-        const { insert_flow_note_positions_one } = await $client.request<{
-          insert_flow_note_positions_one: { note_id: string };
+        const { insertedNotePosition } = await $client.request<{
+          insertedNotePosition: { noteId: string };
         }>(INSERT_FLOW_NOTE_POSITION_WITH_CONTENT, {
           object: {
             flow_id: newFlowId,
@@ -134,7 +136,7 @@ export const copyFlowNotes = async ({
         });
         newNoteIdByOriginalNoteId.set(
           originalNoteId,
-          insert_flow_note_positions_one.note_id,
+          insertedNotePosition.noteId,
         );
       },
     ),

@@ -52,7 +52,7 @@ beforeEach(() => {
     graphql.mutation("CreateFlowNotePosition", ({ variables }) => {
       createFlowNote(variables.object);
       return HttpResponse.json({
-        data: { insert_flow_note_positions_one: { id: "new-id" } },
+        data: { insertedNotePosition: { id: "new-id" } },
       });
     }),
     graphql.mutation("UpdateFlowNoteContent", ({ variables }) => {

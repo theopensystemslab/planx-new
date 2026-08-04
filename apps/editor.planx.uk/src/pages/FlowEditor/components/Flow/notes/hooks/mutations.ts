@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const CREATE_FLOW_NOTE_POSITION = gql`
   mutation CreateFlowNotePosition($object: flow_note_positions_insert_input!) {
-    insert_flow_note_positions_one(object: $object) {
+    insertedNotePosition: insert_flow_note_positions_one(object: $object) {
       id
     }
   }

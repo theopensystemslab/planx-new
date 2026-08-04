@@ -33,18 +33,18 @@ describe("repositionNotesForDeletedNodes", () => {
       graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_note_positions: [
+            flowNotePositions: [
               {
                 id: "note-attached",
-                node_id: "deleted-node",
+                nodeId: "deleted-node",
                 placement: null,
-                created_by: 42,
+                createdBy: 42,
               },
               {
                 id: "note-other-author",
-                node_id: "deleted-node",
+                nodeId: "deleted-node",
                 placement: null,
-                created_by: 999,
+                createdBy: 999,
               },
             ],
           },
@@ -81,12 +81,12 @@ describe("repositionNotesForDeletedNodes", () => {
       graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_note_positions: [
+            flowNotePositions: [
               {
                 id: "note-after-deleted",
-                node_id: null,
+                nodeId: null,
                 placement: { parent: "deleted-node" },
-                created_by: 42,
+                createdBy: 42,
               },
             ],
           },
@@ -130,15 +130,15 @@ describe("repositionNotesForDeletedNodes", () => {
       graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_note_positions: [
+            flowNotePositions: [
               {
                 id: "note-leading",
-                node_id: null,
+                nodeId: null,
                 placement: {
                   parent: "parent-container",
                   before: "deleted-node",
                 },
-                created_by: 42,
+                createdBy: 42,
               },
             ],
           },
@@ -181,12 +181,12 @@ describe("repositionNotesForDeletedNodes", () => {
       graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_note_positions: [
+            flowNotePositions: [
               {
                 id: "note-orphaned",
-                node_id: null,
+                nodeId: null,
                 placement: { parent: "child" },
-                created_by: 42,
+                createdBy: 42,
               },
             ],
           },
@@ -216,7 +216,7 @@ describe("repositionNotesForDeletedNodes", () => {
 
     server.use(
       graphql.query("GetFlowNotePositionsForReposition", () =>
-        HttpResponse.json({ data: { flow_note_positions: [] } }),
+        HttpResponse.json({ data: { flowNotePositions: [] } }),
       ),
       graphql.mutation("DeleteFlowNotePositions", () => {
         mutationCalled = true;
@@ -240,18 +240,18 @@ describe("repositionNotesForMovedNode", () => {
       graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_note_positions: [
+            flowNotePositions: [
               {
                 id: "note-before-moved",
-                node_id: null,
+                nodeId: null,
                 placement: { parent: "old-parent", before: "moved-node" },
-                created_by: 42,
+                createdBy: 42,
               },
               {
                 id: "note-elsewhere",
-                node_id: null,
+                nodeId: null,
                 placement: { parent: "old-parent", before: "some-other-node" },
-                created_by: 42,
+                createdBy: 42,
               },
             ],
           },
