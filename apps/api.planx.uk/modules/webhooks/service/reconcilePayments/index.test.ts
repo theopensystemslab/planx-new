@@ -1,8 +1,10 @@
+import { subHours } from "date-fns";
 import nock from "nock";
 import supertest from "supertest";
 
 import app from "../../../../server.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
+import { GRACE_PERIOD_HOURS } from "./index.js";
 
 const mockSend = vi.fn();
 const mockSlackNotify = vi.fn().mockImplementation(() => ({ send: mockSend }));
@@ -20,10 +22,12 @@ const buildSession = ({
   sessionId,
   paymentId,
   status,
+  createdAt = subHours(new Date(), GRACE_PERIOD_HOURS + 1).toISOString(),
 }: {
   sessionId: string;
   paymentId: string;
   status: string;
+  createdAt?: string;
 }) => ({
   sessionId,
   flowId: "7cd1c4b4-4229-424f-8d04-c9fdc958ef4e",
@@ -31,7 +35,7 @@ const buildSession = ({
     name: "Apply for a lawful development certificate",
     team: { slug: "southwark", name: "Southwark" },
   },
-  paymentStatus: [{ paymentId, status, amount: 25700 }],
+  paymentStatus: [{ paymentId, status, amount: 25700, createdAt }],
 });
 
 const mockSessions = (sessions: ReturnType<typeof buildSession>[]) =>
@@ -92,6 +96,26 @@ describe("Payment reconciliation webhook", () => {
         text: expect.stringMatching(/abc-123.*£257\.00.*Southwark/),
       }),
     );
+  });
+
+  it("ignores a session still within the grace period, even if already recorded as paid", async () => {
+    mockSessions([
+      buildSession({
+        sessionId: "just-paid",
+        paymentId: "pay_abc",
+        status: "success",
+        createdAt: subHours(new Date(), GRACE_PERIOD_HOURS - 1).toISOString(),
+      }),
+    ]);
+
+    await post(ENDPOINT)
+      .set(AUTH)
+      .expect(200)
+      .then((response) =>
+        expect(response.body).toMatchObject({ checked: 0, unsubmitted: 0 }),
+      );
+
+    expect(mockSend).not.toHaveBeenCalled();
   });
 
   it("ignores a session which GOV.UK Pay reports as unpaid", async () => {

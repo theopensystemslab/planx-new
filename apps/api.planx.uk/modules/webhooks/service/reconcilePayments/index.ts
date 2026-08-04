@@ -10,10 +10,14 @@ import type { PaymentCandidate, ReconcilePaymentsResponse } from "./types.js";
 /**
  * How far back to look for payments which never resolved
  * Payments older than this are assumed to have already been investigated
- *
- * Same pattern as daily_failed_submissions - stops repeated alerts for previous failures
  */
 export const LOOKBACK_HOURS = 24;
+
+/**
+ * Payments more recent than this are ignored, so we don't interfere with one
+ * still being processed by the frontend (as per GovPay recommendations)
+ */
+export const GRACE_PERIOD_HOURS = 3;
 
 /**
  * Statuses where GOV.UK Pay took no money, so there is nothing to mop up
@@ -33,15 +37,18 @@ interface GetUnreconciledSessions {
       paymentId: string;
       status: string;
       amount: number;
+      createdAt: string;
     }[];
   }[];
 }
 
 /**
- * Sessions which began a payment but have never been submitted
+ * Sessions which began a payment but have never been submitted, excluding any
+ * whose most recent payment activity is still within the grace period
  */
 const getCandidates = async (): Promise<PaymentCandidate[]> => {
   const since = subHours(new Date(), LOOKBACK_HOURS).toISOString();
+  const gracePeriodStart = subHours(new Date(), GRACE_PERIOD_HOURS);
 
   const { sessions } = await $api.client.request<GetUnreconciledSessions>(
     gql`
@@ -69,6 +76,7 @@ const getCandidates = async (): Promise<PaymentCandidate[]> => {
             paymentId: payment_id
             status
             amount
+            createdAt: created_at
           }
         }
       }
@@ -76,19 +84,23 @@ const getCandidates = async (): Promise<PaymentCandidate[]> => {
     { since },
   );
 
-  return sessions.map(({ sessionId, flowId, flow, paymentStatus }) => {
+  return sessions.flatMap(({ sessionId, flowId, flow, paymentStatus }) => {
     const latest = paymentStatus[0]!;
 
-    return {
-      sessionId,
-      flowId,
-      flowName: flow.name,
-      teamSlug: flow.team.slug,
-      teamName: flow.team.name,
-      paymentId: latest.paymentId,
-      status: latest.status,
-      amount: latest.amount,
-    };
+    if (new Date(latest.createdAt) > gracePeriodStart) return [];
+
+    return [
+      {
+        sessionId,
+        flowId,
+        flowName: flow.name,
+        teamSlug: flow.team.slug,
+        teamName: flow.team.name,
+        paymentId: latest.paymentId,
+        status: latest.status,
+        amount: latest.amount,
+      },
+    ];
   });
 };
 
