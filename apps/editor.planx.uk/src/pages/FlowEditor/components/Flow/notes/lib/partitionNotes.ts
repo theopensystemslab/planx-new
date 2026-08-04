@@ -15,15 +15,17 @@ export const placementKey = (parent: string, before?: string): string =>
  * A note is a clone when its `contentId` (the shared `flow_note_content` row) is referenced by more than one position
  */
 export const getClonedNoteContentIds = (notes: FlowNote[]): Set<string> => {
-  const counts = new Map<string, number>();
+  const seen = new Set<string>();
+  const clonedContentIds = new Set<string>();
+
   for (const note of notes) {
-    counts.set(note.contentId, (counts.get(note.contentId) ?? 0) + 1);
+    if (seen.has(note.contentId)) {
+      clonedContentIds.add(note.contentId);
+    } else {
+      seen.add(note.contentId);
+    }
   }
 
-  const clonedContentIds = new Set<string>();
-  for (const [contentId, count] of counts) {
-    if (count > 1) clonedContentIds.add(contentId);
-  }
   return clonedContentIds;
 };
 
