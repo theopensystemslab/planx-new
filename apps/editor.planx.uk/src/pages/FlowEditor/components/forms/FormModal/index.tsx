@@ -225,10 +225,7 @@ const FormModal: React.FC<FormModalProps> = ({
 
   const showDeleteButton = id && !isDisabledTemplatedNode;
 
-  const showMakeUniqueButton = useMemo(
-    () => id && isClone(id) && !isDisabledTemplatedNode,
-    [isClone, id, isDisabledTemplatedNode],
-  );
+  const showMakeUniqueButton = id && isClone(id) && !isDisabledTemplatedNode;
 
   const disabled = isTemplatedFrom
     ? !canUserEditTemplatedNode
