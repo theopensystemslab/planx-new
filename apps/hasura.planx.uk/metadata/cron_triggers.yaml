@@ -16,6 +16,15 @@
     - name: authorization
       value_from_env: HASURA_PLANX_API_KEY
   comment: 'Checks for any failed submissions and logs them to #planx-notifications-internal to investigate further'
+- name: reconcile_payments
+  webhook: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/reconcile-payments'
+  schedule: '*/30 * * * *'
+  include_in_metadata: true
+  payload: {}
+  headers:
+    - name: authorization
+      value_from_env: HASURA_PLANX_API_KEY
+  comment: 'Re-checks GOV.UK Pay for sessions which began a payment but were never submitted, and logs any paid-but-unsubmitted sessions to #planx-notifications-internal'
 - name: sanitise_application_data
   webhook: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/sanitise-application-data'
   schedule: 0 2 * * *
