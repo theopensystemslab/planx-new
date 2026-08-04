@@ -7,7 +7,9 @@ export interface Submission {
     | "Submit to BOPS"
     | "Submit to Uniform"
     | "Send to email"
-    | "Upload to AWS S3";
+    | "Upload to AWS S3"
+    | "Upload to AWS S3 (no notification)"
+    | "Submit to Idox Nexus";
   status?:
     | "Success"
     | "Failed (500)" // Hasura scheduled event status codes

@@ -43,6 +43,8 @@ export const ResubmitButton = (params: RenderCellParams) => {
       "Submit to Uniform": "uniform",
       "Send to email": "email",
       "Upload to AWS S3": "s3",
+      "Upload to AWS S3 (no notification)": "fme",
+      "Submit to Idox Nexus": "idox",
     };
 
     const destination =
