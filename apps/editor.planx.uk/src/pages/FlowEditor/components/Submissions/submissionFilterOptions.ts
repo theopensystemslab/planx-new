@@ -6,6 +6,8 @@ export const submissionEventTypes: Array<Submission["eventType"]> = [
   "Submit to BOPS",
   "Submit to Uniform",
   "Upload to AWS S3",
+  "Upload to AWS S3 (no notification)",
+  "Submit to Idox Nexus",
 ];
 
 export const submissionStatusOptions: Required<Array<Submission["status"]>> = [
