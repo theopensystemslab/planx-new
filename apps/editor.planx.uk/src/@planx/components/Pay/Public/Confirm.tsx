@@ -32,6 +32,7 @@ export interface Props extends Omit<Pay, "title" | "fn" | "govPayMetadata"> {
   buttonTitle?: string;
   onConfirm: () => void;
   error?: string;
+  warning?: string;
   hideFeeBanner?: boolean;
 }
 
@@ -94,6 +95,9 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
         }
         openLinksOnNewTab
       />
+      {props.warning && (
+        <ErrorSummary format="warning" heading={props.warning} />
+      )}
       <Button
         variant="contained"
         color="primary"
