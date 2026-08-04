@@ -26,7 +26,6 @@ const Node: React.FC<any> = (props) => {
 
   const allProps = {
     ...props,
-    ...node,
     wasVisited,
     tags: node.data?.tags,
     isTemplatedNode: node.data?.isTemplatedNode,
@@ -160,7 +159,13 @@ const Node: React.FC<any> = (props) => {
     case TYPES.ResponsiveQuestion:
     case TYPES.Checklist:
     case TYPES.ResponsiveChecklist:
-      return <Checklist {...allProps} text={node?.data?.text ?? "[Empty]"} />;
+      return (
+        <Checklist
+          {...allProps}
+          {...node}
+          text={node?.data?.text ?? "[Empty]"}
+        />
+      );
     case TYPES.AddressInput:
       return <Question {...allProps} text={node?.data?.title ?? "Address"} />;
     case TYPES.ContactInput:
