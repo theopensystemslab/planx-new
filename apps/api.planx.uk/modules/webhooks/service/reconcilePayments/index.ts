@@ -169,7 +169,15 @@ export const reconcilePayments =
       }
     }
 
-    if (unsubmitted.length) await postToSlack(formatSlackMessage(unsubmitted));
+    if (unsubmitted.length) {
+      try {
+        await postToSlack(formatSlackMessage(unsubmitted));
+      } catch (error) {
+        errors.push(
+          `Slack notification failed: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
 
     return {
       message: `Checked ${checked} payment(s), found ${unsubmitted.length} paid but unsubmitted session(s)`,

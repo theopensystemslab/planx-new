@@ -218,6 +218,27 @@ describe("Payment reconciliation webhook", () => {
     );
   });
 
+  it("still reports success if the reconciliation worked but Slack notification failed", async () => {
+    mockSessions([
+      buildSession({
+        sessionId: "abc-123",
+        paymentId: "pay_abc",
+        status: "success",
+      }),
+    ]);
+    mockSend.mockRejectedValueOnce(new Error("Slack is down"));
+
+    await post(ENDPOINT)
+      .set(AUTH)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toMatchObject({ checked: 0, unsubmitted: 1 });
+        expect(response.body.errors).toEqual([
+          "Slack notification failed: Slack is down",
+        ]);
+      });
+  });
+
   it("does not notify Slack outside of production", async () => {
     vi.stubEnv("APP_ENVIRONMENT", "staging");
 
