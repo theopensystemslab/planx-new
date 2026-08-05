@@ -8,6 +8,8 @@
 \include write/team_integrations.sql
 \include write/team_themes.sql
 \include write/team_settings.sql
+\include write/flow_note_placements.sql
+\include write/flow_note_content.sql
 
 -- Optional tables
 -- \include write/feedback.sql

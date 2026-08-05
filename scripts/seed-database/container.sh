@@ -21,6 +21,8 @@ touch '/tmp/sync.sql'
 tables=(
   # Mandatory tables
   flows 
+  flow_note_positions
+  flow_note_content
   users 
   teams 
   team_members 
