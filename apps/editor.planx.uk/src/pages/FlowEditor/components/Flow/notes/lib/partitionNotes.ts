@@ -12,6 +12,24 @@ export const placementKey = (parent: string, before?: string): string =>
   `${parent}::${before ?? ""}`;
 
 /**
+ * A note is a clone when its `contentId` (the shared `flow_note_content` row) is referenced by more than one position
+ */
+export const getClonedNoteContentIds = (notes: FlowNote[]): Set<string> => {
+  const seen = new Set<string>();
+  const clonedContentIds = new Set<string>();
+
+  for (const note of notes) {
+    if (seen.has(note.contentId)) {
+      clonedContentIds.add(note.contentId);
+    } else {
+      seen.add(note.contentId);
+    }
+  }
+
+  return clonedContentIds;
+};
+
+/**
  * Notes render at two different kinds of location, so the flow renderer needs two different lookups
  * attached notes are keyed by the nodeId they're pinned to
  * positioned notes sit in a gap between nodes and must be keyed by the resolved render coordinate instead (container, before)

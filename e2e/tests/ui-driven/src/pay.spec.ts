@@ -91,6 +91,55 @@ test.describe("Gov Pay integration @regression", () => {
     await expect(page.getByText(paymentId!)).toBeVisible();
   });
 
+  // On redirection back from GOV.UK Pay we need to check payment status, in order
+  // to proceed to the Send node. This test checks that a failure in this request
+  // still gives the applicant a way to proceed
+  test("recovering from an error fetching the payment status", async ({
+    page,
+  }) => {
+    await setGovPayReferrer(page);
+
+    const sessionId = await navigateToPayComponent(page, context);
+    context.sessionIds!.push(sessionId);
+
+    // Simulate a failure of the payment status request
+    // This could be an API 5xx, a dropped connection, or a slow GOV.UK Pay response
+    await failNextPaymentStatusFetch(page, context);
+
+    await page.getByText(payButtonText).click();
+    await fillGovUkCardDetails({
+      page,
+      cardNumber: cards.successful_card_number,
+    });
+    await submitCardDetails(page);
+
+    // The applicant has paid, but we could not read the status
+    await expect(
+      page.getByText(/We could not check the status of your payment/),
+    ).toBeVisible();
+    await expect(page.getByTestId("delayed-loading-indicator")).toBeHidden();
+
+    // We do not send them back to GOV.UK Pay
+    await expect(page.getByText("Retry payment")).toBeHidden();
+
+    // Checking again succeeds, and the user proceeds to the Send component
+    await page.getByText("Check payment status").click();
+    await expect(page.getByText("Form sent")).toBeVisible();
+
+    const session = await findSession({ adminGQLClient, sessionId });
+    const paymentId = session?.data?.govUkPayment?.payment_id;
+    expect(paymentId).toBeTruthy();
+
+    await expect(page.getByText(paymentId!)).toBeVisible();
+    expect(
+      await hasPaymentStatus({
+        status: "success",
+        paymentId: paymentId!,
+        adminGQLClient,
+      }),
+    ).toBe(true);
+  });
+
   test("a retry attempt for a failed GOV.UK payment", async ({ page }) => {
     await setGovPayReferrer(page);
 
@@ -524,6 +573,29 @@ async function resumeSessionViaMagicLink({
   await page.goto(`${previewURL}&sessionId=${sessionId}`);
   await page.locator("#email").fill(context.user.email);
   await page.getByTestId("continue-button").click();
+}
+
+/**
+ * Fail the next GET /pay/:team/:paymentId request with a 500
+ *
+ * Only the first status fetch is failed, so that a recovering user can still
+ * complete their payment on a subsequent attempt
+ */
+async function failNextPaymentStatusFetch(page: Page, context: TestContext) {
+  let hasFailed = false;
+
+  await page.route(`**/pay/${context.team!.slug!}/*`, async (route) => {
+    // POST /pay/:team initiates a payment - only the status fetch should fail
+    const isStatusFetch = route.request().method() === "GET";
+    if (hasFailed || !isStatusFetch) return route.continue();
+
+    hasFailed = true;
+    await route.fulfill({
+      status: 500,
+      contentType: "application/json",
+      body: JSON.stringify({ error: "Internal server error" }),
+    });
+  });
 }
 
 /**

@@ -1,14 +1,19 @@
 import type { FlowNote, NotePlacement } from "hooks/data/useFlowNotes";
 import { describe, expect, it } from "vitest";
 
-import { partitionNotes, placementKey } from "./partitionNotes";
+import {
+  getClonedNoteContentIds,
+  partitionNotes,
+  placementKey,
+} from "./partitionNotes";
 
 let noteCounter = 0;
 
 const baseNote = () => {
   noteCounter += 1;
   return {
-    id: `note-${noteCounter}`,
+    positionId: `note-${noteCounter}`,
+    contentId: `note-content-${noteCounter}`,
     flowId: "flow-1",
     text: `Note ${noteCounter}`,
     color: "#fffdb0",
@@ -126,5 +131,37 @@ describe("partitionNotes", () => {
     const { positioned } = partitionNotes([note], flow);
 
     expect(positioned.get(placementKey("_root", "nodeB"))).toEqual([note]);
+  });
+});
+
+describe("getClonedNoteContentIds", () => {
+  it("returns an empty set when no notes share a contentId", () => {
+    const noteA = makeAttachedNote("node-a");
+    const noteB = makeAttachedNote("node-b");
+
+    expect(getClonedNoteContentIds([noteA, noteB]).size).toBe(0);
+  });
+
+  it("includes a contentId shared by more than one note", () => {
+    const original = makeAttachedNote("node-a");
+    const clone = {
+      ...makePositionedNote({ parent: "node-b" }),
+      contentId: original.contentId,
+    };
+
+    const clonedContentIds = getClonedNoteContentIds([original, clone]);
+
+    expect(clonedContentIds.has(original.contentId)).toBe(true);
+    expect(clonedContentIds.size).toBe(1);
+  });
+
+  it("does not include a contentId that only appears once", () => {
+    const original = makeAttachedNote("node-a");
+    const other = makeAttachedNote("node-b");
+
+    const clonedContentIds = getClonedNoteContentIds([original, other]);
+
+    expect(clonedContentIds.has(original.contentId)).toBe(false);
+    expect(clonedContentIds.has(other.contentId)).toBe(false);
   });
 });

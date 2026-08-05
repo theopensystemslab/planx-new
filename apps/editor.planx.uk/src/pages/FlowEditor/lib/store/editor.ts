@@ -10,11 +10,11 @@ import {
   ComponentType as TYPES,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
-import type { Relationships } from "@planx/graph";
+import type { Graph, Relationships } from "@planx/graph";
 import {
   add,
-  buildGraphFromNodes,
   clone,
+  insertGraph,
   isClone,
   makeUnique,
   move,
@@ -32,6 +32,10 @@ import type {
   ContextMenuPosition,
   ContextMenuSource,
 } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import {
+  repositionNotesForDeletedNodes,
+  repositionNotesForMovedNode,
+} from "pages/FlowEditor/components/Flow/notes/lib/repositionNotes";
 import type { Doc } from "sharedb/lib/client";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
@@ -41,6 +45,7 @@ import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
 import type { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
+import { stripTemplatedNodeProps } from "./utils/stripTemplatedNodeProps";
 
 let doc: Doc;
 
@@ -647,11 +652,20 @@ export const editorStore: StateCreator<
     toParent = undefined,
   ) {
     try {
-      const [, ops] = move(id, parent as unknown as string, {
+      const [after, ops] = move(id, parent as unknown as string, {
         toParent,
         toBefore,
       })(get().flow);
       send(ops);
+
+      if (parent) {
+        const oldParent = parent as unknown as string;
+        repositionNotesForMovedNode(
+          id,
+          oldParent,
+          after[oldParent]?.edges?.[0],
+        );
+      }
     } catch (err: any) {
       alert(err.message);
     }
@@ -702,60 +716,41 @@ export const editorStore: StateCreator<
       }: CopiedPayload = JSON.parse(copiedString);
       if (!copiedNodes || copiedNodes.length === 0) return;
 
-      // Keep a map of originalId: newId allowing us to insert unique nodes and maintain our edge relationships
-      const idMap = new Map<string, string>();
-      const newNodes: { [id: string]: Store.Node } = {};
-      let newRootId: string | null = null;
+      // If copied from a source template and now pasting to a non-source template, remove templated node props
+      const { isTemplate: pastingToTemplate } = get();
+      const stripTemplateProps = copiedFromTemplate && !pastingToTemplate;
 
-      // 1. First pass: Create new nodes and build the ID map
+      /**
+       * Generate a full graph with _root
+       * insertGraph() expects a full graph structure, but will strip this out before inserting
+       */
+      const source: Graph = { [ROOT_NODE_KEY]: { edges: [rootId] } };
       copiedNodes.forEach(({ originalId, nodeData }) => {
-        const newId = uniqueId();
-        idMap.set(originalId, newId);
-
-        // If copied from a source template and now pasting to a non-source template, remove templated node props
-        const { isTemplate: pastingToTemplate } = get();
-        if (copiedFromTemplate && !pastingToTemplate) {
-          delete nodeData.data?.["isTemplatedNode"];
-          delete nodeData.data?.["templatedNodeInstructions"];
-          delete nodeData.data?.["areTemplatedNodeInstructionsRequired"];
-        }
-
-        newNodes[newId] = structuredClone(nodeData);
-
-        if (originalId === rootId) {
-          newRootId = newId;
-        }
+        source[originalId] = stripTemplateProps
+          ? stripTemplatedNodeProps(nodeData)
+          : nodeData;
       });
 
-      if (!newRootId) {
+      if (!source[rootId]) {
         throw new Error("Root node for pasting could not be found.");
       }
 
-      // 2. Second pass: Re-link edges using the ID map
-      Object.values(newNodes).forEach((node) => {
-        if (node.edges && node.edges.length > 0) {
-          node.edges = node.edges
-            .map((oldEdgeId) => idMap.get(oldEdgeId))
-            .filter((id): id is string => !!id);
-        }
-      });
-
-      // 3. Rebuild the graph structure from our flat node list
-      const { id, children, ...nodeData } = buildGraphFromNodes(
-        newRootId,
-        newNodes,
-      );
-
-      // 4. Finally, insert the original pasted node, and all its nested children
-      get().addNode({ id, ...nodeData }, { parent, before, children });
+      const [, ops] = insertGraph(source, { parent, before })(get().flow);
+      send(ops);
     } catch (err) {
       alert((err as Error).message);
     }
   },
 
   removeNode: (id, parent) => {
-    const [, ops] = remove(id, parent)(get().flow);
+    const before = get().flow;
+    const [after, ops] = remove(id, parent)(before);
     send(ops);
+
+    const deletedNodeIds = Object.keys(before).filter((k) => !after[k]);
+    if (deletedNodeIds.length > 0) {
+      repositionNotesForDeletedNodes(deletedNodeIds, before, after);
+    }
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {

@@ -1,6 +1,7 @@
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 import HelpTextIcon from "@mui/icons-material/Help";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
@@ -9,6 +10,8 @@ import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
+import { useNavigate, useParams } from "@tanstack/react-router";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -18,7 +21,15 @@ import * as React from "react";
 import CloneIcon from "ui/icons/Clone";
 import CopyIcon from "ui/icons/Copy";
 
-export type ContextMenuSource = "node" | "hanger" | null;
+import { useClonedFlowNoteId } from "../notes/hooks/useClonedFlowNoteId";
+import { useCloneFlowNote } from "../notes/hooks/useCloneFlowNote";
+import { useCopiedFlowNote } from "../notes/hooks/useCopiedFlowNote";
+import { useCopyFlowNote } from "../notes/hooks/useCopyFlowNote";
+import { usePasteFlowNoteClone } from "../notes/hooks/usePasteFlowNoteClone";
+import { usePasteFlowNoteCopy } from "../notes/hooks/usePasteFlowNoteCopy";
+import { resolveNotePlacement } from "../notes/lib/notePlacement";
+
+export type ContextMenuSource = "node" | "hanger" | "positioned-note" | null;
 
 interface ContextMenuAction {
   id: string;
@@ -37,7 +48,7 @@ export const ContextMenu: React.FC = () => {
   const [
     source,
     position,
-    { self, parent = ROOT_NODE_KEY, before = undefined },
+    { self, parent = ROOT_NODE_KEY, before = undefined, contentId },
     closeMenu,
     clonedNodeId,
     copiedNode,
@@ -79,6 +90,19 @@ export const ContextMenu: React.FC = () => {
     state.getCopiedHelpText(),
     state.pasteHelpText,
   ]);
+
+  const navigate = useNavigate();
+  const { team, flow: flowSlug } = useParams({
+    from: "/_authenticated/app/$team/$flow",
+  });
+  const { cloneFlowNote } = useCloneFlowNote();
+  const { getClonedFlowNoteId } = useClonedFlowNoteId();
+  const { getCopiedFlowNote } = useCopiedFlowNote();
+  const clonedFlowNoteId = getClonedFlowNoteId();
+  const copiedFlowNote = getCopiedFlowNote();
+  const { copyFlowNote } = useCopyFlowNote();
+  const { pasteFlowNoteClone } = usePasteFlowNoteClone();
+  const { pasteFlowNoteCopy } = usePasteFlowNoteCopy();
 
   const handleCopy = () => {
     if (!self)
@@ -126,6 +150,45 @@ export const ContextMenu: React.FC = () => {
     closeMenu();
   };
 
+  const handleAttachNote = () => {
+    if (!self)
+      return alert(
+        "Unable to attach note, missing value for relationship 'self' (nodeId)",
+      );
+
+    navigate({
+      to: "/app/$team/$flow/note/add",
+      params: { team, flow: flowSlug },
+      search: { nodeId: self },
+    });
+    closeMenu();
+  };
+
+  const handleAddNote = () => {
+    navigate({
+      to: "/app/$team/$flow/note/add",
+      params: { team, flow: flowSlug },
+      search: { parent, before },
+    });
+    closeMenu();
+  };
+
+  const handleCloneNote = () => {
+    if (!contentId)
+      return alert("Unable to clone note, missing value for 'contentId'");
+
+    cloneFlowNote(contentId);
+    closeMenu();
+  };
+
+  const handleCopyNote = () => {
+    if (!contentId)
+      return alert("Unable to copy note, missing value for 'contentId'");
+
+    copyFlowNote(contentId);
+    closeMenu();
+  };
+
   const handlePaste = () => {
     if (copiedNode) {
       pasteNode(parent, before);
@@ -143,6 +206,20 @@ export const ContextMenu: React.FC = () => {
     }
   };
 
+  const handlePasteNote = () => {
+    const placement = resolveNotePlacement(flow, parent, before);
+
+    if (clonedFlowNoteId) {
+      pasteFlowNoteClone({ placement });
+      return closeMenu();
+    }
+
+    if (copiedFlowNote) {
+      pasteFlowNoteCopy({ placement });
+      return closeMenu();
+    }
+  };
+
   const anchorPosition = position
     ? { top: position.mouseY, left: position.mouseX }
     : undefined;
@@ -153,6 +230,7 @@ export const ContextMenu: React.FC = () => {
     const hasClonedNode = Boolean(clonedNodeId && getNode(clonedNodeId));
     const hasCutNode = Boolean(cutPayload && getNode(cutPayload.rootId));
     const isPasteEnabled = hasCopiedNode || hasClonedNode || hasCutNode;
+    const isNotePasteEnabled = Boolean(clonedFlowNoteId || copiedFlowNote);
 
     // In templated flows, disable the copy/clone/cut context menus unless within a templated folder
     //   Since "hangers" are hidden in templated flows, isPasteEnabled doesn't need to be aware of isTemplatedFrom
@@ -190,6 +268,17 @@ export const ContextMenu: React.FC = () => {
       const hasCopiedHelper = Boolean(getCopiedHelpText);
 
       const actions: ContextMenuAction[] = [
+        ...(hasFeatureFlag("NOTES")
+          ? [
+              {
+                id: "attach-note",
+                label: "Add note",
+                icon: <StickyNote2Icon fontSize="small" />,
+                disabled: false,
+                onClick: handleAttachNote,
+              },
+            ]
+          : []),
         {
           id: "copy",
           label: "Copy",
@@ -242,12 +331,49 @@ export const ContextMenu: React.FC = () => {
 
     if (source === "hanger") {
       return [
+        ...(hasFeatureFlag("NOTES")
+          ? [
+              {
+                id: "add-note",
+                label: "Add note",
+                icon: <StickyNote2Icon fontSize="small" />,
+                disabled: false,
+                onClick: handleAddNote,
+              },
+            ]
+          : []),
         {
           id: "paste",
           label: "Paste",
           icon: <ContentPaste fontSize="small" />,
           disabled: !isPasteEnabled,
           onClick: handlePaste,
+        },
+        {
+          id: "paste-note",
+          label: "Paste note",
+          icon: <ContentPaste fontSize="small" />,
+          disabled: !isNotePasteEnabled,
+          onClick: handlePasteNote,
+        },
+      ];
+    }
+
+    if (source === "positioned-note") {
+      return [
+        {
+          id: "clone-note",
+          label: "Clone",
+          icon: <CloneIcon fontSize="small" />,
+          disabled: false,
+          onClick: handleCloneNote,
+        },
+        {
+          id: "copy-note",
+          label: "Copy",
+          icon: <CopyIcon fontSize="small" />,
+          disabled: false,
+          onClick: handleCopyNote,
         },
       ];
     }

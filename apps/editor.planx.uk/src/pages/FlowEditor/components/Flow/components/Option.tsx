@@ -3,6 +3,7 @@ import { flatFlags } from "@opensystemslab/planx-core/types";
 import { Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
+import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
@@ -20,6 +21,17 @@ const Option: React.FC<any> = (props) => {
 
   // The folder containing the Question/Checklist this Option belongs to -
   const containerFolderId = getParentId(props.containerFolderId);
+
+  const parent = getParentId(props.parent);
+
+  const handleContextMenu = useContextMenu({
+    source: "node",
+    relationships: {
+      parent,
+      before: props.id,
+      self: props.id,
+    },
+  });
 
   let flags: Flag[] | undefined;
 
@@ -43,42 +55,44 @@ const Option: React.FC<any> = (props) => {
   return (
     <li
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
-      onContextMenu={(e) => e.preventDefault()}
     >
-      <Link
-        to={
-          containerFolderId
-            ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
-            : "/app/$team/$flow/nodes/$id/edit"
-        }
-        params={{
-          team,
-          flow,
-          id: props.parent,
-          ...(containerFolderId && { parent: containerFolderId }),
-        }}
-        hash={props.id}
-        preload={false}
-      >
-        {props.data?.img && (
-          <Thumbnail
-            imageSource={props.data?.img}
-            imageAltText={props.data.text}
-          />
-        )}
-        {flags && flags.length > 0 ? (
-          flags.map((flag) => (
-            <FlagBand key={`${props.id}-${flag.value}`} flag={flag} />
-          ))
-        ) : (
-          <NoFlagBand />
-        )}
-        <div className="text">{props.data.text}</div>
-        {props.data?.val && (
-          <DataField value={props.data.val} variant="child" />
-        )}
-      </Link>
-      <AttachedNotes nodeId={props.id} />
+      <div className="card-wrapper">
+        <Link
+          to={
+            containerFolderId
+              ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
+              : "/app/$team/$flow/nodes/$id/edit"
+          }
+          params={{
+            team,
+            flow,
+            id: props.parent,
+            ...(containerFolderId && { parent: containerFolderId }),
+          }}
+          hash={props.id}
+          preload={false}
+          onContextMenu={handleContextMenu}
+        >
+          {props.data?.img && (
+            <Thumbnail
+              imageSource={props.data?.img}
+              imageAltText={props.data.text}
+            />
+          )}
+          {flags && flags.length > 0 ? (
+            flags.map((flag) => (
+              <FlagBand key={`${props.id}-${flag.value}`} flag={flag} />
+            ))
+          ) : (
+            <NoFlagBand />
+          )}
+          <div className="text">{props.data.text}</div>
+          {props.data?.val && (
+            <DataField value={props.data.val} variant="child" />
+          )}
+        </Link>
+        <AttachedNotes nodeId={props.id} />
+      </div>
       <ol className="decisions">
         {childNodes.map((child) => (
           <Node

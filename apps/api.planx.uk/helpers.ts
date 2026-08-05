@@ -421,19 +421,34 @@ const getChildren = (
 };
 
 /**
+ * Rename a single node id the same way `makeUniqueFlow` renames the flow it belongs to
+ * (replace last n characters), leaving `_root` and nullish ids untouched.
+ */
+function renameNodeId(nodeId: string, replaceValue: string): string;
+function renameNodeId(
+  nodeId: string | null | undefined,
+  replaceValue: string,
+): string | null | undefined;
+function renameNodeId(
+  nodeId: string | null | undefined,
+  replaceValue: string,
+): string | null | undefined {
+  if (!nodeId || nodeId === "_root") return nodeId;
+  return nodeId.slice(0, -replaceValue.length) + replaceValue;
+}
+
+/**
  * For a given flow, make it unique by renaming its' node ids (replace last n characters) while preserving its' content
  */
 const makeUniqueFlow = (
   flowData: Flow["data"],
   replaceValue: string,
 ): Flow["data"] => {
-  const charactersToReplace = replaceValue.length;
-
   Object.keys(flowData).forEach((node) => {
     // if this node has edges, rename them (includes _root.edges)
     if (flowData[node]["edges"]) {
-      const newEdges = flowData[node]["edges"]?.map(
-        (edge) => edge.slice(0, -charactersToReplace) + replaceValue,
+      const newEdges = flowData[node]["edges"]?.map((edge) =>
+        renameNodeId(edge, replaceValue),
       );
       delete flowData[node]["edges"];
       flowData[node]["edges"] = newEdges;
@@ -441,7 +456,7 @@ const makeUniqueFlow = (
 
     // rename this top-level node if it's not _root
     if (node !== "_root") {
-      const newNodeId = node.slice(0, -charactersToReplace) + replaceValue;
+      const newNodeId = renameNodeId(node, replaceValue);
       flowData[newNodeId] = flowData[node];
       delete flowData[node];
     }
@@ -478,4 +493,5 @@ export {
   getMostRecentPublishedFlowVersion,
   isLiveEnv,
   makeUniqueFlow,
+  renameNodeId,
 };
