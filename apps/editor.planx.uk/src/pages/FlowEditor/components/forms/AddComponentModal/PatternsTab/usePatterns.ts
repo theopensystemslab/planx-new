@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 
 import type {
   GetPatternDataQuery,
@@ -14,3 +14,17 @@ export const usePatternData = (id: string | null) =>
     variables: { id: id! },
     skip: !id,
   });
+
+export const useFetchPatternGraph = () => {
+  const [fetchPattern] = useLazyQuery<GetPatternDataQuery, GetPatternDataVars>(
+    GET_PATTERN_DATA,
+  );
+
+  return async (id: string) => {
+    const { data } = await fetchPattern({ variables: { id } }).catch(() => ({
+      data: undefined,
+    }));
+
+    return data?.pattern?.data ?? null;
+  };
+};

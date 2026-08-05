@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import Typography, { typographyClasses } from "@mui/material/Typography";
 import React from "react";
 import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -7,18 +7,25 @@ import type { Pattern } from "./queries";
 
 interface Props {
   pattern: Pattern;
-  selected: boolean;
-  onClick: () => void;
+  active: boolean;
+  onPreview: () => void;
+  onSelect: () => void;
 }
 
-export const PatternRow: React.FC<Props> = ({ pattern, selected, onClick }) => {
+export const PatternRow: React.FC<Props> = ({
+  pattern,
+  active,
+  onPreview,
+  onSelect,
+}) => {
   return (
     <Box
       component="button"
       type="button"
-      onClick={onClick}
+      onClick={onSelect}
+      onMouseEnter={onPreview}
+      onFocus={onPreview}
       data-testid={`pattern-${pattern.id}`}
-      aria-current={selected}
       sx={{
         display: "flex",
         alignItems: "center",
@@ -32,11 +39,12 @@ export const PatternRow: React.FC<Props> = ({ pattern, selected, onClick }) => {
         textAlign: "left",
         cursor: "pointer",
         border: 0,
-        borderLeft: "3px solid",
-        borderLeftColor: selected ? "info.main" : "transparent",
-        backgroundColor: selected ? "action.selected" : "transparent",
+        backgroundColor: active ? "action.hover" : "transparent",
         "&:hover": {
-          backgroundColor: selected ? "action.selected" : "action.hover",
+          backgroundColor: "action.hover",
+          [`& .${typographyClasses.root}`]: {
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
+          },
         },
         "&:focus-visible": focusStyle,
       }}
@@ -44,7 +52,7 @@ export const PatternRow: React.FC<Props> = ({ pattern, selected, onClick }) => {
       <Box sx={{ minWidth: 0 }}>
         <Typography
           variant="body2"
-          sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+          sx={{ fontWeight: active ? FONT_WEIGHT_SEMI_BOLD : "regular" }}
           noWrap
         >
           {pattern.name}
