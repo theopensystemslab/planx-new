@@ -1,7 +1,7 @@
 import Popover from "@mui/material/Popover";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { hasFeatureFlag } from "lib/featureFlags";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
@@ -55,6 +55,15 @@ const AddComponentModal: React.FC<Props> = ({
   const handleInsertPattern = (patternId: string) =>
     console.log(`Inserting pattern ${patternId}!`);
 
+  const handleSelectNote = useCallback(() => {
+    onClose();
+    navigate({
+      to: "/app/$team/$flow/note/add",
+      params: { team, flow },
+      search: { parent, before },
+    });
+  }, [navigate, team, flow, parent, before, onClose]);
+
   // Flip the popover above the hanger when there isn't room below it
   const rect = anchorEl?.getBoundingClientRect();
   const showBelow = !rect || window.innerHeight - rect.bottom >= 450;
@@ -92,10 +101,14 @@ const AddComponentModal: React.FC<Props> = ({
           activeTab={activeTab}
           onTabChange={setActiveTab}
           onComponentSelect={handleComponentSelect}
+          onSelectNote={hasFeatureFlag("NOTES") ? handleSelectNote : undefined}
           onInsertPattern={handleInsertPattern}
         />
       ) : (
-        <ComponentsTab onSelect={handleComponentSelect} />
+        <ComponentsTab
+          onSelect={handleComponentSelect}
+          onSelectNote={hasFeatureFlag("NOTES") ? handleSelectNote : undefined}
+        />
       )}
     </Popover>
   );

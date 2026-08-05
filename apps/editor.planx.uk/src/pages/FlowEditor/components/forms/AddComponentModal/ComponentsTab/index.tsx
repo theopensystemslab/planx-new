@@ -9,6 +9,7 @@ import { TabHeader } from "../TabHeader";
 import type { Category, ComponentItem } from "./componentData";
 import { ALL_CATEGORIES, ALL_ITEMS } from "./componentData";
 import { ComponentRow } from "./ComponentRow";
+import { NoteRow } from "./NoteRow";
 
 export const COMPONENT_LIST_WIDTH = 300;
 
@@ -27,9 +28,10 @@ export const componentListFrameSx = {
 
 interface Props {
   onSelect: (slug: string) => void;
+  onSelectNote?: () => void;
 }
 
-export const ComponentsTab: React.FC<Props> = ({ onSelect }) => {
+export const ComponentsTab: React.FC<Props> = ({ onSelect, onSelectNote }) => {
   const [searchedItems, setSearchedItems] = useState<ComponentItem[] | null>(
     null,
   );
@@ -66,6 +68,9 @@ export const ComponentsTab: React.FC<Props> = ({ onSelect }) => {
         />
       </TabHeader>
       <Box ref={listRef} sx={{ overflowY: "auto", pb: 2 }}>
+        {onSelectNote && (
+          <NoteRow onClick={onSelectNote} scrollContainerRef={listRef} />
+        )}
         {filteredCategories.length === 0 ? (
           <Typography color="textSecondary" variant="body2" sx={{ p: 2 }}>
             No components match your search.

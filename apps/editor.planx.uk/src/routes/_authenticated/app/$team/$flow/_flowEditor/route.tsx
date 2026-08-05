@@ -1,7 +1,10 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
+import { hasFeatureFlag } from "lib/featureFlags";
 import FlowEditor from "pages/FlowEditor";
+import { FlowNotesProvider } from "pages/FlowEditor/components/Flow/notes/FlowNotesContext";
 import { RecentFlowsProvider } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
+import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 export const Route = createFileRoute(
@@ -12,13 +15,21 @@ export const Route = createFileRoute(
 
 /**
  * Ensure a single, persistent, instance of FlowEditor is mounted
+ *
+ * FlowNotesProvider wraps FlowEditor and the Outlet so that note routes can also read live note data via useFlowNotesContext()
  */
 function FlowEditorLayout() {
+  const NotesWrapper = hasFeatureFlag("NOTES")
+    ? FlowNotesProvider
+    : React.Fragment;
+
   return (
     <RecentFlowsProvider>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <FlowEditor />
-        <Outlet />
+        <NotesWrapper>
+          <FlowEditor />
+          <Outlet />
+        </NotesWrapper>
       </ErrorBoundary>
     </RecentFlowsProvider>
   );

@@ -32,6 +32,10 @@ import type {
   ContextMenuPosition,
   ContextMenuSource,
 } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import {
+  repositionNotesForDeletedNodes,
+  repositionNotesForMovedNode,
+} from "pages/FlowEditor/components/Flow/notes/lib/repositionNotes";
 import type { Doc } from "sharedb/lib/client";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
@@ -647,11 +651,20 @@ export const editorStore: StateCreator<
     toParent = undefined,
   ) {
     try {
-      const [, ops] = move(id, parent as unknown as string, {
+      const [after, ops] = move(id, parent as unknown as string, {
         toParent,
         toBefore,
       })(get().flow);
       send(ops);
+
+      if (parent) {
+        const oldParent = parent as unknown as string;
+        repositionNotesForMovedNode(
+          id,
+          oldParent,
+          after[oldParent]?.edges?.[0],
+        );
+      }
     } catch (err: any) {
       alert(err.message);
     }
@@ -754,8 +767,14 @@ export const editorStore: StateCreator<
   },
 
   removeNode: (id, parent) => {
-    const [, ops] = remove(id, parent)(get().flow);
+    const before = get().flow;
+    const [after, ops] = remove(id, parent)(before);
     send(ops);
+
+    const deletedNodeIds = Object.keys(before).filter((k) => !after[k]);
+    if (deletedNodeIds.length > 0) {
+      repositionNotesForDeletedNodes(deletedNodeIds, before, after);
+    }
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {
