@@ -1,6 +1,7 @@
 import type { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import type { FormikErrors, FormikValues } from "formik";
 import React from "react";
 
 import type { ConditionalOption } from "../Option/model";
@@ -51,6 +52,13 @@ function ResponsiveChecklistComponent(props: Props) {
               2,
             ),
           );
+        }
+      },
+      validate: ({ options, ...values }) => {
+        const errors: FormikErrors<FormikValues> = {};
+        if (values.text && (!options || !options.length)) {
+          errors.text =
+            "Checklists can no longer be used as notes and must have at least one option";
         }
       },
       validationSchema,

@@ -45,6 +45,10 @@ function ResponsiveQuestionComponent(props: Props) {
       },
       validate: ({ options, ...values }) => {
         const errors: FormikErrors<FormikValues> = {};
+        if (values.text && !options.length) {
+          errors.text =
+            "Questions can no longer be used as notes and must have at least one option";
+        }
         if (values.fn && !options.some((option) => option.data.val)) {
           errors.fn = "At least one option must also set a data field";
         }

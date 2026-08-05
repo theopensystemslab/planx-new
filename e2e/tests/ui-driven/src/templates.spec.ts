@@ -143,6 +143,7 @@ test.describe("Templates", () => {
         ComponentType.Question,
         REQUIRED_NODE_TITLE,
         { instructions: REQUIRED_NODE_INSTRUCTIONS, required: true },
+        ["Yes", "No"],
       );
 
       await createTemplatedComponent(
@@ -151,6 +152,7 @@ test.describe("Templates", () => {
         ComponentType.Question,
         OPTIONAL_NODE_TITLE,
         { instructions: OPTIONAL_NODE_INSTRUCTIONS, required: false },
+        ["Yes", "No"],
       );
 
       // Check that the required node is visible and has the "Required" label

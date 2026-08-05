@@ -50,25 +50,27 @@ export const BaseChecklistComponent: React.FC<Props> = (props) => {
       <ModalSection>
         <ModalSectionContent>
           <InputGroup>
-            <InputRow>
-              <Input
-                format="large"
-                name="text"
-                value={formik.values.text}
-                placeholder="Text"
-                onChange={formik.handleChange}
-                inputRef={focusRef}
-                errorMessage={formik.errors.text}
-                disabled={props.disabled}
-              />
-              <ImgInput
-                img={formik.values.img}
-                onChange={(newUrl) => {
-                  formik.setFieldValue("img", newUrl);
-                }}
-                disabled={props.disabled}
-              />
-            </InputRow>
+            <ErrorWrapper error={formik.errors.text}>
+              <InputRow>
+                <Input
+                  format="large"
+                  name="text"
+                  value={formik.values.text}
+                  placeholder="Text"
+                  onChange={formik.handleChange}
+                  inputRef={focusRef}
+                  errorMessage={formik.errors.text}
+                  disabled={props.disabled}
+                />
+                <ImgInput
+                  img={formik.values.img}
+                  onChange={(newUrl) => {
+                    formik.setFieldValue("img", newUrl);
+                  }}
+                  disabled={props.disabled}
+                />
+              </InputRow>
+            </ErrorWrapper>
             <InputRow>
               <RichTextInput
                 name="description"

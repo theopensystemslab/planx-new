@@ -63,9 +63,6 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
 
   const isTemplate = useStore.getState().isTemplate;
 
-  const title =
-    type === ComponentType.Question ? "Question" : "Responsive question";
-
   return (
     <form
       onSubmit={formik.handleSubmit}
@@ -82,24 +79,26 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
       <ModalSection>
         <ModalSectionContent>
           <InputGroup>
-            <InputRow>
-              <Input
-                format="large"
-                name="text"
-                value={formik.values.text}
-                placeholder="Text"
-                onChange={formik.handleChange}
-                inputRef={focusRef}
-                disabled={props.disabled}
-              />
-              <ImgInput
-                img={formik.values.img}
-                onChange={(newUrl) => {
-                  formik.setFieldValue("img", newUrl);
-                }}
-                disabled={props.disabled}
-              />
-            </InputRow>
+            <ErrorWrapper error={formik.errors.text}>
+              <InputRow>
+                <Input
+                  format="large"
+                  name="text"
+                  value={formik.values.text}
+                  placeholder="Text"
+                  onChange={formik.handleChange}
+                  inputRef={focusRef}
+                  disabled={props.disabled}
+                />
+                <ImgInput
+                  img={formik.values.img}
+                  onChange={(newUrl) => {
+                    formik.setFieldValue("img", newUrl);
+                  }}
+                  disabled={props.disabled}
+                />
+              </InputRow>
+            </ErrorWrapper>
             <InputRow>
               <RichTextInput
                 name="description"
