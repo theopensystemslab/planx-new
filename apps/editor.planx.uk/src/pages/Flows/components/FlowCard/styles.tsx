@@ -31,14 +31,7 @@ export const CardBanner = styled(Box)(({ theme }) => ({
 
 export const PatternCardBanner = styled(Box)(({ theme }) => ({
   width: "100%",
-  // TODO Ian to update? Fun but a bit easter egg
-  background: `repeating-linear-gradient(
-    45deg, 
-    ${theme.palette.pattern.light}, 
-    ${theme.palette.pattern.light} 5px,
-    ${theme.palette.pattern.dark} 5px,
-    ${theme.palette.pattern.dark} 10px
-  )`,
+  background: theme.palette.pattern.light,
   padding: theme.spacing(0.5, 2),
   borderBottom: `1px solid ${theme.palette.border.main}`,
   display: "flex",
