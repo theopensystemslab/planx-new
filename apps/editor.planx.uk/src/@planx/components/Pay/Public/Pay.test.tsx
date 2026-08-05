@@ -1,12 +1,14 @@
+import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { act, screen } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import { logger } from "airbrake";
 import ErrorFallback from "components/Error/ErrorFallback";
+import { http, HttpResponse } from "msw";
 import type { FullStore, Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import server from "test/mockServer";
 import { setup } from "test/utils";
 import type { Breadcrumbs } from "types";
 import { ApplicationPath } from "types";
@@ -225,6 +227,221 @@ describe("Pay component when fee is undefined or £0", () => {
     expect(loggerSpy).toHaveBeenCalledWith(
       expect.stringMatching(/Negative fee calculated/),
     );
+  });
+});
+
+describe("Pay component when returning from GOV.UK Pay", () => {
+  const flowWithFee: Store.Flow = {
+    _root: {
+      edges: ["setValue", "pay"],
+    },
+    setValue: {
+      type: TYPES.SetValue,
+      edges: ["pay"],
+      data: {
+        fn: "application.fee.payable",
+        val: "103",
+      },
+    },
+    pay: {
+      type: TYPES.Pay,
+      data: {
+        fn: "application.fee.payable",
+      },
+    },
+  };
+
+  const feeBreadcrumbs: Breadcrumbs = {
+    setValue: {
+      auto: true,
+      data: {
+        "application.fee.payable": ["103"],
+      },
+    },
+  };
+
+  const inFlightPayment: GovUKPayment = {
+    amount: 103,
+    reference: "test-reference",
+    state: {
+      status: PaymentStatus.created,
+      finished: false,
+    },
+    payment_id: "test-payment-id",
+    payment_provider: "sandbox",
+    created_date: "2024-01-01T00:00:00.000Z",
+    _links: {
+      self: {
+        href: "https://gov.uk/pay/self",
+        method: "GET",
+      },
+      next_url: {
+        href: "https://gov.uk/pay/next",
+        method: "GET",
+      },
+      next_url_post: {
+        type: "multipart/form-data",
+        params: { chargeTokenId: "test-charge-token" },
+        href: "https://gov.uk/pay/next",
+        method: "POST",
+      },
+    },
+  };
+
+  const getPaymentUrl = `${import.meta.env.VITE_APP_API_URL}/pay/:teamSlug/:paymentId`;
+
+  const setUpPayComponent = (payment: GovUKPayment) => {
+    act(() =>
+      setState({
+        flow: flowWithFee,
+        breadcrumbs: feeBreadcrumbs,
+        teamSlug: "testTeam",
+        govUkPayment: payment,
+      }),
+    );
+
+    const handleSubmit = vi.fn();
+
+    return { handleSubmit };
+  };
+
+  beforeAll(() => (initialState = getState()));
+
+  afterEach(() => {
+    vi.clearAllMocks();
+    act(() => setState(initialState));
+  });
+
+  const successfulPaymentResponse = {
+    ...inFlightPayment,
+    state: { status: PaymentStatus.success, finished: true },
+  };
+
+  it("offers a status check when the payment status request fails", async () => {
+    server.use(
+      http.get(getPaymentUrl, () =>
+        HttpResponse.json({ error: "Something went wrong" }, { status: 500 }),
+      ),
+    );
+
+    const { handleSubmit } = setUpPayComponent(inFlightPayment);
+
+    await setup(
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          govPayMetadata={[]}
+        />
+      </ErrorBoundary>,
+    );
+
+    expect(await screen.findByText("Check payment status")).toBeInTheDocument();
+    expect(
+      screen.getByText(/We could not check the status of your payment/),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByText("Loading payment information"),
+    ).not.toBeInTheDocument();
+
+    // We do not offer to resume the payment
+    expect(screen.queryByText("Retry payment")).not.toBeInTheDocument();
+    expect(handleSubmit).not.toHaveBeenCalled();
+  });
+
+  it("recovers when a repeated status check succeeds", async () => {
+    let isFirstRequest = true;
+
+    server.use(
+      http.get(getPaymentUrl, () => {
+        if (isFirstRequest) {
+          isFirstRequest = false;
+          return HttpResponse.json(
+            { error: "Something went wrong" },
+            { status: 500 },
+          );
+        }
+
+        return HttpResponse.json(successfulPaymentResponse);
+      }),
+    );
+
+    const { handleSubmit } = setUpPayComponent(inFlightPayment);
+
+    const { user } = await setup(
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          govPayMetadata={[]}
+        />
+      </ErrorBoundary>,
+    );
+
+    await user.click(await screen.findByText("Check payment status"));
+
+    // The second check reads the successful payment user can continue
+    await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
+    expect(getState().govUkPayment?.state?.status).toEqual(
+      PaymentStatus.success,
+    );
+  });
+
+  it("offers a status check when the payment is missing a payment_id", async () => {
+    const loggerSpy = vi.spyOn(logger, "notify");
+
+    const { handleSubmit } = setUpPayComponent({
+      ...inFlightPayment,
+      payment_id: "",
+    });
+
+    await setup(
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          govPayMetadata={[]}
+        />
+      </ErrorBoundary>,
+    );
+
+    expect(await screen.findByText("Check payment status")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Loading payment information"),
+    ).not.toBeInTheDocument();
+    expect(handleSubmit).not.toHaveBeenCalled();
+    expect(loggerSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/Missing GOV.UK payment_id/),
+    );
+  });
+
+  it("allows the user to continue when the payment status request succeeds", async () => {
+    server.use(
+      http.get(getPaymentUrl, () =>
+        HttpResponse.json(successfulPaymentResponse),
+      ),
+    );
+
+    const { handleSubmit } = setUpPayComponent(inFlightPayment);
+
+    await setup(
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          govPayMetadata={[]}
+        />
+      </ErrorBoundary>,
+    );
+
+    await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
+    expect(screen.queryByText("Check payment status")).not.toBeInTheDocument();
+    expect(screen.queryByText("Retry payment")).not.toBeInTheDocument();
   });
 });
 

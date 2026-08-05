@@ -10,7 +10,7 @@ import type { APIError } from "lib/api/client";
 import { getPayment, initiatePayment } from "lib/api/pay/requests";
 import { saveSession } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { useErrorBoundary } from "react-error-boundary";
 
 import { makeData } from "../../shared/utils";
@@ -23,11 +23,12 @@ export type Props = PublicProps<Pay>;
 
 type ComponentState =
   | { status: "indeterminate"; displayText?: string }
-  | { status: "no_payment_found" } // landed on Pay, has not redirected to Gov Pay to initiate payment
+  | { status: "no_payment_found" }
   | { status: "init" }
   | { status: "redirecting"; displayText?: string }
   | { status: "fetching_payment"; displayText?: string }
   | { status: "retry" }
+  | { status: "status_unknown" }
   | { status: "success"; displayText?: string }
   | { status: "unsupported_team" }
   | { status: "undefined_fee" }
@@ -35,9 +36,12 @@ type ComponentState =
 
 enum Action {
   NoFeeFound,
+  /** Landed on Pay, has not redirected to Gov Pay to initiate payment */
   NoPaymentFound,
   IncompletePaymentFound,
   IncompletePaymentConfirmed,
+  /** We could not read the payment status, so we don't know whether the user has paid */
+  PaymentStatusUnknown,
   StartNewPayment,
   StartNewPaymentError,
   ResumePayment,
@@ -99,6 +103,8 @@ function Component(props: Props) {
         };
       case Action.IncompletePaymentConfirmed:
         return { status: "retry" };
+      case Action.PaymentStatusUnknown:
+        return { status: "status_unknown" };
       case Action.StartNewPayment:
         return {
           status: "redirecting",
@@ -158,7 +164,6 @@ function Component(props: Props) {
     if (govUkPayment.state.status === PaymentStatus.success) {
       handleSuccess();
     } else {
-      dispatch(Action.IncompletePaymentFound);
       refetchPayment();
     }
   }, []);
@@ -194,10 +199,17 @@ function Component(props: Props) {
   };
 
   const refetchPayment = async () => {
-    try {
-      const paymentId = govUkPayment?.payment_id;
-      if (!paymentId) return;
+    dispatch(Action.IncompletePaymentFound);
 
+    const paymentId = govUkPayment?.payment_id;
+
+    if (!govUkPayment || !paymentId) {
+      logger.notify(`Missing GOV.UK payment_id for session ${sessionId}`);
+      dispatch(Action.PaymentStatusUnknown);
+      return;
+    }
+
+    try {
       const { state } = await getPayment({
         teamSlug,
         sessionId,
@@ -206,22 +218,22 @@ function Component(props: Props) {
       });
 
       // Update local state with the refetched payment state
-      if (govUkPayment) {
-        await resolvePaymentResponse({
-          ...govUkPayment,
-          state,
-        });
-        if (state.status === PaymentStatus.success) {
-          handleSuccess();
-          return;
-        }
+      await resolvePaymentResponse({
+        ...govUkPayment,
+        state,
+      });
+
+      if (state.status === PaymentStatus.success) {
+        handleSuccess();
+        return;
       }
+
       dispatch(Action.IncompletePaymentConfirmed);
     } catch (err) {
       // XXX: There's probably been an issue fetching the payment status,
-      //      but there's a chance that the user might've made a successful
-      //      payment. We silently log the error and the service continues.
+      //      allow user to re-run status check instead of silently failing
       logger.notify(err);
+      dispatch(Action.PaymentStatusUnknown);
     }
   };
 
@@ -296,6 +308,18 @@ function Component(props: Props) {
     if (shouldContinueWithoutPaying) continueWithoutPaying();
     if (["no_payment_found", "init"].includes(state.status)) startNewPayment();
     if (state.status === "retry") resumeExistingPayment();
+    if (state.status === "status_unknown") refetchPayment();
+  };
+
+  const getButtonTitle = () => {
+    switch (state.status) {
+      case "retry":
+        return "Retry payment";
+      case "status_unknown":
+        return "Check payment status";
+      default:
+        return "Pay now using GOV.UK Pay";
+    }
   };
 
   return (
@@ -303,6 +327,7 @@ function Component(props: Props) {
       {state.status === "no_payment_found" ||
       state.status === "init" ||
       state.status === "retry" ||
+      state.status === "status_unknown" ||
       state.status === "unsupported_team" ||
       state.status === "undefined_fee" ||
       state.status === "zero_fee" ? (
@@ -310,10 +335,11 @@ function Component(props: Props) {
           {...props}
           fee={fee}
           onConfirm={onConfirm}
-          buttonTitle={
-            state.status === "retry"
-              ? "Retry payment"
-              : "Pay now using GOV.UK Pay"
+          buttonTitle={getButtonTitle()}
+          warning={
+            (state.status === "status_unknown" &&
+              "We could not check the status of your payment. If you have already paid, checking again will confirm your payment.") ||
+            undefined
           }
           error={
             (state.status === "unsupported_team" &&
