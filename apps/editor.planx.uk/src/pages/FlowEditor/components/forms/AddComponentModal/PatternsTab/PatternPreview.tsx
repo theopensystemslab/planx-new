@@ -3,8 +3,8 @@ import { grey } from "@mui/material/colors";
 import type { SxProps, Theme } from "@mui/material/styles";
 import React from "react";
 
-// Alternating short/long bar widths, one per component
-const BAR_WIDTHS = ["60%", "80%"];
+// Cycling bar widths, one per component
+const BAR_WIDTHS = ["60%", "70%", "80%", "65%"];
 
 // Cap the amount of bars to avoid overflowing preview container
 const MAX_BARS = 14;
@@ -16,8 +16,8 @@ interface Props {
 
 /**
  * Semi-abstract stack of bars representing a pattern's components: one bar per
- * component (up to MAX_BARS), alternating short/long, filling the full height
- * of its container
+ * component (up to MAX_BARS), cycling through varying widths, filling the
+ * full height of its container
  */
 export const PatternPreview: React.FC<Props> = ({ componentCount, sx }) => {
   if (componentCount < 1) return null;
