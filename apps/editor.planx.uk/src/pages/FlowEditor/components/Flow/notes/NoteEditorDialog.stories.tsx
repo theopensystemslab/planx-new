@@ -7,7 +7,8 @@ import React from "react";
 import { NoteEditorDialog } from "./NoteEditorDialog";
 
 const note: FlowNote = {
-  id: "note-1",
+  positionId: "note-1",
+  contentId: "note-content-1",
   flowId: "flow-1",
   nodeId: "node-a",
   placement: null,
@@ -29,14 +30,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Create = {
-  args: { mode: "create", nodeId: "node-a", onClose: () => {} },
+  args: { mode: "create", target: { nodeId: "node-a" }, onClose: () => {} },
   parameters: {
     msw: {
       handlers: [
-        graphql.mutation("CreateFlowNote", ({ variables }) => {
+        graphql.mutation("CreateFlowNotePosition", ({ variables }) => {
           console.log("createFlowNote", variables.object);
           return HttpResponse.json({
-            data: { insert_flow_notes_one: { id: "new-note-id" } },
+            data: { insert_flow_note_positions_one: { id: "new-note-id" } },
           });
         }),
       ],
@@ -53,16 +54,20 @@ export const Edit = {
   parameters: {
     msw: {
       handlers: [
-        graphql.mutation("UpdateFlowNote", ({ variables }) => {
+        graphql.mutation("UpdateFlowNoteContent", ({ variables }) => {
           console.log("updateFlowNote", variables.id, variables.set);
           return HttpResponse.json({
-            data: { update_flow_notes_by_pk: { id: variables.id as string } },
+            data: {
+              update_flow_note_content_by_pk: { id: variables.id as string },
+            },
           });
         }),
-        graphql.mutation("DeleteFlowNote", ({ variables }) => {
+        graphql.mutation("DeleteFlowNotePosition", ({ variables }) => {
           console.log("deleteFlowNote", variables.id);
           return HttpResponse.json({
-            data: { delete_flow_notes_by_pk: { id: variables.id as string } },
+            data: {
+              delete_flow_note_positions_by_pk: { id: variables.id as string },
+            },
           });
         }),
       ],

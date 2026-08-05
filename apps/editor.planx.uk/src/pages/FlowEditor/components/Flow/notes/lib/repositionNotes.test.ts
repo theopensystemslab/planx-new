@@ -1,8 +1,12 @@
 import { graphql, HttpResponse } from "msw";
+import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useStore } from ".";
+import {
+  repositionNotesForDeletedNodes,
+  repositionNotesForMovedNode,
+} from "./repositionNotes";
 
 beforeEach(() => {
   useStore.setState({
@@ -26,10 +30,10 @@ describe("repositionNotesForDeletedNodes", () => {
     let deleteIds: string[] | undefined;
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
+      graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_notes: [
+            flow_note_positions: [
               {
                 id: "note-attached",
                 node_id: "deleted-node",
@@ -46,17 +50,17 @@ describe("repositionNotesForDeletedNodes", () => {
           },
         }),
       ),
-      graphql.mutation("DeleteFlowNotes", ({ variables }) => {
+      graphql.mutation("DeleteFlowNotePositions", ({ variables }) => {
         deleteIds = variables.ids;
         return HttpResponse.json({
-          data: { delete_flow_notes: { affected_rows: variables.ids.length } },
+          data: {
+            delete_flow_note_positions: { affected_rows: variables.ids.length },
+          },
         });
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForDeletedNodes(["deleted-node"], {}, {});
+    await repositionNotesForDeletedNodes(["deleted-node"], {}, {});
 
     expect(deleteIds).toEqual(
       expect.arrayContaining(["note-attached", "note-other-author"]),
@@ -74,10 +78,10 @@ describe("repositionNotesForDeletedNodes", () => {
     let reanchored: any;
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
+      graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_notes: [
+            flow_note_positions: [
               {
                 id: "note-after-deleted",
                 node_id: null,
@@ -88,17 +92,19 @@ describe("repositionNotesForDeletedNodes", () => {
           },
         }),
       ),
-      graphql.mutation("ReanchorFlowNote", ({ variables }) => {
+      graphql.mutation("ReanchorFlowNotePosition", ({ variables }) => {
         reanchored = variables;
         return HttpResponse.json({
-          data: { update_flow_notes_by_pk: { id: variables.id } },
+          data: { update_flow_note_positions_by_pk: { id: variables.id } },
         });
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForDeletedNodes(["deleted-node"], flowBefore, flowAfter);
+    await repositionNotesForDeletedNodes(
+      ["deleted-node"],
+      flowBefore,
+      flowAfter,
+    );
 
     expect(reanchored).toEqual({
       id: "note-after-deleted",
@@ -121,10 +127,10 @@ describe("repositionNotesForDeletedNodes", () => {
     let reanchored: any;
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
+      graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_notes: [
+            flow_note_positions: [
               {
                 id: "note-leading",
                 node_id: null,
@@ -138,17 +144,19 @@ describe("repositionNotesForDeletedNodes", () => {
           },
         }),
       ),
-      graphql.mutation("ReanchorFlowNote", ({ variables }) => {
+      graphql.mutation("ReanchorFlowNotePosition", ({ variables }) => {
         reanchored = variables;
         return HttpResponse.json({
-          data: { update_flow_notes_by_pk: { id: variables.id } },
+          data: { update_flow_note_positions_by_pk: { id: variables.id } },
         });
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForDeletedNodes(["deleted-node"], flowBefore, flowAfter);
+    await repositionNotesForDeletedNodes(
+      ["deleted-node"],
+      flowBefore,
+      flowAfter,
+    );
 
     expect(reanchored).toEqual({
       id: "note-leading",
@@ -170,10 +178,10 @@ describe("repositionNotesForDeletedNodes", () => {
     let deleteIds: string[] | undefined;
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
+      graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_notes: [
+            flow_note_positions: [
               {
                 id: "note-orphaned",
                 node_id: null,
@@ -184,21 +192,21 @@ describe("repositionNotesForDeletedNodes", () => {
           },
         }),
       ),
-      graphql.mutation("DeleteFlowNotes", ({ variables }) => {
+      graphql.mutation("DeleteFlowNotePositions", ({ variables }) => {
         deleteIds = variables.ids;
         return HttpResponse.json({
-          data: { delete_flow_notes: { affected_rows: variables.ids.length } },
+          data: {
+            delete_flow_note_positions: { affected_rows: variables.ids.length },
+          },
         });
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForDeletedNodes(
-        ["folder", "child"],
-        flowBefore,
-        flowAfter,
-      );
+    await repositionNotesForDeletedNodes(
+      ["folder", "child"],
+      flowBefore,
+      flowAfter,
+    );
 
     expect(deleteIds).toEqual(["note-orphaned"]);
   });
@@ -207,20 +215,18 @@ describe("repositionNotesForDeletedNodes", () => {
     let mutationCalled = false;
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
-        HttpResponse.json({ data: { flow_notes: [] } }),
+      graphql.query("GetFlowNotePositionsForReposition", () =>
+        HttpResponse.json({ data: { flow_note_positions: [] } }),
       ),
-      graphql.mutation("DeleteFlowNotes", () => {
+      graphql.mutation("DeleteFlowNotePositions", () => {
         mutationCalled = true;
         return HttpResponse.json({
-          data: { delete_flow_notes: { affected_rows: 0 } },
+          data: { delete_flow_note_positions: { affected_rows: 0 } },
         });
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForDeletedNodes(["deleted-node"], {}, {});
+    await repositionNotesForDeletedNodes(["deleted-node"], {}, {});
 
     expect(mutationCalled).toBe(false);
   });
@@ -231,10 +237,10 @@ describe("repositionNotesForMovedNode", () => {
     const reanchored: any[] = [];
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
+      graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_notes: [
+            flow_note_positions: [
               {
                 id: "note-before-moved",
                 node_id: null,
@@ -251,21 +257,19 @@ describe("repositionNotesForMovedNode", () => {
           },
         }),
       ),
-      graphql.mutation("ReanchorFlowNote", ({ variables }) => {
+      graphql.mutation("ReanchorFlowNotePosition", ({ variables }) => {
         reanchored.push(variables);
         return HttpResponse.json({
-          data: { update_flow_notes_by_pk: { id: variables.id } },
+          data: { update_flow_note_positions_by_pk: { id: variables.id } },
         });
       }),
     );
 
-    await useStore
-      .getState()
-      .repositionNotesForMovedNode(
-        "moved-node",
-        "old-parent",
-        "new-first-child",
-      );
+    await repositionNotesForMovedNode(
+      "moved-node",
+      "old-parent",
+      "new-first-child",
+    );
 
     expect(reanchored).toEqual([
       {

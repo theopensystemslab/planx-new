@@ -10,7 +10,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NoteEditorDialog } from "./NoteEditorDialog";
 
 const makeNote = (overrides: Partial<AttachedNote> = {}): AttachedNote => ({
-  id: "note-1",
+  positionId: "note-1",
+  contentId: "note-content-1",
   flowId: "flow-1",
   nodeId: "node-a",
   placement: null,
@@ -28,29 +29,46 @@ let updateFlowNote: (id: unknown, set: unknown) => void;
 let deleteFlowNote: (id: unknown) => void;
 
 beforeEach(() => {
-  useStore.setState({ id: "flow-1" });
+  useStore.setState({
+    id: "flow-1",
+    jwt: "test-jwt",
+    user: {
+      id: 42,
+      firstName: "Test",
+      lastName: "User",
+      email: "test@example.com",
+      isPlatformAdmin: false,
+      isAnalyst: false,
+      defaultTeamId: null,
+      teams: [],
+    } as any,
+  });
 
   createFlowNote = vi.fn();
   updateFlowNote = vi.fn();
   deleteFlowNote = vi.fn();
 
   server.use(
-    graphql.mutation("CreateFlowNote", ({ variables }) => {
+    graphql.mutation("CreateFlowNotePosition", ({ variables }) => {
       createFlowNote(variables.object);
       return HttpResponse.json({
-        data: { insert_flow_notes_one: { id: "new-id" } },
+        data: { insert_flow_note_positions_one: { id: "new-id" } },
       });
     }),
-    graphql.mutation("UpdateFlowNote", ({ variables }) => {
+    graphql.mutation("UpdateFlowNoteContent", ({ variables }) => {
       updateFlowNote(variables.id, variables.set);
       return HttpResponse.json({
-        data: { update_flow_notes_by_pk: { id: variables.id as string } },
+        data: {
+          update_flow_note_content_by_pk: { id: variables.id as string },
+        },
       });
     }),
-    graphql.mutation("DeleteFlowNote", ({ variables }) => {
+    graphql.mutation("DeleteFlowNotePosition", ({ variables }) => {
       deleteFlowNote(variables.id);
       return HttpResponse.json({
-        data: { delete_flow_notes_by_pk: { id: variables.id as string } },
+        data: {
+          delete_flow_note_positions_by_pk: { id: variables.id as string },
+        },
       });
     }),
   );
@@ -58,7 +76,13 @@ beforeEach(() => {
 
 describe("create mode", () => {
   it("shows a Create button, not Update", async () => {
-    await setup(<NoteEditorDialog mode="create" onClose={vi.fn()} />);
+    await setup(
+      <NoteEditorDialog
+        mode="create"
+        target={{ nodeId: "node-a" }}
+        onClose={vi.fn()}
+      />,
+    );
 
     expect(screen.getByRole("button", { name: /create/i })).toBeInTheDocument();
     expect(
@@ -68,7 +92,11 @@ describe("create mode", () => {
 
   it("calls createFlowNote with the node id and entered text on save", async () => {
     const { user } = await setup(
-      <NoteEditorDialog mode="create" nodeId="node-a" onClose={vi.fn()} />,
+      <NoteEditorDialog
+        mode="create"
+        target={{ nodeId: "node-a" }}
+        onClose={vi.fn()}
+      />,
     );
 
     await user.type(screen.getByRole("textbox"), "A brand new note");
@@ -77,7 +105,9 @@ describe("create mode", () => {
     expect(createFlowNote).toHaveBeenCalledWith(
       expect.objectContaining({
         node_id: "node-a",
-        text: "A brand new note",
+        note: expect.objectContaining({
+          data: expect.objectContaining({ text: "A brand new note" }),
+        }),
       }),
     );
   });
@@ -87,10 +117,12 @@ describe("create mode", () => {
     const { user } = await setup(
       <NoteEditorDialog
         mode="create"
-        placement={{
-          parent: "root",
-          parentIsContainer: true,
-          before: "node-a",
+        target={{
+          placement: {
+            parent: "root",
+            parentIsContainer: true,
+            before: "node-a",
+          },
         }}
         onClose={onClose}
       />,
@@ -102,7 +134,13 @@ describe("create mode", () => {
   });
 
   it("has no delete button", async () => {
-    await setup(<NoteEditorDialog mode="create" onClose={vi.fn()} />);
+    await setup(
+      <NoteEditorDialog
+        mode="create"
+        target={{ nodeId: "node-a" }}
+        onClose={vi.fn()}
+      />,
+    );
 
     expect(
       screen.queryByRole("button", { name: /delete/i }),
@@ -110,14 +148,24 @@ describe("create mode", () => {
   });
 
   it("disables the Create button while the note is empty", async () => {
-    await setup(<NoteEditorDialog mode="create" onClose={vi.fn()} />);
+    await setup(
+      <NoteEditorDialog
+        mode="create"
+        target={{ nodeId: "node-a" }}
+        onClose={vi.fn()}
+      />,
+    );
 
     expect(screen.getByRole("button", { name: /create/i })).toBeDisabled();
   });
 
   it("enables the Create button once text is entered, and disables it again if cleared", async () => {
     const { user } = await setup(
-      <NoteEditorDialog mode="create" onClose={vi.fn()} />,
+      <NoteEditorDialog
+        mode="create"
+        target={{ nodeId: "node-a" }}
+        onClose={vi.fn()}
+      />,
     );
     const createButton = screen.getByRole("button", { name: /create/i });
     const textbox = screen.getByRole("textbox");
@@ -132,7 +180,11 @@ describe("create mode", () => {
   it("does not call createFlowNote when the note is empty", async () => {
     const onClose = vi.fn();
     const { user } = await setup(
-      <NoteEditorDialog mode="create" onClose={onClose} />,
+      <NoteEditorDialog
+        mode="create"
+        target={{ nodeId: "node-a" }}
+        onClose={onClose}
+      />,
     );
     await user.click(screen.getByRole("button", { name: /create/i }));
 
@@ -142,7 +194,11 @@ describe("create mode", () => {
 
   it("shows a validation error once an empty note is touched", async () => {
     const { user } = await setup(
-      <NoteEditorDialog mode="create" onClose={vi.fn()} />,
+      <NoteEditorDialog
+        mode="create"
+        target={{ nodeId: "node-a" }}
+        onClose={vi.fn()}
+      />,
     );
     const textbox = screen.getByRole("textbox");
 
@@ -154,7 +210,7 @@ describe("create mode", () => {
 
   it("shows an error toast if the note fails to save", async () => {
     server.use(
-      graphql.mutation("CreateFlowNote", () => {
+      graphql.mutation("CreateFlowNotePosition", () => {
         return HttpResponse.json(
           { errors: [{ message: "Something went wrong" }] },
           { status: 200 },
@@ -162,7 +218,11 @@ describe("create mode", () => {
       }),
     );
     const { user } = await setup(
-      <NoteEditorDialog mode="create" onClose={vi.fn()} />,
+      <NoteEditorDialog
+        mode="create"
+        target={{ nodeId: "node-a" }}
+        onClose={vi.fn()}
+      />,
     );
 
     await user.type(screen.getByRole("textbox"), "A brand new note");
@@ -181,7 +241,7 @@ describe("edit mode - own note", () => {
     expect(screen.getByDisplayValue("Existing note text")).toBeInTheDocument();
   });
 
-  it("calls updateFlowNote with the note id on save", async () => {
+  it("calls updateFlowNote with the note's content id on save", async () => {
     const { user } = await setup(
       <NoteEditorDialog mode="edit" note={makeNote()} onClose={vi.fn()} />,
     );
@@ -190,12 +250,12 @@ describe("edit mode - own note", () => {
     await user.click(screen.getByRole("button", { name: /update/i }));
 
     expect(updateFlowNote).toHaveBeenCalledWith(
-      "note-1",
+      "note-content-1",
       expect.objectContaining({ text: "Updated text" }),
     );
   });
 
-  it("calls deleteFlowNote and closes the editor when Delete is clicked", async () => {
+  it("calls deleteFlowNote with the note's position id and closes the editor when Delete is clicked", async () => {
     const onClose = vi.fn();
     const { user } = await setup(
       <NoteEditorDialog mode="edit" note={makeNote()} onClose={onClose} />,
@@ -225,7 +285,7 @@ describe("edit mode - another author's note", () => {
     await user.click(screen.getByRole("button", { name: /update/i }));
 
     expect(updateFlowNote).toHaveBeenCalledWith(
-      "note-1",
+      "note-content-1",
       expect.objectContaining({ text: "Edited by another user" }),
     );
   });

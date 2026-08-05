@@ -17,7 +17,8 @@ import { FlowNotesContext } from "./FlowNotesContext";
 
 const notes: FlowNote[] = [
   {
-    id: "note-1",
+    positionId: "note-1",
+    contentId: "note-content-1",
     flowId: "flow-1",
     nodeId: "node-a",
     placement: null,
@@ -33,7 +34,8 @@ const notes: FlowNote[] = [
 const longNotes: FlowNote[] = [
   {
     ...notes[0],
-    id: "note-2",
+    positionId: "note-2",
+    contentId: "note-content-2",
     text: "This note has a lot more text in it than usual, so long in fact that it must be truncated with ellipses and line clamping, the full version is visible in the note editor.",
   },
 ];
@@ -47,9 +49,10 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const AttachedNotesDemo: React.FC<{ notes: FlowNote[] }> = ({
-  notes: notesToRender,
-}) => {
+const AttachedNotesDemo: React.FC<{
+  notes: FlowNote[];
+  clonedContentIds?: Set<string>;
+}> = ({ notes: notesToRender, clonedContentIds = new Set() }) => {
   // disable the edit modal by registering a no-op child route for it
   const rootRoute = createRootRoute();
   const authenticatedRoute = createRoute({
@@ -65,6 +68,7 @@ const AttachedNotesDemo: React.FC<{ notes: FlowNote[] }> = ({
           attached: new Map([["node-a", notesToRender]]),
           positioned: new Map(),
           loading: false,
+          clonedContentIds,
         }}
       >
         <ul
@@ -117,4 +121,14 @@ export const Default = {
 export const LongText = {
   args: { nodeId: "node-a" },
   render: () => <AttachedNotesDemo notes={longNotes} />,
+} satisfies Story;
+
+export const Cloned = {
+  args: { nodeId: "node-a" },
+  render: () => (
+    <AttachedNotesDemo
+      notes={notes}
+      clonedContentIds={new Set(["note-content-1"])}
+    />
+  ),
 } satisfies Story;

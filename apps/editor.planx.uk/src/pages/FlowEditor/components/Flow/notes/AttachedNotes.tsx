@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "@tanstack/react-router";
+import classNames from "classnames";
 import type { FlowNote } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -10,7 +11,7 @@ interface Props {
 }
 
 export const AttachedNotes: React.FC<Props> = ({ nodeId }) => {
-  const { attached } = useFlowNotesContext();
+  const { attached, clonedContentIds } = useFlowNotesContext();
   const showNotes = useStore((state) => state.showNotes);
   const navigate = useNavigate();
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
@@ -21,20 +22,26 @@ export const AttachedNotes: React.FC<Props> = ({ nodeId }) => {
   return (
     <>
       {notes.map((note: FlowNote) => (
-        <button
-          key={note.id}
-          type="button"
-          className="attached-note"
-          onClick={(event) => {
-            event.stopPropagation();
-            navigate({
-              to: "/app/$team/$flow/note/$id/edit",
-              params: { team, flow, id: note.id },
-            });
-          }}
+        <div
+          key={note.positionId}
+          className={classNames("attached-note-wrapper", {
+            isClone: clonedContentIds.has(note.contentId),
+          })}
         >
-          <span className="note-text">{note.text || "Untitled note"}</span>
-        </button>
+          <button
+            type="button"
+            className="attached-note"
+            onClick={(event) => {
+              event.stopPropagation();
+              navigate({
+                to: "/app/$team/$flow/note/$id/edit",
+                params: { team, flow, id: note.positionId },
+              });
+            }}
+          >
+            <span className="note-text">{note.text || "Untitled note"}</span>
+          </button>
+        </div>
       ))}
     </>
   );
