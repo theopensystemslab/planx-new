@@ -1,0 +1,142 @@
+table:
+  name: flow_note_content
+  schema: public
+object_relationships:
+  - name: createdByUser
+    using:
+      manual_configuration:
+        column_mapping:
+          created_by: id
+        insertion_order: null
+        remote_table:
+          name: users
+          schema: public
+  - name: updatedByUser
+    using:
+      manual_configuration:
+        column_mapping:
+          updated_by: id
+        insertion_order: null
+        remote_table:
+          name: users
+          schema: public
+array_relationships:
+  - name: positions
+    using:
+      manual_configuration:
+        column_mapping:
+          id: note_id
+        insertion_order: null
+        remote_table:
+          name: flow_note_positions
+          schema: public
+insert_permissions:
+  - role: platformAdmin
+    permission:
+      check: {}
+      columns:
+        - text
+        - color
+        - created_by
+        - updated_by
+    comment: ""
+  - role: teamEditor
+    permission:
+      check:
+        created_by:
+          _eq: x-hasura-user-id
+      columns:
+        - text
+        - color
+        - created_by
+        - updated_by
+    comment: ""
+select_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - id
+        - text
+        - color
+        - created_by
+        - updated_by
+        - created_at
+        - updated_at
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - id
+        - text
+        - color
+        - created_by
+        - updated_by
+        - created_at
+        - updated_at
+      filter:
+        positions:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+    comment: ""
+update_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - text
+        - color
+        - updated_by
+      filter: {}
+      check: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - text
+        - color
+        - updated_by
+      filter:
+        positions:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+      check:
+        positions:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+    comment: ""
+delete_permissions:
+  - role: platformAdmin
+    permission:
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      filter:
+        positions:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+    comment: ""
