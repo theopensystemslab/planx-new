@@ -11,11 +11,17 @@ const PREVIEW_SIZE = 48;
 
 interface Props {
   pattern: Pattern;
-  selected: boolean;
-  onClick: () => void;
+  active: boolean;
+  onPreview: () => void;
+  onSelect: () => void;
 }
 
-export const PatternRow: React.FC<Props> = ({ pattern, selected, onClick }) => {
+export const PatternRow: React.FC<Props> = ({
+  pattern,
+  active,
+  onPreview,
+  onSelect,
+}) => {
   const componentCount = getComponentCount(pattern.data);
   const countLabel = componentCountLabel(componentCount);
 
@@ -23,9 +29,10 @@ export const PatternRow: React.FC<Props> = ({ pattern, selected, onClick }) => {
     <Box
       component="button"
       type="button"
-      onClick={onClick}
+      onClick={onSelect}
+      onMouseEnter={onPreview}
+      onFocus={onPreview}
       data-testid={`pattern-${pattern.id}`}
-      aria-current={selected}
       sx={{
         display: "flex",
         alignItems: "flex-start",
@@ -38,11 +45,9 @@ export const PatternRow: React.FC<Props> = ({ pattern, selected, onClick }) => {
         textAlign: "left",
         cursor: "pointer",
         border: 0,
-        borderLeft: "4px solid",
-        borderLeftColor: selected ? "info.main" : "transparent",
-        backgroundColor: selected ? "action.selected" : "transparent",
+        backgroundColor: active ? "action.hover" : "transparent",
         "&:hover": {
-          backgroundColor: selected ? "action.selected" : "action.hover",
+          backgroundColor: "action.hover",
         },
         "&:focus-visible": focusStyle,
       }}

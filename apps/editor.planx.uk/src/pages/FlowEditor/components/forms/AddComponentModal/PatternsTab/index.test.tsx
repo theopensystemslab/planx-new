@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import { delay, graphql, HttpResponse } from "msw";
 import server from "test/mockServer";
 import { setup } from "test/utils";
@@ -16,6 +16,10 @@ const errorHandler = () =>
 
 const waitForPatterns = () =>
   screen.findByRole("button", { name: /Pattern 1/ });
+
+/** Wait for a pattern's name to appear in the detail panel, not the list */
+const findInPanel = async (name: string) =>
+  within(await screen.findByTestId("pattern-detail-panel")).findByText(name);
 
 describe("PatternsTab", () => {
   describe("the pattern list", () => {
@@ -116,87 +120,76 @@ describe("PatternsTab", () => {
   });
 
   describe("the detail panel", () => {
-    it("prompts you to pick a pattern before one is selected", async () => {
+    it("prompts you to pick a pattern before one is previewed", async () => {
       server.use(patternsHandler());
       await setup(<PatternsTab onInsert={vi.fn()} />);
       await waitForPatterns();
 
       expect(
-        screen.getByText("Select a pattern to see details."),
+        screen.getByText("Hover a pattern to see details."),
       ).toBeInTheDocument();
     });
 
-    it("shows the selected pattern's details and component count", async () => {
+    it("shows the hovered pattern's details and component count", async () => {
       server.use(patternsHandler());
       const { user } = await setup(<PatternsTab onInsert={vi.fn()} />);
       await waitForPatterns();
 
-      await user.click(screen.getByRole("button", { name: /Pattern 3/ }));
+      await user.hover(screen.getByRole("button", { name: /Pattern 3/ }));
 
       // Answer nodes excluded from count; also shown in the list row itself
       expect(screen.getAllByText("2 components").length).toBeGreaterThanOrEqual(
         1,
       );
       expect(
-        screen.queryByText("Select a pattern to see details."),
+        screen.queryByText("Hover a pattern to see details."),
       ).not.toBeInTheDocument();
     });
 
-    it("closing the panel clears the selection", async () => {
+    it("follows the cursor from pattern to pattern", async () => {
       server.use(patternsHandler());
       const { user } = await setup(<PatternsTab onInsert={vi.fn()} />);
       await waitForPatterns();
 
-      await user.click(screen.getByRole("button", { name: /Pattern 3/ }));
+      await user.hover(screen.getByRole("button", { name: /Pattern 3/ }));
+      await findInPanel("Pattern 3");
 
-      await user.click(
-        screen.getByRole("button", { name: "Close Pattern 3 details" }),
-      );
+      await user.hover(screen.getByRole("button", { name: /Pattern 4/ }));
+      expect(await findInPanel("Pattern 4")).toBeInTheDocument();
+    });
 
-      expect(
-        screen.getByText("Select a pattern to see details."),
-      ).toBeInTheDocument();
+    it("previews a pattern when its row is focused by keyboard", async () => {
+      server.use(patternsHandler());
+      await setup(<PatternsTab onInsert={vi.fn()} />);
+      await waitForPatterns();
+
+      act(() => screen.getByTestId("pattern-1").focus());
+
+      expect(await findInPanel("Pattern 1")).toBeInTheDocument();
     });
   });
 
   describe("inserting", () => {
-    it("enables the insert button for a pattern with components", async () => {
-      server.use(patternsHandler());
-      const { user } = await setup(<PatternsTab onInsert={vi.fn()} />);
-      await waitForPatterns();
-
-      await user.click(screen.getByRole("button", { name: /Pattern 3/ }));
-
-      expect(
-        screen.getByRole("button", { name: "Insert pattern" }),
-      ).toBeEnabled();
-    });
-
-    it("calls onInsert with the selected pattern's graph", async () => {
+    it("inserts the pattern you click in the list", async () => {
       const onInsert = vi.fn();
       server.use(patternsHandler());
       const { user } = await setup(<PatternsTab onInsert={onInsert} />);
       await waitForPatterns();
 
       await user.click(screen.getByRole("button", { name: /Pattern 3/ }));
-      await user.click(screen.getByRole("button", { name: "Insert pattern" }));
 
       expect(onInsert).toHaveBeenCalledWith(mockPatternData);
     });
 
     it("blocks insertion of a pattern with no components", async () => {
+      const onInsert = vi.fn();
       server.use(patternsHandler());
-      const { user } = await setup(<PatternsTab onInsert={vi.fn()} />);
+      const { user } = await setup(<PatternsTab onInsert={onInsert} />);
       await waitForPatterns();
 
       await user.click(screen.getByRole("button", { name: /Pattern 1/ }));
 
-      expect(
-        await screen.findByText("This pattern has no components to insert."),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "Insert pattern" }),
-      ).toBeDisabled();
+      expect(onInsert).not.toHaveBeenCalled();
     });
 
     it.todo("inserts the pattern's nodes into the flow at the hanger position");

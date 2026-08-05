@@ -1,7 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -15,28 +12,18 @@ const PREVIEW_HEIGHT = 130;
 
 interface Props {
   pattern: Pattern | null;
-  onInsert: (patternId: string) => void;
-  onClear: () => void;
 }
 
-export const PatternDetailPanel: React.FC<Props> = ({
-  pattern,
-  onInsert,
-  onClear,
-}) => {
+export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
   const componentCount = pattern ? getComponentCount(pattern.data) : 0;
   const countLabel = componentCountLabel(componentCount);
-
-  // A pattern needs at least one component to be insertable
-  // We should aim to catch this when a pattern is made copyable
   const isEmpty = componentCount < 1;
-  const canInsert = Boolean(pattern) && !isEmpty;
 
   if (!pattern) {
     return (
       <Box sx={{ width: DETAIL_PANEL_WIDTH, flexShrink: 0, p: 2 }}>
         <Typography color="textSecondary" variant="body2">
-          Select a pattern to see details.
+          Hover a pattern to see details.
         </Typography>
       </Box>
     );
@@ -80,22 +67,9 @@ export const PatternDetailPanel: React.FC<Props> = ({
           </Typography>
         </Box>
       )}
-      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
-        <Typography
-          variant="body1"
-          sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD, flexGrow: 1 }}
-        >
-          {pattern.name}
-        </Typography>
-        <IconButton
-          onClick={onClear}
-          aria-label={`Close ${pattern.name} details`}
-          size="small"
-          sx={{ mt: -0.5, mr: -0.5 }}
-        >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </Box>
+      <Typography variant="body1" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+        {pattern.name}
+      </Typography>
       {pattern.summary && (
         <Typography variant="body2">{pattern.summary}</Typography>
       )}
@@ -104,15 +78,6 @@ export const PatternDetailPanel: React.FC<Props> = ({
           This pattern has no components to insert.
         </Typography>
       )}
-      <Button
-        variant="contained"
-        size="small"
-        fullWidth
-        disabled={!canInsert}
-        onClick={() => onInsert(pattern.id)}
-      >
-        Insert pattern
-      </Button>
     </Box>
   );
 };

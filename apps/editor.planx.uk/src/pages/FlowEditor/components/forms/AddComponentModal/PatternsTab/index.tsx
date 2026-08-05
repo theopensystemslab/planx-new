@@ -10,6 +10,7 @@ import { PatternDetailPanel } from "./PatternDetailPanel";
 import { PatternRow } from "./PatternRow";
 import type { Pattern } from "./queries";
 import { usePatterns } from "./usePatterns";
+import { getComponentCount } from "./utils";
 
 interface Props {
   onInsert: (graph: Graph) => void;
@@ -24,15 +25,14 @@ export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
   );
   const visiblePatterns = searchedPatterns ?? patterns;
 
-  const [selectedPatternId, setSelectedPatternId] = useState<string | null>(
-    null,
-  );
-  const selectedPattern =
-    visiblePatterns.find((pattern) => pattern.id === selectedPatternId) ?? null;
+  const [activePatternId, setActivePatternId] = useState<string | null>(null);
+  const activePattern =
+    visiblePatterns.find((pattern) => pattern.id === activePatternId) ?? null;
 
-  const insertPattern = (patternId: string) => {
-    const pattern = visiblePatterns.find((p) => p.id === patternId);
-    if (pattern) onInsert(pattern.data);
+  const insertPattern = (pattern: Pattern) => {
+    // A pattern needs at least one component to be insertable
+    // We should aim to catch this when a pattern is made copyable
+    if (getComponentCount(pattern.data) > 0) onInsert(pattern.data);
   };
 
   return (
@@ -80,17 +80,14 @@ export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
               <PatternRow
                 key={pattern.id}
                 pattern={pattern}
-                selected={pattern.id === selectedPatternId}
-                onClick={() => setSelectedPatternId(pattern.id)}
+                active={pattern.id === activePattern?.id}
+                onPreview={() => setActivePatternId(pattern.id)}
+                onSelect={() => insertPattern(pattern)}
               />
             ))}
         </Box>
       </Box>
-      <PatternDetailPanel
-        pattern={selectedPattern}
-        onInsert={insertPattern}
-        onClear={() => setSelectedPatternId(null)}
-      />
+      <PatternDetailPanel pattern={activePattern} />
     </Box>
   );
 };
