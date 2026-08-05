@@ -94,8 +94,8 @@ export interface EditorUIStore {
   contextMenuPosition: ContextMenuPosition | null;
   closeContextMenu: () => void;
   contextMenuSource: ContextMenuSource | null;
-  lastAddedNodeId?: NodeId;
-  clearLastAddedNodeId: () => void;
+  lastAddedNodeIds?: NodeId[];
+  clearLastAddedNodeIds: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -210,9 +210,9 @@ export const editorUIStore: StateCreator<
 
     contextMenuSource: null,
 
-    lastAddedNodeId: undefined,
+    lastAddedNodeIds: undefined,
 
-    clearLastAddedNodeId: () => set({ lastAddedNodeId: undefined }),
+    clearLastAddedNodeIds: () => set({ lastAddedNodeIds: undefined }),
   }),
   {
     name: "editorUIStore",
@@ -370,7 +370,7 @@ export const editorStore: StateCreator<
       { children, parent, before },
     )(get().flow);
     send(ops);
-    set({ lastAddedNodeId: id });
+    set({ lastAddedNodeIds: [id] });
     return id;
   },
 
@@ -382,9 +382,7 @@ export const editorStore: StateCreator<
       onInsert: (ids) => (insertedIds = ids),
     })(get().flow);
     send(ops);
-    // Flash the first top level node - a pattern may add several, but the
-    // highlight mechanism is designed for one, so this is the closest match
-    if (insertedIds[0]) set({ lastAddedNodeId: insertedIds[0] });
+    set({ lastAddedNodeIds: insertedIds });
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {
@@ -755,7 +753,7 @@ export const editorStore: StateCreator<
         onInsert: (ids) => (insertedIds = ids),
       })(get().flow);
       send(ops);
-      if (insertedIds[0]) set({ lastAddedNodeId: insertedIds[0] });
+      set({ lastAddedNodeIds: insertedIds });
     } catch (err) {
       alert((err as Error).message);
     }
