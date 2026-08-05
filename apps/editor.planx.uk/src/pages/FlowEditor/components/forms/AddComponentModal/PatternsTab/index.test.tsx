@@ -127,7 +127,8 @@ describe("PatternsTab", () => {
 
       await user.click(screen.getByRole("button", { name: /Pattern 3/ }));
 
-      expect(await screen.findByText("3 components")).toBeInTheDocument();
+      // Answer nodes excluded from count
+      expect(await screen.findByText("2 components")).toBeInTheDocument();
       expect(
         screen.queryByText("Select a pattern to see details."),
       ).not.toBeInTheDocument();
@@ -139,7 +140,7 @@ describe("PatternsTab", () => {
       await waitForPatterns();
 
       await user.click(screen.getByRole("button", { name: /Pattern 3/ }));
-      await screen.findByText("3 components");
+      await screen.findByText("2 components");
 
       await user.click(
         screen.getByRole("button", { name: "Close Pattern 3 details" }),
@@ -174,7 +175,7 @@ describe("PatternsTab", () => {
       expect(requested).toEqual([]);
 
       await user.click(screen.getByRole("button", { name: /Pattern 3/ }));
-      await screen.findByText("3 components");
+      await screen.findByText("2 components");
 
       // Specific pattern data has now been requested and cached
       expect(requested).toEqual(["3"]);
@@ -188,7 +189,7 @@ describe("PatternsTab", () => {
       await waitForPatterns();
 
       await user.click(screen.getByRole("button", { name: /Pattern 3/ }));
-      await screen.findByText("3 components");
+      await screen.findByText("2 components");
 
       expect(
         screen.getByRole("button", { name: "Insert pattern" }),
@@ -202,7 +203,7 @@ describe("PatternsTab", () => {
       await waitForPatterns();
 
       await user.click(screen.getByRole("button", { name: /Pattern 3/ }));
-      await screen.findByText("3 components");
+      await screen.findByText("2 components");
 
       await user.click(screen.getByRole("button", { name: "Insert pattern" }));
 
