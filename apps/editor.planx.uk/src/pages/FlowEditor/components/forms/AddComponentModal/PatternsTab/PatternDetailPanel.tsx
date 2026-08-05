@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import type { Graph } from "@planx/graph";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -12,6 +13,14 @@ import type { Pattern } from "./queries";
 import { usePatternData } from "./usePatterns";
 
 export const DETAIL_PANEL_WIDTH = 300;
+
+/**
+ * Count all nodes (minus root and Answer components)
+ */
+const getComponentCount = (graph: Graph) =>
+  Object.entries(graph).filter(
+    ([id, { type }]) => id !== "_root" && type !== ComponentType.Answer,
+  ).length;
 
 interface Props {
   pattern: Pattern | null;
@@ -28,7 +37,8 @@ export const PatternDetailPanel: React.FC<Props> = ({
   const graph = data?.pattern?.data;
 
   // Both null while there's no graph data (loading, error, or not yet selected)
-  const componentCount = graph ? Object.keys(graph).length - 1 : null;
+  const componentCount = graph ? getComponentCount(graph) : null;
+
   const componentCountLabel =
     componentCount !== null && componentCount >= 1
       ? `${componentCount} component${componentCount === 1 ? "" : "s"}`
@@ -36,7 +46,7 @@ export const PatternDetailPanel: React.FC<Props> = ({
 
   // A pattern needs at least one component to be insertable
   // We should aim to catch this when a pattern is made copyable
-  const isEmpty = componentCount !== null && componentCount < 1;
+  const isEmpty = componentCount !== null && componentCount === 0;
   const canInsert = Boolean(graph) && !isEmpty && !error;
 
   if (!pattern) {
