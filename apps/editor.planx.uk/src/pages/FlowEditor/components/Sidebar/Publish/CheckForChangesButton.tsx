@@ -160,24 +160,26 @@ export const CheckForChangesToPublishButton: React.FC<{
             </Box>
           </Box>
         )}
-        <Box sx={{ display: "flex", gap: 1 }}>
-          <Button
-            data-testid="check-for-changes-to-publish-button"
-            sx={{ flex: 1 }}
-            variant="contained"
-            color="primary"
-            disabled={isDisabled}
-            onClick={handleCheckForChangesToPublish}
-            startIcon={
-              checkForChangesMutation.isPending ? (
-                <CircularProgress size={20} color="inherit" />
-              ) : null
-            }
-          >
-            {buttonText}
-          </Button>
-          <OpenServiceMenu />
-        </Box>
+        {!isPattern && (
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Button
+              data-testid="check-for-changes-to-publish-button"
+              sx={{ flex: 1 }}
+              variant="contained"
+              color="primary"
+              disabled={isDisabled}
+              onClick={handleCheckForChangesToPublish}
+              startIcon={
+                checkForChangesMutation.isPending ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : null
+              }
+            >
+              {buttonText}
+            </Button>
+            <OpenServiceMenu />
+          </Box>
+        )}
         {!alteredNodes || alteredNodes?.length === 0 ? (
           <NoChangesDialog
             dialogOpen={dialogOpen}
@@ -196,7 +198,7 @@ export const CheckForChangesToPublishButton: React.FC<{
             templatedFlows={templatedFlows}
           />
         )}
-        <Typography variant="caption">{status}</Typography>
+        {!isPattern && <Typography variant="caption">{status}</Typography>}
       </Box>
     </>
   );

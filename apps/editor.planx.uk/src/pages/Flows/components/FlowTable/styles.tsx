@@ -1,5 +1,5 @@
 import type { Theme } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
+import { darken, styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
@@ -57,13 +57,6 @@ export const StyledTableRow = styled(TableRow, {
   isPattern,
   clickable = true,
 }) => {
-  let hoverBackground: string | undefined;
-  if (clickable && isTemplated && isPattern) {
-    hoverBackground = theme.palette.template.main;
-  } else if (clickable) {
-    hoverBackground = theme.palette.background.paper;
-  }
-
   const getBackgroundColor = (
     theme: Theme,
     isTemplated?: boolean,
@@ -74,9 +67,12 @@ export const StyledTableRow = styled(TableRow, {
     return theme.palette.background.default;
   };
 
+  const backgroundColor = getBackgroundColor(theme, isTemplated, isPattern);
+  const hoverBackground = clickable ? darken(backgroundColor, 0.03) : undefined;
+
   return {
     position: "relative",
-    backgroundColor: getBackgroundColor(theme, isTemplated, isPattern),
+    backgroundColor,
     "&:hover": {
       backgroundColor: hoverBackground,
     },
