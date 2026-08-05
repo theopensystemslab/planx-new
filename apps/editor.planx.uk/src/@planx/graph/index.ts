@@ -837,7 +837,6 @@ export const insertGraph =
       parent?: NodeId;
       before?: NodeId;
       idFn?: () => string;
-      /** Called with the new ids of the inserted top level nodes, in source order */
       onInsert?: (topLevelIds: string[]) => void;
     } = {},
   ) =>
@@ -875,7 +874,10 @@ export const insertGraph =
         .filter((newId): newId is string => Boolean(newId))
         .map((newId) => buildGraphFromNodes(newId, newNodes));
 
-      // 4. Finally, insert each rebuilt node in turn and all its nested children
+      // 4. Fire optional callback function
+      onInsert?.(topLevelTrees.map(({ id }) => id));
+
+      // 5. Finally, insert each rebuilt node in turn and all its nested children
       topLevelTrees.forEach(({ id, children, ...nodeData }) => {
         _add(draft, { id, ...nodeData }, { children, parent, before });
       });
