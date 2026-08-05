@@ -735,10 +735,8 @@ export const editorStore: StateCreator<
       const { isTemplate: pastingToTemplate } = get();
       const stripTemplateProps = copiedFromTemplate && !pastingToTemplate;
 
-      /**
-       * Generate a full graph with _root
-       * insertGraph() expects a full graph structure, but will strip this out before inserting
-       */
+      // Generate a full graph with _root
+      // insertGraph() expects a full graph structure, but will strip this out before inserting
       const source: Graph = { [ROOT_NODE_KEY]: { edges: [rootId] } };
       copiedNodes.forEach(({ originalId, nodeData }) => {
         source[originalId] = stripTemplateProps
