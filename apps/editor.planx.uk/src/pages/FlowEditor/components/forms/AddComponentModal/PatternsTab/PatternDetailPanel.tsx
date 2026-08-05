@@ -1,66 +1,46 @@
-import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
-import { ComponentType } from "@opensystemslab/planx-core/types";
-import type { Graph } from "@planx/graph";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import type { Pattern } from "./queries";
 import { usePatternData } from "./usePatterns";
+import { getComponentCount } from "./utils";
 
 export const DETAIL_PANEL_WIDTH = 300;
 
-/**
- * Count all nodes (minus root and Answer components)
- */
-const getComponentCount = (graph: Graph) =>
-  Object.entries(graph).filter(
-    ([id, { type }]) => id !== "_root" && type !== ComponentType.Answer,
-  ).length;
-
 interface Props {
   pattern: Pattern | null;
-  onInsert: (graph: Graph) => void;
-  onClear: () => void;
 }
 
-export const PatternDetailPanel: React.FC<Props> = ({
-  pattern,
-  onInsert,
-  onClear,
-}) => {
+export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
   const { data, loading, error } = usePatternData(pattern?.id ?? null);
   const graph = data?.pattern?.data;
 
-  // Both null while there's no graph data (loading, error, or not yet selected)
+  // Null while there's no graph data (loading, error, or nothing previewed)
   const componentCount = graph ? getComponentCount(graph) : null;
+
+  if (!pattern) {
+    return (
+      <Box sx={{ width: DETAIL_PANEL_WIDTH, flexShrink: 0, p: 2 }}>
+        <Typography color="textSecondary" variant="body2">
+          Hover a pattern to see details.
+        </Typography>
+      </Box>
+    );
+  }
 
   const componentCountLabel =
     componentCount !== null && componentCount >= 1
       ? `${componentCount} component${componentCount === 1 ? "" : "s"}`
       : null;
 
-  // A pattern needs at least one component to be insertable
-  // We should aim to catch this when a pattern is made copyable
-  const isEmpty = componentCount !== null && componentCount === 0;
-  const canInsert = Boolean(graph) && !isEmpty && !error;
-
-  if (!pattern) {
-    return (
-      <Box sx={{ width: DETAIL_PANEL_WIDTH, flexShrink: 0, p: 2 }}>
-        <Typography color="textSecondary" variant="body2">
-          Select a pattern to see details.
-        </Typography>
-      </Box>
-    );
-  }
+  const isEmpty = componentCount === 0;
 
   return (
     <Box
+      data-testid="pattern-detail-panel"
       sx={{
         width: DETAIL_PANEL_WIDTH,
         flexShrink: 0,
@@ -71,22 +51,9 @@ export const PatternDetailPanel: React.FC<Props> = ({
         gap: 1.5,
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
-        <Typography
-          variant="body1"
-          sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD, flexGrow: 1 }}
-        >
-          {pattern.name}
-        </Typography>
-        <IconButton
-          onClick={onClear}
-          aria-label={`Close ${pattern.name} details`}
-          size="small"
-          sx={{ mt: -0.5, mr: -0.5 }}
-        >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </Box>
+      <Typography variant="body1" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+        {pattern.name}
+      </Typography>
       {pattern.summary && (
         <Typography variant="body2">{pattern.summary}</Typography>
       )}
@@ -106,15 +73,6 @@ export const PatternDetailPanel: React.FC<Props> = ({
           This pattern has no components to insert.
         </Typography>
       )}
-      <Button
-        variant="contained"
-        size="small"
-        fullWidth
-        disabled={loading || !canInsert}
-        onClick={() => graph && onInsert(graph)}
-      >
-        Insert pattern
-      </Button>
     </Box>
   );
 };

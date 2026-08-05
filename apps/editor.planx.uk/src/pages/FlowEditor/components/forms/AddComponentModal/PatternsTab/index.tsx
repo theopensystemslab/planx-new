@@ -9,7 +9,8 @@ import { TabHeader } from "../TabHeader";
 import { PatternDetailPanel } from "./PatternDetailPanel";
 import { PatternRow } from "./PatternRow";
 import type { Pattern } from "./queries";
-import { usePatterns } from "./usePatterns";
+import { useFetchPatternGraph, usePatterns } from "./usePatterns";
+import { getComponentCount } from "./utils";
 
 interface Props {
   onInsert: (graph: Graph) => void;
@@ -24,11 +25,20 @@ export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
   );
   const visiblePatterns = searchedPatterns ?? patterns;
 
-  const [selectedPatternId, setSelectedPatternId] = useState<string | null>(
-    null,
-  );
-  const selectedPattern =
-    visiblePatterns.find((pattern) => pattern.id === selectedPatternId) ?? null;
+  const [activePatternId, setActivePatternId] = useState<string | null>(null);
+  const activePattern =
+    visiblePatterns.find((pattern) => pattern.id === activePatternId) ?? null;
+
+  const fetchPatternGraph = useFetchPatternGraph();
+
+  const insertPattern = async (id: string) => {
+    // Resolves instantly from the cache once the panel has previewed this pattern
+    const patternGraph = await fetchPatternGraph(id);
+    // A pattern needs at least one component to be insertable
+    // We should aim to catch this when a pattern is made copyable
+    if (patternGraph && getComponentCount(patternGraph) > 0)
+      onInsert(patternGraph);
+  };
 
   return (
     <Box sx={{ display: "flex", flex: 1, minHeight: 0 }}>
@@ -75,17 +85,14 @@ export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
               <PatternRow
                 key={pattern.id}
                 pattern={pattern}
-                selected={pattern.id === selectedPatternId}
-                onClick={() => setSelectedPatternId(pattern.id)}
+                active={pattern.id === activePattern?.id}
+                onPreview={() => setActivePatternId(pattern.id)}
+                onSelect={() => insertPattern(pattern.id)}
               />
             ))}
         </Box>
       </Box>
-      <PatternDetailPanel
-        pattern={selectedPattern}
-        onInsert={onInsert}
-        onClear={() => setSelectedPatternId(null)}
-      />
+      <PatternDetailPanel pattern={activePattern} />
     </Box>
   );
 };
