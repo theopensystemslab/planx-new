@@ -6,7 +6,7 @@ import { CREATE_FLOW_NOTE_POSITION } from "./mutations";
 import { useCopiedFlowNote } from "./useCopiedFlowNote";
 
 interface CreateFlowNotePositionResult {
-  insert_flow_note_positions_one: { id: string } | null;
+  insertedNotePosition: { id: string } | null;
 }
 
 export const usePasteFlowNoteCopy = () => {
@@ -40,7 +40,7 @@ export const usePasteFlowNoteCopy = () => {
       },
     });
 
-    return data?.insert_flow_note_positions_one?.id;
+    return data?.insertedNotePosition?.id;
   };
 
   return { pasteFlowNoteCopy, ...mutationState };

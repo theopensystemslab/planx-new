@@ -75,7 +75,7 @@ describe("positioned-note context menu", () => {
         queriedId = variables.id;
         return HttpResponse.json({
           data: {
-            flow_note_content_by_pk: { text: "hi", color: "#fffdb0" },
+            noteContent: { text: "hi", color: "#fffdb0" },
           },
         });
       }),
@@ -117,7 +117,7 @@ describe("hanger context menu - paste note", () => {
       graphql.mutation("CreateFlowNotePosition", ({ variables }) => {
         capturedObject = variables.object;
         return HttpResponse.json({
-          data: { insert_flow_note_positions_one: { id: "new-position-id" } },
+          data: { insertedNotePosition: { id: "new-position-id" } },
         });
       }),
     );
@@ -141,7 +141,7 @@ describe("hanger context menu - paste note", () => {
       graphql.mutation("CreateFlowNotePosition", ({ variables }) => {
         capturedObject = variables.object;
         return HttpResponse.json({
-          data: { insert_flow_note_positions_one: { id: "new-position-id" } },
+          data: { insertedNotePosition: { id: "new-position-id" } },
         });
       }),
     );

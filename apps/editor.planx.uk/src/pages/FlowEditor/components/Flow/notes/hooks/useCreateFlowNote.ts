@@ -7,7 +7,7 @@ import { CREATE_FLOW_NOTE_POSITION } from "./mutations";
 export type CreateFlowNoteInput = FlowNoteTarget & { text: string };
 
 interface CreateFlowNotePositionResult {
-  insert_flow_note_positions_one: { id: string } | null;
+  insertedNotePosition: { id: string } | null;
 }
 
 export const useCreateFlowNote = () => {
@@ -42,7 +42,7 @@ export const useCreateFlowNote = () => {
       },
     });
 
-    return data?.insert_flow_note_positions_one?.id;
+    return data?.insertedNotePosition?.id;
   };
 
   return { createFlowNote, ...mutationState };

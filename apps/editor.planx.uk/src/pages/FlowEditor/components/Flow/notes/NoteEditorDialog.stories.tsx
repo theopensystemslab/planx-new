@@ -37,7 +37,7 @@ export const Create = {
         graphql.mutation("CreateFlowNotePosition", ({ variables }) => {
           console.log("createFlowNote", variables.object);
           return HttpResponse.json({
-            data: { insert_flow_note_positions_one: { id: "new-note-id" } },
+            data: { insertedNotePosition: { id: "new-note-id" } },
           });
         }),
       ],

@@ -1,5 +1,6 @@
 import { createFlow, getFlowData, makeUniqueFlow } from "../../../helpers.js";
 import type { CopyFlowRequest } from "./controller.js";
+import { copyFlowNotes } from "./copyFlowNotes.js";
 
 const copyFlow = async ({
   flowId,
@@ -18,7 +19,7 @@ const copyFlow = async ({
   // Check if copied flow data should be inserted into `flows` table, or just returned for reference
   if (insert) {
     // Insert the flow and an associated operation
-    await createFlow({
+    const insertedFlow = await createFlow({
       teamId,
       slug,
       name,
@@ -27,6 +28,13 @@ const copyFlow = async ({
       copiedFrom: flowId,
       isService: flow.isService,
       isPattern: flow.isPattern,
+    });
+
+    // Copy this flow's notes too, as new (not cloned) notes pointing at the new nodeIds
+    await copyFlowNotes({
+      sourceFlowId: flowId,
+      newFlowId: insertedFlow.id,
+      replaceValue,
     });
   }
 
