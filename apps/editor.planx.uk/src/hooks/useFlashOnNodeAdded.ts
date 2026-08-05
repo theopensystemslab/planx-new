@@ -5,20 +5,21 @@ import { useEffect, useRef } from "react";
 import { flashHighlight } from "./flashHighlight";
 
 const useFlashOnNodeAdded = <T extends HTMLElement>(id: string) => {
-  const [lastAddedNodeId, clearLastAddedNodeId] = useStore((state) => [
-    state.lastAddedNodeId,
-    state.clearLastAddedNodeId,
+  const [lastAddedNodeIds, clearLastAddedNodeIds] = useStore((state) => [
+    state.lastAddedNodeIds,
+    state.clearLastAddedNodeIds,
   ]);
   const ref = useRef<T | null>(null);
   const theme = useTheme();
 
   useEffect(() => {
     if (!ref.current) return;
-    if (lastAddedNodeId !== id) return;
+    if (!lastAddedNodeIds?.includes(id)) return;
 
     flashHighlight(ref.current, theme);
-    clearLastAddedNodeId();
-  }, [lastAddedNodeId, id, theme, clearLastAddedNodeId]);
+
+    if (lastAddedNodeIds.at(-1) === id) clearLastAddedNodeIds();
+  }, [lastAddedNodeIds, id, theme, clearLastAddedNodeIds]);
 
   return ref;
 };
