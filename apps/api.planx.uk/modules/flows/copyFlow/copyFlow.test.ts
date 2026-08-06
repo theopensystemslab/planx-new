@@ -8,6 +8,18 @@ import { userContext } from "../../auth/middleware.js";
 
 beforeEach(() => {
   queryMock.mockQuery({
+    name: "GetUserById",
+    matchOnVariables: false,
+    data: {
+      user: {
+        id: 123,
+        isPlatformAdmin: false,
+        teams: [{ role: "teamEditor", team: { id: 1, slug: "my-team" } }],
+      },
+    },
+  });
+
+  queryMock.mockQuery({
     name: "GetFlowData",
     matchOnVariables: false,
     data: {
@@ -18,21 +30,11 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
-    name: "InsertFlow",
+    name: "CopyFlow",
     matchOnVariables: false,
     data: {
-      insertFlow: {
+      copyFlow: {
         id: 2,
-      },
-    },
-  });
-
-  queryMock.mockQuery({
-    name: "InsertOperation",
-    matchOnVariables: false,
-    data: {
-      operation: {
-        id: 1,
       },
     },
   });
@@ -58,14 +60,6 @@ beforeEach(() => {
       publishedFlow: {
         data: mockFlowData,
       },
-    },
-  });
-
-  queryMock.mockQuery({
-    name: "GetFlowNotesForCopy",
-    matchOnVariables: false,
-    data: {
-      flowNotePositions: [],
     },
   });
 });
@@ -125,6 +119,30 @@ describe("authentication and error handling", () => {
       });
   });
 
+  it("returns an error if the user is not a member of the target team", async () => {
+    queryMock.mockQuery({
+      name: "GetUserById",
+      matchOnVariables: false,
+      data: {
+        user: {
+          id: 123,
+          isPlatformAdmin: false,
+          teams: [{ role: "teamEditor", team: { id: 2, slug: "other-team" } }],
+        },
+      },
+    });
+
+    const body = {
+      insert: true,
+      replaceValue: "T3ST1",
+      teamId: 1,
+      name: "test (copy)",
+      slug: "test-copy",
+    };
+
+    await supertest(app).post("/flows/1/copy").send(body).set(auth).expect(403);
+  });
+
   it("returns an error if the operation to insert a new flow fails", async () => {
     const body = {
       insert: true,
@@ -135,31 +153,14 @@ describe("authentication and error handling", () => {
     };
 
     queryMock.mockQuery({
-      name: "GetFlowData",
+      name: "CopyFlow",
       matchOnVariables: false,
-      data: {
-        flow: {
-          data: mockFlowData,
-        },
-      },
-    });
-
-    queryMock.mockQuery({
-      name: "InsertFlow",
-      matchOnVariables: false,
-      data: {
-        flow: {
-          id: 2,
-        },
-      },
+      data: { copyFlow: null },
       graphqlErrors: [
         {
           message: "Something went wrong",
         },
       ],
-      variables: {
-        id: "3",
-      },
     });
 
     await supertest(app)
@@ -168,8 +169,7 @@ describe("authentication and error handling", () => {
       .set(auth)
       .expect(500)
       .then((res) => {
-        expect(res.body.error).toMatch(/failed to insert flow/);
-        expect(res.body.error).toMatch(/Please check permissions/);
+        expect(res.body.error).toMatch(/Failed to copy flow/);
       });
   });
 });
@@ -201,121 +201,6 @@ it("inserts copied unique flow data", async () => {
     name: "test (copy)",
     slug: "test-copy",
   };
-
-  await supertest(app)
-    .post("/flows/1/copy")
-    .send(body)
-    .set(auth)
-    .expect(200)
-    .then((res) => {
-      expect(res.body).toEqual(mockCopyFlowResponseInserted);
-    });
-});
-
-it("copies a flow's notes, preserving clone relationships between notes but not to the original flow's notes", async () => {
-  const body = {
-    insert: true,
-    replaceValue: "T3ST1",
-    teamId: 1,
-    name: "test (copy)",
-    slug: "test-copy",
-  };
-
-  queryMock.mockQuery({
-    name: "GetFlowNotesForCopy",
-    matchOnVariables: false,
-    data: {
-      flowNotePositions: [
-        {
-          // a standalone note
-          noteId: "note-a",
-          nodeId: "Yh7t91FisE",
-          placement: null,
-          note: { text: "Solo note", color: "#fffdb0" },
-        },
-        {
-          // first of a clone pair - shares noteId "note-b" with the row below
-          noteId: "note-b",
-          nodeId: null,
-          placement: { parent: "_root", before: "kNX8Rej9rk" },
-          note: { text: "Cloned note", color: "#ffd6a5" },
-        },
-        {
-          // second of the clone pair
-          noteId: "note-b",
-          nodeId: "h8DSw40zNr",
-          placement: null,
-          note: { text: "Cloned note", color: "#ffd6a5" },
-        },
-      ],
-    },
-  });
-
-  // One new flow_note_content row created per unique original note, via its first position
-  queryMock.mockQuery({
-    name: "InsertFlowNotePositionWithContentForCopy",
-    variables: {
-      object: {
-        flow_id: 2,
-        node_id: "Yh7t9T3ST1",
-        placement: null,
-        created_by: "123",
-        note: {
-          data: {
-            text: "Solo note",
-            color: "#fffdb0",
-            created_by: "123",
-            updated_by: "123",
-          },
-        },
-      },
-    },
-    data: {
-      insertedNotePosition: { noteId: "new-note-a" },
-    },
-  });
-
-  queryMock.mockQuery({
-    name: "InsertFlowNotePositionWithContentForCopy",
-    variables: {
-      object: {
-        flow_id: 2,
-        node_id: null,
-        placement: { parent: "_root", before: "kNX8RT3ST1" },
-        created_by: "123",
-        note: {
-          data: {
-            text: "Cloned note",
-            color: "#ffd6a5",
-            created_by: "123",
-            updated_by: "123",
-          },
-        },
-      },
-    },
-    data: {
-      insertedNotePosition: { noteId: "new-note-b" },
-    },
-  });
-
-  // The clone pair's second position points at the shared new note, not a new content row
-  queryMock.mockQuery({
-    name: "InsertFlowNotePositionsForCopy",
-    variables: {
-      objects: [
-        {
-          flow_id: 2,
-          node_id: "h8DSwT3ST1",
-          placement: null,
-          created_by: "123",
-          note_id: "new-note-b",
-        },
-      ],
-    },
-    data: {
-      insert_flow_note_positions: { affected_rows: 1 },
-    },
-  });
 
   await supertest(app)
     .post("/flows/1/copy")
@@ -361,7 +246,7 @@ it("throws an error if the a GraphQL operation fails", async () => {
     });
 });
 
-it("throws an error if user details are missing", async () => {
+it("returns an error if user details are missing", async () => {
   const getStoreMock = vi.spyOn(userContext, "getStore");
   getStoreMock.mockReturnValue(undefined);
 
@@ -373,14 +258,7 @@ it("throws an error if user details are missing", async () => {
     slug: "test-copy",
   };
 
-  await supertest(app)
-    .post("/flows/1/copy")
-    .send(body)
-    .set(auth)
-    .expect(500)
-    .then((res) => {
-      expect(res.body.error).toMatch(/Failed to copy flow/);
-    });
+  await supertest(app).post("/flows/1/copy").send(body).set(auth).expect(403);
 });
 
 // the original flow
