@@ -66,11 +66,6 @@ export const PlatformAdminPanel = () => {
       },
     },
     {
-      field: "planningDataEnabled",
-      headerName: "Planning constraints",
-      type: ColumnFilterType.BOOLEAN,
-    },
-    {
       field: "article4sEnabled",
       headerName: "Article 4s",
       type: ColumnFilterType.BOOLEAN,

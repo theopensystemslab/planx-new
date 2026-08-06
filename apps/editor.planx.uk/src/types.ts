@@ -104,7 +104,6 @@ export interface AdminPanelData {
   referenceCode?: string;
   homepage?: string;
   subdomain?: string;
-  planningDataEnabled: boolean;
   article4sEnabled: boolean;
   govnotifyPersonalisation?: TeamContactSettings;
   govpayEnabled: boolean;
