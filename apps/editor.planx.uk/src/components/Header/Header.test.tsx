@@ -13,7 +13,7 @@ import Header from "./Header";
 
 const { setState, getState } = useStore;
 
-const mockTeam1: Omit<Team, "integrations"> = {
+const mockTeam1: Team = {
   id: 123,
   name: "Open Systems Lab",
   slug: "opensystemslab",
@@ -35,7 +35,7 @@ const mockTeam1: Omit<Team, "integrations"> = {
   },
 };
 
-const mockTeam2: Omit<Team, "integrations"> = {
+const mockTeam2: Team = {
   id: 456,
   name: "Closed Systems Lab",
   slug: "closedsystemslab",
