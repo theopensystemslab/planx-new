@@ -125,7 +125,18 @@ function PlanningConstraintsComponent(props: Props) {
               />
             </InputRow>
           </InputGroup>
-          <InputGroup label="Which constraints do you want to check?">
+          <InputGroup label="Select available constraints you want to check">
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              Only select constraints that are available on{" "}
+              <a href="https://planning.data.gov.uk/" target="_blank">
+                Planning Data
+              </a>
+              . If you select constraints for which your team has not published
+              data on Planning Data, the service may return inaccurate results.
+              For example, if you select "Listed buildings" but this data is
+              unavailable, users will be told that their property is not listed
+              even if it is.
+            </Typography>
             <ErrorWrapper error={getIn(formik.errors, "dataValues")}>
               <TableContainer>
                 <Table size="small">

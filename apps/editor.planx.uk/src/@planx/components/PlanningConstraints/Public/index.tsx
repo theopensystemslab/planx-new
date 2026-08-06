@@ -16,7 +16,7 @@ import React, { useState } from "react";
 import type { SiteAddress } from "../../FindProperty/model";
 import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
 import {
-  availableDatasets,
+  DEFAULT_CONSTRAINT_DATA,
   type IntersectingConstraints,
   type PlanningConstraints,
 } from "../model";
@@ -38,8 +38,8 @@ export type InaccurateConstraints =
 export default Component;
 
 function Component(props: Props) {
-  // Existing components will not have dataValues prop so should default to all available datasets
-  const dataValues = props.dataValues || availableDatasets.map((d) => d.val);
+  // Default to nationally available data for unconfigured legacy components
+  const dataValues = props.dataValues || DEFAULT_CONSTRAINT_DATA;
 
   const [
     currentCardId,
