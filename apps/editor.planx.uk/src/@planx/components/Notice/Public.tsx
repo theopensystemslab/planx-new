@@ -79,6 +79,7 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const NoticeComponent: React.FC<Props> = (props) => {
   const theme = useTheme();
+  const titleId = React.useId();
   const textColor = getContrastTextColor(
     props.color,
     theme.palette.text.primary,
@@ -110,11 +111,15 @@ const NoticeComponent: React.FC<Props> = (props) => {
   return (
     <Card handleSubmit={handleSubmit} isValid>
       <>
-        <Container customColor={props.color}>
+        <Container
+          customColor={props.color}
+          component="section"
+          aria-labelledby={titleId}
+        >
           <Content>
             <TitleWrap>
               <ErrorOutline sx={{ width: 34, height: 34 }} />
-              <Title variant="h3" component="h1">
+              <Title variant="h3" component="h1" id={titleId}>
                 {props.title}
               </Title>
             </TitleWrap>
