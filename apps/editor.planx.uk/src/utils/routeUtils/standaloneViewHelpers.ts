@@ -44,9 +44,6 @@ export const fetchDataForStandaloneView = async (
                 emailReplyToId: email_reply_to_id
                 boundaryBBox: boundary_bbox
               }
-              integrations {
-                hasPlanningData: has_planning_data
-              }
               slug
             }
             settings

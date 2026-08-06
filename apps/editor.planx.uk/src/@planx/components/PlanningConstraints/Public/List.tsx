@@ -170,9 +170,8 @@ interface ConstraintListItemProps {
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const [{ longitude, latitude, usrn }, hasPlanningData] = useStore((state) => [
+  const [{ longitude, latitude, usrn }] = useStore((state) => [
     (state.computePassport().data?.["_address"] as SiteAddress) || {},
-    state.teamIntegrations?.hasPlanningData,
   ]);
 
   // Whether a particular constraint list item is sourced from Planning Data
@@ -181,7 +180,6 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
 
   // Whether to show the button to the override modal
   const showOverrideButton =
-    hasPlanningData && // skip teams that don't publish via Planning Data eg Braintree
     !props.fn.startsWith("articleFour") && // skip A4s (and therefore CAZs) because we can't confidently update granular passport vars based on entity data
     props.value && // skip negative constraints that don't apply to this property
     Boolean(props.data?.length); // skip any positive constraints that don't have individual linked entities

@@ -13,13 +13,10 @@ import Header from "./Header";
 
 const { setState, getState } = useStore;
 
-const mockTeam1: Team = {
+const mockTeam1: Omit<Team, "integrations"> = {
   id: 123,
   name: "Open Systems Lab",
   slug: "opensystemslab",
-  integrations: {
-    hasPlanningData: false,
-  },
   theme: {
     logo: "logo.jpg",
     primaryColour: "#0010A4",
@@ -38,13 +35,10 @@ const mockTeam1: Team = {
   },
 };
 
-const mockTeam2: Team = {
+const mockTeam2: Omit<Team, "integrations"> = {
   id: 456,
   name: "Closed Systems Lab",
   slug: "closedsystemslab",
-  integrations: {
-    hasPlanningData: false,
-  },
   theme: {
     logo: null,
     primaryColour: "#0010A4",

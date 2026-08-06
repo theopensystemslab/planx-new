@@ -45,14 +45,12 @@ function Component(props: Props) {
     currentCardId,
     cachedBreadcrumbs,
     teamSlug,
-    hasPlanningData,
     priorOverrides,
     { longitude, latitude },
   ] = useStore((state) => [
     state.currentCard?.id,
     state.cachedBreadcrumbs,
     state.teamSlug,
-    state.teamIntegrations?.hasPlanningData,
     state.computePassport().data?.["_overrides"],
     (state.computePassport().data?.["_address"] as SiteAddress) || {},
   ]);
@@ -97,10 +95,8 @@ function Component(props: Props) {
   const handleSubmit = () => {
     // `_constraints` & `_overrides` are responsible for auditing
     const _constraints: Array<EnhancedGISResponse> = [];
-    if (hasPlanningData) {
-      if (data && !isGISError) _constraints.push(data);
-      if (roads && !isRoadsError) _constraints.push(roads);
-    }
+    if (data && !isGISError) _constraints.push(data);
+    if (roads && !isRoadsError) _constraints.push(roads);
 
     const hasInaccurateConstraints =
       inaccurateConstraints && Object.keys(inaccurateConstraints).length > 0;

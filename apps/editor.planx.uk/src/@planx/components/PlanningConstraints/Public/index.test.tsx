@@ -81,9 +81,6 @@ describe("following a FindProperty component", () => {
       setState({
         breadcrumbs: simpleBreadcrumbs,
         flow: simpleFlow,
-        teamIntegrations: {
-          hasPlanningData: true,
-        },
       }),
     );
   });
@@ -188,9 +185,6 @@ describe("following a FindProperty component", () => {
       setState({
         breadcrumbs: breadcrumbsWithoutUSRN,
         flow: simpleFlow,
-        teamIntegrations: {
-          hasPlanningData: true,
-        },
       }),
     );
 
@@ -287,9 +281,6 @@ describe("selectable datasets in editor", () => {
       setState({
         breadcrumbs: simpleBreadcrumbs,
         flow: simpleFlow,
-        teamIntegrations: {
-          hasPlanningData: true,
-        },
       }),
     );
   });

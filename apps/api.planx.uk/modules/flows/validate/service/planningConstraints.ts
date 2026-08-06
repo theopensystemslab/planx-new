@@ -21,7 +21,6 @@ const validatePlanningConstraints = (
         "When using Planning Constraints, your flow must have exactly ONE Planning Constraints component",
     };
   } else if (numberOfPlanningConstraintNodes === 1) {
-    // In future, add extra `hasPlanningData` validation step here to ensure integration is available for this team
     return {
       title: "Planning Constraints",
       status: "Pass",
