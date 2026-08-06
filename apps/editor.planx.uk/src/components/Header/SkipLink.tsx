@@ -1,19 +1,15 @@
+import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import type { SyntheticEvent } from "react";
 import React from "react";
 import { focusStyle } from "theme";
 
-import { HEADER_HEIGHT_PUBLIC } from "./Header";
-
 const Root = styled("a")(({ theme }) => ({
   width: "100vw",
   cursor: "pointer",
-  height: HEADER_HEIGHT_PUBLIC / 2,
   backgroundColor: theme.palette.background.dark,
   color: theme.palette.common.white,
-  textDecoration: "underline",
-  padding: theme.spacing(1),
-  paddingLeft: theme.spacing(3),
+  padding: theme.spacing(0.5, 0),
   // translate off-screen with absolute position
   position: "absolute",
   transform: "translateY(-100%)",
@@ -28,17 +24,7 @@ const Root = styled("a")(({ theme }) => ({
 export const SkipLink: React.FC = () => {
   const handleClick = (e: SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    handleActivation();
-  };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleActivation();
-    }
-  };
-
-  const handleActivation = () => {
     const targetElement = document.getElementById("main-content");
     if (!targetElement) return;
 
@@ -47,8 +33,8 @@ export const SkipLink: React.FC = () => {
   };
 
   return (
-    <Root onClick={handleClick} onKeyDown={handleKeyDown} tabIndex={0}>
-      Skip to main content
+    <Root href="#main-content" onClick={handleClick}>
+      <Container maxWidth="contentWrap">Skip to main content</Container>
     </Root>
   );
 };
