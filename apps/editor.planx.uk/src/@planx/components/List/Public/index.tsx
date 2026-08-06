@@ -3,22 +3,18 @@ import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { formatTitle } from "@planx/components/shared/Schema/InputFields";
 import { isMapFieldResponse } from "@planx/components/shared/Schema/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import type { PublicProps } from "@planx/components/shared/types";
 import React, { useEffect, useRef } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Card from "../../shared/Preview/Card";
 import { CardHeader } from "../../shared/Preview/CardHeader/CardHeader";
+import { SummaryListTable } from "../../shared/Preview/SummaryList";
 import type { List } from "../model";
 import { formatSchemaDisplayValue } from "../utils";
 import { ListProvider, useListContext } from "./Context";
@@ -33,7 +29,7 @@ const ListCard = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   gap: theme.spacing(3),
   marginBottom: theme.spacing(2),
-  "& label, & table": {
+  "& label, & dl": {
     maxWidth: theme.breakpoints.values.formWrap,
   },
 }));
@@ -84,13 +80,15 @@ const ActiveListCard: React.FC<{
   const isInitialCard =
     activeIndex === 0 && formik.values?.schemaData?.length === 1;
 
+  const itemLabel = `${schema.type} ${i + 1}`;
+
   return (
     <ErrorWrapper
       error={errors.unsavedItem ? "Please save in order to continue" : ""}
     >
       <ListCard data-testid={`list-card-${i}`} ref={ref}>
         <Typography component="h2" variant="h3">
-          {`${schema.type} ${i + 1}`}
+          {itemLabel}
         </Typography>
         <SchemaFields
           sx={(theme) => ({
@@ -108,6 +106,7 @@ const ActiveListCard: React.FC<{
             color="prompt"
             data-testid="save-item-button"
             onClick={async () => await saveItem()}
+            aria-label={`Save ${itemLabel}`}
           >
             Save
           </Button>
@@ -115,6 +114,8 @@ const ActiveListCard: React.FC<{
             <CardButton
               data-testid="cancel-edit-item-button"
               onClick={cancelEditItem}
+              variant="contained"
+              color="secondary"
             >
               Cancel
             </CardButton>
@@ -142,47 +143,52 @@ const InactiveListCard: React.FC<{
       : null;
   })();
 
+  const itemLabel = `${schema.type} ${i + 1}`;
+
   return (
     <ListCard data-testid={`list-card-${i}`}>
       <Typography component="h2" variant="h3">
-        {`${schema.type} ${i + 1}`}
+        {itemLabel}
       </Typography>
       <InactiveListCardLayout>
         {formattedMapResponse && (
-          <Box sx={{ flexBasis: "50%" }}>{formattedMapResponse}</Box>
+          <Box sx={{ flexBasis: "40%", flexGrow: 0, flexShrink: 0 }}>
+            {formattedMapResponse}
+          </Box>
         )}
-        <Table>
-          <TableBody>
-            {schema.fields.map(
-              (field, j) =>
-                field.type !== "map" && (
-                  <TableRow key={`tableRow-${j}`} sx={{ verticalAlign: "top" }}>
-                    <TableCell
-                      sx={{
-                        fontWeight: FONT_WEIGHT_SEMI_BOLD,
-                        maxWidth: "160px",
-                      }}
-                    >
-                      {formatTitle(field)}
-                    </TableCell>
-                    <TableCell>
-                      {formatSchemaDisplayValue(
-                        formik.values.schemaData[i][field.data.fn],
-                        schema.fields[j],
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ),
-            )}
-          </TableBody>
-        </Table>
+        <SummaryListTable sx={{ margin: 0 }}>
+          {schema.fields.map(
+            (field, j) =>
+              field.type !== "map" && (
+                <React.Fragment key={`field-${j}`}>
+                  <Box component="dt">{formatTitle(field)}</Box>
+                  <Box component="dd">
+                    {formatSchemaDisplayValue(
+                      formik.values.schemaData[i][field.data.fn],
+                      schema.fields[j],
+                    )}
+                  </Box>
+                </React.Fragment>
+              ),
+          )}
+        </SummaryListTable>
       </InactiveListCardLayout>
       <Box sx={{ display: "flex", gap: 2 }}>
-        <CardButton onClick={() => removeItem(i)}>
+        <CardButton
+          onClick={() => removeItem(i)}
+          aria-label={`Remove ${itemLabel}`}
+          variant="contained"
+          color="secondary"
+        >
           <DeleteIcon color="warning" fontSize="medium" />
           Remove
         </CardButton>
-        <CardButton onClick={() => editItem(i)}>
+        <CardButton
+          onClick={() => editItem(i)}
+          aria-label={`Edit ${itemLabel}`}
+          variant="contained"
+          color="secondary"
+        >
           <EditIcon fontSize="medium" />
           Edit
         </CardButton>

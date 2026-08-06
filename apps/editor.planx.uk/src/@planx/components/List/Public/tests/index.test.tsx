@@ -127,43 +127,43 @@ test(
     await fillInResponse(user);
 
     // Text input
-    expect(getByText("What's their name?", { selector: "td" })).toBeVisible();
-    expect(getByText("Richard Parker", { selector: "td" })).toBeVisible();
+    expect(getByText("What's their name?", { selector: "dt" })).toBeVisible();
+    expect(getByText("Richard Parker", { selector: "dd" })).toBeVisible();
 
     // Email input
     expect(
-      getByText("What's their email address?", { selector: "td" }),
+      getByText("What's their email address?", { selector: "dt" }),
     ).toBeVisible();
     expect(
-      getByText("richard.parker@pi.com", { selector: "td" }),
+      getByText("richard.parker@pi.com", { selector: "dd" }),
     ).toBeVisible();
 
     // Number input
-    expect(getByText("How old are they?", { selector: "td" })).toBeVisible();
-    expect(getByText("10 years old", { selector: "td" })).toBeVisible();
+    expect(getByText("How old are they?", { selector: "dt" })).toBeVisible();
+    expect(getByText("10 years old", { selector: "dd" })).toBeVisible();
 
     // Question input - select
-    expect(getByText("What size are they?", { selector: "td" })).toBeVisible();
-    expect(getByText("Medium", { selector: "td" })).toBeVisible();
+    expect(getByText("What size are they?", { selector: "dt" })).toBeVisible();
+    expect(getByText("Medium", { selector: "dd" })).toBeVisible();
 
     // Question input - radio
-    expect(getByText("How cute are they?", { selector: "td" })).toBeVisible();
-    expect(getByText("Very", { selector: "td" })).toBeVisible();
+    expect(getByText("How cute are they?", { selector: "dt" })).toBeVisible();
+    expect(getByText("Very", { selector: "dd" })).toBeVisible();
 
     // Checklist input
-    expect(getByText("What do they eat?", { selector: "td" })).toBeVisible();
+    expect(getByText("What do they eat?", { selector: "dt" })).toBeVisible();
     expect(getByText("Meat", { selector: "li" })).toBeVisible();
     expect(getByText("Leaves", { selector: "li" })).toBeVisible();
     expect(getByText("Bamboo", { selector: "li" })).toBeVisible();
 
     // Address input
     expect(
-      getByText("What's their address?", { selector: "td" }),
+      getByText("What's their address?", { selector: "dt" }),
     ).toBeVisible();
     expect(
       getByText(
         "134 Corstorphine Rd, Corstorphine, Edinburgh, Midlothian, EH12 6TS, Scotland",
-        { selector: "td" },
+        { selector: "dd" },
       ),
     ).toBeVisible();
   },
