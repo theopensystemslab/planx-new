@@ -53,7 +53,7 @@ test.describe("Focus navigation accessibility", () => {
 
     await page.keyboard.press("Tab");
 
-    const skipLink = page.getByText("Skip to main content");
+    const skipLink = page.getByRole("link", { name: "Skip to main content" });
     await expect(skipLink).toBeFocused();
 
     await skipLink.click();
@@ -63,7 +63,9 @@ test.describe("Focus navigation accessibility", () => {
 
     await page.keyboard.press("Tab");
 
-    const skipLinkAgain = page.getByText("Skip to main content");
+    const skipLinkAgain = page.getByRole("link", {
+      name: "Skip to main content",
+    });
     await expect(skipLinkAgain).toBeFocused();
   });
 });
