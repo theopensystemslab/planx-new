@@ -77,13 +77,13 @@ describe("rendering boolean columns", () => {
     );
 
     // Newcastle (row 3): govpayEnabled = false
-    const firstRow = govPayCells[1];
+    const firstRow = govPayCells[3];
     expect(
       await within(firstRow as HTMLElement).findByTestId("CloseIcon"),
     ).toBeVisible();
 
     // Tewkesbury (row 4): govpayEnabled = true
-    const secondRow = govPayCells[2];
+    const secondRow = govPayCells[4];
     expect(
       within(secondRow as HTMLElement).getByTestId("DoneIcon"),
     ).toBeVisible();
