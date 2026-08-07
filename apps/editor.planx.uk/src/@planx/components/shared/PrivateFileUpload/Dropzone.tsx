@@ -73,7 +73,7 @@ const Root = styled(Box, {
       }),
     ],
   },
-  "&:focus": {
+  "&:focus-within": {
     ...borderedFocusStyle,
     boxShadow: "none",
     borderStyle: "solid",
@@ -175,9 +175,18 @@ export function Dropzone<T extends FileUploadSlot>({
     onDropRejected: handleRejectedUpload,
   });
 
+  // Keep focus/click/keyboard handling on the input
+  const {
+    role: _role,
+    tabIndex: _tabIndex,
+    onClick: _onClick,
+    onKeyDown: _onKeyDown,
+    ...dragProps
+  } = getRootProps();
+
   return (
     <Root
-      {...getRootProps()}
+      {...dragProps}
       isDragActive={isDragActive}
       isWithinListCard={isWithinListCard}
     >
@@ -185,6 +194,15 @@ export function Dropzone<T extends FileUploadSlot>({
         data-testid="upload-input"
         {...getInputProps()}
         aria-labelledby="dropzone-label"
+        tabIndex={0}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          opacity: 0,
+          cursor: "pointer",
+        }}
       />
       <Box sx={{ pl: 2, pr: 3, color: "text.secondary" }}>
         <CloudUpload />
