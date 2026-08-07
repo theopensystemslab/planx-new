@@ -1,9 +1,11 @@
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import ExtensionIcon from "@mui/icons-material/Extension";
 import LockIcon from "@mui/icons-material/Lock";
 import MapIcon from "@mui/icons-material/Map";
 import PaletteIcon from "@mui/icons-material/Palette";
 import { useParams } from "@tanstack/react-router";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
 import React from "react";
@@ -41,6 +43,9 @@ const TeamSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
 
   const settingsLinks = [
     ...baseSettingsLinks,
+    ...(hasFeatureFlag("STRIPE_MIGRATION")
+      ? [{ label: "Payment", path: "/payment", icon: AccountBalanceIcon }]
+      : []),
     ...(isPlatformAdmin
       ? [{ label: "Advanced", path: "/advanced", icon: LockIcon }]
       : []),
