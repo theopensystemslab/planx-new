@@ -8,15 +8,14 @@ import { useEffect } from "react";
 import type { PlanningConstraints } from "../../model";
 
 export const useClassifiedRoads = (dataValues: string[]) => {
-  const [hasPlanningData, { usrn }] = useStore((state) => [
-    state.teamIntegrations?.hasPlanningData,
+  const [{ usrn }] = useStore((state) => [
     (state.computePassport().data?.["_address"] as SiteAddress) || {},
   ]);
 
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
   //   skip if the applicant plotted a new non-UPRN address on the map
   const shouldFetchRoads =
-    hasPlanningData && Boolean(usrn) && dataValues.includes("road.classified");
+    Boolean(usrn) && dataValues.includes("road.classified");
 
   const query = useQuery({
     queryKey: ["classifiedRoads", usrn],
@@ -36,10 +35,7 @@ export const useClassifiedRoads = (dataValues: string[]) => {
 export const usePrefetchClassifiedRoads = (usrn?: string) => {
   const queryClient = useQueryClient();
 
-  const [hasPlanningData, flow] = useStore((state) => [
-    state.teamIntegrations?.hasPlanningData,
-    state.flow,
-  ]);
+  const [flow] = useStore((state) => [state.flow]);
 
   // Validation rules enforce that each graph can only contain a single PlanningConstraints node
   const planningConstraintsNode = Object.values(flow).find(
@@ -49,7 +45,7 @@ export const usePrefetchClassifiedRoads = (usrn?: string) => {
   const dataValues = planningConstraintsNode?.dataValues;
 
   const shouldPrefetch =
-    hasPlanningData && Boolean(usrn) && dataValues?.includes("road.classified");
+    Boolean(usrn) && dataValues?.includes("road.classified");
 
   useEffect(() => {
     if (shouldPrefetch) {

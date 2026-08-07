@@ -9,7 +9,6 @@ export const STAGING_ADMIN_PANEL_QUERY = gql`
       referenceCode: reference_code
       homepage
       subdomain
-      planningDataEnabled: planning_data_enabled
       article4sEnabled: article_4s_enabled
       govnotifyPersonalisation: govnotify_personalisation
       govpayEnabled: govpay_enabled_staging
@@ -36,7 +35,6 @@ export const PRODUCTION_ADMIN_PANEL_QUERY = gql`
       referenceCode: reference_code
       homepage
       subdomain
-      planningDataEnabled: planning_data_enabled
       article4sEnabled: article_4s_enabled
       govnotifyPersonalisation: govnotify_personalisation
       govpayEnabled: govpay_enabled_production

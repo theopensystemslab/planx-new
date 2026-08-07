@@ -16,7 +16,7 @@ import React, { useState } from "react";
 import type { SiteAddress } from "../../FindProperty/model";
 import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
 import {
-  availableDatasets,
+  DEFAULT_CONSTRAINT_DATA,
   type IntersectingConstraints,
   type PlanningConstraints,
 } from "../model";
@@ -38,21 +38,19 @@ export type InaccurateConstraints =
 export default Component;
 
 function Component(props: Props) {
-  // Existing components will not have dataValues prop so should default to all available datasets
-  const dataValues = props.dataValues || availableDatasets.map((d) => d.val);
+  // Default to nationally available data for unconfigured legacy components
+  const dataValues = props.dataValues || DEFAULT_CONSTRAINT_DATA;
 
   const [
     currentCardId,
     cachedBreadcrumbs,
     teamSlug,
-    hasPlanningData,
     priorOverrides,
     { longitude, latitude },
   ] = useStore((state) => [
     state.currentCard?.id,
     state.cachedBreadcrumbs,
     state.teamSlug,
-    state.teamIntegrations?.hasPlanningData,
     state.computePassport().data?.["_overrides"],
     (state.computePassport().data?.["_address"] as SiteAddress) || {},
   ]);
@@ -97,10 +95,8 @@ function Component(props: Props) {
   const handleSubmit = () => {
     // `_constraints` & `_overrides` are responsible for auditing
     const _constraints: Array<EnhancedGISResponse> = [];
-    if (hasPlanningData) {
-      if (data && !isGISError) _constraints.push(data);
-      if (roads && !isRoadsError) _constraints.push(roads);
-    }
+    if (data && !isGISError) _constraints.push(data);
+    if (roads && !isRoadsError) _constraints.push(roads);
 
     const hasInaccurateConstraints =
       inaccurateConstraints && Object.keys(inaccurateConstraints).length > 0;

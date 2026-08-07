@@ -25,7 +25,6 @@ describe("rendering column headers", () => {
       "Reference code",
       "Live services",
       "First online at",
-      "Planning constraints",
       "Article 4s",
       "GOV.UK Pay",
       "GOV.UK Notify",
@@ -73,18 +72,18 @@ describe("rendering boolean columns", () => {
 
     await screen.findByText("Barking and Dagenham");
 
-    const planningConstraintCells = container.querySelectorAll(
-      '[data-field="planningDataEnabled"]',
+    const govPayCells = container.querySelectorAll(
+      '[data-field="govpayEnabled"]',
     );
 
-    // Barking (row 1): planningDataEnabled = false
-    const firstRow = planningConstraintCells[1];
+    // Newcastle (row 3): govpayEnabled = false
+    const firstRow = govPayCells[3];
     expect(
       await within(firstRow as HTMLElement).findByTestId("CloseIcon"),
     ).toBeVisible();
 
-    // Doncaster (row 2): planningDataEnabled = true
-    const secondRow = planningConstraintCells[2];
+    // Tewkesbury (row 4): govpayEnabled = true
+    const secondRow = govPayCells[4];
     expect(
       within(secondRow as HTMLElement).getByTestId("DoneIcon"),
     ).toBeVisible();

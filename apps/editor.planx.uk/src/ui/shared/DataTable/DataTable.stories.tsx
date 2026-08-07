@@ -68,11 +68,6 @@ export const Basic: Story = {
         },
       },
       {
-        field: "planningDataEnabled",
-        headerName: "Planning constraints",
-        type: ColumnFilterType.BOOLEAN,
-      },
-      {
         field: "govpayEnabled",
         headerName: "GOV.UK Pay",
         type: ColumnFilterType.BOOLEAN,

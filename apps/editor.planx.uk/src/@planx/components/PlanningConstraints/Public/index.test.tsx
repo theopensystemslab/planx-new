@@ -22,6 +22,7 @@ import PlanningConstraints from ".";
 const { setState } = useStore;
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
+const availableDataValues = ["registeredPark", "road.classified"];
 
 const handlers = [
   // GIS requests
@@ -49,7 +50,7 @@ describe("error state", () => {
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
           handleSubmit={vi.fn()}
-          dataValues={["test1", "test2", "test3"]}
+          dataValues={availableDataValues}
         />
       </ErrorBoundary>,
     );
@@ -66,7 +67,7 @@ describe("error state", () => {
           description="Things that might affect your project"
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
-          dataValues={["test1", "test2", "test3"]}
+          dataValues={availableDataValues}
         />
       </ErrorBoundary>,
     );
@@ -81,9 +82,6 @@ describe("following a FindProperty component", () => {
       setState({
         breadcrumbs: simpleBreadcrumbs,
         flow: simpleFlow,
-        teamIntegrations: {
-          hasPlanningData: true,
-        },
       }),
     );
   });
@@ -98,7 +96,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={handleSubmit}
-        dataValues={["test1", "test2", "test3"]}
+        dataValues={availableDataValues}
       />,
     );
 
@@ -133,7 +131,7 @@ describe("following a FindProperty component", () => {
         description="Things that might affect your project"
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
-        dataValues={["test1", "test2", "test3"]}
+        dataValues={availableDataValues}
       />,
     );
 
@@ -153,7 +151,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-        dataValues={["test1", "test2", "test3"]}
+        dataValues={availableDataValues}
       />,
     );
 
@@ -170,7 +168,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-        dataValues={["test1", "test2", "test3", "road.classified"]}
+        dataValues={availableDataValues}
       />,
     );
 
@@ -188,9 +186,6 @@ describe("following a FindProperty component", () => {
       setState({
         breadcrumbs: breadcrumbsWithoutUSRN,
         flow: simpleFlow,
-        teamIntegrations: {
-          hasPlanningData: true,
-        },
       }),
     );
 
@@ -201,7 +196,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-        dataValues={["test1", "test2", "test3", "road.classified"]}
+        dataValues={availableDataValues}
       />,
     );
 
@@ -225,7 +220,7 @@ describe("following a FindProperty component", () => {
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
           handleSubmit={vi.fn()}
-          dataValues={["test1", "test2", "test3"]}
+          dataValues={availableDataValues}
         />,
       );
 
@@ -266,6 +261,7 @@ describe("following a FindProperty component", () => {
         description="Things that might affect your project"
         fn="property.constraints.planning"
         handleSubmit={vi.fn()}
+        dataValues={availableDataValues}
       />,
     );
 
@@ -287,9 +283,6 @@ describe("selectable datasets in editor", () => {
       setState({
         breadcrumbs: simpleBreadcrumbs,
         flow: simpleFlow,
-        teamIntegrations: {
-          hasPlanningData: true,
-        },
       }),
     );
   });
