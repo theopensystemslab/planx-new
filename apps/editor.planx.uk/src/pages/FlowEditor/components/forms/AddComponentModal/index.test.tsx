@@ -31,7 +31,7 @@ const patternDataHandler = () =>
 
 describe("AddComponentModal", () => {
   describe("handleInsertPattern", () => {
-    it.skip("calls insertPattern on the store then closes the modal", async () => {
+    it("calls insertPattern on the store then closes the modal", async () => {
       const insertPattern = vi.fn();
       useStore.setState({ insertPattern });
 
