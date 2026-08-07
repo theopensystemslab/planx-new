@@ -59,7 +59,12 @@ const ActionText: React.FC<Application> = (application) => {
   return <span className="text-body-md mb-0">{actionText}</span>;
 };
 
-const DeleteButton: React.FC<Application> = ({ id }) => {
+const DeleteButton: React.FC<Application> = ({
+  id,
+  address,
+  createdAt,
+  service,
+}) => {
   const deleteApplication = useDeleteApplication();
 
   const handleDelete = () => {
@@ -71,6 +76,9 @@ const DeleteButton: React.FC<Application> = ({ id }) => {
   return (
     <button
       onClick={handleDelete}
+      aria-label={`Delete application to ${service.name} at ${
+        address || "an undeclared address"
+      }, started ${formatDate(createdAt)}`}
       className="button button--small button-focus-style button--secondary"
     >
       Delete
@@ -85,6 +93,9 @@ const ViewApplicationButton: React.FC<Application> = (application) => {
   return (
     <a
       href={url}
+      aria-label={`View application to ${application.service.name} at ${
+        application.address || "an undeclared address"
+      }, started ${formatDate(application.createdAt)}`}
       className="button button--primary button--small button-focus-style paragraph-link--external"
       onClick={handleClick}
     >
@@ -103,6 +114,9 @@ const ActionButtons: React.FC<Application> = (application) => {
             <a
               href={application.serviceUrl}
               target="_blank"
+              aria-label={`Resume application to ${application.service.name} at ${
+                application.address || "an undeclared address"
+              }, started ${formatDate(application.createdAt)}`}
               className="button button--primary button--small button-focus-style paragraph-link--external"
             >
               Resume
@@ -116,6 +130,9 @@ const ActionButtons: React.FC<Application> = (application) => {
             <a
               href={application.paymentUrl}
               target="_blank"
+              aria-label={`Go to payment URL for application to ${application.service.name} at ${
+                application.address || "an undeclared address"
+              }, started ${formatDate(application.createdAt)}`}
               className="button button--primary button--small button-focus-style paragraph-link--external"
             >
               Go to payment URL
