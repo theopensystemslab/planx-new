@@ -9,6 +9,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
@@ -45,6 +46,7 @@ const checkActiveSessions = async (
 };
 
 export const Provider: React.FC = () => {
+  const toast = useToast();
   const teamId = useStore((state) => state.teamId);
   const [provider, setProvider] = useState<PaymentProvider>("govpay");
   const [dialogState, setDialogState] = useState<DialogState>({
@@ -71,6 +73,7 @@ export const Provider: React.FC = () => {
     );
     setProvider("stripe");
     setDialogState({ type: "closed" });
+    toast.success("Migration to Stripe successful");
     console.log("[Provider] Migration complete");
   };
 
@@ -112,7 +115,7 @@ export const Provider: React.FC = () => {
               <Typography variant="body1">Current provider:</Typography>
               <Chip
                 label={PROVIDER_LABELS[provider]}
-                color={isStripe ? "success" : "primary"}
+                color="info"
                 size="small"
               />
             </Box>
