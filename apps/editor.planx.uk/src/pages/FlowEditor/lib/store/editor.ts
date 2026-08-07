@@ -94,8 +94,8 @@ export interface EditorUIStore {
   contextMenuPosition: ContextMenuPosition | null;
   closeContextMenu: () => void;
   contextMenuSource: ContextMenuSource | null;
-  lastAddedNodeId?: NodeId;
-  clearLastAddedNodeId: () => void;
+  lastAddedNodeIds?: NodeId[];
+  clearLastAddedNodeIds: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -210,9 +210,9 @@ export const editorUIStore: StateCreator<
 
     contextMenuSource: null,
 
-    lastAddedNodeId: undefined,
+    lastAddedNodeIds: undefined,
 
-    clearLastAddedNodeId: () => set({ lastAddedNodeId: undefined }),
+    clearLastAddedNodeIds: () => set({ lastAddedNodeIds: undefined }),
   }),
   {
     name: "editorUIStore",
@@ -291,6 +291,8 @@ export interface EditorStore extends Store.Store {
   cutNode: (id: NodeId, parent: NodeId) => void;
   getCutNode: () => CutPayload | null;
   addNode: (node: any, relationships?: Relationships) => NodeId;
+  /** Insert every node of a pattern's graph, as one batch of ops */
+  insertPattern: (graph: Graph, parent?: NodeId, before?: NodeId) => void;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectToFlow: (id: NodeId) => Promise<void>;
   disconnectFromFlow: () => void;
@@ -368,8 +370,19 @@ export const editorStore: StateCreator<
       { children, parent, before },
     )(get().flow);
     send(ops);
-    set({ lastAddedNodeId: id });
+    set({ lastAddedNodeIds: [id] });
     return id;
+  },
+
+  insertPattern: (graph, parent = ROOT_NODE_KEY, before = undefined) => {
+    let insertedIds: string[] = [];
+    const [, ops] = insertGraph(graph, {
+      parent,
+      before,
+      onInsert: (ids) => (insertedIds = ids),
+    })(get().flow);
+    send(ops);
+    set({ lastAddedNodeIds: insertedIds });
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {
@@ -720,10 +733,8 @@ export const editorStore: StateCreator<
       const { isTemplate: pastingToTemplate } = get();
       const stripTemplateProps = copiedFromTemplate && !pastingToTemplate;
 
-      /**
-       * Generate a full graph with _root
-       * insertGraph() expects a full graph structure, but will strip this out before inserting
-       */
+      // Generate a full graph with _root
+      // insertGraph() expects a full graph structure, but will strip this out before inserting
       const source: Graph = { [ROOT_NODE_KEY]: { edges: [rootId] } };
       copiedNodes.forEach(({ originalId, nodeData }) => {
         source[originalId] = stripTemplateProps
@@ -735,8 +746,14 @@ export const editorStore: StateCreator<
         throw new Error("Root node for pasting could not be found.");
       }
 
-      const [, ops] = insertGraph(source, { parent, before })(get().flow);
+      let insertedIds: string[] = [];
+      const [, ops] = insertGraph(source, {
+        parent,
+        before,
+        onInsert: (ids) => (insertedIds = ids),
+      })(get().flow);
       send(ops);
+      set({ lastAddedNodeIds: insertedIds });
     } catch (err) {
       alert((err as Error).message);
     }

@@ -13,9 +13,9 @@ export const mockPatterns: Pattern[] = [
   { id: "5", slug: "pattern-5", name: "Pattern 5", summary },
 ];
 
-export const mockPatternData = {
+export const mockPatternData: Graph = {
   _root: { edges: ["question", "notice"] },
   question: { type: 100, data: { text: "A question" }, edges: ["answer"] },
   answer: { type: 200, data: { text: "An answer" } },
   notice: { type: 8, data: { title: "A notice" } },
-} as unknown as Graph;
+};

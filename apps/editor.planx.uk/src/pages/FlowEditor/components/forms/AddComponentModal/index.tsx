@@ -1,6 +1,8 @@
 import Popover from "@mui/material/Popover";
+import type { Graph } from "@planx/graph";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback, useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { getNodeRoute } from "utils/routeUtils/utils";
@@ -28,13 +30,12 @@ const AddComponentModal: React.FC<Props> = ({
   onClose,
 }) => {
   const showPatterns = hasFeatureFlag("PATTERN_SELECT");
-
   const navigate = useNavigate();
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const [activeTab, setActiveTab] = useState<ModalTab>("components");
   const popoverWidth =
-    showPatterns && activeTab === "patterns"
+    activeTab === "patterns"
       ? COMPONENT_LIST_WIDTH + DETAIL_PANEL_WIDTH
       : COMPONENT_LIST_WIDTH;
 
@@ -52,8 +53,10 @@ const AddComponentModal: React.FC<Props> = ({
     });
   };
 
-  const handleInsertPattern = (patternId: string) =>
-    console.log(`Inserting pattern ${patternId}!`);
+  const handleInsertPattern = (graph: Graph) => {
+    useStore.getState().insertPattern(graph, parent, before);
+    onClose();
+  };
 
   const handleSelectNote = useCallback(() => {
     onClose();

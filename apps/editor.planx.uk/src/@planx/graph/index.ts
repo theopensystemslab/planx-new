@@ -832,7 +832,13 @@ export const insertGraph =
       parent = ROOT_NODE_KEY,
       before = undefined,
       idFn = uniqueId,
-    }: { parent?: NodeId; before?: NodeId; idFn?: () => string } = {},
+      onInsert,
+    }: {
+      parent?: NodeId;
+      before?: NodeId;
+      idFn?: () => string;
+      onInsert?: (topLevelIds: string[]) => void;
+    } = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
     wrap(graph, (draft) => {
@@ -868,7 +874,10 @@ export const insertGraph =
         .filter((newId): newId is string => Boolean(newId))
         .map((newId) => buildGraphFromNodes(newId, newNodes));
 
-      // 4. Finally, insert each rebuilt node in turn and all its nested children
+      // 4. Fire optional callback function
+      onInsert?.(topLevelTrees.map(({ id }) => id));
+
+      // 5. Finally, insert each rebuilt node in turn and all its nested children
       topLevelTrees.forEach(({ id, children, ...nodeData }) => {
         _add(draft, { id, ...nodeData }, { children, parent, before });
       });
