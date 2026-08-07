@@ -1,6 +1,5 @@
 import type {
   Team,
-  TeamIntegrations,
   TeamSettings,
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
@@ -15,7 +14,6 @@ export type TeamSummary = Pick<Team, "id" | "name" | "slug"> & {
 
 export interface TeamStore {
   teamId: number;
-  teamIntegrations: TeamIntegrations;
   teamName: string;
   teamSettings: TeamSettings;
   teamSlug: string;
@@ -34,7 +32,6 @@ export const teamStore: StateCreator<
   TeamStore
 > = (set, get) => ({
   teamId: 0,
-  teamIntegrations: {} as TeamIntegrations,
   teamName: "",
   teamSettings: {} as TeamSettings,
   teamSlug: "",
@@ -50,7 +47,6 @@ export const teamStore: StateCreator<
   setTeam: (team) => {
     set({
       teamId: team.id,
-      teamIntegrations: team.integrations,
       teamName: team.name,
       teamSettings: team.settings,
       teamSlug: team.slug,
@@ -61,7 +57,6 @@ export const teamStore: StateCreator<
 
   getTeam: () => ({
     id: get().teamId,
-    integrations: get().teamIntegrations,
     name: get().teamName,
     settings: get().teamSettings,
     slug: get().teamSlug,
@@ -72,7 +67,6 @@ export const teamStore: StateCreator<
   clearTeamStore: () =>
     set({
       teamId: 0,
-      teamIntegrations: undefined,
       teamName: "",
       teamSettings: undefined,
       teamSlug: "",
