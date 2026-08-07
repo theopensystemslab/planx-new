@@ -56,36 +56,36 @@ export const createMetabaseService = async ({
   const metabaseTask = new awsx.ecs.FargateTaskDefinition("metabase", {
     logGroup: { existing: metabaseLogGroup },
     container: {
-        name: "metabase",
-        // XXX: keep this image reference in sync with docker-compose.yml
-        image: "metabase/metabase:v0.58.8",
-        essential: true,
-        cpu: config.requireNumber("metabase-cpu"),
-        // when changing `memory`, also update `JAVA_OPTS` below
-        memory: metabaseMemoryMb,
-        portMappings: [{ targetGroup: metabaseTargetGroup }],
-        environment: [
-          // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#allocating-more-memory-to-the-jvm
-          { name: "JAVA_OPTS", value: getJavaOpts(metabaseMemoryMb) },
-          { name: "MB_DB_TYPE", value: "postgres" },
-          {
-            name: "MB_DB_CONNECTION_URI",
-            value: dbUrl,
-          },
-          { name: "MB_JETTY_HOST", value: "0.0.0.0" },
-          { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
-          {
-            name: "MB_SITE_URL",
-            value: pulumi.interpolate`https://metabase.${DOMAIN}/`,
-          },
-          // https://www.metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html
-          {
-            name: "MB_ENCRYPTION_SECRET_KEY",
-            value: config.requireSecret("metabase-encryption-secret-key"),
-          },
-        ],
-      }
-    });
+      name: "metabase",
+      // XXX: keep this image reference in sync with docker-compose.yml
+      image: "metabase/metabase:v0.58.24",
+      essential: true,
+      cpu: config.requireNumber("metabase-cpu"),
+      // when changing `memory`, also update `JAVA_OPTS` below
+      memory: metabaseMemoryMb,
+      portMappings: [{ targetGroup: metabaseTargetGroup }],
+      environment: [
+        // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#allocating-more-memory-to-the-jvm
+        { name: "JAVA_OPTS", value: getJavaOpts(metabaseMemoryMb) },
+        { name: "MB_DB_TYPE", value: "postgres" },
+        {
+          name: "MB_DB_CONNECTION_URI",
+          value: dbUrl,
+        },
+        { name: "MB_JETTY_HOST", value: "0.0.0.0" },
+        { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
+        {
+          name: "MB_SITE_URL",
+          value: pulumi.interpolate`https://metabase.${DOMAIN}/`,
+        },
+        // https://www.metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html
+        {
+          name: "MB_ENCRYPTION_SECRET_KEY",
+          value: config.requireSecret("metabase-encryption-secret-key"),
+        },
+      ],
+    },
+  });
 
   const metabaseService = new awsx.ecs.FargateService("metabase", {
       cluster: cluster.arn,
