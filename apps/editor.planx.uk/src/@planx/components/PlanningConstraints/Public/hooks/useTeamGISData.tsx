@@ -13,7 +13,7 @@ export const useTeamGISData = (dataValues: string[]) => {
     ],
   );
 
-  // Fetch planning constraints data for a given local authority if a geometry is available
+  // Fetch planning constraints data for a given local authority if a geometry is available and at least one PD sourced dataset is selected in the editor modal
   const shouldFetchPlanningData =
     Boolean(latitude) &&
     Boolean(longitude) &&
