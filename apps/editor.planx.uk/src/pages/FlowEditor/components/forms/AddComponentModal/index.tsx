@@ -7,11 +7,7 @@ import React, { useCallback, useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
-import {
-  COMPONENT_LIST_WIDTH,
-  componentListFrameSx,
-  ComponentsTab,
-} from "./ComponentsTab";
+import { COMPONENT_LIST_WIDTH, componentListFrameSx } from "./ComponentsTab";
 import type { ModalTab } from "./ModalTabs";
 import { ModalTabs } from "./ModalTabs";
 import { DETAIL_PANEL_WIDTH } from "./PatternsTab/PatternDetailPanel";
@@ -29,7 +25,6 @@ const AddComponentModal: React.FC<Props> = ({
   before,
   onClose,
 }) => {
-  const showPatterns = hasFeatureFlag("PATTERN_SELECT");
   const navigate = useNavigate();
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -99,20 +94,13 @@ const AddComponentModal: React.FC<Props> = ({
         },
       }}
     >
-      {showPatterns ? (
-        <ModalTabs
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          onComponentSelect={handleComponentSelect}
-          onSelectNote={hasFeatureFlag("NOTES") ? handleSelectNote : undefined}
-          onInsertPattern={handleInsertPattern}
-        />
-      ) : (
-        <ComponentsTab
-          onSelect={handleComponentSelect}
-          onSelectNote={hasFeatureFlag("NOTES") ? handleSelectNote : undefined}
-        />
-      )}
+      <ModalTabs
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onComponentSelect={handleComponentSelect}
+        onSelectNote={hasFeatureFlag("NOTES") ? handleSelectNote : undefined}
+        onInsertPattern={handleInsertPattern}
+      />
     </Popover>
   );
 };
