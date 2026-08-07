@@ -1,6 +1,4 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import React from "react";
-import Main from "ui/shared/Main";
 import {
   fetchDataForStandaloneView,
   setupStandaloneViewStore,
@@ -16,9 +14,5 @@ export const Route = createFileRoute("/_public/_customDomain/$flow/pay")({
 });
 
 function PayLayoutComponent() {
-  return (
-    <Main>
-      <Outlet />
-    </Main>
-  );
+  return <Outlet />;
 }

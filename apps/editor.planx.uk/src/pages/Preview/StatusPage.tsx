@@ -33,12 +33,7 @@ const StatusPage: React.FC<PropsWithChildren<Props>> = ({
   const resetPreview = useStore().resetPreview;
 
   return (
-    <Box
-      component="main"
-      id="main-content"
-      tabIndex={-1}
-      sx={{ width: "100%" }}
-    >
+    <>
       <Box sx={{ width: "100%" }}>
         <Banner
           heading={bannerHeading}
@@ -89,7 +84,7 @@ const StatusPage: React.FC<PropsWithChildren<Props>> = ({
           </>
         )}
       </Card>
-    </Box>
+    </>
   );
 };
 

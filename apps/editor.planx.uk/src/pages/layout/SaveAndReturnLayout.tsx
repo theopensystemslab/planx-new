@@ -1,7 +1,6 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
 import React from "react";
-import Main from "ui/shared/Main";
 
 import { ApplicationPath as AppPath } from "../../types";
 import ResumePage from "../Preview/Resume";
@@ -16,16 +15,8 @@ const SaveAndReturnLayout = ({ children }: PropsWithChildren) => {
       {
         {
           [AppPath.SingleSession]: children,
-          [AppPath.Save]: (
-            <Main>
-              <SavePage />
-            </Main>
-          ),
-          [AppPath.Resume]: (
-            <Main>
-              <ResumePage />
-            </Main>
-          ),
+          [AppPath.Save]: <SavePage />,
+          [AppPath.Resume]: <ResumePage />,
           [AppPath.SaveAndReturn]: <SaveAndReturn>{children}</SaveAndReturn>,
         }[path]
       }
