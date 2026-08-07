@@ -184,9 +184,9 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
           onClick={onSave}
           data-testid={`save-${uploadedFile.file.name}`}
         >
-          Save
+          Save{" "}
           <Box sx={visuallyHidden} component="span">
-            {` labels for ${uploadedFile.file.name}`}
+            {`labels for ${uploadedFile.file.name}`}
           </Box>
         </Button>
       )}
