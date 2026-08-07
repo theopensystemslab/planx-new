@@ -14,6 +14,7 @@ import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
+import Main from "ui/shared/Main";
 
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
@@ -26,7 +27,7 @@ const RootContainer = styled(Box)(() => ({
   gridTemplateColumns: "100%",
 }));
 
-const MainContainer = styled(Box)(({ theme }) => ({
+const MainContainer = styled(Main)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.border.light}`,
   display: "flex",
   flex: "1 0 auto",

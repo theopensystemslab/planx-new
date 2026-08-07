@@ -1,6 +1,4 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import React from "react";
-import Main from "ui/shared/Main";
 import { createPublicRouteErrorComponent } from "utils/routeUtils/publicRouteHelpers";
 import {
   fetchDataForStandaloneView,
@@ -18,9 +16,5 @@ export const Route = createFileRoute("/_public/_planXDomain/$team/$flow/pay")({
 });
 
 function PayLayoutComponent() {
-  return (
-    <Main>
-      <Outlet />
-    </Main>
-  );
+  return <Outlet />;
 }

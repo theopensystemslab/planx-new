@@ -10,7 +10,6 @@ import React, { type PropsWithChildren } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import Main from "ui/shared/Main";
 import { object, ref, string } from "yup";
 
 const confirmEmailSchema = object({
@@ -41,7 +40,7 @@ export const ConfirmEmail: React.FC<{
   ]);
 
   return (
-    <Main>
+    <>
       <Card handleSubmit={formik.handleSubmit}>
         <CardHeader title={flowName} description={flowSummary}></CardHeader>
         <TitleWrapper>
@@ -93,7 +92,7 @@ export const ConfirmEmail: React.FC<{
           </InputLabel>
         </InputRow>
       </Card>
-    </Main>
+    </>
   );
 };
 
