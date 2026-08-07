@@ -18,34 +18,30 @@ const TeamSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const { team } = useParams({ from: "/_authenticated/app/$team" });
 
   // TODO: Make links type-safe
-  const baseSettingsLinks: SettingsLink[] = [
+  const settingsLinks: SettingsLink[] = [
     {
       label: "Contact information",
       path: "/contact",
       icon: AlternateEmailIcon,
     },
     {
-      label: "Integrations",
-      path: "/integrations",
-      icon: ExtensionIcon,
-    },
-    {
       label: "GIS data",
       path: "/gis-data",
       icon: MapIcon,
+    },
+    ...(hasFeatureFlag("STRIPE_MIGRATION")
+      ? [{ label: "Payments", path: "/payments", icon: AccountBalanceIcon }]
+      : []),
+    {
+      label: "Integrations",
+      path: "/integrations",
+      icon: ExtensionIcon,
     },
     {
       label: "Design",
       path: "/design",
       icon: PaletteIcon,
     },
-  ];
-
-  const settingsLinks = [
-    ...baseSettingsLinks,
-    ...(hasFeatureFlag("STRIPE_MIGRATION")
-      ? [{ label: "Payment", path: "/payment", icon: AccountBalanceIcon }]
-      : []),
     ...(isPlatformAdmin
       ? [{ label: "Advanced", path: "/advanced", icon: LockIcon }]
       : []),
