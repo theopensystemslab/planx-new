@@ -22,6 +22,7 @@ import PlanningConstraints from ".";
 const { setState } = useStore;
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
+const availableDataValues = ["registeredPark", "road.classified"];
 
 const handlers = [
   // GIS requests
@@ -49,7 +50,7 @@ describe("error state", () => {
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
           handleSubmit={vi.fn()}
-          dataValues={["test1", "test2", "test3"]}
+          dataValues={availableDataValues}
         />
       </ErrorBoundary>,
     );
@@ -66,7 +67,7 @@ describe("error state", () => {
           description="Things that might affect your project"
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
-          dataValues={["test1", "test2", "test3"]}
+          dataValues={availableDataValues}
         />
       </ErrorBoundary>,
     );
@@ -95,7 +96,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={handleSubmit}
-        dataValues={["test1", "test2", "test3"]}
+        dataValues={availableDataValues}
       />,
     );
 
@@ -104,7 +105,7 @@ describe("following a FindProperty component", () => {
     ).toBeInTheDocument();
 
     expect(
-      await findByRole("button", { name: /Registered parks and gardens/ }),
+      await findByRole("button", { name: /Parks and gardens/ }),
     ).toBeVisible();
 
     await user.click(getByTestId("continue-button"));
@@ -130,12 +131,12 @@ describe("following a FindProperty component", () => {
         description="Things that might affect your project"
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
-        dataValues={["test1", "test2", "test3"]}
+        dataValues={availableDataValues}
       />,
     );
 
     expect(
-      await findByRole("button", { name: /Registered parks and gardens/ }),
+      await findByRole("button", { name: /Parks and gardens/ }),
     ).toBeVisible();
 
     const results = await axe(container);
@@ -150,12 +151,12 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-        dataValues={["test1", "test2", "test3"]}
+        dataValues={availableDataValues}
       />,
     );
 
     expect(
-      await findByRole("button", { name: /Registered parks and gardens/ }),
+      await findByRole("button", { name: /Parks and gardens/ }),
     ).toBeVisible();
   });
 
@@ -167,7 +168,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-        dataValues={["test1", "test2", "test3", "road.classified"]}
+        dataValues={availableDataValues}
       />,
     );
 
@@ -176,7 +177,7 @@ describe("following a FindProperty component", () => {
     ).toBeVisible();
 
     expect(
-      await findByRole("button", { name: /Registered parks and gardens/ }),
+      await findByRole("button", { name: /Parks and gardens/ }),
     ).toBeVisible();
   });
 
@@ -195,13 +196,13 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-        dataValues={["test1", "test2", "test3", "road.classified"]}
+        dataValues={availableDataValues}
       />,
     );
 
     // GIS data present
     expect(
-      await findByRole("button", { name: /Registered parks and gardens/ }),
+      await findByRole("button", { name: /Parks and gardens/ }),
     ).toBeVisible();
 
     // Roads data not present
@@ -219,12 +220,12 @@ describe("following a FindProperty component", () => {
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
           handleSubmit={vi.fn()}
-          dataValues={["test1", "test2", "test3"]}
+          dataValues={availableDataValues}
         />,
       );
 
     expect(
-      await findByRole("button", { name: /Registered parks and gardens/ }),
+      await findByRole("button", { name: /Parks and gardens/ }),
     ).toBeVisible();
 
     // Positive constraints visible by default
@@ -260,11 +261,12 @@ describe("following a FindProperty component", () => {
         description="Things that might affect your project"
         fn="property.constraints.planning"
         handleSubmit={vi.fn()}
+        dataValues={availableDataValues}
       />,
     );
 
     expect(
-      await findByRole("button", { name: /Registered parks and gardens/ }),
+      await findByRole("button", { name: /Parks and gardens/ }),
     ).toBeVisible();
 
     expect(
@@ -301,7 +303,7 @@ describe("selectable datasets in editor", () => {
 
     // GIS data present
     expect(
-      await findByRole("button", { name: /Registered parks and gardens/ }),
+      await findByRole("button", { name: /Parks and gardens/ }),
     ).toBeVisible();
 
     // Roads data not present
@@ -328,7 +330,7 @@ describe("selectable datasets in editor", () => {
 
     // GIS data not present
     expect(
-      queryByRole("button", { name: /Registered parks and gardens/ }),
+      queryByRole("button", { name: /Parks and gardens/ }),
     ).not.toBeInTheDocument();
 
     // Roads data present
