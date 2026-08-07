@@ -55,6 +55,7 @@ import { Route as AuthenticatedAppTeamSettingsContactRouteImport } from './route
 import { Route as AuthenticatedAppTeamSettingsDesignRouteImport } from './routes/_authenticated/app/$team/settings/design'
 import { Route as AuthenticatedAppTeamSettingsGisDataRouteImport } from './routes/_authenticated/app/$team/settings/gis-data'
 import { Route as AuthenticatedAppTeamSettingsIntegrationsRouteImport } from './routes/_authenticated/app/$team/settings/integrations'
+import { Route as AuthenticatedAppTeamSettingsPaymentsRouteImport } from './routes/_authenticated/app/$team/settings/payments'
 import { Route as AuthenticatedAppTeamSubmissionSessionIdRouteImport } from './routes/_authenticated/app/$team/submission.$sessionId'
 import { Route as PublicCustomDomainFlowPagesPageRouteImport } from './routes/_public/_customDomain/$flow/pages.$page'
 import { Route as PublicCustomDomainFlowPayIndexRouteImport } from './routes/_public/_customDomain/$flow/pay/index'
@@ -369,6 +370,12 @@ const AuthenticatedAppTeamSettingsIntegrationsRoute =
   AuthenticatedAppTeamSettingsIntegrationsRouteImport.update({
     id: '/integrations',
     path: '/integrations',
+    getParentRoute: () => AuthenticatedAppTeamSettingsRouteRoute,
+  } as any)
+const AuthenticatedAppTeamSettingsPaymentsRoute =
+  AuthenticatedAppTeamSettingsPaymentsRouteImport.update({
+    id: '/payments',
+    path: '/payments',
     getParentRoute: () => AuthenticatedAppTeamSettingsRouteRoute,
   } as any)
 const AuthenticatedAppTeamSubmissionSessionIdRoute =
@@ -730,6 +737,7 @@ export interface FileRoutesByFullPath {
   '/app/$team/settings/design': typeof AuthenticatedAppTeamSettingsDesignRoute
   '/app/$team/settings/gis-data': typeof AuthenticatedAppTeamSettingsGisDataRoute
   '/app/$team/settings/integrations': typeof AuthenticatedAppTeamSettingsIntegrationsRoute
+  '/app/$team/settings/payments': typeof AuthenticatedAppTeamSettingsPaymentsRoute
   '/app/$team/submission/$sessionId': typeof AuthenticatedAppTeamSubmissionSessionIdRoute
   '/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
@@ -814,6 +822,7 @@ export interface FileRoutesByTo {
   '/app/$team/settings/design': typeof AuthenticatedAppTeamSettingsDesignRoute
   '/app/$team/settings/gis-data': typeof AuthenticatedAppTeamSettingsGisDataRoute
   '/app/$team/settings/integrations': typeof AuthenticatedAppTeamSettingsIntegrationsRoute
+  '/app/$team/settings/payments': typeof AuthenticatedAppTeamSettingsPaymentsRoute
   '/app/$team/submission/$sessionId': typeof AuthenticatedAppTeamSubmissionSessionIdRoute
   '/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
@@ -913,6 +922,7 @@ export interface FileRoutesById {
   '/_authenticated/app/$team/settings/design': typeof AuthenticatedAppTeamSettingsDesignRoute
   '/_authenticated/app/$team/settings/gis-data': typeof AuthenticatedAppTeamSettingsGisDataRoute
   '/_authenticated/app/$team/settings/integrations': typeof AuthenticatedAppTeamSettingsIntegrationsRoute
+  '/_authenticated/app/$team/settings/payments': typeof AuthenticatedAppTeamSettingsPaymentsRoute
   '/_authenticated/app/$team/submission/$sessionId': typeof AuthenticatedAppTeamSubmissionSessionIdRoute
   '/_public/_customDomain/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/_public/_customDomain/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
@@ -1011,6 +1021,7 @@ export interface FileRouteTypes {
     | '/app/$team/settings/design'
     | '/app/$team/settings/gis-data'
     | '/app/$team/settings/integrations'
+    | '/app/$team/settings/payments'
     | '/app/$team/submission/$sessionId'
     | '/$flow/pages/$page'
     | '/$flow/pay/not-found'
@@ -1095,6 +1106,7 @@ export interface FileRouteTypes {
     | '/app/$team/settings/design'
     | '/app/$team/settings/gis-data'
     | '/app/$team/settings/integrations'
+    | '/app/$team/settings/payments'
     | '/app/$team/submission/$sessionId'
     | '/$flow/pages/$page'
     | '/$flow/pay/not-found'
@@ -1193,6 +1205,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/$team/settings/design'
     | '/_authenticated/app/$team/settings/gis-data'
     | '/_authenticated/app/$team/settings/integrations'
+    | '/_authenticated/app/$team/settings/payments'
     | '/_authenticated/app/$team/submission/$sessionId'
     | '/_public/_customDomain/$flow/pages/$page'
     | '/_public/_customDomain/$flow/pay/not-found'
@@ -1576,6 +1589,13 @@ declare module '@tanstack/react-router' {
       path: '/integrations'
       fullPath: '/app/$team/settings/integrations'
       preLoaderRoute: typeof AuthenticatedAppTeamSettingsIntegrationsRouteImport
+      parentRoute: typeof AuthenticatedAppTeamSettingsRouteRoute
+    }
+    '/_authenticated/app/$team/settings/payments': {
+      id: '/_authenticated/app/$team/settings/payments'
+      path: '/payments'
+      fullPath: '/app/$team/settings/payments'
+      preLoaderRoute: typeof AuthenticatedAppTeamSettingsPaymentsRouteImport
       parentRoute: typeof AuthenticatedAppTeamSettingsRouteRoute
     }
     '/_authenticated/app/$team/submission/$sessionId': {
@@ -2105,6 +2125,7 @@ interface AuthenticatedAppTeamSettingsRouteRouteChildren {
   AuthenticatedAppTeamSettingsDesignRoute: typeof AuthenticatedAppTeamSettingsDesignRoute
   AuthenticatedAppTeamSettingsGisDataRoute: typeof AuthenticatedAppTeamSettingsGisDataRoute
   AuthenticatedAppTeamSettingsIntegrationsRoute: typeof AuthenticatedAppTeamSettingsIntegrationsRoute
+  AuthenticatedAppTeamSettingsPaymentsRoute: typeof AuthenticatedAppTeamSettingsPaymentsRoute
   AuthenticatedAppTeamSettingsIndexRoute: typeof AuthenticatedAppTeamSettingsIndexRoute
 }
 
@@ -2120,6 +2141,8 @@ const AuthenticatedAppTeamSettingsRouteRouteChildren: AuthenticatedAppTeamSettin
       AuthenticatedAppTeamSettingsGisDataRoute,
     AuthenticatedAppTeamSettingsIntegrationsRoute:
       AuthenticatedAppTeamSettingsIntegrationsRoute,
+    AuthenticatedAppTeamSettingsPaymentsRoute:
+      AuthenticatedAppTeamSettingsPaymentsRoute,
     AuthenticatedAppTeamSettingsIndexRoute:
       AuthenticatedAppTeamSettingsIndexRoute,
   }
