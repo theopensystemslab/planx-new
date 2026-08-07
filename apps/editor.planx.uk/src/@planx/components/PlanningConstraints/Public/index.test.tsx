@@ -104,7 +104,7 @@ describe("following a FindProperty component", () => {
     ).toBeInTheDocument();
 
     expect(
-      await findByRole("button", { name: /Parks and gardens/ }),
+      await findByRole("button", { name: /Registered parks and gardens/ }),
     ).toBeVisible();
 
     await user.click(getByTestId("continue-button"));
@@ -135,7 +135,7 @@ describe("following a FindProperty component", () => {
     );
 
     expect(
-      await findByRole("button", { name: /Parks and gardens/ }),
+      await findByRole("button", { name: /Registered parks and gardens/ }),
     ).toBeVisible();
 
     const results = await axe(container);
@@ -155,7 +155,7 @@ describe("following a FindProperty component", () => {
     );
 
     expect(
-      await findByRole("button", { name: /Parks and gardens/ }),
+      await findByRole("button", { name: /Registered parks and gardens/ }),
     ).toBeVisible();
   });
 
@@ -176,7 +176,7 @@ describe("following a FindProperty component", () => {
     ).toBeVisible();
 
     expect(
-      await findByRole("button", { name: /Parks and gardens/ }),
+      await findByRole("button", { name: /Registered parks and gardens/ }),
     ).toBeVisible();
   });
 
@@ -201,7 +201,7 @@ describe("following a FindProperty component", () => {
 
     // GIS data present
     expect(
-      await findByRole("button", { name: /Parks and gardens/ }),
+      await findByRole("button", { name: /Registered parks and gardens/ }),
     ).toBeVisible();
 
     // Roads data not present
@@ -224,7 +224,7 @@ describe("following a FindProperty component", () => {
       );
 
     expect(
-      await findByRole("button", { name: /Parks and gardens/ }),
+      await findByRole("button", { name: /Registered parks and gardens/ }),
     ).toBeVisible();
 
     // Positive constraints visible by default
@@ -264,7 +264,7 @@ describe("following a FindProperty component", () => {
     );
 
     expect(
-      await findByRole("button", { name: /Parks and gardens/ }),
+      await findByRole("button", { name: /Registered parks and gardens/ }),
     ).toBeVisible();
 
     expect(
@@ -301,7 +301,7 @@ describe("selectable datasets in editor", () => {
 
     // GIS data present
     expect(
-      await findByRole("button", { name: /Parks and gardens/ }),
+      await findByRole("button", { name: /Registered parks and gardens/ }),
     ).toBeVisible();
 
     // Roads data not present
@@ -328,7 +328,7 @@ describe("selectable datasets in editor", () => {
 
     // GIS data not present
     expect(
-      queryByRole("button", { name: /Parks and gardens/ }),
+      queryByRole("button", { name: /Registered parks and gardens/ }),
     ).not.toBeInTheDocument();
 
     // Roads data present
