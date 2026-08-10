@@ -1,16 +1,19 @@
 import Typography from "@mui/material/Typography";
-import type { IndexedNode } from "@opensystemslab/planx-core/types";
-import type { SearchResult } from "hooks/useSearch";
 import React from "react";
 import { NodeCard } from "ui/editor/NodeCard";
 
 import { DATA_FACETS } from "../facets";
 import { Headline } from "../Headline";
+import type { SearchableResult } from "../types";
+import { isNoteResult } from "../types";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
+import { NoteResultCard } from "./NoteResultCard";
 
 export const SearchResultCard: React.FC<{
-  result: SearchResult<IndexedNode>;
+  result: SearchableResult;
 }> = ({ result }) => {
+  if (isNoteResult(result)) return <NoteResultCard result={result} />;
+
   const { key, headline } = getDisplayDetailsForResult(result);
 
   const isDataKey = DATA_FACETS.includes(result.key);
