@@ -18,7 +18,7 @@
   comment: 'Checks for any failed submissions and logs them to #planx-notifications-internal to investigate further'
 - name: reconcile_payments
   webhook: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/reconcile-payments'
-  schedule: '*/3 * * * *'
+  schedule: 0 */3 * * *
   include_in_metadata: true
   payload: {}
   headers:
