@@ -22,7 +22,7 @@ services:
   metabase:
     container_name: metabase
     # XXX: keep this image reference in sync with infrastructure/application/services/metabase.ts
-    image: metabase/metabase:v0.58.8
+    image: metabase/metabase:v0.58.24
     profiles: ["analytics"]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
