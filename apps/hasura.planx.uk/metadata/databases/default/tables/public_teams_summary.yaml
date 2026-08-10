@@ -9,7 +9,6 @@ select_permissions:
         - govpay_enabled_production
         - govpay_enabled_staging
         - is_trial
-        - planning_data_enabled
         - power_automate_enabled_production
         - power_automate_enabled_staging
         - id
@@ -37,7 +36,6 @@ select_permissions:
         - govpay_enabled_production
         - govpay_enabled_staging
         - is_trial
-        - planning_data_enabled
         - power_automate_enabled_production
         - power_automate_enabled_staging
         - id

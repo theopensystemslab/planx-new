@@ -4,7 +4,6 @@ CREATE TEMPORARY TABLE sync_team_integrations (
   team_id integer,
   staging_bops_submission_url text,
   staging_bops_secret text,
-  has_planning_data boolean,
   staging_govpay_secret text,
   staging_file_api_key text,
   staging_power_automate_api_key text
@@ -13,13 +12,12 @@ CREATE TEMPORARY TABLE sync_team_integrations (
 \COPY sync_team_integrations FROM '/tmp/team_integrations.csv' WITH (FORMAT csv, DELIMITER ';');
 
 INSERT INTO
-  team_integrations (id, team_id, staging_bops_submission_url, staging_bops_secret, has_planning_data, staging_govpay_secret, staging_file_api_key, staging_power_automate_api_key)
+  team_integrations (id, team_id, staging_bops_submission_url, staging_bops_secret, staging_govpay_secret, staging_file_api_key, staging_power_automate_api_key)
 SELECT
   id,
   team_id,
   staging_bops_submission_url,
   staging_bops_secret,
-  has_planning_data,
   staging_govpay_secret,
   staging_file_api_key,
   staging_power_automate_api_key
@@ -30,7 +28,6 @@ SET
   team_id = EXCLUDED.team_id,
   staging_bops_submission_url = EXCLUDED.staging_bops_submission_url,
   staging_bops_secret = EXCLUDED.staging_bops_secret,
-  has_planning_data = EXCLUDED.has_planning_data,
   staging_govpay_secret = EXCLUDED.staging_govpay_secret,
   staging_file_api_key = EXCLUDED.staging_file_api_key,
   staging_power_automate_api_key = EXCLUDED.staging_power_automate_api_key;
