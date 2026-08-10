@@ -2,7 +2,10 @@
 -- several independent Hasura mutations from the API, so a failure partway through (eg. after the flow was inserted but before its notes were copied) left a visibly half-copied flow.
 -- Using a plpgsql function means we can run it in a single Postgres transaction and guard against this
 
-CREATE FUNCTION rename_node_id(node_id text, replace_value text)
+-- schema-qualified because an earlier migration (`PostGIS_Extensions_Upgrade()`) mutates the session's
+-- search_path for the rest of a from-scratch migration run (e.g. in CI/e2e, where every migration replays
+-- in one continuous session) - an unqualified CREATE FUNCTION would silently land in the `tiger` schema
+CREATE FUNCTION public.rename_node_id(node_id text, replace_value text)
 RETURNS text AS $$
 BEGIN
   -- mirrors renameNodeId() in apps/api.planx.uk/helpers.ts: leave _root and null ids untouched,
@@ -14,7 +17,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
-CREATE FUNCTION remap_note_placement(placement jsonb, replace_value text)
+CREATE FUNCTION public.remap_note_placement(placement jsonb, replace_value text)
 RETURNS jsonb AS $$
 DECLARE
   result jsonb;
@@ -24,21 +27,21 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  result := jsonb_set(placement, '{parent}', to_jsonb(rename_node_id(placement->>'parent', replace_value)));
+  result := jsonb_set(placement, '{parent}', to_jsonb(public.rename_node_id(placement->>'parent', replace_value)));
 
   IF placement ? 'container' THEN
-    result := jsonb_set(result, '{container}', to_jsonb(rename_node_id(placement->>'container', replace_value)));
+    result := jsonb_set(result, '{container}', to_jsonb(public.rename_node_id(placement->>'container', replace_value)));
   END IF;
 
   IF placement ? 'before' THEN
-    result := jsonb_set(result, '{before}', to_jsonb(rename_node_id(placement->>'before', replace_value)));
+    result := jsonb_set(result, '{before}', to_jsonb(public.rename_node_id(placement->>'before', replace_value)));
   END IF;
 
   RETURN result;
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
-CREATE FUNCTION copy_flow(
+CREATE FUNCTION public.copy_flow(
   source_flow_id uuid,
   team_id integer,
   slug text,
@@ -86,8 +89,8 @@ BEGIN
   SELECT
     (note_map ->> p.note_id::text)::uuid,
     new_flow.id,
-    rename_node_id(p.node_id, replace_value),
-    remap_note_placement(p.placement, replace_value),
+    public.rename_node_id(p.node_id, replace_value),
+    public.remap_note_placement(p.placement, replace_value),
     creator_id
   FROM flow_note_positions p
   WHERE p.flow_id = source_flow_id;
