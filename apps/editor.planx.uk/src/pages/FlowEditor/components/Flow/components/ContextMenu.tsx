@@ -272,7 +272,7 @@ export const ContextMenu: React.FC = () => {
           ? [
               {
                 id: "attach-note",
-                label: "Add note",
+                label: "Attach note",
                 icon: <StickyNote2Icon fontSize="small" />,
                 disabled: false,
                 onClick: handleAttachNote,
