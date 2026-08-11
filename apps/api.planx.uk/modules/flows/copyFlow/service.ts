@@ -54,7 +54,7 @@ const copyFlow = async ({
     );
 
     // Publish immediately, same as createFlow() does for every newly-created flow
-    await publishFlow(insertedFlow.id, "Created flow");
+    await publishFlow(insertedFlow.id, "Created flow from copy");
   }
 
   return { flow, uniqueFlowData };
