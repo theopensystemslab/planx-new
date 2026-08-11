@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -70,6 +71,19 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
 
         <Box>
           <Typography variant="h4">Event History</Typography>
+          {events.map((event, index) => (
+            <ListItem key={`${event.eventId}-${index}`}>
+              <Box>
+                <Typography>
+                  {event.eventType} {event.retry && "[Retry]"}
+                </Typography>
+                <Typography>
+                  Status: {event.status},{" "}
+                  {new Date(event.createdAt).toLocaleString()}
+                </Typography>
+              </Box>
+            </ListItem>
+          ))}
         </Box>
       </Box>
       <DialogActions>
