@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import type { FlowNote, FlowNoteTarget } from "hooks/data/useFlowNotes";
 import { useToast } from "hooks/useToast";
+import { formatLastEditMessage } from "pages/FlowEditor/utils";
 import React from "react";
 import Input from "ui/shared/Input/Input";
 import { object, string } from "yup";
@@ -40,6 +41,11 @@ export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = (props) => {
   const { deleteFlowNote, loading: deleting } = useDeleteFlowNote();
 
   const isEditing = mode === "edit";
+  const lastEditMessage =
+    props.mode === "edit"
+      ? formatLastEditMessage(props.note.updatedAt, props.note.updatedByUser)
+          .formatted
+      : undefined;
   const isSaving = creating || updating;
   const savingLabel = isEditing ? "Updating..." : "Creating...";
   const idleLabel = isEditing ? "Update" : "Create";
@@ -108,6 +114,17 @@ export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = (props) => {
             errorMessage={formik.touched.text ? formik.errors.text : undefined}
             {...formik.getFieldProps("text")}
           />
+          {lastEditMessage && (
+            <Typography
+              variant="body4"
+              sx={{
+                color: "text.secondary",
+                mt: 1,
+              }}
+            >
+              {lastEditMessage}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions
           disableSpacing
