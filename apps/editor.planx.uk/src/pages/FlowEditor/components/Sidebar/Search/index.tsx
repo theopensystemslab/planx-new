@@ -1,14 +1,10 @@
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
-import type { IndexedNode } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import {
-  type SearchResult,
-  type SearchResults,
-  useSearch,
-} from "hooks/useSearch";
+import { useSearch } from "hooks/useSearch";
 import { debounce } from "lodash";
+import { useFlowNotesContext } from "pages/FlowEditor/components/Flow/notes/FlowNotesContext";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useMemo, useState } from "react";
 import type { Components } from "react-virtuoso";
@@ -17,9 +13,10 @@ import { SEARCH_DEBOUNCE_MS } from "ui/shared/constants";
 
 import { ExternalPortalList } from "./ExternalPortalList/ExternalPortalList";
 import type { SearchFacets } from "./facets";
-import { ALL_FACETS } from "./facets";
+import { ALL_FACETS, NOTE_FACETS } from "./facets";
 import { SearchHeader } from "./SearchHeader";
 import { SearchResultCard } from "./SearchResultCard";
+import type { SearchableResult } from "./types";
 
 interface SearchNodes {
   pattern: string;
@@ -27,9 +24,9 @@ interface SearchNodes {
 }
 
 // Types for Virtuoso
-export type Data = SearchResult<IndexedNode>;
+export type Data = SearchableResult;
 export type Context = {
-  results: SearchResults<IndexedNode>;
+  results: SearchableResult[];
   formik: ReturnType<typeof useFormik<SearchNodes>>;
   isSearching: boolean;
   lastPattern: string;
@@ -78,20 +75,46 @@ const Search: React.FC = () => {
   const [lastPattern, setLastPattern] = useState("");
 
   // Call custom hook to control searching
-  const { results, search } = useSearch({
+  const { results: nodeResults, search: searchNodes } = useSearch({
     list: orderedFlow || [],
     keys: formik.values.facets,
   });
+
+  // Notes aren't part of the flow graph, so they're searched separately and merged into `results`
+  const { attached, positioned } = useFlowNotesContext();
+  const notes = useMemo(
+    () => [...attached.values(), ...positioned.values()].flat(),
+    [attached, positioned],
+  );
+
+  const isDataOnlySearch = !formik.values.facets.includes("data.title");
+
+  const noteSearchList = useMemo(
+    () => (isDataOnlySearch ? [] : notes),
+    [isDataOnlySearch, notes],
+  );
+
+  const { results: noteResults, search: searchNotes } = useSearch({
+    list: noteSearchList,
+    keys: NOTE_FACETS,
+  });
+
+  // Interleave notes and nodes search results by relevance
+  const results = useMemo<SearchableResult[]>(
+    () => [...nodeResults, ...noteResults].sort((a, b) => a.score - b.score),
+    [nodeResults, noteResults],
+  );
 
   const debouncedSearch = useMemo(
     () =>
       debounce((pattern: string) => {
         console.debug("Search term: ", pattern);
-        search(pattern);
+        searchNodes(pattern);
+        searchNotes(pattern);
         setLastPattern(pattern);
         setIsSearching(false);
       }, SEARCH_DEBOUNCE_MS),
-    [search],
+    [searchNodes, searchNotes],
   );
 
   const theme = useTheme();

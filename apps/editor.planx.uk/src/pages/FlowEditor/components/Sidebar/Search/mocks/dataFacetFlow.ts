@@ -208,6 +208,7 @@ export const mockQuestionResult: SearchResult<IndexedNode> = {
   key: "data.fn",
   matchIndices: [[0, 3]],
   refIndex: 0,
+  score: 0,
   matchValue: "colour",
 };
 
@@ -224,6 +225,7 @@ export const mockAnswerResult: SearchResult<IndexedNode> = {
   key: "data.val",
   matchIndices: [[0, 2]],
   refIndex: 0,
+  score: 0,
   matchValue: "red",
 };
 
@@ -276,6 +278,7 @@ export const mockListRootResult: SearchResult<IndexedNode> = {
   key: "data.fn",
   matchIndices: [[0, 7]],
   refIndex: 0,
+  score: 0,
   matchValue: "listRoot",
 };
 
@@ -418,6 +421,7 @@ export const mockListDataResult: SearchResult<IndexedNode> = {
   key: "data.schema.fields.data.fn",
   matchIndices: [[0, 5]],
   refIndex: 1,
+  score: 0,
   matchValue: "tenure",
 };
 
@@ -560,6 +564,7 @@ export const mockListAnswerResult: SearchResult<IndexedNode> = {
   key: "data.schema.fields.data.options.data.val",
   matchIndices: [[0, 14]],
   refIndex: 10,
+  score: 0,
   matchValue: "selfCustomBuild",
 };
 
@@ -583,6 +588,7 @@ export const mockCalculateRootResult: SearchResult<IndexedNode> = {
   key: "data.fn",
   matchIndices: [[0, 14]],
   refIndex: 0,
+  score: 0,
   matchValue: "calculateOutput",
 };
 
@@ -606,6 +612,7 @@ export const mockCalculateFormulaResult: SearchResult<IndexedNode> = {
   key: "formula",
   matchIndices: [[0, 6]],
   refIndex: 1,
+  score: 0,
   matchValue: "formulaTwo",
 };
 
@@ -631,5 +638,6 @@ export const mockFileUploadAndLabelResult: SearchResult<IndexedNode> = {
   key: "data.fileTypes.fn",
   matchIndices: [[0, 8]],
   refIndex: 0,
+  score: 0,
   matchValue: "floorplan",
 };

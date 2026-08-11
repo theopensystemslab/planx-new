@@ -306,6 +306,7 @@ export const mockQuestionResult: SearchResult<IndexedNode> = {
   key: "data.text",
   matchIndices: [[0, 7]],
   refIndex: 0,
+  score: 0,
   matchValue: "Seahorse",
 };
 
@@ -352,6 +353,7 @@ export const mockPayResult: SearchResult<IndexedNode> = {
   key: "data.title",
   matchIndices: [[0, 5]],
   refIndex: 3,
+  score: 0,
   matchValue: "Jaguar",
 };
 
@@ -376,6 +378,7 @@ export const mockChecklistResult: SearchResult<IndexedNode> = {
   key: "data.categories.title",
   matchIndices: [[0, 4]],
   refIndex: 0,
+  score: 0,
   matchValue: "Koala",
 };
 
@@ -392,6 +395,7 @@ export const mockChecklistOptionResult: SearchResult<IndexedNode> = {
   key: "data.text",
   matchIndices: [[0, 3]],
   refIndex: 0,
+  score: 0,
   matchValue: "Duck",
 };
 
@@ -415,6 +419,7 @@ export const mockNextStepsOptionResult: SearchResult<IndexedNode> = {
   key: "data.steps.title",
   matchIndices: [[0, 6]],
   refIndex: 0,
+  score: 0,
   matchValue: "Hamster",
 };
 
@@ -445,6 +450,7 @@ export const mockFileUploadAndLabelResult: SearchResult<IndexedNode> = {
   key: "data.fileTypes.name",
   matchIndices: [[0, 6]],
   refIndex: 0,
+  score: 0,
   matchValue: "Penguin",
 };
 
@@ -461,6 +467,7 @@ export const mockNumberInputResult: SearchResult<IndexedNode> = {
   key: "data.units",
   matchIndices: [[0, 8]],
   refIndex: 0,
+  score: 0,
   matchValue: "Wolverine",
 };
 
@@ -515,6 +522,7 @@ export const mockSchemaResult: SearchResult<IndexedNode> = {
   key: "data.schemaName",
   matchIndices: [[0, 7]],
   refIndex: 0,
+  score: 0,
   matchValue: "Hedgehog",
 };
 
@@ -537,6 +545,7 @@ export const mockTaskListResult: SearchResult<IndexedNode> = {
   key: "data.tasks.title",
   matchIndices: [[0, 6]],
   refIndex: 0,
+  score: 0,
   matchValue: "Ostrich",
 };
 
@@ -552,6 +561,7 @@ export const mockContentResult: SearchResult<IndexedNode> = {
   key: "data.content",
   matchIndices: [[3, 7]],
   refIndex: 0,
+  score: 0,
   matchValue: "Sheep",
 };
 
@@ -579,6 +589,7 @@ export const mockConfirmationResult: SearchResult<IndexedNode> = {
   key: "data.heading",
   matchIndices: [[0, 4]],
   refIndex: 0,
+  score: 0,
   matchValue: "Snake",
 };
 
@@ -598,6 +609,7 @@ export const mockFindPropertyResult: SearchResult<IndexedNode> = {
   key: "data.newAddressTitle",
   matchIndices: [[0, 4]],
   refIndex: 0,
+  score: 0,
   matchValue: "Mouse",
 };
 
@@ -618,6 +630,7 @@ export const mockDrawBoundaryResult: SearchResult<IndexedNode> = {
   key: "data.titleForUploading",
   matchIndices: [[0, 7]],
   refIndex: 0,
+  score: 0,
   matchValue: "Elephant",
 };
 
@@ -636,6 +649,7 @@ export const mockPlanningConstraintsResult: SearchResult<IndexedNode> = {
   key: "data.disclaimer",
   matchIndices: [[3, 11]],
   refIndex: 0,
+  score: 0,
   matchValue: "Barracuda",
 };
 
@@ -657,6 +671,7 @@ export const mockResultResult: SearchResult<IndexedNode> = {
   key: "data.overrides.flag.pp.immune.heading",
   matchIndices: [[0, 4]],
   refIndex: 0,
+  score: 0,
   matchValue: "Squid",
 };
 
@@ -678,4 +693,5 @@ export const mockFeedbackResult: SearchResult<IndexedNode> = {
   matchIndices: [[0, 7]],
   matchValue: "Bullfrog",
   refIndex: 0,
+  score: 0,
 };

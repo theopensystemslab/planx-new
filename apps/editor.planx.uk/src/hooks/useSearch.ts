@@ -19,6 +19,8 @@ export interface SearchResult<T extends object> {
   matchValue: string;
   /** Index within flattened array of item[key] */
   refIndex: number;
+  /** Fuse relevance score - 0-1, lower is better. */
+  score: number;
 }
 
 export type SearchResults<T extends object> = SearchResult<T>[];
@@ -35,6 +37,7 @@ export const useSearch = <T extends object>({
     () => ({
       useExtendedSearch: true,
       includeMatches: true,
+      includeScore: true,
       minMatchCharLength: 3,
       ignoreLocation: true,
       keys,
@@ -66,6 +69,7 @@ export const useSearch = <T extends object>({
           matchIndices: result.matches[0].indices as [number, number][],
           matchValue: result.matches[0].value!,
           refIndex: result.matches[0]?.refIndex || 0,
+          score: result.score ?? 0,
         };
       }),
     );
