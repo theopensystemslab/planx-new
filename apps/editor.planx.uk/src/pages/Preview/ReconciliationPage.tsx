@@ -86,7 +86,7 @@ const ReconciliationPage: React.FC<Props> = ({
             </Typography>
           </Box>
         )}
-        <Typography variant="h2">
+        <Typography variant="h2" id="reconciliation-heading">
           Review your {hasSections ? "progress" : "answers"} so far
         </Typography>
         {hasSections ? (
@@ -109,6 +109,7 @@ const ReconciliationPage: React.FC<Props> = ({
             changeAnswer={changeAnswer}
             showChangeButton={false}
             sectionComponent="h3"
+            titleId="reconciliation-heading"
           />
         )}
         {buttonText && (

@@ -27,9 +27,15 @@ function Component(props: Props) {
     props.breadcrumbs,
   );
 
+  const titleId = "review-title";
+
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
-      <CardHeader title={props.title} description={props.description} />
+      <CardHeader
+        title={props.title}
+        description={props.description}
+        titleId={titleId}
+      />
       <SummaryLists
         breadcrumbs={sortedBreadcrumbs}
         flow={props.flow}
@@ -38,6 +44,7 @@ function Component(props: Props) {
         showChangeButton={props.showChangeButton}
         sectionComponent="h2"
         disclaimer={props.disclaimer}
+        titleId={titleId}
       />
       <PrintButton />
     </Card>

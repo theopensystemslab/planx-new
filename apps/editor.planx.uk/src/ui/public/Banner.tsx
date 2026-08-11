@@ -9,6 +9,7 @@ import { getContrastTextColor } from "styleUtils";
 
 interface BannerProps {
   heading?: string;
+  headingId?: string;
   Icon?: typeof SvgIcon;
   iconTitle?: string;
   color?: { background: string; text: string };
@@ -64,7 +65,11 @@ function Banner(props: BannerProps) {
           />
         )}
         {props.heading && (
-          <Typography variant="h1" sx={{ textWrap: "balance" }}>
+          <Typography
+            variant="h1"
+            id={props.headingId}
+            sx={{ textWrap: "balance" }}
+          >
             {props.heading}
           </Typography>
         )}

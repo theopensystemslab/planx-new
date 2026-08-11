@@ -34,11 +34,18 @@ const ApplicationViewer: React.FC = () => {
   const noBreadcrumbs = Object.keys(breadcrumbs).length === 0;
   if (noBreadcrumbs) return <NoContentPage />;
 
+  const overviewHeadingId = "overview-heading";
+  const responsesHeadingId = "your-responses-heading";
+
   return (
     <StatusPage bannerHeading="Review your responses">
-      <Typography variant="h2">Overview</Typography>
-      <ApplicationSummary />
-      <Typography variant="h2">Your responses</Typography>
+      <Typography variant="h2" id={overviewHeadingId}>
+        Overview
+      </Typography>
+      <ApplicationSummary titleId={overviewHeadingId} />
+      <Typography variant="h2" id={responsesHeadingId}>
+        Your responses
+      </Typography>
       <SummaryListsBySections
         changeAnswer={() => null}
         showChangeButton={false}
@@ -46,6 +53,7 @@ const ApplicationViewer: React.FC = () => {
         passport={passport}
         breadcrumbs={breadcrumbs}
         sectionComponent="h2"
+        titleId={responsesHeadingId}
       />
       {showFeeBreakdown && (
         <Box sx={{ mb: 4 }}>

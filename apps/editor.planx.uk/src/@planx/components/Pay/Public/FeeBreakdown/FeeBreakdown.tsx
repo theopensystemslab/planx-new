@@ -6,6 +6,7 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { visuallyHidden } from "@mui/utils";
 import type { FeeBreakdown as IFeeBreakdown } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -329,6 +330,9 @@ export const FeeBreakdown: React.FC<{
   return (
     <TableContainer sx={{ mt: 3 }}>
       <StyledTable data-testid="fee-breakdown-table">
+        <Box component="caption" style={visuallyHidden}>
+          Fee breakdown
+        </Box>
         <Header {...breakdown} />
         <TableBody>
           <ApplicationFee {...breakdown} />

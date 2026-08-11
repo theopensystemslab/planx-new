@@ -144,10 +144,11 @@ const InactiveListCard: React.FC<{
   })();
 
   const itemLabel = `${schema.type} ${i + 1}`;
+  const itemLabelId = `list-card-heading-${i}`;
 
   return (
     <ListCard data-testid={`list-card-${i}`}>
-      <Typography component="h2" variant="h3">
+      <Typography component="h2" variant="h3" id={itemLabelId}>
         {itemLabel}
       </Typography>
       <InactiveListCardLayout>
@@ -156,7 +157,7 @@ const InactiveListCard: React.FC<{
             {formattedMapResponse}
           </Box>
         )}
-        <SummaryListTable sx={{ margin: 0 }}>
+        <SummaryListTable sx={{ margin: 0 }} aria-labelledby={itemLabelId}>
           {schema.fields.map(
             (field, j) =>
               field.type !== "map" && (
