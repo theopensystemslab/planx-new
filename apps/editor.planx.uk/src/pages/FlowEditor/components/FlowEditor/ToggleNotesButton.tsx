@@ -1,7 +1,7 @@
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ToggleIconButton from "ui/editor/ToggleIconButton";
-import NoteIcon from "ui/icons/Note";
 
 export const ToggleNotesButton: React.FC = () => {
   const [showNotes, toggleShowNotes] = useStore((state) => [
@@ -13,7 +13,7 @@ export const ToggleNotesButton: React.FC = () => {
     <ToggleIconButton
       isToggled={showNotes}
       onToggle={toggleShowNotes}
-      icon={<NoteIcon />}
+      icon={<StickyNote2Icon />}
       tooltip="Toggle notes"
       ariaLabel="Toggle notes"
     />
