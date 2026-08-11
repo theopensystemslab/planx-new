@@ -32,6 +32,11 @@ import type {
   ContextMenuPosition,
   ContextMenuSource,
 } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import type { CopiedAttachedNote } from "pages/FlowEditor/components/Flow/notes/lib/copyNotesForNodes";
+import {
+  fetchAttachedFlowNotesForNodes,
+  pasteAttachedFlowNotes,
+} from "pages/FlowEditor/components/Flow/notes/lib/copyNotesForNodes";
 import {
   repositionNotesForDeletedNodes,
   repositionNotesForMovedNode,
@@ -269,6 +274,7 @@ interface CopiedPayload {
   rootId: string;
   nodes: { originalId: string; nodeData: Store.Node }[];
   isTemplate: boolean;
+  notes: CopiedAttachedNote[];
 }
 
 interface CutPayload {
@@ -298,7 +304,7 @@ export interface EditorStore extends Store.Store {
   disconnectFromFlow: () => void;
   cloneNode: (id: NodeId) => void;
   getClonedNodeId: () => string | null;
-  copyNode: (id: NodeId) => void;
+  copyNode: (id: NodeId) => Promise<void>;
   getCopiedNode: () => { node: Store.Node; children: Store.Node[] };
   copyHelpText: (id: NodeId) => void;
   getCopiedHelpText: () => {
@@ -448,7 +454,7 @@ export const editorStore: StateCreator<
 
   getClonedNodeId: () => localStorage.getItem("clonedNodeId"),
 
-  copyNode(id: string) {
+  async copyNode(id: string) {
     const { flow, isTemplate } = get();
     const rootNode = flow[id];
     if (!rootNode) return;
@@ -473,10 +479,17 @@ export const editorStore: StateCreator<
 
     getDescendants(id);
 
+    const flowId = get().id;
+    const notes = await fetchAttachedFlowNotesForNodes(
+      flowId,
+      nodesToCopy.map(({ originalId }) => originalId),
+    );
+
     const payload: CopiedPayload = {
       rootId: id,
       nodes: nodesToCopy,
       isTemplate: isTemplate,
+      notes,
     };
 
     try {
@@ -726,6 +739,7 @@ export const editorStore: StateCreator<
         rootId,
         nodes: copiedNodes,
         isTemplate: copiedFromTemplate,
+        notes: copiedNotes,
       }: CopiedPayload = JSON.parse(copiedString);
       if (!copiedNodes || copiedNodes.length === 0) return;
 
@@ -747,13 +761,21 @@ export const editorStore: StateCreator<
       }
 
       let insertedIds: string[] = [];
+      let insertedIdMap: Map<string, string> = new Map();
       const [, ops] = insertGraph(source, {
         parent,
         before,
-        onInsert: (ids) => (insertedIds = ids),
+        onInsert: (ids, idMap) => {
+          insertedIds = ids;
+          insertedIdMap = idMap;
+        },
       })(get().flow);
       send(ops);
       set({ lastAddedNodeIds: insertedIds });
+
+      if (copiedNotes?.length) {
+        pasteAttachedFlowNotes(copiedNotes, insertedIdMap, get().id);
+      }
     } catch (err) {
       alert((err as Error).message);
     }

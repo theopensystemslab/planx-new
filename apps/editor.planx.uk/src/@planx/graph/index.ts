@@ -837,7 +837,8 @@ export const insertGraph =
       parent?: NodeId;
       before?: NodeId;
       idFn?: () => string;
-      onInsert?: (topLevelIds: string[]) => void;
+      /** Called with the new top-level ids, and a map of every original id (including nested descendants) to its newly generated id */
+      onInsert?: (topLevelIds: string[], idMap: Map<string, string>) => void;
     } = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
@@ -875,7 +876,10 @@ export const insertGraph =
         .map((newId) => buildGraphFromNodes(newId, newNodes));
 
       // 4. Fire optional callback function
-      onInsert?.(topLevelTrees.map(({ id }) => id));
+      onInsert?.(
+        topLevelTrees.map(({ id }) => id),
+        idMap,
+      );
 
       // 5. Finally, insert each rebuilt node in turn and all its nested children
       topLevelTrees.forEach(({ id, children, ...nodeData }) => {

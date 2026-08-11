@@ -121,7 +121,7 @@ describe("inserting a graph", () => {
       insertGraph(pattern, { idFn: deterministicId, onInsert })(emptyFlow());
 
       // question then notice, matching pattern._root.edges - not their new ids' sort order
-      expect(onInsert).toHaveBeenCalledWith(["ID_0", "ID_3"]);
+      expect(onInsert).toHaveBeenCalledWith(["ID_0", "ID_3"], expect.any(Map));
     });
 
     test("is not called when there is nothing to insert", () => {
