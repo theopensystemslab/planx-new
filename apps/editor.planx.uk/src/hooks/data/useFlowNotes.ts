@@ -43,6 +43,7 @@ interface FlowNoteBase {
   updatedBy: number;
   createdAt: string;
   updatedAt: string;
+  updatedByUser?: { firstName: string; lastName: string };
 }
 
 export interface AttachedNote extends FlowNoteBase {
@@ -75,6 +76,10 @@ const GET_FLOW_NOTES = gql`
         updatedBy: updated_by
         createdAt: created_at
         updatedAt: updated_at
+        updatedByUser {
+          firstName: first_name
+          lastName: last_name
+        }
       }
     }
   }
@@ -93,6 +98,7 @@ interface FlowNotePositionRow {
     updatedBy: number;
     createdAt: string;
     updatedAt: string;
+    updatedByUser?: { firstName: string; lastName: string };
   };
 }
 
@@ -111,6 +117,7 @@ const toFlowNote = (row: FlowNotePositionRow): FlowNote => {
     updatedBy: row.note.updatedBy,
     createdAt: row.note.createdAt,
     updatedAt: row.note.updatedAt,
+    updatedByUser: row.note.updatedByUser,
   };
 
   return row.nodeId

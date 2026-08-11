@@ -241,6 +241,22 @@ describe("edit mode - own note", () => {
     expect(screen.getByDisplayValue("Existing note text")).toBeInTheDocument();
   });
 
+  it("shows who last edited the note and when", async () => {
+    await setup(
+      <NoteEditorDialog
+        mode="edit"
+        note={makeNote({
+          updatedByUser: { firstName: "Joe", lastName: "Bloggs" },
+        })}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByText(/Last edited .* by Joe Bloggs/),
+    ).toBeInTheDocument();
+  });
+
   it("calls updateFlowNote with the note's content id on save", async () => {
     const { user } = await setup(
       <NoteEditorDialog mode="edit" note={makeNote()} onClose={vi.fn()} />,
