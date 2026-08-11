@@ -71,6 +71,9 @@ router.post(
   "/flows/:flowId/copy",
   useTeamEditorAuth,
   validate(copyFlowSchema),
+  requireTeamMembership(
+    (parsedReq: z.infer<typeof copyFlowSchema>) => parsedReq.body.teamId,
+  ),
   copyFlowController,
 );
 

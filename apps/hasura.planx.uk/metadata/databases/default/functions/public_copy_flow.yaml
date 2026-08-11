@@ -1,0 +1,7 @@
+function:
+  name: copy_flow
+  schema: public
+configuration:
+  exposed_as: mutation
+permissions:
+  - role: api
