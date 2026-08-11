@@ -99,8 +99,9 @@ const Search: React.FC = () => {
     keys: NOTE_FACETS,
   });
 
+  // Interleave notes and nodes search results by relevance
   const results = useMemo<SearchableResult[]>(
-    () => [...nodeResults, ...noteResults],
+    () => [...nodeResults, ...noteResults].sort((a, b) => a.score - b.score),
     [nodeResults, noteResults],
   );
 
