@@ -120,6 +120,12 @@ const Step = ({ title, description, url }: ListItemProps) => (
         }}
       >
         {description}
+        {url && (
+          <>
+            {description && <br />}
+            {`(opens in new tab)`}
+          </>
+        )}
       </Typography>
     </Box>
     <ArrowButton className="arrowButton">
