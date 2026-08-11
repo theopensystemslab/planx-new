@@ -8,6 +8,7 @@ import {
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
 import React, { useRef, useState } from "react";
+import type { DropTargetMonitor } from "react-dnd";
 import { useDragLayer, useDrop } from "react-dnd";
 
 import { useStore } from "../../../lib/store";
@@ -35,6 +36,11 @@ interface NoteItem {
 }
 
 const DROPPABLE_TYPES = ["DECISION", "PORTAL", "PAGE", "NOTE"];
+
+const isNoteItem = (
+  monitor: DropTargetMonitor<Item | NoteItem, unknown>,
+  _item: Item | NoteItem,
+): _item is NoteItem => monitor.getItemType() === "NOTE";
 
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
@@ -79,11 +85,10 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DROPPABLE_TYPES,
     drop: (item: Item | NoteItem, monitor) => {
-      if (monitor.getItemType() === "NOTE") {
-        moveFlowNotePosition((item as NoteItem).positionId, parent, before);
+      if (isNoteItem(monitor, item)) {
+        moveFlowNotePosition(item.positionId, parent, before);
       } else {
-        const nodeItem = item as Item;
-        moveNode(nodeItem.id, nodeItem.parent, before, parent);
+        moveNode(item.id, item.parent, before, parent);
       }
     },
     collect: (monitor) => ({
