@@ -666,10 +666,10 @@ $fontMonospace: "Source Code Pro", monospace;
     }
 
     &::before {
-      @include paperFoldFront($size: 10px);
+      @include paperFoldFront;
     }
     &::after {
-      @include paperFoldBack($size: 10px, $foldColor: #999);
+      @include paperFoldBack;
     }
   }
 }
