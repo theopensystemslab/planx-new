@@ -23,6 +23,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
         ) {
           flowId: flow_id
           id: session_id
+          eventType: event_type
           status: status
           address: address
           eventCreatedAt: created_at
@@ -38,6 +39,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   );
 
   const submissions = useMemo(() => data?.submissions || [], [data]);
+
   // filter by flow if flowId prop is passed from route params
   const filteredSubmissions = submissions.filter(
     (submission) => !flowSlug || slugify(submission.flowName) === flowSlug,

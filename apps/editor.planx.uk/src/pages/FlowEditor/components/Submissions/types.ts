@@ -38,8 +38,9 @@ export interface SubmissionSummary {
   flowName: string;
   address: string | null;
   eventCreatedAt: string;
-  mostRecentEventType: Submission["eventType"];
+  eventType: Submission["eventType"];
   status: Submission["status"];
+  consolidatedStatus?: string;
 }
 
 export interface EventsLogProps {
