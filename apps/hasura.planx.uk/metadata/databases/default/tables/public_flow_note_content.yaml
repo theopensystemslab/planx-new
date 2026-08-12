@@ -35,9 +35,8 @@ insert_permissions:
     permission:
       check: {}
       columns:
-        - text
-        - color
         - created_by
+        - text
         - updated_by
     comment: ""
   - role: teamEditor
@@ -46,34 +45,31 @@ insert_permissions:
         created_by:
           _eq: x-hasura-user-id
       columns:
-        - text
-        - color
         - created_by
+        - text
         - updated_by
     comment: ""
 select_permissions:
   - role: platformAdmin
     permission:
       columns:
+        - created_at
+        - created_by
         - id
         - text
-        - color
-        - created_by
-        - updated_by
-        - created_at
         - updated_at
+        - updated_by
       filter: {}
     comment: ""
   - role: teamEditor
     permission:
       columns:
+        - created_at
+        - created_by
         - id
         - text
-        - color
-        - created_by
-        - updated_by
-        - created_at
         - updated_at
+        - updated_by
       filter:
         positions:
           flow:
@@ -90,7 +86,6 @@ update_permissions:
     permission:
       columns:
         - text
-        - color
         - updated_by
       filter: {}
       check: {}
@@ -99,7 +94,6 @@ update_permissions:
     permission:
       columns:
         - text
-        - color
         - updated_by
       filter:
         positions:

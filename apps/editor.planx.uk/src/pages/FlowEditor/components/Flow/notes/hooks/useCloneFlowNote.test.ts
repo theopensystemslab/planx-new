@@ -17,7 +17,7 @@ describe("useCloneFlowNote", () => {
     const { result: clonedId } = renderHook(() => useClonedFlowNoteId());
     const { result: copied } = renderHook(() => useCopiedFlowNote());
 
-    setCopied.current.setCopiedFlowNote({ text: "hi", color: "#fffdb0" });
+    setCopied.current.setCopiedFlowNote({ text: "hi" });
     clone.current.cloneFlowNote("note-content-1");
 
     expect(clonedId.current.getClonedFlowNoteId()).toBe("note-content-1");

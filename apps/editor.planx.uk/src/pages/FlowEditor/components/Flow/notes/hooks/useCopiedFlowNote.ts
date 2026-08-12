@@ -1,6 +1,5 @@
 export interface CopiedFlowNoteContent {
   text: string;
-  color: string;
 }
 
 export const useCopiedFlowNote = () => {

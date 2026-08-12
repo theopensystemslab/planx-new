@@ -16,7 +16,6 @@ const baseNote = () => {
     contentId: `note-content-${noteCounter}`,
     flowId: "flow-1",
     text: `Note ${noteCounter}`,
-    color: "#fffdb0",
     createdBy: 1,
     updatedBy: 1,
     createdAt: "2026-01-01T00:00:00Z",

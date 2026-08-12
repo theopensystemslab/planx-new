@@ -13,7 +13,6 @@ const note: FlowNote = {
   nodeId: "node-a",
   placement: null,
   text: "This is an existing note that you're about to edit",
-  color: "#fffdb0",
   createdBy: 1,
   updatedBy: 1,
   createdAt: "2026-01-01T00:00:00Z",

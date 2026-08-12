@@ -22,8 +22,8 @@ BEGIN
   VALUES ('TEST_copy_flow_sql_source', 'Test copy_flow SQL source', '{"_root": {"edges": ["a"]}}'::jsonb)
   RETURNING id INTO source_flow_id;
 
-  INSERT INTO flow_note_content (text, color, created_by, updated_by)
-  VALUES ('A note', '#fffdb0', test_user_id, test_user_id)
+  INSERT INTO flow_note_content (text, created_by, updated_by)
+  VALUES ('A note', test_user_id, test_user_id)
   RETURNING id INTO content_id;
 
   INSERT INTO flow_note_positions (note_id, flow_id, node_id, created_by)

@@ -75,7 +75,7 @@ describe("positioned-note context menu", () => {
         queriedId = variables.id;
         return HttpResponse.json({
           data: {
-            noteContent: { text: "hi", color: "#fffdb0" },
+            noteContent: { text: "hi" },
           },
         });
       }),
@@ -92,7 +92,6 @@ describe("positioned-note context menu", () => {
     expect(queriedId).toBe("content-1");
     expect(JSON.parse(localStorage.getItem("copiedFlowNote")!)).toEqual({
       text: "hi",
-      color: "#fffdb0",
     });
   });
 });
@@ -146,10 +145,7 @@ describe("hanger context menu - paste note", () => {
       }),
     );
 
-    localStorage.setItem(
-      "copiedFlowNote",
-      JSON.stringify({ text: "hi", color: "#fffdb0" }),
-    );
+    localStorage.setItem("copiedFlowNote", JSON.stringify({ text: "hi" }));
     useStore.setState({
       contextMenuSource: "hanger",
       contextMenuRelationships: { parent: "_root" },
@@ -159,7 +155,7 @@ describe("hanger context menu - paste note", () => {
     await user.click(screen.getByRole("menuitem", { name: /paste note/i }));
 
     expect(capturedObject).toMatchObject({
-      note: { data: { text: "hi", color: "#fffdb0" } },
+      note: { data: { text: "hi" } },
     });
     expect(capturedObject.note_id).toBeUndefined();
   });
