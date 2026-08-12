@@ -20,8 +20,6 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
       query GetSubmissions($team_id: Int!) {
         submissions: submissions_grouped(
           where: { team_id: { _eq: $team_id } }
-          order_by: [{ session_id: asc }, { created_at: desc }]
-          distinct_on: session_id
         ) {
           flowId: flow_id
           id: session_id
