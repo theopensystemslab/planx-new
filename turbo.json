@@ -1,4 +1,7 @@
 {
+  "remoteCache": {
+    "apiUrl": "https://api.vercel.com"
+  },
   "$schema": "https://turborepo.com/schema.json",
   "globalDependencies": [
     "packages/typescript-config/*.json",
