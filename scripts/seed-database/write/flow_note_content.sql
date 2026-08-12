@@ -2,7 +2,6 @@
 CREATE TEMPORARY TABLE sync_flow_note_content (
   id uuid,
   text text,
-  color text,
   created_by integer,
   updated_by integer,
   created_at timestamptz,
@@ -12,11 +11,10 @@ CREATE TEMPORARY TABLE sync_flow_note_content (
 \copy sync_flow_note_content FROM '/tmp/flow_note_content.csv' WITH (FORMAT csv, DELIMITER ';');
 
 INSERT INTO
-  flow_note_content (id, text, color, created_by, updated_by, created_at, updated_at)
+  flow_note_content (id, text, created_by, updated_by, created_at, updated_at)
 SELECT
   id, 
   text, 
-  color, 
   created_by, 
   updated_by, 
   created_at, 
