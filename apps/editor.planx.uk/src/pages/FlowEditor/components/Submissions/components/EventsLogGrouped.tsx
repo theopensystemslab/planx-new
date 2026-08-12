@@ -3,6 +3,7 @@ import type { GridFilterItem } from "@mui/x-data-grid";
 import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { EmptyState } from "ui/editor/EmptyState";
@@ -12,13 +13,8 @@ import { ColumnFilterType } from "ui/shared/DataTable/types";
 import { dateFormatter } from "ui/shared/DataTable/utils";
 
 import { submissionStatusOptions } from "../submissionFilterOptions";
-import type {
-  EventsLogGroupedProps,
-  Submission,
-  SubmissionSummary,
-} from "../types";
+import type { EventsLogGroupedProps, SubmissionSummary } from "../types";
 import { StatusChip } from "./StatusChip";
-import SubmissionDetailModal from "./SubmissionDetailModal";
 
 const EventsLog: React.FC<EventsLogGroupedProps> = ({
   submissions,
@@ -26,8 +22,8 @@ const EventsLog: React.FC<EventsLogGroupedProps> = ({
   error,
   filterByFlow,
 }) => {
-  const [selectedSubmission, setSelectedSubmission] =
-    useState<Submission | null>(null);
+  const navigate = useNavigate();
+  const teamSlug = useStore((state) => state.teamSlug);
 
   if (loading)
     return (
@@ -86,18 +82,20 @@ const EventsLog: React.FC<EventsLogGroupedProps> = ({
     },
     { field: "id", headerName: "Session ID", width: 400 },
   ];
-
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <DataTable
         columns={columns}
         rows={submissions}
-        onRowClick={(params) => setSelectedSubmission(params.row)}
-      />
-      <SubmissionDetailModal
-        open={!!selectedSubmission}
-        sessionId={selectedSubmission?.sessionId}
-        handleClose={() => setSelectedSubmission(null)}
+        onRowClick={(params) => {
+          navigate({
+            to: "/app/$team/submissions/$sessionId",
+            params: {
+              team: teamSlug,
+              sessionId: params.row.id,
+            },
+          });
+        }}
       />
     </ErrorBoundary>
   );
