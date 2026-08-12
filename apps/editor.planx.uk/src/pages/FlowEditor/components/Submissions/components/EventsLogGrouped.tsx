@@ -16,7 +16,7 @@ import { submissionStatusOptions } from "../submissionFilterOptions";
 import type { EventsLogGroupedProps, SubmissionSummary } from "../types";
 import { StatusChip } from "./StatusChip";
 
-const EventsLog: React.FC<EventsLogGroupedProps> = ({
+const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
   submissions,
   loading,
   error,
@@ -101,4 +101,4 @@ const EventsLog: React.FC<EventsLogGroupedProps> = ({
   );
 };
 
-export default EventsLog;
+export default EventsLogGrouped;
