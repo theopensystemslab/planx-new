@@ -193,11 +193,7 @@ describe("Info-only mode with hidden drop zone", () => {
     const { queryByRole } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
-        fileTypes={[
-          mockFileTypes.AlwaysRequired,
-          mockFileTypes.AlwaysRecommended,
-          mockFileTypes.NotRequired,
-        ]}
+        fileTypes={mockFileTypesUniqueKeys}
         hideDropZone={true}
       />,
     );

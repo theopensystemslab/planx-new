@@ -141,7 +141,9 @@ export default function Component(props: Props) {
   };
 
   const isCategoryVisible = (category: keyof typeof state.fileList) => {
-    if (props.hideDropZone) return true;
+    if (props.hideDropZone) {
+      return state.fileList[category].length > 0;
+    }
 
     switch (category) {
       case "optional":
@@ -256,7 +258,7 @@ export default function Component(props: Props) {
           </Box>
         </ErrorWrapper>
       </FullWidthWrapper>
-      {props.hideDropZone && <PrintButton />}
+      {props.hideDropZone && <PrintButton showSubmissionDisclaimer={false} />}
     </Card>
   );
 }
