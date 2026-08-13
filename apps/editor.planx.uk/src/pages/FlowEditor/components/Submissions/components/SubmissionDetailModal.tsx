@@ -14,6 +14,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import type { Submission } from "../types";
 import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
 import { SubmissionDetails } from "./SubmissionDetails";
+import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
 import { ViewSubmissionButton } from "./ViewSubmissionButton";
 
 const GET_SUBMISSION_EVENTS = gql`
@@ -81,22 +82,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
         </Grid>
 
         <Grid size={6}>
-          <DialogContent>
-            <Typography variant="h4">Event History</Typography>
-            {events.map((event, index) => (
-              <ListItem key={`${event.eventId}-${index}`}>
-                <Box>
-                  <Typography>
-                    {event.eventType} {event.retry && "[Retry]"}
-                  </Typography>
-                  <Typography>
-                    Status: {event.status},{" "}
-                    {new Date(event.createdAt).toLocaleString()}
-                  </Typography>
-                </Box>
-              </ListItem>
-            ))}
-          </DialogContent>
+          <SubmissionEventsHistory events={events} />
         </Grid>
       </Grid>
       <DialogActions>
