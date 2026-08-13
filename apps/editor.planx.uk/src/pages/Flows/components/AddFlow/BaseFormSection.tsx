@@ -1,5 +1,6 @@
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikContext } from "formik";
@@ -14,28 +15,50 @@ import { slugify } from "utils";
 
 import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";
 import { CreateFromTemplateFormSection } from "./CreateFromTemplateFormSection";
-import type { CreateFlow } from "./types";
-import { CREATE_FLOW_MODES, FLOW_SERVICE_OPTIONS } from "./types";
+import type { CreateFlow, FlowTypeOption } from "./types";
+import {
+  CREATE_FLOW_MODES,
+  FLOW_TYPE_OPTIONS,
+  PATTERN_TYPE_OPTION,
+} from "./types";
 
 export const BaseFormSection: React.FC = () => {
   const { values, setFieldValue, getFieldProps, errors } =
     useFormikContext<CreateFlow>();
+
+  let flowType: FlowTypeOption = "flow";
+  if (values.flow.isPattern) flowType = "pattern";
+  else if (values.flow.isService) flowType = "service";
+
+  const handleFlowTypeChange: React.ComponentProps<
+    typeof BasicRadio
+  >["onChange"] = (e) => {
+    const value = (e.target as HTMLInputElement).value as FlowTypeOption;
+    setFieldValue("flow.isService", value === "service");
+    setFieldValue("flow.isPattern", value === "pattern");
+  };
+
+  let nameLabel = "Flow name";
+  if (values.mode === "new") {
+    if (flowType === "pattern") nameLabel = "Pattern name";
+    else if (flowType === "service") nameLabel = "Service name";
+  }
+
   return (
     <>
-      <InputLabel
-        label="How do you want to create a new flow?"
-        id="create-flow-mode"
-      >
+      <InputLabel label="How do you want to start?" id="create-flow-mode">
         <SelectInput
           value={values.mode}
           name="mode"
           bordered
           required={true}
-          title={"How do you want to create a new flow?"}
+          title={"How do you want to start?"}
           labelId="create-flow-mode"
           onChange={(e) => {
             setFieldValue("mode", e.target.value);
-            setFieldValue("flow.source.id", undefined);
+            setFieldValue("flow.sourceId", "");
+            setFieldValue("flow.name", "");
+            setFieldValue("flow.slug", "");
           }}
         >
           {CREATE_FLOW_MODES.map(({ mode, title }) => (
@@ -45,9 +68,47 @@ export const BaseFormSection: React.FC = () => {
           ))}
         </SelectInput>
       </InputLabel>
+      {values.mode === "new" && (
+        <Stack spacing={1}>
+          <Typography variant="body1">What are you creating?</Typography>
+          <RadioGroup value={flowType}>
+            {FLOW_TYPE_OPTIONS.map((option) => (
+              <BasicRadio
+                key={option.value}
+                id={option.value}
+                label={option.title}
+                description={option.description}
+                variant="inline"
+                onChange={handleFlowTypeChange}
+              />
+            ))}
+            <Permission.IsPlatformAdmin>
+              <BasicRadio
+                id={PATTERN_TYPE_OPTION.value}
+                label={PATTERN_TYPE_OPTION.title}
+                description={PATTERN_TYPE_OPTION.description}
+                variant="inline"
+                onChange={handleFlowTypeChange}
+              />
+            </Permission.IsPlatformAdmin>
+          </RadioGroup>
+        </Stack>
+      )}
+      {values.mode === "new" && flowType !== "pattern" && (
+        <Permission.IsPlatformAdmin>
+          <Switch
+            name="isTemplate"
+            checked={values.flow.isTemplate}
+            onChange={() =>
+              setFieldValue("flow.isTemplate", !values.flow.isTemplate)
+            }
+            label={"Source template"}
+          />
+        </Permission.IsPlatformAdmin>
+      )}
       <CreateFromTemplateFormSection />
       <CreateFromCopyFormSection />
-      <InputLabel label="Flow name" htmlFor="flow.name">
+      <InputLabel label={nameLabel} htmlFor="flow.name">
         <Input
           {...getFieldProps("flow.name")}
           id="flow.name"
@@ -69,49 +130,6 @@ export const BaseFormSection: React.FC = () => {
           startAdornment={<URLPrefix mode="flow" />}
         />
       </InputLabel>
-      {values.mode === "new" && (
-        <>
-          <Permission.IsPlatformAdmin>
-            <Switch
-              name="isPattern"
-              checked={values.flow.isPattern}
-              onChange={() =>
-                setFieldValue("flow.isPattern", !values.flow.isPattern)
-              }
-              label={"Pattern"}
-            />
-            <Switch
-              name="isTemplate"
-              checked={values.flow.isTemplate}
-              onChange={() =>
-                setFieldValue("flow.isTemplate", !values.flow.isTemplate)
-              }
-              label={"Source template"}
-            />
-          </Permission.IsPlatformAdmin>
-          <Typography variant="h4">Is this a flow or a service?</Typography>
-          <RadioGroup
-            defaultValue={false}
-            value={values.flow.isService}
-            sx={{ gap: 1 }}
-          >
-            {FLOW_SERVICE_OPTIONS.map((option) => (
-              <BasicRadio
-                id={option.isService}
-                label={option.title}
-                description={option.description}
-                variant="compact"
-                onChange={(e) =>
-                  setFieldValue(
-                    "flow.isService",
-                    (e.target as HTMLInputElement).value === "true",
-                  )
-                }
-              />
-            ))}
-          </RadioGroup>
-        </>
-      )}
     </>
   );
 };
