@@ -21,7 +21,7 @@ declare module "@mui/material/Chip" {
 
 declare module "@mui/material/Chip" {
   interface ChipClasses {
-    colorInvitedToPay: string;
+    colorPaymentPending: string;
     colorSending: string;
   }
 }
