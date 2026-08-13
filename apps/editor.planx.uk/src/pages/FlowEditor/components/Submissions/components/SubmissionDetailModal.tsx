@@ -1,11 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
-import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -73,32 +71,37 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
         },
       }}
     >
-      <Typography variant="h2" component="h1" gutterBottom>
-        Submission details
-      </Typography>
-      <Grid container>
-        <Grid size={6}>
-          <SubmissionDetails sessionId={sessionId} latestEvent={latestEvent} />
-        </Grid>
+      <DialogContent>
+        <Typography variant="h2" component="h1" gutterBottom>
+          Submission details
+        </Typography>
+        <Grid container>
+          <Grid size={6}>
+            <SubmissionDetails
+              sessionId={sessionId}
+              latestEvent={latestEvent}
+            />
+          </Grid>
 
-        <Grid size={6}>
-          <SubmissionEventsHistory events={events} />
+          <Grid size={6}>
+            <SubmissionEventsHistory events={events} />
+          </Grid>
         </Grid>
-      </Grid>
-      <DialogActions>
-        <Button
-          onClick={() =>
-            navigate({
-              to: "/app/$team/submissions",
-              params: {
-                team: teamSlug,
-              },
-            })
-          }
-        >
-          Back
-        </Button>
-      </DialogActions>
+        <DialogActions>
+          <Button
+            onClick={() =>
+              navigate({
+                to: "/app/$team/submissions",
+                params: {
+                  team: teamSlug,
+                },
+              })
+            }
+          >
+            Back
+          </Button>
+        </DialogActions>
+      </DialogContent>
     </Dialog>
   );
 };

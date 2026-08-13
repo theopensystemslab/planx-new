@@ -1,6 +1,7 @@
-import DialogContent from "@mui/material/DialogContent";
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import { background } from "storybook/theming";
 
 import type { Submission } from "../types";
 
@@ -11,7 +12,15 @@ type Props = {
 
 export const SubmissionDetails: React.FC<Props> = (props) => {
   return (
-    <DialogContent>
+    <Box
+      sx={{
+        background: "background",
+        padding: 4,
+        margin: 4,
+        border: 1,
+        borderColor: "border.main",
+      }}
+    >
       <Typography variant="h3" sx={{ mb: 2 }}>
         {props.latestEvent?.flowName}
       </Typography>
@@ -39,6 +48,6 @@ export const SubmissionDetails: React.FC<Props> = (props) => {
           </Typography>
         </Grid>
       </Grid>
-    </DialogContent>
+    </Box>
   );
 };
