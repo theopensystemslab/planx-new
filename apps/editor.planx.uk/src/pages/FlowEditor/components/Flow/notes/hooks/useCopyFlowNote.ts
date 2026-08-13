@@ -6,13 +6,12 @@ const GET_FLOW_NOTE_CONTENT = gql`
   query GetFlowNoteContent($id: uuid!) {
     noteContent: flow_note_content_by_pk(id: $id) {
       text
-      color
     }
   }
 `;
 
 interface GetFlowNoteContentResult {
-  noteContent: { text: string; color: string } | null;
+  noteContent: { text: string } | null;
 }
 
 export const useCopyFlowNote = () => {

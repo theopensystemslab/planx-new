@@ -71,7 +71,6 @@ const createNotes = async ({
         solo: insert_flow_note_content_one(
           object: {
             text: "Solo note"
-            color: "#fffdb0"
             created_by: $userId
             updated_by: $userId
           }
@@ -81,7 +80,6 @@ const createNotes = async ({
         clone: insert_flow_note_content_one(
           object: {
             text: "Cloned note"
-            color: "#ffd6a5"
             created_by: $userId
             updated_by: $userId
           }
@@ -210,7 +208,7 @@ export interface FlowNotePosition {
   noteId: string;
   nodeId: string | null;
   placement: { parent: string; before?: string; container?: string } | null;
-  note: { text: string; color: string };
+  note: { text: string };
 }
 
 export const getNotePositions = async (flowId: string) => {
@@ -227,7 +225,6 @@ export const getNotePositions = async (flowId: string) => {
           placement
           note {
             text
-            color
           }
         }
       }

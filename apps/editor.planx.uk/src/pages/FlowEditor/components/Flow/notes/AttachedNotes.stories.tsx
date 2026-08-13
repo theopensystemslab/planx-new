@@ -23,7 +23,6 @@ const notes: FlowNote[] = [
     nodeId: "node-a",
     placement: null,
     text: "This is a note which is attached to a node",
-    color: "#fffdb0",
     createdBy: 1,
     updatedBy: 1,
     createdAt: "2026-01-01T00:00:00Z",

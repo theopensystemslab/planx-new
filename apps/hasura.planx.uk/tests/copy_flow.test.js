@@ -54,8 +54,8 @@ describe("copy_flow", () => {
       const contentRes = await gqlAdmin(
         `
         mutation Insert($userId: Int!) {
-          solo: insert_flow_note_content_one(object: { text: "Solo note", color: "#fffdb0", created_by: $userId, updated_by: $userId }) { id }
-          clone: insert_flow_note_content_one(object: { text: "Cloned note", color: "#ffd6a5", created_by: $userId, updated_by: $userId }) { id }
+          solo: insert_flow_note_content_one(object: { text: "Solo note", created_by: $userId, updated_by: $userId }) { id }
+          clone: insert_flow_note_content_one(object: { text: "Cloned note", created_by: $userId, updated_by: $userId }) { id }
         }
         `,
         { userId },
@@ -139,7 +139,9 @@ describe("copy_flow", () => {
             note_id
             node_id
             placement
-            note { text color }
+            note { 
+              text 
+            }
           }
         }
       `);

@@ -23,7 +23,6 @@ const note: FlowNote = {
   nodeId: null,
   placement: { parent: "_root", before: "node-a", parentIsContainer: true },
   text: "this note is positioned in between nodes",
-  color: "#fffdb0",
   createdBy: 1,
   updatedBy: 1,
   createdAt: "2026-01-01T00:00:00Z",

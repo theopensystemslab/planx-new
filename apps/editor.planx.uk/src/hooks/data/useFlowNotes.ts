@@ -38,7 +38,6 @@ interface FlowNoteBase {
   contentId: string;
   flowId: string;
   text: string;
-  color: string;
   createdBy: number;
   updatedBy: number;
   createdAt: string;
@@ -71,7 +70,6 @@ const GET_FLOW_NOTES = gql`
       note {
         contentId: id
         text
-        color
         createdBy: created_by
         updatedBy: updated_by
         createdAt: created_at
@@ -93,7 +91,6 @@ interface FlowNotePositionRow {
   note: {
     contentId: string;
     text: string;
-    color: string;
     createdBy: number;
     updatedBy: number;
     createdAt: string;
@@ -112,7 +109,6 @@ const toFlowNote = (row: FlowNotePositionRow): FlowNote => {
     contentId: row.note.contentId,
     flowId: row.flowId,
     text: row.note.text,
-    color: row.note.color,
     createdBy: row.note.createdBy,
     updatedBy: row.note.updatedBy,
     createdAt: row.note.createdAt,

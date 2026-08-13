@@ -28,7 +28,6 @@ const makeNote = (overrides: Partial<FlowNote> = {}): FlowNote =>
     nodeId: null,
     placement: { parent: "root" },
     text: "A positioned note",
-    color: "#fffdb0",
     createdBy: 1,
     updatedBy: 1,
     createdAt: "2026-01-01T00:00:00Z",

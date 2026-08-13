@@ -7,14 +7,12 @@ import { CREATE_FLOW_NOTE_POSITION } from "../hooks/mutations";
 export interface CopiedAttachedNote {
   nodeId: string;
   text: string;
-  color: string;
 }
 
 interface AttachedFlowNoteRow {
   node_id: string;
   note: {
     text: string;
-    color: string;
   };
 }
 
@@ -26,7 +24,6 @@ const GET_ATTACHED_FLOW_NOTES_FOR_NODES = gql`
       node_id
       note {
         text
-        color
       }
     }
   }
@@ -52,7 +49,6 @@ export const fetchAttachedFlowNotesForNodes = async (
   return data.flow_note_positions.map((row) => ({
     nodeId: row.node_id,
     text: row.note.text,
-    color: row.note.color,
   }));
 };
 
@@ -69,7 +65,7 @@ export const pasteAttachedFlowNotes = async (
   if (!flowId || !userId || notes.length === 0) return;
 
   await Promise.all(
-    notes.map(({ nodeId, text, color }) => {
+    notes.map(({ nodeId, text }) => {
       const newNodeId = idMap.get(nodeId);
       if (!newNodeId) return undefined;
 
@@ -83,7 +79,6 @@ export const pasteAttachedFlowNotes = async (
             note: {
               data: {
                 text,
-                color,
                 created_by: userId,
                 updated_by: userId,
               },

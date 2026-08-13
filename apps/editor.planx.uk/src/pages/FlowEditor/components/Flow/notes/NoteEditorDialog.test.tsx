@@ -16,7 +16,6 @@ const makeNote = (overrides: Partial<AttachedNote> = {}): AttachedNote => ({
   nodeId: "node-a",
   placement: null,
   text: "Existing note text",
-  color: "#fffdb0",
   createdBy: 1,
   updatedBy: 1,
   createdAt: "2026-01-01T00:00:00Z",

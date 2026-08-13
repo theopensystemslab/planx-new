@@ -31,7 +31,6 @@ const mockNote: AttachedNote = {
   nodeId: "Ej0xpn4l8u",
   placement: null,
   text: "Sample note text",
-  color: "yellow",
   createdBy: 1,
   updatedBy: 1,
   createdAt: "2026-01-01T00:00:00.000Z",

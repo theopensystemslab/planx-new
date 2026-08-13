@@ -31,7 +31,6 @@ export const usePasteFlowNoteCopy = () => {
           note: {
             data: {
               text: copied.text,
-              color: copied.color,
               created_by: userId,
               updated_by: userId,
             },
