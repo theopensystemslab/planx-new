@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import Grid from "@mui/material/Grid";
 import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
@@ -11,6 +12,9 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import type { Submission } from "../types";
+import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
+import { SubmissionDetails } from "./SubmissionDetails";
+import { ViewSubmissionButton } from "./ViewSubmissionButton";
 
 const GET_SUBMISSION_EVENTS = gql`
   query GetSubmissionEvents($sessionId: uuid!) {
@@ -56,36 +60,45 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   if (loading) return <DelayedLoadingIndicator />;
   if (error) throw error;
   return (
-    <Dialog open>
+    <Dialog
+      open
+      slotProps={{
+        paper: {
+          sx: {
+            width: "66.67%",
+            maxWidth: "66.67%",
+            margin: "auto",
+          },
+        },
+      }}
+    >
       <Typography variant="h2" component="h1" gutterBottom>
-        Submission Details
+        Submission details
       </Typography>
+      <Grid container>
+        <Grid size={6}>
+          <SubmissionDetails sessionId={sessionId} latestEvent={latestEvent} />
+        </Grid>
 
-      <Box sx={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 3 }}>
-        <Box>
-          <Typography variant="h4">Details</Typography>
-          <Typography>Address: {latestEvent?.address}</Typography>
-          <Typography>Service: {latestEvent?.flowName}</Typography>
-          <Typography>Session ID: {sessionId}</Typography>
-        </Box>
-
-        <Box>
-          <Typography variant="h4">Event History</Typography>
-          {events.map((event, index) => (
-            <ListItem key={`${event.eventId}-${index}`}>
-              <Box>
-                <Typography>
-                  {event.eventType} {event.retry && "[Retry]"}
-                </Typography>
-                <Typography>
-                  Status: {event.status},{" "}
-                  {new Date(event.createdAt).toLocaleString()}
-                </Typography>
-              </Box>
-            </ListItem>
-          ))}
-        </Box>
-      </Box>
+        <Grid size={6}>
+          <DialogContent>
+            <Typography variant="h4">Event History</Typography>
+            {events.map((event, index) => (
+              <ListItem key={`${event.eventId}-${index}`}>
+                <Box>
+                  <Typography>
+                    {event.eventType} {event.retry && "[Retry]"}
+                  </Typography>
+                  <Typography>
+                    Status: {event.status},{" "}
+                    {new Date(event.createdAt).toLocaleString()}
+                  </Typography>
+                </Box>
+              </ListItem>
+            ))}
+          </DialogContent>
+        </Grid>
+      </Grid>
       <DialogActions>
         <Button
           onClick={() =>
