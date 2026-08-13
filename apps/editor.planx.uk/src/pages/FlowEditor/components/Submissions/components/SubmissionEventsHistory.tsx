@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 
 import type { Submission } from "../types";
+import { StatusIcon } from "./StatusIcon";
 
 export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
   events,
@@ -24,14 +25,14 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
 const SubmissionEvent: React.FC<{ event: Submission }> = ({ event }) => {
   return (
     <Box>
-      <Typography sx={{ fontWeight: "bold" }}>
-        {event.eventType} {event.retry && "[Retry]"}
-      </Typography>
-
-      <Typography>Status: {event.status}, </Typography>
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <StatusIcon status={event.status} />
+        <Typography sx={{ fontWeight: "bold" }}>
+          {event.eventType} {event.retry && "[Retry]"}
+        </Typography>
+      </Box>
 
       <Typography>{new Date(event.createdAt).toLocaleString()}</Typography>
-      {/* TODO: refactor date formatting */}
     </Box>
   );
 };
