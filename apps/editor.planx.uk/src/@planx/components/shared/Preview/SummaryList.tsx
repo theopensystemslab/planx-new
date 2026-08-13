@@ -147,6 +147,7 @@ interface SummaryListBaseProps {
   passport: Store.Passport;
   changeAnswer: (id: NodeId) => void;
   showChangeButton: boolean;
+  titleId?: string;
 }
 
 interface SummaryListsBySectionsProps extends SummaryListBaseProps {
@@ -237,8 +238,9 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
 
     return (
       <>
-        {sectionsWithFilteredBreadcrumbs.map(
-          (filteredBreadcrumbs, i) =>
+        {sectionsWithFilteredBreadcrumbs.map((filteredBreadcrumbs, i) => {
+          const sectionTitleId = `summary-list-section-heading-${i}`;
+          return (
             Boolean(filteredBreadcrumbs.length) && (
               <React.Fragment key={i}>
                 <Box
@@ -251,6 +253,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   <Typography
                     component={props.sectionComponent || "h2"}
                     variant="h3"
+                    id={sectionTitleId}
                   >
                     {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
                   </Typography>
@@ -262,10 +265,12 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   changeAnswer={props.changeAnswer}
                   showChangeButton={props.showChangeButton}
                   disclaimer={props.disclaimer}
+                  titleId={sectionTitleId}
                 />
               </React.Fragment>
-            ),
-        )}
+            )
+          );
+        })}
       </>
     );
   } else {
@@ -280,6 +285,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
         changeAnswer={props.changeAnswer}
         showChangeButton={props.showChangeButton}
         disclaimer={props.disclaimer}
+        titleId={props.titleId}
       />
     );
   }
@@ -314,7 +320,10 @@ function SummaryList(props: SummaryListProps) {
 
   return (
     <>
-      <SummaryListTable showChangeButton={props.showChangeButton}>
+      <SummaryListTable
+        showChangeButton={props.showChangeButton}
+        aria-labelledby={props.titleId}
+      >
         {!props.summaryBreadcrumbs.length && (
           <Typography variant="body2">No responses to display</Typography>
         )}

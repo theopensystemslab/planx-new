@@ -115,6 +115,8 @@ export function Presentational(props: PresentationalProps) {
     }
   }, []);
 
+  const titleId = "property-information-title";
+
   const propertyDetails: PropertyDetail[] = [
     {
       heading: "Address",
@@ -155,6 +157,7 @@ export function Presentational(props: PresentationalProps) {
         policyRef={policyRef}
         howMeasured={howMeasured}
         definitionImg={definitionImg}
+        titleId={titleId}
       />
       <MapContainer environment={environment}>
         <p style={visuallyHidden}>
@@ -192,6 +195,7 @@ export function Presentational(props: PresentationalProps) {
           data={propertyDetails}
           showPropertyTypeOverride={showPropertyTypeOverride}
           overrideAnswer={overrideAnswer}
+          titleId={titleId}
         />
       )}
     </Card>
@@ -209,10 +213,11 @@ interface PropertyDetailsProps {
   showPropertyTypeOverride?: boolean;
   showChangeButton?: boolean;
   overrideAnswer: (fn: string) => void;
+  titleId?: string;
 }
 
 function PropertyDetails(props: PropertyDetailsProps) {
-  const { data, showPropertyTypeOverride, overrideAnswer } = props;
+  const { data, showPropertyTypeOverride, overrideAnswer, titleId } = props;
   const filteredData = data.filter((d) => Boolean(d.detail));
 
   const { trackEvent } = useAnalyticsTracking();
@@ -227,7 +232,7 @@ function PropertyDetails(props: PropertyDetailsProps) {
   };
 
   return (
-    <SummaryListTable showChangeButton={true}>
+    <SummaryListTable showChangeButton={true} aria-labelledby={titleId}>
       {filteredData.map(({ heading, detail, fn }: PropertyDetail) => (
         <React.Fragment key={heading}>
           <Box component="dt">{heading}</Box>

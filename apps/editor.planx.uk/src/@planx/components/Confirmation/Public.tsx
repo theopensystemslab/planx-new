@@ -19,10 +19,12 @@ export type Props = PublicProps<Confirmation>;
 export default function ConfirmationComponent(props: Props) {
   const isFinalCard = useStore().isFinalCard();
   const theme = useTheme();
+  const headingId = "confirmation-heading";
   return (
     <Box sx={{ width: "100%" }}>
       <Banner
         heading={props.heading || ""}
+        headingId={headingId}
         color={{
           background: theme.palette.success.light,
           text: theme.palette.text.primary,
@@ -37,7 +39,7 @@ export default function ConfirmationComponent(props: Props) {
         )}
       </Banner>
       <Card handleSubmit={isFinalCard ? undefined : props.handleSubmit}>
-        <ApplicationSummary />
+        <ApplicationSummary titleId={headingId} />
         <ViewApplicationLink />
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box sx={{ pt: 3 }}>

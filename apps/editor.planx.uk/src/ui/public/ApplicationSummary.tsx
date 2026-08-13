@@ -15,7 +15,11 @@ const getApplicationTypeDescriptionFromPassportValue = (
   return description;
 };
 
-const ApplicationSummary: React.FC = () => {
+interface Props {
+  titleId?: string;
+}
+
+const ApplicationSummary: React.FC<Props> = ({ titleId }) => {
   const [sessionId, passport, govUkPayment, flowName] = useStore((state) => [
     state.sessionId,
     state.computePassport(),
@@ -48,7 +52,7 @@ const ApplicationSummary: React.FC = () => {
   >;
 
   return (
-    <SummaryListTable>
+    <SummaryListTable aria-labelledby={titleId}>
       {Object.entries(applicableDetails).map(([k, v], i) => (
         <Fragment key={`detail-${i}`}>
           <Box component="dt">{k}</Box>
