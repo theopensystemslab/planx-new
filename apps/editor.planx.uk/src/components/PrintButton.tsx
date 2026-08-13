@@ -17,16 +17,25 @@ const StyledTimestamp = styled(Typography)(() => ({
   },
 }));
 
-const PrintedAt = () => {
+const PrintedAt = ({
+  showSubmissionDisclaimer,
+}: {
+  showSubmissionDisclaimer: boolean;
+}) => {
   return (
     <StyledTimestamp>
-      Printed at {new Date().toLocaleString("en-GB")}. This is a record of your
-      responses so far and does not confirm submission.
+      Printed at {new Date().toLocaleString("en-GB")}.
+      {showSubmissionDisclaimer &&
+        " This is a record of your responses so far and does not confirm submission."}
     </StyledTimestamp>
   );
 };
 
-export const PrintButton = () => {
+export const PrintButton = ({
+  showSubmissionDisclaimer = true,
+}: {
+  showSubmissionDisclaimer?: boolean;
+}) => {
   return (
     <>
       <StyledPrintButton
@@ -39,7 +48,7 @@ export const PrintButton = () => {
         Print this page
       </StyledPrintButton>
 
-      <PrintedAt />
+      <PrintedAt showSubmissionDisclaimer={showSubmissionDisclaimer} />
     </>
   );
 };
