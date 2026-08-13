@@ -10,6 +10,22 @@ declare module "@mui/material/Chip" {
   }
 }
 
+declare module "@mui/material/Chip" {
+  interface ChipPropsColorOverrides {
+    uploadedFileTag: true;
+    notApplicableTag: true;
+    paymentPending: true;
+    sending: true;
+  }
+}
+
+declare module "@mui/material/Chip" {
+  interface ChipClasses {
+    colorPaymentPending: string;
+    colorSending: string;
+  }
+}
+
 // Add our custom breakpoints
 declare module "@mui/material/styles" {
   interface BreakpointOverrides {
@@ -55,6 +71,8 @@ declare module "@mui/material/styles" {
       dark: string;
       icon: string;
     };
+    paymentPending: { main: string };
+    sending: { main: string };
   }
 
   interface PaletteOptions {
@@ -90,6 +108,12 @@ declare module "@mui/material/styles" {
       light: string;
       dark: string;
       icon: string;
+    };
+    paymentPending?: {
+      main: string;
+    };
+    sending?: {
+      main: string;
     };
   }
 

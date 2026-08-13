@@ -1,6 +1,7 @@
 import type { Submission } from "./types";
 
 export const submissionEventTypes: Array<Submission["eventType"]> = [
+  // TODO: delete after removing feature flag, no more event type column to filter on
   "Send to email",
   "Pay",
   "Submit to BOPS",
@@ -11,6 +12,7 @@ export const submissionEventTypes: Array<Submission["eventType"]> = [
 ];
 
 export const submissionStatusOptions: Required<Array<Submission["status"]>> = [
+  // TODO: delete after feature flag removal ^
   "Success",
   "Failed (500)",
   "Failed (502)",
@@ -25,4 +27,16 @@ export const submissionStatusOptions: Required<Array<Submission["status"]>> = [
   "Cancelled",
   "Error",
   "Unknown",
+];
+
+export const submissionStatusGroupedOptions = [
+  "Success",
+  "Invited to pay",
+  "Payment in progress",
+  "Sending",
+  "Send to BOPS failed",
+  "Send to Uniform failed",
+  "Send to email failed",
+  "Upload to AWS S3 failed",
+  "Submit to Idox Nexus failed",
 ];

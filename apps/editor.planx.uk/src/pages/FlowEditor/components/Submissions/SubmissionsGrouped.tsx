@@ -20,11 +20,10 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
       query GetSubmissions($team_id: Int!) {
         submissions: submissions_grouped(
           where: { team_id: { _eq: $team_id } }
-          order_by: [{ session_id: asc }, { created_at: desc }]
-          distinct_on: session_id
         ) {
           flowId: flow_id
           id: session_id
+          eventType: event_type
           status: status
           address: address
           eventCreatedAt: created_at
@@ -40,6 +39,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   );
 
   const submissions = useMemo(() => data?.submissions || [], [data]);
+
   // filter by flow if flowId prop is passed from route params
   const filteredSubmissions = submissions.filter(
     (submission) => !flowSlug || slugify(submission.flowName) === flowSlug,

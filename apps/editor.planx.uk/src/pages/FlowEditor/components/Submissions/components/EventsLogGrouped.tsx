@@ -4,7 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { EmptyState } from "ui/editor/EmptyState";
 import { DataTable } from "ui/shared/DataTable/DataTable";
@@ -12,11 +12,16 @@ import type { ColumnConfig } from "ui/shared/DataTable/types";
 import { ColumnFilterType } from "ui/shared/DataTable/types";
 import { dateFormatter } from "ui/shared/DataTable/utils";
 
-import { submissionStatusOptions } from "../submissionFilterOptions";
-import type { EventsLogGroupedProps, SubmissionSummary } from "../types";
+import { submissionStatusGroupedOptions } from "../submissionFilterOptions";
+import type {
+  EventsLogGroupedProps,
+  Submission,
+  SubmissionSummary,
+} from "../types";
+import { getConsolidatedStatus } from "../utils";
 import { StatusChip } from "./StatusChip";
 
-const EventsLog: React.FC<EventsLogGroupedProps> = ({
+const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
   submissions,
   loading,
   error,
@@ -24,6 +29,20 @@ const EventsLog: React.FC<EventsLogGroupedProps> = ({
 }) => {
   const navigate = useNavigate();
   const teamSlug = useStore((state) => state.teamSlug);
+
+  const [selectedSubmission, setSelectedSubmission] =
+    useState<Submission | null>(null);
+
+  // consolidate event types and statuses into single status
+  const submissionsWithConsolidatedStatus = useMemo(() => {
+    return submissions.map((submission) => ({
+      ...submission,
+      consolidatedStatus: getConsolidatedStatus(
+        submission.status,
+        submission.eventType,
+      ),
+    }));
+  }, [submissions]);
 
   if (loading)
     return (
@@ -62,13 +81,13 @@ const EventsLog: React.FC<EventsLogGroupedProps> = ({
       width: 250,
     },
     {
-      field: "status",
+      field: "consolidatedStatus",
       headerName: "Status",
       width: 125,
       type: ColumnFilterType.SINGLE_SELECT,
       customComponent: StatusChip,
       columnOptions: {
-        valueOptions: submissionStatusOptions,
+        valueOptions: submissionStatusGroupedOptions,
       },
     },
     {
@@ -86,7 +105,7 @@ const EventsLog: React.FC<EventsLogGroupedProps> = ({
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <DataTable
         columns={columns}
-        rows={submissions}
+        rows={submissionsWithConsolidatedStatus}
         onRowClick={(params) => {
           navigate({
             to: "/app/$team/submissions/$sessionId",
@@ -101,4 +120,4 @@ const EventsLog: React.FC<EventsLogGroupedProps> = ({
   );
 };
 
-export default EventsLog;
+export default EventsLogGrouped;

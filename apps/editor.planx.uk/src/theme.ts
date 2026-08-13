@@ -80,6 +80,12 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     contrastText: "#FFFFFF",
     light: "#EBF4FD",
   },
+  paymentPending: {
+    main: "#7B4724",
+  },
+  sending: {
+    main: "#676767",
+  },
   border: {
     main: "#B1B4B6",
     input: "#0B0C0C",
@@ -443,15 +449,17 @@ const getThemeOptions = ({
               color: darken(palette.info.main, 0.8),
             },
           },
-          {
-            props: { variant: "notApplicableTag" },
-            style: {
-              backgroundColor: lighten(palette.warning.light, 0.7),
-              fontWeight: FONT_WEIGHT_SEMI_BOLD,
-              color: palette.text.primary,
-            },
-          },
         ],
+        styleOverrides: {
+          colorPaymentPending: {
+            backgroundColor: palette.paymentPending.main,
+            color: palette.common.white,
+          },
+          colorSending: {
+            backgroundColor: palette.sending.main,
+            color: palette.common.white,
+          },
+        },
       },
       MuiContainer: {
         styleOverrides: {
