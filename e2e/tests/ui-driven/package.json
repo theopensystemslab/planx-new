@@ -2,9 +2,9 @@
   "name": "@planx/e2e-ui",
   "private": true,
   "scripts": {
-    "test": "playwright test --grep-invert @regression",
+    "test:run": "playwright test --grep-invert @regression",
     "test:regression": "playwright test",
-    "test:debug": "DEBUG_LOG=true pnpm test",
+    "test:debug": "DEBUG_LOG=true pnpm test:run",
     "ui": "serve ../../../apps/editor.planx.uk/build --single --listen 3000"
   },
   "type": "module",
@@ -13,15 +13,15 @@
     "axios": "catalog:",
     "dotenv": "catalog:",
     "eslint": "catalog:",
-    "graphql-request": "^6.1.0",
     "graphql": "catalog:graphql",
+    "graphql-request": "^6.1.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "catalog:jwt",
     "serve": "^14.2.6",
     "uuid": "catalog:"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.62.1",
     "@types/geojson": "^7946.0.16",
     "@types/node": "catalog:",
     "eslint-plugin-playwright": "^0.20.0"

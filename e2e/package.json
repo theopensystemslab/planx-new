@@ -7,11 +7,11 @@
     "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
     "pretest": "../scripts/check-containers.sh e2e",
     "test:api-regression": "cd tests/api-driven && pnpm test:regression",
-    "test:api": "cd tests/api-driven && pnpm test",
+    "test:api": "cd tests/api-driven && pnpm test:run",
     "test:debug": "DEBUG_LOG=true pnpm test",
     "test:regression": "pnpm test:api-regression && pnpm test:ui-regression",
     "test:ui-regression": "cd tests/ui-driven && pnpm test:regression",
-    "test:ui": "cd tests/ui-driven && pnpm test",
+    "test:ui": "cd tests/ui-driven && pnpm test:run",
     "test": "pnpm test:api && pnpm test:ui",
     "typecheck": "tsc --noEmit"
   },

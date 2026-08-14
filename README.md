@@ -106,9 +106,17 @@ The root of the project has several scripts set up to help you manage your docke
 - `pnpm typecheck` - type-check every workspace (`tsc --noEmit` / `astro check`)
 - `pnpm lint` - ESLint + Prettier checks (Editor, API, E2E)
 - `pnpm check` - `typecheck` and `lint` together
-- `pnpm build` - build the Editor, API and LPS
+- `pnpm build` - build the Editor, API and LPS (run `pnpm run up` first so LPS can hit Hasura)
+- `pnpm test` - test all packages (run `pnpm tests` first to spin up test containers)
 
 Turbo caches by content hash, so re-running an unchanged task is near-instant (`>>> FULL TURBO`). This can be scoped to one package with `--filter` (e.g. `pnpm turbo run build --filter=api.planx.uk`).
+
+Note that to take advantage of this 'multiplayer' cache shared between local and CI runs, you have to login using the `TURBO_TOKEN` secret, and link your local environment to the remote cache (hosted on Vercel):
+
+```
+pnpm dlx turbo login --manual
+pnpm dlx turbo link
+```
 
 ### Documentation
 

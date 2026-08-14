@@ -2,7 +2,7 @@
   "name": "@planx/e2e-api",
   "private": true,
   "scripts": {
-    "test": "cucumber-js --tags 'not @regression'",
+    "test:run": "cucumber-js --tags 'not @regression'",
     "test:regression": "cucumber-js"
   },
   "type": "module",
