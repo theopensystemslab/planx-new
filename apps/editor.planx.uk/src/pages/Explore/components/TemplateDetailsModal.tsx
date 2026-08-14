@@ -9,6 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import { useToast } from "hooks/useToast";
+import { SYSTEM_TEAMS } from "lib/systemTeams";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditMessage } from "pages/FlowEditor/utils";
 import { useCreateFlow } from "pages/Flows/components/AddFlow/hooks/useCreateFlow";
@@ -41,7 +42,7 @@ interface TemplateDetails {
 }
 
 const GET_TEMPLATE_DETAILS = gql`
-  query GetTemplateDetails($id: uuid!) {
+  query GetTemplateDetails($id: uuid!, $systemTeams: [String!]!) {
     flows(where: { id: { _eq: $id } }, limit: 1) {
       id
       team {
@@ -63,6 +64,7 @@ const GET_TEMPLATE_DETAILS = gql`
       usedByTeams: templated_flows(
         distinct_on: team_id
         order_by: [{ team_id: asc }, { created_at: desc }]
+        where: { team: { slug: { _nin: $systemTeams } } }
       ) {
         team {
           id
@@ -109,7 +111,7 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
   const { data } = useQuery<{ flows: TemplateDetails[] }>(
     GET_TEMPLATE_DETAILS,
     {
-      variables: { id: template.id },
+      variables: { id: template.id, systemTeams: SYSTEM_TEAMS },
       skip: !open,
     },
   );
@@ -167,8 +169,18 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
   const usedByCount = details?.usedByTeams.length ?? 0;
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogContent>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="formWrap"
+      slotProps={{
+        paper: {
+          sx: (theme) => ({ maxWidth: theme.breakpoints.values.formWrap }),
+        },
+      }}
+    >
+      <DialogContent sx={{ backgroundColor: "background.default" }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
           <Badge variant={BadgeVariant.SourceTemplate} size="compact" />
           <Typography variant="body1" sx={{ fontWeight: "bold" }}>
