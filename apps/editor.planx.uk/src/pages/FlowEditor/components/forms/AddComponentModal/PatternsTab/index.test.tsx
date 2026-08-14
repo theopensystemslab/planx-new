@@ -1,4 +1,4 @@
-import { act, screen, waitFor, within } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { delay, graphql, HttpResponse } from "msw";
 import server from "test/mockServer";
 import { setup } from "test/utils";
@@ -22,10 +22,6 @@ const errorHandler = (operation: "GetPatterns" | "GetPatternData") =>
 const waitForPatterns = () =>
   screen.findByRole("button", { name: /Pattern 1/ });
 
-/** Wait for a pattern's name to appear in the detail panel, not the list */
-const findInPanel = async (name: string) =>
-  within(await screen.findByTestId("pattern-detail-panel")).findByText(name);
-
 describe("PatternsTab", () => {
   describe("the pattern list", () => {
     it("renders each pattern returned by the query", async () => {
@@ -35,7 +31,9 @@ describe("PatternsTab", () => {
       await waitForPatterns();
 
       mockPatterns.forEach(({ name }) => {
-        expect(screen.getByRole("button", { name })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: new RegExp(name) }),
+        ).toBeInTheDocument();
       });
     });
 
@@ -120,15 +118,14 @@ describe("PatternsTab", () => {
       const { user } = await setup(<PatternsTab onInsert={onInsert} />);
       await waitForPatterns();
 
-      await user.hover(screen.getByRole("button", { name: /Pattern 3/ }));
-      await screen.findByText("2 components");
-
       await user.click(screen.getByRole("button", { name: /Pattern 3/ }));
 
-      expect(onInsert).toHaveBeenCalledWith(mockPatternData);
+      await waitFor(() =>
+        expect(onInsert).toHaveBeenCalledWith(mockPatternData),
+      );
     });
 
-    it("waits for the graph when clicked before the preview has loaded", async () => {
+    it("waits for the graph to finish loading before inserting", async () => {
       const onInsert = vi.fn();
       server.use(
         patternsHandler(),

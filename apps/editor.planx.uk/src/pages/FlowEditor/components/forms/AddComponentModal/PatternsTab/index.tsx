@@ -24,67 +24,72 @@ export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
   );
   const visiblePatterns = searchedPatterns ?? patterns;
 
+  const [insertError, setInsertError] = useState<{
+    id: string;
+    message: string;
+  } | null>(null);
+
   const fetchPatternGraph = useFetchPatternGraph();
 
   const insertPattern = async (id: string) => {
-    // Resolves instantly from the cache once the panel has previewed this pattern
+    setInsertError(null);
     const patternGraph = await fetchPatternGraph(id);
+    if (!patternGraph) {
+      setInsertError({ id, message: "Couldn't load this pattern." });
+      return;
+    }
     // A pattern needs at least one component to be insertable
     // We should aim to catch this when a pattern is made copyable
-    if (patternGraph && getComponentCount(patternGraph) > 0)
-      onInsert(patternGraph);
+    if (getComponentCount(patternGraph) === 0) {
+      setInsertError({
+        id,
+        message: "This pattern has no components to insert.",
+      });
+      return;
+    }
+    onInsert(patternGraph);
   };
 
   return (
-    <Box sx={{ display: "flex", flex: 1, minHeight: 0 }}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          flex: 1,
-          minWidth: 0,
-          borderRight: 1,
-          borderColor: "divider",
-        }}
-      >
-        <TabHeader>
-          <SearchBox<Pattern>
-            records={patterns}
-            setRecords={setSearchedPatterns}
-            searchKey={["name", "summary"]}
-            compact
-            hideLabel
-            fullWidth
-            placeholder="Search patterns"
-          />
-        </TabHeader>
-        <Box sx={{ overflowY: "auto", minHeight: 0, pb: 2 }}>
-          {loading && (
-            <DelayedLoadingIndicator inline text="Loading patterns" />
-          )}
-          {!loading && error && (
-            <Typography color="error" variant="body2" sx={{ p: 2 }}>
-              Couldn't load patterns.
-            </Typography>
-          )}
-          {!loading && !error && visiblePatterns.length === 0 && (
-            <Typography color="textSecondary" variant="body2" sx={{ p: 2 }}>
-              {patterns.length === 0
-                ? "No patterns available yet."
-                : "No patterns match your search."}
-            </Typography>
-          )}
-          {!loading &&
-            !error &&
-            visiblePatterns.map((pattern) => (
-              <PatternRow
-                key={pattern.id}
-                pattern={pattern}
-                onSelect={() => insertPattern(pattern.id)}
-              />
-            ))}
-        </Box>
+    <>
+      <TabHeader>
+        <SearchBox<Pattern>
+          records={patterns}
+          setRecords={setSearchedPatterns}
+          searchKey={["name", "summary"]}
+          compact
+          hideLabel
+          fullWidth
+          placeholder="Search patterns"
+        />
+      </TabHeader>
+      <Box sx={{ overflowY: "auto", minHeight: 0, pb: 2 }}>
+        {loading && <DelayedLoadingIndicator inline text="Loading patterns" />}
+        {!loading && error && (
+          <Typography color="error" variant="body2" sx={{ p: 2 }}>
+            Couldn't load patterns.
+          </Typography>
+        )}
+        {!loading && !error && visiblePatterns.length === 0 && (
+          <Typography color="textSecondary" variant="body2" sx={{ p: 2 }}>
+            {patterns.length === 0
+              ? "No patterns available yet."
+              : "No patterns match your search."}
+          </Typography>
+        )}
+        {!loading &&
+          !error &&
+          visiblePatterns.map((pattern) => (
+            <PatternRow
+              key={pattern.id}
+              pattern={pattern}
+              error={
+                insertError?.id === pattern.id ? insertError.message : null
+              }
+              onSelect={() => insertPattern(pattern.id)}
+            />
+          ))}
       </Box>
-    </Box>
+    </>
   );
 };

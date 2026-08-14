@@ -7,7 +7,6 @@ import { COMPONENT_LIST_WIDTH, componentListFrameSx } from "./ComponentsTab";
 import type { ModalTab } from "./ModalTabs";
 import { ModalTabs } from "./ModalTabs";
 import { mockPatternData, mockPatterns } from "./PatternsTab/mocks";
-import { DETAIL_PANEL_WIDTH } from "./PatternsTab/PatternDetailPanel";
 
 /**
  * Stories render the modal's tabbed content rather than the full `AddComponentModal`,
@@ -51,10 +50,7 @@ const ModalTabsWrapper: React.FC<{ initialTab: ModalTab }> = ({
     <Paper
       sx={{
         ...componentListFrameSx,
-        width:
-          activeTab === "patterns"
-            ? COMPONENT_LIST_WIDTH + DETAIL_PANEL_WIDTH
-            : COMPONENT_LIST_WIDTH,
+        width: COMPONENT_LIST_WIDTH,
       }}
     >
       <ModalTabs

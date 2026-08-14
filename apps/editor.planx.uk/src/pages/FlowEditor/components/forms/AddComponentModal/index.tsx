@@ -33,7 +33,6 @@ const AddComponentModal: React.FC<Props> = ({
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const [activeTab, setActiveTab] = useState<ModalTab>("components");
-  const popoverWidth = COMPONENT_LIST_WIDTH;
 
   const handleComponentSelect = (slug: string) => {
     onClose();
@@ -86,7 +85,7 @@ const AddComponentModal: React.FC<Props> = ({
         paper: {
           sx: {
             ...componentListFrameSx,
-            width: popoverWidth,
+            width: COMPONENT_LIST_WIDTH,
             mt: showBelow ? "4px" : "-4px",
           },
         },
