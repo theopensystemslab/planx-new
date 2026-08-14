@@ -19,7 +19,7 @@ import type {
   SubmissionSummary,
 } from "../types";
 import { getConsolidatedStatus } from "../utils";
-import { StatusChip } from "./StatusChip";
+import { StatusChipGrouped } from "./StatusChipGrouped";
 
 const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
   submissions,
@@ -85,7 +85,7 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
       headerName: "Status",
       width: 125,
       type: ColumnFilterType.SINGLE_SELECT,
-      customComponent: StatusChip,
+      customComponent: StatusChipGrouped,
       columnOptions: {
         valueOptions: submissionStatusGroupedOptions,
       },
