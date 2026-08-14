@@ -2,25 +2,13 @@ import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Typography from "@mui/material/Typography";
-import { Link } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import React from "react";
+import React, { useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 
-import { Badge } from "./Badge/Badge";
-import { BadgeVariant } from "./Badge/types";
-
-export interface Template {
-  id: string;
-  name: string;
-  slug: string;
-  summary: string;
-  team: {
-    slug: string;
-  };
-}
+import { TemplateDetailsModal } from "./TemplateDetailsModal";
+import { TemplateListItem } from "./TemplateListItem";
+import type { Template } from "./types";
 
 interface TemplatesWidgetProps {
   templates?: Template[];
@@ -31,6 +19,10 @@ export function TemplatesWidget({
   templates,
   loading = false,
 }: TemplatesWidgetProps) {
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
+    null,
+  );
+
   if (loading) {
     return (
       <List
@@ -60,40 +52,34 @@ export function TemplatesWidget({
   }
 
   return (
-    <List
-      disablePadding
-      sx={{
-        overflowY: "auto",
-        flex: 1,
-        borderTop: "1px solid",
-        borderColor: "divider",
-      }}
-    >
-      {templates.map((template, index) => (
-        <React.Fragment key={template.id}>
-          {index > 0 && <Divider sx={{ borderColor: "border.main" }} />}
-          <ListItem sx={{ position: "relative", px: 2, py: 1.5, gap: 1.5 }}>
-            <Link
-              to="/app/$team/$flow"
-              params={{ team: template.team.slug, flow: template.slug }}
-              style={{ position: "absolute", inset: 0, zIndex: 1 }}
-              aria-label={template.name}
+    <>
+      <List
+        disablePadding
+        sx={{
+          overflowY: "auto",
+          flex: 1,
+          borderTop: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        {templates.map((template, index) => (
+          <React.Fragment key={template.id}>
+            {index > 0 && <Divider sx={{ borderColor: "border.main" }} />}
+            <TemplateListItem
+              template={template}
+              onClick={setSelectedTemplate}
             />
-            <Badge variant={BadgeVariant.SourceTemplate} />
-            <Box>
-              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                {template.name}
-              </Typography>
-              {template.summary && (
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {template.summary}
-                </Typography>
-              )}
-            </Box>
-          </ListItem>
-        </React.Fragment>
-      ))}
-    </List>
+          </React.Fragment>
+        ))}
+      </List>
+      {selectedTemplate && (
+        <TemplateDetailsModal
+          template={selectedTemplate}
+          open={Boolean(selectedTemplate)}
+          onClose={() => setSelectedTemplate(null)}
+        />
+      )}
+    </>
   );
 }
 
@@ -109,10 +95,9 @@ const GET_ONLINE_SOURCE_TEMPLATES = gql`
     ) {
       id
       name
-      slug
       summary
       team {
-        slug
+        name
       }
     }
   }

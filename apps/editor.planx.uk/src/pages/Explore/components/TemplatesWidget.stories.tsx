@@ -18,32 +18,28 @@ const meta = {
       {
         id: "1",
         name: "Apply for planning permission",
-        slug: "apply-for-planning-permission",
         summary: "This service submits an application for planning permission",
-        team: { slug: "planx" },
+        team: { name: "Open Systems Lab" },
       },
       {
         id: "2",
         name: "Find out if you need planning permission",
-        slug: "find-out-if-you-need-planning-permission",
         summary:
           "Use this service to find out if a project needs planning permission",
-        team: { slug: "planx" },
+        team: { name: "Open Systems Lab" },
       },
       {
         id: "3",
         name: "Apply for works to trees",
-        slug: "apply-for-works-to-trees",
         summary: "This service submits an application for works to trees",
-        team: { slug: "planx" },
+        team: { name: "Open Systems Lab" },
       },
       {
         id: "4",
         name: "Apply for a lawful development certificate",
-        slug: "apply-for-a-lawful-development-certificate",
         summary:
           "This service submits an application for a lawful development certificate",
-        team: { slug: "planx" },
+        team: { name: "Open Systems Lab" },
       },
     ],
   },
