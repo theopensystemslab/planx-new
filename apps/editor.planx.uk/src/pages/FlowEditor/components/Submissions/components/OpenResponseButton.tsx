@@ -9,7 +9,7 @@ import { DataTableModal } from "ui/shared/DataTable/components/DataTableModal";
 import type { Attempt, Submission } from "../types";
 import { FormattedResponse } from "./FormattedResponse";
 
-type Props = GridCellParams | { attempt: Attempt };
+type Props = GridCellParams | { attempt: Attempt; sessionId: string };
 
 const isGridCellParams = (props: Props): props is GridCellParams => {
   return "row" in props;
@@ -17,6 +17,10 @@ const isGridCellParams = (props: Props): props is GridCellParams => {
 
 export const OpenResponseButton = (props: Props) => {
   const submission = isGridCellParams(props) ? props.row : props.attempt;
+  const sessionId = isGridCellParams(props)
+    ? props.row.sessionId
+    : props.sessionId;
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [response, setResponse] = useState<Record<string, any> | null>(null);
 
@@ -49,7 +53,7 @@ export const OpenResponseButton = (props: Props) => {
         </IconButton>
       </Tooltip>
       <DataTableModal
-        title={`Response for ${submission.sessionId || "unknown"}`}
+        title={`Response for ${sessionId || "unknown"}`}
         open={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
       >

@@ -34,7 +34,8 @@ export interface Submission {
 
 export interface GroupedEvent {
   eventType: Submission["eventType"];
-  id: Submission["eventId"];
+  sessionId: Submission["sessionId"];
+  eventId: Submission["eventId"];
   events: Attempt[];
 }
 

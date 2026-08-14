@@ -18,7 +18,8 @@ const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
     if (!currentGroup || currentGroup.eventType !== submission.eventType) {
       currentGroup = {
         eventType: submission.eventType,
-        id: submission.eventId,
+        sessionId: submission.sessionId,
+        eventId: submission.eventId,
         events: [
           {
             createdAt: submission.createdAt,
@@ -85,21 +86,28 @@ const SubmissionEvent: React.FC<{ groupedEvent: GroupedEvent }> = ({
                 {new Date(groupedEvent.events[0].createdAt).toLocaleString()}
               </Typography>
               <Box sx={{ marginLeft: "auto" }}>
-                <OpenResponseButton attempt={groupedEvent.events[0]} />
+                <OpenResponseButton
+                  attempt={groupedEvent.events[0]}
+                  sessionId={groupedEvent.sessionId}
+                />
               </Box>
             </Box>
           </>
         ) : (
-          <SubmissionAttempts attempts={groupedEvent.events} />
+          <SubmissionAttempts
+            attempts={groupedEvent.events}
+            sessionId={groupedEvent.sessionId}
+          />
         )}
       </Box>
     </Box>
   );
 };
 
-const SubmissionAttempts: React.FC<{ attempts: Attempt[] }> = ({
-  attempts,
-}) => {
+const SubmissionAttempts: React.FC<{
+  attempts: Attempt[];
+  sessionId: string;
+}> = ({ attempts, sessionId }) => {
   const numberAttempts = attempts.length;
 
   return (
@@ -116,7 +124,7 @@ const SubmissionAttempts: React.FC<{ attempts: Attempt[] }> = ({
             </Box>
 
             <Box sx={{ marginLeft: "auto" }}>
-              <OpenResponseButton attempt={attempt} />
+              <OpenResponseButton attempt={attempt} sessionId={sessionId} />
             </Box>
           </Box>
         </>
