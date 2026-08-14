@@ -217,11 +217,7 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
               {details!.usedByTeams.map(({ team }) => (
                 <Tooltip key={team.id} title={team.name}>
                   <span>
-                    <Badge
-                      variant={BadgeVariant.Team}
-                      size="compact"
-                      team={team}
-                    />
+                    <Badge variant={BadgeVariant.Team} team={team} />
                   </span>
                 </Tooltip>
               ))}
