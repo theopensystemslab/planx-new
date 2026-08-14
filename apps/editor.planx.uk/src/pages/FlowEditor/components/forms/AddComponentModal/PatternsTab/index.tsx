@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 import { TabHeader } from "../TabHeader";
-import { PatternDetailPanel } from "./PatternDetailPanel";
 import { PatternRow } from "./PatternRow";
 import type { Pattern } from "./queries";
 import { useFetchPatternGraph, usePatterns } from "./usePatterns";
@@ -24,10 +23,6 @@ export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
     null,
   );
   const visiblePatterns = searchedPatterns ?? patterns;
-
-  const [activePatternId, setActivePatternId] = useState<string | null>(null);
-  const activePattern =
-    visiblePatterns.find((pattern) => pattern.id === activePatternId) ?? null;
 
   const fetchPatternGraph = useFetchPatternGraph();
 
@@ -85,14 +80,11 @@ export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
               <PatternRow
                 key={pattern.id}
                 pattern={pattern}
-                active={pattern.id === activePattern?.id}
-                onPreview={() => setActivePatternId(pattern.id)}
                 onSelect={() => insertPattern(pattern.id)}
               />
             ))}
         </Box>
       </Box>
-      <PatternDetailPanel pattern={activePattern} />
     </Box>
   );
 };

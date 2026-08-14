@@ -14,7 +14,6 @@ import {
 } from "./ComponentsTab";
 import type { ModalTab } from "./ModalTabs";
 import { ModalTabs } from "./ModalTabs";
-import { DETAIL_PANEL_WIDTH } from "./PatternsTab/PatternDetailPanel";
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -34,10 +33,7 @@ const AddComponentModal: React.FC<Props> = ({
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const [activeTab, setActiveTab] = useState<ModalTab>("components");
-  const popoverWidth =
-    activeTab === "patterns"
-      ? COMPONENT_LIST_WIDTH + DETAIL_PANEL_WIDTH
-      : COMPONENT_LIST_WIDTH;
+  const popoverWidth = COMPONENT_LIST_WIDTH;
 
   const handleComponentSelect = (slug: string) => {
     onClose();
