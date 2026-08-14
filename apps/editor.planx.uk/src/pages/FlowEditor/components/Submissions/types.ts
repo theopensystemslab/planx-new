@@ -32,6 +32,19 @@ export interface Submission {
   address: string | null;
 }
 
+export interface GroupedEvent {
+  eventType: Submission["eventType"];
+  id: Submission["eventId"];
+  events: Attempt[];
+}
+
+export type Attempt = {
+  createdAt: Submission["createdAt"];
+  retry: Submission["retry"];
+  response: Submission["response"];
+  status: Submission["status"];
+};
+
 export interface SubmissionSummary {
   id: string;
   flowId: string;
