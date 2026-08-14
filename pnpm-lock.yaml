@@ -119,6 +119,7 @@ overrides:
   on-headers@<1.1.0: '>=1.1.0'
   qs@<6.14.1: '>=6.14.1'
   serialize-javascript: ^7.0.3
+  tar@<=7.5.18: '>=7.5.19'
   ws@>=7.0.0 <7.5.11: ^7.5.11
 
 importers:
@@ -10811,8 +10812,8 @@ packages:
     resolution: {integrity: sha512-1MOpMXuhGzGL5TTCZFItxCc0AARf1EZFQkGqMm7ERKj8+Hgr5oLvJOVFcC+lRmR8hCe2S3jC4T5D7Vg/d7/fhA==}
     engines: {node: '>=6'}
 
-  tar@7.5.13:
-    resolution: {integrity: sha512-tOG/7GyXpFevhXVh8jOPJrmtRpOTsYqUIkVdVooZYJS/z8WhfQUX8RJILmeuJNinGAMSu1veBr4asSHFt5/hng==}
+  tar@7.5.22:
+    resolution: {integrity: sha512-MFO/QzvtAOmJbkhOaCTvbGcFN9L9b+JunIsDwaKljSOdcLMea3NJ1k9Usz/rjdfSXTq4dfzfeS7W4p4YOAAHeA==}
     engines: {node: '>=18'}
 
   tdigest@0.1.2:
@@ -13348,7 +13349,7 @@ snapshots:
       local-pkg: 1.1.2
       pathe: 2.0.3
       svgo: 3.3.3
-      tar: 7.5.13
+      tar: 7.5.22
     transitivePeerDependencies:
       - supports-color
 
@@ -20540,7 +20541,7 @@ snapshots:
       nopt: 9.0.0
       proc-log: 6.1.0
       semver: 7.8.5
-      tar: 7.5.13
+      tar: 7.5.22
       tinyglobby: 0.2.17
       undici: 6.27.0
       which: 6.0.1
@@ -20915,7 +20916,7 @@ snapshots:
       proc-log: 6.1.0
       sigstore: 4.1.1
       ssri: 13.0.1
-      tar: 7.5.13
+      tar: 7.5.22
     transitivePeerDependencies:
       - supports-color
 
@@ -22859,7 +22860,7 @@ snapshots:
 
   tapable@2.3.2: {}
 
-  tar@7.5.13:
+  tar@7.5.22:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
