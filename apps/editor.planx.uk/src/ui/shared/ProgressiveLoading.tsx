@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { keyframes, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { visuallyHidden } from "@mui/utils";
 import React, { useEffect, useState } from "react";
 
 const pulseAnimation = keyframes`
@@ -77,8 +78,15 @@ const ProgressiveLoading: React.FC<ProgressiveLoadingProps> = ({
         mt: 2,
         maxWidth: "100%",
       }}
+      aria-busy="true"
     >
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+      <Box role="status" aria-live="polite" style={visuallyHidden}>
+        {stages.join(". ")}
+      </Box>
+      <Box
+        aria-hidden="true"
+        sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}
+      >
         {stages.map((stage, index) => {
           const isVisible = index <= visibleStages;
           return (
@@ -88,10 +96,7 @@ const ProgressiveLoading: React.FC<ProgressiveLoadingProps> = ({
                 ...(isVisible && { opacity: 1 }),
               }}
             >
-              <Loader
-                aria-hidden="true"
-                sx={{ visibility: isVisible ? "visible" : "hidden" }}
-              />
+              <Loader sx={{ visibility: isVisible ? "visible" : "hidden" }} />
               <Typography variant="body1">{stage}</Typography>
             </LoadingStage>
           );
