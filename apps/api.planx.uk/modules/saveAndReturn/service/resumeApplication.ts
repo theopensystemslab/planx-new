@@ -24,6 +24,7 @@ const resumeApplication = async (teamSlug: string, email: string) => {
     personalisation: await getPersonalisation(sessions, team),
     reference: null,
     emailReplyToId: team.settings.emailReplyToId,
+    sanitiseContentFor: ["content"],
   };
   const hasGeneralSession = sessions.some(
     (s) => s.flow.email_template === "general",

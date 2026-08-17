@@ -67,6 +67,7 @@ const sendSingleApplicationEmail = async ({
       personalisation: getPersonalisation(session, flowSlug, flowName, team),
       reference: null,
       emailReplyToId: team.settings.emailReplyToId,
+      sanitiseContentFor: ["address"],
     };
     const firstSave = !session.hasUserSaved;
     if (firstSave && !session.submittedAt)

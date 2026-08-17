@@ -55,6 +55,7 @@ const sendLoginEmail = async (email: string, magicLink: string) => {
     personalisation: { magicLink },
     // TODO: This should be a LPS specific email
     emailReplyToId: DEVOPS_EMAIL_REPLY_TO_ID,
+    sanitiseContentFor: [],
   };
 
   await sendEmail("lps-login", email, config);

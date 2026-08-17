@@ -130,6 +130,7 @@ const getInviteToPayNotifyConfig = (
 
   return {
     emailReplyToId: settings.emailReplyToId,
+    sanitiseContentFor: ["address", "agentName", "payeeName"],
     personalisation: {
       helpEmail: settings.helpEmail,
       helpPhone: settings.helpPhone,

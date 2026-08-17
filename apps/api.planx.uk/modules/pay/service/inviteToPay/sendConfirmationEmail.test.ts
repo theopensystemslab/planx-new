@@ -63,6 +63,7 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
 
     const expectedConfig = {
       emailReplyToId: "123",
+      sanitiseContentFor: ["address", "payeeName", "applicantName"],
       personalisation: {
         applicantName: "xyz",
         payeeName: "payeeName",

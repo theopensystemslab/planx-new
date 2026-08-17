@@ -8,6 +8,7 @@ vi.mock("notifications-node-client");
 
 const mockConfig: TemplateRegistry["save"]["config"] = {
   emailReplyToId: "test",
+  sanitiseContentFor: ["address"],
   personalisation: {
     serviceName: "test",
     sessionId: "test",
