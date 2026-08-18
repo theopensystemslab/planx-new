@@ -78,6 +78,8 @@ const SettingsLayout: React.FC<Props> = ({
           {settingsLinks && (
             <TabList>
               <Tabs
+                variant="scrollable"
+                scrollButtons={false}
                 onChange={handleChange}
                 value={activeTab}
                 aria-label={title}
