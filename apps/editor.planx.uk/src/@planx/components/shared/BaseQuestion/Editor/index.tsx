@@ -79,26 +79,25 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
       <ModalSection>
         <ModalSectionContent>
           <InputGroup>
-            <ErrorWrapper error={formik.errors.text}>
-              <InputRow>
-                <Input
-                  format="large"
-                  name="text"
-                  value={formik.values.text}
-                  placeholder="Text"
-                  onChange={formik.handleChange}
-                  inputRef={focusRef}
-                  disabled={props.disabled}
-                />
-                <ImgInput
-                  img={formik.values.img}
-                  onChange={(newUrl) => {
-                    formik.setFieldValue("img", newUrl);
-                  }}
-                  disabled={props.disabled}
-                />
-              </InputRow>
-            </ErrorWrapper>
+            <InputRow>
+              <Input
+                errorMessage={formik.errors.text}
+                format="large"
+                name="text"
+                value={formik.values.text}
+                placeholder="Text"
+                onChange={formik.handleChange}
+                inputRef={focusRef}
+                disabled={props.disabled}
+              />
+              <ImgInput
+                img={formik.values.img}
+                onChange={(newUrl) => {
+                  formik.setFieldValue("img", newUrl);
+                }}
+                disabled={props.disabled}
+              />
+            </InputRow>
             <InputRow>
               <RichTextInput
                 name="description"
