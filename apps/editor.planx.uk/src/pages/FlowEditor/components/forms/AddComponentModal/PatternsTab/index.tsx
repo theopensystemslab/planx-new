@@ -10,7 +10,7 @@ import { PatternDetailPanel } from "./PatternDetailPanel";
 import { PatternRow } from "./PatternRow";
 import type { Pattern } from "./queries";
 import { useFetchPatternGraph, usePatterns } from "./usePatterns";
-import { getComponentCount } from "./utils";
+import { getPatternCounts } from "./utils";
 
 interface Props {
   onInsert: (graph: Graph) => void;
@@ -36,7 +36,8 @@ export const PatternsTab: React.FC<Props> = ({ onInsert }) => {
     const patternGraph = await fetchPatternGraph(id);
     // A pattern needs at least one component to be insertable
     // We should aim to catch this when a pattern is made copyable
-    if (patternGraph && getComponentCount(patternGraph) > 0)
+    const counts = patternGraph && getPatternCounts(patternGraph);
+    if (counts && counts.components + counts.nestedFlows > 0)
       onInsert(patternGraph);
   };
 
