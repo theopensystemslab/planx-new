@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
-// import DialogActions from "@mui/material/DialogActions";
+import DialogActions from "@mui/material/DialogActions";
 import Typography from "@mui/material/Typography";
 
 import { useTeamLogo } from "../hooks";
-// import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
 import type { Submission } from "../types";
-// import { ViewSubmissionButton } from "./ViewSubmissionButton";
+import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
+import { ViewSubmissionButton } from "./ViewSubmissionButton";
 
 type SubmissionDetailsProps = {
   sessionId: string;
@@ -84,10 +84,10 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
         />
       </Box>
 
-      {/* <DialogActions>
-        <ViewSubmissionButton />
-        <DownloadSubmissionButton />
-      </DialogActions> */}
+      <DialogActions>
+        {/* <ViewSubmissionButton />
+        <DownloadSubmissionButton /> */}
+      </DialogActions>
     </Box>
   );
 };
