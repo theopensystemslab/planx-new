@@ -10,10 +10,42 @@ export interface Props {
   label: FormControlLabelProps["label"];
   description?: string;
   onChange: FormControlLabelProps["onChange"];
-  variant?: "default" | "compact";
+  variant?: "default" | "compact" | "inline";
   value?: string;
   disabled?: boolean;
 }
+
+const getLabel = (
+  label: FormControlLabelProps["label"],
+  description: string | undefined,
+  variant: NonNullable<Props["variant"]>,
+) => {
+  if (!description) return label;
+
+  if (variant === "inline") {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "flex-start",
+          gap: 1,
+        }}
+      >
+        <Box sx={{ fontWeight: "bold" }}>{label}</Box>
+        <Box sx={{ color: "text.secondary" }}>–</Box>
+        <Box sx={{ color: "text.secondary" }}>{description}</Box>
+      </Box>
+    );
+  }
+
+  return (
+    <Box>
+      <Box sx={{ fontWeight: "bold", mb: 1 }}>{label}</Box>
+      <Box sx={{ color: "text.secondary" }}>{description}</Box>
+    </Box>
+  );
+};
 
 const BasicRadio: React.FC<Props> = ({
   id,
@@ -26,17 +58,8 @@ const BasicRadio: React.FC<Props> = ({
   <FormControlLabel
     value={id}
     onChange={onChange}
-    control={<Radio variant={variant} />}
-    label={
-      description ? (
-        <Box>
-          <Box sx={{ fontWeight: "bold", mb: 1 }}>{label}</Box>
-          <Box sx={{ color: "text.secondary" }}>{description}</Box>
-        </Box>
-      ) : (
-        label
-      )
-    }
+    control={<Radio variant={variant === "inline" ? "compact" : variant} />}
+    label={getLabel(label, description, variant)}
     disabled={disabled}
     sx={(theme) => ({
       ml: theme.spacing(-1),

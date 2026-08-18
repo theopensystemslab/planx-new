@@ -101,61 +101,69 @@ export const AddFlow: React.FC = () => {
         validationSchema={validationSchema}
         enableReinitialize
       >
-        {({ resetForm, isSubmitting, status }) => (
-          <Dialog
-            open={dialogOpen}
-            onClose={() => {
-              setDialogOpen(false);
-              resetForm();
-            }}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            fullWidth
-          >
-            <DialogTitle variant="h3" component="h1" id="dialog-heading">
-              Add a new flow
-            </DialogTitle>
-            <Form
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                overflow: "hidden",
+        {({ resetForm, isSubmitting, status, values }) => {
+          let addButtonLabel = "Add flow";
+          if (values.mode === "new") {
+            if (values.flow.isPattern) addButtonLabel = "Add pattern";
+            else if (values.flow.isService) addButtonLabel = "Add service";
+          }
+
+          return (
+            <Dialog
+              open={dialogOpen}
+              onClose={() => {
+                setDialogOpen(false);
+                resetForm();
               }}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              fullWidth
             >
-              <DialogContent dividers>
-                <ErrorWrapper error={status?.error}>
-                  <Box
-                    sx={{
-                      gap: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
+              <DialogTitle variant="h3" component="h1" id="dialog-heading">
+                Add a new flow
+              </DialogTitle>
+              <Form
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  overflow: "hidden",
+                }}
+              >
+                <DialogContent dividers>
+                  <ErrorWrapper error={status?.error}>
+                    <Box
+                      sx={{
+                        gap: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <BaseFormSection />
+                    </Box>
+                  </ErrorWrapper>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={() => setDialogOpen(false)}
+                    disabled={isSubmitting}
+                    variant="contained"
+                    color="secondary"
                   >
-                    <BaseFormSection />
-                  </Box>
-                </ErrorWrapper>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={() => setDialogOpen(false)}
-                  disabled={isSubmitting}
-                  variant="contained"
-                  color="secondary"
-                >
-                  Back
-                </Button>
-                <Button
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                  disabled={isSubmitting}
-                >
-                  Add flow
-                </Button>
-              </DialogActions>
-            </Form>
-          </Dialog>
-        )}
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    color="primary"
+                    variant="contained"
+                    disabled={isSubmitting}
+                  >
+                    {addButtonLabel}
+                  </Button>
+                </DialogActions>
+              </Form>
+            </Dialog>
+          );
+        }}
       </Formik>
     </Box>
   );
