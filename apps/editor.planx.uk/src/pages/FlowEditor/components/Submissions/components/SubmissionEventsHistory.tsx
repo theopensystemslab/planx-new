@@ -15,13 +15,16 @@ const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
   let currentGroup: GroupedEvent | null = null;
 
   for (const submission of submissions) {
-    if (!currentGroup || currentGroup.eventType !== submission.eventType) {
+    if (
+      !currentGroup ||
+      currentGroup.events[0].eventType !== submission.eventType
+    ) {
       currentGroup = {
-        eventType: submission.eventType,
         sessionId: submission.sessionId,
         eventId: submission.eventId,
         events: [
           {
+            eventType: submission.eventType,
             createdAt: submission.createdAt,
             retry: submission.retry,
             response: submission.response,
@@ -32,6 +35,7 @@ const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
       result.push(currentGroup);
     } else {
       currentGroup.events.push({
+        eventType: submission.eventType,
         createdAt: submission.createdAt,
         retry: submission.retry,
         response: submission.response,
@@ -76,7 +80,7 @@ const SubmissionEvent: React.FC<{ groupedEvent: GroupedEvent }> = ({
 
       <Box sx={{ flex: 1, paddingLeft: 2 }}>
         <Typography sx={{ fontWeight: "bold" }}>
-          {groupedEvent.eventType}
+          {groupedEvent.events[0].eventType}
         </Typography>
         {groupedEvent.events.length === 1 ? (
           <>
