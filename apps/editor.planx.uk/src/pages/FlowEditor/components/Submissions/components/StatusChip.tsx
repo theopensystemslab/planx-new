@@ -7,6 +7,7 @@ import type { Submission } from "../types";
 type Props = RenderCellParams | { status: Submission["status"] };
 
 const isRenderCellParams = (props: Props): props is RenderCellParams => {
+  // TODO: when removing feature flag, conditional isRenderCellParams not needed
   return "value" in props;
 };
 

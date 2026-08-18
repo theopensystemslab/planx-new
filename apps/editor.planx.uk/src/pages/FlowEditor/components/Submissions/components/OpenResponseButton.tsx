@@ -16,7 +16,7 @@ const isGridCellParams = (props: Props): props is GridCellParams => {
 };
 
 export const OpenResponseButton = (props: Props) => {
-  const submission = isGridCellParams(props) ? props.row : props.attempt;
+  const submission = isGridCellParams(props) ? props.row : props.attempt; // TODO: when removing feature flag, conditional isGridCellParams not needed
   const sessionId = isGridCellParams(props)
     ? props.row.sessionId
     : props.sessionId;
