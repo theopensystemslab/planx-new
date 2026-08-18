@@ -1,9 +1,11 @@
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
+import { PatternMosaic } from "./PatternMosaic";
 import type { Pattern } from "./queries";
 import { usePatternData } from "./usePatterns";
 import { getPatternCounts } from "./utils";
@@ -63,28 +65,60 @@ export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
         gap: 1.5,
       }}
     >
-      <Typography variant="body1" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
-        {pattern.name}
-      </Typography>
-      {pattern.summary && (
-        <Typography variant="body2">{pattern.summary}</Typography>
-      )}
-      <Typography
-        variant="body3"
-        sx={{ color: "text.secondary", minHeight: "1.5em" }}
+      <Box
+        sx={{
+          position: "relative",
+          width: "100%",
+          aspectRatio: "2 / 1",
+          backgroundColor: "text.primary",
+          borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+          overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingBottom: 1.75,
+        }}
       >
-        {loading ? <Skeleton width={80} /> : componentCountLabel}
-      </Typography>
-      {error && (
-        <Typography color="error" variant="body2">
-          Couldn't load this pattern.
+        {counts && <PatternMosaic seed={pattern.id} counts={counts} />}
+        {(loading || componentCountLabel) && (
+          <Typography
+            variant="body3"
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              width: "100%",
+              textAlign: "center",
+              py: 0.5,
+              color: "common.white",
+            }}
+          >
+            {loading ? (
+              <Skeleton width={80} sx={{ bgcolor: "grey.500" }} />
+            ) : (
+              componentCountLabel
+            )}
+          </Typography>
+        )}
+      </Box>
+      <Stack spacing={1}>
+        <Typography variant="body1" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+          {pattern.name}
         </Typography>
-      )}
-      {isEmpty && (
-        <Typography color="textSecondary" variant="body2">
-          This pattern has no components to insert.
-        </Typography>
-      )}
+        {pattern.summary && (
+          <Typography variant="body2">{pattern.summary}</Typography>
+        )}
+        {error && (
+          <Typography color="error" variant="body2">
+            Couldn't load this pattern.
+          </Typography>
+        )}
+        {isEmpty && (
+          <Typography color="textSecondary" variant="body2">
+            This pattern has no components to insert.
+          </Typography>
+        )}
+      </Stack>
     </Box>
   );
 };

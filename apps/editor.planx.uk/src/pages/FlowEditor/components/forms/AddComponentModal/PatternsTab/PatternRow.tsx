@@ -53,7 +53,6 @@ export const PatternRow: React.FC<Props> = ({
         <Typography
           variant="body2"
           sx={{ fontWeight: active ? FONT_WEIGHT_SEMI_BOLD : "regular" }}
-          noWrap
         >
           {pattern.name}
         </Typography>
