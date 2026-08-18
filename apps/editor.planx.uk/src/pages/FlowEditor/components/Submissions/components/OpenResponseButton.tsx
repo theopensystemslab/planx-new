@@ -6,11 +6,21 @@ import type { GridCellParams } from "@mui/x-data-grid";
 import React, { useState } from "react";
 import { DataTableModal } from "ui/shared/DataTable/components/DataTableModal";
 
-import type { Submission } from "../types";
+import type { Attempt, Submission } from "../types";
 import { FormattedResponse } from "./FormattedResponse";
 
-export const OpenResponseButton = (props: GridCellParams) => {
-  const { row } = props;
+type Props = GridCellParams | { attempt: Attempt; sessionId: string };
+
+const isGridCellParams = (props: Props): props is GridCellParams => {
+  return "row" in props;
+};
+
+export const OpenResponseButton = (props: Props) => {
+  const submission = isGridCellParams(props) ? props.row : props.attempt; // TODO: when removing feature flag, conditional isGridCellParams not needed
+  const sessionId = isGridCellParams(props)
+    ? props.row.sessionId
+    : props.sessionId;
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [response, setResponse] = useState<Record<string, any> | null>(null);
 
@@ -24,7 +34,7 @@ export const OpenResponseButton = (props: GridCellParams) => {
   const handleButtonClick = () => {
     setModalIsOpen(true);
     if (!response) {
-      let parsedData = getResponse(row);
+      let parsedData = getResponse(submission);
       try {
         parsedData =
           typeof parsedData === "string" ? JSON.parse(parsedData) : parsedData;
@@ -43,7 +53,7 @@ export const OpenResponseButton = (props: GridCellParams) => {
         </IconButton>
       </Tooltip>
       <DataTableModal
-        title={`Response for ${row.sessionId || "unknown"}`}
+        title={`Response for ${sessionId || "unknown"}`}
         open={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
       >

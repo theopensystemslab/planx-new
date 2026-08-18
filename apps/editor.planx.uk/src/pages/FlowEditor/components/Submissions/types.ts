@@ -32,6 +32,20 @@ export interface Submission {
   address: string | null;
 }
 
+export interface GroupedEvent {
+  eventType: Submission["eventType"];
+  sessionId: Submission["sessionId"];
+  eventId: Submission["eventId"];
+  events: Attempt[];
+}
+
+export type Attempt = {
+  createdAt: Submission["createdAt"];
+  retry: Submission["retry"];
+  response: Submission["response"];
+  status: Submission["status"];
+};
+
 export interface SubmissionSummary {
   id: string;
   flowId: string;
@@ -60,3 +74,17 @@ export interface EventsLogGroupedProps {
 export interface SubmissionsProps {
   flowSlug?: string;
 }
+
+export type GetTeamLogoQuery = {
+  teams: {
+    theme: {
+      logo: string;
+    };
+    id: number;
+    name: string;
+  }[];
+};
+
+export type GetTeamLogoVariables = {
+  teamSlug: string;
+};

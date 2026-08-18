@@ -1,17 +1,21 @@
 import { gql, useQuery } from "@apollo/client";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import ListItem from "@mui/material/ListItem";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import type { Submission } from "../types";
+import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
+import { SubmissionDetails } from "./SubmissionDetails";
+import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
+import { ViewSubmissionButton } from "./ViewSubmissionButton";
 
+// TODO: refactor into hooks / queries pattern
 const GET_SUBMISSION_EVENTS = gql`
   query GetSubmissionEvents($sessionId: uuid!) {
     submissions: submission_services_log(
@@ -56,50 +60,50 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   if (loading) return <DelayedLoadingIndicator />;
   if (error) throw error;
   return (
-    <Dialog open>
-      <Typography variant="h2" component="h1" gutterBottom>
-        Submission Details
-      </Typography>
+    <Dialog
+      open
+      slotProps={{
+        paper: {
+          sx: {
+            width: "66.67%",
+            maxWidth: "66.67%",
+            margin: "auto",
+          },
+        },
+      }}
+    >
+      <DialogContent>
+        <Typography variant="h2" component="h1" gutterBottom>
+          Submission details
+        </Typography>
+        <Grid container>
+          <Grid size={6}>
+            <SubmissionDetails
+              sessionId={sessionId}
+              latestEvent={latestEvent}
+              teamSlug={teamSlug}
+            />
+          </Grid>
 
-      <Box sx={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 3 }}>
-        <Box>
-          <Typography variant="h4">Details</Typography>
-          <Typography>Address: {latestEvent?.address}</Typography>
-          <Typography>Service: {latestEvent?.flowName}</Typography>
-          <Typography>Session ID: {sessionId}</Typography>
-        </Box>
-
-        <Box>
-          <Typography variant="h4">Event History</Typography>
-          {events.map((event, index) => (
-            <ListItem key={`${event.eventId}-${index}`}>
-              <Box>
-                <Typography>
-                  {event.eventType} {event.retry && "[Retry]"}
-                </Typography>
-                <Typography>
-                  Status: {event.status},{" "}
-                  {new Date(event.createdAt).toLocaleString()}
-                </Typography>
-              </Box>
-            </ListItem>
-          ))}
-        </Box>
-      </Box>
-      <DialogActions>
-        <Button
-          onClick={() =>
-            navigate({
-              to: "/app/$team/submissions",
-              params: {
-                team: teamSlug,
-              },
-            })
-          }
-        >
-          Back
-        </Button>
-      </DialogActions>
+          <Grid size={6}>
+            <SubmissionEventsHistory events={events} />
+          </Grid>
+        </Grid>
+        <DialogActions>
+          <Button
+            onClick={() =>
+              navigate({
+                to: "/app/$team/submissions",
+                params: {
+                  team: teamSlug,
+                },
+              })
+            }
+          >
+            Back
+          </Button>
+        </DialogActions>
+      </DialogContent>
     </Dialog>
   );
 };
