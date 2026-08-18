@@ -58,7 +58,6 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
         borderColor: "border.main",
       }}
     >
-      <Typography variant="h3">Event history</Typography>
       {groupedEvents.map((groupedEvent) => (
         <SubmissionEvent groupedEvent={groupedEvent} />
       ))}
