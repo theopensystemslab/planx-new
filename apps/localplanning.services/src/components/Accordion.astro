@@ -23,3 +23,15 @@ const { title, id } = Astro.props;
     <slot />
   </section>
 </details>
+
+<script>
+  // A11y: Workaround for JAWS focus loss on <details> collapse
+  document.querySelectorAll("details").forEach((details) => {
+    details.addEventListener("toggle", () => {
+      const summary = details.querySelector("summary");
+      if (!details.open && summary) {
+        summary.focus();
+      }
+    });
+  });
+</script>
