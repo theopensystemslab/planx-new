@@ -6,7 +6,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import type { Pattern } from "./queries";
 import { usePatternData } from "./usePatterns";
-import { getComponentCount } from "./utils";
+import { getPatternCounts } from "./utils";
 
 export const DETAIL_PANEL_WIDTH = 300;
 
@@ -19,7 +19,7 @@ export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
   const graph = data?.pattern?.data;
 
   // Null while there's no graph data (loading, error, or nothing previewed)
-  const componentCount = graph ? getComponentCount(graph) : null;
+  const counts = graph ? getPatternCounts(graph) : null;
 
   if (!pattern) {
     return (
@@ -31,12 +31,24 @@ export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
     );
   }
 
-  const componentCountLabel =
-    componentCount !== null && componentCount >= 1
-      ? `${componentCount} component${componentCount === 1 ? "" : "s"}`
-      : null;
+  const componentCountLabel = (() => {
+    if (!counts) return null;
+    const parts: string[] = [];
+    if (counts.components > 0) {
+      parts.push(
+        `${counts.components} component${counts.components === 1 ? "" : "s"}`,
+      );
+    }
+    if (counts.nestedFlows > 0) {
+      parts.push(
+        `${counts.nestedFlows} nested flow${counts.nestedFlows === 1 ? "" : "s"}`,
+      );
+    }
+    return parts.length ? parts.join(", ") : null;
+  })();
 
-  const isEmpty = componentCount === 0;
+  const isEmpty =
+    counts !== null && counts.components === 0 && counts.nestedFlows === 0;
 
   return (
     <Box
