@@ -339,6 +339,30 @@ aws cloudfront list-distributions \
   --query "DistributionList.Items[?contains(Aliases.Items, 'planningservices.council.gov.uk')].{Id:Id,Status:Status,Aliases:Aliases.Items}"
 ```
 
+### Production deploy → OAI deletion fails with `PreconditionFailed` (step B7)
+
+When advancing to `shared-final`, Pulumi tears down the legacy CDN and its Origin Access Identity (OAI). The AWS provider can send a stale `If-Match` ETag on the OAI delete call, causing a 412. The CDN and ACM cert delete fine, only the OAI fails.
+
+```sh
+DeleteCloudFrontOriginAccessIdentity, https response error StatusCode: 412, PreconditionFailed: The request failed because it didn't meet the preconditions in one or more request-header fields.
+```
+
+Fix: delete the OAI manually and remove it from Pulumi state.
+
+```sh
+# Get the current ETag
+aws cloudfront get-cloud-front-origin-access-identity --id <OAI_ID> \
+  --query 'ETag' --output text
+
+# Delete with the correct ETag
+aws cloudfront delete-cloud-front-origin-access-identity --id <OAI_ID> --if-match <ETAG>
+
+# Remove the orphaned resource from Pulumi state
+pulumi state delete 'urn:pulumi:production::application::aws:cloudfront/originAccessIdentity:OriginAccessIdentity::planningservices.<council>.gov.uk-OAI' --stack production
+```
+
+Re-run the production deploy to confirm a clean pass.
+
 ### `pulumi preview` on `certificates` proposes deletes
 
 If a preview wants to **delete** `sslCert-custom-domains` or `sslCert-dns-mining` (rather than replace/update them), Pulumi thinks the desired domain set is empty or wrong - almost always the **wrong stack** or **wrong AWS credentials**. A correct run _adds_ SANs and _replaces_ certs; the SAN count never shrinks unexpectedly. Stop and check your context.
