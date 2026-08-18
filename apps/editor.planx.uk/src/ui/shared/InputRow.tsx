@@ -7,7 +7,7 @@ const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "childRow",
 })<BoxProps & { childRow?: boolean }>(({ childRow }) => ({
   display: "flex",
-  alignItems: "center",
+  alignItems: "flex-end",
   width: "100%",
   "&:not(:last-child)": {
     marginBottom: 5,
