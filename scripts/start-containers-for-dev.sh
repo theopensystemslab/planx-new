@@ -35,7 +35,7 @@ function setupContainers(){
   echo "Starting docker…"
 
   # Bring dev containers back up, preserving existing volumes so local data changes are not lost.
-  # For a clean first-time setup, use `pnpm up` instead.
+  # For a clean first-time setup (including seeding the db), use `pnpm run up` instead.
   DOCKER_BUILDKIT=1 dev_compose up -d --quiet-pull --build --force-recreate
 
   echo "All containers ready."
