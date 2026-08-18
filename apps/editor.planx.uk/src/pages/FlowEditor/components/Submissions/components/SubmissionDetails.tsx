@@ -35,8 +35,8 @@ const DetailRow: React.FC<DetailRowProps> = ({ label, value, border }) => (
 
 export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
   const { data } = useTeamLogo(props.teamSlug);
-  const teamLogo = data?.teamThemes[0].logo;
-  const teamName = data?.teamThemes[0].team.name;
+  const teamLogo = data?.teams[0].theme.logo;
+  const teamName = data?.teams[0].name;
 
   return (
     <Box

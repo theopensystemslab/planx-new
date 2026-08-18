@@ -76,11 +76,12 @@ export interface SubmissionsProps {
 }
 
 export type GetTeamLogoQuery = {
-  teamThemes: {
-    logo: string;
-    team: {
-      name: string;
+  teams: {
+    theme: {
+      logo: string;
     };
+    id: number;
+    name: string;
   }[];
 };
 
