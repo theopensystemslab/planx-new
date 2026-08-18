@@ -74,3 +74,16 @@ export interface EventsLogGroupedProps {
 export interface SubmissionsProps {
   flowSlug?: string;
 }
+
+export type GetTeamLogoQuery = {
+  teamThemes: {
+    logo: string;
+    team: {
+      name: string;
+    };
+  }[];
+};
+
+export type GetTeamLogoVariables = {
+  teamSlug: string;
+};

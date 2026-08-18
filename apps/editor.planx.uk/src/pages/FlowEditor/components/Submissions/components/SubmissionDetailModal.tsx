@@ -15,6 +15,7 @@ import { SubmissionDetails } from "./SubmissionDetails";
 import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
 import { ViewSubmissionButton } from "./ViewSubmissionButton";
 
+// TODO: refactor into hooks / queries pattern
 const GET_SUBMISSION_EVENTS = gql`
   query GetSubmissionEvents($sessionId: uuid!) {
     submissions: submission_services_log(
@@ -80,6 +81,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
             <SubmissionDetails
               sessionId={sessionId}
               latestEvent={latestEvent}
+              teamSlug={teamSlug}
             />
           </Grid>
 
