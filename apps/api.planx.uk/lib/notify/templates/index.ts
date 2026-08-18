@@ -54,7 +54,18 @@ import {
   userConfirmationTemplate,
 } from "./saveAndReturn/user-confirmation.js";
 
-export type NotifyConfig<T> = { personalisation: T; emailReplyToId: string };
+export type NotifyConfig<T> = {
+  personalisation: T;
+  emailReplyToId: string;
+  /**
+   * Each template must identify which values are user-derived
+   * These must be sanitised before injection into an email
+   * This stops markdown such as (Click me!)[http://evil.com] being used as a name/address
+   *
+   * @docs https://docs.notifications.service.gov.uk/node.html#sanitisecontentfor-optional
+   */
+  sanitiseContentFor: string[];
+};
 
 export type Access =
   /**

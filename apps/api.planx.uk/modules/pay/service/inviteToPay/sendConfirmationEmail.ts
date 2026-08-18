@@ -27,6 +27,7 @@ export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
       projectType,
     },
     emailReplyToId,
+    sanitiseContentFor: ["address", "payeeName", "applicantName"],
   };
   await sendEmail(
     resolveNotifyTemplate("confirmation-agent", emailTemplate),
