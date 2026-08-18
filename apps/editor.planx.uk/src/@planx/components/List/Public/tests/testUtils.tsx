@@ -86,6 +86,8 @@ export const fillInResponse = async (user: UserEvent) => {
   expect(mockFile1).toBeVisible();
   expect(mockFile2).toBeVisible();
 
+  // FileUploadInput syncs slots into Formik in an effect, so the first Save can validate values
+  // that still hold status: "uploading" - saveItem() then fails silently (hence retries)
   await waitFor(async () => {
     const saveButton = screen.queryByRole("button", { name: /Save/ });
     if (saveButton) await user.click(saveButton);

@@ -40,7 +40,8 @@ describe("ContactInputComponent - Editor Modal", () => {
     );
 
     const title = screen.getByPlaceholderText("Title");
-    await user.type(title, "What is your contact info?");
+    await user.click(title);
+    await user.paste("What is your contact info?");
 
     fireEvent.submit(screen.getByRole("form"));
 
@@ -61,7 +62,8 @@ describe("ContactInputComponent - Editor Modal", () => {
     );
 
     const title = screen.getByPlaceholderText("Title");
-    await user.type(title, "What is your contact info?");
+    await user.click(title);
+    await user.paste("What is your contact info?");
 
     const autocompleteComponent = screen.getByTestId(
       "contact-input-data-field",

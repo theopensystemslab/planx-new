@@ -71,16 +71,12 @@ describe("validation", () => {
       </DndProvider>,
     );
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(
-      screen.getAllByPlaceholderText("Option")[0],
-      "Non unique label",
-    );
+    await user.click(screen.getAllByPlaceholderText("Option")[0]);
+    await user.paste("Non unique label");
 
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(
-      screen.getAllByPlaceholderText("Option")[1],
-      "Non unique label",
-    );
+    await user.click(screen.getAllByPlaceholderText("Option")[1]);
+    await user.paste("Non unique label");
 
     expect(
       screen.queryByText("Error: Options must have unique labels"),
