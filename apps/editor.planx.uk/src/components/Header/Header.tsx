@@ -99,12 +99,22 @@ const TeamBrand: React.FC = () => {
     state.teamTheme,
   ]);
 
-  if (teamTheme?.logo) {
+  const [logoFailed, setLogoFailed] = useState(false);
+
+  const showLogo = teamTheme?.logo && !logoFailed;
+
+  if (showLogo) {
     const altText = teamSettings?.homepage
       ? `${teamName} Homepage (opens in a new tab)`
       : `${teamName} Logo`;
 
-    const logo = <Logo alt={altText} src={teamTheme.logo} />;
+    const logo = (
+      <Logo
+        alt={altText}
+        src={teamTheme.logo!}
+        onError={() => setLogoFailed(true)}
+      />
+    );
 
     return teamSettings?.homepage ? (
       <CustomLink

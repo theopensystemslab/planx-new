@@ -1,6 +1,6 @@
 import type { Team } from "@opensystemslab/planx-core/types";
 import * as TanStackRouter from "@tanstack/react-router";
-import { act, screen } from "@testing-library/react";
+import { act, fireEvent, screen } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "test/utils";
@@ -169,6 +169,28 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
         "src",
         "logo.jpg",
       );
+    });
+
+    it("falls back to the team name when the logo fails to load", async () => {
+      act(() => {
+        setState({
+          previewEnvironment: "standalone",
+          teamTheme: mockTeam1.theme,
+          teamName: mockTeam1.name,
+          teamSlug: mockTeam1.slug,
+        });
+      });
+      await setup(<Header />);
+      const logo = screen.getByAltText(`${mockTeam1.name} Logo`);
+
+      act(() => {
+        fireEvent.error(logo);
+      });
+
+      expect(
+        screen.queryByAltText(`${mockTeam1.name} Logo`),
+      ).not.toBeInTheDocument();
+      expect(screen.getByText(mockTeam1.name)).toBeInTheDocument();
     });
 
     it("falls back to the team name when a logo is not present", async () => {
