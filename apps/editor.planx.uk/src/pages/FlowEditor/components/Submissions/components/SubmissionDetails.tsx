@@ -1,17 +1,36 @@
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
 import { useTeamLogo } from "../hooks";
 import type { Submission } from "../types";
 
-type Props = {
+type SubmissionDetailsProps = {
   sessionId: string;
   latestEvent: Submission;
   teamSlug: string;
 };
 
-export const SubmissionDetails: React.FC<Props> = (props) => {
+type DetailRowProps = {
+  label: string;
+  value: string | null;
+  border?: boolean;
+};
+
+const DetailRow: React.FC<DetailRowProps> = ({ label, value, border }) => (
+  <Box
+    sx={{
+      display: "flex",
+      py: 2,
+      borderBottom: border ? 1 : 0,
+      borderColor: "border.main",
+    }}
+  >
+    <Typography sx={{ fontWeight: "bold", width: "33%" }}>{label}</Typography>
+    <Typography sx={{ width: "66%" }}>{value}</Typography>
+  </Box>
+);
+
+export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
   const { data } = useTeamLogo(props.teamSlug);
   const teamLogo = data?.teamThemes[0].logo;
   const teamName = data?.teamThemes[0].team.name;
@@ -49,30 +68,18 @@ export const SubmissionDetails: React.FC<Props> = (props) => {
       <Typography variant="h3" sx={{ mb: 2 }}>
         {props.latestEvent?.flowName}
       </Typography>
-      <Grid container spacing={2}>
-        <Grid size={4}>
-          <Typography sx={{ fontWeight: "bold" }}>Property address</Typography>
-        </Grid>
-        <Grid size={8}>
-          <Typography>{props.latestEvent?.address}</Typography>
-        </Grid>
-
-        <Grid size={4}>
-          <Typography sx={{ fontWeight: "bold" }}>Reference</Typography>
-        </Grid>
-        <Grid size={8}>
-          <Typography>{props.sessionId}</Typography>
-        </Grid>
-
-        <Grid size={4}>
-          <Typography sx={{ fontWeight: "bold" }}>Submitted on</Typography>
-        </Grid>
-        <Grid size={8}>
-          <Typography>
-            {new Date(props.latestEvent?.createdAt).toLocaleDateString()}
-          </Typography>
-        </Grid>
-      </Grid>
+      <Box>
+        <DetailRow
+          label="Property address"
+          value={props.latestEvent?.address}
+          border={true}
+        />
+        <DetailRow label="Reference" value={props.sessionId} border={true} />
+        <DetailRow
+          label="Submitted on"
+          value={new Date(props.latestEvent?.createdAt).toLocaleDateString()}
+        />
+      </Box>
     </Box>
   );
 };
