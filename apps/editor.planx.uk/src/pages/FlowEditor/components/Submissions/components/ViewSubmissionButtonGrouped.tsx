@@ -32,7 +32,7 @@ export const ViewSubmissionButtonGrouped = (props: Props) => {
       variant="contained"
       onClick={() =>
         navigate({
-          to: `/app/$team/submission/$sessionId`,
+          to: `/app/$team/view-submission/$sessionId`,
           params: { team: teamSlug, sessionId: props.sessionId },
         })
       }
