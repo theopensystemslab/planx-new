@@ -1,22 +1,14 @@
-import type { GovUKPayment } from "@opensystemslab/planx-core/types";
-import {
-  GOV_PAY_PASSPORT_KEY,
-  PaymentStatus,
-} from "@opensystemslab/planx-core/types";
 import type { PublicProps } from "@planx/components/shared/types";
 import { logger } from "airbrake";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import type { APIError } from "lib/api/client";
-import { getPayment, initiatePayment } from "lib/api/pay/requests";
-import { saveSession } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect, useReducer } from "react";
-import { useErrorBoundary } from "react-error-boundary";
 
-import { makeData } from "../../shared/utils";
 import type { Pay } from "../model";
-import { createPayload, getDefaultContent } from "../model";
+import { getDefaultContent } from "../model";
 import Confirm from "./Confirm";
+import { useGovUkPay } from "./providers/useGovUkPay";
+import { Action } from "./types";
 
 export default Component;
 export type Props = PublicProps<Pay>;
@@ -34,103 +26,65 @@ type ComponentState =
   | { status: "undefined_fee" }
   | { status: "zero_fee" };
 
-enum Action {
-  NoFeeFound,
-  /** Landed on Pay, has not redirected to Gov Pay to initiate payment */
-  NoPaymentFound,
-  IncompletePaymentFound,
-  IncompletePaymentConfirmed,
-  /** We could not read the payment status, so we don't know whether the user has paid */
-  PaymentStatusUnknown,
-  StartNewPayment,
-  StartNewPaymentError,
-  ResumePayment,
-  Success,
-  ZeroFee,
-}
-
 export const PAY_API_ERROR_UNSUPPORTED_TEAM =
   "Online payments are not enabled for";
 
-const redirectToGovPay = (payment: GovUKPayment) => {
-  const nextUrl = payment._links.next_url?.href;
-  if (!nextUrl) {
-    logger.notify("Payment did not include a 'next_url' link.");
-    return;
+const reducer = (_state: ComponentState, action: Action): ComponentState => {
+  switch (action) {
+    case Action.NoFeeFound:
+      return { status: "undefined_fee" };
+    case Action.NoPaymentFound:
+      return { status: "no_payment_found" };
+    case Action.IncompletePaymentFound:
+      return {
+        status: "fetching_payment",
+        displayText: "Loading payment information",
+      };
+    case Action.IncompletePaymentConfirmed:
+      return { status: "retry" };
+    case Action.PaymentStatusUnknown:
+      return { status: "status_unknown" };
+    case Action.StartNewPayment:
+      return {
+        status: "redirecting",
+        displayText: "Connecting you to the payment page",
+      };
+    case Action.StartNewPaymentError:
+      return { status: "unsupported_team" };
+    case Action.ResumePayment:
+      return {
+        status: "redirecting",
+        displayText: "Reconnecting to the payment page",
+      };
+    case Action.Success:
+      return { status: "success", displayText: "Payment Successful" };
+    case Action.ZeroFee:
+      return { status: "zero_fee" };
   }
-  // assign() is used to preserve history
-  // This allows browser "back" navigation to work from GOV.UK Pay,
-  // meaning that users can resume sessions by confirming their email
-  window.location.assign(nextUrl);
 };
 
 function Component(props: Props) {
-  const [
-    flowId,
-    sessionId,
-    breadcrumbs,
-    govUkPayment,
-    setGovUkPayment,
-    passport,
-    environment,
-    teamSlug,
-  ] = useStore((state) => [
-    state.id,
+  const [sessionId, govUkPayment, passport] = useStore((state) => [
     state.sessionId,
-    state.breadcrumbs,
     state.govUkPayment,
-    state.setGovUkPayment,
     state.computePassport(),
-    state.previewEnvironment,
-    state.teamSlug,
   ]);
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
   const defaultMetadata = getDefaultContent().govPayMetadata;
-
   const metadata = [...(props.govPayMetadata || []), ...defaultMetadata];
-
-  // Handles UI states
-  const reducer = (_state: ComponentState, action: Action): ComponentState => {
-    switch (action) {
-      case Action.NoFeeFound:
-        return { status: "undefined_fee" };
-      case Action.NoPaymentFound:
-        return { status: "no_payment_found" };
-      case Action.IncompletePaymentFound:
-        return {
-          status: "fetching_payment",
-          displayText: "Loading payment information",
-        };
-      case Action.IncompletePaymentConfirmed:
-        return { status: "retry" };
-      case Action.PaymentStatusUnknown:
-        return { status: "status_unknown" };
-      case Action.StartNewPayment:
-        return {
-          status: "redirecting",
-          displayText: "Connecting you to the payment page",
-        };
-      case Action.StartNewPaymentError:
-        return { status: "unsupported_team" };
-      case Action.ResumePayment:
-        return {
-          status: "redirecting",
-          displayText: "Reconnecting to the payment page",
-        };
-      case Action.Success:
-        return { status: "success", displayText: "Payment Successful" };
-      case Action.ZeroFee:
-        return { status: "zero_fee" };
-    }
-  };
 
   const [state, dispatch] = useReducer(reducer, {
     status: "indeterminate",
     displayText: "Loading...",
   });
 
-  const { showBoundary } = useErrorBoundary();
+  const { actions, hasExistingPayment } = useGovUkPay(
+    props,
+    dispatch,
+    fee,
+    metadata,
+  );
 
   const isTeamSupported = state.status !== "unsupported_team";
   const showPayOptions = props.allowInviteToPay && !props.hidePay;
@@ -144,7 +98,7 @@ function Component(props: Props) {
       return;
     }
 
-    // Do not contact GovPay at all if fee is 0, just show UI
+    // Do not contact payment provider at all if fee is 0, just show UI
     if (fee === 0) {
       dispatch(Action.ZeroFee);
       return;
@@ -157,146 +111,17 @@ function Component(props: Props) {
       return;
     }
 
-    if (!govUkPayment) {
+    if (!hasExistingPayment) {
       dispatch(Action.NoPaymentFound);
       return;
     }
 
-    if (govUkPayment.state.status === PaymentStatus.success) {
-      handleSuccess();
+    if (govUkPayment?.state.status === "success") {
+      actions.handleSuccess();
     } else {
-      refetchPayment();
+      actions.refetchPayment();
     }
   }, []);
-
-  const handleSuccess = () => {
-    dispatch(Action.Success);
-    props.handleSubmit &&
-      props.handleSubmit(makeData(props, govUkPayment, GOV_PAY_PASSPORT_KEY));
-  };
-
-  const normalizePaymentResponse = (
-    responseData: GovUKPayment,
-  ): GovUKPayment => {
-    if (!responseData?.state?.status)
-      throw new Error("Corrupted response from GOV.UK");
-    return responseData;
-  };
-
-  const resolvePaymentResponse = async (
-    responseData: GovUKPayment,
-  ): Promise<GovUKPayment> => {
-    const payment = normalizePaymentResponse(responseData);
-    setGovUkPayment(payment);
-    // save a record of the session with the latest payment for debugging purposes
-    await saveSession({
-      breadcrumbs,
-      id: flowId,
-      passport,
-      sessionId,
-      govUkPayment: payment,
-    });
-    return payment;
-  };
-
-  const refetchPayment = async () => {
-    dispatch(Action.IncompletePaymentFound);
-
-    const paymentId = govUkPayment?.payment_id;
-
-    if (!govUkPayment || !paymentId) {
-      logger.notify(`Missing GOV.UK payment_id for session ${sessionId}`);
-      dispatch(Action.PaymentStatusUnknown);
-      return;
-    }
-
-    try {
-      const { state } = await getPayment({
-        teamSlug,
-        sessionId,
-        flowId,
-        paymentId,
-      });
-
-      // Update local state with the refetched payment state
-      await resolvePaymentResponse({
-        ...govUkPayment,
-        state,
-      });
-
-      if (state.status === PaymentStatus.success) {
-        handleSuccess();
-        return;
-      }
-
-      dispatch(Action.IncompletePaymentConfirmed);
-    } catch (err) {
-      // XXX: There's probably been an issue fetching the payment status,
-      //      allow user to re-run status check instead of silently failing
-      logger.notify(err);
-      dispatch(Action.PaymentStatusUnknown);
-    }
-  };
-
-  const resumeExistingPayment = async () => {
-    dispatch(Action.ResumePayment);
-
-    if (!govUkPayment) {
-      await startNewPayment();
-      return;
-    }
-
-    switch (govUkPayment.state.status) {
-      case PaymentStatus.cancelled:
-      case PaymentStatus.error:
-      case PaymentStatus.failed: {
-        await startNewPayment();
-        break;
-      }
-      case PaymentStatus.started:
-      case PaymentStatus.created:
-      case PaymentStatus.submitted: {
-        redirectToGovPay(govUkPayment);
-        break;
-      }
-      default: {
-        logger.notify("Unhandled payment status");
-      }
-    }
-  };
-
-  const startNewPayment = async () => {
-    dispatch(Action.StartNewPayment);
-
-    // Skip the redirect process if viewing this within the Editor or using Pay in info-only mode
-    if (environment !== "standalone" || props.hidePay) {
-      handleSuccess();
-      return;
-    }
-
-    const payload = createPayload(fee, sessionId, metadata, passport);
-    await initiatePayment({
-      teamSlug,
-      flowId,
-      sessionId,
-      payload,
-    })
-      .then(async (data) => {
-        const payment = await resolvePaymentResponse(data);
-        redirectToGovPay(payment);
-      })
-      .catch((error: APIError<{ error: string }>) => {
-        const apiErrorMessage = error.data.error;
-
-        if (apiErrorMessage.startsWith(PAY_API_ERROR_UNSUPPORTED_TEAM)) {
-          // Show a custom message if this team isn't set up to use Pay yet
-          dispatch(Action.StartNewPaymentError);
-        } else {
-          // Throw all other errors so they're caught by our ErrorBoundary
-          showBoundary(Error(apiErrorMessage));
-        }
-      });
-  };
 
   const continueWithoutPaying = () => {
     props.handleSubmit && props.handleSubmit({ auto: false });
@@ -307,9 +132,10 @@ function Component(props: Props) {
       fee === 0 || props.hidePay || state.status === "unsupported_team";
 
     if (shouldContinueWithoutPaying) continueWithoutPaying();
-    if (["no_payment_found", "init"].includes(state.status)) startNewPayment();
-    if (state.status === "retry") resumeExistingPayment();
-    if (state.status === "status_unknown") refetchPayment();
+    if (["no_payment_found", "init"].includes(state.status))
+      actions.startNewPayment();
+    if (state.status === "retry") actions.resumeExistingPayment();
+    if (state.status === "status_unknown") actions.refetchPayment();
   };
 
   const getButtonTitle = () => {
