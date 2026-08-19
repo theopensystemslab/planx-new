@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import DialogActions from "@mui/material/DialogActions";
 import Typography from "@mui/material/Typography";
 
 import { useTeamLogo } from "../hooks";
@@ -86,26 +85,30 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
         </Box>
       </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          backgroundColor: "background.paper",
-          padding: 1,
-          gap: 2,
-          borderTop: 1,
-          borderColor: "border.main",
-        }}
-      >
-        <ViewSubmissionButtonGrouped
-          sessionId={props.sessionId}
-          submittedAt={props.submittedAt}
-        />
-        <DownloadSubmissionButtonGrouped
-          sessionId={props.sessionId}
-          submittedAt={props.submittedAt}
-        />
-      </Box>
+      {props.submittedAt ? (
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            backgroundColor: "background.paper",
+            padding: 1,
+            gap: 2,
+            borderTop: 1,
+            borderColor: "border.main",
+          }}
+        >
+          <ViewSubmissionButtonGrouped
+            sessionId={props.sessionId}
+            submittedAt={props.submittedAt}
+          />
+          <DownloadSubmissionButtonGrouped
+            sessionId={props.sessionId}
+            submittedAt={props.submittedAt}
+          />
+        </Box>
+      ) : (
+        <></>
+      )}
     </Box>
   );
 };
