@@ -139,7 +139,7 @@ export const flowGraph: FlowGraph = {
       inviteToPayTitle: "Details of your nominee",
       instructionsTitle: "How to pay",
       inviteToPayDescription: "You can invite someone else to pay.",
-      instructionsDescription: "You can pay by using GOV.UK Pay.",
+      instructionsDescription: "You can pay online.",
     },
     type: 400,
   },
@@ -163,7 +163,7 @@ export const flowWithInviteToPay: Flow["data"] = {
       instructionsTitle: "How to pay",
       secondaryPageTitle: "Invite someone else to pay",
       instructionsDescription:
-        "<p>You can pay by using GOV.UK Pay.</p>         <p>Your form will be sent after you have paid the fee.          Wait until you see a form sent message before closing your browser.</p>",
+        "<p>You can pay online.</p>         <p>Your form will be sent after you have paid the fee.          Wait until you see a form sent message before closing your browser.</p>",
     },
     type: ComponentType.Pay,
   },

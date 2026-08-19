@@ -34,7 +34,7 @@ export const flowWithMultipleSetValues: Store.Flow = {
       instructionsTitle: "How to pay",
       secondaryPageTitle: "Invite someone else to pay",
       instructionsDescription:
-        "<p>You can pay by using GOV.UK Pay.</p>    <p>Your form will be sent after you have paid the fee.     Wait until you see a form sent message before closing your browser.</p>",
+        "<p>You can pay online.</p>    <p>Your form will be sent after you have paid the fee.     Wait until you see a form sent message before closing your browser.</p>",
     },
     type: 400,
   },

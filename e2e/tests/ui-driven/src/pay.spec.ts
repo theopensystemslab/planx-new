@@ -37,7 +37,7 @@ let context: TestContext = {
 };
 const previewURL = `/${context.team!.slug!}/${context.flow?.slug}/published?analytics=false`;
 
-const payButtonText = "Pay now using GOV.UK Pay";
+const payButtonText = "Pay now";
 
 test.describe("Gov Pay integration @regression", () => {
   const adminGQLClient = getGraphQLClient();

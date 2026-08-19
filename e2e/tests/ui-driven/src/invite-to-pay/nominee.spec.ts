@@ -67,7 +67,7 @@ test.describe("Nominee journey @regression", () => {
     await expect(page.getByTestId("fee-breakdown-table")).toBeVisible();
 
     const payButton = page.getByRole("button", {
-      name: "Pay using GOV.UK Pay",
+      name: "Pay now",
     });
     await expect(payButton).toBeVisible();
 
