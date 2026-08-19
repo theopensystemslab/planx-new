@@ -9,7 +9,8 @@ type Props = {
   sessionId: string;
   createdAt: string;
 };
-export const DownloadSubmissionButton = (props: Props) => {
+
+export const DownloadSubmissionButtonGrouped = (props: Props) => {
   const submissionDataExpirationDate = addDays(
     new Date(props.createdAt),
     DAYS_UNTIL_EXPIRY,

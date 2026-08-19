@@ -10,10 +10,10 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { CloseButton } from "ui/icons/CloseButton";
 
 import type { Submission } from "../types";
-import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
+import { DownloadSubmissionButtonGrouped } from "./DownloadSubmissionButtonGrouped";
 import { SubmissionDetails } from "./SubmissionDetails";
 import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
-import { ViewSubmissionButton } from "./ViewSubmissionButton";
+import { ViewSubmissionButtonGrouped } from "./ViewSubmissionButtonGrouped";
 
 // TODO: refactor into hooks / queries pattern
 const GET_SUBMISSION_EVENTS = gql`
@@ -40,6 +40,24 @@ interface SubmissionDetailModalProps {
   sessionId: string;
 }
 
+const getSubmittedAt = (events: Submission[]): string | undefined => {
+  const sendEventTypes: Submission["eventType"][] = [
+    "Submit to BOPS",
+    "Submit to Uniform",
+    "Send to email",
+    "Upload to AWS S3",
+    "Upload to AWS S3 (no notification)",
+    "Submit to Idox Nexus",
+  ];
+
+  const successfulSend = events.find(
+    (event) =>
+      sendEventTypes.includes(event.eventType) && event.status === "Success",
+  );
+
+  return successfulSend?.createdAt ?? undefined;
+};
+
 const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   sessionId,
 }) => {
@@ -56,6 +74,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
 
   const events = data?.submissions || [];
   const latestEvent = events[0];
+  const submittedAt = getSubmittedAt(events);
 
   if (loading) return <DelayedLoadingIndicator />;
   if (error) throw error;
@@ -96,6 +115,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
               sessionId={sessionId}
               latestEvent={latestEvent}
               teamSlug={teamSlug}
+              submittedAt={submittedAt}
             />
           </Grid>
 
