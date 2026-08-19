@@ -1,7 +1,6 @@
 import { styled } from "@mui/material/styles";
 import type { TabProps } from "@mui/material/Tab";
 import Tab, { tabClasses } from "@mui/material/Tab";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface StyledTabProps extends TabProps {
@@ -24,7 +23,7 @@ const TabLabel = styled("span")(() => ({
 }));
 
 const StyledTab = styled(
-  ({ size, label, ...props }: StyledTabProps) => (
+  ({ label, ...props }: StyledTabProps) => (
     <Tab
       {...props}
       label={<TabLabel data-text={label}>{label}</TabLabel>}
@@ -46,12 +45,17 @@ const StyledTab = styled(
   minWidth: 0,
   minHeight: size === "large" ? "48px" : "36px",
   margin: theme.spacing(0, size === "large" ? 1 : 0.5),
-  padding: "0.75em",
+  padding: size === "large" ? theme.spacing(0.75) : theme.spacing(0.75),
   fontSize: fontSize ?? (size === "large" ? "1rem" : undefined),
+  gap: 0.25,
   "& svg": {
     marginRight: "7px !important",
-    fontSize: 18,
+    fontSize: 17,
     opacity: 0.8,
+    // Hide icon on smaller screens
+    [theme.breakpoints.down("lg")]: {
+      display: "none",
+    },
   },
   [`&.${tabClasses.selected}`]: {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,

@@ -1,9 +1,10 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import type { SvgIconProps } from "@mui/material/SvgIcon";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "@tanstack/react-router";
 import React from "react";
 import { useLocation } from "react-use";
@@ -24,9 +25,10 @@ interface Props {
   topOffset?: number;
 }
 
-const TabList = styled(Box)(() => ({
+const TabList = styled(Box)(({ theme }) => ({
   position: "relative",
-  marginLeft: "-12px",
+  marginLeft: theme.spacing(-0.75),
+  width: `(calc(100% + ${theme.spacing(1.5)}))`,
   [`& .${tabsClasses.indicator}`]: {
     display: "none",
   },
@@ -41,6 +43,8 @@ const SettingsLayout: React.FC<Props> = ({
 }) => {
   const navigate = useNavigate();
   const pathname = useLocation();
+  const theme = useTheme();
+  const isScrollable = useMediaQuery(theme.breakpoints.down("contentWrap"));
 
   const filteredLinks = settingsLinks.filter(
     (link) => link.condition === undefined || link.condition,
@@ -78,8 +82,8 @@ const SettingsLayout: React.FC<Props> = ({
           {settingsLinks && (
             <TabList>
               <Tabs
-                variant="scrollable"
-                scrollButtons={false}
+                variant={isScrollable ? "scrollable" : "standard"}
+                scrollButtons="auto"
                 onChange={handleChange}
                 value={activeTab}
                 aria-label={title}
