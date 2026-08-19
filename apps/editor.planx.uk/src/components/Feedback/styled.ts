@@ -31,13 +31,6 @@ export const FeedbackTitle = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const CloseButton = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  color: theme.palette.text.primary,
-}));
-
 export const FeedbackBody = styled(Box)(({ theme }) => ({
   maxWidth: theme.breakpoints.values.formWrap,
 }));

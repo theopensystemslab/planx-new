@@ -1,13 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
-import Button from "@mui/material/Button";
+import Close from "@mui/icons-material/CloseOutlined";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { CloseButton } from "ui/icons/CloseButton";
 
 import type { Submission } from "../types";
 import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
@@ -72,6 +72,20 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
         },
       }}
     >
+      <CloseButton
+        aria-label="close"
+        onClick={() => {
+          navigate({
+            to: "/app/$team/submissions",
+            params: {
+              team: teamSlug,
+            },
+          });
+        }}
+        size="large"
+      >
+        <Close />
+      </CloseButton>
       <DialogContent>
         <Typography variant="h2" component="h1" gutterBottom>
           Submission details
@@ -89,20 +103,6 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
             <SubmissionEventsHistory events={events} />
           </Grid>
         </Grid>
-        <DialogActions>
-          <Button
-            onClick={() =>
-              navigate({
-                to: "/app/$team/submissions",
-                params: {
-                  team: teamSlug,
-                },
-              })
-            }
-          >
-            Back
-          </Button>
-        </DialogActions>
       </DialogContent>
     </Dialog>
   );
