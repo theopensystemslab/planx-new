@@ -45,7 +45,7 @@ const StyledTab = styled(
   minWidth: 0,
   minHeight: size === "large" ? "48px" : "36px",
   margin: theme.spacing(0, size === "large" ? 1 : 0.5),
-  padding: size === "large" ? theme.spacing(0.75) : theme.spacing(0.75),
+  padding: theme.spacing(0.75),
   fontSize: fontSize ?? (size === "large" ? "1rem" : undefined),
   gap: 0.25,
   "& svg": {
