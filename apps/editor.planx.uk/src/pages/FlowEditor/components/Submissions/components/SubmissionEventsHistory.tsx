@@ -1,9 +1,11 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import type { Attempt, GroupedEvent, Submission } from "../types";
 import { OpenResponseButton } from "./OpenResponseButton";
+import { ResubmitButtonGrouped } from "./ResubmitButtonGrouped";
 import { StatusChip } from "./StatusChip";
 import { StatusIcon } from "./StatusIcon";
 
@@ -46,10 +48,30 @@ const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
   return result;
 };
 
+const getMostRecentEventIndices = (
+  groupedEvents: GroupedEvent[],
+): Set<number> => {
+  const mostRecentMap = new Map<string, { index: number; timestamp: string }>();
+
+  groupedEvents.forEach((group, index) => {
+    const eventType = group.events[0].eventType;
+    const mostRecentEventInGroup = group.events[0];
+    const timestamp = mostRecentEventInGroup.createdAt;
+
+    const existing = mostRecentMap.get(eventType);
+    if (!existing || timestamp > existing.timestamp) {
+      mostRecentMap.set(eventType, { index, timestamp });
+    }
+  });
+
+  return new Set(Array.from(mostRecentMap.values()).map((item) => item.index));
+};
+
 export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
   events,
 }) => {
   const groupedEvents = groupEvents(events);
+  const mostRecentIndices = getMostRecentEventIndices(groupedEvents);
 
   return (
     <Box
@@ -61,27 +83,67 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
       }}
     >
       <Box sx={{ padding: 1, margin: 1 }}>
-        {groupedEvents.map((groupedEvent) => (
-          <SubmissionEvent groupedEvent={groupedEvent} />
+        {groupedEvents.map((groupedEvent, index) => (
+          <SubmissionEvent
+            key={groupedEvent.eventId}
+            groupedEvent={groupedEvent}
+            isMostRecent={mostRecentIndices.has(index)}
+          />
         ))}
       </Box>
     </Box>
   );
 };
 
-const SubmissionEvent: React.FC<{ groupedEvent: GroupedEvent }> = ({
-  groupedEvent,
-}) => {
+const SubmissionEvent: React.FC<{
+  groupedEvent: GroupedEvent;
+  isMostRecent: boolean;
+}> = ({ groupedEvent, isMostRecent }) => {
+  const isPlatformAdmin = useStore((state) =>
+    Boolean(state.user?.isPlatformAdmin),
+  );
+
   return (
-    <Box sx={{ display: "flex", width: "100%", alignItems: "flex-start" }}>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        alignItems: "flex-start",
+        mb: 1,
+        borderBottom: 1,
+        borderColor: "border.main",
+      }}
+    >
       <Box>
         <StatusIcon status={groupedEvent.events[0].status} />
       </Box>
 
-      <Box sx={{ flex: 1, paddingLeft: 2 }}>
+      <Box
+        sx={{
+          flex: 1,
+          paddingLeft: 2,
+          gap: 1,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <Typography sx={{ fontWeight: "bold" }}>
           {groupedEvent.events[0].eventType}
         </Typography>
+
+        {/* TODO: add something about pay events here? v */}
+        {isMostRecent &&
+        groupedEvent.events[0].status !== "Success" &&
+        groupedEvent.events[0].eventType !== "Pay" &&
+        isPlatformAdmin ? (
+          <ResubmitButtonGrouped
+            sessionId={groupedEvent.sessionId}
+            eventType={groupedEvent.events[0].eventType}
+          />
+        ) : (
+          <></>
+        )}
+
         {groupedEvent.events.length === 1 ? (
           <>
             <Box sx={{ display: "flex" }}>
@@ -117,7 +179,7 @@ const SubmissionAttempts: React.FC<{
     <Box>
       {attempts.map((attempt, index) => (
         <>
-          <Box key={`${index}`} sx={{ display: "flex", gap: 2, marginTop: 1 }}>
+          <Box key={`${index}`} sx={{ display: "flex", gap: 2, my: 1 }}>
             <StatusChip status={attempt.status} />
             <Box>
               <Typography>Attempt {numberAttempts - index}</Typography>
