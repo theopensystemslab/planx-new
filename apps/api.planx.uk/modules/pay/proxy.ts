@@ -9,14 +9,19 @@ export const usePayProxy = (
   req: Request,
   res: Response,
 ) => {
+  const { on: onEvents, ...restOptions } = options;
+
   return useProxy({
     target: "https://publicapi.payments.service.gov.uk/v1/payments",
-    onProxyReq: fixRequestBody,
+    on: {
+      proxyReq: fixRequestBody,
+      ...onEvents,
+    },
     headers: {
       ...(req.headers as NodeJS.Dict<string | string[]>),
       "content-type": "application/json",
       Authorization: `Bearer ${res.locals.govPayToken}`,
     },
-    ...options,
+    ...restOptions,
   });
 };

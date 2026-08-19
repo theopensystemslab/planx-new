@@ -3,8 +3,8 @@ import assert from "assert";
 import { AsyncLocalStorage } from "async_hooks";
 import crypto from "crypto";
 import type { CookieOptions, Request } from "express";
+import type { RequestHandler } from "express";
 import { expressjwt, type IsRevoked } from "express-jwt";
-import type { RequestHandler } from "http-proxy-middleware";
 import { generators } from "openid-client";
 import type { Authenticator } from "passport";
 

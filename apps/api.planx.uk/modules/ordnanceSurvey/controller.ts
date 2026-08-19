@@ -12,8 +12,10 @@ export const useOrdnanceSurveyProxy = async (
 ) =>
   useProxy({
     target: OS_DOMAIN,
-    onProxyRes: (proxyRes) => setCORPHeaders(proxyRes),
-    pathRewrite: (fullPath, req) => appendAPIKey(fullPath, req),
+    on: {
+      proxyRes: (proxyRes) => setCORPHeaders(proxyRes),
+    },
+    pathRewrite: (fullPath, req) => appendAPIKey(fullPath, req as Request),
   })(req, res, next);
 
 const setCORPHeaders = (proxyRes: IncomingMessage): void => {
