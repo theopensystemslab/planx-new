@@ -1,8 +1,9 @@
+import type { Request, Response } from "express";
 import { ServerResponse } from "http";
 import type { Options } from "http-proxy-middleware";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
-export const useProxy = (options: Partial<Options> = {}) => {
+export const useProxy = (options: Partial<Options<Request, Response>> = {}) => {
   const { on: onEvents, ...restOptions } = options;
 
   return createProxyMiddleware({

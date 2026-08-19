@@ -10,7 +10,7 @@ export const useOrdnanceSurveyProxy = useProxy({
   on: {
     proxyRes: (proxyRes) => setCORPHeaders(proxyRes),
   },
-  pathRewrite: (fullPath, req) => appendAPIKey(fullPath, req as Request),
+  pathRewrite: (fullPath, req) => appendAPIKey(fullPath, req),
 });
 
 const setCORPHeaders = (proxyRes: IncomingMessage): void => {

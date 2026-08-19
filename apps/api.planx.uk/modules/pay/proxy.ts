@@ -5,7 +5,7 @@ import { fixRequestBody } from "http-proxy-middleware";
 import { useProxy } from "../../shared/middleware/proxy.js";
 
 export const usePayProxy = (
-  options: Partial<Options>,
+  options: Partial<Options<Request, Response>>,
   req: Request,
   res: Response,
 ) => {
