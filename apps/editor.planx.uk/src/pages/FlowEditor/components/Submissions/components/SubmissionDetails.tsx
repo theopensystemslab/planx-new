@@ -43,49 +43,60 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
     <Box
       sx={{
         background: "background",
-        padding: 4,
-        margin: 4,
         border: 1,
+        margin: 1,
         borderColor: "border.main",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        {teamLogo ? (
-          <Box
-            component="img"
-            src={teamLogo}
-            alt={teamName}
-            sx={{
-              maxWidth: 100,
-              width: "100%",
-              height: 50,
-              objectFit: "contain",
-              objectPosition: "left",
-              display: "block",
-            }}
+      <Box sx={{ padding: 1, margin: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+          {teamLogo ? (
+            <Box
+              component="img"
+              src={teamLogo}
+              alt={teamName}
+              sx={{
+                maxWidth: 100,
+                width: "100%",
+                height: 50,
+                objectFit: "contain",
+                objectPosition: "left",
+                display: "block",
+              }}
+            />
+          ) : null}
+
+          <Typography sx={{ fontWeight: "bold" }}>{teamName}</Typography>
+        </Box>
+
+        <Typography variant="h3" sx={{ mb: 2 }}>
+          {props.latestEvent?.flowName}
+        </Typography>
+        <Box>
+          <DetailRow
+            label="Property address"
+            value={props.latestEvent?.address}
+            border={true}
           />
-        ) : null}
-
-        <Typography sx={{ fontWeight: "bold" }}>{teamName}</Typography>
+          <DetailRow label="Reference" value={props.sessionId} border={true} />
+          <DetailRow
+            label="Submitted on"
+            value={new Date(props.latestEvent?.createdAt).toLocaleDateString()}
+          />
+        </Box>
       </Box>
 
-      <Typography variant="h3" sx={{ mb: 2 }}>
-        {props.latestEvent?.flowName}
-      </Typography>
-      <Box>
-        <DetailRow
-          label="Property address"
-          value={props.latestEvent?.address}
-          border={true}
-        />
-        <DetailRow label="Reference" value={props.sessionId} border={true} />
-        <DetailRow
-          label="Submitted on"
-          value={new Date(props.latestEvent?.createdAt).toLocaleDateString()}
-        />
-      </Box>
-
-      <DialogActions>
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+          backgroundColor: "background.paper",
+          padding: 1,
+          gap: 2,
+          borderTop: 1,
+          borderColor: "border.main",
+        }}
+      >
         <ViewSubmissionButtonGrouped
           sessionId={props.sessionId}
           submittedAt={props.submittedAt}
@@ -94,7 +105,7 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
           sessionId={props.sessionId}
           submittedAt={props.submittedAt}
         />
-      </DialogActions>
+      </Box>
     </Box>
   );
 };
