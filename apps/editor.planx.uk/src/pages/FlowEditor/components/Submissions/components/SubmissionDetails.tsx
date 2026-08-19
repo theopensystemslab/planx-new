@@ -90,7 +90,10 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
           sessionId={props.sessionId}
           submittedAt={props.submittedAt}
         />
-        {/* <DownloadSubmissionButtonGrouped /> */}
+        <DownloadSubmissionButtonGrouped
+          sessionId={props.sessionId}
+          submittedAt={props.submittedAt}
+        />
       </DialogActions>
     </Box>
   );
