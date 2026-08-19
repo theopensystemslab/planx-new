@@ -10,10 +10,8 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { CloseButton } from "ui/icons/CloseButton";
 
 import type { Submission } from "../types";
-import { DownloadSubmissionButtonGrouped } from "./DownloadSubmissionButtonGrouped";
 import { SubmissionDetails } from "./SubmissionDetails";
 import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
-import { ViewSubmissionButtonGrouped } from "./ViewSubmissionButtonGrouped";
 
 // TODO: refactor into hooks / queries pattern
 const GET_SUBMISSION_EVENTS = gql`
