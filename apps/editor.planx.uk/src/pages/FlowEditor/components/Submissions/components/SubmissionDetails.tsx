@@ -4,13 +4,14 @@ import Typography from "@mui/material/Typography";
 
 import { useTeamLogo } from "../hooks";
 import type { Submission } from "../types";
-import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
-import { ViewSubmissionButton } from "./ViewSubmissionButton";
+import { DownloadSubmissionButtonGrouped } from "./DownloadSubmissionButtonGrouped";
+import { ViewSubmissionButtonGrouped } from "./ViewSubmissionButtonGrouped";
 
 type SubmissionDetailsProps = {
   sessionId: string;
   latestEvent: Submission;
   teamSlug: string;
+  submittedAt?: string;
 };
 
 type DetailRowProps = {
@@ -85,8 +86,11 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
       </Box>
 
       <DialogActions>
-        {/* <ViewSubmissionButton />
-        <DownloadSubmissionButton /> */}
+        <ViewSubmissionButtonGrouped
+          sessionId={props.sessionId}
+          submittedAt={props.submittedAt}
+        />
+        {/* <DownloadSubmissionButtonGrouped /> */}
       </DialogActions>
     </Box>
   );
