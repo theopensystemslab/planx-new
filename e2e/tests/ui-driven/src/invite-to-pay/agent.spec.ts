@@ -90,7 +90,7 @@ test.describe("Agent journey @regression", () => {
       name: "Invite someone else to pay",
     });
 
-    await page.getByText("Pay now using GOV.UK Pay").click();
+    await page.getByText("Pay now").click();
     await page.getByText("Cancel payment").click();
     await page.getByText("Continue").click();
     await page.getByLabel("email").fill(context.user.email);
@@ -184,7 +184,7 @@ test.describe("Agent journey @regression", () => {
     expect(paymentRequest).toBeDefined();
 
     // Attempt to make payment in tab 2...
-    await tab2.getByText("Pay now using GOV.UK Pay").click();
+    await tab2.getByText("Pay now").click();
 
     // ...and fail to do so
     const errorMessage = tab2.getByText(
@@ -202,7 +202,7 @@ test.describe("Agent journey @regression", () => {
     } = await parallelITPJourneys({ page, browserContext });
 
     // Start to make payment in tab 1
-    await tab1.getByText("Pay now using GOV.UK Pay").click();
+    await tab1.getByText("Pay now").click();
     const govPayHeader = tab1.getByRole("heading", {
       name: "Enter card details",
     });

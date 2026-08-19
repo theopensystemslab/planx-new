@@ -78,7 +78,7 @@ const flow: FlowGraph = {
       fn: "application.fee.payable",
       instructionsTitle: "How to pay",
       instructionsDescription:
-        "<p>You can pay by using GOV.UK Pay.</p>         <p>Your form will be sent after you have paid the fee.          Wait until you see a form sent message before closing your browser.</p>",
+        "<p>You can pay online.</p>         <p>Your form will be sent after you have paid the fee.          Wait until you see a form sent message before closing your browser.</p>",
       allowInviteToPay: true,
       secondaryPageTitle: "Invite someone else to pay",
       nomineeTitle: "Details of the person paying",
