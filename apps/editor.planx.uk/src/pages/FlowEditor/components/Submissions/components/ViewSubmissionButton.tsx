@@ -31,7 +31,7 @@ export const ViewSubmissionButton = (params: RenderCellParams) => {
         aria-label="view application"
         onClick={() =>
           navigate({
-            to: `/app/$team/submission/$sessionId`,
+            to: `/app/$team/view-submission/$sessionId`,
             params: { team: teamSlug, sessionId: sessionId },
           })
         }
