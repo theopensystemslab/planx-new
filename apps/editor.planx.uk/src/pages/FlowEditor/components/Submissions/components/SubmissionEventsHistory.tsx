@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
@@ -56,15 +55,16 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
     <Box
       sx={{
         background: "background",
-        padding: 4,
-        margin: 4,
         border: 1,
+        margin: 1,
         borderColor: "border.main",
       }}
     >
-      {groupedEvents.map((groupedEvent) => (
-        <SubmissionEvent groupedEvent={groupedEvent} />
-      ))}
+      <Box sx={{ padding: 1, margin: 1 }}>
+        {groupedEvents.map((groupedEvent) => (
+          <SubmissionEvent groupedEvent={groupedEvent} />
+        ))}
+      </Box>
     </Box>
   );
 };
