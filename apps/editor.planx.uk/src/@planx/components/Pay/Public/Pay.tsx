@@ -49,7 +49,8 @@ enum Action {
   ZeroFee,
 }
 
-export const PAY_API_ERROR_UNSUPPORTED_TEAM = "GOV.UK Pay is not enabled for";
+export const PAY_API_ERROR_UNSUPPORTED_TEAM =
+  "Online payments are not enabled for";
 
 const redirectToGovPay = (payment: GovUKPayment) => {
   const nextUrl = payment._links.next_url?.href;
@@ -108,14 +109,14 @@ function Component(props: Props) {
       case Action.StartNewPayment:
         return {
           status: "redirecting",
-          displayText: "Connecting you to GOV.UK Pay",
+          displayText: "Connecting you to the payment page",
         };
       case Action.StartNewPaymentError:
         return { status: "unsupported_team" };
       case Action.ResumePayment:
         return {
           status: "redirecting",
-          displayText: "Reconnecting to GOV.UK Pay",
+          displayText: "Reconnecting to the payment page",
         };
       case Action.Success:
         return { status: "success", displayText: "Payment Successful" };
@@ -318,7 +319,7 @@ function Component(props: Props) {
       case "status_unknown":
         return "Check payment status";
       default:
-        return "Pay now using GOV.UK Pay";
+        return "Pay now";
     }
   };
 
@@ -343,7 +344,7 @@ function Component(props: Props) {
           }
           error={
             (state.status === "unsupported_team" &&
-              "GOV.UK Pay is not enabled for this local authority") ||
+              "Online payments are not enabled for this local authority") ||
             (state.status === "undefined_fee" &&
               "We are unable to calculate your fee right now") ||
             undefined

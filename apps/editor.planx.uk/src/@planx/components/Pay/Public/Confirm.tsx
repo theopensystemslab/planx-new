@@ -104,7 +104,7 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
         size="large"
         onClick={props.onConfirm}
       >
-        {props.buttonTitle || "Pay now using GOV.UK Pay"}
+        {props.buttonTitle || "Pay now"}
       </Button>
       {props.showInviteToPay && (
         <Button

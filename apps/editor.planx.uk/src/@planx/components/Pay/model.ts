@@ -180,7 +180,7 @@ export const getDefaultContent = (): Pay => ({
   description: `<p>The fee covers the cost of processing your form.\
     <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">Find out more about how planning fees are calculated</a> (opens in new tab).</p>`,
   instructionsTitle: "How to pay",
-  instructionsDescription: `<p>You can pay by using GOV.UK Pay.</p>\
+  instructionsDescription: `<p>You can pay online.</p>\
     <p>Your form will be sent after you have paid the fee. \
     Wait until you see a form sent message before closing your browser.</p>`,
   hidePay: false,

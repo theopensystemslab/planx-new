@@ -37,16 +37,16 @@ const States = {
     loading: "Payment Successful",
   },
   Ready: {
-    button: "Pay using GOV.UK Pay",
-    loading: "Connecting to GOV.UK Pay",
+    button: "Pay now",
+    loading: "Connecting to the payment page",
   },
   ReadyToRetry: {
     button: "Retry payment",
-    loading: "Reconnecting to GOV.UK Pay",
+    loading: "Reconnecting to the payment page",
   },
   Reset: {
     button: "Retry payment",
-    loading: "Connecting to GOV.UK Pay",
+    loading: "Connecting to the payment page",
   },
 } as const;
 
