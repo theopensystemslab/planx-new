@@ -21,6 +21,7 @@ import {
 import React, { useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
+import { CloseButton } from "ui/icons/CloseButton";
 import { Switch } from "ui/shared/Switch";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
@@ -33,12 +34,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& > * > *": {
     backgroundColor: theme.palette.background.paper,
   },
-}));
-
-const CloseButton = styled(IconButton)(({ theme }) => ({
-  margin: "0 0 0 auto",
-  padding: theme.spacing(1),
-  color: theme.palette.grey[600],
 }));
 
 /**

@@ -16,12 +16,12 @@ import {
 import { BackButton } from "pages/Preview/Questions";
 import React, { useState } from "react";
 import { usePrevious } from "react-use";
+import { CloseButton } from "ui/icons/CloseButton";
 import FeedbackOption from "ui/public/FeedbackOption";
 
 import FeedbackForm from "./FeedbackForm/FeedbackForm";
 import FeedbackPhaseBanner from "./FeedbackPhaseBanner";
 import {
-  CloseButton,
   FeedbackBody,
   FeedbackHeader,
   FeedbackRow,
