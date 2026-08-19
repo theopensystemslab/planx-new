@@ -26,7 +26,7 @@ export const isTeamUsingGovPay: RequestHandler = async (req, res, next) => {
   if (!govPayToken) {
     return next({
       status: 400,
-      message: `GOV.UK Pay is not enabled for this local authority (${req.params.localAuthority})`,
+      message: `Online payments are not enabled for this local authority (${req.params.localAuthority})`,
     });
   }
 
