@@ -1,22 +1,17 @@
-import type { NextFunction, Request, Response } from "express";
+import type { Request } from "express";
 import type { IncomingMessage } from "http";
 
 import { useProxy } from "../../shared/middleware/proxy.js";
 
 export const OS_DOMAIN = "https://api.os.uk";
 
-export const useOrdnanceSurveyProxy = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) =>
-  useProxy({
-    target: OS_DOMAIN,
-    on: {
-      proxyRes: (proxyRes) => setCORPHeaders(proxyRes),
-    },
-    pathRewrite: (fullPath, req) => appendAPIKey(fullPath, req as Request),
-  })(req, res, next);
+export const useOrdnanceSurveyProxy = useProxy({
+  target: OS_DOMAIN,
+  on: {
+    proxyRes: (proxyRes) => setCORPHeaders(proxyRes),
+  },
+  pathRewrite: (fullPath, req) => appendAPIKey(fullPath, req),
+});
 
 const setCORPHeaders = (proxyRes: IncomingMessage): void => {
   proxyRes.headers["Cross-Origin-Resource-Policy"] = "cross-origin";
