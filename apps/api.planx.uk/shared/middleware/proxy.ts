@@ -1,19 +1,27 @@
+import { ServerResponse } from "http";
 import type { Options } from "http-proxy-middleware";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
-// debug, info, warn, error, silent
-const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
-
 export const useProxy = (options: Partial<Options> = {}) => {
+  const { on: onEvents, ...restOptions } = options;
+
   return createProxyMiddleware({
     changeOrigin: true,
-    logLevel: LOG_LEVEL,
-    onError: (_err, _req, res, _target) => {
-      res.json({
-        status: 500,
-        message: "Something went wrong",
-      });
+    logger: process.env.NODE_ENV === "test" ? undefined : console,
+    on: {
+      error: (_err, _req, res) => {
+        if (res instanceof ServerResponse && !res.headersSent) {
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              status: 500,
+              message: "Something went wrong",
+            }),
+          );
+        }
+      },
+      ...onEvents,
     },
-    ...options,
+    ...restOptions,
   });
 };

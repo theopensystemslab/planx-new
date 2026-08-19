@@ -49,22 +49,24 @@ export const makePaymentViaProxy: PaymentProxyController = async (
     {
       pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
       selfHandleResponse: true,
-      onProxyRes: responseInterceptor(
-        async (responseBuffer, _proxyRes, _req, { statusCode }) => {
-          const responseString = responseBuffer.toString("utf8");
-          const govUkResponse = JSON.parse(responseString);
+      on: {
+        proxyRes: responseInterceptor(
+          async (responseBuffer, _proxyRes, _req, { statusCode }) => {
+            const responseString = responseBuffer.toString("utf8");
+            const govUkResponse = JSON.parse(responseString);
 
-          if (statusCode >= 400) return handleGovPayErrors(govUkResponse);
+            if (statusCode >= 400) return handleGovPayErrors(govUkResponse);
 
-          await logPaymentStatus({
-            sessionId,
-            flowId,
-            teamSlug,
-            govUkResponse,
-          });
-          return responseBuffer;
-        },
-      ),
+            await logPaymentStatus({
+              sessionId,
+              flowId,
+              teamSlug,
+              govUkResponse,
+            });
+            return responseBuffer;
+          },
+        ),
+      },
     },
     req,
     res,
@@ -86,32 +88,34 @@ export const makeInviteToPayPaymentViaProxy: PaymentRequestProxyController = (
     {
       pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
       selfHandleResponse: true,
-      onProxyRes: responseInterceptor(
-        async (responseBuffer, _proxyRes, _req, { statusCode }) => {
-          const responseString = responseBuffer.toString("utf8");
-          const govUkResponse = JSON.parse(responseString);
+      on: {
+        proxyRes: responseInterceptor(
+          async (responseBuffer, _proxyRes, _req, { statusCode }) => {
+            const responseString = responseBuffer.toString("utf8");
+            const govUkResponse = JSON.parse(responseString);
 
-          if (statusCode >= 400) return handleGovPayErrors(govUkResponse);
+            if (statusCode >= 400) return handleGovPayErrors(govUkResponse);
 
-          await logPaymentStatus({
-            sessionId,
-            flowId,
-            teamSlug,
-            govUkResponse,
-          });
-
-          try {
-            await addGovPayPaymentIdToPaymentRequest(
-              paymentRequestId,
+            await logPaymentStatus({
+              sessionId,
+              flowId,
+              teamSlug,
               govUkResponse,
-            );
-          } catch (error) {
-            throw Error(error as string);
-          }
+            });
 
-          return responseBuffer;
-        },
-      ),
+            try {
+              await addGovPayPaymentIdToPaymentRequest(
+                paymentRequestId,
+                govUkResponse,
+              );
+            } catch (error) {
+              throw Error(error as string);
+            }
+
+            return responseBuffer;
+          },
+        ),
+      },
     },
     req,
     res,
@@ -137,36 +141,38 @@ export function fetchPaymentViaProxyWithCallback(
       {
         pathRewrite: () => `/${req.params.paymentId}`,
         selfHandleResponse: true,
-        onProxyRes: responseInterceptor(
-          async (responseBuffer, _proxyRes, _req, { statusCode }) => {
-            const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+        on: {
+          proxyRes: responseInterceptor(
+            async (responseBuffer, _proxyRes, _req, { statusCode }) => {
+              const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
 
-            if (statusCode >= 400) return handleGovPayErrors(govUkResponse);
+              if (statusCode >= 400) return handleGovPayErrors(govUkResponse);
 
-            await logPaymentStatus({
-              sessionId,
-              flowId,
-              teamSlug,
-              govUkResponse,
-            });
+              await logPaymentStatus({
+                sessionId,
+                flowId,
+                teamSlug,
+                govUkResponse,
+              });
 
-            try {
-              await callback(req, govUkResponse);
-            } catch (e) {
-              throw Error(e as string);
-            }
+              try {
+                await callback(req, govUkResponse);
+              } catch (e) {
+                throw Error(e as string);
+              }
 
-            // only return payment status, filter out PII
-            return JSON.stringify({
-              payment_id: govUkResponse.payment_id,
-              amount: govUkResponse.amount,
-              state: govUkResponse.state,
-              _links: {
-                next_url: govUkResponse._links?.next_url,
-              },
-            });
-          },
-        ),
+              // only return payment status, filter out PII
+              return JSON.stringify({
+                payment_id: govUkResponse.payment_id,
+                amount: govUkResponse.amount,
+                state: govUkResponse.state,
+                _links: {
+                  next_url: govUkResponse._links?.next_url,
+                },
+              });
+            },
+          ),
+        },
       },
       req,
       res,
