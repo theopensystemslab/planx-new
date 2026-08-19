@@ -131,7 +131,6 @@ const SubmissionEvent: React.FC<{
           {groupedEvent.events[0].eventType}
         </Typography>
 
-        {/* TODO: add something about pay events here? v */}
         {isMostRecent &&
         groupedEvent.events[0].status !== "Success" &&
         groupedEvent.events[0].eventType !== "Pay" &&

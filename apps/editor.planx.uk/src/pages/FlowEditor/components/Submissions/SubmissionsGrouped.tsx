@@ -14,7 +14,6 @@ const SubmissionsGrouped: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const [teamId] = useStore((state) => [state.teamId]);
 
   const { data, loading, error } = useQuery<{
-    //
     submissions: SubmissionSummary[];
   }>(
     gql`
