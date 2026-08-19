@@ -117,7 +117,7 @@ const defaultProps = {
   description: "The fee covers the cost of processing your form",
   fee: 103,
   instructionsTitle: "How to pay",
-  instructionsDescription: "Pay via GOV.UK Pay",
+  instructionsDescription: "Pay online",
   buttonTitle: "Pay",
   onConfirm: vi.fn(),
   error: undefined,
@@ -230,7 +230,7 @@ describe("Pay component when fee is undefined or £0", () => {
   });
 });
 
-describe("Pay component when returning from GOV.UK Pay", () => {
+describe("Pay component when returning from payment provider", () => {
   const flowWithFee: Store.Flow = {
     _root: {
       edges: ["setValue", "pay"],
@@ -480,7 +480,7 @@ describe("Confirm component without inviteToPay", () => {
   it("displays an error and continue-with-testing button if Pay is not enabled for this team", async () => {
     const handleSubmit = vi.fn();
     const errorMessage =
-      "GOV.UK Pay is not enabled for this local authority (testing)";
+      "Online payments are not enabled for this local authority (testing)";
 
     const { user } = await setup(
       <Confirm
@@ -540,7 +540,7 @@ describe("Confirm component with inviteToPay", () => {
     ...defaultProps,
     showInviteToPay: true,
     nomineeTitle: "Details of your nominee",
-    nomineeDescription: "Invite someone else to pay via GOV.UK Pay",
+    nomineeDescription: "Invite someone else to pay",
     paymentStatus: undefined,
   };
 
