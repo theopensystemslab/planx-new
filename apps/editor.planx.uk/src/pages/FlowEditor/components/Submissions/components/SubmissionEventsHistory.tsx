@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import Permission from "ui/editor/Permission";
 
 import type { Attempt, GroupedEvent, Submission } from "../types";
 import { OpenResponseButtonGrouped } from "./OpenResponseButtonGrouped";
@@ -103,10 +104,6 @@ const SubmissionEvent: React.FC<{
 }> = ({ groupedEvent: { sessionId, events: attempts }, isMostRecent }) => {
   const { eventType, createdAt, status } = attempts[0];
 
-  const isPlatformAdmin = useStore((state) =>
-    Boolean(state.user?.isPlatformAdmin),
-  );
-
   return (
     <Box
       sx={{
@@ -133,14 +130,14 @@ const SubmissionEvent: React.FC<{
       >
         <Typography sx={{ fontWeight: "bold" }}>{eventType}</Typography>
 
-        {isMostRecent &&
-        status !== "Success" &&
-        eventType !== "Pay" &&
-        isPlatformAdmin ? (
-          <ResubmitButtonGrouped sessionId={sessionId} eventType={eventType} />
-        ) : (
-          <></>
-        )}
+        <Permission.IsPlatformAdmin>
+          {isMostRecent && status !== "Success" && eventType !== "Pay" && (
+            <ResubmitButtonGrouped
+              sessionId={sessionId}
+              eventType={eventType}
+            />
+          )}
+        </Permission.IsPlatformAdmin>
 
         {attempts.length === 1 ? (
           <>
