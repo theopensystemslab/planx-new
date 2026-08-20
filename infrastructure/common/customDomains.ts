@@ -75,7 +75,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "newcastle",
           domain: "planningservices.newcastle.gov.uk",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "cutover-ongoing",
           certificateLocation: "pulumiConfig",
         },
         {
