@@ -2,8 +2,8 @@ import { gql, useQuery } from "@apollo/client";
 import Close from "@mui/icons-material/CloseOutlined";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -103,10 +103,8 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
       >
         <Close />
       </CloseButton>
+      <DialogTitle variant="h2">Submission details</DialogTitle>
       <DialogContent>
-        <Typography variant="h2" component="h1" gutterBottom>
-          Submission details
-        </Typography>
         <Grid container>
           <Grid size={6}>
             <SubmissionDetails
