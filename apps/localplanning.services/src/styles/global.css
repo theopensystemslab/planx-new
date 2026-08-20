@@ -135,10 +135,17 @@
   .paragraph-link,
   .button-link {
     @apply underline underline-offset-6;
+    text-decoration-thickness: 3px;
+    text-decoration-color: color-mix(in srgb, currentColor 50%, transparent);
+    transition: text-decoration-color 150ms ease;
   }
   .styled-content a.external::after,
   .paragraph-link--external::after {
     content: " ↗";
+  }
+  .styled-content a:not(.button):hover,
+  .paragraph-link:hover {
+    text-decoration-color: currentColor;
   }
   .button-link {
     cursor: pointer;
