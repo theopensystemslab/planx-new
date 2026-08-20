@@ -48,7 +48,9 @@ __pycache__
 # Tooling
 .aider*
 .claude
-.turbo/
 
 # Output of turbo prune
 /out
+
+# Turborepo
+.turbo

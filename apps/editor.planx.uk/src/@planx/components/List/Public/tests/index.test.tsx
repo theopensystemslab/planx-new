@@ -116,58 +116,48 @@ describe("Basic UI", () => {
   });
 });
 
-test(
-  "Input data is displayed in the inactive card view",
-  { timeout: 35_000 },
-  async () => {
-    const { getByText, user } = await setup(
-      <ListComponent {...mockZooProps} />,
-    );
+test("Input data is displayed in the inactive card view", async () => {
+  const { getByText, user } = await setup(<ListComponent {...mockZooProps} />);
 
-    await fillInResponse(user);
+  await fillInResponse(user);
 
-    // Text input
-    expect(getByText("What's their name?", { selector: "dt" })).toBeVisible();
-    expect(getByText("Richard Parker", { selector: "dd" })).toBeVisible();
+  // Text input
+  expect(getByText("What's their name?", { selector: "dt" })).toBeVisible();
+  expect(getByText("Richard Parker", { selector: "dd" })).toBeVisible();
 
-    // Email input
-    expect(
-      getByText("What's their email address?", { selector: "dt" }),
-    ).toBeVisible();
-    expect(
-      getByText("richard.parker@pi.com", { selector: "dd" }),
-    ).toBeVisible();
+  // Email input
+  expect(
+    getByText("What's their email address?", { selector: "dt" }),
+  ).toBeVisible();
+  expect(getByText("richard.parker@pi.com", { selector: "dd" })).toBeVisible();
 
-    // Number input
-    expect(getByText("How old are they?", { selector: "dt" })).toBeVisible();
-    expect(getByText("10 years old", { selector: "dd" })).toBeVisible();
+  // Number input
+  expect(getByText("How old are they?", { selector: "dt" })).toBeVisible();
+  expect(getByText("10 years old", { selector: "dd" })).toBeVisible();
 
-    // Question input - select
-    expect(getByText("What size are they?", { selector: "dt" })).toBeVisible();
-    expect(getByText("Medium", { selector: "dd" })).toBeVisible();
+  // Question input - select
+  expect(getByText("What size are they?", { selector: "dt" })).toBeVisible();
+  expect(getByText("Medium", { selector: "dd" })).toBeVisible();
 
-    // Question input - radio
-    expect(getByText("How cute are they?", { selector: "dt" })).toBeVisible();
-    expect(getByText("Very", { selector: "dd" })).toBeVisible();
+  // Question input - radio
+  expect(getByText("How cute are they?", { selector: "dt" })).toBeVisible();
+  expect(getByText("Very", { selector: "dd" })).toBeVisible();
 
-    // Checklist input
-    expect(getByText("What do they eat?", { selector: "dt" })).toBeVisible();
-    expect(getByText("Meat", { selector: "li" })).toBeVisible();
-    expect(getByText("Leaves", { selector: "li" })).toBeVisible();
-    expect(getByText("Bamboo", { selector: "li" })).toBeVisible();
+  // Checklist input
+  expect(getByText("What do they eat?", { selector: "dt" })).toBeVisible();
+  expect(getByText("Meat", { selector: "li" })).toBeVisible();
+  expect(getByText("Leaves", { selector: "li" })).toBeVisible();
+  expect(getByText("Bamboo", { selector: "li" })).toBeVisible();
 
-    // Address input
-    expect(
-      getByText("What's their address?", { selector: "dt" }),
-    ).toBeVisible();
-    expect(
-      getByText(
-        "134 Corstorphine Rd, Corstorphine, Edinburgh, Midlothian, EH12 6TS, Scotland",
-        { selector: "dd" },
-      ),
-    ).toBeVisible();
-  },
-);
+  // Address input
+  expect(getByText("What's their address?", { selector: "dt" })).toBeVisible();
+  expect(
+    getByText(
+      "134 Corstorphine Rd, Corstorphine, Edinburgh, Midlothian, EH12 6TS, Scotland",
+      { selector: "dd" },
+    ),
+  ).toBeVisible();
+});
 
 describe("Navigating back", () => {
   test("it pre-populates list correctly", async () => {

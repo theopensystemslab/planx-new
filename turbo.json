@@ -1,4 +1,8 @@
 {
+  "remoteCache": {
+    "teamId": "team_7liLUNk0ekSOy74MY60qmGD3",
+    "apiUrl": "https://api.vercel.com"
+  },
   "$schema": "https://turborepo.com/schema.json",
   "globalDependencies": [
     "packages/typescript-config/*.json",

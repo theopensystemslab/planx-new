@@ -35,6 +35,9 @@ export const CharacterCounter: React.FC<Props> = ({ limit, count, error }) => {
     }
   }, [currentCharacterCount, updateCharacterCount, count, screenReaderCount]);
 
+  // second cleanup-only effect which runs once, on unmount (to avoid uncaught errors in testing)
+  useEffect(() => () => updateCharacterCount.cancel(), [updateCharacterCount]);
+
   const characterLimitText = showCharacterLimitError
     ? `You have ${Math.abs(currentCharacterCount)} characters too many`
     : `You have ${currentCharacterCount} characters remaining`;

@@ -4,9 +4,9 @@
     "down": "pnpm destroy",
     "restart": "pnpm stop && pnpm start",
     "start": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull",
-    "stop": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services down",
+    "stop": "./scripts/stop-containers.sh",
     "recreate": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull --build --renew-anon-volumes --force-recreate",
-    "destroy": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services down --remove-orphans -v",
+    "destroy": "./scripts/destroy-containers.sh",
     "sync-data": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml -f ./docker-compose.seed.yml run seed-database",
     "test-sync": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml -f ./docker-compose.seed.yml run seed-database reset_flows",
     "clean-data": "docker compose -f ./docker-compose.yml -f ./docker-compose.seed.yml run seed-database reset_all",
@@ -15,10 +15,13 @@
     "analytics": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services --profile analytics  up -d --quiet-pull",
     "logs": "docker compose logs --tail 30 -f",
     "prepare": "husky",
+    "prebuild": "./scripts/check-containers.sh dev",
+    "pretest": "./scripts/check-containers.sh e2e",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
     "check": "turbo run typecheck lint",
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "test": "turbo run test --concurrency=1"
   },
   "lint-staged": {
     "apps/editor.planx.uk/src/**/*.{js,jsx,ts,tsx}": "eslint --fix --flag v10_config_lookup_from_file",
