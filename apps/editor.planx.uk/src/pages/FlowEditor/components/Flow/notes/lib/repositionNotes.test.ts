@@ -26,8 +26,8 @@ beforeEach(() => {
 });
 
 describe("repositionNotesForDeletedNodes", () => {
-  it("deletes all attached notes whose node was deleted, regardless of author", async () => {
-    let deleteIds: string[] | undefined;
+  it("leaves attached notes whose node was deleted untouched (orphaned), regardless of author", async () => {
+    let mutationCalled = false;
 
     server.use(
       graphql.query("GetFlowNotePositionsForReposition", () =>
@@ -50,22 +50,17 @@ describe("repositionNotesForDeletedNodes", () => {
           },
         }),
       ),
-      graphql.mutation("DeleteFlowNotePositions", ({ variables }) => {
-        deleteIds = variables.ids;
+      graphql.mutation("ReanchorFlowNotePosition", () => {
+        mutationCalled = true;
         return HttpResponse.json({
-          data: {
-            delete_flow_note_positions: { affected_rows: variables.ids.length },
-          },
+          data: { update_flow_note_positions_by_pk: { id: "unused" } },
         });
       }),
     );
 
     await repositionNotesForDeletedNodes(["deleted-node"], {}, {});
 
-    expect(deleteIds).toEqual(
-      expect.arrayContaining(["note-attached", "note-other-author"]),
-    );
-    expect(deleteIds).toHaveLength(2);
+    expect(mutationCalled).toBe(false);
   });
 
   it("re-anchors a sibling-anchored positioned note to the surviving preceding sibling", async () => {
@@ -168,14 +163,14 @@ describe("repositionNotesForDeletedNodes", () => {
     });
   });
 
-  it("deletes a positioned note when its entire container was also deleted", async () => {
+  it("leaves a positioned note untouched (orphaned) when its entire container was also deleted", async () => {
     const flowBefore = {
       _root: { edges: ["folder"] },
       folder: { edges: ["child"] },
       child: { type: 8 },
     };
     const flowAfter = { _root: {} };
-    let deleteIds: string[] | undefined;
+    let mutationCalled = false;
 
     server.use(
       graphql.query("GetFlowNotePositionsForReposition", () =>
@@ -192,12 +187,10 @@ describe("repositionNotesForDeletedNodes", () => {
           },
         }),
       ),
-      graphql.mutation("DeleteFlowNotePositions", ({ variables }) => {
-        deleteIds = variables.ids;
+      graphql.mutation("ReanchorFlowNotePosition", () => {
+        mutationCalled = true;
         return HttpResponse.json({
-          data: {
-            delete_flow_note_positions: { affected_rows: variables.ids.length },
-          },
+          data: { update_flow_note_positions_by_pk: { id: "unused" } },
         });
       }),
     );
@@ -208,7 +201,7 @@ describe("repositionNotesForDeletedNodes", () => {
       flowAfter,
     );
 
-    expect(deleteIds).toEqual(["note-orphaned"]);
+    expect(mutationCalled).toBe(false);
   });
 
   it("issues no mutations when there is nothing to reposition", async () => {
@@ -218,10 +211,10 @@ describe("repositionNotesForDeletedNodes", () => {
       graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({ data: { flow_note_positions: [] } }),
       ),
-      graphql.mutation("DeleteFlowNotePositions", () => {
+      graphql.mutation("ReanchorFlowNotePosition", () => {
         mutationCalled = true;
         return HttpResponse.json({
-          data: { delete_flow_note_positions: { affected_rows: 0 } },
+          data: { update_flow_note_positions_by_pk: { id: "unused" } },
         });
       }),
     );

@@ -24,14 +24,6 @@ const GET_FLOW_NOTE_POSITIONS_FOR_REPOSITION = gql`
   }
 `;
 
-const DELETE_FLOW_NOTE_POSITIONS = gql`
-  mutation DeleteFlowNotePositions($ids: [uuid!]!) {
-    delete_flow_note_positions(where: { id: { _in: $ids } }) {
-      affected_rows
-    }
-  }
-`;
-
 const REANCHOR_FLOW_NOTE_POSITION = gql`
   mutation ReanchorFlowNotePosition($id: uuid!, $placement: jsonb!) {
     update_flow_note_positions_by_pk(
@@ -45,6 +37,7 @@ const REANCHOR_FLOW_NOTE_POSITION = gql`
 
 /**
  * Called after a node is removed from the flow, with the flow as it was immediately before and immediately after.
+
  */
 export const repositionNotesForDeletedNodes = async (
   deletedNodeIds: string[],
@@ -65,14 +58,10 @@ export const repositionNotesForDeletedNodes = async (
     fetchPolicy: "network-only",
   });
 
-  const toDelete: string[] = [];
   const toReanchor: Array<{ id: string; placement: NotePlacement }> = [];
 
   for (const note of data.flow_note_positions) {
-    if (note.node_id) {
-      if (deleted.has(note.node_id)) toDelete.push(note.id);
-      continue;
-    }
+    if (note.node_id) continue;
 
     if (!note.placement) continue;
 
@@ -99,28 +88,18 @@ export const repositionNotesForDeletedNodes = async (
       );
       if (repositioned) {
         toReanchor.push({ id: note.id, placement: repositioned });
-      } else {
-        toDelete.push(note.id);
       }
     }
   }
 
-  await Promise.all([
-    ...(toDelete.length > 0
-      ? [
-          client.mutate({
-            mutation: DELETE_FLOW_NOTE_POSITIONS,
-            variables: { ids: toDelete },
-          }),
-        ]
-      : []),
-    ...toReanchor.map(({ id, placement }) =>
+  await Promise.all(
+    toReanchor.map(({ id, placement }) =>
       client.mutate({
         mutation: REANCHOR_FLOW_NOTE_POSITION,
         variables: { id, placement },
       }),
     ),
-  ]);
+  );
 };
 
 /**
