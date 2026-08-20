@@ -5,7 +5,7 @@ import React from "react";
 import type { PatternCounts } from "./utils";
 import { getPatternMosaic } from "./utils";
 
-/** Colour palette, based on the pattern lime green */
+/** Colour palette, based on a transition between PlanX blue and pattern lime green */
 const MOSAIC_PALETTE = [
   "#c7e2a0",
   "#acdb9a",
@@ -30,7 +30,7 @@ interface Props {
 
 /** Renders a pattern's mosaic as a self-contained SVG */
 export const PatternMosaic: React.FC<Props> = ({ seed, counts, sx }) => {
-  const mosaic = getPatternMosaic(seed, counts);
+  const mosaic = getPatternMosaic(seed, counts, MOSAIC_PALETTE.length);
 
   if (mosaic.cols === 0 || mosaic.rows === 0) return null;
 

@@ -44,8 +44,6 @@ export interface Mosaic {
   squares: MosaicSquare[];
 }
 
-const PALETTE_SIZE = 10;
-
 /** Packing grid targets this cols:rows ratio, matching the preview window's aspect ratio */
 const TARGET_ASPECT_RATIO = 2;
 
@@ -73,6 +71,7 @@ const createRandom = (seed: number): (() => number) => {
 export const getPatternMosaic = (
   seed: string,
   counts: PatternCounts,
+  paletteSize: number,
 ): Mosaic => {
   const totalUnits = counts.components + counts.nestedFlows * 4;
   if (totalUnits === 0) return { cols: 0, rows: 0, squares: [] };
@@ -91,9 +90,9 @@ export const getPatternMosaic = (
   // Picks any colour but the last one used
   let colorIndex = -1;
   const nextColor = (): number => {
-    let next = Math.floor(random() * PALETTE_SIZE);
+    let next = Math.floor(random() * paletteSize);
     while (next === colorIndex) {
-      next = Math.floor(random() * PALETTE_SIZE);
+      next = Math.floor(random() * paletteSize);
     }
     colorIndex = next;
     return colorIndex;
