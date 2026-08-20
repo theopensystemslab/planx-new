@@ -41,16 +41,13 @@ const Initial = styled("span", {
 }));
 
 export const Badge: React.FC<BadgeProps> = (props) => {
-  const { size = "default", sx } = props;
+  const { size = "default" } = props;
 
   if (props.variant === BadgeVariant.SourceTemplate) {
     return (
       <Root
         size={size}
-        sx={[
-          { backgroundColor: "template.light" },
-          ...(Array.isArray(sx) ? sx : [sx]),
-        ]}
+        sx={{ backgroundColor: "template.light" }}
         role="img"
         aria-label="Source template"
         data-testid="badge-source-template"
@@ -64,13 +61,10 @@ export const Badge: React.FC<BadgeProps> = (props) => {
     return (
       <Root
         size={size}
-        sx={[
-          {
-            backgroundColor: props.backgroundColour,
-            color: props.iconColour,
-          },
-          ...(Array.isArray(sx) ? sx : [sx]),
-        ]}
+        sx={{
+          backgroundColor: props.backgroundColour,
+          color: props.iconColour,
+        }}
         data-testid="badge-custom"
       >
         {props.icon}
@@ -85,10 +79,7 @@ export const Badge: React.FC<BadgeProps> = (props) => {
     return (
       <Root
         size={size}
-        sx={[
-          { backgroundColor: backgroundColour },
-          ...(Array.isArray(sx) ? sx : [sx]),
-        ]}
+        sx={{ backgroundColor: backgroundColour }}
         role="img"
         aria-label={team.name}
         data-testid="badge-team-logo"
@@ -103,10 +94,7 @@ export const Badge: React.FC<BadgeProps> = (props) => {
   return (
     <Root
       size={size}
-      sx={[
-        { backgroundColor: backgroundColour },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
+      sx={{ backgroundColor: backgroundColour }}
       role="img"
       aria-label={team.name}
       data-testid="badge-team-initial"

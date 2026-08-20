@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import ListItemButton from "@mui/material/ListItemButton";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -34,7 +33,9 @@ export const TemplateListItem: React.FC<TemplateListItemProps> = ({
       alignItems="flex-start"
       sx={{ px: 2, py: 1.5, gap: 1.5 }}
     >
-      <Badge variant={BadgeVariant.SourceTemplate} sx={{ mt: 0.25 }} />
+      <Box sx={{ mt: 0.25 }}>
+        <Badge variant={BadgeVariant.SourceTemplate} />
+      </Box>
       <Box
         sx={{
           display: "flex",
