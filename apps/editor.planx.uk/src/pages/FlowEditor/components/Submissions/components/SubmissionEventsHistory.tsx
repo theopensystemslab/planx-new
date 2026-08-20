@@ -48,30 +48,32 @@ const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
   return result;
 };
 
-const getMostRecentEventIndices = (
-  groupedEvents: GroupedEvent[],
-): Set<number> => {
-  const mostRecentMap = new Map<string, { index: number; timestamp: string }>();
+const getMostRecentEventId = (groupedEvents: GroupedEvent[]): Set<string> => {
+  const mostRecentMap = new Map<
+    string,
+    { eventId: string; timestamp: string }
+  >();
 
-  groupedEvents.forEach((group, index) => {
+  groupedEvents.forEach((group) => {
     const eventType = group.events[0].eventType;
-    const mostRecentEventInGroup = group.events[0];
-    const timestamp = mostRecentEventInGroup.createdAt;
+    const timestamp = group.events[0].createdAt;
 
     const existing = mostRecentMap.get(eventType);
     if (!existing || timestamp > existing.timestamp) {
-      mostRecentMap.set(eventType, { index, timestamp });
+      mostRecentMap.set(eventType, { eventId: group.eventId, timestamp });
     }
   });
 
-  return new Set(Array.from(mostRecentMap.values()).map((item) => item.index));
+  return new Set(
+    Array.from(mostRecentMap.values()).map((item) => item.eventId),
+  );
 };
 
 export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
   events,
 }) => {
   const groupedEvents = groupEvents(events);
-  const mostRecentIndices = getMostRecentEventIndices(groupedEvents);
+  const mostRecentIds = getMostRecentEventId(groupedEvents);
 
   return (
     <Box
@@ -83,11 +85,11 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
       }}
     >
       <Box sx={{ padding: 1, margin: 1 }}>
-        {groupedEvents.map((groupedEvent, index) => (
+        {groupedEvents.map((groupedEvent) => (
           <SubmissionEvent
             key={groupedEvent.eventId}
             groupedEvent={groupedEvent}
-            isMostRecent={mostRecentIndices.has(index)}
+            isMostRecent={mostRecentIds.has(groupedEvent.eventId)}
           />
         ))}
       </Box>
