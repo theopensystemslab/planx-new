@@ -166,10 +166,10 @@ const keyFormatters: KeyMap = {
     getDisplayKey: () => "Label (your details)",
   },
   "data.govPayMetadata.key": {
-    getDisplayKey: () => "GOV.UK Pay metadata (key)",
+    getDisplayKey: () => "Payment metadata (key)",
   },
   "data.govPayMetadata.value": {
-    getDisplayKey: () => "GOV.UK Pay metadata (value)",
+    getDisplayKey: () => "Payment metadata (value)",
   },
   // Calculate contains both input and output data values
   formula: {
