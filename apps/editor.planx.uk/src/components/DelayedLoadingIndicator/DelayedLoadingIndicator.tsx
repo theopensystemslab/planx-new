@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { EllipsesText } from "components/EllipsesText/EllipsesText";
 import React, { useEffect, useState } from "react";
 
 export interface Props {
@@ -22,21 +23,6 @@ const SpinnerRoot = styled(Box, {
   ...(inline && {
     padding: 0,
   }),
-}));
-
-export const EllipsesText = styled(Typography)(() => ({
-  "&::after": {
-    display: "inline-block",
-    animation: "ellipsis steps(1,end) 1s infinite",
-    content: '""',
-  },
-  "@keyframes ellipsis": {
-    "0%": { content: '""' },
-    "25%": { content: '"."' },
-    "50%": { content: '".."' },
-    "75%": { content: '"..."' },
-    "100%": { content: '""' },
-  },
 }));
 
 const DelayedLoadingIndicator: React.FC<Props> = ({
