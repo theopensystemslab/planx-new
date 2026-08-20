@@ -46,10 +46,10 @@ export interface Mosaic {
 
 const PALETTE_SIZE = 10;
 
-// Packing grid targets this cols:rows ratio, matching the preview window's aspect ratio
+/** Packing grid targets this cols:rows ratio, matching the preview window's aspect ratio */
 const TARGET_ASPECT_RATIO = 2;
 
-// Deterministic string hash, used to seed the mosaic's PRNG per-pattern
+/** Deterministic string hash, used to seed the mosaic's PRNG per-pattern */
 const hashString = (value: string): number => {
   let hash = 0;
   for (let i = 0; i < value.length; i++) {
@@ -58,7 +58,7 @@ const hashString = (value: string): number => {
   return hash >>> 0;
 };
 
-// Sequence generator using mulberry32 forumla to produce a pattern based on each seed
+/** Sequence generator using mulberry32 forumla to produce a pattern based on each seed */
 const createRandom = (seed: number): (() => number) => {
   let state = seed;
   return () => {
@@ -69,7 +69,7 @@ const createRandom = (seed: number): (() => number) => {
   };
 };
 
-// Non-repeating, deterministic mosaic layout for a pattern
+/** Non-repeating, deterministic mosaic layout for a pattern */
 export const getPatternMosaic = (
   seed: string,
   counts: PatternCounts,
