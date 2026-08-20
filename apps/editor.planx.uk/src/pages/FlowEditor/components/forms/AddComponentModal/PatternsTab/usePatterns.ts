@@ -7,7 +7,11 @@ import type {
 } from "./queries";
 import { GET_PATTERN_DATA, GET_PATTERNS } from "./queries";
 
-export const usePatterns = () => useQuery<GetPatternsQuery>(GET_PATTERNS);
+export const usePatterns = () =>
+  useQuery<GetPatternsQuery>(GET_PATTERNS, {
+    // Ensure a pattern toggled "not copiable by others" does not persist in the cache
+    fetchPolicy: "cache-and-network",
+  });
 
 export const usePatternData = (id: string | null) =>
   useQuery<GetPatternDataQuery, GetPatternDataVars>(GET_PATTERN_DATA, {
