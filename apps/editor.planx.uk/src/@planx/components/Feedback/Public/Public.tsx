@@ -120,7 +120,10 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
               container
               columnSpacing={2}
               component="fieldset"
-              sx={{ flexDirection: { xs: "column", formWrap: "row" } }}
+              sx={{
+                width: "100%",
+                flexDirection: { xs: "column", formWrap: "row" },
+              }}
             >
               <FaceBox
                 value={1}
