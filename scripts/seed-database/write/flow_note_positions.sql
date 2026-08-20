@@ -15,13 +15,21 @@ CREATE TEMPORARY TABLE sync_flow_note_positions (
 INSERT INTO
   flow_note_positions (id, note_id, flow_id, node_id, placement, created_by, created_at, updated_at)
 SELECT
-  id, 
-  note_id,
-  flow_id,
-  node_id,
-  placement, 
-  created_by, 
-  created_at, 
-  updated_at
+  source.id, 
+  source.note_id,
+  source.flow_id,
+  source.node_id,
+  source.placement, 
+  source.created_by, 
+  source.created_at, 
+  source.updated_at
 FROM
-  sync_flow_note_positions ON CONFLICT (id) DO NOTHING;
+  sync_flow_note_positions AS source
+WHERE
+  source.note_id IS NULL
+  OR EXISTS (
+    SELECT 1
+    FROM flow_note_content AS content
+    WHERE content.id = source.note_id
+  )
+ON CONFLICT (id) DO NOTHING;
