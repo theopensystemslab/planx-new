@@ -138,7 +138,7 @@ export const isJWTRevoked: RequestHandler = async (req, res) => {
     const isRevoked = await isTokenRevoked(tokenDigest);
 
     if (isRevoked) {
-      console.error("Token is revoked", { tokenDigest });
+      console.debug("Token is revoked", { tokenDigest });
       res.set("Cache-Control", "no-store");
       return res.status(401).send();
     }
@@ -150,7 +150,13 @@ export const isJWTRevoked: RequestHandler = async (req, res) => {
 
     return res.status(200).json(decoded);
   } catch (error) {
-    console.error("Unhandled error in JWT validation", { error });
+    if (error instanceof jwt.TokenExpiredError) {
+      console.debug("JWT expired", { expiredAt: error.expiredAt });
+    } else if (error instanceof jwt.JsonWebTokenError) {
+      console.debug("JWT validation failed", { message: error.message });
+    } else {
+      console.error("Unhandled error in JWT validation", { error });
+    }
     return res.status(401).send();
   }
 };
