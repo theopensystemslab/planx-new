@@ -24,7 +24,7 @@ const SpinnerRoot = styled(Box, {
   }),
 }));
 
-const EllipsesText = styled(Typography)(() => ({
+export const EllipsesText = styled(Typography)(() => ({
   "&::after": {
     display: "inline-block",
     animation: "ellipsis steps(1,end) 1s infinite",

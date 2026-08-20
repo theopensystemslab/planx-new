@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
-import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { EllipsesText } from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -100,7 +100,16 @@ export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
             }}
           >
             {loading ? (
-              <Skeleton width={80} sx={{ bgcolor: "grey.500" }} />
+              <EllipsesText
+                sx={{
+                  width: "70px",
+                  textAlign: "left",
+                  margin: "0 auto",
+                }}
+                variant="inherit"
+              >
+                Loading
+              </EllipsesText>
             ) : (
               componentCountLabel
             )}
