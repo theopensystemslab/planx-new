@@ -7,7 +7,6 @@ import DialogContent from "@mui/material/DialogContent";
 import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import type { FlowStatus } from "@opensystemslab/planx-core/types";
 import { useNavigate } from "@tanstack/react-router";
 import { useToast } from "hooks/useToast";
 import { SYSTEM_TEAMS } from "lib/systemTeams";
@@ -31,7 +30,6 @@ interface TemplateDetails {
   }[];
   publishedFlows: { hasSendComponent: boolean }[];
   usedByTeams: {
-    status: FlowStatus;
     team: {
       id: number;
       name: string;
@@ -68,7 +66,6 @@ const GET_TEMPLATE_DETAILS = gql`
         order_by: [{ team_id: asc }, { created_at: desc }]
         where: { team: { slug: { _nin: $systemTeams } } }
       ) {
-        status
         team {
           id
           name
@@ -169,10 +166,7 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
       ).formatted
     : undefined;
 
-  const onlineTeams =
-    details?.usedByTeams.filter(({ status }) => status === "online") ?? [];
-  const copiedTeams =
-    details?.usedByTeams.filter(({ status }) => status !== "online") ?? [];
+  const usedByCount = details?.usedByTeams.length ?? 0;
 
   return (
     <Dialog
@@ -212,34 +206,15 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
           </Typography>
         )}
       </DialogContent>
-      {onlineTeams.length > 0 && (
+      {usedByCount > 0 && (
         <>
           <Divider />
           <Box sx={{ p: 2 }}>
             <Typography variant="body1" sx={{ fontWeight: "bold", mb: 1.5 }}>
-              {`Online with ${onlineTeams.length} team${onlineTeams.length === 1 ? "" : "s"}:`}
+              {`Subscribed to by ${usedByCount} team${usedByCount === 1 ? "" : "s"}:`}
             </Typography>
             <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-              {onlineTeams.map(({ team }) => (
-                <Tooltip key={team.id} title={team.name}>
-                  <span>
-                    <Badge variant={BadgeVariant.Team} team={team} />
-                  </span>
-                </Tooltip>
-              ))}
-            </Box>
-          </Box>
-        </>
-      )}
-      {copiedTeams.length > 0 && (
-        <>
-          <Divider />
-          <Box sx={{ p: 2 }}>
-            <Typography variant="body1" sx={{ fontWeight: "bold", mb: 1.5 }}>
-              {`Subscribed to by ${copiedTeams.length} team${copiedTeams.length === 1 ? "" : "s"} (not online):`}
-            </Typography>
-            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-              {copiedTeams.map(({ team }) => (
+              {details!.usedByTeams.map(({ team }) => (
                 <Tooltip key={team.id} title={team.name}>
                   <span>
                     <Badge variant={BadgeVariant.Team} team={team} />
