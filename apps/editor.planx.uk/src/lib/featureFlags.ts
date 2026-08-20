@@ -3,7 +3,6 @@ export const AVAILABLE_FEATURE_FLAGS = [
   "EXPLORE",
   "GROUPED_SUBMISSIONS",
   "NOTES",
-  "PATTERN_SELECT",
   "STRIPE_MIGRATION",
 ] as const;
 
