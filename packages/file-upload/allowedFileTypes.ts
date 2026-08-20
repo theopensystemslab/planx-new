@@ -14,43 +14,43 @@ export const ALLOWED_EXTENSIONS_BY_MIME_TYPE: Record<string, string[]> = {
   // PDFs
   "application/pdf": [".pdf"],
   // raster images
-  "image/bmp": [".bmp"],
-  "image/gif": [".gif"],
+  // "image/bmp": [".bmp"],
+  // "image/gif": [".gif"],
   "image/jpeg": [".jpg", ".jpeg"],
   "image/png": [".png"],
-  "image/tiff": [".tif", ".tiff"],
-  "image/webp": [".webp"],
+  // "image/tiff": [".tif", ".tiff"],
+  // "image/webp": [".webp"],
   // vector graphics
   "image/svg+xml": [".svg"],
   // CAD and BIM
-  "image/vnd.dwg": [".dwg"],
-  "image/vnd.dxf": [".dxf"],
+  // "image/vnd.dwg": [".dwg"],
+  // "image/vnd.dxf": [".dxf"],
   // Text, MS Office documents and spreadsheets
-  "text/csv": [".csv"],
-  "text/plain": [".txt"],
-  "application/rtf": [".rtf"],
+  // "text/csv": [".csv"],
+  // "text/plain": [".txt"],
+  // "application/rtf": [".rtf"],
   // TODO: handle macros in old office files (.doc, .xls); in the meantime, we don't accept them
   // (bundle this logic with ability to upload open source office files, e.g. .odt, .ods)
   // "application/msword": [".doc"],
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
-    ".docx",
-  ],
+  // "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+  //   ".docx",
+  // ],
   // "application/vnd.ms-excel": [".xls"],
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
-    ".xlsx",
-  ],
+  // "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+  //   ".xlsx",
+  // ],
   // videos
-  "video/x-msvideo": [".avi"],
-  "video/x-matroska": [".mkv"],
-  "video/quicktime": [".mov"],
-  "video/mp4": [".mp4"],
-  "video/mpeg": [".mpg", ".mpeg"],
-  "video/webm": [".webm"],
-  "video/x-ms-wmv": [".wmv"],
+  // "video/x-msvideo": [".avi"],
+  // "video/x-matroska": [".mkv"],
+  // "video/quicktime": [".mov"],
+  // "video/mp4": [".mp4"],
+  // "video/mpeg": [".mpg", ".mpeg"],
+  // "video/webm": [".webm"],
+  // "video/x-ms-wmv": [".wmv"],
   // GML (Geographic Markup Language)
-  "application/gml+xml": [".gml"],
+  // "application/gml+xml": [".gml"],
   // binary files without custom MIME, for which we fall back to catchall octet-stream
-  "application/octet-stream": [".bim", ".ifc", ".plt", ".rvt", ".skp"],
+  // "application/octet-stream": [".bim", ".ifc", ".plt", ".rvt", ".skp"],
 };
 
 /**
