@@ -19,13 +19,16 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - name: Install pulumi
-        uses: pulumi/setup-pulumi@v2
-      - run: |
-          echo "STAGING_PG_URL=$(pulumi stack output --stack staging --show-secrets dbRootUrl)" >> $GITHUB_ENV
-        working-directory: infrastructure/data
+      - name: Get staging database URL
+        id: pulumi
+        uses: pulumi/actions@v7
+        with:
+          command: output
+          stack-name: staging
+          work-dir: infrastructure/data
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      - run: echo "STAGING_PG_URL=${{ steps.pulumi.outputs.dbRootUrl }}" >> $GITHUB_ENV
       - uses: ./.github/actions/setup-pizza-env
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
