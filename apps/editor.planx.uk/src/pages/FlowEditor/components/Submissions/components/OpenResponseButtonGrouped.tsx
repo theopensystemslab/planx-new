@@ -1,5 +1,4 @@
 import PreviewIcon from "@mui/icons-material/Preview";
-import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useState } from "react";
@@ -12,33 +11,31 @@ type Props = { attempt: Attempt; sessionId: string };
 
 export const OpenResponseButtonGrouped = (props: Props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [response, setResponse] = useState<Record<string, any> | null>(null);
 
-  const getResponse = ({ eventType, status, response }: Attempt) => {
-    if (eventType === "Pay") return response;
-    if (status === "Success") return response?.data?.body;
+  const parseResponse = ({ eventType, status, response }: Attempt) => {
+    let data;
+    if (eventType === "Pay") data = response;
+    else if (status === "Success") data = response?.data?.body;
+    else data = response?.data?.message;
 
-    return response?.data?.message;
-  };
-
-  const handleButtonClick = () => {
-    setModalIsOpen(true);
-    if (!response) {
-      let parsedData = getResponse(props.attempt);
-      try {
-        parsedData =
-          typeof parsedData === "string" ? JSON.parse(parsedData) : parsedData;
-      } catch (error) {
-        parsedData = { error: "Invalid JSON format", raw: parsedData };
-      }
-      setResponse(parsedData);
+    try {
+      return typeof data === "string" ? JSON.parse(data) : data;
+    } catch (error) {
+      return {
+        error: "Unable to parse response data",
+        message: error instanceof Error ? error.message : "Invalid JSON format",
+        raw: data,
+      };
     }
   };
 
   return (
     <>
       <Tooltip title="View response">
-        <IconButton aria-label="View response" onClick={handleButtonClick}>
+        <IconButton
+          aria-label="View response"
+          onClick={() => setModalIsOpen(true)}
+        >
           <PreviewIcon />
         </IconButton>
       </Tooltip>
@@ -47,11 +44,7 @@ export const OpenResponseButtonGrouped = (props: Props) => {
         open={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
       >
-        {response ? (
-          <FormattedResponse response={response} />
-        ) : (
-          <CircularProgress />
-        )}
+        <FormattedResponse response={parseResponse(props.attempt)} />
       </DataTableModal>
     </>
   );

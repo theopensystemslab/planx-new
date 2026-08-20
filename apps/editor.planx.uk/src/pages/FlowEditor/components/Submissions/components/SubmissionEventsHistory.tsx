@@ -4,7 +4,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import type { Attempt, GroupedEvent, Submission } from "../types";
-import { OpenResponseButton } from "./OpenResponseButton";
+import { OpenResponseButtonGrouped } from "./OpenResponseButtonGrouped";
 import { ResubmitButtonGrouped } from "./ResubmitButtonGrouped";
 import { StatusChip } from "./StatusChip";
 import { StatusIcon } from "./StatusIcon";
@@ -150,7 +150,7 @@ const SubmissionEvent: React.FC<{
                 {new Date(groupedEvent.events[0].createdAt).toLocaleString()}
               </Typography>
               <Box sx={{ marginLeft: "auto" }}>
-                <OpenResponseButton
+                <OpenResponseButtonGrouped
                   attempt={groupedEvent.events[0]}
                   sessionId={groupedEvent.sessionId}
                 />
@@ -188,7 +188,10 @@ const SubmissionAttempts: React.FC<{
             </Box>
 
             <Box sx={{ marginLeft: "auto" }}>
-              <OpenResponseButton attempt={attempt} sessionId={sessionId} />
+              <OpenResponseButtonGrouped
+                attempt={attempt}
+                sessionId={sessionId}
+              />
             </Box>
           </Box>
         </>
