@@ -17,10 +17,13 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { usePaymentProvider } from "../Public/hooks/usePaymentProvider";
 import { isFieldDisabled, parseError, parseTouched } from "./helpers";
 
 const GOVPAY_DOCS_URL =
   "https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39";
+
+const STRIPE_DOCS_URL = "https://docs.stripe.com/metadata";
 
 export type FormikGovPayMetadata =
   Record<keyof GovPayMetadata, string>[] | string | undefined;
@@ -142,6 +145,7 @@ const Headers: React.FC<{ title: string }> = ({ title }) => (
 export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
   disabled,
 }) => {
+  const provider = usePaymentProvider();
   const { errors, setFieldValue, setTouched, touched, values } =
     useFormikContext<Pay>();
 
@@ -161,16 +165,16 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
 
   return (
     <ModalSection>
-      <ModalSectionContent title="GOV.UK Pay metadata" Icon={DataObjectIcon}>
+      <ModalSectionContent title="Payment metadata" Icon={DataObjectIcon}>
         <Typography variant="subtitle2" sx={{ mb: 2 }}>
           Include metadata alongside payments, such as VAT codes, cost centers,
           or ledger codes. See{" "}
           <Link
-            href={GOVPAY_DOCS_URL}
+            href={provider === "stripe" ? STRIPE_DOCS_URL : GOVPAY_DOCS_URL}
             target="_blank"
             rel="noopener noreferrer"
           >
-            GOV.UK Pay documentation
+            payment provider documentation
           </Link>{" "}
           for more details.
         </Typography>

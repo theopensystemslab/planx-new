@@ -726,7 +726,7 @@ describe("pay fields", () => {
     });
 
     expect(output).toStrictEqual<Output>({
-      key: "GOV.UK Pay metadata (key)",
+      key: "Payment metadata (key)",
       iconKey: ComponentType.Pay,
       componentType: "Pay",
       title: "Jaguar",
@@ -742,7 +742,7 @@ describe("pay fields", () => {
     });
 
     expect(output).toStrictEqual<Output>({
-      key: "GOV.UK Pay metadata (value)",
+      key: "Payment metadata (value)",
       iconKey: ComponentType.Pay,
       componentType: "Pay",
       title: "Jaguar",
