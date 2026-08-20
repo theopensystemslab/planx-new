@@ -93,6 +93,7 @@ The root of the project has several scripts set up to help you manage your docke
 - `pnpm recreate` will build and (re)start your docker containers from scratch
 - `pnpm destroy` will remove volumes (i.e. database data) for your docker containers (dev or e2e) and can be a useful hard reset when necessary
 - `pnpm sync-data` will sync production records with modified data in your database
+- `pnpm test-sync` emulates the command performed by the nightly staging sync (see `sync-staging-db.yml`)
 - `pnpm clean-data` will sync production records and reset any modified data
 - `pnpm dev` will tear down any e2e containers and recreate your dev docker containers from scratch, *without* re-seeding the database - useful when switching from a test environment
 - `pnpm tests` will tear down any dev containers and recreate your docker containers and include test services - useful when switching from a dev environment

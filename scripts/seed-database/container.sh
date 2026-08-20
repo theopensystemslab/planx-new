@@ -60,6 +60,7 @@ echo published_flows downloaded
 
 if [[ ${RESET} == "reset_flows" ]]; then
   cat 'write/truncate_flows.sql' >> '/tmp/sync.sql'
+  cat 'write/truncate_flow_notes.sql' >> '/tmp/sync.sql'
   cat 'write/truncate_team_members.sql' >> '/tmp/sync.sql'
 fi
 
