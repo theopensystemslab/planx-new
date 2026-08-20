@@ -69,17 +69,24 @@ export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
         sx={{
           position: "relative",
           width: "100%",
-          aspectRatio: "2 / 1",
-          backgroundColor: "text.primary",
+          aspectRatio: "2.2 / 1",
           borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+          border: (theme) => `1px solid ${theme.palette.divider}`,
           overflow: "hidden",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          paddingBottom: 1.75,
+          backgroundColor: (theme) => theme.palette.common.white,
+          paddingBottom: 1.85,
         }}
       >
-        {counts && <PatternMosaic seed={pattern.id} counts={counts} />}
+        {counts && (
+          <PatternMosaic
+            seed={pattern.id}
+            counts={counts}
+            sx={{ maxWidth: "80%", maxHeight: "75%" }}
+          />
+        )}
         {(loading || componentCountLabel) && (
           <Typography
             variant="body3"
@@ -90,7 +97,6 @@ export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
               width: "100%",
               textAlign: "center",
               py: 0.5,
-              color: "common.white",
             }}
           >
             {loading ? (

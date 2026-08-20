@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import type { SxProps, Theme } from "@mui/material/styles";
 import React from "react";
 
 import type { PatternCounts } from "./utils";
@@ -6,16 +7,16 @@ import { getPatternMosaic } from "./utils";
 
 // Colour palette, based on the pattern lime green
 const MOSAIC_PALETTE = [
-  "#28d1de",
-  "#6bc5b5",
-  "#90cfaa",
-  "#8cd48b",
-  "#96d788",
-  "#a2da85",
-  "#aeda8d",
-  "#bcd996",
-  "#d4e7a3",
-  "#e7f2ab",
+  "#c7e2a0",
+  "#acdb9a",
+  "#a6d2a7",
+  "#91c4b3",
+  "#74a8b1",
+  "#517aac",
+  "#3a52b1",
+  "#3b44a7",
+  "#3f38a1",
+  "#362f8b",
 ];
 
 const CELL_SIZE = 36;
@@ -24,10 +25,11 @@ const GAP = 0.12;
 interface Props {
   seed: string;
   counts: PatternCounts;
+  sx?: SxProps<Theme>;
 }
 
 // Renders a pattern's mosaic as a self-contained SVG
-export const PatternMosaic: React.FC<Props> = ({ seed, counts }) => {
+export const PatternMosaic: React.FC<Props> = ({ seed, counts, sx }) => {
   const mosaic = getPatternMosaic(seed, counts);
 
   if (mosaic.cols === 0 || mosaic.rows === 0) return null;
@@ -36,13 +38,14 @@ export const PatternMosaic: React.FC<Props> = ({ seed, counts }) => {
     <Box
       component="svg"
       viewBox={`0 0 ${mosaic.cols} ${mosaic.rows}`}
-      sx={{
-        display: "block",
-        aspectRatio: `${mosaic.cols} / ${mosaic.rows}`,
-        width: mosaic.cols * CELL_SIZE,
-        maxWidth: "70%",
-        maxHeight: "60%",
-      }}
+      sx={[
+        {
+          display: "block",
+          aspectRatio: `${mosaic.cols} / ${mosaic.rows}`,
+          width: mosaic.cols * CELL_SIZE,
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       {mosaic.squares.map((square, i) => (
         <rect
