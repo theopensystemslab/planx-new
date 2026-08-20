@@ -5,4 +5,5 @@ export interface Template {
   team: {
     name: string;
   };
+  subscribedTeams?: { id: string }[];
 }

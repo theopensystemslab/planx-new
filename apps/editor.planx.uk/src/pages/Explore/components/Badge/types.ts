@@ -1,3 +1,4 @@
+import type { SxProps, Theme } from "@mui/material/styles";
 import type React from "react";
 
 export const BadgeVariant = {
@@ -22,6 +23,7 @@ interface BadgeTeam {
 
 interface BadgeBaseProps {
   size?: BadgeSize;
+  sx?: SxProps<Theme>;
 }
 
 interface SourceTemplateBadgeProps extends BadgeBaseProps {

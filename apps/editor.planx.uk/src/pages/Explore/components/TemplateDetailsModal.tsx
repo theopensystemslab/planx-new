@@ -8,14 +8,17 @@ import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
+import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { useToast } from "hooks/useToast";
 import { SYSTEM_TEAMS } from "lib/systemTeams";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditMessage } from "pages/FlowEditor/utils";
 import { useCreateFlow } from "pages/Flows/components/AddFlow/hooks/useCreateFlow";
-import React from "react";
+import React, { useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
+import CheckCircleIcon from "ui/icons/CheckCircle";
 import { slugify } from "utils";
 
 import { Badge } from "./Badge/Badge";
@@ -94,6 +97,7 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
   const toast = useToast();
   const [
     teamId,
+    teamName,
     teamSlug,
     canUserEditTeam,
     showLoading,
@@ -101,6 +105,7 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
     setLoadingCompleteCallback,
   ] = useStore((state) => [
     state.teamId,
+    state.teamName,
     state.teamSlug,
     state.canUserEditTeam,
     state.showLoading,
@@ -118,6 +123,12 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
 
   const details = data?.flows[0];
   const { mutate: createFlow, isPending } = useCreateFlow();
+
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+
+  const isAlreadySubscribed = Boolean(
+    details?.usedByTeams.some(({ team }) => team.id === teamId),
+  );
 
   const handleAddToTeam = () => {
     const name = `${template.name} (templated)`;
@@ -168,6 +179,15 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
 
   const usedByCount = details?.usedByTeams.length ?? 0;
 
+  const usedByLabel = (() => {
+    if (canUserEditTeam(teamSlug) && isAlreadySubscribed) {
+      const otherTeamsCount = usedByCount - 1;
+      if (otherTeamsCount === 0) return `Subscribed to by ${teamName}:`;
+      return `Subscribed to by ${teamName} and ${otherTeamsCount} other team${otherTeamsCount === 1 ? "" : "s"}:`;
+    }
+    return `Subscribed to by ${usedByCount} team${usedByCount === 1 ? "" : "s"}:`;
+  })();
+
   return (
     <Dialog
       open={open}
@@ -187,6 +207,19 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
             {details?.team.name ?? template.team.name}
           </Typography>
         </Box>
+        {canUserEditTeam(teamSlug) && isAlreadySubscribed && (
+          <Box
+            sx={{ display: "flex", alignItems: "center", gap: 0.33, mb: 0.5 }}
+          >
+            <CheckCircleIcon color="success" sx={{ fontSize: 20 }} />
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            >
+              Subscribed
+            </Typography>
+          </Box>
+        )}
         <Typography variant="h3" component="h2">
           {template.name}
         </Typography>
@@ -211,7 +244,7 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
           <Divider />
           <Box sx={{ p: 2 }}>
             <Typography variant="body1" sx={{ fontWeight: "bold", mb: 1.5 }}>
-              {`Subscribed to by ${usedByCount} team${usedByCount === 1 ? "" : "s"}:`}
+              {usedByLabel}
             </Typography>
             <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
               {details!.usedByTeams.map(({ team }) => (
@@ -234,13 +267,32 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddToTeam}
+            onClick={() =>
+              isAlreadySubscribed
+                ? setIsConfirmationOpen(true)
+                : handleAddToTeam()
+            }
             disabled={isPending}
           >
             Add to my team
           </Button>
         )}
       </DialogActions>
+      <ConfirmationDialog
+        open={isConfirmationOpen}
+        onClose={(confirmed) => {
+          setIsConfirmationOpen(false);
+          if (confirmed) handleAddToTeam();
+        }}
+        title="Add template to your team?"
+        confirmText="Continue"
+        cancelText="Cancel"
+      >
+        <Typography>
+          You already subscribe to this template, subscribing again would mean
+          maintaining more than one instance of this template.
+        </Typography>
+      </ConfirmationDialog>
     </Dialog>
   );
 };

@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 
@@ -84,7 +85,7 @@ export function TemplatesWidget({
 }
 
 const GET_ONLINE_SOURCE_TEMPLATES = gql`
-  query GetOnlineSourceTemplates {
+  query GetOnlineSourceTemplates($teamId: Int!) {
     templates: flows(
       where: {
         is_template: { _eq: true }
@@ -99,13 +100,21 @@ const GET_ONLINE_SOURCE_TEMPLATES = gql`
       team {
         name
       }
+      subscribedTeams: templated_flows(
+        where: { team_id: { _eq: $teamId } }
+        limit: 1
+      ) {
+        id
+      }
     }
   }
 `;
 
 export default function ConnectedTemplatesWidget() {
+  const teamId = useStore((state) => state.teamId);
   const { data, loading } = useQuery<{ templates: Template[] }>(
     GET_ONLINE_SOURCE_TEMPLATES,
+    { variables: { teamId } },
   );
 
   return <TemplatesWidget templates={data?.templates} loading={loading} />;
