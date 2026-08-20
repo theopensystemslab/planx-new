@@ -8,7 +8,7 @@ import React from "react";
 
 type Props = {
   sessionId: string;
-  submittedAt?: string;
+  submittedAt: string;
 };
 
 export const ViewSubmissionButtonGrouped = (props: Props) => {

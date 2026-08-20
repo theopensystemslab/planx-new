@@ -6,17 +6,15 @@ import React from "react";
 
 type Props = {
   sessionId: string;
-  submittedAt?: string;
+  submittedAt: string;
 };
 
 export const DownloadSubmissionButtonGrouped = (props: Props) => {
-  const submissionDataExpirationDate = props.submittedAt
-    ? addDays(new Date(props.submittedAt), DAYS_UNTIL_EXPIRY)
-    : null;
-
-  const showDownloadButton = submissionDataExpirationDate
-    ? isBefore(new Date(), submissionDataExpirationDate)
-    : false;
+  const submissionDataExpirationDate = addDays(
+    new Date(props.submittedAt),
+    DAYS_UNTIL_EXPIRY,
+  );
+  const showDownloadButton = isBefore(new Date(), submissionDataExpirationDate);
 
   if (!showDownloadButton) return;
 
