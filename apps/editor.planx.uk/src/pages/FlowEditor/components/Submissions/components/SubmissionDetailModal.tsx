@@ -39,18 +39,8 @@ interface SubmissionDetailModalProps {
 }
 
 const getSubmittedAt = (events: Submission[]): string | undefined => {
-  const sendEventTypes: Submission["eventType"][] = [
-    "Submit to BOPS",
-    "Submit to Uniform",
-    "Send to email",
-    "Upload to AWS S3",
-    "Upload to AWS S3 (no notification)",
-    "Submit to Idox Nexus",
-  ];
-
   const successfulSend = events.find(
-    (event) =>
-      sendEventTypes.includes(event.eventType) && event.status === "Success",
+    (event) => event.eventType !== "Pay" && event.status === "Success",
   );
 
   return successfulSend?.createdAt ?? undefined;
