@@ -244,6 +244,9 @@ export const ContextMenu: React.FC = () => {
 
     const isTemplatedNodeContextMenuEnabled =
       parentIsTemplatedInternalPortal || parentIsChildOfTemplatedInternalPortal;
+    const isNoteContextMenuEnabled =
+      (self && getNode(self)?.data?.isTemplatedNode) ||
+      isTemplatedNodeContextMenuEnabled;
 
     if (source === "node") {
       const node = self ? getNode(self) : null;
@@ -274,7 +277,7 @@ export const ContextMenu: React.FC = () => {
                 id: "attach-note",
                 label: "Attach note",
                 icon: <StickyNote2Icon fontSize="small" />,
-                disabled: false,
+                disabled: isTemplatedFrom ? !isNoteContextMenuEnabled : false,
                 onClick: handleAttachNote,
               },
             ]
@@ -337,7 +340,7 @@ export const ContextMenu: React.FC = () => {
                 id: "add-note",
                 label: "Add note",
                 icon: <StickyNote2Icon fontSize="small" />,
-                disabled: false,
+                disabled: isTemplatedFrom ? !isNoteContextMenuEnabled : false,
                 onClick: handleAddNote,
               },
             ]
@@ -353,7 +356,7 @@ export const ContextMenu: React.FC = () => {
           id: "paste-note",
           label: "Paste note",
           icon: <ContentPaste fontSize="small" />,
-          disabled: !isNotePasteEnabled,
+          disabled: isNotePasteEnabled,
           onClick: handlePasteNote,
         },
       ];
@@ -365,14 +368,14 @@ export const ContextMenu: React.FC = () => {
           id: "clone-note",
           label: "Clone",
           icon: <CloneIcon fontSize="small" />,
-          disabled: false,
+          disabled: isTemplatedFrom ? true : false,
           onClick: handleCloneNote,
         },
         {
           id: "copy-note",
           label: "Copy",
           icon: <CopyIcon fontSize="small" />,
-          disabled: false,
+          disabled: isTemplatedFrom ? true : false,
           onClick: handleCopyNote,
         },
       ];
