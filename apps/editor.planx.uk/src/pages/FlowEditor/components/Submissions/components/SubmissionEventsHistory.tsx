@@ -100,7 +100,9 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
 const SubmissionEvent: React.FC<{
   groupedEvent: GroupedEvent;
   isMostRecent: boolean;
-}> = ({ groupedEvent, isMostRecent }) => {
+}> = ({ groupedEvent: { sessionId, events: attempts }, isMostRecent }) => {
+  const { eventType, createdAt, status } = attempts[0];
+
   const isPlatformAdmin = useStore((state) =>
     Boolean(state.user?.isPlatformAdmin),
   );
@@ -117,7 +119,7 @@ const SubmissionEvent: React.FC<{
       }}
     >
       <Box>
-        <StatusIcon status={groupedEvent.events[0].status} />
+        <StatusIcon status={status} />
       </Box>
 
       <Box
@@ -129,41 +131,31 @@ const SubmissionEvent: React.FC<{
           flexDirection: "column",
         }}
       >
-        <Typography sx={{ fontWeight: "bold" }}>
-          {groupedEvent.events[0].eventType}
-        </Typography>
+        <Typography sx={{ fontWeight: "bold" }}>{eventType}</Typography>
 
         {isMostRecent &&
-        groupedEvent.events[0].status !== "Success" &&
-        groupedEvent.events[0].eventType !== "Pay" &&
+        status !== "Success" &&
+        eventType !== "Pay" &&
         isPlatformAdmin ? (
-          <ResubmitButtonGrouped
-            sessionId={groupedEvent.sessionId}
-            eventType={groupedEvent.events[0].eventType}
-          />
+          <ResubmitButtonGrouped sessionId={sessionId} eventType={eventType} />
         ) : (
           <></>
         )}
 
-        {groupedEvent.events.length === 1 ? (
+        {attempts.length === 1 ? (
           <>
             <Box sx={{ display: "flex" }}>
-              <Typography>
-                {new Date(groupedEvent.events[0].createdAt).toLocaleString()}
-              </Typography>
+              <Typography>{new Date(createdAt).toLocaleString()}</Typography>
               <Box sx={{ marginLeft: "auto" }}>
                 <OpenResponseButtonGrouped
-                  attempt={groupedEvent.events[0]}
-                  sessionId={groupedEvent.sessionId}
+                  attempt={attempts[0]}
+                  sessionId={sessionId}
                 />
               </Box>
             </Box>
           </>
         ) : (
-          <SubmissionAttempts
-            attempts={groupedEvent.events}
-            sessionId={groupedEvent.sessionId}
-          />
+          <SubmissionAttempts attempts={attempts} sessionId={sessionId} />
         )}
       </Box>
     </Box>
