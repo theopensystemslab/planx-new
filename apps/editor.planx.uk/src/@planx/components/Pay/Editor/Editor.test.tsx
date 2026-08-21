@@ -32,7 +32,7 @@ describe("Pay component - Editor Modal", () => {
     expect(results).toHaveNoViolations();
   });
 
-  describe("GOV.UK Pay Metadata section", () => {
+  describe("Payment Metadata section", () => {
     // Set up mock state with platformAdmin user so all Editor features are enabled
     const { getState, setState } = useStore;
     const mockUser: User = {
@@ -57,11 +57,11 @@ describe("Pay component - Editor Modal", () => {
           <PayComponent id="test" />
         </DndProvider>,
       );
-      expect(getByText("GOV.UK Pay metadata")).toBeInTheDocument();
+      expect(getByText("Payment metadata")).toBeInTheDocument();
     });
 
     it("lists the default values", async () => {
-      const { getByDisplayValue, getByRole } = await setup(
+      const { getByDisplayValue } = await setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent id="test" />
         </DndProvider>,
