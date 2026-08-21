@@ -42,7 +42,7 @@ interface TemplateDetails {
 
 const GET_TEMPLATE_DETAILS = gql`
   query GetTemplateDetails($id: uuid!, $systemTeams: [String!]!) {
-    flows(where: { id: { _eq: $id } }, limit: 1) {
+    flow: flows_by_pk(id: $id) {
       id
       team {
         name
@@ -109,7 +109,7 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
     state.setLoadingCompleteCallback,
   ]);
 
-  const { data } = useQuery<{ flows: TemplateDetails[] }>(
+  const { data } = useQuery<{ flow: TemplateDetails | null }>(
     GET_TEMPLATE_DETAILS,
     {
       variables: { id: template.id, systemTeams: SYSTEM_TEAMS },
@@ -117,7 +117,7 @@ export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
     },
   );
 
-  const details = data?.flows[0];
+  const details = data?.flow ?? undefined;
   const { mutate: createFlow, isPending } = useCreateFlow();
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
