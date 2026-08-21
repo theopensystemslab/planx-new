@@ -3,7 +3,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import SubmissionDetailModal from "pages/FlowEditor/components/Submissions/components/SubmissionDetailModal";
 
 export const Route = createFileRoute(
-  "/_authenticated/app/$team/submissions/$sessionId",
+  "/_authenticated/app/$team/$flow/submissions/$sessionId",
 )({
   loader: async ({ params }) => ({
     sessionId: params.sessionId,
