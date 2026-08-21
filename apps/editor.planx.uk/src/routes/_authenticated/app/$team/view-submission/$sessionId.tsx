@@ -3,7 +3,7 @@ import SubmissionHTML from "pages/FlowEditor/components/Submissions/components/S
 import React from "react";
 
 export const Route = createFileRoute(
-  "/_authenticated/app/$team/submission/$sessionId",
+  "/_authenticated/app/$team/view-submission/$sessionId",
 )({
   loader: async ({ params }) => ({
     sessionId: params.sessionId,

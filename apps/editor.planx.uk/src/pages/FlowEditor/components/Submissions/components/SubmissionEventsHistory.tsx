@@ -1,10 +1,12 @@
 import Box from "@mui/material/Box";
-import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import Permission from "ui/editor/Permission";
 
 import type { Attempt, GroupedEvent, Submission } from "../types";
-import { OpenResponseButton } from "./OpenResponseButton";
+import { OpenResponseButtonGrouped } from "./OpenResponseButtonGrouped";
+import { ResubmitButtonGrouped } from "./ResubmitButtonGrouped";
 import { StatusChip } from "./StatusChip";
 import { StatusIcon } from "./StatusIcon";
 
@@ -15,13 +17,16 @@ const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
   let currentGroup: GroupedEvent | null = null;
 
   for (const submission of submissions) {
-    if (!currentGroup || currentGroup.eventType !== submission.eventType) {
+    if (
+      !currentGroup ||
+      currentGroup.events[0].eventType !== submission.eventType
+    ) {
       currentGroup = {
-        eventType: submission.eventType,
         sessionId: submission.sessionId,
         eventId: submission.eventId,
         events: [
           {
+            eventType: submission.eventType,
             createdAt: submission.createdAt,
             retry: submission.retry,
             response: submission.response,
@@ -32,6 +37,7 @@ const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
       result.push(currentGroup);
     } else {
       currentGroup.events.push({
+        eventType: submission.eventType,
         createdAt: submission.createdAt,
         retry: submission.retry,
         response: submission.response,
@@ -43,60 +49,110 @@ const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
   return result;
 };
 
+const getMostRecentEventId = (groupedEvents: GroupedEvent[]): Set<string> => {
+  const mostRecentMap = new Map<
+    string,
+    { eventId: string; timestamp: string }
+  >();
+
+  groupedEvents.forEach((group) => {
+    const eventType = group.events[0].eventType;
+    const timestamp = group.events[0].createdAt;
+
+    const existing = mostRecentMap.get(eventType);
+    if (!existing || timestamp > existing.timestamp) {
+      mostRecentMap.set(eventType, { eventId: group.eventId, timestamp });
+    }
+  });
+
+  return new Set(
+    Array.from(mostRecentMap.values()).map((item) => item.eventId),
+  );
+};
+
 export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
   events,
 }) => {
   const groupedEvents = groupEvents(events);
+  const mostRecentIds = getMostRecentEventId(groupedEvents);
 
   return (
     <Box
       sx={{
         background: "background",
-        padding: 4,
-        margin: 4,
         border: 1,
+        margin: 1,
         borderColor: "border.main",
       }}
     >
-      {groupedEvents.map((groupedEvent) => (
-        <SubmissionEvent groupedEvent={groupedEvent} />
-      ))}
+      <Box sx={{ padding: 1, margin: 1 }}>
+        {groupedEvents.map((groupedEvent) => (
+          <SubmissionEvent
+            key={groupedEvent.eventId}
+            groupedEvent={groupedEvent}
+            isMostRecent={mostRecentIds.has(groupedEvent.eventId)}
+          />
+        ))}
+      </Box>
     </Box>
   );
 };
 
-const SubmissionEvent: React.FC<{ groupedEvent: GroupedEvent }> = ({
-  groupedEvent,
-}) => {
+const SubmissionEvent: React.FC<{
+  groupedEvent: GroupedEvent;
+  isMostRecent: boolean;
+}> = ({ groupedEvent: { sessionId, events: attempts }, isMostRecent }) => {
+  const { eventType, createdAt, status } = attempts[0];
+
   return (
-    <Box sx={{ display: "flex", width: "100%", alignItems: "flex-start" }}>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        alignItems: "flex-start",
+        mb: 1,
+        borderBottom: 1,
+        borderColor: "border.main",
+      }}
+    >
       <Box>
-        <StatusIcon status={groupedEvent.events[0].status} />
+        <StatusIcon status={status} />
       </Box>
 
-      <Box sx={{ flex: 1, paddingLeft: 2 }}>
-        <Typography sx={{ fontWeight: "bold" }}>
-          {groupedEvent.eventType}
-        </Typography>
-        {groupedEvent.events.length === 1 ? (
+      <Box
+        sx={{
+          flex: 1,
+          paddingLeft: 2,
+          gap: 1,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Typography sx={{ fontWeight: "bold" }}>{eventType}</Typography>
+
+        <Permission.IsPlatformAdmin>
+          {isMostRecent && status !== "Success" && eventType !== "Pay" && (
+            <ResubmitButtonGrouped
+              sessionId={sessionId}
+              eventType={eventType}
+            />
+          )}
+        </Permission.IsPlatformAdmin>
+
+        {attempts.length === 1 ? (
           <>
             <Box sx={{ display: "flex" }}>
-              <Typography>
-                {new Date(groupedEvent.events[0].createdAt).toLocaleString()}
-              </Typography>
+              <Typography>{new Date(createdAt).toLocaleString()}</Typography>
               <Box sx={{ marginLeft: "auto" }}>
-                <OpenResponseButton
-                  attempt={groupedEvent.events[0]}
-                  sessionId={groupedEvent.sessionId}
+                <OpenResponseButtonGrouped
+                  attempt={attempts[0]}
+                  sessionId={sessionId}
                 />
               </Box>
             </Box>
           </>
         ) : (
-          <SubmissionAttempts
-            attempts={groupedEvent.events}
-            sessionId={groupedEvent.sessionId}
-          />
+          <SubmissionAttempts attempts={attempts} sessionId={sessionId} />
         )}
       </Box>
     </Box>
@@ -113,7 +169,7 @@ const SubmissionAttempts: React.FC<{
     <Box>
       {attempts.map((attempt, index) => (
         <>
-          <Box key={`${index}`} sx={{ display: "flex", gap: 2, marginTop: 1 }}>
+          <Box key={`${index}`} sx={{ display: "flex", gap: 2, my: 1 }}>
             <StatusChip status={attempt.status} />
             <Box>
               <Typography>Attempt {numberAttempts - index}</Typography>
@@ -123,7 +179,10 @@ const SubmissionAttempts: React.FC<{
             </Box>
 
             <Box sx={{ marginLeft: "auto" }}>
-              <OpenResponseButton attempt={attempt} sessionId={sessionId} />
+              <OpenResponseButtonGrouped
+                attempt={attempt}
+                sessionId={sessionId}
+              />
             </Box>
           </Box>
         </>

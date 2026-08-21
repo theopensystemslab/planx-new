@@ -1,11 +1,11 @@
-import Close from "@mui/icons-material/CloseOutlined";
+import Close from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
-import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
 import React from "react";
+import { CloseButton } from "ui/icons/CloseButton";
 
 interface DataTableModalProps {
   open: boolean;
@@ -13,12 +13,6 @@ interface DataTableModalProps {
   title: string;
   children?: ReactNode;
 }
-
-const CloseButton = styled(IconButton)(({ theme }) => ({
-  margin: "0 0 0 auto",
-  padding: theme.spacing(1),
-  color: theme.palette.grey[600],
-}));
 
 const ModalHeader = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),

@@ -33,13 +33,13 @@ export interface Submission {
 }
 
 export interface GroupedEvent {
-  eventType: Submission["eventType"];
   sessionId: Submission["sessionId"];
   eventId: Submission["eventId"];
   events: Attempt[];
 }
 
 export type Attempt = {
+  eventType: Submission["eventType"];
   createdAt: Submission["createdAt"];
   retry: Submission["retry"];
   response: Submission["response"];

@@ -10,7 +10,7 @@ import { useStore } from "../../lib/store";
 import EventsLogGrouped from "./components/EventsLogGrouped";
 import type { SubmissionsProps, SubmissionSummary } from "./types";
 
-const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
+const SubmissionsGrouped: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const [teamId] = useStore((state) => [state.teamId]);
 
   const { data, loading, error } = useQuery<{
@@ -71,4 +71,4 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   );
 };
 
-export default Submissions;
+export default SubmissionsGrouped;

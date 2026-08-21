@@ -1,19 +1,17 @@
 import { gql, useQuery } from "@apollo/client";
-import Button from "@mui/material/Button";
+import Close from "@mui/icons-material/CloseOutlined";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { CloseButton } from "ui/icons/CloseButton";
 
 import type { Submission } from "../types";
-import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
 import { SubmissionDetails } from "./SubmissionDetails";
 import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
-import { ViewSubmissionButton } from "./ViewSubmissionButton";
 
 // TODO: refactor into hooks / queries pattern
 const GET_SUBMISSION_EVENTS = gql`
@@ -40,6 +38,14 @@ interface SubmissionDetailModalProps {
   sessionId: string;
 }
 
+const getSubmittedAt = (events: Submission[]): string | undefined => {
+  const successfulSend = events.find(
+    (event) => event.eventType !== "Pay" && event.status === "Success",
+  );
+
+  return successfulSend?.createdAt ?? undefined;
+};
+
 const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   sessionId,
 }) => {
@@ -56,6 +62,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
 
   const events = data?.submissions || [];
   const latestEvent = events[0];
+  const submittedAt = getSubmittedAt(events);
 
   if (loading) return <DelayedLoadingIndicator />;
   if (error) throw error;
@@ -72,16 +79,29 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
         },
       }}
     >
+      <CloseButton
+        aria-label="close"
+        onClick={() => {
+          navigate({
+            to: "/app/$team/submissions",
+            params: {
+              team: teamSlug,
+            },
+          });
+        }}
+        size="large"
+      >
+        <Close />
+      </CloseButton>
+      <DialogTitle variant="h2">Submission details</DialogTitle>
       <DialogContent>
-        <Typography variant="h2" component="h1" gutterBottom>
-          Submission details
-        </Typography>
         <Grid container>
           <Grid size={6}>
             <SubmissionDetails
               sessionId={sessionId}
               latestEvent={latestEvent}
               teamSlug={teamSlug}
+              submittedAt={submittedAt}
             />
           </Grid>
 
@@ -89,20 +109,6 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
             <SubmissionEventsHistory events={events} />
           </Grid>
         </Grid>
-        <DialogActions>
-          <Button
-            onClick={() =>
-              navigate({
-                to: "/app/$team/submissions",
-                params: {
-                  team: teamSlug,
-                },
-              })
-            }
-          >
-            Back
-          </Button>
-        </DialogActions>
       </DialogContent>
     </Dialog>
   );
