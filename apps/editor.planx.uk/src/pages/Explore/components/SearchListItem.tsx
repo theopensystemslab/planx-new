@@ -27,6 +27,7 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
           gap: 0.25,
           justifyContent: "center",
           minHeight: "56px",
+          pt: 0.33,
         }}
       >
         {statusLabel && (
