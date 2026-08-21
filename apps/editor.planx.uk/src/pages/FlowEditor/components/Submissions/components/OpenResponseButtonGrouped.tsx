@@ -7,10 +7,11 @@ import { DataTableModal } from "ui/shared/DataTable/components/DataTableModal";
 import type { Attempt } from "../types";
 import { FormattedResponse } from "./FormattedResponse";
 
-type Props = { attempt: Attempt; sessionId: string };
+type Props = { attempt: Attempt; sessionId: string; disabled?: boolean };
 
 export const OpenResponseButtonGrouped = (props: Props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  if (props.disabled) return;
 
   const parseResponse = ({ eventType, status, response }: Attempt) => {
     let data;
