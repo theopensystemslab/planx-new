@@ -28,7 +28,7 @@ const meta = {
         name: "Apply for planning permission",
         summary: "This service submits an application for planning permission",
         team: { name: "Open Systems Lab" },
-        subscribedTeams: [{ id: "team-1" }],
+        subscription: [{ id: "team-1" }],
       },
       {
         id: "2",
@@ -49,7 +49,7 @@ const meta = {
         summary:
           "This service submits an application for a lawful development certificate",
         team: { name: "Open Systems Lab" },
-        subscribedTeams: [{ id: "team-1" }],
+        subscription: [{ id: "team-1" }],
       },
     ],
   },
@@ -74,7 +74,7 @@ export const NoneSubscribed: Story = {
   args: {
     templates: meta.args.templates?.map((template) => ({
       ...template,
-      subscribedTeams: [],
+      subscription: [],
     })),
   },
 };

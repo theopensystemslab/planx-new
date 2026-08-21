@@ -66,8 +66,7 @@ export function TemplatesWidget({
     >
       {templates.map((template, index) => {
         const isSubscribed =
-          canUserEditTeam(teamSlug) &&
-          Boolean(template.subscribedTeams?.length);
+          canUserEditTeam(teamSlug) && Boolean(template.subscription?.length);
 
         return (
           <React.Fragment key={template.id}>
@@ -102,7 +101,7 @@ const GET_ONLINE_SOURCE_TEMPLATES = gql`
         name
         id
       }
-      subscribedTeams: templated_flows(
+      subscription: templated_flows(
         where: { team_id: { _eq: $teamId } }
         limit: 1
       ) {
