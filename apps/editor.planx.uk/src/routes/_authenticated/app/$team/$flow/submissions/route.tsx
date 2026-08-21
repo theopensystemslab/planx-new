@@ -12,13 +12,15 @@ export const Route = createFileRoute(
 });
 
 function SubmissionsGroupedLayout() {
+  const { flow } = Route.useParams();
+
   const SubmissionsWrapper = hasFeatureFlag("GROUPED_SUBMISSIONS")
     ? SubmissionsGrouped
     : Submissions;
 
   return (
     <>
-      <SubmissionsWrapper />
+      <SubmissionsWrapper flowSlug={flow} />
       <Outlet />
     </>
   );
