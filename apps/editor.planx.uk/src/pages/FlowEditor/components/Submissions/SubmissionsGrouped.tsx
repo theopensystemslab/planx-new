@@ -44,7 +44,7 @@ const SubmissionsGrouped: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const filteredSubmissions = submissions.filter(
     (submission) => !flowSlug || slugify(submission.flowName) === flowSlug,
   );
-
+  console.log({ flowSlug });
   return (
     <FixedHeightDashboardContainer
       bgColor="background.paper"
