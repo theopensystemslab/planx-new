@@ -71,7 +71,7 @@ export const SearchListItemDetail: React.FC<SearchListItemDetailProps> = ({
           >
             {relatedItems.label}
           </Typography>
-          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+          <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
             {relatedItems.items.map((item) => (
               <Tooltip key={item.key} title={item.tooltip}>
                 <span>{item.icon}</span>

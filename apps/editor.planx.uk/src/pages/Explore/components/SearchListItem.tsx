@@ -19,7 +19,7 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
 }) => {
   const content = (
     <>
-      <Box sx={{ mt: 0.25 }}>{icon}</Box>
+      <Box>{icon}</Box>
       <Box
         sx={{
           display: "flex",
@@ -30,9 +30,7 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
         }}
       >
         {statusLabel && (
-          <Box
-            sx={{ display: "flex", alignItems: "center", gap: 0.33, mt: 0.5 }}
-          >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.33 }}>
             <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
             <Typography
               variant="body3"
@@ -46,7 +44,7 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
           {title}
         </Typography>
         {description && (
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          <Typography variant="body3" sx={{ color: "text.secondary" }}>
             {description}
           </Typography>
         )}
