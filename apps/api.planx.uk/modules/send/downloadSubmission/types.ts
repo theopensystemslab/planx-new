@@ -7,7 +7,8 @@ export const useAccessTokenAuthSchema = z.object({
     authorization: z
       .string({ message: "Authorization headers are required" })
       .startsWith("Bearer ", "Invalid token format")
-      .transform((val) => val.replace("Bearer ", "")),
+      .transform((val) => val.replace("Bearer ", ""))
+      .pipe(z.string().uuid("Invalid token format")),
   }),
 });
 

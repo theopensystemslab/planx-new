@@ -59,6 +59,19 @@ describe("downloading submission data with an access token", () => {
         );
     });
 
+    it("fails with a malformed (non-UUID) token", async () => {
+      await supertest(app)
+        .get("/download-submission")
+        .set({ authorization: "Bearer abc123-not-a-uuid" })
+        .expect(400)
+        .then((res) =>
+          expect(res.body.issues[0]).toHaveProperty(
+            "message",
+            "Invalid token format",
+          ),
+        );
+    });
+
     it("errors if matching token is not found", async () => {
       queryMock.mockQuery({
         name: "GetApplicationAccessToken",

@@ -21,7 +21,12 @@ export const useAccessTokenAuth: UseAccessTokenAuth = async (
 ) => {
   const { authorization: token } = res.locals.parsedReq.headers;
 
-  const record = await getTokenRecord(token);
+  let record: AccessToken | null;
+  try {
+    record = await getTokenRecord(token);
+  } catch {
+    return res.status(401).json({ error: "INVALID_ACCESS_TOKEN" });
+  }
 
   if (!record) {
     return res.status(404).json({ error: "INVALID_ACCESS_TOKEN" });
