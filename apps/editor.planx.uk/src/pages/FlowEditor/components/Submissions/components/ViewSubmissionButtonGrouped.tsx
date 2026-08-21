@@ -1,6 +1,7 @@
 import PreviewIcon from "@mui/icons-material/Preview";
 import Button from "@mui/material/Button";
 import { useNavigate } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import { addDays, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -23,6 +24,28 @@ export const ViewSubmissionButtonGrouped = (props: Props) => {
     : false;
 
   const navigate = useNavigate();
+  const params = useParams({ strict: false });
+
+  const handleClick = () => {
+    if (params.flow) {
+      navigate({
+        to: "/app/$team/$flow/view-submission/$sessionId",
+        params: {
+          team: teamSlug,
+          flow: params.flow,
+          sessionId: props.sessionId,
+        },
+      });
+    } else {
+      navigate({
+        to: "/app/$team/view-submission/$sessionId",
+        params: {
+          team: teamSlug,
+          sessionId: props.sessionId,
+        },
+      });
+    }
+  };
 
   if (!showViewButton) return;
 
@@ -30,12 +53,7 @@ export const ViewSubmissionButtonGrouped = (props: Props) => {
     <Button
       color="primary"
       variant="contained"
-      onClick={() =>
-        navigate({
-          to: `/app/$team/view-submission/$sessionId`,
-          params: { team: teamSlug, sessionId: props.sessionId },
-        })
-      }
+      onClick={handleClick}
       disabled={!props.submittedAt}
     >
       <PreviewIcon sx={{ mr: 1 }} />
