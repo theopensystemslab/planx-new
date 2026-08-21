@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Permission from "ui/editor/Permission";
 
 import type { Attempt, GroupedEvent, Submission } from "../types";
+import { canResubmit } from "../utils";
 import { OpenResponseButtonGrouped } from "./OpenResponseButtonGrouped";
 import { ResubmitButtonGrouped } from "./ResubmitButtonGrouped";
 import { StatusChip } from "./StatusChip";
@@ -143,16 +143,12 @@ const SubmissionEvent: React.FC<{
         <Typography sx={{ fontWeight: "bold" }}>{eventType}</Typography>
 
         <Permission.IsPlatformAdmin>
-          {isMostRecent &&
-            status !== "Success" &&
-            eventType !== "Pay" &&
-            eventType !== "Invited to pay" &&
-            eventType !== "Started session" && ( // TODO: refactor
-              <ResubmitButtonGrouped
-                sessionId={sessionId}
-                eventType={eventType}
-              />
-            )}
+          {canResubmit(isMostRecent, status, eventType) && (
+            <ResubmitButtonGrouped
+              sessionId={sessionId}
+              eventType={eventType}
+            />
+          )}
         </Permission.IsPlatformAdmin>
 
         {attempts.length === 1 ? (
