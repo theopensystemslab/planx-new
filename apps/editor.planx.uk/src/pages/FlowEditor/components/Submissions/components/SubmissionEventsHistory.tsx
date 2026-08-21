@@ -103,6 +103,8 @@ const SubmissionEvent: React.FC<{
   isMostRecent: boolean;
 }> = ({ groupedEvent: { sessionId, events: attempts }, isMostRecent }) => {
   const { eventType, createdAt, status } = attempts[0];
+  const hideResponse =
+    eventType === "Invited to pay" || eventType === "Started session";
 
   return (
     <Box
@@ -131,12 +133,16 @@ const SubmissionEvent: React.FC<{
         <Typography sx={{ fontWeight: "bold" }}>{eventType}</Typography>
 
         <Permission.IsPlatformAdmin>
-          {isMostRecent && status !== "Success" && eventType !== "Pay" && (
-            <ResubmitButtonGrouped
-              sessionId={sessionId}
-              eventType={eventType}
-            />
-          )}
+          {isMostRecent &&
+            status !== "Success" &&
+            eventType !== "Pay" &&
+            eventType !== "Invited to pay" &&
+            eventType !== "Started session" && ( // TODO: refactor
+              <ResubmitButtonGrouped
+                sessionId={sessionId}
+                eventType={eventType}
+              />
+            )}
         </Permission.IsPlatformAdmin>
 
         {attempts.length === 1 ? (
@@ -147,6 +153,7 @@ const SubmissionEvent: React.FC<{
                 <OpenResponseButtonGrouped
                   attempt={attempts[0]}
                   sessionId={sessionId}
+                  disabled={hideResponse}
                 />
               </Box>
             </Box>
@@ -182,6 +189,7 @@ const SubmissionAttempts: React.FC<{
               <OpenResponseButtonGrouped
                 attempt={attempt}
                 sessionId={sessionId}
+                disabled={hideResponse}
               />
             </Box>
           </Box>
