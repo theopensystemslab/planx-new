@@ -168,7 +168,7 @@ function EditorNavMenu() {
                     "platformAdmin",
                     "teamAdmin",
                     "teamEditor",
-                  ] as Role[],
+                  ] satisfies Role[],
                 },
               ]
             : []),
