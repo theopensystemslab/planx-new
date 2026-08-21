@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { CloseButton } from "ui/icons/CloseButton";
@@ -50,7 +50,27 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   sessionId,
 }) => {
   const navigate = useNavigate();
+  const params = useParams({ strict: false });
   const [teamSlug] = useStore((state) => [state.teamSlug]);
+
+  const handleClose = () => {
+    if (params.flow) {
+      navigate({
+        to: "/app/$team/$flow/submissions",
+        params: {
+          team: teamSlug,
+          flow: params.flow,
+        },
+      });
+    } else {
+      navigate({
+        to: "/app/$team/submissions",
+        params: {
+          team: teamSlug,
+        },
+      });
+    }
+  };
 
   const { data, loading, error } = useQuery<{ submissions: Submission[] }>(
     GET_SUBMISSION_EVENTS,
@@ -79,18 +99,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
         },
       }}
     >
-      <CloseButton
-        aria-label="close"
-        onClick={() => {
-          navigate({
-            to: "/app/$team/submissions",
-            params: {
-              team: teamSlug,
-            },
-          });
-        }}
-        size="large"
-      >
+      <CloseButton aria-label="close" onClick={handleClose} size="large">
         <Close />
       </CloseButton>
       <DialogTitle variant="h2">Submission details</DialogTitle>
