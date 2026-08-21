@@ -26,8 +26,8 @@ BEGIN
   VALUES ('A note', test_user_id, test_user_id)
   RETURNING id INTO content_id;
 
-  INSERT INTO flow_note_positions (note_id, flow_id, node_id, created_by)
-  VALUES (content_id, source_flow_id, 'a', test_user_id);
+  INSERT INTO flow_note_positions (note_id, flow_id, node_id, created_by, updated_by)
+  VALUES (content_id, source_flow_id, 'a', test_user_id, test_user_id);
 
   -- sanity check: a normal call succeeds and copies the flow, its operation, and its note
   copied := copy_flow(
@@ -41,8 +41,8 @@ BEGIN
   -- make a dangling note position on the source flow: a note_id that doesn't reference any flow_note_content row,
   -- violating the NOT NULL constraint, thus should fail and cause the whole transaction to rollback
   SET session_replication_role = replica;
-  INSERT INTO flow_note_positions (note_id, flow_id, node_id, created_by)
-  VALUES (gen_random_uuid(), source_flow_id, 'dangling', test_user_id);
+  INSERT INTO flow_note_positions (note_id, flow_id, node_id, created_by, updated_by)
+  VALUES (gen_random_uuid(), source_flow_id, 'dangling', test_user_id, test_user_id);
   SET session_replication_role = origin;
 
   BEGIN
