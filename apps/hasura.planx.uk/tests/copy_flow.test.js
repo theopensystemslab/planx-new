@@ -67,9 +67,9 @@ describe("copy_flow", () => {
         `
         mutation Insert($flowId: uuid!, $userId: Int!, $soloNoteId: uuid!, $cloneNoteId: uuid!) {
           insert_flow_note_positions(objects: [
-            { flow_id: $flowId, note_id: $soloNoteId, node_id: "soloNode", created_by: $userId }
-            { flow_id: $flowId, note_id: $cloneNoteId, placement: { parent: "_root", before: "beforeNode" }, created_by: $userId }
-            { flow_id: $flowId, note_id: $cloneNoteId, node_id: "cloneNode", created_by: $userId }
+            { flow_id: $flowId, note_id: $soloNoteId, node_id: "soloNode", created_by: $userId, updated_by: $userId }
+            { flow_id: $flowId, note_id: $cloneNoteId, placement: { parent: "_root", before: "beforeNode" }, created_by: $userId, updated_by: $userId }
+            { flow_id: $flowId, note_id: $cloneNoteId, node_id: "cloneNode", created_by: $userId, updated_by: $userId }
           ]) { affected_rows }
         }
         `,

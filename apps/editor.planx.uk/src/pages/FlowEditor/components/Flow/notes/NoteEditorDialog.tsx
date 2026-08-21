@@ -41,6 +41,7 @@ export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = (props) => {
   const { deleteFlowNote, loading: deleting } = useDeleteFlowNote();
 
   const isEditing = mode === "edit";
+  // TODO account for max last updated between `flow_note_content` and `flow_note_position`, currently exclusively content
   const lastEditMessage =
     props.mode === "edit"
       ? formatLastEditMessage(props.note.updatedAt, props.note.updatedByUser)

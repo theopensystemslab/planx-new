@@ -28,6 +28,7 @@ export const usePasteFlowNoteClone = () => {
           node_id: nodeId ?? null,
           placement: placement ?? null,
           created_by: userId,
+          updated_by: userId,
           note_id: noteContentId,
         },
       },

@@ -19,7 +19,11 @@ interface AttachedFlowNoteRow {
 const GET_ATTACHED_FLOW_NOTES_FOR_NODES = gql`
   query GetAttachedFlowNotesForNodes($flowId: uuid!, $nodeIds: [String!]!) {
     flow_note_positions(
-      where: { flow_id: { _eq: $flowId }, node_id: { _in: $nodeIds } }
+      where: {
+        flow_id: { _eq: $flowId }
+        node_id: { _in: $nodeIds }
+        deleted_at: { _is_null: true }
+      }
     ) {
       node_id
       note {
@@ -76,6 +80,7 @@ export const pasteAttachedFlowNotes = async (
             flow_id: flowId,
             node_id: newNodeId,
             created_by: userId,
+            updated_by: userId,
             note: {
               data: {
                 text,

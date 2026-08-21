@@ -60,7 +60,7 @@ export type FlowNote = AttachedNote | PositionedNote;
 const GET_FLOW_NOTES = gql`
   subscription GetFlowNotes($flowId: uuid!) {
     flowNotePositions: flow_note_positions(
-      where: { flow_id: { _eq: $flowId } }
+      where: { flow_id: { _eq: $flowId }, deleted_at: { _is_null: true } }
       order_by: { created_at: asc, id: asc }
     ) {
       positionId: id

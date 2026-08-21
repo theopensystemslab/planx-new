@@ -109,18 +109,21 @@ const createNotes = async ({
               note_id: $soloNoteId
               node_id: "soloNode"
               created_by: $userId
+              updated_by: $userId
             }
             {
               flow_id: $flowId
               note_id: $cloneNoteId
               placement: { parent: "_root", before: "beforeNode" }
               created_by: $userId
+              updated_by: $userId
             }
             {
               flow_id: $flowId
               note_id: $cloneNoteId
               node_id: "cloneNode"
               created_by: $userId
+              updated_by: $userId
             }
           ]
         ) {
@@ -218,7 +221,7 @@ export const getNotePositions = async (flowId: string) => {
     gql`
       query GetNotePositions($flowId: uuid!) {
         flowNotePositions: flow_note_positions(
-          where: { flow_id: { _eq: $flowId } }
+          where: { flow_id: { _eq: $flowId }, deleted_at: { _is_null: true } }
         ) {
           noteId: note_id
           nodeId: node_id

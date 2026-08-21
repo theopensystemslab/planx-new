@@ -11,19 +11,24 @@ interface FlowNotePositionRowForReposition {
   node_id: string | null;
   placement: NotePlacement | null;
   created_by: number;
+  updated_by: number;
 }
 
 const GET_FLOW_NOTE_POSITIONS_FOR_REPOSITION = gql`
   query GetFlowNotePositionsForReposition($flowId: uuid!) {
-    flow_note_positions(where: { flow_id: { _eq: $flowId } }) {
+    flow_note_positions(
+      where: { flow_id: { _eq: $flowId }, deleted_at: { _is_null: true } }
+    ) {
       id
       node_id
       placement
       created_by
+      updated_by
     }
   }
 `;
 
+// TODO update to soft delete
 const DELETE_FLOW_NOTE_POSITIONS = gql`
   mutation DeleteFlowNotePositions($ids: [uuid!]!) {
     delete_flow_note_positions(where: { id: { _in: $ids } }) {
@@ -32,6 +37,7 @@ const DELETE_FLOW_NOTE_POSITIONS = gql`
   }
 `;
 
+// TODO update to set `updated_by`
 const REANCHOR_FLOW_NOTE_POSITION = gql`
   mutation ReanchorFlowNotePosition($id: uuid!, $placement: jsonb!) {
     update_flow_note_positions_by_pk(
