@@ -85,7 +85,19 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
         borderColor: "border.main",
       }}
     >
-      <Box sx={{ padding: 1, margin: 1 }}>
+      <Box
+        sx={{
+          padding: 1,
+          margin: 1,
+          "& > *": {
+            borderBottom: 1,
+            borderColor: "border.main",
+          },
+          "& > *:last-child": {
+            borderBottom: 0,
+          },
+        }}
+      >
         {groupedEvents.map((groupedEvent) => (
           <SubmissionEvent
             key={groupedEvent.eventId}
@@ -113,8 +125,6 @@ const SubmissionEvent: React.FC<{
         width: "100%",
         alignItems: "flex-start",
         mb: 1,
-        borderBottom: 1,
-        borderColor: "border.main",
       }}
     >
       <Box>
@@ -189,7 +199,6 @@ const SubmissionAttempts: React.FC<{
               <OpenResponseButtonGrouped
                 attempt={attempt}
                 sessionId={sessionId}
-                disabled={hideResponse}
               />
             </Box>
           </Box>
