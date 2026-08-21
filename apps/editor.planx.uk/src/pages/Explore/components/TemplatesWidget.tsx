@@ -100,6 +100,7 @@ const GET_ONLINE_SOURCE_TEMPLATES = gql`
       summary
       team {
         name
+        id
       }
       subscribedTeams: templated_flows(
         where: { team_id: { _eq: $teamId } }
