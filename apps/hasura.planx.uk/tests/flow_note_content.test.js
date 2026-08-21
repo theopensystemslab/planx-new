@@ -35,6 +35,7 @@ describe("flow note content", () => {
       expect(i.mutations).toContain("update_flow_note_content_by_pk");
     });
 
+    // TODO remove permissions once soft delete pattern implemented
     test("can delete flow_note_content", () => {
       expect(i.mutations).toContain("delete_flow_note_content");
       expect(i.mutations).toContain("delete_flow_note_content_by_pk");
@@ -60,6 +61,7 @@ describe("flow note content", () => {
       expect(i.mutations).toContain("update_flow_note_content_by_pk");
     });
 
+    // TODO remove permissions once soft delete pattern implemented
     test("can delete flow_note_content", () => {
       expect(i.mutations).toContain("delete_flow_note_content");
       expect(i.mutations).toContain("delete_flow_note_content_by_pk");
@@ -85,6 +87,7 @@ describe("flow note content", () => {
       expect(i.mutations).toContain("update_flow_note_content_by_pk");
     });
 
+    // TODO remove permissions once soft delete pattern implemented
     test("can delete flow_note_content", () => {
       expect(i.mutations).toContain("delete_flow_note_content");
       expect(i.mutations).toContain("delete_flow_note_content_by_pk");
@@ -110,6 +113,7 @@ describe("flow note content", () => {
       expect(i.mutations).toContain("update_flow_note_content_by_pk");
     });
 
+    // TODO remove permissions once soft delete pattern implemented
     test("can delete flow_note_content", () => {
       expect(i.mutations).toContain("delete_flow_note_content");
       expect(i.mutations).toContain("delete_flow_note_content_by_pk");

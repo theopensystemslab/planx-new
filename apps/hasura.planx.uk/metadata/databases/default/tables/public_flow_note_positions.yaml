@@ -29,6 +29,15 @@ object_relationships:
         remote_table:
           name: flow_note_content
           schema: public
+  - name: updatedByUser
+    using:
+      manual_configuration:
+        column_mapping:
+          updated_by: id
+        insertion_order: null
+        remote_table:
+          name: users
+          schema: public
 insert_permissions:
   - role: platformAdmin
     permission:
@@ -65,27 +74,31 @@ select_permissions:
   - role: platformAdmin
     permission:
       columns:
-        - id
-        - note_id
-        - flow_id
-        - node_id
-        - placement
-        - created_by
         - created_at
+        - created_by
+        - deleted_at
+        - flow_id
+        - id
+        - node_id
+        - note_id
+        - placement
         - updated_at
+        - updated_by
       filter: {}
     comment: ""
   - role: teamEditor
     permission:
       columns:
-        - id
-        - note_id
-        - flow_id
-        - node_id
-        - placement
-        - created_by
         - created_at
+        - created_by
+        - deleted_at
+        - flow_id
+        - id
+        - node_id
+        - note_id
+        - placement
         - updated_at
+        - updated_by
       filter:
         flow:
           team:

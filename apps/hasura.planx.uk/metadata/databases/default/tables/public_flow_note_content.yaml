@@ -55,6 +55,7 @@ select_permissions:
       columns:
         - created_at
         - created_by
+        - deleted_at
         - id
         - text
         - updated_at
@@ -66,6 +67,7 @@ select_permissions:
       columns:
         - created_at
         - created_by
+        - deleted_at
         - id
         - text
         - updated_at
