@@ -38,7 +38,7 @@ components:
         fileUrl:
           type: string
     UnsupportedFileType:
-      description: The uploaded file has an unsupported MIME type or extension
+      description: The uploaded file has an unsupported extension
       content:
         application/json:
           schema:
@@ -46,7 +46,17 @@ components:
             properties:
               error:
                 type: string
-                example: "Unsupported file type. Mimetype: text/plain. Extension: .txt"
+                example: "Unsupported file type. Extension: .txt"
+    MismatchedFileContent:
+      description: The content of the uploaded file does not appear to match the file type
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "File content does not match given extension: .txt"
     FileTooLarge:
       description: The uploaded file exceeds the 30MB size limit
       content:

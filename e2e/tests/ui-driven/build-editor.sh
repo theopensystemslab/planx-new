@@ -16,5 +16,6 @@ source ../../../.env
 
 cd ../../../apps/editor.planx.uk
 pnpm install --frozen-lockfile
-VITE_APP_ENV=test pnpm build
+# the --dir flag disrupts pnpm's implicit binary passthrough, so we need an explicit 'exec'
+VITE_APP_ENV=test pnpm --dir ../.. exec turbo run build --filter=editor.planx.uk...
 echo "$EDITOR_HASH" > build/.editor-hash

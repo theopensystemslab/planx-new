@@ -16,6 +16,7 @@ import {
   publicUploadController,
   uploadFileSchema,
 } from "./controller.js";
+import { useFileContentValidation } from "./middleware/useFileContentValidation.js";
 import { useFileUpload } from "./middleware/useFileUpload.js";
 
 const router = Router();
@@ -25,6 +26,7 @@ router.post(
   useFileUpload,
   useTeamEditorAuth,
   validate(uploadFileSchema),
+  useFileContentValidation,
   publicUploadController,
 );
 
@@ -32,6 +34,7 @@ router.post(
   "/file/private/upload",
   useFileUpload,
   validate(uploadFileSchema),
+  useFileContentValidation,
   privateUploadController,
 );
 

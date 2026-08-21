@@ -54,7 +54,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
           restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
-      - run: pnpm turbo run build --filter=editor.planx.uk
+      - run: pnpm turbo run build --filter=editor.planx.uk...
         env:
           VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}

@@ -1,6 +1,9 @@
 import type * as s3Client from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import fs from "fs";
+import path from "path";
 import supertest from "supertest";
+import { fileURLToPath } from "url";
 import type { Mocked } from "vitest";
 
 import app from "../../server.js";
@@ -35,6 +38,11 @@ vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
   };
 });
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// real PNG bytes needed since file-type sniffs actual image/zip structure, not just a magic number
+const PNG_FIXTURE = fs.readFileSync(
+  path.join(__dirname, "fixtures", "planx-logo.png"),
+);
 const PRIVATE_ENDPOINT = "/file/private/upload";
 const PUBLIC_ENDPOINT = "/file/public/upload";
 
@@ -78,11 +86,11 @@ describe("File upload", () => {
   describe.each([PRIVATE_ENDPOINT, PUBLIC_ENDPOINT])(
     "File type validation for %s",
     (ENDPOINT) => {
-      it("should not upload a file with an invalid extension", async () => {
+      it("should not upload a file with an unsupported extension", async () => {
         await supertest(app)
           .post(ENDPOINT)
-          .field("filename", "")
-          .attach("file", Buffer.from("some data"), "some_file.xlxs")
+          .field("filename", "some_file.exe")
+          .attach("file", Buffer.from("some data"), "some_file.exe")
           .expect(415)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
@@ -90,42 +98,12 @@ describe("File upload", () => {
           });
       });
 
-      it("should not upload a file with an invalid MIME type", async () => {
+      it("should reject an unsupported extension even with a valid-looking MIME type", async () => {
         await supertest(app)
           .post(ENDPOINT)
           .field("filename", "")
           .attach("file", Buffer.from("some data"), {
-            filename: "invalid_file.txt", // Invalid file type
-            contentType: "text/plain", // Invalid MIME type
-          })
-          .expect(415)
-          .then((res) => {
-            expect(mockPutObject).not.toHaveBeenCalled();
-            expect(res.body.error).toMatch(/Unsupported file type/);
-          });
-      });
-
-      it("should not upload a file a valid file type, but invalid MIME type", async () => {
-        await supertest(app)
-          .post(ENDPOINT)
-          .field("filename", "")
-          .attach("file", Buffer.from("some data"), {
-            filename: "invalid_file.png", // Valid file type
-            contentType: "text/plain", // Invalid MIME type
-          })
-          .expect(415)
-          .then((res) => {
-            expect(mockPutObject).not.toHaveBeenCalled();
-            expect(res.body.error).toMatch(/Unsupported file type/);
-          });
-      });
-
-      it("should not upload a file a valid MIME type, but invalid file type", async () => {
-        await supertest(app)
-          .post(ENDPOINT)
-          .field("filename", "")
-          .attach("file", Buffer.from("some data"), {
-            filename: "invalid_file.txt", // Invalid file type
+            filename: "malicious_file.exe",
             contentType: "application/pdf", // Valid MIME type
           })
           .expect(415)
@@ -133,6 +111,39 @@ describe("File upload", () => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/Unsupported file type/);
           });
+      });
+    },
+  );
+
+  describe.each([PRIVATE_ENDPOINT, PUBLIC_ENDPOINT])(
+    "File content validation for %s",
+    (ENDPOINT) => {
+      const auth = authHeader({ role: "teamEditor" });
+      const PDF_HEADER = Buffer.from("%PDF-1.4\n%some minimal content");
+
+      it("should reject content whose magic number doesn't match the claimed extension", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .set(auth)
+          .field("filename", "some_file.pdf")
+          .attach("file", PNG_FIXTURE, "some_file.pdf") // real PNG bytes, claimed as PDF
+          .expect(415)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(
+              /File content does not match given extension/,
+            );
+          });
+      });
+
+      it("should allow content whose magic number matches the claimed extension", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .set(auth)
+          .field("filename", "some_file.pdf")
+          .attach("file", PDF_HEADER, "some_file.pdf")
+          .expect(200);
+        expect(mockPutObject).toHaveBeenCalledTimes(1);
       });
     },
   );
@@ -162,18 +173,19 @@ describe("File upload", () => {
         });
     });
 
-    it("should not upload a file with an invalid extension in the filename parameter (no attachment)", async () => {
+    it("should not upload when the filename parameter has an unsupported extension", async () => {
       await supertest(app)
         .post(PRIVATE_ENDPOINT)
         .field("filename", "my_file.exe") // filename does not match multer.file.filename
         .attach("file", Buffer.from("some data"), {
           filename: "my_file.jpg",
-          contentType: "image/jpg",
+          contentType: "image/jpeg",
         })
-        .expect(415)
+        .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toMatch(/Unsupported file type/);
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
         });
     });
 
@@ -232,6 +244,41 @@ describe("File upload", () => {
             fileUrl:
               "https://api.editor.planx.dev/file/private/nanoid/modified%20key",
           });
+        });
+      expect(mockPutObject).toHaveBeenCalledTimes(1);
+      expect(getSignedUrl).toHaveBeenCalledTimes(1);
+    });
+
+    it("should upload a file with a supported extension despite an unexpected MIME type", async () => {
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "some_file.png")
+        .attach("file", Buffer.from("some data"), {
+          filename: "some_file.png", // Supported extension will be privileged over MIME
+          contentType: "application/octet-stream", // Unreliable MIME type will be ignored
+        })
+        .expect(200);
+      expect(mockPutObject).toHaveBeenCalledTimes(1);
+      expect(getSignedUrl).toHaveBeenCalledTimes(1);
+    });
+
+    // TODO: re-evaluate this test when re-enabling commented out file types
+    // eslint-disable-next-line vitest/no-disabled-tests
+    it.skip.each([
+      "drawing.plt",
+      "model.gml",
+      "report.docx",
+      "schedule.xlsx",
+      "notes.txt",
+      "walkthrough.mp4",
+    ])("should upload newly supported format %s", async (filename) => {
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", filename)
+        .attach("file", Buffer.from("some data"), filename)
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toHaveProperty("fileUrl");
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
       expect(getSignedUrl).toHaveBeenCalledTimes(1);
@@ -311,19 +358,20 @@ describe("File upload", () => {
         });
     });
 
-    it("should not upload a file with an invalid extension in the filename parameter (no attachment)", async () => {
+    it("should not upload when the filename parameter has an unsupported extension", async () => {
       await supertest(app)
         .post(PUBLIC_ENDPOINT)
         .set(auth)
         .field("filename", "my_file.exe") // filename does not match multer.file.filename
         .attach("file", Buffer.from("some data"), {
           filename: "my_file.jpg",
-          contentType: "image/jpg",
+          contentType: "image/jpeg",
         })
-        .expect(415)
+        .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toMatch(/Unsupported file type/);
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
         });
     });
 

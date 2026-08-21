@@ -27,7 +27,7 @@ export const uploadFileSchema = z.object({
       .trim()
       .min(1)
       .refine(validateExtension, (input) => ({
-        message: `Unsupported file type: ${path.extname(input).toLowerCase()}`,
+        message: `Unsupported file type for given filename: ${path.extname(input).toLowerCase()}`,
       }))
       .transform((filename) => encodeURIComponent(filename)),
   }),

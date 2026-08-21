@@ -6,6 +6,10 @@ import Typography from "@mui/material/Typography";
 import type { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { useOptionalListContext } from "@planx/components/List/Public/Context";
 import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload";
+import {
+  ALLOWED_EXTENSIONS_BY_MIME_TYPE,
+  MAX_UPLOAD_SIZE_BYTES,
+} from "@planx/file-upload";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { nanoid } from "nanoid";
 import React, { useCallback } from "react";
@@ -87,8 +91,6 @@ export function Dropzone<T extends FileUploadSlot>({
   createSlot,
   maxFiles = 0,
 }: Props<T>) {
-  const MAX_UPLOAD_SIZE_MB = 30;
-
   const isWithinListCard = Boolean(useOptionalListContext());
 
   const handleFileUpload = useCallback(
@@ -162,13 +164,8 @@ export function Dropzone<T extends FileUploadSlot>({
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: {
-      "image/jpeg": [".jpg", ".jpeg"],
-      "image/png": [".png"],
-      "application/pdf": [".pdf"],
-      "image/svg+xml": [".svg"],
-    },
-    maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
+    accept: ALLOWED_EXTENSIONS_BY_MIME_TYPE,
+    maxSize: MAX_UPLOAD_SIZE_BYTES,
     multiple: maxFiles !== 1,
     disabled: Boolean(maxFiles && slots.length >= maxFiles),
     onDrop,
@@ -220,14 +217,6 @@ export function Dropzone<T extends FileUploadSlot>({
               to upload
             </>
           )}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{
-            color: "text.secondary",
-          }}
-        >
-          pdf, jpg, png
         </Typography>
         <Typography
           variant="body2"
