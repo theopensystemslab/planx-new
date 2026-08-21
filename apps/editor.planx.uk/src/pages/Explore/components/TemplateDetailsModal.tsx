@@ -24,11 +24,13 @@ import type { Template } from "./types";
 interface TemplateDetails {
   team: { name: string };
   operations: {
+    id: number;
     createdAt: string;
     actor?: { firstName: string; lastName: string };
   }[];
-  publishedFlows: { hasSendComponent: boolean }[];
+  publishedFlows: { id: number; hasSendComponent: boolean }[];
   usedByTeams: {
+    id: string;
     team: {
       id: number;
       name: string;
@@ -48,6 +50,7 @@ const GET_TEMPLATE_DETAILS = gql`
         name
       }
       operations(limit: 1, order_by: { created_at: desc }) {
+        id
         createdAt: created_at
         actor {
           firstName: first_name
@@ -58,6 +61,7 @@ const GET_TEMPLATE_DETAILS = gql`
         order_by: { created_at: desc }
         limit: 1
       ) {
+        id
         hasSendComponent: has_send_component
       }
       usedByTeams: templated_flows(
@@ -65,6 +69,7 @@ const GET_TEMPLATE_DETAILS = gql`
         order_by: [{ team_id: asc }, { created_at: desc }]
         where: { team: { slug: { _nin: $systemTeams } } }
       ) {
+        id
         team {
           id
           name
