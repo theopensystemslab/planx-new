@@ -39,14 +39,14 @@ export interface GroupedEvent {
 }
 
 export type Attempt = {
-  eventType: Submission["eventType"] | LifecycleEvent;
+  eventType: Submission["eventType"] | SessionEvent;
   createdAt: Submission["createdAt"];
   retry: Submission["retry"];
   response: Submission["response"];
   status: Submission["status"];
 };
 
-type LifecycleEvent = "Invited to pay" | "Started session";
+export type SessionEvent = "Invited to pay" | "Started session";
 
 export interface SubmissionSummary {
   id: string;
