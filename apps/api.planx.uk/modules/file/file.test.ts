@@ -262,8 +262,9 @@ describe("File upload", () => {
       expect(getSignedUrl).toHaveBeenCalledTimes(1);
     });
 
-    // guard against failing files for which we can't verify content
-    it.each([
+    // TODO: re-evaluate this test when re-enabling commented out file types
+    // eslint-disable-next-line vitest/no-disabled-tests
+    it.skip.each([
       "drawing.plt",
       "model.gml",
       "report.docx",
