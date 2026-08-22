@@ -9,8 +9,8 @@ import type { BadgeProps, BadgeSize } from "./types";
 import { BadgeVariant } from "./types";
 
 const DIMENSIONS: Record<BadgeSize, { box: number; borderRadius: number }> = {
-  default: { box: 54, borderRadius: 6 },
-  compact: { box: 46, borderRadius: 4 },
+  default: { box: 56, borderRadius: 6 },
+  compact: { box: 50, borderRadius: 5 },
 };
 
 const Root = styled(Box, {

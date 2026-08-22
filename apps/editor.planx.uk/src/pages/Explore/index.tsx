@@ -2,11 +2,11 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { linkOptions } from "@tanstack/react-router";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import NumbersWidget from "./components/NumbersWidget";
+import TemplatesWidget from "./components/TemplatesWidget";
 
 export default function Explore() {
   const team = useStore((state) => state.getTeam());
@@ -41,16 +41,8 @@ export default function Explore() {
           <DashboardWidget title="Plan✕ in numbers" subtitle="last 30 days">
             <NumbersWidget />
           </DashboardWidget>
-          <DashboardWidget
-            title="Featured templates"
-            link={linkOptions({
-              // TODO: Update to point to filtered search view for templates
-              to: "/app/$team/flows",
-              params: { team: team.slug },
-              label: "view all templates",
-            })}
-          >
-            <i>templates content</i>
+          <DashboardWidget title="Templates">
+            <TemplatesWidget />
           </DashboardWidget>
         </Box>
       </Container>
