@@ -1,26 +1,25 @@
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import CheckCircleIcon from "ui/icons/CheckCircle";
 
+import type { SearchResult } from "./SearchResult";
+
 interface SearchListItemProps {
-  icon: React.ReactNode;
-  title: string;
-  description?: string;
-  statusLabel?: string;
+  result: SearchResult;
+  onClick?: () => void;
 }
 
 export const SearchListItem: React.FC<SearchListItemProps> = ({
-  icon,
-  title,
-  description,
-  statusLabel,
+  result: { icon, title, description, statusLabel },
+  onClick,
 }) => {
-  return (
-    <ListItem alignItems="flex-start" sx={{ px: 2, py: 1.5, gap: 1.5 }}>
-      <Box sx={{ mt: 0.25 }}>{icon}</Box>
+  const content = (
+    <>
+      <Box>{icon}</Box>
       <Box
         sx={{
           display: "flex",
@@ -28,12 +27,11 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
           gap: 0.25,
           justifyContent: "center",
           minHeight: "56px",
+          pt: 0.33,
         }}
       >
         {statusLabel && (
-          <Box
-            sx={{ display: "flex", alignItems: "center", gap: 0.33, mt: 0.5 }}
-          >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.33 }}>
             <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
             <Typography
               variant="body3"
@@ -47,11 +45,29 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
           {title}
         </Typography>
         {description && (
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          <Typography variant="body3" sx={{ color: "text.secondary" }}>
             {description}
           </Typography>
         )}
       </Box>
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <ListItemButton
+        onClick={onClick}
+        alignItems="flex-start"
+        sx={{ px: 2, py: 1.5, gap: 1.5 }}
+      >
+        {content}
+      </ListItemButton>
+    );
+  }
+
+  return (
+    <ListItem alignItems="flex-start" sx={{ px: 2, py: 1.5, gap: 1.5 }}>
+      {content}
     </ListItem>
   );
 };
