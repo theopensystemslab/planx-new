@@ -109,6 +109,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
           },
         },
       }}
+      onClose={handleClose}
     >
       <CloseButton aria-label="close" onClick={handleClose} size="large">
         <Close />
