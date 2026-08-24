@@ -9,7 +9,7 @@ import type { TaskComponentMap } from "../types";
 import InitialUserInput from "./InitialUserInput";
 import ModifyUserInput from "./ModifyUserInput";
 import ProjectDescription from "./Tasks/ProjectDescription";
-import type { FormValues, Props } from "./types";
+import type { FormValues, Props, Step } from "./types";
 import { getValidationSchema, makeBreadcrumb } from "./utils";
 
 const taskComponents: TaskComponentMap = {
@@ -18,9 +18,7 @@ const taskComponents: TaskComponentMap = {
 
 const EnhancedTextInputComponent = (props: Props) => {
   const previous = getPreviouslySubmittedData(props);
-  const [step, setStep] = useState<"input" | "selection" | "modification">(
-    "input",
-  );
+  const [step, setStep] = useState<Step>("input");
   const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
   const initialValues: FormValues = previous
@@ -33,7 +31,6 @@ const EnhancedTextInputComponent = (props: Props) => {
           props.previouslySubmittedData?.data?._enhancements[props.fn].enhanced,
         error: null,
         selectedOption: null,
-        customDescription: "",
       }
     : {
         userInput: "",
@@ -41,7 +38,6 @@ const EnhancedTextInputComponent = (props: Props) => {
         enhanced: null,
         error: null,
         selectedOption: null,
-        customDescription: "",
       };
 
   const nextStep = (values: FormValues) => {
@@ -53,10 +49,7 @@ const EnhancedTextInputComponent = (props: Props) => {
 
     if (step === "input") return setStep("selection");
 
-    if (step === "selection") {
-      if (values.selectedOption !== "new") return setStep("modification");
-      return props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
-    }
+    if (step === "selection") return setStep("modification");
 
     if (step === "modification") {
       props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
@@ -66,7 +59,7 @@ const EnhancedTextInputComponent = (props: Props) => {
   const TaskComponent = taskComponents[props.task];
   if (!TaskComponent) return null;
 
-  const validationSchema = getValidationSchema(props);
+  const validationSchema = getValidationSchema(props, step);
 
   return (
     <Formik<FormValues>

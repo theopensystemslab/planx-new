@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 import { HelpButton } from "@planx/components/shared/Preview/CardHeader/styled";
 import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
 import MoreInfoSection from "@planx/components/shared/Preview/MoreInfoSection";
-import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useQuery } from "@tanstack/react-query";
 import { useFormikContext } from "formik";
 import { enhanceProjectDescription } from "lib/api/ai/requests";
@@ -15,11 +14,7 @@ import type { APIError } from "lib/api/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { type ComponentProps, useEffect, useRef, useState } from "react";
 import { ApplicationPath } from "types";
-import InputLabel from "ui/public/InputLabel";
-import { CharacterCounter } from "ui/shared/CharacterCounter";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
 import ProgressiveLoading from "ui/shared/ProgressiveLoading";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
@@ -32,7 +27,6 @@ import {
   QuoteDescription,
   QuotedText,
   RecommendedTag,
-  RevealedContent,
   StyledFormLabel,
 } from "./styles";
 
@@ -154,7 +148,6 @@ const ProjectDescription: React.FC<Props> = (props) => {
         enhanced: data.enhanced,
         error: null,
         selectedOption: null,
-        customDescription: "",
       });
     }
   }, [isSuccess, data, setValues]);
@@ -168,7 +161,6 @@ const ProjectDescription: React.FC<Props> = (props) => {
         error: error.data.error,
         userInput: initialValueRef.current,
         selectedOption: null,
-        customDescription: "",
       });
     }
   }, [error, setValues]);
@@ -186,17 +178,10 @@ const ProjectDescription: React.FC<Props> = (props) => {
           setFieldValue("userInput", data.original);
           break;
         case "new":
-          setFieldValue("userInput", values.customDescription);
+          setFieldValue("userInput", "");
           break;
       }
     }
-  };
-
-  const handleCustomDescriptionChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setFieldValue("customDescription", event.target.value);
-    setFieldValue("userInput", event.target.value);
   };
 
   const showRadioError = !values.selectedOption && Boolean(errors.userInput);
@@ -307,33 +292,6 @@ const ProjectDescription: React.FC<Props> = (props) => {
               />
             </RadioGroup>
           </ErrorWrapper>
-
-          {values.selectedOption === "new" && (
-            <RevealedContent>
-              <InputRow>
-                <InputLabel
-                  label="Enter your project description. This will not be checked for suggested improvements."
-                  htmlFor={props.id}
-                >
-                  <Input
-                    type="text"
-                    multiline
-                    rows={5}
-                    name="customDescription"
-                    value={values.customDescription}
-                    bordered
-                    onChange={handleCustomDescriptionChange}
-                    id={props.id}
-                  />
-                  <CharacterCounter
-                    limit={TEXT_LIMITS[TextInputType.Long]}
-                    count={values.customDescription.length}
-                    error={false}
-                  />
-                </InputLabel>
-              </InputRow>
-            </RevealedContent>
-          )}
         </Box>
       )}
 

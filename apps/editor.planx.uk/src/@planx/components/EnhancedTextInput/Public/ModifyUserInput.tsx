@@ -16,6 +16,7 @@ import type { EnhancedTextInput } from "../types";
 import type { FormValues } from "./types";
 
 const HEADING_ID = "confirm-project-description-heading";
+const NOT_CHECKED_HINT_ID = "confirm-project-description-not-checked-hint";
 
 const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
   const { values, errors, setFieldValue } = useFormikContext<FormValues>();
@@ -31,8 +32,16 @@ const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
       <Typography variant="h2" component="h1" id={HEADING_ID} sx={{ mb: 1 }}>
         Confirm your project description
       </Typography>
-      <Typography variant="subtitle1" component="p" sx={{ mb: 2 }}>
+      <Typography variant="subtitle1" component="p" sx={{ mb: 1 }}>
         Edit the description below, or continue to submit it as shown.
+      </Typography>
+      <Typography
+        variant="subtitle1"
+        component="p"
+        id={NOT_CHECKED_HINT_ID}
+        sx={{ mb: 2 }}
+      >
+        This will not be checked for suggested improvements.
       </Typography>
       <InputRow>
         <Box sx={{ width: "100%" }}>
@@ -50,6 +59,7 @@ const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
               "aria-labelledby": HEADING_ID,
               "aria-describedby": [
                 props.description ? DESCRIPTION_TEXT : "",
+                NOT_CHECKED_HINT_ID,
                 "character-hint",
                 showError ? `${ERROR_MESSAGE}-${props.id}` : "",
               ]

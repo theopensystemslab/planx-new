@@ -4,10 +4,11 @@ import type { EnhancedTextInput, TaskAction } from "../types";
 
 export type Props = PublicProps<EnhancedTextInput>;
 
+export type Step = "input" | "selection" | "modification";
+
 interface FormValuesBase {
   userInput: string;
   selectedOption: TaskAction | null;
-  customDescription: string;
 }
 
 interface FormValuesIdle extends FormValuesBase {
