@@ -4,12 +4,14 @@ import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 
 import { Badge } from "./Badge/Badge";
 import { BadgeVariant } from "./Badge/types";
 import { SearchListItem } from "./SearchListItem";
+import type { SearchResult } from "./SearchResult";
+import { TemplateDetailsModal } from "./TemplateDetailsModal";
 import type { Template } from "./types";
 
 interface TemplatesWidgetProps {
@@ -25,6 +27,9 @@ export function TemplatesWidget({
     state.teamSlug,
     state.canUserEditTeam,
   ]);
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
+    null,
+  );
 
   if (loading) {
     return (
@@ -55,32 +60,46 @@ export function TemplatesWidget({
   }
 
   return (
-    <List
-      disablePadding
-      sx={{
-        overflowY: "auto",
-        flex: 1,
-        borderTop: "1px solid",
-        borderColor: "divider",
-      }}
-    >
-      {templates.map((template, index) => {
-        const isSubscribed =
-          canUserEditTeam(teamSlug) && Boolean(template.subscription?.length);
+    <>
+      <List
+        disablePadding
+        sx={{
+          overflowY: "auto",
+          flex: 1,
+          borderTop: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        {templates.map((template, index) => {
+          const isSubscribed =
+            canUserEditTeam(teamSlug) && Boolean(template.subscription?.length);
 
-        return (
-          <React.Fragment key={template.id}>
-            {index > 0 && <Divider sx={{ borderColor: "border.main" }} />}
-            <SearchListItem
-              icon={<Badge variant={BadgeVariant.SourceTemplate} />}
-              title={template.name}
-              description={template.summary}
-              statusLabel={isSubscribed ? "Subscribed" : undefined}
-            />
-          </React.Fragment>
-        );
-      })}
-    </List>
+          const result: SearchResult = {
+            icon: <Badge variant={BadgeVariant.SourceTemplate} />,
+            title: template.name,
+            description: template.summary,
+            statusLabel: isSubscribed ? "Subscribed" : undefined,
+          };
+
+          return (
+            <React.Fragment key={template.id}>
+              {index > 0 && <Divider sx={{ borderColor: "border.main" }} />}
+              <SearchListItem
+                result={result}
+                onClick={() => setSelectedTemplate(template)}
+              />
+            </React.Fragment>
+          );
+        })}
+      </List>
+      {selectedTemplate && (
+        <TemplateDetailsModal
+          template={selectedTemplate}
+          open={Boolean(selectedTemplate)}
+          onClose={() => setSelectedTemplate(null)}
+        />
+      )}
+    </>
   );
 }
 
