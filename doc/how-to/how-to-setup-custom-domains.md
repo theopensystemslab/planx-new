@@ -104,7 +104,7 @@ This adds the domain to the mining cert as an SAN; ACM generates the CNAME the c
 Read the validation record:
 
 ```sh
-pulumi stack output pendingCouncilDnsRecords --stack production --json
+pulumi stack output pendingCouncilDnsRecords --stack production --json | grep -i -C 2 "{COUNCIL}"
 ```
 
 Get the shared CDN domain for the routing record:
@@ -196,7 +196,7 @@ A legacy council is already on the mining cert (`legacy-with-validation`), so th
 
 ```sh
 cd infrastructure/certificates
-pulumi stack output pendingCouncilDnsRecords --stack production --json     # validation record
+pulumi stack output pendingCouncilDnsRecords --stack production --json | grep -i -C 2 "{COUNCIL}"    # validation record
 
 cd ../application
 pulumi stack output customDomainsCdnDomainName --stack production          # routing target, e.g. d1234abcd.cloudfront.net
