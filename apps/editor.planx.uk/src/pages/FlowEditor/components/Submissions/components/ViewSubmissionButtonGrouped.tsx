@@ -29,7 +29,7 @@ export const ViewSubmissionButtonGrouped = (props: Props) => {
   const handleClick = () => {
     if (params.flow) {
       navigate({
-        to: "/app/$team/$flow/view-submission/$sessionId",
+        to: "/app/$team/$flow/submissions/$sessionId/detail",
         params: {
           team: teamSlug,
           flow: params.flow,
@@ -38,7 +38,7 @@ export const ViewSubmissionButtonGrouped = (props: Props) => {
       });
     } else {
       navigate({
-        to: "/app/$team/view-submission/$sessionId",
+        to: "/app/$team/submissions/$sessionId/detail",
         params: {
           team: teamSlug,
           sessionId: props.sessionId,

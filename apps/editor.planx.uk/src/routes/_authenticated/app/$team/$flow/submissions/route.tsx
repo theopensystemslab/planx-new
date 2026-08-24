@@ -1,5 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { createFileRoute, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { hasFeatureFlag } from "lib/featureFlags";
 import Submissions from "pages/FlowEditor/components/Submissions/Submissions";
 import SubmissionsGrouped from "pages/FlowEditor/components/Submissions/SubmissionsGrouped";
@@ -7,12 +6,17 @@ import SubmissionsGrouped from "pages/FlowEditor/components/Submissions/Submissi
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/submissions",
 )({
-  pendingComponent: DelayedLoadingIndicator,
-  component: SubmissionsGroupedLayout,
+  pendingMs: Infinity,
+  component: SubmissionsLayout,
 });
 
-function SubmissionsGroupedLayout() {
+function SubmissionsLayout() {
   const { flow } = Route.useParams();
+  const matchRoute = useMatchRoute();
+  const isDetailRoute = matchRoute({
+    to: "/app/$team/$flow/submissions/$sessionId/detail",
+    fuzzy: true,
+  });
 
   const SubmissionsWrapper = hasFeatureFlag("GROUPED_SUBMISSIONS")
     ? SubmissionsGrouped
@@ -20,7 +24,7 @@ function SubmissionsGroupedLayout() {
 
   return (
     <>
-      <SubmissionsWrapper flowSlug={flow} />
+      {!isDetailRoute && <SubmissionsWrapper flowSlug={flow} />}
       <Outlet />
     </>
   );
