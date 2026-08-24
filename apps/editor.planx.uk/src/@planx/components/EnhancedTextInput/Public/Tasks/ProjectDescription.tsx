@@ -57,36 +57,47 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
 }) => {
   const radioGroupState = useRadioGroup();
   const isSelected = radioGroupState?.value === id;
+  const recommendedTagId = `${id}-recommended`;
 
   return (
-    <StyledFormLabel
-      focused={false}
-      isSelected={isSelected}
-      showBorder={recommended}
-    >
-      {recommended && <RecommendedTag>Recommended</RecommendedTag>}
-      <Radio
-        value={id}
-        onChange={onChange}
-        slotProps={{ input: { "aria-label": title } }}
-      />
-      <Box sx={{ position: "relative" }}>
-        <Typography
-          variant="body1"
-          sx={{
-            color: "text.primary",
-            pt: 0.95,
+    <Box sx={{ position: "relative" }}>
+      {recommended && (
+        <RecommendedTag id={recommendedTagId}>Recommended</RecommendedTag>
+      )}
+      <StyledFormLabel
+        htmlFor={id}
+        focused={false}
+        isSelected={isSelected}
+        showBorder={recommended}
+      >
+        <Radio
+          id={id}
+          value={id}
+          onChange={onChange}
+          slotProps={{
+            input: {
+              "aria-describedby": recommended ? recommendedTagId : undefined,
+            },
           }}
-        >
-          {title}
-        </Typography>
-        {description && (
-          <QuoteDescription variant="subtitle1" component="blockquote">
-            {description}
-          </QuoteDescription>
-        )}
-      </Box>
-    </StyledFormLabel>
+        />
+        <Box sx={{ position: "relative" }}>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "text.primary",
+              pt: 0.95,
+            }}
+          >
+            {title}
+          </Typography>
+          {description && (
+            <QuoteDescription variant="subtitle1" component="blockquote">
+              {description}
+            </QuoteDescription>
+          )}
+        </Box>
+      </StyledFormLabel>
+    </Box>
   );
 };
 
