@@ -72,8 +72,7 @@ export function TemplatesWidget({
       >
         {templates.map((template, index) => {
           const isSubscribed =
-            canUserEditTeam(teamSlug) &&
-            Boolean(template.subscription?.length);
+            canUserEditTeam(teamSlug) && Boolean(template.subscription?.length);
 
           const result: SearchResult = {
             icon: <Badge variant={BadgeVariant.SourceTemplate} />,
