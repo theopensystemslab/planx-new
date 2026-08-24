@@ -16,6 +16,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
+import type { Role } from "@opensystemslab/planx-core/types";
 import {
   useLocation,
   useMatches,
@@ -163,7 +164,11 @@ function EditorNavMenu() {
                   title: "Explore",
                   Icon: ExploreIcon,
                   route: `/app/${teamSlug}/explore`,
-                  accessibleBy: "*" as const,
+                  accessibleBy: [
+                    "platformAdmin",
+                    "teamAdmin",
+                    "teamEditor",
+                  ] satisfies Role[],
                 },
               ]
             : []),
