@@ -50,27 +50,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   sessionId,
 }) => {
   const navigate = useNavigate();
-  const params = useParams({ strict: false });
   const [teamSlug] = useStore((state) => [state.teamSlug]);
-
-  const handleClose = () => {
-    if (params.flow) {
-      navigate({
-        to: "/app/$team/$flow/submissions",
-        params: {
-          team: teamSlug,
-          flow: params.flow,
-        },
-      });
-    } else {
-      navigate({
-        to: "/app/$team/submissions",
-        params: {
-          team: teamSlug,
-        },
-      });
-    }
-  };
 
   const { data, loading, error } = useQuery<{ submissions: Submission[] }>(
     GET_SUBMISSION_EVENTS,
@@ -79,6 +59,12 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
       skip: !sessionId,
     },
   );
+
+  const handleClose = () => {
+    navigate({
+      search: undefined,
+    });
+  };
 
   const events = data?.submissions || [];
   const latestEvent = events[0];

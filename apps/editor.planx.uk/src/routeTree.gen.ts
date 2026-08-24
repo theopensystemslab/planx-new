@@ -58,7 +58,6 @@ import { Route as AuthenticatedAppTeamSettingsIntegrationsRouteImport } from './
 import { Route as AuthenticatedAppTeamSettingsPaymentsRouteImport } from './routes/_authenticated/app/$team/settings/payments'
 import { Route as AuthenticatedAppTeamSubmissionsIndexRouteImport } from './routes/_authenticated/app/$team/submissions/index'
 import { Route as AuthenticatedAppTeamSubmissionsSessionIdRouteImport } from './routes/_authenticated/app/$team/submissions/$sessionId'
-import { Route as AuthenticatedAppTeamViewSubmissionSessionIdRouteImport } from './routes/_authenticated/app/$team/view-submission/$sessionId'
 import { Route as PublicCustomDomainFlowPagesPageRouteImport } from './routes/_public/_customDomain/$flow/pages.$page'
 import { Route as PublicCustomDomainFlowPayIndexRouteImport } from './routes/_public/_customDomain/$flow/pay/index'
 import { Route as PublicCustomDomainFlowPayNotFoundRouteImport } from './routes/_public/_customDomain/$flow/pay/not-found'
@@ -79,7 +78,6 @@ import { Route as AuthenticatedAppTeamFlowSettingsTemplatesRouteImport } from '.
 import { Route as AuthenticatedAppTeamFlowSettingsVisibilityRouteImport } from './routes/_authenticated/app/$team/$flow/settings/visibility'
 import { Route as AuthenticatedAppTeamFlowSubmissionsIndexRouteImport } from './routes/_authenticated/app/$team/$flow/submissions/index'
 import { Route as AuthenticatedAppTeamFlowSubmissionsSessionIdRouteImport } from './routes/_authenticated/app/$team/$flow/submissions/$sessionId'
-import { Route as AuthenticatedAppTeamFlowViewSubmissionSessionIdRouteImport } from './routes/_authenticated/app/$team/$flow/view-submission/$sessionId'
 import { Route as PublicCustomDomainFlowPayInviteIndexRouteImport } from './routes/_public/_customDomain/$flow/pay/invite/index'
 import { Route as PublicCustomDomainFlowPayInviteFailedRouteImport } from './routes/_public/_customDomain/$flow/pay/invite/failed'
 import { Route as PublicCustomDomainFlowPayPagesPageRouteImport } from './routes/_public/_customDomain/$flow/pay/pages.$page'
@@ -395,12 +393,6 @@ const AuthenticatedAppTeamSubmissionsSessionIdRoute =
     path: '/$sessionId',
     getParentRoute: () => AuthenticatedAppTeamSubmissionsRouteRoute,
   } as any)
-const AuthenticatedAppTeamViewSubmissionSessionIdRoute =
-  AuthenticatedAppTeamViewSubmissionSessionIdRouteImport.update({
-    id: '/view-submission/$sessionId',
-    path: '/view-submission/$sessionId',
-    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
-  } as any)
 const PublicCustomDomainFlowPagesPageRoute =
   PublicCustomDomainFlowPagesPageRouteImport.update({
     id: '/pages/$page',
@@ -520,12 +512,6 @@ const AuthenticatedAppTeamFlowSubmissionsSessionIdRoute =
     id: '/$sessionId',
     path: '/$sessionId',
     getParentRoute: () => AuthenticatedAppTeamFlowSubmissionsRouteRoute,
-  } as any)
-const AuthenticatedAppTeamFlowViewSubmissionSessionIdRoute =
-  AuthenticatedAppTeamFlowViewSubmissionSessionIdRouteImport.update({
-    id: '/view-submission/$sessionId',
-    path: '/view-submission/$sessionId',
-    getParentRoute: () => AuthenticatedAppTeamFlowRouteRoute,
   } as any)
 const PublicCustomDomainFlowPayInviteIndexRoute =
   PublicCustomDomainFlowPayInviteIndexRouteImport.update({
@@ -774,7 +760,6 @@ export interface FileRoutesByFullPath {
   '/app/$team/settings/integrations': typeof AuthenticatedAppTeamSettingsIntegrationsRoute
   '/app/$team/settings/payments': typeof AuthenticatedAppTeamSettingsPaymentsRoute
   '/app/$team/submissions/$sessionId': typeof AuthenticatedAppTeamSubmissionsSessionIdRoute
-  '/app/$team/view-submission/$sessionId': typeof AuthenticatedAppTeamViewSubmissionSessionIdRoute
   '/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
   '/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
@@ -790,7 +775,6 @@ export interface FileRoutesByFullPath {
   '/app/$team/$flow/settings/templates': typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
   '/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/app/$team/$flow/submissions/$sessionId': typeof AuthenticatedAppTeamFlowSubmissionsSessionIdRoute
-  '/app/$team/$flow/view-submission/$sessionId': typeof AuthenticatedAppTeamFlowViewSubmissionSessionIdRoute
   '/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
   '/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
   '/$team/$flow/draft/view-application': typeof PublicPlanXDomainTeamFlowDraftViewApplicationRoute
@@ -862,7 +846,6 @@ export interface FileRoutesByTo {
   '/app/$team/settings/integrations': typeof AuthenticatedAppTeamSettingsIntegrationsRoute
   '/app/$team/settings/payments': typeof AuthenticatedAppTeamSettingsPaymentsRoute
   '/app/$team/submissions/$sessionId': typeof AuthenticatedAppTeamSubmissionsSessionIdRoute
-  '/app/$team/view-submission/$sessionId': typeof AuthenticatedAppTeamViewSubmissionSessionIdRoute
   '/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
   '/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
@@ -878,7 +861,6 @@ export interface FileRoutesByTo {
   '/app/$team/$flow/settings/templates': typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
   '/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/app/$team/$flow/submissions/$sessionId': typeof AuthenticatedAppTeamFlowSubmissionsSessionIdRoute
-  '/app/$team/$flow/view-submission/$sessionId': typeof AuthenticatedAppTeamFlowViewSubmissionSessionIdRoute
   '/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
   '/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
   '/$team/$flow/draft/view-application': typeof PublicPlanXDomainTeamFlowDraftViewApplicationRoute
@@ -967,7 +949,6 @@ export interface FileRoutesById {
   '/_authenticated/app/$team/settings/integrations': typeof AuthenticatedAppTeamSettingsIntegrationsRoute
   '/_authenticated/app/$team/settings/payments': typeof AuthenticatedAppTeamSettingsPaymentsRoute
   '/_authenticated/app/$team/submissions/$sessionId': typeof AuthenticatedAppTeamSubmissionsSessionIdRoute
-  '/_authenticated/app/$team/view-submission/$sessionId': typeof AuthenticatedAppTeamViewSubmissionSessionIdRoute
   '/_public/_customDomain/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/_public/_customDomain/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
   '/_public/_customDomain/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
@@ -983,7 +964,6 @@ export interface FileRoutesById {
   '/_authenticated/app/$team/$flow/settings/templates': typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
   '/_authenticated/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/_authenticated/app/$team/$flow/submissions/$sessionId': typeof AuthenticatedAppTeamFlowSubmissionsSessionIdRoute
-  '/_authenticated/app/$team/$flow/view-submission/$sessionId': typeof AuthenticatedAppTeamFlowViewSubmissionSessionIdRoute
   '/_public/_customDomain/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
   '/_public/_customDomain/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
   '/_public/_planXDomain/$team/$flow/draft/view-application': typeof PublicPlanXDomainTeamFlowDraftViewApplicationRoute
@@ -1071,7 +1051,6 @@ export interface FileRouteTypes {
     | '/app/$team/settings/integrations'
     | '/app/$team/settings/payments'
     | '/app/$team/submissions/$sessionId'
-    | '/app/$team/view-submission/$sessionId'
     | '/$flow/pages/$page'
     | '/$flow/pay/not-found'
     | '/$flow/pay/view-application'
@@ -1087,7 +1066,6 @@ export interface FileRouteTypes {
     | '/app/$team/$flow/settings/templates'
     | '/app/$team/$flow/settings/visibility'
     | '/app/$team/$flow/submissions/$sessionId'
-    | '/app/$team/$flow/view-submission/$sessionId'
     | '/$flow/pay/invite/failed'
     | '/$flow/pay/pages/$page'
     | '/$team/$flow/draft/view-application'
@@ -1159,7 +1137,6 @@ export interface FileRouteTypes {
     | '/app/$team/settings/integrations'
     | '/app/$team/settings/payments'
     | '/app/$team/submissions/$sessionId'
-    | '/app/$team/view-submission/$sessionId'
     | '/$flow/pages/$page'
     | '/$flow/pay/not-found'
     | '/$flow/pay/view-application'
@@ -1175,7 +1152,6 @@ export interface FileRouteTypes {
     | '/app/$team/$flow/settings/templates'
     | '/app/$team/$flow/settings/visibility'
     | '/app/$team/$flow/submissions/$sessionId'
-    | '/app/$team/$flow/view-submission/$sessionId'
     | '/$flow/pay/invite/failed'
     | '/$flow/pay/pages/$page'
     | '/$team/$flow/draft/view-application'
@@ -1263,7 +1239,6 @@ export interface FileRouteTypes {
     | '/_authenticated/app/$team/settings/integrations'
     | '/_authenticated/app/$team/settings/payments'
     | '/_authenticated/app/$team/submissions/$sessionId'
-    | '/_authenticated/app/$team/view-submission/$sessionId'
     | '/_public/_customDomain/$flow/pages/$page'
     | '/_public/_customDomain/$flow/pay/not-found'
     | '/_public/_customDomain/$flow/pay/view-application'
@@ -1279,7 +1254,6 @@ export interface FileRouteTypes {
     | '/_authenticated/app/$team/$flow/settings/templates'
     | '/_authenticated/app/$team/$flow/settings/visibility'
     | '/_authenticated/app/$team/$flow/submissions/$sessionId'
-    | '/_authenticated/app/$team/$flow/view-submission/$sessionId'
     | '/_public/_customDomain/$flow/pay/invite/failed'
     | '/_public/_customDomain/$flow/pay/pages/$page'
     | '/_public/_planXDomain/$team/$flow/draft/view-application'
@@ -1673,13 +1647,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppTeamSubmissionsSessionIdRouteImport
       parentRoute: typeof AuthenticatedAppTeamSubmissionsRouteRoute
     }
-    '/_authenticated/app/$team/view-submission/$sessionId': {
-      id: '/_authenticated/app/$team/view-submission/$sessionId'
-      path: '/view-submission/$sessionId'
-      fullPath: '/app/$team/view-submission/$sessionId'
-      preLoaderRoute: typeof AuthenticatedAppTeamViewSubmissionSessionIdRouteImport
-      parentRoute: typeof AuthenticatedAppTeamRouteRoute
-    }
     '/_public/_customDomain/$flow/pages/$page': {
       id: '/_public/_customDomain/$flow/pages/$page'
       path: '/pages/$page'
@@ -1819,13 +1786,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/$team/$flow/submissions/$sessionId'
       preLoaderRoute: typeof AuthenticatedAppTeamFlowSubmissionsSessionIdRouteImport
       parentRoute: typeof AuthenticatedAppTeamFlowSubmissionsRouteRoute
-    }
-    '/_authenticated/app/$team/$flow/view-submission/$sessionId': {
-      id: '/_authenticated/app/$team/$flow/view-submission/$sessionId'
-      path: '/view-submission/$sessionId'
-      fullPath: '/app/$team/$flow/view-submission/$sessionId'
-      preLoaderRoute: typeof AuthenticatedAppTeamFlowViewSubmissionSessionIdRouteImport
-      parentRoute: typeof AuthenticatedAppTeamFlowRouteRoute
     }
     '/_public/_customDomain/$flow/pay/invite/': {
       id: '/_public/_customDomain/$flow/pay/invite/'
@@ -2213,7 +2173,6 @@ interface AuthenticatedAppTeamFlowRouteRouteChildren {
   AuthenticatedAppTeamFlowSubmissionsRouteRoute: typeof AuthenticatedAppTeamFlowSubmissionsRouteRouteWithChildren
   AuthenticatedAppTeamFlowAboutRoute: typeof AuthenticatedAppTeamFlowAboutRoute
   AuthenticatedAppTeamFlowFeedbackRoute: typeof AuthenticatedAppTeamFlowFeedbackRoute
-  AuthenticatedAppTeamFlowViewSubmissionSessionIdRoute: typeof AuthenticatedAppTeamFlowViewSubmissionSessionIdRoute
 }
 
 const AuthenticatedAppTeamFlowRouteRouteChildren: AuthenticatedAppTeamFlowRouteRouteChildren =
@@ -2227,8 +2186,6 @@ const AuthenticatedAppTeamFlowRouteRouteChildren: AuthenticatedAppTeamFlowRouteR
     AuthenticatedAppTeamFlowAboutRoute: AuthenticatedAppTeamFlowAboutRoute,
     AuthenticatedAppTeamFlowFeedbackRoute:
       AuthenticatedAppTeamFlowFeedbackRoute,
-    AuthenticatedAppTeamFlowViewSubmissionSessionIdRoute:
-      AuthenticatedAppTeamFlowViewSubmissionSessionIdRoute,
   }
 
 const AuthenticatedAppTeamFlowRouteRouteWithChildren =
@@ -2303,7 +2260,6 @@ interface AuthenticatedAppTeamRouteRouteChildren {
   AuthenticatedAppTeamSubscriptionRoute: typeof AuthenticatedAppTeamSubscriptionRoute
   AuthenticatedAppTeamTutorialsRoute: typeof AuthenticatedAppTeamTutorialsRoute
   AuthenticatedAppTeamIndexRoute: typeof AuthenticatedAppTeamIndexRoute
-  AuthenticatedAppTeamViewSubmissionSessionIdRoute: typeof AuthenticatedAppTeamViewSubmissionSessionIdRoute
 }
 
 const AuthenticatedAppTeamRouteRouteChildren: AuthenticatedAppTeamRouteRouteChildren =
@@ -2328,8 +2284,6 @@ const AuthenticatedAppTeamRouteRouteChildren: AuthenticatedAppTeamRouteRouteChil
       AuthenticatedAppTeamSubscriptionRoute,
     AuthenticatedAppTeamTutorialsRoute: AuthenticatedAppTeamTutorialsRoute,
     AuthenticatedAppTeamIndexRoute: AuthenticatedAppTeamIndexRoute,
-    AuthenticatedAppTeamViewSubmissionSessionIdRoute:
-      AuthenticatedAppTeamViewSubmissionSessionIdRoute,
   }
 
 const AuthenticatedAppTeamRouteRouteWithChildren =

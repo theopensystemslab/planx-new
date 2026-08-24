@@ -1,23 +1,10 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { hasFeatureFlag } from "lib/featureFlags";
-import Submissions from "pages/FlowEditor/components/Submissions/Submissions";
-import SubmissionsGrouped from "pages/FlowEditor/components/Submissions/SubmissionsGrouped";
 
 export const Route = createFileRoute("/_authenticated/app/$team/submissions")({
+  validateSearch: (search: Record<string, unknown>): { detail?: string } => ({
+    detail: search.detail as string | undefined,
+  }),
   pendingComponent: DelayedLoadingIndicator,
-  component: SubmissionsGroupedLayout,
+  component: () => <Outlet />,
 });
-
-function SubmissionsGroupedLayout() {
-  const SubmissionsWrapper = hasFeatureFlag("GROUPED_SUBMISSIONS")
-    ? SubmissionsGrouped
-    : Submissions;
-
-  return (
-    <>
-      <SubmissionsWrapper />
-      <Outlet />
-    </>
-  );
-}

@@ -1,23 +1,18 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import SubmissionDetailModal from "pages/FlowEditor/components/Submissions/components/SubmissionDetailModal";
+import { createFileRoute } from "@tanstack/react-router";
+import SubmissionHTML from "pages/FlowEditor/components/Submissions/components/SubmissionHTML";
+import React from "react";
 
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/submissions/$sessionId",
 )({
+  validateSearch: () => ({}),
   loader: async ({ params }) => ({
     sessionId: params.sessionId,
   }),
-  pendingComponent: DelayedLoadingIndicator,
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { sessionId } = Route.useLoaderData();
-  return (
-    <>
-      <SubmissionDetailModal sessionId={sessionId} />
-      <Outlet />
-    </>
-  );
+  return <SubmissionHTML sessionId={sessionId} />;
 }

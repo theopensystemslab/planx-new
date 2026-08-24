@@ -37,20 +37,15 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
 
     if (params.flow) {
       navigate({
-        to: "/app/$team/$flow/submissions/$sessionId",
-        params: {
-          team: teamSlug,
-          flow: params.flow,
-          sessionId: sessionId,
-        },
+        to: "/app/$team/$flow/submissions",
+        params: { team: teamSlug, flow: params.flow },
+        search: { detail: sessionId },
       });
     } else {
       navigate({
-        to: "/app/$team/submissions/$sessionId",
-        params: {
-          team: teamSlug,
-          sessionId: sessionId,
-        },
+        to: "/app/$team/submissions",
+        params: { team: teamSlug },
+        search: { detail: sessionId },
       });
     }
   };
