@@ -73,7 +73,7 @@ const EnhancedTextInputComponent = (props: Props) => {
       {({ submitForm, values, setFieldValue }) => {
         const showCardHeader =
           step === "input" ||
-          values.status !== "success" ||
+          values.status === "idle" ||
           Boolean(isRunningTask);
 
         const handleBack = (() => {
