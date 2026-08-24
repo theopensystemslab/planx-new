@@ -70,7 +70,32 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   const latestEvent = events[0];
   const submittedAt = getSubmittedAt(events);
 
-  if (loading) return <DelayedLoadingIndicator />;
+  if (loading) {
+    return (
+      <Dialog
+        open
+        slotProps={{
+          paper: {
+            sx: {
+              width: "66.67%",
+              maxWidth: "66.67%",
+              margin: "auto",
+              minHeight: "30vh",
+            },
+          },
+        }}
+      >
+        <CloseButton aria-label="close" onClick={handleClose} size="large">
+          <Close />
+        </CloseButton>
+        <DialogTitle variant="h2">Submission details</DialogTitle>
+        <DialogContent>
+          <DelayedLoadingIndicator />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   if (error) throw error;
   return (
     <Dialog
