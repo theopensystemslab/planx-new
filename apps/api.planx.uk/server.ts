@@ -1,4 +1,5 @@
 import "isomorphic-fetch";
+import "express-async-errors";
 
 import type { Role } from "@opensystemslab/planx-core/types";
 import assert from "assert";
