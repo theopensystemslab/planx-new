@@ -18,7 +18,7 @@
     "@astrojs/react": "^5.0.0",
     "@astrojs/sitemap": "^3.7.0",
     "@nanostores/react": "^1.0.0",
-    "@opensystemslab/map": "1.0.0-alpha.11",
+    "@opensystemslab/map": "catalog:",
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/react-query": "^5.101.1",
     "@types/react": "^19.2.14",
