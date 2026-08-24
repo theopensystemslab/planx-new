@@ -7,7 +7,7 @@ import { useEffect, useReducer } from "react";
 import type { Pay } from "../model";
 import { getDefaultContent } from "../model";
 import Confirm from "./Confirm";
-import { useGovUkPay } from "./providers/useGovUkPay";
+import { usePaymentFlow } from "./hooks/usePaymentFlow";
 import { Action } from "./types";
 
 export default Component;
@@ -79,7 +79,7 @@ function Component(props: Props) {
     displayText: "Loading...",
   });
 
-  const { actions, hasExistingPayment } = useGovUkPay(
+  const { actions, hasExistingPayment } = usePaymentFlow(
     props,
     dispatch,
     fee,
