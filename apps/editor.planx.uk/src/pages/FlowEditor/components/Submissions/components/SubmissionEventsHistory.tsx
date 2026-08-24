@@ -13,37 +13,30 @@ import { StatusIcon } from "./StatusIcon";
 const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
   if (submissions.length === 0) return [];
 
-  const result: GroupedEvent[] = [];
-  let currentGroup: GroupedEvent | null = null;
+  const eventsMap = new Map<string, Submission[]>();
 
   for (const submission of submissions) {
-    if (
-      !currentGroup ||
-      currentGroup.events[0].eventType !== submission.eventType
-    ) {
-      currentGroup = {
-        sessionId: submission.sessionId,
-        eventId: submission.eventId,
-        events: [
-          {
-            eventType: submission.eventType,
-            createdAt: submission.createdAt,
-            retry: submission.retry,
-            response: submission.response,
-            status: submission.status,
-          },
-        ],
-      };
-      result.push(currentGroup);
-    } else {
-      currentGroup.events.push({
-        eventType: submission.eventType,
-        createdAt: submission.createdAt,
-        retry: submission.retry,
-        response: submission.response,
-        status: submission.status,
-      });
-    }
+    const events = eventsMap.get(submission.eventType) || [];
+    events.push(submission);
+    eventsMap.set(submission.eventType, events);
+  }
+
+  const result: GroupedEvent[] = [];
+
+  for (const [eventType, events] of eventsMap.entries()) {
+    const groupedEvent: GroupedEvent = {
+      sessionId: events[0].sessionId,
+      eventId: events[0].eventId,
+      events: events.map((event) => ({
+        eventType: event.eventType,
+        createdAt: event.createdAt,
+        retry: event.retry,
+        response: event.response,
+        status: event.status,
+      })),
+    };
+
+    result.push(groupedEvent);
   }
 
   return result;
