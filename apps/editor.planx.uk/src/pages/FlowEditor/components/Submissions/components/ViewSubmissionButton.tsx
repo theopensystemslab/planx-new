@@ -1,7 +1,7 @@
 import PreviewIcon from "@mui/icons-material/Preview";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { addDays, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -22,20 +22,36 @@ export const ViewSubmissionButton = (params: RenderCellParams) => {
     isBefore(new Date(), submissionDataExpirationDate);
 
   const navigate = useNavigate();
+  const urlParams = useParams({ strict: false });
+
+  const handleClick = () => {
+    if (urlParams.flow) {
+      navigate({
+        to: "/app/$team/$flow/submissions/$sessionId",
+        params: {
+          team: teamSlug,
+          flow: urlParams.flow,
+          sessionId: sessionId,
+        },
+        search: {},
+      });
+    } else {
+      navigate({
+        to: "/app/$team/submissions/$sessionId",
+        params: {
+          team: teamSlug,
+          sessionId: sessionId,
+        },
+        search: {},
+      });
+    }
+  };
 
   if (!showViewButton) return;
 
   return (
     <Tooltip title="View application data">
-      <IconButton
-        aria-label="view application"
-        onClick={() =>
-          navigate({
-            to: `/app/$team/view-submission/$sessionId`,
-            params: { team: teamSlug, sessionId: sessionId },
-          })
-        }
-      >
+      <IconButton aria-label="view application" onClick={handleClick}>
         <PreviewIcon />
       </IconButton>
     </Tooltip>

@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { CloseButton } from "ui/icons/CloseButton";
@@ -60,11 +60,42 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
     },
   );
 
+  const handleClose = () => {
+    navigate({
+      search: undefined,
+    });
+  };
+
   const events = data?.submissions || [];
   const latestEvent = events[0];
   const submittedAt = getSubmittedAt(events);
 
-  if (loading) return <DelayedLoadingIndicator />;
+  if (loading) {
+    return (
+      <Dialog
+        open
+        slotProps={{
+          paper: {
+            sx: {
+              width: "66.67%",
+              maxWidth: "66.67%",
+              margin: "auto",
+              minHeight: "30vh",
+            },
+          },
+        }}
+      >
+        <CloseButton aria-label="close" onClick={handleClose} size="large">
+          <Close />
+        </CloseButton>
+        <DialogTitle variant="h2">Submission details</DialogTitle>
+        <DialogContent>
+          <DelayedLoadingIndicator />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   if (error) throw error;
   return (
     <Dialog
@@ -78,19 +109,9 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
           },
         },
       }}
+      onClose={handleClose}
     >
-      <CloseButton
-        aria-label="close"
-        onClick={() => {
-          navigate({
-            to: "/app/$team/submissions",
-            params: {
-              team: teamSlug,
-            },
-          });
-        }}
-        size="large"
-      >
+      <CloseButton aria-label="close" onClick={handleClose} size="large">
         <Close />
       </CloseButton>
       <DialogTitle variant="h2">Submission details</DialogTitle>

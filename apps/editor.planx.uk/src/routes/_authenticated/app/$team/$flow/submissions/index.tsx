@@ -4,12 +4,15 @@ import SubmissionDetailModal from "pages/FlowEditor/components/Submissions/compo
 import Submissions from "pages/FlowEditor/components/Submissions/Submissions";
 import SubmissionsGrouped from "pages/FlowEditor/components/Submissions/SubmissionsGrouped";
 
-export const Route = createFileRoute("/_authenticated/app/$team/submissions/")({
+export const Route = createFileRoute(
+  "/_authenticated/app/$team/$flow/submissions/",
+)({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { detail } = Route.useSearch();
+  const { flow } = Route.useParams();
 
   const SubmissionsWrapper = hasFeatureFlag("GROUPED_SUBMISSIONS")
     ? SubmissionsGrouped
@@ -17,7 +20,7 @@ function RouteComponent() {
 
   return (
     <>
-      <SubmissionsWrapper />
+      <SubmissionsWrapper flowSlug={flow} />
       {detail && <SubmissionDetailModal sessionId={detail} />}
     </>
   );

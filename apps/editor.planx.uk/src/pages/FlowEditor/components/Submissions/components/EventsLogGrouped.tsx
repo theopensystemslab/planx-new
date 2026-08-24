@@ -1,6 +1,7 @@
 import BarChartIcon from "@mui/icons-material/BarChart";
-import type { GridFilterItem } from "@mui/x-data-grid";
+import type { GridFilterItem, GridRowParams } from "@mui/x-data-grid";
 import { useNavigate } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -28,10 +29,26 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
   filterByFlow,
 }) => {
   const navigate = useNavigate();
+  const params = useParams({ strict: false });
   const teamSlug = useStore((state) => state.teamSlug);
 
-  const [selectedSubmission, setSelectedSubmission] =
-    useState<Submission | null>(null);
+  const handleRowClick = (rowParams: GridRowParams) => {
+    const sessionId = rowParams.row.id;
+
+    if (params.flow) {
+      navigate({
+        to: "/app/$team/$flow/submissions",
+        params: { team: teamSlug, flow: params.flow },
+        search: { detail: sessionId },
+      });
+    } else {
+      navigate({
+        to: "/app/$team/submissions",
+        params: { team: teamSlug },
+        search: { detail: sessionId },
+      });
+    }
+  };
 
   // consolidate event types and statuses into single status
   const submissionsWithConsolidatedStatus = useMemo(() => {
@@ -106,15 +123,7 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
       <DataTable
         columns={columns}
         rows={submissionsWithConsolidatedStatus}
-        onRowClick={(params) => {
-          navigate({
-            to: "/app/$team/submissions/$sessionId",
-            params: {
-              team: teamSlug,
-              sessionId: params.row.id,
-            },
-          });
-        }}
+        onRowClick={handleRowClick}
       />
     </ErrorBoundary>
   );
