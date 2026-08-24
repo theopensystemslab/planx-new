@@ -91,7 +91,14 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
       <DialogTitle variant="h2">Submission details</DialogTitle>
       <DialogContent>
         <Grid container>
-          <Grid size={6}>
+          <Grid
+            size={6}
+            sx={{
+              position: "sticky",
+              top: 0,
+              alignSelf: "flex-start",
+            }}
+          >
             <SubmissionDetails
               sessionId={sessionId}
               latestEvent={latestEvent}
