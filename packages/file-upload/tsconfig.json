@@ -5,6 +5,7 @@
     "rootDir": ".",
     "sourceMap": true,
     "declaration": true,
+    "declarationMap": true,
     "verbatimModuleSyntax": true
   },
   "exclude": ["dist", "eslint.config.mjs", "node_modules"]

@@ -47,4 +47,4 @@ ENV NODE_ENV=development
 
 RUN npm_config_inject_workspace_packages=true pnpm --filter api.planx.uk deploy --prefer-offline /api
 WORKDIR /api
-CMD ["pnpm", "dev"]
+CMD ["pnpm", "watch"]
