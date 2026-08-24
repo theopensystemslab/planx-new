@@ -4,7 +4,10 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { makeData } from "../../../shared/utils";
 import type { Props } from "../Pay";
 import { Action } from "../types";
-import { STRIPE_PASSPORT_KEY, type UsePaymentProviderResult } from "./types";
+import {
+  PAYMENT_REFERENCE_PASSPORT_KEY,
+  type UsePaymentProviderResult,
+} from "./types";
 
 export function useStripePay(
   props: Props,
@@ -17,7 +20,7 @@ export function useStripePay(
     dispatch(Action.Success);
     props.handleSubmit &&
       props.handleSubmit(
-        makeData(props, "todo-stripe-data", STRIPE_PASSPORT_KEY),
+        makeData(props, "todo-stripe-data", PAYMENT_REFERENCE_PASSPORT_KEY),
       );
   };
 
@@ -47,7 +50,7 @@ export function useStripePay(
       resumeExistingPayment,
       handleSuccess,
     },
-    passportKey: STRIPE_PASSPORT_KEY,
+    passportKey: PAYMENT_REFERENCE_PASSPORT_KEY,
     hasExistingPayment: false,
   };
 }

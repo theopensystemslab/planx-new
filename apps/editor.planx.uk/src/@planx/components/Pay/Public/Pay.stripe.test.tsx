@@ -90,7 +90,7 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
     await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
     expect(handleSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: { "application.fee.reference.stripe": "todo-stripe-data" },
+        data: { "application.fee.reference": "todo-stripe-data" },
       }),
     );
   });
