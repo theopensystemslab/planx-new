@@ -6,12 +6,12 @@ Shared [ESLint](https://eslint.org) config for the planx-new monorepo.
 
 The presets are split by **toolchain/framework concern**, not by app, so each workspace composes the rules that apply to it. They're independent (a Node app can use `vitest` without `react`), and app-specific policy (e.g. the Editor's MUI rules) lives in that app's own `eslint.config.mjs`, not here.
 
-| Export | Applies to | Contents |
-| --- | --- | --- |
-| `./base` | every TS workspace | `@eslint/js` recommended + typescript-eslint recommended + shared rules + `eslint-config-prettier` last. |
-| `./react` | React component code (Editor, LPS islands) | `base` + jsx-a11y, react-hooks, `@tanstack/eslint-plugin-query`, jest-dom, Vitest. |
-| `./playwright` | Playwright tests (e2e ui) | `eslint-plugin-playwright` recommended |
-| `./vitest` | test files (Editor, API, Hasura tests) | A function (`vitestConfig()`) returning Vitest rules scoped to test files. Pass extra assertion helpers (e.g. Supertest's `get.expect`) so `expect-expect` doesn't flag them. |
+| Export         | Applies to                                 | Contents                                                                                                                                                                      |
+| -------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `./base`       | every TS workspace                         | `@eslint/js` recommended + typescript-eslint recommended + shared rules + `eslint-config-prettier` last.                                                                      |
+| `./react`      | React component code (Editor, LPS islands) | `base` + jsx-a11y, react-hooks, `@tanstack/eslint-plugin-query`, jest-dom, Vitest.                                                                                            |
+| `./playwright` | Playwright tests (e2e ui)                  | `eslint-plugin-playwright` recommended                                                                                                                                        |
+| `./vitest`     | test files (Editor, API, Hasura tests)     | A function (`vitestConfig()`) returning Vitest rules scoped to test files. Pass extra assertion helpers (e.g. Supertest's `get.expect`) so `expect-expect` doesn't flag them. |
 
 ## Usage
 
@@ -21,8 +21,8 @@ Add the dependency:
 {
   "devDependencies": {
     "@planx/eslint-config": "workspace:*",
-    "eslint": "catalog:"
-  }
+    "eslint": "catalog:",
+  },
 }
 ```
 
@@ -48,7 +48,12 @@ export default [
   { ignores: ["dist/**"] },
   ...base,
   { languageOptions: { globals: { ...globals.node } } },
-  ...vitestConfig(["expect", "get.expect", "post.expect", "supertest.**.expect"]),
+  ...vitestConfig([
+    "expect",
+    "get.expect",
+    "post.expect",
+    "supertest.**.expect",
+  ]),
 ];
 ```
 

@@ -1335,9 +1335,6 @@ importers:
       '@vitest/eslint-plugin':
         specifier: ^1.6.9
         version: 1.6.16(@typescript-eslint/eslint-plugin@8.62.0(@typescript-eslint/parser@8.62.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)(vitest@4.1.9)
-      eslint:
-        specifier: 'catalog:'
-        version: 9.39.5(jiti@2.7.0)
       eslint-config-prettier:
         specifier: ^10.1.8
         version: 10.1.8(eslint@9.39.5(jiti@2.7.0))
@@ -1362,6 +1359,16 @@ importers:
       typescript-eslint:
         specifier: ^8.46.0
         version: 8.62.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+    devDependencies:
+      '@planx/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.3
 
   packages/file-upload:
     devDependencies:
