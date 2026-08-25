@@ -23,9 +23,7 @@ select_permissions:
         - can_create_from_copy
         - templated_from
         - team_id
-      filter:
-        deleted_at:
-          _is_null: true
+      filter: {}
     role: teamEditor
   - permission:
       columns:
@@ -38,7 +36,5 @@ select_permissions:
         - can_create_from_copy
         - templated_from
         - team_id
-      filter:
-        deleted_at:
-          _is_null: true
+      filter: {}
     role: platformAdmin
