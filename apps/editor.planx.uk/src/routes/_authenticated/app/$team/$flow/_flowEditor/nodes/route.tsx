@@ -21,6 +21,7 @@ const nodeSearchSchema = z.object({
       "map-and-label",
       "feedback",
       "task-list",
+      "note",
       "notice",
       "result",
       "content",

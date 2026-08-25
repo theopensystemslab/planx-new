@@ -19,9 +19,10 @@ import Portal from "./Portal";
 import Question from "./Question";
 
 const Node: React.FC<any> = (props) => {
-  const [node, wasVisited] = useStore((state) => [
+  const [node, wasVisited, showNotes] = useStore((state) => [
     state.flow[props.id],
     state.wasVisited(props.id),
+    state.showNotes,
   ]);
 
   const allProps = {
@@ -96,6 +97,11 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.NextSteps:
       return <Question {...allProps} text="Next steps" />;
+    case TYPES.Note:
+      // TODO also "hide" notes if templated flow; always hide notes that come from source versus show notes if inside templated folder i can edit?
+      return showNotes ? (
+        <Question {...allProps} text={node?.data?.note ?? "Note"} />
+      ) : null;
     case TYPES.Notice:
       return <Question {...allProps} text={node?.data?.title ?? "Notice"} />;
     case TYPES.NumberInput:

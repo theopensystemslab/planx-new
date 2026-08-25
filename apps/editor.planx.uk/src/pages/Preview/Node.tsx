@@ -36,6 +36,8 @@ import type { MapAndLabel } from "@planx/components/MapAndLabel/model";
 import MapAndLabelComponent from "@planx/components/MapAndLabel/Public";
 import type { NextSteps } from "@planx/components/NextSteps/model";
 import NextStepsComponent from "@planx/components/NextSteps/Public";
+import type { Note } from "@planx/components/Note/model";
+import NoteComponent from "@planx/components/Note/Public";
 import type { Notice } from "@planx/components/Notice/model";
 import NoticeComponent from "@planx/components/Notice/Public";
 import type { NumberInput } from "@planx/components/NumberInput/model";
@@ -237,6 +239,9 @@ const Node: React.FC<Props> = (props) => {
 
     case TYPES.NextSteps:
       return <NextStepsComponent {...getComponentProps<NextSteps>()} />;
+
+    case TYPES.Note:
+      return <NoteComponent {...getComponentProps<Note>()} />;
 
     case TYPES.Notice:
       return <NoticeComponent {...getComponentProps<Notice>()} />;
