@@ -18,6 +18,17 @@ const title = (type: TYPES): string => COMPONENT_TITLES[type] ?? String(type);
 
 export const ALL_CATEGORIES: Category[] = [
   {
+    label: "",
+    items: [
+      {
+        type: TYPES.Note,
+        slug: "note",
+        title: title(TYPES.Note),
+        description: "Add a sticky note visible to editors only",
+      },
+    ],
+  },
+  {
     label: "Structure",
     items: [
       {
