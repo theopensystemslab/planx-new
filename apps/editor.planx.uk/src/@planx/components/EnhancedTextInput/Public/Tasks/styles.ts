@@ -27,7 +27,8 @@ export const StyledFormLabel = styled(FormLabel, {
 
 export const RecommendedTag = styled(Box)(({ theme }) => ({
   position: "absolute",
-  top: 0,
+  // Matches StyledFormLabel's marginTop so the tag overlaps its border rather than sitting above it
+  top: theme.spacing(1),
   left: 0,
   width: "100%",
   backgroundColor: theme.palette.secondary.dark,
