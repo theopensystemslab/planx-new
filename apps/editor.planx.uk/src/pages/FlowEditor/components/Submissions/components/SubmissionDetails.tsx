@@ -1,6 +1,8 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
+import { Badge } from "../../../../../components/Badge/Badge";
+import { BadgeVariant } from "../../../../../components/Badge/types";
 import { useTeamLogo } from "../hooks";
 import type { Submission } from "../types";
 import { DownloadSubmissionButtonGrouped } from "./DownloadSubmissionButtonGrouped";
@@ -35,8 +37,14 @@ const DetailRow: React.FC<DetailRowProps> = ({ label, value, border }) => (
 
 export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
   const { data } = useTeamLogo(props.teamSlug);
+
+  if (!data?.teams[0]) {
+    return null;
+  }
+
   const teamLogo = data?.teams[0].theme.logo;
   const teamName = data?.teams[0].name;
+  const teamColour = data?.teams[0].theme.primaryColour;
 
   return (
     <Box
@@ -48,22 +56,15 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
       }}
     >
       <Box sx={{ padding: 1, margin: 1 }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          {teamLogo ? (
-            <Box
-              component="img"
-              src={teamLogo}
-              alt={teamName}
-              sx={{
-                maxWidth: 100,
-                width: "100%",
-                height: 50,
-                objectFit: "contain",
-                objectPosition: "left",
-                display: "block",
-              }}
-            />
-          ) : null}
+        <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 1 }}>
+          <Badge
+            variant={BadgeVariant.Team}
+            team={{
+              name: teamName,
+              theme: { primaryColour: teamColour, logo: teamLogo },
+            }}
+            size="compact"
+          />
 
           <Typography sx={{ fontWeight: "bold" }}>{teamName}</Typography>
         </Box>
