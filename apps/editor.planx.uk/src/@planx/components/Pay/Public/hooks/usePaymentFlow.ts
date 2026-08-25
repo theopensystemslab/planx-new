@@ -1,4 +1,4 @@
-import type { GovPayMetadata } from "@opensystemslab/planx-core/types";
+import type { PaymentMetadata } from "@opensystemslab/planx-core/types";
 
 import type { Props } from "../Pay";
 import type { UsePaymentProviderResult } from "../providers/types";
@@ -11,7 +11,7 @@ export const usePaymentFlow = (
   props: Props,
   dispatch: React.Dispatch<Action>,
   fee: number,
-  metadata: GovPayMetadata[],
+  metadata: PaymentMetadata[],
 ): UsePaymentProviderResult => {
   const providerName = usePaymentProvider();
   const govPay = useGovUkPay(props, dispatch, fee, metadata);
