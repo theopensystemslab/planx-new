@@ -43,12 +43,6 @@ const Component: React.FC<Props> = (props: Props) => {
     props.formikRef,
   );
 
-  const onSubmit = (newValues: Pay) => {
-    if (props.handleSubmit) {
-      props.handleSubmit({ type: TYPES.Pay, data: newValues });
-    }
-  };
-
   return (
     <FormikProvider value={formik}>
       <form id="modal" name="modal" onSubmit={formik.handleSubmit}>
