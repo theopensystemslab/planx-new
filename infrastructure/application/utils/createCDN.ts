@@ -1,31 +1,33 @@
 import * as aws from "@pulumi/aws";
-import * as pulumi from "@pulumi/pulumi";
+import type * as pulumi from "@pulumi/pulumi";
 
-const spaErrorResponses: aws.cloudfront.DistributionArgs["customErrorResponses"] = [
-  {
-    errorCode: 404,
-    responseCode: 200,
-    responsePagePath: "/index.html",
-  },
-  {
-    errorCode: 403,
-    responseCode: 200,
-    responsePagePath: "/index.html",
-  },
-];
+const spaErrorResponses: aws.cloudfront.DistributionArgs["customErrorResponses"] =
+  [
+    {
+      errorCode: 404,
+      responseCode: 200,
+      responsePagePath: "/index.html",
+    },
+    {
+      errorCode: 403,
+      responseCode: 200,
+      responsePagePath: "/index.html",
+    },
+  ];
 
-const staticErrorResponses: aws.cloudfront.DistributionArgs["customErrorResponses"] = [
-  {
-    errorCode: 404,
-    responseCode: 404,
-    responsePagePath: "/404.html",
-  },
-  {
-    errorCode: 403,
-    responseCode: 404,
-    responsePagePath: "/404.html",
-  },
-];
+const staticErrorResponses: aws.cloudfront.DistributionArgs["customErrorResponses"] =
+  [
+    {
+      errorCode: 404,
+      responseCode: 404,
+      responsePagePath: "/404.html",
+    },
+    {
+      errorCode: 403,
+      responseCode: 404,
+      responsePagePath: "/404.html",
+    },
+  ];
 
 // TODO: should we just be using a pre-baked AWS policy to simplify this?
 // e.g. CORS-with-preflight-and-SecurityHeadersPolicy
@@ -67,7 +69,7 @@ const responseHeadersPolicy = new aws.cloudfront.ResponseHeadersPolicy(
         override: true,
       },
     },
-  }
+  },
 );
 
 export const createCdn = ({
@@ -86,8 +88,8 @@ export const createCdn = ({
   acmCertificateArn: pulumi.Input<string>;
   bucket: aws.s3.Bucket;
   logsBucket: aws.s3.Bucket;
-  oai: aws.cloudfront.OriginAccessIdentity,
-  mode?: "static" | "spa"
+  oai: aws.cloudfront.OriginAccessIdentity;
+  mode?: "static" | "spa";
   includeWww?: boolean;
   lambdaFunctionAssociation?: {
     lambdaArn: pulumi.Input<string>;
@@ -135,7 +137,7 @@ export const createCdn = ({
       lambdaFunctionAssociations: lambdaFunctionAssociation
         ? [lambdaFunctionAssociation]
         : [],
-      responseHeadersPolicyId: responseHeadersPolicy.id
+      responseHeadersPolicyId: responseHeadersPolicy.id,
     },
 
     // "All" is the most broad distribution, and also the most expensive.

@@ -3,24 +3,23 @@
 // Intercepts link preview requests and returns skeleton HTML with meta tags
 // so that Slack, Teams, Discord, iMessage, Twitter etc. show rich previews.
 
-// Lambda@Edge functions can't use environment variables, 
+// Lambda@Edge functions can't use environment variables,
 // so the correct Hasura URL is replaced at build time
-const HASURA_URL =
-  process.env.HASURA_URL || "__HASURA_URL__";
+const HASURA_URL = process.env.HASURA_URL || "__HASURA_URL__";
 
 // crawler user agents to detect; sourced from
 // https://github.com/monperrus/crawler-user-agents/blob/master/crawler-user-agents.json
 const CRAWLER_USER_AGENTS = [
-  /Slackbot/i,            // Slack
-  /Twitterbot/i,          // X (Twitter)
+  /Slackbot/i, // Slack
+  /Twitterbot/i, // X (Twitter)
   /facebookexternalhit/i, // Facebook
-  /LinkedInBot/i,         // LinkedIn
-  /Discordbot/i,          // Discord
-  /TelegramBot/i,         // Telegram
-  /WhatsApp/i,            // WhatsApp
-  /Applebot/i,            // iMessage, Safari, Siri
-  /Googlebot/i,           // Google Search
-  /SkypeUriPreview/i,     // MS Teams/Skype
+  /LinkedInBot/i, // LinkedIn
+  /Discordbot/i, // Discord
+  /TelegramBot/i, // Telegram
+  /WhatsApp/i, // WhatsApp
+  /Applebot/i, // iMessage, Safari, Siri
+  /Googlebot/i, // Google Search
+  /SkypeUriPreview/i, // MS Teams/Skype
 ];
 
 // planx.{uk,dev} domains: regex for identifying team-hosted domains and extracting team and flow slugs from path
@@ -70,7 +69,6 @@ const QUERY_BY_DOMAIN = `
 
 // Fetches flow metadata from Hasura, looking up the team by slug or domain
 async function fetchFlowMetadata({ teamSlug, teamDomain }, flowSlug) {
-
   // differing queries, based on teamSlug vs teamDomain
   const [query, variables] = teamSlug
     ? [QUERY_BY_SLUG, { flowSlug, teamSlug }]
@@ -171,4 +169,3 @@ exports.handler = async (event) => {
     return request;
   }
 };
-

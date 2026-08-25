@@ -13,16 +13,23 @@ export const createLpsUrlRewriteLambda = () => {
   const config = new pulumi.Config();
   const lambdaNodejsRuntime = config.require("lambda-nodejs-runtime");
 
-  const assumeRolePolicy = aws.iam.getPolicyDocumentOutput({
-    statements: [{
-      effect: "Allow",
-      principals: [{
-        type: "Service",
-        identifiers: ["lambda.amazonaws.com", "edgelambda.amazonaws.com"],
-      }],
-      actions: ["sts:AssumeRole"],
-    }],
-  }, { provider: usEast1 });
+  const assumeRolePolicy = aws.iam.getPolicyDocumentOutput(
+    {
+      statements: [
+        {
+          effect: "Allow",
+          principals: [
+            {
+              type: "Service",
+              identifiers: ["lambda.amazonaws.com", "edgelambda.amazonaws.com"],
+            },
+          ],
+          actions: ["sts:AssumeRole"],
+        },
+      ],
+    },
+    { provider: usEast1 },
+  );
 
   const role = new aws.iam.Role("lps-url-rewrite-role", {
     assumeRolePolicy: assumeRolePolicy.json,

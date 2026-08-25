@@ -1,6 +1,6 @@
 import * as aws from "@pulumi/aws";
 import * as cloudflare from "@pulumi/cloudflare";
-import * as pulumi from "@pulumi/pulumi";
+import type * as pulumi from "@pulumi/pulumi";
 
 /**
  * Restrict ALB ingress to Cloudflare IP ranges only.
@@ -18,13 +18,16 @@ export const createCloudflareIngressRules = async (
     ipv4Cidrs.forEach((cidr) => {
       // we use a simplified cidr directly in resource name to avoid replacing these rules on every deploy
       const sanitisedCidr = cidr.replace(/[./\s]/g, "");
-      new aws.vpc.SecurityGroupIngressRule(`${sgName}-allow-tcp-in-${port}-from-cloudflare-${sanitisedCidr}`, {
-        securityGroupId,
-        cidrIpv4: cidr,
-        fromPort: port,
-        toPort: port,
-        ipProtocol: "tcp",
-      });
+      new aws.vpc.SecurityGroupIngressRule(
+        `${sgName}-allow-tcp-in-${port}-from-cloudflare-${sanitisedCidr}`,
+        {
+          securityGroupId,
+          cidrIpv4: cidr,
+          fromPort: port,
+          toPort: port,
+          ipProtocol: "tcp",
+        },
+      );
     });
   }
 };

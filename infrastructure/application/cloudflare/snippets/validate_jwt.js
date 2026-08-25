@@ -15,10 +15,10 @@ export default {
     const validateJWT = async (request) => {
       const response = await fetch(`${API_URL_EXT}/auth/validate-jwt`, {
         method: "GET",
-        headers: request.headers
+        headers: request.headers,
       });
 
-      return response.ok
+      return response.ok;
     };
 
     try {
@@ -30,12 +30,14 @@ export default {
 
       // Requests with a JWT need additional validation via our REST API
       // We check if the token is valid (signed by PlanX) or revoked (user has logged out)
-      const isValidToken = await validateJWT(request)
+      const isValidToken = await validateJWT(request);
       if (isValidToken) return fetch(request);
 
       return new Response(`Invalid or revoked token`, { status: 401 });
     } catch (error) {
-      return new Response("Error validating token: " + error.message, { status: 500 })
+      return new Response("Error validating token: " + error.message, {
+        status: 500,
+      });
     }
-  }
+  },
 };

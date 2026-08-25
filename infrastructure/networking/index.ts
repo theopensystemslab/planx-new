@@ -10,7 +10,7 @@ const vpc = new awsx.ec2.Vpc("vpc", {
     strategy: awsx.ec2.NatGatewayStrategy.None,
   },
   // for subnets, "Legacy" strategy is default, but will be "Auto" in next major version, so we configure explicitly
-  subnetStrategy: awsx.ec2.SubnetAllocationStrategy.Legacy
+  subnetStrategy: awsx.ec2.SubnetAllocationStrategy.Legacy,
 });
 
 // we allocate the RDS instance to the 2 public subnets so it can be hit from the internet

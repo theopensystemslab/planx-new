@@ -1,6 +1,6 @@
 import * as aws from "@pulumi/aws";
-import * as pulumi from "@pulumi/pulumi";
 import * as cloudflare from "@pulumi/cloudflare";
+import * as pulumi from "@pulumi/pulumi";
 
 import { createCdn, createLpsUrlRewriteLambda, usEast1 } from "../utils";
 
@@ -12,7 +12,7 @@ const config = new pulumi.Config();
 
 const createLPSBucket = (
   domain: string,
-  oai: aws.cloudfront.OriginAccessIdentity
+  oai: aws.cloudfront.OriginAccessIdentity,
 ) => {
   const lpsBucket = new aws.s3.Bucket(domain, {
     bucket: domain,
@@ -36,7 +36,7 @@ const createLPSBucket = (
               Resource: `${bucketArn}/*`,
             },
           ],
-        })
+        }),
       ),
   });
 
@@ -75,15 +75,12 @@ export const createLPSCertificates = (
     {
       domainName: domain,
       validationMethod: "DNS",
-      subjectAlternativeNames: [
-        domain,
-        `www.${domain}`,
-      ],
+      subjectAlternativeNames: [domain, `www.${domain}`],
     },
     {
       provider: usEast1,
       dependsOn: [caaRecordRoot],
-    }
+    },
   );
 
   const sslCertValidationRecord = new cloudflare.DnsRecord(
@@ -94,7 +91,7 @@ export const createLPSCertificates = (
       type: sslCert.domainValidationOptions[0].resourceRecordType,
       content: sslCert.domainValidationOptions[0].resourceRecordValue,
       zoneId: config.require("lps-cloudflare-zone-id"),
-    }
+    },
   );
 
   const sslCertValidationRecordWWW = new cloudflare.DnsRecord(
@@ -105,7 +102,7 @@ export const createLPSCertificates = (
       type: sslCert.domainValidationOptions[1].resourceRecordType,
       content: sslCert.domainValidationOptions[1].resourceRecordValue,
       zoneId: config.require("lps-cloudflare-zone-id"),
-    }
+    },
   );
 
   const sslCertValidation = new aws.acm.CertificateValidation(
@@ -119,13 +116,16 @@ export const createLPSCertificates = (
     },
     {
       provider: usEast1,
-    }
+    },
   );
 
   return sslCertValidation.certificateArn;
 };
 
-const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) => {
+const createCNAMERecords = (
+  domain: string,
+  cdn: aws.cloudfront.Distribution,
+) => {
   // Create record on planx.dev
   if (env === "staging") {
     new cloudflare.DnsRecord("localplanningservices", {
@@ -137,7 +137,7 @@ const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) =>
       proxied: false,
     });
   }
-  
+
   // Create records on localplanning.services
   if (env === "production") {
     new cloudflare.DnsRecord("localplanningservices", {
@@ -158,9 +158,11 @@ const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) =>
       proxied: true,
     });
   }
-}
+};
 
-export const createLocalPlanningServices = (planXCertArn: pulumi.Output<string>) => {
+export const createLocalPlanningServices = (
+  planXCertArn: pulumi.Output<string>,
+) => {
   const domain = config.require("lps-domain");
   const oai = new aws.cloudfront.OriginAccessIdentity("lpsOAI", {
     comment: `OAI for LPS CloudFront distribution`,

@@ -14,16 +14,23 @@ export const createFlowLinkPreviewLambda = (hasuraUrl: string) => {
 
   // Role + policy required for Lambda@Edge functions
   // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-edge-permissions.html
-  const assumeRolePolicy = aws.iam.getPolicyDocumentOutput({
-    statements: [{
-      effect: "Allow",
-      principals: [{
-        type: "Service",
-        identifiers: ["lambda.amazonaws.com", "edgelambda.amazonaws.com"],
-      }],
-      actions: ["sts:AssumeRole"],
-    }],
-  }, { provider: usEast1 });
+  const assumeRolePolicy = aws.iam.getPolicyDocumentOutput(
+    {
+      statements: [
+        {
+          effect: "Allow",
+          principals: [
+            {
+              type: "Service",
+              identifiers: ["lambda.amazonaws.com", "edgelambda.amazonaws.com"],
+            },
+          ],
+          actions: ["sts:AssumeRole"],
+        },
+      ],
+    },
+    { provider: usEast1 },
+  );
 
   const role = new aws.iam.Role("flow-link-preview-role", {
     assumeRolePolicy: assumeRolePolicy.json,
@@ -37,7 +44,7 @@ export const createFlowLinkPreviewLambda = (hasuraUrl: string) => {
 
   // Read function file & swap placeholder with actual Hasura URL
   const source = fs
-  .readFileSync(`${process.cwd()}/aws/lambda/flow_link_preview.js`, "utf-8")
+    .readFileSync(`${process.cwd()}/aws/lambda/flow_link_preview.js`, "utf-8")
     .replace("__HASURA_URL__", hasuraUrl);
 
   // Create Lambda function in us-east-1 for Lambda@Edge

@@ -1,14 +1,14 @@
-import * as awsx from "@pulumi/awsx";
 import * as aws from "@pulumi/aws";
+import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
 
-import { CreateService } from './../types';
 import {
   getJavaOpts,
   setupDnsRecord,
   setupLoadBalancer,
   setupNotificationForDeploymentRollback,
 } from "../utils";
+import type { CreateService } from "./../types";
 
 export const createMetabaseService = async ({
   env,
@@ -20,7 +20,9 @@ export const createMetabaseService = async ({
   stacks: { certificates } = {},
 }: CreateService): Promise<awsx.ecs.FargateService> => {
   if (!certificates) {
-    throw new Error("The Pulumi certificates stack is required to setup Metabase service");
+    throw new Error(
+      "The Pulumi certificates stack is required to setup Metabase service",
+    );
   }
   const config = new pulumi.Config();
   const DOMAIN: string = await certificates.requireOutputValue("domain");
@@ -44,9 +46,9 @@ export const createMetabaseService = async ({
       interval: 300,
       timeout: 120,
       unhealthyThreshold: 10,
-    }
+    },
   });
-  
+
   const metabaseMemoryMb = config.requireNumber("metabase-memory");
   const metabaseLogGroup = new aws.cloudwatch.LogGroup("metabase", {
     name: "/ecs/metabase",
@@ -87,7 +89,9 @@ export const createMetabaseService = async ({
     },
   });
 
-  const metabaseService = new awsx.ecs.FargateService("metabase", {
+  const metabaseService = new awsx.ecs.FargateService(
+    "metabase",
+    {
       cluster: cluster.arn,
       taskDefinition: metabaseTask.taskDefinition.arn,
       // we get the LB config as an output of the task defn, as computed from the target group passed into port mappings
@@ -107,10 +111,15 @@ export const createMetabaseService = async ({
     },
     {
       dependsOn: [metabaseLb],
-    }
+    },
   );
 
-  setupNotificationForDeploymentRollback(env, "metabase", cluster, metabaseService);
+  setupNotificationForDeploymentRollback(
+    env,
+    "metabase",
+    cluster,
+    metabaseService,
+  );
   setupDnsRecord("metabase", DOMAIN, metabaseLb);
   return metabaseService;
-}
+};

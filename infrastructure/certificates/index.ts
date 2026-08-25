@@ -1,10 +1,14 @@
 "use strict";
 
 import * as aws from "@pulumi/aws";
-import * as pulumi from "@pulumi/pulumi";
 import * as cloudflare from "@pulumi/cloudflare";
+import * as pulumi from "@pulumi/pulumi";
 
-import { getCustomDomains, getPendingDomains, getValidatedDomains } from "../common/customDomains";
+import {
+  getCustomDomains,
+  getPendingDomains,
+  getValidatedDomains,
+} from "../common/customDomains";
 
 const config = new pulumi.Config();
 const env = pulumi.getStack();
@@ -15,7 +19,7 @@ new pulumi.Config("cloudflare").requireSecret("apiToken");
 // ACM certificates for CloudFront must be provisioned in us-east-1
 const usEast1 = new aws.Provider("us-east-1", { region: "us-east-1" });
 
-// ----------------------- CAA records 
+// ----------------------- CAA records
 // CAA records restrict which CAs can issue certificates for our domain
 // (they protect against a quite exotic attack scenario, where a compromised CA specifically targets our domain)
 // Three CAs are permitted:
@@ -23,7 +27,7 @@ const usEast1 = new aws.Provider("us-east-1", { region: "us-east-1" });
 //   - pki.goog     — Google Trust Services (used by Cloudflare Total TLS on staging)
 //   - letsencrypt.org — Let's Encrypt (used by Cloudflare Total TLS on production, and for backup on staging)
 // See: https://developers.cloudflare.com/ssl/reference/certificate-authorities/#caa-records
-const caaRecordRoot = new cloudflare.DnsRecord("caa-record-root", {
+new cloudflare.DnsRecord("caa-record-root", {
   name: `${config.require("domain")}`,
   ttl: 600,
   type: "CAA",
@@ -35,7 +39,7 @@ const caaRecordRoot = new cloudflare.DnsRecord("caa-record-root", {
   },
 });
 
-const caaRecordWildcard = new cloudflare.DnsRecord("caa-record-wildcard", {
+new cloudflare.DnsRecord("caa-record-wildcard", {
   name: `${config.require("domain")}`,
   ttl: 600,
   type: "CAA",
@@ -47,7 +51,7 @@ const caaRecordWildcard = new cloudflare.DnsRecord("caa-record-wildcard", {
   },
 });
 
-const caaRecordRootGoog = new cloudflare.DnsRecord("caa-record-root-gts", {
+new cloudflare.DnsRecord("caa-record-root-gts", {
   name: `${config.require("domain")}`,
   ttl: 600,
   type: "CAA",
@@ -59,7 +63,7 @@ const caaRecordRootGoog = new cloudflare.DnsRecord("caa-record-root-gts", {
   },
 });
 
-const caaRecordWildcardGoog = new cloudflare.DnsRecord("caa-record-wildcard-gts", {
+new cloudflare.DnsRecord("caa-record-wildcard-gts", {
   name: `${config.require("domain")}`,
   ttl: 600,
   type: "CAA",
@@ -71,7 +75,7 @@ const caaRecordWildcardGoog = new cloudflare.DnsRecord("caa-record-wildcard-gts"
   },
 });
 
-const caaRecordRootLetsEncrypt = new cloudflare.DnsRecord("caa-record-root-letsencrypt", {
+new cloudflare.DnsRecord("caa-record-root-letsencrypt", {
   name: `${config.require("domain")}`,
   ttl: 600,
   type: "CAA",
@@ -83,7 +87,7 @@ const caaRecordRootLetsEncrypt = new cloudflare.DnsRecord("caa-record-root-letse
   },
 });
 
-const caaRecordWildcardLetsEncrypt = new cloudflare.DnsRecord("caa-record-wildcard-letsencrypt", {
+new cloudflare.DnsRecord("caa-record-wildcard-letsencrypt", {
   name: `${config.require("domain")}`,
   ttl: 600,
   type: "CAA",
@@ -106,17 +110,20 @@ const validatedCustomDomains = getValidatedDomains(customDomains);
 // 'Mining' certificate — surfaces DNS validation records for pending domains.
 // NOT attached to any CloudFront distribution. Its sole purpose is to request DNS validation
 // from AWS ACM so we can extract the required CNAME records and send them to council IT teams.
-const miningCert = pendingCustomDomains.length > 0
-  ? new aws.acm.Certificate(
-      "sslCert-dns-mining",
-      {
-        domainName: pendingCustomDomains[0].domain,
-        subjectAlternativeNames: pendingCustomDomains.slice(1).map(d => d.domain),
-        validationMethod: "DNS",
-      },
-      { provider: usEast1 }
-    )
-  : undefined;
+const miningCert =
+  pendingCustomDomains.length > 0
+    ? new aws.acm.Certificate(
+        "sslCert-dns-mining",
+        {
+          domainName: pendingCustomDomains[0].domain,
+          subjectAlternativeNames: pendingCustomDomains
+            .slice(1)
+            .map((d) => d.domain),
+          validationMethod: "DNS",
+        },
+        { provider: usEast1 },
+      )
+    : undefined;
 
 // Shared custom domain certificate — a single DNS-validated ACM cert for all non-legacy domains.
 // The application layer attaches this to the shared CloudFront distribution.
@@ -127,15 +134,18 @@ if (validatedCustomDomains.length > 0) {
     "sslCert-custom-domains",
     {
       domainName: validatedCustomDomains[0].domain,
-      subjectAlternativeNames: validatedCustomDomains.slice(1).map(d => d.domain),
+      subjectAlternativeNames: validatedCustomDomains
+        .slice(1)
+        .map((d) => d.domain),
       validationMethod: "DNS",
     },
-    { provider: usEast1,
+    {
+      provider: usEast1,
       // ensure cert is replaced but *not* deleted - that is, deletion will be delayed to the next deployment of this layer
       // (immediate deletion would fail since cert is in use by a CloudFront distribution, pending deployment of application layer)
       deleteBeforeReplace: false,
       retainOnDelete: true,
-     }
+    },
   );
 
   const customDomainsCertValidation = new aws.acm.CertificateValidation(
@@ -143,10 +153,10 @@ if (validatedCustomDomains.length > 0) {
     {
       certificateArn: customDomainsCert.arn,
       validationRecordFqdns: customDomainsCert.domainValidationOptions.apply(
-        options => options.map(opt => opt.resourceRecordName)
+        (options) => options.map((opt) => opt.resourceRecordName),
       ),
     },
-    { provider: usEast1 }
+    { provider: usEast1 },
   );
 
   customDomainsCertArn = customDomainsCertValidation.certificateArn;
@@ -164,13 +174,14 @@ export const miningCertArn = miningCert ? miningCert.arn : undefined;
 
 // DNS validation records that councils need to add before we can move domain to shared cert/CDN
 export const pendingCouncilDnsRecords = miningCert
-  ? miningCert.domainValidationOptions.apply((options: aws.types.output.acm.CertificateDomainValidationOption[]) =>
-      options.map((opt) => ({
-        domain: opt.domainName,
-        validationCname: {
-          name: opt.resourceRecordName,
-          target: opt.resourceRecordValue,
-        },
-      }))
+  ? miningCert.domainValidationOptions.apply(
+      (options: aws.types.output.acm.CertificateDomainValidationOption[]) =>
+        options.map((opt) => ({
+          domain: opt.domainName,
+          validationCname: {
+            name: opt.resourceRecordName,
+            target: opt.resourceRecordValue,
+          },
+        })),
     )
   : undefined;

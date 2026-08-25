@@ -16,7 +16,7 @@ mock.method(globalThis, "fetch", async () => {
         ],
       },
     }),
-    { status: 200, headers: { "content-type": "application/json" } }
+    { status: 200, headers: { "content-type": "application/json" } },
   );
 });
 
@@ -107,12 +107,29 @@ for (const scenario of TEST_MATRIX) {
     const result = await handler(event);
 
     if (scenario.expectPreviewHtml) {
-      assert.ok(result.body, "Expected an HTML preview response body, but request passed through");
-      assert.match(result.body, /<html/i, "Response body should be a valid HTML string");
-      assert.match(result.body, /PlanX Testing Authority/i, "HTML should include mocked team metadata");
+      assert.ok(
+        result.body,
+        "Expected an HTML preview response body, but request passed through",
+      );
+      assert.match(
+        result.body,
+        /<html/i,
+        "Response body should be a valid HTML string",
+      );
+      assert.match(
+        result.body,
+        /PlanX Testing Authority/i,
+        "HTML should include mocked team metadata",
+      );
     } else {
-      assert.ok(!result.body, "Expected request to pass through smoothly, but received a mock HTML response body");
-      assert.ok(result.uri, "Expected to pass back a valid CloudFront request configuration object");
+      assert.ok(
+        !result.body,
+        "Expected request to pass through smoothly, but received a mock HTML response body",
+      );
+      assert.ok(
+        result.uri,
+        "Expected to pass back a valid CloudFront request configuration object",
+      );
     }
   });
 }
