@@ -52,8 +52,8 @@ const SubmissionModalWrapper = ({
       slotProps={{
         paper: {
           sx: {
-            width: "66.67%",
-            maxWidth: "66.67%",
+            width: { xs: "90%", md: "66.67%" },
+            maxWidth: { xs: "90%", md: "66.67%" },
             margin: "auto",
           },
         },
@@ -129,9 +129,9 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
     <SubmissionModalWrapper handleClose={handleClose}>
       <Grid container>
         <Grid
-          size={6}
+          size={{ xs: 12, md: 6 }}
           sx={{
-            position: "sticky",
+            position: { md: "sticky" },
             top: 0,
             alignSelf: "flex-start",
           }}
@@ -144,7 +144,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
           />
         </Grid>
 
-        <Grid size={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <SubmissionEventsHistory events={events} />
         </Grid>
       </Grid>
