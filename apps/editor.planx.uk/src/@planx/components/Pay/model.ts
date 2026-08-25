@@ -78,7 +78,7 @@ const getReturnURL = (sessionId: string): string => {
 
 export const GOV_UK_PAY_URL = `${import.meta.env.VITE_APP_API_URL}/pay`;
 
-export const REQUIRED_GOVPAY_METADATA = [
+export const REQUIRED_PAYMENT_METADATA = [
   "flow",
   "source",
   "paidViaInviteToPay",
@@ -86,7 +86,7 @@ export const REQUIRED_GOVPAY_METADATA = [
 
 // Validation must match requirements set out here -
 // https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39
-export const govPayMetadataSchema = array(
+export const paymentMetadataSchema = array(
   object({
     key: string()
       .required("Key is a required field")
@@ -129,12 +129,12 @@ export const govPayMetadataSchema = array(
     message: `Keys ${new Intl.ListFormat("en-GB", {
       style: "long",
       type: "conjunction",
-    }).format(REQUIRED_GOVPAY_METADATA)} must be present`,
+    }).format(REQUIRED_PAYMENT_METADATA)} must be present`,
     test: (metadata) => {
       if (!metadata) return false;
 
       const keys = metadata.map((item) => item.key);
-      const allRequiredKeysPresent = REQUIRED_GOVPAY_METADATA.every(
+      const allRequiredKeysPresent = REQUIRED_PAYMENT_METADATA.every(
         (requiredKey) => keys.includes(requiredKey),
       );
       return allRequiredKeysPresent;
@@ -170,7 +170,7 @@ export const validationSchema = object({
     is: true,
     then: string().required(),
   }),
-  govPayMetadata: govPayMetadataSchema,
+  govPayMetadata: paymentMetadataSchema,
 });
 
 export const getDefaultContent = (): Pay => ({
