@@ -147,6 +147,9 @@ export const DataTable = <T,>({
                 backgroundColor: "action.hover",
               },
             }),
+            "& .MuiDataGrid-cell:focus": {
+              outline: "none",
+            },
           }}
           slots={{
             toolbar: CustomToolbar,
