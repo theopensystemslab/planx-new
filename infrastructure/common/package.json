@@ -1,16 +1,24 @@
 {
   "name": "@planx/infrastructure-common",
+  "prettier": "@planx/prettier-config",
   "scripts": {
-    "check": "pnpm typecheck",
-    "typecheck": "tsc --noEmit"
+    "check": "pnpm typecheck && pnpm lint",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint '**/*.{js,ts}' && prettier -c .",
+    "lint:fix": "eslint --fix '**/*.{js,ts}' && prettier -w ."
   },
   "dependencies": {
     "@pulumi/aws": "catalog:infrastructure",
     "@pulumi/pulumi": "catalog:infrastructure"
   },
   "devDependencies": {
-    "@types/node": "catalog:",
+    "@planx/eslint-config": "workspace:*",
+    "@planx/prettier-config": "workspace:*",
     "@planx/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "globals": "catalog:",
+    "prettier": "catalog:",
     "typescript": "catalog:typescript"
   },
   "private": true

@@ -1,7 +1,4 @@
 {
   "extends": "@planx/typescript-config/pulumi.json",
-  "files": [
-    "index.ts",
-    "utils/generateTeamSecrets.ts"
-  ]
+  "files": ["index.ts", "utils/generateTeamSecrets.ts"]
 }
