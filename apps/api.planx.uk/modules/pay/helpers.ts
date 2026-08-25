@@ -1,7 +1,7 @@
 import { getFeeBreakdown } from "@opensystemslab/planx-core";
 import type {
   FeeBreakdown,
-  GovPayMetadataValue,
+  PaymentMetadataValue,
   Session,
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
@@ -35,7 +35,7 @@ export async function logPaymentStatus({
     state: {
       status: string;
     };
-    metadata?: Record<string, GovPayMetadataValue>;
+    metadata?: Record<string, PaymentMetadataValue>;
   };
 }): Promise<void> {
   if (!flowId || !sessionId) {
@@ -115,7 +115,7 @@ async function insertPaymentStatus({
   status: string;
   amount: number;
   feeBreakdown: FeeBreakdown;
-  metadata?: Record<string, GovPayMetadataValue>;
+  metadata?: Record<string, PaymentMetadataValue>;
 }): Promise<void> {
   const _response = await $api.client.request(
     gql`
