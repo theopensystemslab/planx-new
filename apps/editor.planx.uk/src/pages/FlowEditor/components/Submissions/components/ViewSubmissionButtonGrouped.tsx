@@ -57,8 +57,8 @@ export const ViewSubmissionButtonGrouped = (props: Props) => {
       variant="contained"
       onClick={handleClick}
       disabled={!props.submittedAt}
+      startIcon={<PreviewIcon />}
     >
-      <PreviewIcon sx={{ mr: 1 }} />
       View submission
     </Button>
   );
