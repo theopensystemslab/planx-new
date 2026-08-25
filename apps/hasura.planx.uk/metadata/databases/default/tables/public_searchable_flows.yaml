@@ -1,0 +1,44 @@
+table:
+  name: searchable_flows
+  schema: public
+object_relationships:
+  - name: team
+    using:
+      manual_configuration:
+        column_mapping:
+          team_id: id
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
+select_permissions:
+  - permission:
+      columns:
+        - id
+        - name
+        - slug
+        - description
+        - status
+        - is_template
+        - can_create_from_copy
+        - templated_from
+        - team_id
+      filter:
+        deleted_at:
+          _is_null: true
+    role: teamEditor
+  - permission:
+      columns:
+        - id
+        - name
+        - slug
+        - description
+        - status
+        - is_template
+        - can_create_from_copy
+        - templated_from
+        - team_id
+      filter:
+        deleted_at:
+          _is_null: true
+    role: platformAdmin

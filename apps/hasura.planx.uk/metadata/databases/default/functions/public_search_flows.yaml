@@ -1,0 +1,9 @@
+function:
+  name: search_flows
+  schema: public
+configuration:
+  exposed_as: query
+permissions:
+  - role: teamEditor
+  - role: teamAdmin
+  - role: platformAdmin
