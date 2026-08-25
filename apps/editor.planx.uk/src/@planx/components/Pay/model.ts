@@ -84,8 +84,15 @@ export const REQUIRED_PAYMENT_METADATA = [
   "paidViaInviteToPay",
 ];
 
-// Validation must match requirements set out here -
-// https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39
+/**
+ * Validation rules for both GovPay and Stripe metadata
+ *
+ * Rules set out here -
+ * GovPay - https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39
+ * Stripe - https://docs.stripe.com/metadata
+ *
+ * @TODO Once migration to Stripe is completed, we can loosen these rules to only validate against Stripe requirements
+ */
 export const paymentMetadataSchema = array(
   object({
     key: string()
@@ -103,6 +110,16 @@ export const paymentMetadataSchema = array(
           if (type === "data") return true;
           // Static strings must be 100 characters or less
           return value.length <= 100;
+        },
+      })
+      .test({
+        name: "no-brackets",
+        message: "Static values cannot contain [ or ] characters",
+        test: (value, context) => {
+          if (!value) return true;
+          const type = context.parent.type;
+          if (type !== "static") return true;
+          return !/[[\]]/.test(value);
         },
       }),
     type: mixed()
