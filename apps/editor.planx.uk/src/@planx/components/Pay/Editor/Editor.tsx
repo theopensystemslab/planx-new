@@ -22,8 +22,8 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import type { EditorProps } from "../../shared/types";
-import { GovPayMetadataSection } from "./GovPayMetadataSection";
 import { InviteToPaySection } from "./InviteToPaySection";
+import { PaymentMetadataSection } from "./PaymentMetadataSection";
 
 export type Props = EditorProps<TYPES.Pay, Pay>;
 
@@ -131,7 +131,7 @@ const Component: React.FC<Props> = (props: Props) => {
           </ModalSectionContent>
         </ModalSection>
         <InviteToPaySection disabled={props.disabled} />
-        <GovPayMetadataSection disabled={props.disabled} />
+        <PaymentMetadataSection disabled={props.disabled} />
         <MoreInformation formik={formik} disabled={props.disabled} />
         <InternalNotes
           name="notes"

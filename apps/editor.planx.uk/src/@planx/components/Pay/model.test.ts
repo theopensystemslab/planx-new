@@ -1,8 +1,8 @@
-import { govPayMetadataSchema, parsePay } from "./model";
+import { parsePay, paymentMetadataSchema } from "./model";
 
-describe("GovPayMetadata Schema", () => {
+describe("Payment Metadata Schema", () => {
   const validate = async (payload: unknown) =>
-    await govPayMetadataSchema.validate(payload).catch((err) => err.errors);
+    await paymentMetadataSchema.validate(payload).catch((err) => err.errors);
 
   const defaults = [
     { key: "flow", value: "flowName", type: "static" },
@@ -141,7 +141,7 @@ describe("GovPayMetadata Schema", () => {
 });
 
 describe("parsePay() helper function", () => {
-  describe("govPayMetadata mapping", () => {
+  describe("payment metadata mapping", () => {
     it("handles new nodes", () => {
       const result = parsePay();
 
