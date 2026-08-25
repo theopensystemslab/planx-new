@@ -67,7 +67,7 @@
     "check": "pnpm typecheck && pnpm lint",
     "copy-prompt-files": "copyfiles 'modules/ai/**/*.md' dist",
     "copy-swagger-files": "copyfiles '**/docs.yaml' dist",
-    "dev": "tsx watch index.ts",
+    "dev": "pnpm turbo run watch --filter=api.planx.uk",
     "lint:error": "eslint --quiet '**/*.{js,ts}' && prettier -c . --ignore-path ../../.prettierignore",
     "lint:fix": "eslint --fix '**/*.{js,ts}' && prettier -w .",
     "lint": "eslint '**/*.{js,ts}' && prettier -c .",
@@ -75,7 +75,8 @@
     "test:coverage": "TZ=Europe/London vitest run --coverage && open coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London vitest --ui --coverage",
     "test": "TZ=Europe/London vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "watch": "tsx watch index.ts"
   },
   "prettier": "@planx/prettier-config",
   "devDependencies": {
