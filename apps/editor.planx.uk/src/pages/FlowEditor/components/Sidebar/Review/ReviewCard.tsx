@@ -10,9 +10,7 @@ export const ReviewCard: React.FC<{ nodeId: string }> = ({ nodeId }) => {
   return (
     <ListItem>
       <NodeCard nodeId={nodeId} backgroundColor="#fff">
-        {notes && (
-          <Typography variant="body2">Internal notes - {notes}</Typography>
-        )}
+        {notes && <Typography variant="body2">Note - {notes}</Typography>}
       </NodeCard>
     </ListItem>
   );

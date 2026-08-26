@@ -1,7 +1,6 @@
 import type { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
-import { Link } from "@tanstack/react-router";
-import { useParams } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import useFlashOnNodeAdded from "hooks/useFlashOnNodeAdded";
@@ -10,7 +9,7 @@ import { useDrag } from "react-dnd";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
-import { AttachedNotes } from "../notes/AttachedNotes";
+import { AttachedNote } from "./AttachedNote";
 import Hanger from "./Hanger";
 import Node from "./Node";
 
@@ -20,9 +19,10 @@ type Props = {
 };
 
 const Filter: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes] = useStore((state) => [
+  const [isClone, childNodes, showNotes] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
+    state.showNotes,
   ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
@@ -88,7 +88,9 @@ const Filter: React.FC<Props> = React.memo((props) => {
             {Icon && <Icon />}
             <span>{props.text}</span>
           </Link>
-          <AttachedNotes nodeId={props.id} />
+          {showNotes && props.data?.notes && (
+            <AttachedNote note={props.data.notes} />
+          )}
         </div>
         <ol className="options">
           {childNodes.map((child) => (

@@ -30,18 +30,18 @@ export const ModalFooter = <T extends BaseNodeData>({
       {showMoreInformation && (
         <MoreInformation formik={formik} disabled={disabled} />
       )}
+      {showTags && (
+        <ComponentTagSelect
+          value={formik.values.tags}
+          onChange={(value) => formik.setFieldValue("tags", value)}
+          disabled={disabled}
+        />
+      )}
       {showInternalNotes && (
         <InternalNotes
           name="notes"
           onChange={formik.handleChange}
           value={formik.values.notes}
-          disabled={disabled}
-        />
-      )}
-      {showTags && (
-        <ComponentTagSelect
-          value={formik.values.tags}
-          onChange={(value) => formik.setFieldValue("tags", value)}
           disabled={disabled}
         />
       )}
