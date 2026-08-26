@@ -10,7 +10,7 @@ packages:
 
 catalog:
   "@opensystemslab/map": 1.0.0-alpha.15
-  "@opensystemslab/planx-core": github:theopensystemslab/planx-core#a9f763f
+  "@opensystemslab/planx-core": github:theopensystemslab/planx-core#2fce56a
   "@types/jsdom": ^28.0.3
   "@types/node": ~24.10.15
   "@vitest/eslint-plugin": ^1.6.20
