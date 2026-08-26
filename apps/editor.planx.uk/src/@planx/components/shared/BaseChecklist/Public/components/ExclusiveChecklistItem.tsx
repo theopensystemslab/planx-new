@@ -52,6 +52,7 @@ export const ExclusiveChecklistItem = ({
             <ChecklistItem
               onChange={changeCheckbox(exclusiveOrOption.id)}
               label={exclusiveOrOption.data.text}
+              description={exclusiveOrOption.data.description}
               id={exclusiveOrOption.id}
               checked={formik.values.checked.includes(exclusiveOrOption.id)}
               inputProps={{
