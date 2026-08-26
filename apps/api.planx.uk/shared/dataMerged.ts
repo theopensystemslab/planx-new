@@ -52,10 +52,10 @@ export const dataMerged = async (
     }
   }
 
-  return redactNotesFromFlow(mergedGraph) as FlowGraph;
+  return sanitiseNotes(mergedGraph) as FlowGraph;
 };
 
-const redactNotesFromFlow = (flow: MergedGraph): MergedGraph => {
+export const sanitiseNotes = (flow: MergedGraph): MergedGraph => {
   const redactedFlow = cloneDeep(flow);
 
   for (const [nodeId, node] of Object.entries(redactedFlow)) {
