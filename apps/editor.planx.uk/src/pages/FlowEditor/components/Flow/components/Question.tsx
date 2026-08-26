@@ -80,9 +80,11 @@ const Question: React.FC<Props> = React.memo((props) => {
           "card",
           "decision",
           "type-" + TYPES[props.type as TYPES],
+          `${props.type === TYPES.Note ? "question" : ""}`,
           {
             isDragging,
             isClone: isCloneValue,
+            isNote: props.type === TYPES.Note,
             wasVisited: props.wasVisited,
             hasFailed: props.hasFailed,
           },

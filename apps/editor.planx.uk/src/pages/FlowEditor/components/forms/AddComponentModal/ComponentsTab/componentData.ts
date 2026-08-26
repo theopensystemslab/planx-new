@@ -1,5 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { COMPONENT_TITLES } from "@planx/components/shared/componentTitles";
+import { hasFeatureFlag } from "lib/featureFlags";
 
 export interface ComponentItem {
   type: TYPES;
@@ -17,17 +18,21 @@ export interface Category {
 const title = (type: TYPES): string => COMPONENT_TITLES[type] ?? String(type);
 
 export const ALL_CATEGORIES: Category[] = [
-  {
-    label: "",
-    items: [
-      {
-        type: TYPES.Note,
-        slug: "note",
-        title: title(TYPES.Note),
-        description: "Add a sticky note visible to editors only",
-      },
-    ],
-  },
+  ...(hasFeatureFlag("NOTES_V2")
+    ? [
+        {
+          label: "",
+          items: [
+            {
+              type: TYPES.Note,
+              slug: "note",
+              title: title(TYPES.Note),
+              description: "Add a sticky note visible to editors only",
+            },
+          ],
+        },
+      ]
+    : []),
   {
     label: "Structure",
     items: [

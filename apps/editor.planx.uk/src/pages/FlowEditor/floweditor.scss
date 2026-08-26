@@ -834,6 +834,7 @@ $fontMonospace: "Source Code Pro", monospace;
   }
   align-items: center;
 
+  // TODO retire `.question.` prefix
   &.question.isNote {
     a {
       background: #fffdb0 !important;
