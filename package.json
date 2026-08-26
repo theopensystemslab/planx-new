@@ -15,7 +15,6 @@
     "analytics": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services --profile analytics  up -d --quiet-pull",
     "logs": "docker compose logs --tail 30 -f",
     "prepare": "husky",
-    "postinstall": "turbo run build --filter='./packages/*'",
     "prebuild": "./scripts/check-containers.sh dev",
     "pretest": "./scripts/check-containers.sh e2e",
     "typecheck": "turbo run typecheck",

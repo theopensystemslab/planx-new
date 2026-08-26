@@ -11,10 +11,17 @@
     ".prettierignore"
   ],
   "tasks": {
-    "typecheck": {},
+    // compiled workspace packages resolve via dist/, so consumers reading types or importing at
+    // runtime (including tests) must build any such dependencies first (`pnpm install` only symlinks)
+    // workspace packages - it never builds them.
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
     "lint": {},
     "lint:fix": {},
-    "test": {},
+    "test": {
+      "dependsOn": ["^build"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**"]

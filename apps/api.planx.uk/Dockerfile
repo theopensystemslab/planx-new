@@ -20,10 +20,7 @@ RUN npm install -g pnpm@10.30.2
 # unless the API's dependencies change (not on every monorepo source change).
 COPY --from=pruner /app/out/json/ ./
 RUN pnpm fetch
-# `--ignore-scripts` skips the root `postinstall` (which builds `packages/*`) - no
-# source has been copied into this layer yet, so it would fail with TS18003. The
-# workspace deps are built below instead, once the full source is present.
-RUN pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
+RUN pnpm install --frozen-lockfile --prefer-offline
 
 # Build from the pruned full source
 COPY --from=pruner /app/out/full/ ./
