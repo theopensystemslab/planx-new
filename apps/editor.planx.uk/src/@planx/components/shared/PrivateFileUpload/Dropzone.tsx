@@ -9,6 +9,7 @@ import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload"
 import {
   ALLOWED_EXTENSIONS_BY_MIME_TYPE,
   MAX_UPLOAD_SIZE_BYTES,
+  MAX_UPLOAD_SIZE_MB,
 } from "@planx/file-upload";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { nanoid } from "nanoid";
@@ -226,7 +227,7 @@ export function Dropzone<T extends FileUploadSlot>({
             pt: 1,
           }}
         >
-          Max size per file 30MB
+          Max size per file {MAX_UPLOAD_SIZE_MB}MB
         </Typography>
       </Box>
     </Root>
