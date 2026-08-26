@@ -1,14 +1,14 @@
-import { formatGovPayMetadata } from "@opensystemslab/planx-core";
+import { formatPaymentMetadata } from "@opensystemslab/planx-core";
 import type {
-  GovPayMetadataValue,
   Passport,
+  PaymentMetadataValue,
 } from "@opensystemslab/planx-core/types";
 import type { NextFunction, Request, RequestHandler, Response } from "express";
 import { gql } from "graphql-request";
 
 import { $api } from "../../client/index.js";
 import { ServerError } from "../../errors/index.js";
-import type { GovPayMetadata } from "./types.js";
+import type { PaymentMetadata } from "./types.js";
 
 /**
  * Confirm that this local authority (aka team) has a pay token
@@ -39,7 +39,7 @@ interface GetPaymentRequestDetails {
   paymentRequest: {
     sessionId: string;
     paymentAmount: number;
-    govPayMetadata: GovPayMetadata[];
+    govPayMetadata: PaymentMetadata[];
     session: {
       flowId: string;
       flow: {
@@ -111,7 +111,7 @@ interface GovPayCreatePayment {
   reference: string;
   description: string;
   return_url: string;
-  metadata: Record<string, GovPayMetadataValue>;
+  metadata: Record<string, PaymentMetadataValue>;
 }
 
 export async function buildPaymentPayload(
@@ -138,7 +138,7 @@ export async function buildPaymentPayload(
   }
 
   // Convert metadata to format required by GovPay
-  const metadata = formatGovPayMetadata({
+  const metadata = formatPaymentMetadata({
     metadata: res.locals.govPayMetadata,
     userPassport: res.locals.passport,
     paidViaInviteToPay: true,

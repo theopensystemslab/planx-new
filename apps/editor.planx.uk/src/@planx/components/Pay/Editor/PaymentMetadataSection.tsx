@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import type { GovPayMetadata } from "@opensystemslab/planx-core/types";
+import type { PaymentMetadata } from "@opensystemslab/planx-core/types";
 import type { Pay } from "@planx/components/Pay/model";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { useFormikContext } from "formik";
@@ -26,14 +26,14 @@ const GOVPAY_DOCS_URL =
 const STRIPE_DOCS_URL = "https://docs.stripe.com/metadata";
 
 export type FormikPaymentMetadata =
-  Record<keyof GovPayMetadata, string>[] | string | undefined;
+  Record<keyof PaymentMetadata, string>[] | string | undefined;
 
 interface PaymentMetadataSectionProps {
   disabled?: boolean;
 }
 
 function PaymentMetadataEditor(
-  props: ListManagerEditorProps<GovPayMetadata> & {
+  props: ListManagerEditorProps<PaymentMetadata> & {
     isFieldDisabled: (key: string, index: number) => boolean;
     disabled?: boolean;
     variant: "data" | "static";
@@ -150,7 +150,7 @@ export const PaymentMetadataSection: React.FC<PaymentMetadataSectionProps> = ({
     useFormikContext<Pay>();
 
   const EditorComponent = useCallback(
-    (editorProps: ListManagerEditorProps<GovPayMetadata>) => (
+    (editorProps: ListManagerEditorProps<PaymentMetadata>) => (
       // @ts-expect-error "variant" prop is passed in via editorProps, but type inference won't pick this up
       <PaymentMetadataEditor
         {...editorProps}
@@ -201,7 +201,7 @@ export const PaymentMetadataSection: React.FC<PaymentMetadataSectionProps> = ({
                   key: "",
                   value: "",
                   type: "static",
-                } satisfies GovPayMetadata;
+                } satisfies PaymentMetadata;
               }}
               itemName="static field"
               editorExtraProps={{ variant: "static" }}
@@ -227,7 +227,7 @@ export const PaymentMetadataSection: React.FC<PaymentMetadataSectionProps> = ({
                   key: "",
                   value: "",
                   type: "data",
-                } satisfies GovPayMetadata;
+                } satisfies PaymentMetadata;
               }}
               itemName="data field"
               editorExtraProps={{ variant: "data" }}

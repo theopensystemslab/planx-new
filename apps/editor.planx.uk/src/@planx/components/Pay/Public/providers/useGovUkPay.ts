@@ -1,6 +1,6 @@
 import type {
-  GovPayMetadata,
   GovUKPayment,
+  PaymentMetadata,
 } from "@opensystemslab/planx-core/types";
 import {
   GOV_PAY_PASSPORT_KEY,
@@ -36,7 +36,7 @@ export function useGovUkPay(
   props: Props,
   dispatch: React.Dispatch<Action>,
   fee: number,
-  metadata: GovPayMetadata[],
+  metadata: PaymentMetadata[],
 ): UsePaymentProviderResult {
   const [
     flowId,

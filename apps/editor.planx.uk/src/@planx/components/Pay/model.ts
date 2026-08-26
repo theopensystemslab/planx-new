@@ -1,8 +1,8 @@
-import { formatGovPayMetadata } from "@opensystemslab/planx-core";
+import { formatPaymentMetadata } from "@opensystemslab/planx-core";
 import type {
-  GovPayMetadata,
   GovUKCreatePaymentPayload,
   Passport as IPassport,
+  PaymentMetadata,
 } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -30,7 +30,7 @@ export interface Pay extends BaseNodeData {
   yourDetailsTitle?: string;
   yourDetailsDescription?: string;
   yourDetailsLabel?: string;
-  govPayMetadata: GovPayMetadata[];
+  govPayMetadata: PaymentMetadata[];
 }
 
 export const toPence = (decimal: number) => Math.trunc(decimal * 100);
@@ -48,14 +48,14 @@ export const formattedPriceWithCurrencySymbol = (
 export const createPayload = (
   fee: number,
   reference: string,
-  metadata: GovPayMetadata[],
+  metadata: PaymentMetadata[],
   passport: Passport,
 ): GovUKCreatePaymentPayload => ({
   amount: toPence(fee),
   reference,
   description: "New application",
   return_url: getReturnURL(reference),
-  metadata: formatGovPayMetadata({
+  metadata: formatPaymentMetadata({
     metadata,
     userPassport: passport as IPassport,
     paidViaInviteToPay: false,
