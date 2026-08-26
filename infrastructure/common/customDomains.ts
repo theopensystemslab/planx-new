@@ -54,8 +54,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "westberks",
           domain: "planningservices.westberks.gov.uk",
-          cloudFrontState: "cutover-ongoing",
-          certificateLocation: "pulumiConfig",
+          cloudFrontState: "shared-final",
         },
         {
           name: "gateshead",
