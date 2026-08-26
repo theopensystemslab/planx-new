@@ -96,6 +96,39 @@ describe("Payment Metadata Schema", () => {
     expect(result).toEqual(input);
   });
 
+  test("static values cannot contain square brackets", async () => {
+    const input = [
+      ...defaults,
+      { key: "myKey", value: "value[0]", type: "static" },
+    ];
+    const errors = await validate(input);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatch(
+      /Static values cannot contain \[ or \] characters/,
+    );
+  });
+
+  test("static values reject lone opening bracket", async () => {
+    const input = [
+      ...defaults,
+      { key: "myKey", value: "value[with", type: "static" },
+    ];
+    const errors = await validate(input);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatch(
+      /Static values cannot contain \[ or \] characters/,
+    );
+  });
+
+  test("dynamic values can contain square brackets", async () => {
+    const input = [
+      ...defaults,
+      { key: "myKey", value: "passport.var[0]", type: "data" },
+    ];
+    const result = await validate(input);
+    expect(result).toEqual(input);
+  });
+
   test("keys must be unique", async () => {
     const input = [
       ...defaults,
