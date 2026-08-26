@@ -8,7 +8,14 @@ services:
       target: development
     restart: always
     volumes:
+      # Only the API's own source is bind-mounted, so host edits under `packages/` (e.g.
+      # @planx/file-upload) never reach the container - they arrive as a copy baked into the image
+      # by `pnpm deploy --inject-workspace-packages`, which then seeds the volume below.
       - "./apps/api.planx.uk:/api"
+      # XXX: compose carries anonymous volumes over when recreating a container, so a rebuilt
+      # node_modules can be masked by the stale volume from the previous container. Changes to
+      # workspace dependencies therefore need `pnpm recreate` (which passes --renew-anon-volumes)
+      # to actually land - `pnpm dbuild` alone is not enough.
       - "/api/node_modules"
 
     environment:

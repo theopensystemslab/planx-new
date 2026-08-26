@@ -4,6 +4,7 @@
     "down": "pnpm destroy",
     "restart": "pnpm stop && pnpm start",
     "start": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull",
+    "dbuild": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull --build",
     "stop": "./scripts/stop-containers.sh",
     "recreate": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull --build --renew-anon-volumes --force-recreate",
     "destroy": "./scripts/destroy-containers.sh",

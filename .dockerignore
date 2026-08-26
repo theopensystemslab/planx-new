@@ -14,3 +14,24 @@ apps/localplanning.services/*
 !apps/localplanning.services/package.json
 apps/postgres/*
 !apps/postgres/package.json
+
+# NB the negated package.json globs above are load-bearing: `turbo prune` needs every workspace
+# member's package.json present to resolve the workspace graph against the lockfile
+
+# host build/test artefacts - every build happens in-image, and no dist is committed
+**/dist
+**/coverage
+**/.turbo
+
+# local data, scratch and docs - none are workspace members
+minio-data
+ignore
+doc
+localplanning.services
+docker_compose_logs.txt
+.vscode
+
+# secrets - no Dockerfile declares an ARG or a --mount=type=secret, and compose passes env at
+# runtime. (Compose's own interpolation reads the *host* .env; .dockerignore does not affect that.)
+.env*
+**/.env*
