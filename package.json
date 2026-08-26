@@ -32,7 +32,9 @@
     "e2e/tests/**/*.{js,ts}": "eslint --fix --flag v10_config_lookup_from_file",
     "apps/localplanning.services/**/*.{js,jsx,ts,tsx,mjs}": "eslint --fix --flag v10_config_lookup_from_file",
     "packages/file-upload/**/*.ts": "eslint --fix --flag v10_config_lookup_from_file",
-    "{apps/editor.planx.uk/src,apps/api.planx.uk,apps/localplanning.services,e2e/tests,apps/hasura.planx.uk/tests,packages/file-upload}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": "prettier --write"
+    "infrastructure/**/*.{js,ts}": "eslint --fix --flag v10_config_lookup_from_file",
+    "packages/eslint-config/*.js": "eslint --fix --flag v10_config_lookup_from_file",
+    "{apps/editor.planx.uk/src,apps/api.planx.uk,apps/localplanning.services,e2e/tests,apps/hasura.planx.uk/tests,packages/file-upload,infrastructure,packages/eslint-config}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": "prettier --write"
   },
   "devDependencies": {
     "eslint": "catalog:",

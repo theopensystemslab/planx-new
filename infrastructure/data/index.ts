@@ -14,7 +14,6 @@ const env = pulumi.getStack();
 const networking = new pulumi.StackReference(`planx/networking/${env}`);
 const vpcId = networking.requireOutput("vpcId") as pulumi.Output<string>;
 
-
 // create dedicated security group and ingress/egress rules for the RDS instance
 const dbSecurityGroup = new aws.ec2.SecurityGroup("db-sg", {
   description: "Security group for RDS instance",
@@ -41,7 +40,7 @@ const parameterGroup = new aws.rds.ParameterGroup("parameterGroup", {
       name: "shared_preload_libraries",
       value: "pg_tle,pg_stat_statements,pg_cron",
       applyMethod: "pending-reboot",
-    }
+    },
   ],
 });
 
@@ -75,13 +74,15 @@ const db = new aws.rds.Instance("app", {
 
 export const dbRootUrl = pulumi
   .all([DB_ROOT_USER, dbRootPassword, db.address])
-  .apply(([role, password, host]) => getPostgresDbUrl({ role, password, host }));
+  .apply(([role, password, host]) =>
+    getPostgresDbUrl({ role, password, host }),
+  );
 
 const apiBucket = new aws.s3.Bucket("user-data");
 
 // in latest @pulumi/aws API CORS rules are determined separately from bucket defn
 // by default, objects are encrypted at rest using SSE-S3 encryption
-const apiBucketCors = new aws.s3.BucketCorsConfiguration("user-data-cors", {
+new aws.s3.BucketCorsConfiguration("user-data-cors", {
   bucket: apiBucket.id,
   corsRules: [
     {

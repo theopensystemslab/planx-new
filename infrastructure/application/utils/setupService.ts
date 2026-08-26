@@ -23,9 +23,9 @@ export const setupLoadBalancer = async ({
   healthCheck,
   stickiness,
 }: SetupLoadBalancer): Promise<{
-  loadBalancer: awsx.lb.ApplicationLoadBalancer,
-  targetGroup: aws.lb.TargetGroup,
-  serviceSecurityGroup: aws.ec2.SecurityGroup,
+  loadBalancer: awsx.lb.ApplicationLoadBalancer;
+  targetGroup: aws.lb.TargetGroup;
+  serviceSecurityGroup: aws.ec2.SecurityGroup;
 }> => {
   // prepare security groups as per AWS docs, with SG for load balancer and Fargate service serving as source/destination for each other
   // see: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html
@@ -33,16 +33,29 @@ export const setupLoadBalancer = async ({
     description: `Security group for ${serviceName} load balancer`,
     vpcId: vpcId,
   });
-  const serviceSecurityGroup = new aws.ec2.SecurityGroup(`${serviceName}-service-sg`, {
-    description: `Security group for ${serviceName} Fargate service`,
-    vpcId: vpcId,
-  });
+  const serviceSecurityGroup = new aws.ec2.SecurityGroup(
+    `${serviceName}-service-sg`,
+    {
+      description: `Security group for ${serviceName} Fargate service`,
+      vpcId: vpcId,
+    },
+  );
 
   // LB SG accepts traffic only from Cloudflare, and allows outbound traffic only to Fargate service SG
   await createCloudflareIngressRules(lbSecurityGroup.id, `${serviceName}-lb`);
-  createDestinationSgEgressRule(lbSecurityGroup.id, `${serviceName}-lb`, [containerPort], serviceSecurityGroup.id);
+  createDestinationSgEgressRule(
+    lbSecurityGroup.id,
+    `${serviceName}-lb`,
+    [containerPort],
+    serviceSecurityGroup.id,
+  );
   // SG for the Fargate service accepts inbound traffic only from the LB SG, and allows outbound traffic to open internet
-  createSourceSgIngressRule(serviceSecurityGroup.id, `${serviceName}-service`, [containerPort], lbSecurityGroup.id);
+  createSourceSgIngressRule(
+    serviceSecurityGroup.id,
+    `${serviceName}-service`,
+    [containerPort],
+    lbSecurityGroup.id,
+  );
   createAllIpv4EgressRule(serviceSecurityGroup.id, `${serviceName}-service`);
 
   // tag on a listener with service container as target
@@ -54,46 +67,53 @@ export const setupLoadBalancer = async ({
     // see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/alb.html
     targetType: "ip",
     // we only pass health check/stickness objects here if they're passed in above, to avoid overwriting defaults
-    ...(typeof healthCheck !== 'undefined' && { healthCheck }),
-    ...(typeof stickiness !== 'undefined' && { stickiness }),
+    ...(typeof healthCheck !== "undefined" && { healthCheck }),
+    ...(typeof stickiness !== "undefined" && { stickiness }),
   });
 
-  const loadBalancer = new awsx.lb.ApplicationLoadBalancer(`${serviceName}-lb`, {
-    internal: false,
-    subnetIds: publicSubnetIds,
-    // NB. VPC to be which the ALB belongs is conveyed by the security group
-    securityGroups: [lbSecurityGroup.id],
-    idleTimeout: idleTimeout ?? 60,
-    listeners: [
-      {
-        port: 443,
-        protocol: "HTTPS",
-        certificateArn,
-        sslPolicy: "ELBSecurityPolicy-TLS13-1-2-Res-PQ-2025-09",
-        defaultActions: [{
-          type: "forward",
-          targetGroupArn: targetGroup.arn,
-        }],
-      },
-      // don't force http to https, to avoid ALB <-> Cloudflare redirect loop during deploy
-      // TODO: after Cloudflare SSL mode successfully upgraded to 'Full (Strict)', delete this listener
-      {
-        port: 80,
-        protocol: "HTTP",
-        defaultActions: [{
-          type: "forward",
-          targetGroupArn: targetGroup.arn,
-        }],
-      },
-    ],
-  });
+  const loadBalancer = new awsx.lb.ApplicationLoadBalancer(
+    `${serviceName}-lb`,
+    {
+      internal: false,
+      subnetIds: publicSubnetIds,
+      // NB. VPC to be which the ALB belongs is conveyed by the security group
+      securityGroups: [lbSecurityGroup.id],
+      idleTimeout: idleTimeout ?? 60,
+      listeners: [
+        {
+          port: 443,
+          protocol: "HTTPS",
+          certificateArn,
+          sslPolicy: "ELBSecurityPolicy-TLS13-1-2-Res-PQ-2025-09",
+          defaultActions: [
+            {
+              type: "forward",
+              targetGroupArn: targetGroup.arn,
+            },
+          ],
+        },
+        // don't force http to https, to avoid ALB <-> Cloudflare redirect loop during deploy
+        // TODO: after Cloudflare SSL mode successfully upgraded to 'Full (Strict)', delete this listener
+        {
+          port: 80,
+          protocol: "HTTP",
+          defaultActions: [
+            {
+              type: "forward",
+              targetGroupArn: targetGroup.arn,
+            },
+          ],
+        },
+      ],
+    },
+  );
 
   return {
     loadBalancer,
     targetGroup,
     serviceSecurityGroup,
-  }
-}
+  };
+};
 
 /**
  * Send a Slack notification when a Fargate service deployment is rolled back by the circuit breaker
@@ -102,21 +122,18 @@ export const setupNotificationForDeploymentRollback = (
   env: string,
   serviceName: string,
   cluster: aws.ecs.Cluster,
-  service: awsx.ecs.FargateService
+  service: awsx.ecs.FargateService,
 ): void => {
   const config = new pulumi.Config();
   const topic = new aws.sns.Topic(`${serviceName}-rollback-alerts`, {
     name: `${serviceName}-rollback-alerts-topic`,
   });
 
-  new aws.sns.TopicSubscription(
-    `${serviceName}-rollback-alerts-subscription`,
-    {
-      topic: topic.arn,
-      protocol: "https",
-      endpoint: config.requireSecret("slack-internal-errors-webhook"),
-    }
-  );
+  new aws.sns.TopicSubscription(`${serviceName}-rollback-alerts-subscription`, {
+    topic: topic.arn,
+    protocol: "https",
+    endpoint: config.requireSecret("slack-internal-errors-webhook"),
+  });
 
   // allow SNS topic to receive events from EventBridge
   new aws.sns.TopicPolicy(`${serviceName}-rollback-alerts-topic-policy`, {
@@ -127,13 +144,13 @@ export const setupNotificationForDeploymentRollback = (
         {
           Effect: "Allow",
           Principal: {
-            Service: "events.amazonaws.com"
+            Service: "events.amazonaws.com",
           },
           Action: "sns:Publish",
-          Resource: topic.arn
-        }
-      ]
-    })
+          Resource: topic.arn,
+        },
+      ],
+    }),
   });
 
   // EventBridge rule to catch circuit breaker rollbacks
@@ -151,42 +168,41 @@ export const setupNotificationForDeploymentRollback = (
           eventType: ["ERROR"],
           eventName: ["SERVICE_DEPLOYMENT_FAILED"],
           clusterArn: [cluster.arn],
-        }
-      })
-    }
+        },
+      }),
+    },
   );
 
-  new aws.cloudwatch.EventTarget(
-    `${serviceName}-rollback-alerts-target`,
-    {
-      rule: rollbackRule.name,
-      arn: topic.arn,
-      inputTransformer: {
-        inputPaths: {
-          eventType: "$.detail.eventType",
-          eventName: "$.detail.eventName",
-          deploymentId: "$.detail.deploymentId",
-          updatedAt: "$.detail.updatedAt",
-          reason: "$.detail.reason",
-        },
-        inputTemplate: pulumi.jsonStringify([
-            `-> Environment: ${env}`,
-            `-> Affected service: ${serviceName}`,
-            "-> Event type: <eventType>",
-            "-> Event name: <eventName>",
-            "-> Deployment ID: <deploymentId>",
-            "-> Updated at: <updatedAt>",
-            "-> Reason: <reason>",
-          ].join("\n")),
+  new aws.cloudwatch.EventTarget(`${serviceName}-rollback-alerts-target`, {
+    rule: rollbackRule.name,
+    arn: topic.arn,
+    inputTransformer: {
+      inputPaths: {
+        eventType: "$.detail.eventType",
+        eventName: "$.detail.eventName",
+        deploymentId: "$.detail.deploymentId",
+        updatedAt: "$.detail.updatedAt",
+        reason: "$.detail.reason",
       },
-    }
-  );
+      inputTemplate: pulumi.jsonStringify(
+        [
+          `-> Environment: ${env}`,
+          `-> Affected service: ${serviceName}`,
+          "-> Event type: <eventType>",
+          "-> Event name: <eventName>",
+          "-> Deployment ID: <deploymentId>",
+          "-> Updated at: <updatedAt>",
+          "-> Reason: <reason>",
+        ].join("\n"),
+      ),
+    },
+  });
 };
 
 export const setupDnsRecord = async (
   serviceName: string,
   domain: string,
-  loadBalancer: awsx.lb.ApplicationLoadBalancer
+  loadBalancer: awsx.lb.ApplicationLoadBalancer,
 ) => {
   const config = new pulumi.Config();
   return new cloudflare.DnsRecord(serviceName, {
@@ -199,4 +215,4 @@ export const setupDnsRecord = async (
     ttl: 1,
     proxied: true,
   });
-}
+};

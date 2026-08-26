@@ -1,14 +1,13 @@
- # Infra for ML
+# Infra for ML
 
 This Pulumi stack provisions AWS EC2 infrastructure for machine learning purposes - currently just training and experimentation.
-
 
 ## Resources
 
 - **EC2 instance**: GPU accelerated instance running Ubuntu 24.04 Deep Learning AMI
 - **Security Group**: SSH-only access (port 22)
 - **Key pair**: For SSH authentication
-- **Storage**: 
+- **Storage**:
   - **Persistent EBS**: 256GB persistent EBS volume as root (survives stop/start)
   - **Ephemeral NVMe**: > 200GB high-speed instance store at `/opt/dlami/nvme` (lost on stop)
 
@@ -17,7 +16,6 @@ The instance type can be varied by adjusting the `training-instance-type` variab
 ```
 pulumi config set training-instance-type g6.xlarge
 ```
-
 
 ## Deployment
 
@@ -37,14 +35,13 @@ Some of the resources provisioned here are persistent, even when the instance (b
 pulumi down
 ```
 
-
 ## Storage
 
 The training instance provides two types of storage:
 
 ### Persistent storage (EBS)
 
-- **Location**: `/` (root filesystem) 
+- **Location**: `/` (root filesystem)
 - **Size**: 256GB
 - **Type**: gp3 encrypted EBS volume
 - **Persistence**: Survives instance stop/start/reboot, and reassignment to different instance type
@@ -53,14 +50,13 @@ The training instance provides two types of storage:
 ### Ephemeral storage (instance store)
 
 - **Location**: `/opt/dlami/nvme` (auto-mounted by the DLAMI)
-- **Convenience symlink**: `/home/ubuntu/nvme` 
+- **Convenience symlink**: `/home/ubuntu/nvme`
 - **Size**: ~230GB (for `g6.xlarge`, as an example)
 - **Type**: High-speed NVMe SSD
 - **Persistence**: **Lost when instance stops** i.e. data is temporary
 - **Use for**: Training datasets, model checkpoints during training, Docker images, temporary files
 
 ⚠️ The instance store (`/opt/dlami/nvme`) is ephemeral - all data is lost when the instance stops. Always backup important data to the persistent EBS volume or S3.
-
 
 ## Usage
 
@@ -97,13 +93,11 @@ aws ec2 describe-instances --instance-ids $(pulumi stack output trainingInstance
   --query 'Reservations[0].Instances[0].PublicIpAddress' --output text
 ```
 
-
 ## Security considerations
 
 - The security group allows SSH access from anywhere (0.0.0.0/0)
 - Consider restricting SSH access to specific IP ranges for production use
 - The instance has a public IP for easy access - consider using a bastion host for production
-
 
 ## Cost efficiency
 

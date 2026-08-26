@@ -6,25 +6,24 @@ import * as awsx from "@pulumi/awsx";
 import * as cloudflare from "@pulumi/cloudflare";
 import * as postgres from "@pulumi/postgresql";
 import * as pulumi from "@pulumi/pulumi";
-import * as tldjs from "tldjs";
 import mime from "mime";
+import * as tldjs from "tldjs";
 
-import { getCustomDomains, getLegacyDomains, getValidatedDomains } from "../common/customDomains";
+import {
+  getCustomDomains,
+  getLegacyDomains,
+  getValidatedDomains,
+} from "../common/customDomains";
 import type { CustomDomain } from "../common/types";
 import { getPostgresDbUrl } from "../common/utils";
-
 import {
   createApiService,
   createHasuraService,
   createLocalPlanningServices,
   createMetabaseService,
   createSharedbService,
-} from "./services"
-import {
-  createCdn,
-  createFlowLinkPreviewLambda,
-  usEast1,
-} from "./utils";
+} from "./services";
+import { createCdn, createFlowLinkPreviewLambda, usEast1 } from "./utils";
 
 const config = new pulumi.Config();
 const env = pulumi.getStack();
@@ -56,7 +55,9 @@ export = async () => {
   });
 
   const vpcId = networking.requireOutput("vpcId") as pulumi.Output<string>;
-  const publicSubnetIds = networking.requireOutput("publicSubnetIds") as pulumi.Output<string[]>;
+  const publicSubnetIds = networking.requireOutput(
+    "publicSubnetIds",
+  ) as pulumi.Output<string[]>;
   // define ECS cluster to host all Fargate containers
   const cluster = new aws.ecs.Cluster("cluster", {
     settings: [
@@ -86,33 +87,33 @@ export = async () => {
   });
 
   const serviceValidationRecords = serviceDomains.map((_domain, index) => {
-    return new cloudflare.DnsRecord(
-      `serviceSslCertValidationRecord-${index}`,
-      {
-        name: serviceSslCert.domainValidationOptions[index].resourceRecordName,
-        type: serviceSslCert.domainValidationOptions[index].resourceRecordType,
-        content: serviceSslCert.domainValidationOptions[index].resourceRecordValue,
-        zoneId: config.requireSecret("cloudflare-zone-id"),
-        ttl: 3600,
-        proxied: false,
-      }
-    );
+    return new cloudflare.DnsRecord(`serviceSslCertValidationRecord-${index}`, {
+      name: serviceSslCert.domainValidationOptions[index].resourceRecordName,
+      type: serviceSslCert.domainValidationOptions[index].resourceRecordType,
+      content:
+        serviceSslCert.domainValidationOptions[index].resourceRecordValue,
+      zoneId: config.requireSecret("cloudflare-zone-id"),
+      ttl: 3600,
+      proxied: false,
+    });
   });
 
   const serviceSslCertValidation = new aws.acm.CertificateValidation(
     `serviceSslCertValidation`,
     {
       certificateArn: serviceSslCert.arn,
-      validationRecordFqdns: serviceValidationRecords.map(record => record.name),
-    }
+      validationRecordFqdns: serviceValidationRecords.map(
+        (record) => record.name,
+      ),
+    },
   );
 
   const serviceCertificateArn = serviceSslCertValidation.certificateArn;
 
   // prepare DB credentials for Metabase, Hasura and ShareDB
-  const DB_ROOT_USER = "dbuser"
+  const DB_ROOT_USER = "dbuser";
   const dbRootPassword = config.requireSecret("db-password");
-  const dbHost = config.requireSecret("db-host")
+  const dbHost = config.requireSecret("db-host");
 
   // ----------------------- Metabase
   const provider = new postgres.Provider("metabase", {
@@ -135,7 +136,7 @@ export = async () => {
       login: true,
       password: metabasePgPassword,
     },
-    { provider }
+    { provider },
   );
   new postgres.Database(
     "metabase",
@@ -145,18 +146,20 @@ export = async () => {
     },
     {
       provider,
-    }
+    },
   );
 
   // since our secrets here are of the type Output<string>, we have to use Pulumi methods to access them as strings
   const metabaseDbUrl = pulumi
     .all([metabasePgPassword, dbHost])
-    .apply(([password, host]) => getPostgresDbUrl({
-      role: "metabase",
-      password,
-      host,
-      database: "metabase",
-    }));
+    .apply(([password, host]) =>
+      getPostgresDbUrl({
+        role: "metabase",
+        password,
+        host,
+        database: "metabase",
+      }),
+    );
 
   const metabaseService = await createMetabaseService({
     env,
@@ -172,7 +175,9 @@ export = async () => {
   // we'll also pass this database URI to sharedb later on
   const rootDbUrl = pulumi
     .all([dbRootPassword, dbHost])
-    .apply(([password, host]) => getPostgresDbUrl({ role: DB_ROOT_USER, password, host }));
+    .apply(([password, host]) =>
+      getPostgresDbUrl({ role: DB_ROOT_USER, password, host }),
+    );
 
   const hasuraService = await createHasuraService({
     env,
@@ -212,7 +217,7 @@ export = async () => {
 
   // ----------------------- Flow Link Preview Lambda@Edge
   const flowLinkPreviewLambda = createFlowLinkPreviewLambda(
-    `https://hasura.${DOMAIN}/v1/graphql`
+    `https://hasura.${DOMAIN}/v1/graphql`,
   );
   const linkPreviewAssociation = {
     lambdaArn: flowLinkPreviewLambda.qualifiedArn,
@@ -221,11 +226,14 @@ export = async () => {
 
   // ----------------------- PlanX Frontend
   const frontendBucket = new aws.s3.Bucket(DOMAIN, { bucket: DOMAIN });
-  const frontendWebsiteConfig = new aws.s3.BucketWebsiteConfiguration(`${DOMAIN}-website-config`, {
-    bucket: frontendBucket.id,
-    indexDocument: { suffix: "index.html" },
-    errorDocument: { key: "error.html" },
-  });
+  const frontendWebsiteConfig = new aws.s3.BucketWebsiteConfiguration(
+    `${DOMAIN}-website-config`,
+    {
+      bucket: frontendBucket.id,
+      indexDocument: { suffix: "index.html" },
+      errorDocument: { key: "error.html" },
+    },
+  );
 
   fsWalk
     .walkSync("../../apps/editor.planx.uk/build/", {
@@ -251,8 +259,8 @@ export = async () => {
         {
           parent: frontendBucket,
           // Temp transition alias
-          aliases: [{ name: `../../editor.planx.uk/build/${path}` }]
-        }
+          aliases: [{ name: `../../editor.planx.uk/build/${path}` }],
+        },
       );
     });
 
@@ -276,25 +284,26 @@ export = async () => {
     // Get certificates from AWS Secrets Manager
     if (certificateLocation === "secretsManager") {
       const secretId = `ssl/${name}`;
-      const certSecret = pulumi.output(aws.secretsmanager.getSecretVersion({ secretId }));
-      const certData = certSecret.apply(secretResult =>
-        JSON.parse(secretResult.secretString)
+      const certSecret = pulumi.output(
+        aws.secretsmanager.getSecretVersion({ secretId }),
+      );
+      const certData = certSecret.apply((secretResult) =>
+        JSON.parse(secretResult.secretString),
       );
       const sslCert = new aws.acm.Certificate(
         `sslCert-${name}`,
         {
-          privateKey: certData.apply(data => data.key),
-          certificateBody: certData.apply(data => data.cert),
-          certificateChain: certData.apply(data => data?.chain),
+          privateKey: certData.apply((data) => data.key),
+          certificateBody: certData.apply((data) => data.cert),
+          certificateChain: certData.apply((data) => data?.chain),
         },
-        { 
+        {
           provider: usEast1,
           replaceOnChanges: ["privateKey"],
-        }
+        },
       );
 
       acmCertificateArn = sslCert.arn;
-
     } else {
       // Get certificates from Pulumi config file
       const sslCert = new aws.acm.Certificate(
@@ -312,7 +321,7 @@ export = async () => {
         {
           provider: usEast1,
           replaceOnChanges: ["privateKey"],
-        }
+        },
       );
 
       acmCertificateArn = sslCert.arn;
@@ -328,39 +337,50 @@ export = async () => {
       cdnName: domain,
       domains,
       acmCertificateArn,
-      bucket: frontendBucket, 
+      bucket: frontendBucket,
       logsBucket,
       oai,
       lambdaFunctionAssociation: linkPreviewAssociation,
     });
 
     return { domain, cname: cdn.domainName };
-  }
+  };
 
-  const legacyDistributions = legacyCustomDomains.map(createLegacyDistributions);
+  const legacyDistributions = legacyCustomDomains.map(
+    createLegacyDistributions,
+  );
 
   // ------------------- Single shared custom domain CDN (multi-tenant)
   // Here we only create the CloudFront distribution, consuming the validated cert ARN
   let customDomainsCdnDomainName: pulumi.Output<string> | undefined;
   let customDomainsDistributionId: pulumi.Output<string> | undefined;
 
-  const customDomainsCertArn = certificates.getOutput("customDomainsCertArn") as pulumi.Output<string | undefined>;
+  const customDomainsCertArn = certificates.getOutput(
+    "customDomainsCertArn",
+  ) as pulumi.Output<string | undefined>;
 
   if (validatedCustomDomains.length > 0) {
-    const customDomainsOai = new aws.cloudfront.OriginAccessIdentity("custom-domains-OAI", {
-      comment: "OAI for shared custom domain CloudFront distribution",
-    });
+    const customDomainsOai = new aws.cloudfront.OriginAccessIdentity(
+      "custom-domains-OAI",
+      {
+        comment: "OAI for shared custom domain CloudFront distribution",
+      },
+    );
 
     // only include domains that have already been moved to shared CDN via AWS CLI (deploy would fail o/w)
     const domains = validatedCustomDomains.reduce(
-      (acc, d) => d.cloudFrontState !== "cutover-ongoing" ? [...acc, d.domain] : acc,
+      (acc, d) =>
+        d.cloudFrontState !== "cutover-ongoing" ? [...acc, d.domain] : acc,
       [] as string[],
-    )
+    );
     const customDomainsCdn = createCdn({
       cdnName: "custom-domains",
       domains,
-      acmCertificateArn: customDomainsCertArn.apply(arn => {
-        if (!arn) throw new Error("customDomainsCertArn not found in certificates stack — run `pulumi up` on the certificates stack first");
+      acmCertificateArn: customDomainsCertArn.apply((arn) => {
+        if (!arn)
+          throw new Error(
+            "customDomainsCertArn not found in certificates stack — run `pulumi up` on the certificates stack first",
+          );
         return arn;
       }),
       bucket: frontendBucket,
@@ -390,31 +410,33 @@ export = async () => {
     },
     {
       provider: usEast1,
-    }
+    },
   );
 
   // here we control the nameserver, so handle the DNS validation ourselves
-  const editorCloudfrontValidationRecords = cloudfrontDomains.map((_domain, index) => {
-    return new cloudflare.DnsRecord(
-      `sslCertValidationRecord-${index}`,
-      {
+  const editorCloudfrontValidationRecords = cloudfrontDomains.map(
+    (_domain, index) => {
+      return new cloudflare.DnsRecord(`sslCertValidationRecord-${index}`, {
         name: editorSslCert.domainValidationOptions[index].resourceRecordName,
         type: editorSslCert.domainValidationOptions[index].resourceRecordType,
-        content: editorSslCert.domainValidationOptions[index].resourceRecordValue,
+        content:
+          editorSslCert.domainValidationOptions[index].resourceRecordValue,
         zoneId: config.requireSecret("cloudflare-zone-id"),
         ttl: 3600,
         proxied: false,
-      }
-    );
-  });
+      });
+    },
+  );
 
   const editorSslCertValidation = new aws.acm.CertificateValidation(
     `sslCertValidation`,
     {
       certificateArn: editorSslCert.arn,
-      validationRecordFqdns: editorCloudfrontValidationRecords.map(record => record.name),
+      validationRecordFqdns: editorCloudfrontValidationRecords.map(
+        (record) => record.name,
+      ),
     },
-    { provider: usEast1 }
+    { provider: usEast1 },
   );
 
   // TODO: migrate to Origin Access Control (instead of Identity)
@@ -454,7 +476,10 @@ export = async () => {
     sharedbServiceName: sharedbService.service.name,
     // we export the shared CDN domain name, which councils should CNAME their domain to (at the appropriate time)
     // we also export the distribution ID for confident transfer of alias between distributions
-    ...(customDomainsCdnDomainName && { customDomainsCdnDomainName, customDomainsDistributionId }),
+    ...(customDomainsCdnDomainName && {
+      customDomainsCdnDomainName,
+      customDomainsDistributionId,
+    }),
   };
 };
 

@@ -1,7 +1,7 @@
-"use strict"
+"use strict";
 
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
+import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -20,25 +20,25 @@ const mlSecurityGroup = new aws.ec2.SecurityGroup("ml-ssh-sg", {
 });
 
 new aws.vpc.SecurityGroupIngressRule("ml-allow-ssh-in", {
-    securityGroupId: mlSecurityGroup.id,
-    cidrIpv4: "0.0.0.0/0", // allow SSH from anywhere
-    fromPort: 22,
-    toPort: 22,
-    ipProtocol: "tcp",
+  securityGroupId: mlSecurityGroup.id,
+  cidrIpv4: "0.0.0.0/0", // allow SSH from anywhere
+  fromPort: 22,
+  toPort: 22,
+  ipProtocol: "tcp",
 });
 
 new aws.vpc.SecurityGroupEgressRule("ml-allow-ipv4-traffic-out", {
-    securityGroupId: mlSecurityGroup.id,
-    cidrIpv4: "0.0.0.0/0",
-    ipProtocol: "-1",
+  securityGroupId: mlSecurityGroup.id,
+  cidrIpv4: "0.0.0.0/0",
+  ipProtocol: "-1",
 });
 
 // load existing public key into the instance so we can SSH in
 const publicKey = config.require("ssh-devops-public-key");
 const devopsKeyPair = new aws.ec2.KeyPair("ssh-devops-key-pair", {
-    keyName: "ssh-devops-key-pair",
-    publicKey: publicKey,
-})
+  keyName: "ssh-devops-key-pair",
+  publicKey: publicKey,
+});
 
 // see https://docs.aws.amazon.com/dlami/latest/devguide/appendix-ami-release-notes.html
 const amazonLinuxAmi = aws.ec2.getAmi({
@@ -59,33 +59,35 @@ const amazonLinuxAmi = aws.ec2.getAmi({
 const getInstanceType = (): pulumi.Output<string> => {
   const trainingInstanceType = config.require("training-instance-type");
   const validInstanceTypes = Object.values(aws.ec2.InstanceType);
-  
+
   // apply a transformation to the config value to check if it's a valid instance type
-  return pulumi.output(trainingInstanceType).apply(instanceType => {
+  return pulumi.output(trainingInstanceType).apply((instanceType) => {
     if (validInstanceTypes.includes(instanceType as aws.ec2.InstanceType)) {
       return instanceType;
     }
-    throw new Error(`Invalid instance type: ${instanceType}. Must be one of: ${validInstanceTypes.join(', ')}`);
+    throw new Error(
+      `Invalid instance type: ${instanceType}. Must be one of: ${validInstanceTypes.join(", ")}`,
+    );
   });
-}
+};
 
 // create the EC2 instance for ML training and experiment workloads
 const trainingInstance = new aws.ec2.Instance("ml-training-instance", {
   // see https://www.pulumi.com/registry/packages/aws/api-docs/ec2/instance/#instancetype
   instanceType: getInstanceType(),
-  ami: amazonLinuxAmi.then(ami => ami.id),
+  ami: amazonLinuxAmi.then((ami) => ami.id),
   keyName: devopsKeyPair.keyName,
-  
+
   // use first public subnet in vpc (you can make this configurable)
-  subnetId: publicSubnetIds.apply(subnets => subnets[0]),
+  subnetId: publicSubnetIds.apply((subnets) => subnets[0]),
   vpcSecurityGroupIds: [mlSecurityGroup.id],
-  
+
   // assign a public IP for SSH access
   associatePublicIpAddress: true,
-  
+
   // don't terminate on shutdown
   instanceInitiatedShutdownBehavior: "stop",
-  
+
   // persistent EBS volume configuration for ML workloads (survives instance stop/starts)
   rootBlockDevice: {
     volumeType: "gp3",
@@ -112,32 +114,30 @@ const mlBudget = new aws.budgets.Budget("ml-infra-budget-monthly", {
   limitUnit: "USD",
   timeUnit: "MONTHLY",
   timePeriodStart: "2025-10-01_00:00",
-  
+
   // cost filters to track resources with project=ml tag (applied by default via yaml config)
-  costFilters: [{
-    name: "TagKeyValue",
-    values: ["project$ml"],
-  }],
-  
+  costFilters: [
+    {
+      name: "TagKeyValue",
+      values: ["project$ml"],
+    },
+  ],
+
   // XXX: could add SNS/Lambda combo to stop instances when budget exceeded
   notifications: [
     {
       comparisonOperator: "GREATER_THAN",
       threshold: 80, // alert at 80% of budget
-      thresholdType: "PERCENTAGE", 
+      thresholdType: "PERCENTAGE",
       notificationType: "ACTUAL",
-      subscriberEmailAddresses: [
-        "devops@opensystemslab.io",
-      ],
+      subscriberEmailAddresses: ["devops@opensystemslab.io"],
     },
     {
       comparisonOperator: "GREATER_THAN",
       threshold: 100, // alert again when budget is exceeded
       thresholdType: "PERCENTAGE",
       notificationType: "ACTUAL",
-      subscriberEmailAddresses: [
-        "devops@opensystemslab.io", 
-      ],
+      subscriberEmailAddresses: ["devops@opensystemslab.io"],
     },
   ],
 });

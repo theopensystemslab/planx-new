@@ -1,13 +1,13 @@
-import * as awsx from "@pulumi/awsx";
 import * as aws from "@pulumi/aws";
+import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
 
-import { CreateService } from './../types';
 import {
   setupDnsRecord,
   setupLoadBalancer,
   setupNotificationForDeploymentRollback,
 } from "../utils";
+import type { CreateService } from "./../types";
 
 export const createSharedbService = async ({
   env,
@@ -23,7 +23,9 @@ export const createSharedbService = async ({
     throw new Error("An ECR repo is required to setup ShareDB service");
   }
   if (!certificates) {
-    throw new Error("The Pulumi certificates stack is required to setup ShareDB service");
+    throw new Error(
+      "The Pulumi certificates stack is required to setup ShareDB service",
+    );
   }
   const config = new pulumi.Config();
   const DOMAIN: string = await certificates.requireOutputValue("domain");
@@ -77,26 +79,34 @@ export const createSharedbService = async ({
     },
   });
 
-  const sharedbService = new awsx.ecs.FargateService("sharedb", {
-    cluster: cluster.arn,
-    taskDefinition: sharedbTask.taskDefinition.arn,
-    loadBalancers: sharedbTask.loadBalancers,
-    networkConfiguration: {
-      subnets: publicSubnetIds,
-      assignPublicIp: true,
-      securityGroups: [sharedbServiceSecurityGroup.id],
+  const sharedbService = new awsx.ecs.FargateService(
+    "sharedb",
+    {
+      cluster: cluster.arn,
+      taskDefinition: sharedbTask.taskDefinition.arn,
+      loadBalancers: sharedbTask.loadBalancers,
+      networkConfiguration: {
+        subnets: publicSubnetIds,
+        assignPublicIp: true,
+        securityGroups: [sharedbServiceSecurityGroup.id],
+      },
+      desiredCount: 1,
+      deploymentCircuitBreaker: {
+        enable: true,
+        rollback: true,
+      },
     },
-    desiredCount: 1,
-    deploymentCircuitBreaker: {
-      enable: true,
-      rollback: true,
+    {
+      dependsOn: [sharedbLb],
     },
-  },
-  {
-    dependsOn: [sharedbLb],
-  });
+  );
 
-  setupNotificationForDeploymentRollback(env, "sharedb", cluster, sharedbService);
+  setupNotificationForDeploymentRollback(
+    env,
+    "sharedb",
+    cluster,
+    sharedbService,
+  );
   setupDnsRecord("sharedb", DOMAIN, sharedbLb);
   return sharedbService;
-}
+};

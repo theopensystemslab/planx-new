@@ -9,7 +9,9 @@ export const generateCORSAllowList = (
   customDomains: CustomDomain[],
   domain: string,
 ): KeyValuePair => {
-  const customDomainURLs = customDomains.map(team => `https://${team.domain}`);
+  const customDomainURLs = customDomains.map(
+    (team) => `https://${team.domain}`,
+  );
   const editorURL = `https://${domain}`;
   const apiURL = `https://api.${domain}`; // Required for requests from API docs
   const hasuraURL = `https://hasura.${domain}`; // Required for proxied auth requests

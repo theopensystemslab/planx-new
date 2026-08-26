@@ -1,7 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
+import type * as pulumi from "@pulumi/pulumi";
 
 import { teams } from "../../common/teams";
-import { KeyValuePair } from "../types";
+import type { KeyValuePair } from "../types";
 
 // Greedily match any non-word characters
 // XXX: Matches regex used in apps/api.planx.uk/send.js
@@ -21,7 +21,7 @@ const value = (value: string) => value.replace(regex, "-").toLowerCase();
 
 export const generateTeamSecrets = (
   config: pulumi.Config,
-  env: String
+  env: string,
 ): KeyValuePair[] => {
   const secrets: KeyValuePair[] = [];
   teams.forEach((team) => {

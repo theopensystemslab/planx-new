@@ -1111,6 +1111,12 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2
     devDependencies:
+      '@planx/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@planx/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@planx/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -1120,9 +1126,18 @@ importers:
       '@types/tldjs':
         specifier: ^2.3.4
         version: 2.3.4
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)
+      globals:
+        specifier: 'catalog:'
+        version: 16.5.0
       mime:
         specifier: ^4.1.0
         version: 4.1.0
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.3
       typescript:
         specifier: catalog:typescript
         version: 5.9.3
@@ -1142,12 +1157,27 @@ importers:
         specifier: catalog:infrastructure
         version: 3.251.0(ts-node@10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
+      '@planx/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@planx/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@planx/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.15
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)
+      globals:
+        specifier: 'catalog:'
+        version: 16.5.0
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.3
       typescript:
         specifier: catalog:typescript
         version: 5.9.3
@@ -1161,12 +1191,27 @@ importers:
         specifier: catalog:infrastructure
         version: 3.251.0(ts-node@10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
+      '@planx/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@planx/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@planx/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.15
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)
+      globals:
+        specifier: 'catalog:'
+        version: 16.5.0
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.3
       typescript:
         specifier: catalog:typescript
         version: 5.9.3
@@ -1183,12 +1228,27 @@ importers:
         specifier: catalog:infrastructure
         version: 3.251.0(ts-node@10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
+      '@planx/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@planx/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@planx/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.15
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)
+      globals:
+        specifier: 'catalog:'
+        version: 16.5.0
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.3
       typescript:
         specifier: catalog:typescript
         version: 5.9.3
@@ -1202,12 +1262,27 @@ importers:
         specifier: catalog:infrastructure
         version: 3.251.0(ts-node@10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
+      '@planx/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@planx/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@planx/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.15
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)
+      globals:
+        specifier: 'catalog:'
+        version: 16.5.0
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.3
       typescript:
         specifier: catalog:typescript
         version: 5.9.3
@@ -1224,12 +1299,27 @@ importers:
         specifier: catalog:infrastructure
         version: 3.251.0(ts-node@10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
+      '@planx/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@planx/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@planx/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.15
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)
+      globals:
+        specifier: 'catalog:'
+        version: 16.5.0
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.3
       typescript:
         specifier: catalog:typescript
         version: 5.9.3
@@ -1245,9 +1335,6 @@ importers:
       '@vitest/eslint-plugin':
         specifier: ^1.6.9
         version: 1.6.16(@typescript-eslint/eslint-plugin@8.62.0(@typescript-eslint/parser@8.62.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)(vitest@4.1.9)
-      eslint:
-        specifier: 'catalog:'
-        version: 9.39.5(jiti@2.7.0)
       eslint-config-prettier:
         specifier: ^10.1.8
         version: 10.1.8(eslint@9.39.5(jiti@2.7.0))
@@ -1272,6 +1359,16 @@ importers:
       typescript-eslint:
         specifier: ^8.46.0
         version: 8.62.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+    devDependencies:
+      '@planx/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.3
 
   packages/file-upload:
     devDependencies:

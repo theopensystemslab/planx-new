@@ -10,8 +10,8 @@ This snippet intercepts all GraphQL requests to `hasura.editor.planx.{DOMAIN}/v1
 2. Validates tokens against the PlanX API authentication service (`/auth/validate-jwt` endpoint)
 3. Forwards valid requests to Hasura or returns appropriate error responses
 
-
 ### Request with valid JWT
+
 ```mermaid
 sequenceDiagram
     participant Client
@@ -21,17 +21,18 @@ sequenceDiagram
 
     Client->>CF: GraphQL request
     Note over CF: Extract JWT
-    
+
     CF->>API: Validate JWT
     API->>CF: Token status
 
     CF->>Hasura: Forward request
     Hasura->>CF: Response
-    
+
     CF->>Client: Return response
 ```
 
 ### Request with invalid JWT
+
 ```mermaid
 sequenceDiagram
     participant Client
@@ -50,9 +51,9 @@ sequenceDiagram
 
 ## Deployment
 
-This is currently deployed manually through the Cloudflare Snippets console (Cloudflare > Select domain > Rules > Snippets). 
+This is currently deployed manually through the Cloudflare Snippets console (Cloudflare > Select domain > Rules > Snippets).
 
-Please copy/paste the contents of `validate_jwt.js` to a snippet named `validate_jwt` and configure the snippet rule to - 
+Please copy/paste the contents of `validate_jwt.js` to a snippet named `validate_jwt` and configure the snippet rule to -
 
 `(http.request.full_uri wildcard "https://hasura.editor.planx.{DOMAIN}/v1/graphql")`
 

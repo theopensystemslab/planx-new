@@ -7,22 +7,22 @@ export const teams: Team[] = [
   },
   {
     name: "Lambeth",
-    uniformInstances: ["Lambeth"]
+    uniformInstances: ["Lambeth"],
   },
   {
     name: "Southwark",
-    uniformInstances: ["Southwark"]
+    uniformInstances: ["Southwark"],
   },
   {
     name: "Medway",
-    govPayStagingOnly: true
+    govPayStagingOnly: true,
   },
   {
     name: "Gloucester",
-    govPayStagingOnly: true
+    govPayStagingOnly: true,
   },
   {
     name: "Camden",
-    govPayStagingOnly: true
-  }
+    govPayStagingOnly: true,
+  },
 ];

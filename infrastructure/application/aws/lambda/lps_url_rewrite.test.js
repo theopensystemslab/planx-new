@@ -8,50 +8,50 @@ function makeEvent(uri) {
 }
 
 const CASES = [
-  { 
-    description: "Root navigates to index document", 
+  {
+    description: "Root navigates to index document",
     uri: "/",
-    expected: "/index.html"
+    expected: "/index.html",
   },
-  { 
-    description: "Extensionless page", 
+  {
+    description: "Extensionless page",
     uri: "/about",
-    expected: "/about.html"
+    expected: "/about.html",
   },
-  { 
-    description: "Trailing slash", 
+  {
+    description: "Trailing slash",
     uri: "/about/",
-    expected: "/about.html"
+    expected: "/about.html",
   },
-  { 
-    description: "Nested extensionless page", 
+  {
+    description: "Nested extensionless page",
     uri: "/nested/page",
-    expected: "/nested/page.html"
+    expected: "/nested/page.html",
   },
-  { 
-    description: "Error page key", 
+  {
+    description: "Error page key",
     uri: "/404",
-    expected: "/404.html"
+    expected: "/404.html",
   },
-  { 
-    description: "Hashed assets are unchanged", 
+  {
+    description: "Hashed assets are unchanged",
     uri: "/_astro/index.abc123.js",
-    expected: "/_astro/index.abc123.js"
+    expected: "/_astro/index.abc123.js",
   },
-  { 
-    description: "XML files are unchanged", 
+  {
+    description: "XML files are unchanged",
     uri: "/sitemap-index.xml",
-    expected: "/sitemap-index.xml"
+    expected: "/sitemap-index.xml",
   },
-  { 
-    description: "Icon files are unchanged", 
+  {
+    description: "Icon files are unchanged",
     uri: "/favicon.ico",
-    expected: "/favicon.ico"
+    expected: "/favicon.ico",
   },
-  { 
-    description: "HTML files are unchanged", 
+  {
+    description: "HTML files are unchanged",
     uri: "/about.html",
-    expected: "/about.html"
+    expected: "/about.html",
   },
 ];
 
