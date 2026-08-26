@@ -113,13 +113,16 @@ async function reconcileSessionData({
     sessionData.breadcrumbs,
   );
 
-  const findParentNode = (nodeId: string): string | undefined => {
-    const [parentId, _] =
-      Object.entries(currentFlow).find(([_, node]) =>
-        node.edges?.includes(nodeId),
-      ) || [];
-    return parentId;
-  };
+  // Build a map of relationships just once to use as a lookup
+  const parentByChildId = new Map<string, string>();
+  for (const [parentId, node] of Object.entries(currentFlow)) {
+    for (const childId of node.edges ?? []) {
+      if (!parentByChildId.has(childId)) parentByChildId.set(childId, parentId);
+    }
+  }
+
+  const findParentNode = (nodeId: string): string | undefined =>
+    parentByChildId.get(nodeId);
 
   const removeAlteredAndAffectedBreadcrumb = (nodeId: string) => {
     const foundParentId = findParentNode(nodeId);
