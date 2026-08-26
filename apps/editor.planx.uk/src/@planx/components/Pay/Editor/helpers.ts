@@ -1,5 +1,5 @@
-import { REQUIRED_GOVPAY_METADATA } from "../model";
-import type { FormikGovPayMetadata } from "./GovPayMetadataSection";
+import { REQUIRED_PAYMENT_METADATA } from "../model";
+import type { FormikPaymentMetadata } from "./PaymentMetadataSection";
 
 /**
  * Helper method to handle Formik errors in arrays
@@ -7,7 +7,7 @@ import type { FormikGovPayMetadata } from "./GovPayMetadataSection";
  * Docs: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
  */
 export const parseError = (
-  errors: FormikGovPayMetadata,
+  errors: FormikPaymentMetadata,
   index: number,
 ): string | undefined => {
   // No errors
@@ -28,7 +28,7 @@ export const parseError = (
  * Please see parseError() for additional context
  */
 export const parseTouched = (
-  touched: string | undefined | FormikGovPayMetadata,
+  touched: string | undefined | FormikPaymentMetadata,
   index: number,
 ): string | undefined => {
   // No errors
@@ -49,5 +49,5 @@ export const parseTouched = (
  * Only disable first instance, otherwise any field beginning with a required field will be disabled, and user will not be able to fix their mistake as the delete icon is also disabled
  */
 export const isFieldDisabled = (key: string, index: number) =>
-  REQUIRED_GOVPAY_METADATA.includes(key) &&
-  index === REQUIRED_GOVPAY_METADATA.indexOf(key);
+  REQUIRED_PAYMENT_METADATA.includes(key) &&
+  index === REQUIRED_PAYMENT_METADATA.indexOf(key);

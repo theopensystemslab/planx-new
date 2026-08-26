@@ -25,14 +25,14 @@ const GOVPAY_DOCS_URL =
 
 const STRIPE_DOCS_URL = "https://docs.stripe.com/metadata";
 
-export type FormikGovPayMetadata =
+export type FormikPaymentMetadata =
   Record<keyof GovPayMetadata, string>[] | string | undefined;
 
-interface GovPayMetadataSectionProps {
+interface PaymentMetadataSectionProps {
   disabled?: boolean;
 }
 
-function GovPayMetadataEditor(
+function PaymentMetadataEditor(
   props: ListManagerEditorProps<GovPayMetadata> & {
     isFieldDisabled: (key: string, index: number) => boolean;
     disabled?: boolean;
@@ -43,11 +43,11 @@ function GovPayMetadataEditor(
   const { errors, touched } = useFormikContext<Pay>();
 
   const error = parseError(
-    errors.govPayMetadata as FormikGovPayMetadata,
+    errors.govPayMetadata as FormikPaymentMetadata,
     props.index,
   );
   const isTouched = parseTouched(
-    touched.govPayMetadata as FormikGovPayMetadata,
+    touched.govPayMetadata as FormikPaymentMetadata,
     props.index,
   );
 
@@ -142,7 +142,7 @@ const Headers: React.FC<{ title: string }> = ({ title }) => (
   </>
 );
 
-export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
+export const PaymentMetadataSection: React.FC<PaymentMetadataSectionProps> = ({
   disabled,
 }) => {
   const provider = usePaymentProvider();
@@ -152,7 +152,7 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
   const EditorComponent = useCallback(
     (editorProps: ListManagerEditorProps<GovPayMetadata>) => (
       // @ts-expect-error "variant" prop is passed in via editorProps, but type inference won't pick this up
-      <GovPayMetadataEditor
+      <PaymentMetadataEditor
         {...editorProps}
         isFieldDisabled={(key, index) =>
           disabled || isFieldDisabled(key, index)
