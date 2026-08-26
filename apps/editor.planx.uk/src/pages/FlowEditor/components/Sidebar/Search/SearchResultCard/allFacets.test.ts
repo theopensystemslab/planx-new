@@ -78,7 +78,7 @@ describe("More information fields", () => {
     });
 
     expect(output).toStrictEqual<Output>({
-      key: "Internal notes",
+      key: "Note",
       iconKey: ComponentType.Question,
       componentType: "Question",
       title: "Seahorse",

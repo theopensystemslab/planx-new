@@ -1,4 +1,4 @@
-import BorderColorIcon from "@mui/icons-material/BorderColor";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import type { ChangeEvent } from "react";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
@@ -21,7 +21,7 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
 }) => {
   return (
     <ModalSection>
-      <ModalSectionContent title="Internal notes" Icon={BorderColorIcon}>
+      <ModalSectionContent title="Note" Icon={StickyNote2Icon}>
         <InputRow>
           <Input
             // required
@@ -29,7 +29,7 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
             value={value}
             onChange={onChange}
             multiline
-            placeholder="Internal notes"
+            placeholder="Note"
             rows={3}
             disabled={disabled}
           />
