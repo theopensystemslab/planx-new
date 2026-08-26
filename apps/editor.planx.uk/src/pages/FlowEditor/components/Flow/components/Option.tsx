@@ -7,6 +7,7 @@ import React from "react";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
+import { AttachedNote } from "./AttachedNote";
 import { DataField } from "./DataField";
 import { FlagBand, NoFlagBand } from "./FlagBand";
 import Hanger from "./Hanger";
@@ -15,7 +16,10 @@ import { Thumbnail } from "./Thumbnail";
 
 const Option: React.FC<any> = (props) => {
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
-  const childNodes = useStore((state) => state.childNodesOf(props.id));
+  const [childNodes, showNotes] = useStore((state) => [
+    state.childNodesOf(props.id),
+    state.showNotes,
+  ]);
 
   // The folder containing the Question/Checklist this Option belongs to -
   const containerFolderId = getParentId(props.containerFolderId);
@@ -87,6 +91,9 @@ const Option: React.FC<any> = (props) => {
           <div className="text">{props.data.text}</div>
           {props.data?.val && (
             <DataField value={props.data.val} variant="child" />
+          )}
+          {showNotes && props.data?.notes && (
+            <AttachedNote note={props.data.notes} variant="option" />
           )}
         </Link>
       </div>
