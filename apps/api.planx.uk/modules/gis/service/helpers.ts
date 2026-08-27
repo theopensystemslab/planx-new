@@ -32,6 +32,7 @@ import * as swale from "./local_authorities/metadata/swale.js";
 import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
 import * as torbay from "./local_authorities/metadata/torbay.js";
 import * as walthamForest from "./local_authorities/metadata/walthamForest.js";
+import * as waverly from "./local_authorities/metadata/waverly.js";
 import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
 import * as westminster from "./local_authorities/metadata/westminster.js";
 
@@ -80,6 +81,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   tewkesbury,
   torbay,
   "waltham-forest": walthamForest,
+  waverly,
   "west-berkshire": westBerkshire,
   westminster,
 };
