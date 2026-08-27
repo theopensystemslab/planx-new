@@ -14,34 +14,9 @@ GENERATED ALWAYS AS (
 CREATE INDEX flows_search_vector_idx ON public.flows
 USING GIN (search_vector);
 
--- searchable_flows view exists mainly to more precisely scope permissions
--- it's scoped to only the columns the search feature actually needs
-CREATE VIEW public.searchable_flows AS
-SELECT
-  id,
-  name,
-  slug,
-  summary,
-  status,
-  is_template,
-  can_create_from_copy,
-  templated_from,
-  team_id
-FROM public.flows
-WHERE deleted_at IS NULL;
-
 CREATE FUNCTION public.search_flows(search text)
-RETURNS SETOF public.searchable_flows AS $$
-  SELECT
-    id,
-    name,
-    slug,
-    summary,
-    status,
-    is_template,
-    can_create_from_copy,
-    templated_from,
-    team_id
+RETURNS SETOF public.flows AS $$
+  SELECT *
   FROM public.flows
   WHERE deleted_at IS NULL
     AND search_vector @@ plainto_tsquery('english', search)

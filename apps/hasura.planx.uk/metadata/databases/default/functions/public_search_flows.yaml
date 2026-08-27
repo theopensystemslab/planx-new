@@ -4,5 +4,8 @@ function:
 configuration:
   exposed_as: query
 permissions:
-  - role: teamEditor
+  - role: analyst
+  - role: api
   - role: platformAdmin
+  - role: public
+  - role: teamEditor
