@@ -3,9 +3,9 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
 import type { Store } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -159,19 +159,23 @@ function SetFeeComponent(props: Props) {
             />
           </InputRow>
           <Typography variant="body2" sx={{ mb: 2 }}>
-            If your council does not wish to absorb Stripe transaction fees
-            incurred by GOV.UK Pay for this service, use this option to apply an
+            If your council does not wish to absorb transaction fees incurred by
+            the payment provider for this service, use this option to apply an
             additional {DEFAULT_PAYMENT_PROCESSING_PERCENTAGE * 100}% of{" "}
             <strong>application.fee.payable</strong> plus {VAT_PERCENTAGE * 100}
             % VAT payment processing fee to the amount owed by the applicant.
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            Please note that it is your responsibility to configure which credit
-            card types are accepted in your GOV.UK Pay account.{" "}
-            {DEFAULT_PAYMENT_PROCESSING_PERCENTAGE * 100}% is an average
-            processing fee only; American Express and non-EU credit cards are
-            likely to have higher rates.
-          </Typography>
+          {!hasFeatureFlag("STRIPE_MIGRATION") ? (
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              Please note that it is your responsibility to configure which
+              credit card types are accepted in your GOV.UK Pay account.{" "}
+              {DEFAULT_PAYMENT_PROCESSING_PERCENTAGE * 100}% is an average
+              processing fee only; American Express and non-EU credit cards are
+              likely to have higher rates.
+            </Typography>
+          ) : (
+            <></>
+          )}
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
@@ -201,7 +205,7 @@ function SetFeeComponent(props: Props) {
             <strong>application.fee.payable</strong> is the total sum{" "}
             <em>inclusive of VAT</em> that the applicant will owe when they
             reach Pay. Any of the passport data values above can be referenced
-            in your GOV.UK Pay metadata.
+            in your payment metadata.
           </Typography>
         </ModalSectionContent>
       </ModalSection>
