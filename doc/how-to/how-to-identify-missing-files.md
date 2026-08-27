@@ -11,6 +11,25 @@ When Scanii detects an image which breaks it's moderation policy the file is del
 
 As these images are automatically deleted, this can lead to issues when trying to download the application files - the passport will list files which no longer exist on S3 and the request to get the file will fail.
 
+## Scan verification
+
+Once Scanii has scanned an object, a callback Lambda tags it with `ScaniiId` and `ScaniiFindings`. The API will not serve a file from the user-data bucket unless those tags are present, so a file that has not yet been scanned is never handed to a council. This is controlled by the `ENFORCE_SCAN_FROM` env var (an ISO8601 date). When unset the check is disabled entirely (which is the case locally and in CI where Minio has no Scanii equivalent and no object is ever tagged).
+
+The API response tells you which situation you're in before you go near CloudWatch:
+
+| Response | Meaning |
+| --- | --- |
+| `503` + `{ "error": "FILE_SCAN_PENDING" }` | Scanii hasn't tagged the object yet. Transient — retry after the `Retry-After` interval. If it persists, the tagging Lambda is broken or not running. |
+| `404` + `{ "error": "FILE_FLAGGED" }` | Scanii recorded findings against the file. Follow the steps below. |
+| `404` + `{ "error": "FILE_NOT_FOUND" }` | No such object. Usually a file Scanii deleted at scan time — also follow the steps below. |
+| `500` | An S3 or configuration failure, not a moderation issue. Check API logs. |
+
+You can inspect an object's tags directly:
+
+```sh
+aws s3api get-object-tagging --bucket <user-data-bucket> --key 'abc12345/my_file.jpg'
+```
+
 ## Steps
 If the above is reported (failure to download files) please take the following steps to identify the issue.
 
@@ -44,4 +63,5 @@ Clearly this is an imperfect solution. However, this is a rare occurrence so far
  - Once Scanni deleted a file, track this in a PlanX db table
    - Use records here to either update a user's session, or...
    - Check table before fetching files
- - More permissive payload creation - skip failed files and add comment to zip (e.g. a `failures.txt` listing any issues)
+   - More permissive payload creation - skip failed files and add comment to zip (e.g. a `failures.txt` listing any issues)
+   - The zip builder now fails outright rather than silently omitting a file, so a council never receives an incomplete submission. A `failures.txt` would still make sense for permanently deleted files, where retrying can never succeed.
