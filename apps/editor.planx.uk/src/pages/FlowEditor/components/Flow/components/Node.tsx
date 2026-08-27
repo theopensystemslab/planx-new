@@ -5,12 +5,16 @@ import {
 import { TASKS } from "@planx/components/EnhancedTextInput/model";
 import type { Task } from "@planx/components/EnhancedTextInput/types";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
+import {
+  nodeIsChildOfTemplatedInternalPortal,
+  nodeIsTemplatedInternalPortal,
+} from "pages/FlowEditor/utils";
 import React from "react";
 import { exhaustiveCheck } from "utils";
 
 import type { Store } from "../../../lib/store";
 import { useStore } from "../../../lib/store";
-import { stripTagsAndLimitLength } from "../lib/utils";
+import { getParentId, stripTagsAndLimitLength } from "../lib/utils";
 import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";
 import Filter from "./Filter";
@@ -19,11 +23,15 @@ import Portal from "./Portal";
 import Question from "./Question";
 
 const Node: React.FC<any> = (props) => {
-  const [node, wasVisited, showNotes] = useStore((state) => [
-    state.flow[props.id],
-    state.wasVisited(props.id),
-    state.showNotes,
-  ]);
+  const [node, wasVisited, showNotes, isTemplatedFrom, flow, orderedFlow] =
+    useStore((state) => [
+      state.flow[props.id],
+      state.wasVisited(props.id),
+      state.showNotes,
+      state.isTemplatedFrom,
+      state.flow,
+      state.orderedFlow,
+    ]);
 
   const allProps = {
     ...props,
@@ -35,6 +43,22 @@ const Node: React.FC<any> = (props) => {
       node.data?.areTemplatedNodeInstructionsRequired,
     className: props.className || "",
   };
+
+  // In templated flows, always hide `Note` components that are inherited
+  //   from the source template unless within a templated folder
+  const parent = getParentId(node.id);
+  const indexedParent = orderedFlow?.find(({ id }) => id === parent);
+  const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
+    flow,
+    indexedParent,
+  );
+  const parentIsChildOfTemplatedInternalPortal =
+    nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
+  const renderNoteComponent =
+    showNotes &&
+    (!isTemplatedFrom ||
+      parentIsTemplatedInternalPortal ||
+      parentIsChildOfTemplatedInternalPortal);
 
   const type = props.type as TYPES;
   switch (type) {
@@ -98,8 +122,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.NextSteps:
       return <Question {...allProps} text="Next steps" />;
     case TYPES.Note:
-      // TODO also "hide" notes if templated flow; always hide notes that come from source versus show notes if inside templated folder i can edit?
-      return showNotes ? (
+      return renderNoteComponent ? (
         <Question {...allProps} text={node?.data?.note ?? "Note"} />
       ) : null;
     case TYPES.Notice:
