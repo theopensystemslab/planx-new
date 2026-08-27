@@ -36,12 +36,12 @@ function NoteComponent(props: Props) {
         <ModalSectionContent>
           <InputRow>
             <Input
-              name="note"
+              name="text"
               format="large"
               minRows={4}
               multiline={true}
               placeholder="Note"
-              value={formik.values.note}
+              value={formik.values.text}
               onChange={formik.handleChange}
               disabled={props.disabled}
             />
