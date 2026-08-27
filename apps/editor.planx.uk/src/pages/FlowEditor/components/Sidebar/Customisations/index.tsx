@@ -2,37 +2,26 @@ import { gql, useSubscription } from "@apollo/client";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import { sortIdsDepthFirst } from "@planx/graph";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect } from "react";
 
 import { CustomisationCard } from "./CustomisationCard";
 import type { FlowEdits } from "./types";
 
 const Customisations = () => {
-  const [flowId, flow, isTemplatedFrom, isTemplate, setOrderedFlow] = useStore(
+  const [flowId, isTemplatedFrom, isTemplate, orderedFlow] = useStore(
     (state) => [
       state.id,
-      state.flow,
       state.isTemplatedFrom,
       state.isTemplate,
-      state.setOrderedFlow,
+      state.orderedFlow,
     ],
   );
 
-  useEffect(() => {
-    if (flow) setOrderedFlow();
-  }, [flow, setOrderedFlow]);
-
   // Get the nodes within this flow that are customisable and sort them top-down to match graph
-  const customisableNodeIds = new Set(
-    Object.entries(flow)
-      .filter(([_nodeId, nodeData]) => Boolean(nodeData.data?.isTemplatedNode))
-      .map((entry) => entry[0]),
-  );
-  const sortedCustomisableNodeIds =
-    sortIdsDepthFirst(flow)(customisableNodeIds);
+  const sortedCustomisableNodeIds = (orderedFlow ?? [])
+    .filter((node) => Boolean(node.data?.isTemplatedNode))
+    .map((node) => node.id);
 
   // Subscribe to edits in order to mark customisable nodes "done"
   const { data, loading, error } = useSubscription<{

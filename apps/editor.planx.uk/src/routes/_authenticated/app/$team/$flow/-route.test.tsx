@@ -22,6 +22,7 @@ vi.mock("utils/routeUtils/queryUtils", () => ({
 const mockDisconnectFromFlow = vi.fn();
 const mockConnectToFlow = vi.fn().mockResolvedValue(undefined);
 const mockGetFlowInformation = vi.fn();
+const mockSetOrderedFlow = vi.fn();
 
 const makeStore = (overrides: Partial<FullStore> = {}): FullStore =>
   ({
@@ -29,7 +30,7 @@ const makeStore = (overrides: Partial<FullStore> = {}): FullStore =>
     disconnectFromFlow: mockDisconnectFromFlow,
     connectToFlow: mockConnectToFlow,
     getFlowInformation: mockGetFlowInformation,
-    setOrderedFlow: vi.fn(),
+    setOrderedFlow: mockSetOrderedFlow,
     ...overrides,
   }) as unknown as FullStore;
 
@@ -120,5 +121,67 @@ describe("connectToFlowRoute (ShareDB connection guard)", () => {
 
     expect(mockDisconnectFromFlow).toHaveBeenCalledOnce();
     expect(mockConnectToFlow).toHaveBeenCalledWith("lambeth-flow-b-uuid");
+  });
+
+  // The Customise panel (source templates, and templates) requires `orderedFlow`
+  describe("preparing orderedFlow for the Customise panel", () => {
+    beforeEach(() => {
+      vi.mocked(useStore.getState).mockReturnValue(makeStore({ id: "" }));
+      vi.mocked(getBasicFlowData).mockResolvedValue({
+        id: "flow-uuid",
+        name: "Some Flow",
+      });
+    });
+
+    it("sets the ordered flow for a templated-from (child) flow", async () => {
+      vi.mocked(getFlowEditorData).mockResolvedValue({
+        id: "flow-uuid",
+        flowStatus: "online",
+        isFlowPublished: false,
+        isTemplate: false,
+        isService: true,
+        templatedFrom: "template-uuid",
+        template: undefined,
+        isPattern: false,
+      });
+
+      await connectToFlowRoute("lambeth", "someFlow");
+
+      expect(mockSetOrderedFlow).toHaveBeenCalledOnce();
+    });
+
+    it("sets the ordered flow for a source template", async () => {
+      vi.mocked(getFlowEditorData).mockResolvedValue({
+        id: "flow-uuid",
+        flowStatus: "online",
+        isFlowPublished: false,
+        isTemplate: true,
+        isService: false,
+        templatedFrom: "",
+        template: undefined,
+        isPattern: false,
+      });
+
+      await connectToFlowRoute("lambeth", "someTemplate");
+
+      expect(mockSetOrderedFlow).toHaveBeenCalledOnce();
+    });
+
+    it("does not set the ordered flow for a plain flow", async () => {
+      vi.mocked(getFlowEditorData).mockResolvedValue({
+        id: "flow-uuid",
+        flowStatus: "online",
+        isFlowPublished: false,
+        isTemplate: false,
+        isService: true,
+        templatedFrom: "",
+        template: undefined,
+        isPattern: false,
+      });
+
+      await connectToFlowRoute("lambeth", "someFlow");
+
+      expect(mockSetOrderedFlow).not.toHaveBeenCalled();
+    });
   });
 });
