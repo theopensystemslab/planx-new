@@ -1,6 +1,6 @@
 -- Powers the explore page "Search PlanX" feature: search over flows & templates
--- by name, summary, description, and limitations - ranked by relevance using
--- Postgres full text search, with name weighted highest, then summary, description/limitations
+-- by name, summary, description, and limitations - ranked by relevance using pgvector/pgquery
+-- name weighted highest, then summary/description/limitations
 -- HTML is stripped from description/limitations before indexing
 
 ALTER TABLE public.flows ADD COLUMN search_vector tsvector
