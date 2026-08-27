@@ -8,6 +8,7 @@ import mime from "mime";
 import { customAlphabet } from "nanoid";
 
 import { isLiveEnv } from "../../../helpers.js";
+import { SCAN_EXEMPT_METADATA_KEY } from "./scanStatus.js";
 import { s3Factory } from "./utils.js";
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 8);
 
@@ -33,6 +34,11 @@ export const uploadPrivateFile = async (
   file: Express.Multer.File,
   filename: string,
   filekey?: string,
+  /**
+   * Optionally mark the file as exempt from Scanii checks. Should only be used for files
+   * the API generates itself from trusted data - never for anything a user uploads.
+   */
+  { scanExempt = false }: { scanExempt?: boolean } = {},
 ) => {
   const s3 = s3Factory();
 
@@ -40,6 +46,7 @@ export const uploadPrivateFile = async (
 
   params.Metadata = {
     is_private: "true",
+    ...(scanExempt && { [SCAN_EXEMPT_METADATA_KEY]: "true" }),
   };
 
   await s3.putObject(params);
