@@ -123,11 +123,16 @@ Send the council both CNAMEs together.
 
 ### 4. Wait for the validation record, then verify it
 
-Wait for the council to confirm. Then verify the record is actually live (don't rely on the ACM console alone - see [Troubleshooting](#troubleshooting)):
+Wait for the council to confirm. Then verify both records are actually live (don't rely on the ACM console alone - see [Troubleshooting](#troubleshooting)). Councils commonly add one record and forget the other - a missing routing record surfaces later as an SSL error / site-not-loading, so check both now before proceeding:
 
 ```sh
+# 1. Validation record
 dig _abc123.planningservices.a-new-council.gov.uk CNAME +short @1.1.1.1
-# → returns the ...acm-validations.aws. target once it's in place
+# → Returns the ...acm-validations.aws. target
+
+# 2. Routing record
+dig planningservices.a-new-council.gov.uk CNAME +short @1.1.1.1
+# → Returns the shared CDN domain (d1234abcd.cloudfront.net)
 ```
 
 In the [ACM console](https://us-east-1.console.aws.amazon.com/acm/certificates/list) (region **us-east-1**), the domain on the mining cert should flip from `Pending validation` to `Success`.
@@ -207,8 +212,13 @@ Send the council both CNAMEs together - the routing record replaces their existi
 ### 2. Wait for the validation record, then verify it
 
 ```sh
+# 1. Validation record
 dig _abc123.planningservices.an-existing-council.gov.uk CNAME +short @1.1.1.1
-# → returns the ...acm-validations.aws. target once live
+# → Returns the ...acm-validations.aws. target
+
+# 2. Routing record
+dig planningservices.an-existing-council.gov.uk CNAME +short @1.1.1.1
+# → Returns the shared CDN domain (d1234abcd.cloudfront.net) - not their old CDN
 ```
 
 Confirm `Success` on the mining cert in the [ACM console](https://us-east-1.console.aws.amazon.com/acm/certificates/list) (us-east-1). Don't advance until this is confirmed - the next step's cert won't issue otherwise.
