@@ -1,11 +1,9 @@
-import { logger } from "airbrake";
-import ErrorFallback from "components/Error/ErrorFallback";
 import React from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
+import { AppErrorBoundary } from "./AppErrorBoundary";
 import { GraphError } from "./GraphError";
 
 vi.mock("airbrake", () => ({
@@ -24,9 +22,9 @@ const ThrowGraphError: React.FC = () => {
 
 it("does not render if a child does not throw an error", async () => {
   const { queryByRole } = await setup(
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <AppErrorBoundary>
       <h1>No error</h1>
-    </ErrorBoundary>,
+    </AppErrorBoundary>,
   );
   expect(
     queryByRole("heading", { name: /Invalid graph/ }),
@@ -35,9 +33,9 @@ it("does not render if a child does not throw an error", async () => {
 
 it("does not render if a child throws a non-Graph error", async () => {
   const { queryByRole, getByText } = await setup(
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <AppErrorBoundary>
       <ThrowError />
-    </ErrorBoundary>,
+    </AppErrorBoundary>,
   );
   // ErrorFallback displays...
   expect(getByText(/Something went wrong/)).toBeInTheDocument();
@@ -49,32 +47,20 @@ it("does not render if a child throws a non-Graph error", async () => {
 
 it("renders if a child throws an error", async () => {
   const { queryByText, getByRole } = await setup(
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <AppErrorBoundary>
       <ThrowGraphError />
-    </ErrorBoundary>,
+    </AppErrorBoundary>,
   );
 
   expect(queryByText(/Something went wrong/)).not.toBeInTheDocument();
   expect(getByRole("heading", { name: /Invalid graph/ })).toBeInTheDocument();
 });
 
-it("does not call Airbrake", async () => {
-  const loggerSpy = vi.spyOn(logger, "notify");
-
-  await setup(
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <ThrowGraphError />
-    </ErrorBoundary>,
-  );
-
-  expect(loggerSpy).not.toHaveBeenCalled();
-});
-
 it("should not have accessability violations", async () => {
   const { container } = await setup(
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <AppErrorBoundary>
       <ThrowGraphError />
-    </ErrorBoundary>,
+    </AppErrorBoundary>,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();

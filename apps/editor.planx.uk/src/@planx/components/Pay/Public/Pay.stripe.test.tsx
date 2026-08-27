@@ -1,9 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen, waitFor } from "@testing-library/react";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import type { FullStore, Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { ErrorBoundary } from "react-error-boundary";
 import { setup } from "test/utils";
 import type { Breadcrumbs } from "types";
 import { vi } from "vitest";
@@ -75,14 +74,14 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
     );
 
     const { user } = await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     await user.click(await screen.findByText("Pay now"));
@@ -108,14 +107,14 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
     );
 
     const { user } = await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     expect(await screen.findByText("Pay now")).toBeInTheDocument();
@@ -138,7 +137,7 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
     );
 
     const { user } = await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
@@ -146,7 +145,7 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
           hidePay={true}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     await user.click(await screen.findByText("Continue"));
@@ -165,14 +164,14 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
     );
 
     await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     expect(await screen.findByText("Pay now")).toBeInTheDocument();

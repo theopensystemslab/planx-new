@@ -6,12 +6,11 @@ import {
   ThemeProvider,
 } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import Feedback from "components/Feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
 import React from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 import Main from "ui/shared/Main";
@@ -109,9 +108,7 @@ const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
         <RootContainer data-testid="document-start">
           <Header />
           <MainContainer>
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              {children}
-            </ErrorBoundary>
+            <AppErrorBoundary>{children}</AppErrorBoundary>
           </MainContainer>
           <PublicFooter />
         </RootContainer>

@@ -4,8 +4,8 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { TASKS } from "@planx/components/EnhancedTextInput/model";
 import type { Task } from "@planx/components/EnhancedTextInput/types";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import React from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import { exhaustiveCheck } from "utils";
 
 import type { Store } from "../../../lib/store";
@@ -193,7 +193,7 @@ const getSetValueText = ({ operation, fn, val }: Store.Node["data"] = {}) => {
 
 export default function SafeNode(props: any) {
   return (
-    <ErrorBoundary
+    <AppErrorBoundary
       FallbackComponent={() => (
         <Question
           hasFailed
@@ -206,6 +206,6 @@ export default function SafeNode(props: any) {
       )}
     >
       <Node {...props} />
-    </ErrorBoundary>
+    </AppErrorBoundary>
   );
 }

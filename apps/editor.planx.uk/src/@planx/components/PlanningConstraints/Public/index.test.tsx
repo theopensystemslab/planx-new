@@ -1,9 +1,7 @@
 import { act } from "@testing-library/react";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { http, HttpResponse } from "msw";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import { vi } from "vitest";
@@ -43,7 +41,7 @@ beforeEach(() => {
 describe("error state", () => {
   it("renders an error if no address is present in the passport", async () => {
     const { getByRole, getByTestId } = await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <PlanningConstraints
           title="Planning constraints"
           description="Things that might affect your project"
@@ -52,7 +50,7 @@ describe("error state", () => {
           handleSubmit={vi.fn()}
           dataValues={availableDataValues}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     expect(getByTestId("error-summary-invalid-graph")).toBeInTheDocument();
@@ -61,7 +59,7 @@ describe("error state", () => {
 
   it("should not have any accessibility violations", async () => {
     const { container } = await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <PlanningConstraints
           title="Planning constraints"
           description="Things that might affect your project"
@@ -69,7 +67,7 @@ describe("error state", () => {
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
           dataValues={availableDataValues}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();

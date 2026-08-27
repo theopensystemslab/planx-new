@@ -1,11 +1,10 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { hasFeatureFlag } from "lib/featureFlags";
 import FlowEditor from "pages/FlowEditor";
 import { FlowNotesProvider } from "pages/FlowEditor/components/Flow/notes/FlowNotesContext";
 import { RecentFlowsProvider } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
 import React from "react";
-import { ErrorBoundary } from "react-error-boundary";
 
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/_flowEditor",
@@ -25,12 +24,12 @@ function FlowEditorLayout() {
 
   return (
     <RecentFlowsProvider>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <NotesWrapper>
           <FlowEditor />
           <Outlet />
         </NotesWrapper>
-      </ErrorBoundary>
+      </AppErrorBoundary>
     </RecentFlowsProvider>
   );
 }

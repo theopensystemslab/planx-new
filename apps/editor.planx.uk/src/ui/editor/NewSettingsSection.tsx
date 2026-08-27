@@ -2,10 +2,8 @@ import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import type { ReactNode } from "react";
-import React from "react";
-import { ErrorBoundary } from "react-error-boundary";
 
 const Root = styled(Box)(({ theme }) => ({
   display: "block",
@@ -34,9 +32,7 @@ export default function NewSettingsSection(
 ) {
   return (
     <Root {...props}>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        {props.children}
-      </ErrorBoundary>
+      <AppErrorBoundary>{props.children}</AppErrorBoundary>
     </Root>
   );
 }

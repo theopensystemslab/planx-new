@@ -3,11 +3,10 @@ import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen, waitFor } from "@testing-library/react";
 import { logger } from "airbrake";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { http, HttpResponse } from "msw";
 import type { FullStore, Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { ErrorBoundary } from "react-error-boundary";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import type { Breadcrumbs } from "types";
@@ -137,14 +136,14 @@ describe("Pay component when fee is undefined or £0", () => {
     });
 
     await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     // handleSubmit has NOT been called (not skipped), Pay shows error instead
@@ -164,14 +163,14 @@ describe("Pay component when fee is undefined or £0", () => {
     });
 
     const { getByTestId, user, getByRole } = await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     // Node is not auto-answered
@@ -208,14 +207,14 @@ describe("Pay component when fee is undefined or £0", () => {
     });
 
     await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     expect(handleSubmit).not.toHaveBeenCalled();
@@ -327,14 +326,14 @@ describe("Pay component when returning from payment provider", () => {
     const { handleSubmit } = setUpPayComponent(inFlightPayment);
 
     await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     expect(await screen.findByText("Check payment status")).toBeInTheDocument();
@@ -371,14 +370,14 @@ describe("Pay component when returning from payment provider", () => {
     const { handleSubmit } = setUpPayComponent(inFlightPayment);
 
     const { user } = await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     await user.click(await screen.findByText("Check payment status"));
@@ -399,14 +398,14 @@ describe("Pay component when returning from payment provider", () => {
     });
 
     await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     expect(await screen.findByText("Check payment status")).toBeInTheDocument();
@@ -429,14 +428,14 @@ describe("Pay component when returning from payment provider", () => {
     const { handleSubmit } = setUpPayComponent(inFlightPayment);
 
     await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AppErrorBoundary>
         <Pay
           title="Pay"
           fn="application.fee.payable"
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>,
+      </AppErrorBoundary>,
     );
 
     await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
