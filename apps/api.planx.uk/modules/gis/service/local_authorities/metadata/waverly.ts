@@ -1,6 +1,6 @@
 /*
 LAD20CD: E07000216
-LAD20NM: Waverly
+LAD20NM: Waverley
 LAD20NMW:
 FID:
 
@@ -12,28 +12,28 @@ import type { LocalAuthorityMetadata } from "../../helpers.js";
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {
     records: {
-      "articleFour.waverly.sunray": "A4D-01",
-      "articleFour.waverly.laneEndMillbridge": "A4D-04",
-      "articleFour.waverly.munsteadOaks": "A4D-05",
-      "articleFour.waverly.buildingsWood": "A4D-06",
-      "articleFour.waverly.farnhamTrading": "A4D-07",
-      "articleFour.waverly.middleBourneLane": "A4D-08",
-      "articleFour.waverly.wishanger": "A4D-09",
-      "articleFour.waverly.westCottage": "A4D-10",
-      "articleFour.waverly.greenLane": "A4D-11",
-      "articleFour.waverly.potatoCopse": "A4D-12",
-      "articleFour.waverly.lytheHill": "A4D-13",
-      "articleFour.waverly.runfoldWest": "A4D-14",
-      "articleFour.waverly.chiddingfold": "A4D-15",
-      "articleFour.waverly.sydneyRosemary": "A4D-16",
-      "articleFour.waverly.winterfoldHouse": "A4D-17",
-      "articleFour.waverly.horshamRoad": "A4D-20",
-      "articleFour.waverly.woodFarm": "A4D-21",
-      "articleFour.waverly.longGardenWalk": "A4D-26",
-      "articleFour.waverly.lowndesBuildings": "A4D-27",
-      "articleFour.waverly.wildwoodGolf": "A4D-28",
-      "articleFour.waverly.godalmingStation": "A4D-31",
-      "articleFour.waverly.beaconHill": "A4D-32",
+      "articleFour.waverley.sunray": "A4D-01",
+      "articleFour.waverley.laneEndMillbridge": "A4D-04",
+      "articleFour.waverley.munsteadOaks": "A4D-05",
+      "articleFour.waverley.buildingsWood": "A4D-06",
+      "articleFour.waverley.farnhamTrading": "A4D-07",
+      "articleFour.waverley.middleBourneLane": "A4D-08",
+      "articleFour.waverley.wishanger": "A4D-09",
+      "articleFour.waverley.westCottage": "A4D-10",
+      "articleFour.waverley.greenLane": "A4D-11",
+      "articleFour.waverley.potatoCopse": "A4D-12",
+      "articleFour.waverley.lytheHill": "A4D-13",
+      "articleFour.waverley.runfoldWest": "A4D-14",
+      "articleFour.waverley.chiddingfold": "A4D-15",
+      "articleFour.waverley.sydneyRosemary": "A4D-16",
+      "articleFour.waverley.winterfoldHouse": "A4D-17",
+      "articleFour.waverley.horshamRoad": "A4D-20",
+      "articleFour.waverley.woodFarm": "A4D-21",
+      "articleFour.waverley.longGardenWalk": "A4D-26",
+      "articleFour.waverley.lowndesBuildings": "A4D-27",
+      "articleFour.waverley.wildwoodGolf": "A4D-28",
+      "articleFour.waverley.godalmingStation": "A4D-31",
+      "articleFour.waverley.beaconHill": "A4D-32",
     },
   },
 };
