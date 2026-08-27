@@ -25,7 +25,6 @@ export const SketchPlanFullDescriptionTPO: Schema = {
     },
     {
       type: "text",
-      required: false,
       data: {
         title: "Tree description",
         description: "For example 'rear garden, mature (80cm diameter)'.",
@@ -35,7 +34,6 @@ export const SketchPlanFullDescriptionTPO: Schema = {
     },
     {
       type: "text",
-      required: false,
       data: {
         title: "Proposed work",
         fn: "work",
@@ -44,7 +42,6 @@ export const SketchPlanFullDescriptionTPO: Schema = {
     },
     {
       type: "text",
-      required: false,
       data: {
         title: "Reasons for the proposed work",
         fn: "reason",
