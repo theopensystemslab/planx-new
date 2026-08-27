@@ -9,18 +9,11 @@ import { getLocalFlowIdb, setLocalFlowIdb } from "lib/local.idb";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import type { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Session } from "types";
 import { ApplicationPath } from "types";
 
-import ErrorFallback from "../../components/Error/ErrorFallback";
+import { AppErrorBoundary } from "../../components/Error/AppErrorBoundary";
 import OpenInEditorButton from "../../components/OpenInEditorButton";
 import { useStore } from "../FlowEditor/lib/store";
 import type { HandleSubmit } from "./Node";
@@ -255,13 +248,13 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
       {node && (
         <>
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <AppErrorBoundary>
             <Node
               node={node}
               key={node.id}
               handleSubmit={handleSubmit(node.id!)}
             />
-          </ErrorBoundary>
+          </AppErrorBoundary>
         </>
       )}
       {isDraft && <OpenInEditorButton />}

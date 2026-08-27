@@ -7,19 +7,17 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import type { FormikProps } from "formik";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
 import React, { useMemo, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { CloseButton } from "ui/icons/CloseButton";
 import { Switch } from "ui/shared/Switch";
@@ -278,7 +276,7 @@ const FormModal: React.FC<FormModalProps> = ({
           {!handleDelete && (
             <TextInputToggle type={type} parent={parent} before={before} />
           )}
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <AppErrorBoundary>
             <Component
               formikRef={formikRef}
               node={node}
@@ -323,7 +321,7 @@ const FormModal: React.FC<FormModalProps> = ({
                 });
               }}
             />
-          </ErrorBoundary>
+          </AppErrorBoundary>
         </DialogContent>
         <DialogActions
           disableSpacing

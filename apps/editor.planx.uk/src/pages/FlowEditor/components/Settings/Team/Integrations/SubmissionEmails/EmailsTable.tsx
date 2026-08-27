@@ -8,10 +8,9 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 
 import { StyledTableRow } from "../../../../Team/styles";
@@ -193,7 +192,7 @@ const EmailsTableContent = () => {
 };
 
 export const EmailsTable = () => (
-  <ErrorBoundary FallbackComponent={ErrorFallback}>
+  <AppErrorBoundary>
     <EmailsTableContent />
-  </ErrorBoundary>
+  </AppErrorBoundary>
 );

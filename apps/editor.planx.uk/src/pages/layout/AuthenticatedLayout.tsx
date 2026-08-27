@@ -4,14 +4,13 @@ import { styled } from "@mui/material/styles";
 import { useRouter } from "@tanstack/react-router";
 import Breadcrumbs from "components/Breadcrumbs";
 import EditorNavMenu from "components/EditorNavMenu/EditorNavMenu";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import LoadingOverlay from "components/LoadingOverlay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
 import React, { useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { ErrorBoundary } from "react-error-boundary";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 import Header from "../../components/Header/Header";
@@ -60,10 +59,10 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
         <EditorNavMenu />
         <DashboardContainer>
           <Breadcrumbs />
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <AppErrorBoundary>
             <WatermarkBackground variant="dark" opacity={0.05} />
             <DndProvider backend={HTML5Backend}>{children}</DndProvider>
-          </ErrorBoundary>
+          </AppErrorBoundary>
         </DashboardContainer>
       </DashboardWrap>
     </>

@@ -1,7 +1,7 @@
 import ReactJson from "@microlink/react-json-view";
 import { styled } from "@mui/material/styles";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import React from "react";
-import { ErrorBoundary } from "react-error-boundary";
 
 const Root = styled("pre")(({ theme }) => ({
   padding: theme.spacing(2.5, 2),
@@ -35,7 +35,7 @@ export const FormattedResponse: React.FC<FormattedResponseProps> = ({
 
   return (
     <Root>
-      <ErrorBoundary FallbackComponent={InvalidJSONError}>
+      <AppErrorBoundary FallbackComponent={InvalidJSONError} disableReporting>
         <ReactJson
           src={parsedResponse}
           theme="monokai"
@@ -45,7 +45,7 @@ export const FormattedResponse: React.FC<FormattedResponseProps> = ({
           style={{ background: "transparent" }}
           enableClipboard={false}
         />
-      </ErrorBoundary>
+      </AppErrorBoundary>
     </Root>
   );
 };

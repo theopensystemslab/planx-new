@@ -1,10 +1,9 @@
 import BarChartIcon from "@mui/icons-material/BarChart";
 import type { GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import { EmptyState } from "ui/editor/EmptyState";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import type { ColumnConfig } from "ui/shared/DataTable/types";
@@ -183,9 +182,9 @@ const EventsLog: React.FC<EventsLogProps> = ({
   }
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <AppErrorBoundary>
       <DataTable columns={columns} rows={rowData} />
-    </ErrorBoundary>
+    </AppErrorBoundary>
   );
 };
 

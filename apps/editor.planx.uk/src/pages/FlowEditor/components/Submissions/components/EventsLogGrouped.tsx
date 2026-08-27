@@ -1,12 +1,11 @@
 import BarChartIcon from "@mui/icons-material/BarChart";
-import type { GridFilterItem, GridRowParams } from "@mui/x-data-grid";
+import type { GridRowParams } from "@mui/x-data-grid";
 import { useNavigate } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useMemo, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import React, { useMemo } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import type { ColumnConfig } from "ui/shared/DataTable/types";
@@ -14,11 +13,7 @@ import { ColumnFilterType } from "ui/shared/DataTable/types";
 import { dateFormatter } from "ui/shared/DataTable/utils";
 
 import { submissionStatusGroupedOptions } from "../submissionFilterOptions";
-import type {
-  EventsLogGroupedProps,
-  Submission,
-  SubmissionSummary,
-} from "../types";
+import type { EventsLogGroupedProps, SubmissionSummary } from "../types";
 import { getConsolidatedStatus } from "../utils";
 import { StatusChipGrouped } from "./StatusChipGrouped";
 
@@ -119,13 +114,13 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
     { field: "id", headerName: "Session ID", width: 400 },
   ];
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <AppErrorBoundary>
       <DataTable
         columns={columns}
         rows={submissionsWithConsolidatedStatus}
         onRowClick={handleRowClick}
       />
-    </ErrorBoundary>
+    </AppErrorBoundary>
   );
 };
 

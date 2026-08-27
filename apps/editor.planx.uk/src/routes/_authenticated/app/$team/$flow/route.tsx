@@ -4,9 +4,8 @@ import {
   stripSearchParams,
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import ErrorFallback from "components/Error/ErrorFallback";
+import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import FlowSkeleton from "pages/FlowEditor/FlowSkeleton";
-import { ErrorBoundary } from "react-error-boundary";
 import { CatchAllComponent } from "routes/$";
 
 import { flowsSearchSchema } from "../flows";
@@ -40,8 +39,8 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
 
 function RouteComponent() {
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <AppErrorBoundary>
       <Outlet />
-    </ErrorBoundary>
+    </AppErrorBoundary>
   );
 }
