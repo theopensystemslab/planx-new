@@ -163,6 +163,9 @@ const GroupedChecklistComponent: React.FC<PublicProps<GroupedChecklist>> = (
                         exclusiveOrOptionGroup.children[0].id,
                       )}
                       label={exclusiveOrOptionGroup.children[0].data.text}
+                      description={
+                        exclusiveOrOptionGroup.children[0].data.description
+                      }
                       id={exclusiveOrOptionGroup.children[0].id}
                       checked={formik.values.checked.includes(
                         exclusiveOrOptionGroup.children[0].id,
