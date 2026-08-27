@@ -46,10 +46,21 @@ vi.mock("string-to-stream", () => ({
 
 const mockGetSessionById = vi.fn().mockResolvedValue(mockLowcalSession);
 
+// User-uploaded files on the session passport; empty unless a test sets them
+let mockPassportFiles: { url: string }[] = [];
+
+const mockGetFileFromS3 = vi.fn();
+
+vi.mock("../../file/service/getFile.js", () => ({
+  getFileFromS3: (key: string) => mockGetFileFromS3(key),
+}));
+
 vi.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: class MockPassport {
-      files = vi.fn().mockImplementation(() => []);
+      get files() {
+        return mockPassportFiles;
+      }
     },
     generateApplicationHTML: vi
       .fn()
@@ -94,6 +105,55 @@ vi.mock("../../../client", () => {
 describe("buildSubmissionExportZip", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockPassportFiles = [];
+  });
+
+  describe("user-uploaded files", () => {
+    const FILE_URL = "https://api.planx.dev/file/private/abc12345/plan.pdf";
+
+    beforeEach(() => {
+      mockPassportFiles = [{ url: FILE_URL }];
+    });
+
+    test("a scanned file is added to the zip", async () => {
+      const body = Buffer.from("pdf bytes");
+      mockGetFileFromS3.mockResolvedValue({ outcome: "ok", body });
+
+      await buildSubmissionExportZip({ sessionId: "1234" });
+
+      expect(mockGetFileFromS3).toHaveBeenCalledWith("abc12345/plan.pdf");
+      expect(mockAddFile).toHaveBeenCalledWith("abc12345-plan.pdf", body);
+    });
+
+    // A council should not receive submissions that silently omit attachments. Failing
+    // here lets the send event's Hasura retry pick the file up once its scan has landed.
+    test.each([
+      ["pending-scan", 503],
+      ["malicious", 500],
+      ["not-found", 500],
+      ["error", 500],
+    ])(
+      "an unreadable file (%s) fails the whole zip",
+      async (outcome, status) => {
+        mockGetFileFromS3.mockResolvedValue({ outcome });
+
+        await expect(
+          buildSubmissionExportZip({ sessionId: "1234" }),
+        ).rejects.toThrow(
+          expect.objectContaining({
+            status,
+            message: expect.stringMatching(
+              /Failed to add file abc12345\/plan.pdf/,
+            ),
+          }),
+        );
+
+        expect(mockAddFile).not.toHaveBeenCalledWith(
+          "abc12345-plan.pdf",
+          expect.anything(),
+        );
+      },
+    );
   });
 
   test("the document viewer is added to zip", async () => {

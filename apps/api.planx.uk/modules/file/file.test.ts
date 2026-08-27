@@ -12,8 +12,18 @@ import { deleteFilesByURL } from "./service/deleteFile.js";
 
 let mockPutObject: Mocked<() => void>;
 let mockGetObject: Mocked<() => void>;
+let mockGetObjectTagging: Mocked<() => void>;
+let mockHeadObject: Mocked<() => void>;
 let mockDeleteObjects: Mocked<() => void>;
 let getObjectResponse = {};
+
+/** Tags as written by the Scanii callback Lambda for a file it scanned and cleared */
+const CLEAN_TAGS = {
+  TagSet: [
+    { Key: "ScaniiId", Value: "0ba8a1f0dd1d11eea1b40e7c1e0f1d2c" },
+    { Key: "ScaniiFindings", Value: "" },
+  ],
+};
 
 vi.mock("@aws-sdk/s3-request-presigner", () => ({
   getSignedUrl: vi.fn(() => {
@@ -29,6 +39,8 @@ vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
   class MockS3 {
     putObject = mockPutObject;
     getObject = mockGetObject;
+    getObjectTagging = mockGetObjectTagging;
+    headObject = mockHeadObject;
     deleteObjects = mockDeleteObjects;
   }
 
@@ -419,13 +431,14 @@ describe("File download", () => {
       ContentEncoding: "undefined",
       CacheControl: "undefined",
       Expires: "undefined",
-      LastModified:
-        "Tue May 31 2022 12:21:37 GMT+0000 (Coordinated Universal Time)",
+      LastModified: new Date("2022-05-31T12:21:37Z"),
       ETag: "a4c57ed39e8d869d636ccf5fc34a65a1",
+      TagCount: 2,
     };
     vi.clearAllMocks();
 
     mockGetObject = vi.fn(() => Promise.resolve(getObjectResponse));
+    mockGetObjectTagging = vi.fn(() => Promise.resolve(CLEAN_TAGS));
   });
 
   describe("Public", () => {
@@ -451,23 +464,40 @@ describe("File download", () => {
         },
       };
 
+      // Indistinguishable from a missing file, so the public route can't be used to probe
+      // for the existence of private ones
       await supertest(app)
         .get(`/file/public/${filePath}`)
-        .expect(500)
+        .expect(404)
         .then((res) => {
           expect(mockGetObject).toHaveBeenCalledTimes(1);
-          expect(res.body.error).toMatch(/Bad request/);
+          expect(res.body.error).toBe("FILE_NOT_FOUND");
         });
     });
 
-    it("should handle S3 error", async () => {
-      mockGetObject = vi.fn(() => Promise.reject(new Error("S3 error!")));
+    it("should 404 when the file is not in S3", async () => {
+      const noSuchKey = new Error("The specified key does not exist.");
+      noSuchKey.name = "NoSuchKey";
+      mockGetObject = vi.fn(() => Promise.reject(noSuchKey));
 
       await supertest(app)
         .get("/file/public/someKey/someFile.txt")
         .expect(404)
         .then((res) => {
-          expect(res.body.error).toMatch(/Missing file/);
+          expect(res.body.error).toBe("FILE_NOT_FOUND");
+        });
+      expect(mockGetObject).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle S3 error", async () => {
+      mockGetObject = vi.fn(() => Promise.reject(new Error("S3 error!")));
+
+      // An unexpected S3 failure is a 500
+      await supertest(app)
+        .get("/file/public/someKey/someFile.txt")
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Failed to download file/);
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
     });
@@ -482,9 +512,9 @@ describe("File download", () => {
 
       await supertest(app)
         .get("/file/public/someKey/someFile.txt")
-        .expect(404)
+        .expect(500)
         .then((res) => {
-          expect(res.body.error).toMatch(/Missing file/);
+          expect(res.body.error).toMatch(/Failed to download file/);
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
     });
@@ -496,24 +526,6 @@ describe("File download", () => {
         .get("/file/private/someKey")
         .set({ "api-key": "test" })
         .expect(404);
-    });
-
-    it("should not download if file is private", async () => {
-      const filePath = "somekey/file_name.txt";
-      getObjectResponse = {
-        ...getObjectResponse,
-        Metadata: {
-          is_private: "true",
-        },
-      };
-
-      await supertest(app)
-        .get(`/file/public/${filePath}`)
-        .expect(500)
-        .then((res) => {
-          expect(mockGetObject).toHaveBeenCalledTimes(1);
-          expect(res.body.error).toMatch(/Bad request/);
-        });
     });
 
     it("should not download if user is unauthorised", async () => {
@@ -559,12 +571,193 @@ describe("File download", () => {
         .set({ "api-key": "test" })
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
-        .expect(404)
+        .expect(500)
         .then((res) => {
-          expect(res.body.error).toMatch(/Missing file/);
+          expect(res.body.error).toMatch(/Failed to download file/);
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
     });
+  });
+
+  describe("Scanii verification", () => {
+    const FILE_PATH = "somekey/file_name.txt";
+    const get = () =>
+      supertest(app)
+        .get(`/file/private/${FILE_PATH}`)
+        .set({ "api-key": "test" });
+
+    it("serves any file when ENFORCE_SCAN_FROM is unset", async () => {
+      // The guard is off by default - this is always the state locally and in CI
+      getObjectResponse = { ...getObjectResponse, TagCount: 0 };
+
+      await get().expect(200);
+      expect(mockGetObjectTagging).not.toHaveBeenCalled();
+    });
+
+    describe("with enforcement enabled", () => {
+      beforeEach(() => {
+        vi.stubEnv("ENFORCE_SCAN_FROM", "2024-01-01T00:00:00Z");
+      });
+
+      afterEach(() => vi.unstubAllEnvs());
+
+      it("serves a file tagged as scanned and clean", async () => {
+        getObjectResponse = {
+          ...getObjectResponse,
+          LastModified: new Date("2026-08-01T00:00:00Z"),
+        };
+
+        await get().expect(200);
+        expect(mockGetObjectTagging).toHaveBeenCalledTimes(1);
+      });
+
+      it("returns 503 FILE_SCAN_PENDING for an untagged file", async () => {
+        getObjectResponse = {
+          ...getObjectResponse,
+          LastModified: new Date("2026-08-01T00:00:00Z"),
+          TagCount: 0,
+        };
+
+        await get()
+          .expect(503)
+          .then((res) => {
+            expect(res.body.error).toBe("FILE_SCAN_PENDING");
+            expect(res.headers["retry-after"]).toBe("30");
+          });
+        expect(mockGetObjectTagging).not.toHaveBeenCalled();
+      });
+
+      it("returns 503 FILE_SCAN_PENDING when non-Scanii tags are present", async () => {
+        getObjectResponse = {
+          ...getObjectResponse,
+          LastModified: new Date("2026-08-01T00:00:00Z"),
+        };
+        mockGetObjectTagging = vi.fn(() =>
+          Promise.resolve({ TagSet: [{ Key: "Team", Value: "barnet" }] }),
+        );
+
+        await get()
+          .expect(503)
+          .then((res) => expect(res.body.error).toBe("FILE_SCAN_PENDING"));
+      });
+
+      it("returns 404 when Scanii recorded findings", async () => {
+        getObjectResponse = {
+          ...getObjectResponse,
+          LastModified: new Date("2026-08-01T00:00:00Z"),
+        };
+        mockGetObjectTagging = vi.fn(() =>
+          Promise.resolve({
+            TagSet: [
+              { Key: "ScaniiId", Value: "abc123" },
+              {
+                Key: "ScaniiFindings",
+                Value: "content.malicious.eicar-test-signature",
+              },
+            ],
+          }),
+        );
+
+        await get()
+          .expect(404)
+          .then((res) => expect(res.body.error).toBe("FILE_FLAGGED"));
+      });
+
+      it("serves an untagged file uploaded before the cutoff", async () => {
+        getObjectResponse = {
+          ...getObjectResponse,
+          LastModified: new Date("2023-06-01T00:00:00Z"),
+          TagCount: 0,
+        };
+
+        await get().expect(200);
+        expect(mockGetObjectTagging).not.toHaveBeenCalled();
+      });
+
+      it("serves an API-generated file marked scan_exempt in metadata", async () => {
+        getObjectResponse = {
+          ...getObjectResponse,
+          LastModified: new Date("2026-08-01T00:00:00Z"),
+          TagCount: 0,
+          Metadata: { is_private: "true", scan_exempt: "true" },
+        };
+
+        await get().expect(200);
+        expect(mockGetObjectTagging).not.toHaveBeenCalled();
+      });
+
+      it("fails when ENFORCE_SCAN_FROM is malformed", async () => {
+        vi.stubEnv("ENFORCE_SCAN_FROM", "not-a-date");
+
+        await get().expect(500);
+      });
+    });
+  });
+});
+
+describe("DELETE /file/public/:fileKey/:fileName", () => {
+  const FILE_PATH = "somekey/file_name.txt";
+  const del = () =>
+    supertest(app)
+      .delete(`/file/public/${FILE_PATH}`)
+      .set(authHeader({ role: "platformAdmin" }));
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockHeadObject = vi.fn(() => Promise.resolve({ Metadata: {} }));
+    mockDeleteObjects = vi.fn(() => Promise.resolve());
+  });
+
+  it("deletes a public file", async () => {
+    await del().expect(204);
+
+    // Metadata-only read: no reason to pull bytes we're about to throw away
+    expect(mockHeadObject).toHaveBeenCalledTimes(1);
+    expect(mockGetObject).not.toHaveBeenCalled();
+    expect(mockDeleteObjects).toHaveBeenCalledTimes(1);
+  });
+
+  it("deletes a file whose scan is still pending", async () => {
+    vi.stubEnv("ENFORCE_SCAN_FROM", "2024-01-01T00:00:00Z");
+    mockHeadObject = vi.fn(() =>
+      Promise.resolve({ Metadata: {}, TagCount: 0 }),
+    );
+
+    await del().expect(204);
+
+    expect(mockDeleteObjects).toHaveBeenCalledTimes(1);
+    vi.unstubAllEnvs();
+  });
+
+  it("refuses to delete a private file", async () => {
+    mockHeadObject = vi.fn(() =>
+      Promise.resolve({ Metadata: { is_private: "true" } }),
+    );
+
+    await del()
+      .expect(404)
+      .then((res) => expect(res.body.error).toBe("FILE_NOT_FOUND"));
+
+    expect(mockDeleteObjects).not.toHaveBeenCalled();
+  });
+
+  it("404s when the file is not in S3", async () => {
+    const notFound = new Error("Not Found");
+    notFound.name = "NotFound";
+    mockHeadObject = vi.fn(() => Promise.reject(notFound));
+
+    await del()
+      .expect(404)
+      .then((res) => expect(res.body.error).toBe("FILE_NOT_FOUND"));
+
+    expect(mockDeleteObjects).not.toHaveBeenCalled();
+  });
+
+  it("requires platformAdmin", async () => {
+    await supertest(app)
+      .delete(`/file/public/${FILE_PATH}`)
+      .set(authHeader({ role: "teamEditor" }))
+      .expect(403);
   });
 });
 
