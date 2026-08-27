@@ -5,5 +5,4 @@ configuration:
   exposed_as: query
 permissions:
   - role: teamEditor
-  - role: teamAdmin
   - role: platformAdmin
