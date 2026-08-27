@@ -1,12 +1,18 @@
--- Powers the explore page "Search PlanX" feature: fuzzy search over flows & templates, by name
--- ranked by similarity using pg_trgm
+-- Powers the explore page "Search PlanX" feature: search over flows & templates
+-- by name, summary, description, and limitations - ranked by relevance using
+-- Postgres full text search, with name weighted highest, then summary, description/limitations
+-- HTML is stripped from description/limitations before indexing
 
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
+ALTER TABLE public.flows ADD COLUMN search_vector tsvector
+GENERATED ALWAYS AS (
+  setweight(to_tsvector('english', coalesce(name, '')), 'A')
+  || setweight(to_tsvector('english', coalesce(summary, '')), 'B')
+  || setweight(to_tsvector('english', regexp_replace(coalesce(description, ''), '<[^>]+>', ' ', 'g')), 'B')
+  || setweight(to_tsvector('english', regexp_replace(coalesce(limitations, ''), '<[^>]+>', ' ', 'g')), 'B')
+) STORED;
 
-CREATE INDEX flows_name_trgm_idx ON public.flows
-USING GIN (name gin_trgm_ops);
-
--- question - do we want any other columns to be searchable? should index those also if so
+CREATE INDEX flows_search_vector_idx ON public.flows
+USING GIN (search_vector);
 
 -- searchable_flows view exists mainly to more precisely scope permissions
 -- it's scoped to only the columns the search feature actually needs
@@ -15,7 +21,7 @@ SELECT
   id,
   name,
   slug,
-  description,
+  summary,
   status,
   is_template,
   can_create_from_copy,
@@ -30,7 +36,7 @@ RETURNS SETOF public.searchable_flows AS $$
     id,
     name,
     slug,
-    description,
+    summary,
     status,
     is_template,
     can_create_from_copy,
@@ -38,6 +44,6 @@ RETURNS SETOF public.searchable_flows AS $$
     team_id
   FROM public.flows
   WHERE deleted_at IS NULL
-    AND search <% COALESCE(name, '')
-  ORDER BY similarity(search, COALESCE(name, '')) DESC;
+    AND search_vector @@ plainto_tsquery('english', search)
+  ORDER BY ts_rank(search_vector, plainto_tsquery('english', search)) DESC;
 $$ LANGUAGE sql STABLE;
