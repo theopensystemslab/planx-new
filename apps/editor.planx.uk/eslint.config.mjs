@@ -75,6 +75,12 @@ export default [
               message:
                 "Please import shared Switch component from 'ui/shared/Switch' instead of the MUI Switch component directly",
             },
+            {
+              name: "react-error-boundary",
+              importNames: ["ErrorBoundary"],
+              message:
+                "Please use AppErrorBoundary from 'components/Error/AppErrorBoundary' instead — it reports caught errors to Airbrake with a component stack.",
+            },
           ],
           patterns: ["@mui/*/*/*"],
         },

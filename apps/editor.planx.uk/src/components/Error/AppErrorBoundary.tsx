@@ -1,10 +1,11 @@
 import React, { type ComponentType, type PropsWithChildren } from "react";
-import {
-  ErrorBoundary,
-  type ErrorBoundaryProps,
-  type FallbackProps,
-  type OnErrorCallback,
+import type {
+  ErrorBoundaryProps,
+  FallbackProps,
+  OnErrorCallback,
 } from "react-error-boundary";
+// eslint-disable-next-line no-restricted-imports
+import { ErrorBoundary } from "react-error-boundary";
 
 import ErrorFallback from "./ErrorFallback";
 import { logError } from "./logError";
