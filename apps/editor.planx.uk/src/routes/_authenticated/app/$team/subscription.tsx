@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
       useStore.getState().getUserRoleForCurrentTeam() === "teamAdmin";
 
     if (!isAuthorised) {
-      throw new Error("The user does not have permission to access this page.");
+      throw notFound();
     }
 
     const {
