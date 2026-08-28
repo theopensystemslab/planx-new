@@ -1,5 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { addDays, isBefore } from "date-fns";
+import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import type { DescriptionListItem } from "ui/public/DescriptionList";
 import { DescriptionList } from "ui/public/DescriptionList";
 
@@ -45,6 +47,13 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
   const teamName = themeData?.teams[0].name;
   const teamColour = themeData?.teams[0].theme.primaryColour;
 
+  const submissionExpirationDate = props.submittedAt
+    ? addDays(new Date(props.submittedAt), DAYS_UNTIL_EXPIRY)
+    : null;
+
+  const isSubmissionAvailable =
+    submissionExpirationDate && isBefore(new Date(), submissionExpirationDate);
+
   return (
     <Box
       sx={{
@@ -74,7 +83,7 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
         <DescriptionList data={submissionData} />
       </Box>
 
-      {props.submittedAt ? (
+      {props.submittedAt && !isSubmissionAvailable && (
         <Box
           sx={{
             display: "flex",
@@ -95,8 +104,6 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
             submittedAt={props.submittedAt}
           />
         </Box>
-      ) : (
-        <></>
       )}
     </Box>
   );
