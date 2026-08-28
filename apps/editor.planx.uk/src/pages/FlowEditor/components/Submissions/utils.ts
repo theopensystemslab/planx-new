@@ -20,6 +20,13 @@ export const getConsolidatedStatus = (
   }
 };
 
+export const getSucceededPayment = (
+  events: Submission[],
+): Submission | undefined =>
+  events.find(
+    (event) => event.eventType === "Pay" && event.status === "Success",
+  );
+
 const NON_RESUBMITTABLE_EVENT_TYPES = [
   "Pay",
   "Invited to pay",
