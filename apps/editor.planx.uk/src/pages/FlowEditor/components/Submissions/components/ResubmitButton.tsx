@@ -14,7 +14,10 @@ import type { RenderCellParams } from "ui/shared/DataTable/types";
 
 import type { Submission } from "../types";
 
-type ResubmitEventType = Exclude<Submission["eventType"], "Pay">;
+type ResubmitEventType = Exclude<
+  Submission["eventType"],
+  "Pay" | "Started session" | "Invited to pay"
+>;
 
 export const ResubmitButton = (params: RenderCellParams) => {
   const teamSlug = useStore((state) => state.teamSlug);
