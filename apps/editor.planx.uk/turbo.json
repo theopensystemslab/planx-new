@@ -12,10 +12,15 @@
       "outputs": ["build/**", "!build/storybook/**"],
       "env": ["VITE_*"]
     },
-    "build-storybook": {
+    "storybook:build": {
       "dependsOn": ["build"],
       "outputs": ["build/storybook/**"],
       "env": ["VITE_*"]
+    },
+    "storybook:dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
     }
   }
 }

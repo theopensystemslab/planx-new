@@ -8,4 +8,4 @@ This package must be built (`pnpm --filter @planx/file-upload build`) before any
 
 NB. This does not currently happen for Docker builds, so `apps/api.planx.uk/Dockerfile` filters with `pnpm --filter api.planx.uk...` to build this package first too.
 
-Interactive dev servers are also turbo-aware: `editor.planx.uk`'s `pnpm start` and `api.planx.uk`'s `pnpm dev` both delegate to `turbo run <task> --filter=<app>`, whose task definition (in each app's own `turbo.json`) depends on `^build`, so this package is built first there too.
+Interactive dev servers are also turbo-aware: `editor.planx.uk`'s `pnpm start`, `editor.planx.uk`'s `pnpm storybook`, and `api.planx.uk`'s `pnpm dev` all delegate to `turbo run <task> --filter=<app>`, whose task definition (in each app's own `turbo.json`) depends on `^build`, so this package is built first there too.

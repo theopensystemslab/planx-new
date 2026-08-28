@@ -8,6 +8,7 @@ import type {
 } from "@mui/x-data-grid";
 import {
   DataGrid,
+  gridClasses,
   GridToolbarColumnsButton,
   GridToolbarContainer,
   GridToolbarDensitySelector,
@@ -140,13 +141,16 @@ export const DataTable = <T,>({
           }
           sx={{
             ...(onRowClick && {
-              "& .MuiDataGrid-row": {
+              [`& .${gridClasses.row}`]: {
                 cursor: "pointer",
               },
-              "& .MuiDataGrid-row:hover": {
+              [`& .${gridClasses.row}:hover`]: {
                 backgroundColor: "action.hover",
               },
             }),
+            [`& .${gridClasses.cell}:focus`]: {
+              outline: "none",
+            },
           }}
           slots={{
             toolbar: CustomToolbar,

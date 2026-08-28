@@ -9,7 +9,9 @@ export interface Submission {
     | "Send to email"
     | "Upload to AWS S3"
     | "Upload to AWS S3 (no notification)"
-    | "Submit to Idox Nexus";
+    | "Submit to Idox Nexus"
+    | "Started session"
+    | "Invited to pay";
   status?:
     | "Success"
     | "Failed (500)" // Hasura scheduled event status codes
@@ -39,12 +41,14 @@ export interface GroupedEvent {
 }
 
 export type Attempt = {
-  eventType: Submission["eventType"];
+  eventType: Submission["eventType"] | SessionEvent;
   createdAt: Submission["createdAt"];
   retry: Submission["retry"];
   response: Submission["response"];
   status: Submission["status"];
 };
+
+export type SessionEvent = "Invited to pay" | "Started session";
 
 export interface SubmissionSummary {
   id: string;
@@ -79,6 +83,7 @@ export type GetTeamLogoQuery = {
   teams: {
     theme: {
       logo: string;
+      primaryColour: string;
     };
     id: number;
     name: string;

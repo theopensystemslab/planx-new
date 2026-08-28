@@ -16,10 +16,7 @@ import { Thumbnail } from "./Thumbnail";
 
 const Option: React.FC<any> = (props) => {
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
-  const [childNodes, showNotes] = useStore((state) => [
-    state.childNodesOf(props.id),
-    state.showNotes,
-  ]);
+  const [childNodes] = useStore((state) => [state.childNodesOf(props.id)]);
 
   // The folder containing the Question/Checklist this Option belongs to -
   const containerFolderId = getParentId(props.containerFolderId);
@@ -92,7 +89,7 @@ const Option: React.FC<any> = (props) => {
           {props.data?.val && (
             <DataField value={props.data.val} variant="child" />
           )}
-          {showNotes && props.data?.notes && (
+          {props.data?.notes && (
             <AttachedNote note={props.data.notes} variant="option" />
           )}
         </Link>

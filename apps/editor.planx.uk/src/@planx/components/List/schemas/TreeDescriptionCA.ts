@@ -23,7 +23,15 @@ export const TreeDescriptionCA: Schema = {
     },
     {
       type: "text",
-      required: false,
+      data: {
+        title: "Tree description",
+        description: "For example 'rear garden, mature (80cm diameter)'.",
+        fn: "description",
+        type: TextInputType.Short,
+      },
+    },
+    {
+      type: "text",
       data: {
         title: "Proposed work",
         fn: "work",

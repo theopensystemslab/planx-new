@@ -1,0 +1,11 @@
+function:
+  name: search_flows
+  schema: public
+configuration:
+  exposed_as: query
+permissions:
+  - role: analyst
+  - role: api
+  - role: platformAdmin
+  - role: public
+  - role: teamEditor

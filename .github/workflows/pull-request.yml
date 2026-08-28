@@ -202,7 +202,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
           restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - name: Build Storybook + editor (with workspace dependencies)
-        run: pnpm turbo run build build-storybook --filter=editor.planx.uk...
+        run: pnpm --filter=editor.planx.uk build-storybook
         env:
           VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}

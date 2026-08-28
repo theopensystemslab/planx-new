@@ -31,7 +31,7 @@ const Boundary: React.FC = () => {
       query={GET_TEAM_SETTINGS}
       mutation={UPDATE_TEAM_SETTINGS}
       validationSchema={validationSchema}
-      legend={"Boundary (bounding box)"}
+      legend={"Boundary"}
       description={<BoundaryDescription />}
       getInitialValues={({ teams: [team] }) => ({
         boundaryUrl: team.settings.boundaryUrl || "",

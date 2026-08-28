@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import React, { Fragment } from "react";
 
-interface DescriptionListItem {
+export interface DescriptionListItem {
   term: string;
   details: string;
 }

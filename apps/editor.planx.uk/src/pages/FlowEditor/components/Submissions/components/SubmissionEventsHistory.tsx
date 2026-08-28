@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Permission from "ui/editor/Permission";
 
 import type { Attempt, GroupedEvent, Submission } from "../types";
+import { canResubmit } from "../utils";
 import { OpenResponseButtonGrouped } from "./OpenResponseButtonGrouped";
 import { ResubmitButtonGrouped } from "./ResubmitButtonGrouped";
 import { StatusChip } from "./StatusChip";
@@ -13,37 +13,30 @@ import { StatusIcon } from "./StatusIcon";
 const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
   if (submissions.length === 0) return [];
 
-  const result: GroupedEvent[] = [];
-  let currentGroup: GroupedEvent | null = null;
+  const eventsMap = new Map<string, Submission[]>();
 
   for (const submission of submissions) {
-    if (
-      !currentGroup ||
-      currentGroup.events[0].eventType !== submission.eventType
-    ) {
-      currentGroup = {
-        sessionId: submission.sessionId,
-        eventId: submission.eventId,
-        events: [
-          {
-            eventType: submission.eventType,
-            createdAt: submission.createdAt,
-            retry: submission.retry,
-            response: submission.response,
-            status: submission.status,
-          },
-        ],
-      };
-      result.push(currentGroup);
-    } else {
-      currentGroup.events.push({
-        eventType: submission.eventType,
-        createdAt: submission.createdAt,
-        retry: submission.retry,
-        response: submission.response,
-        status: submission.status,
-      });
-    }
+    const events = eventsMap.get(submission.eventType) || [];
+    events.push(submission);
+    eventsMap.set(submission.eventType, events);
+  }
+
+  const result: GroupedEvent[] = [];
+
+  for (const [eventType, events] of eventsMap.entries()) {
+    const groupedEvent: GroupedEvent = {
+      sessionId: events[0].sessionId,
+      eventId: events[0].eventId,
+      events: events.map((event) => ({
+        eventType: event.eventType,
+        createdAt: event.createdAt,
+        retry: event.retry,
+        response: event.response,
+        status: event.status,
+      })),
+    };
+
+    result.push(groupedEvent);
   }
 
   return result;
@@ -70,9 +63,10 @@ const getMostRecentEventId = (groupedEvents: GroupedEvent[]): Set<string> => {
   );
 };
 
-export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
-  events,
-}) => {
+export const SubmissionEventsHistory: React.FC<{
+  events: Submission[];
+  isSubmissionAvailable: boolean;
+}> = ({ events, isSubmissionAvailable }) => {
   const groupedEvents = groupEvents(events);
   const mostRecentIds = getMostRecentEventId(groupedEvents);
 
@@ -82,15 +76,25 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
         background: "background",
         border: 1,
         margin: 1,
-        borderColor: "border.main",
+        borderColor: "lightgrey",
       }}
     >
-      <Box sx={{ padding: 1, margin: 1 }}>
+      <Box
+        sx={{
+          padding: 1,
+          margin: 1,
+          "& > *": {
+            borderBottom: 1,
+            borderColor: "lightgrey",
+          },
+        }}
+      >
         {groupedEvents.map((groupedEvent) => (
           <SubmissionEvent
             key={groupedEvent.eventId}
             groupedEvent={groupedEvent}
             isMostRecent={mostRecentIds.has(groupedEvent.eventId)}
+            isSubmissionAvailable={isSubmissionAvailable}
           />
         ))}
       </Box>
@@ -101,8 +105,15 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
 const SubmissionEvent: React.FC<{
   groupedEvent: GroupedEvent;
   isMostRecent: boolean;
-}> = ({ groupedEvent: { sessionId, events: attempts }, isMostRecent }) => {
+  isSubmissionAvailable: boolean;
+}> = ({
+  groupedEvent: { sessionId, events: attempts },
+  isMostRecent,
+  isSubmissionAvailable,
+}) => {
   const { eventType, createdAt, status } = attempts[0];
+  const hideResponse =
+    eventType === "Invited to pay" || eventType === "Started session";
 
   return (
     <Box
@@ -111,8 +122,6 @@ const SubmissionEvent: React.FC<{
         width: "100%",
         alignItems: "flex-start",
         mb: 1,
-        borderBottom: 1,
-        borderColor: "border.main",
       }}
     >
       <Box>
@@ -131,7 +140,12 @@ const SubmissionEvent: React.FC<{
         <Typography sx={{ fontWeight: "bold" }}>{eventType}</Typography>
 
         <Permission.IsPlatformAdmin>
-          {isMostRecent && status !== "Success" && eventType !== "Pay" && (
+          {canResubmit(
+            isMostRecent,
+            status,
+            eventType,
+            isSubmissionAvailable,
+          ) && (
             <ResubmitButtonGrouped
               sessionId={sessionId}
               eventType={eventType}
@@ -141,12 +155,13 @@ const SubmissionEvent: React.FC<{
 
         {attempts.length === 1 ? (
           <>
-            <Box sx={{ display: "flex" }}>
+            <Box sx={{ display: "flex", alignItems: "center", pb: 1 }}>
               <Typography>{new Date(createdAt).toLocaleString()}</Typography>
               <Box sx={{ marginLeft: "auto" }}>
                 <OpenResponseButtonGrouped
                   attempt={attempts[0]}
                   sessionId={sessionId}
+                  disabled={hideResponse}
                 />
               </Box>
             </Box>
