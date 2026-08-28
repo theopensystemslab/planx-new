@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Permission from "ui/editor/Permission";
 
 import type { Attempt, GroupedEvent, Submission } from "../types";
+import { canResubmit } from "../utils";
 import { OpenResponseButtonGrouped } from "./OpenResponseButtonGrouped";
 import { ResubmitButtonGrouped } from "./ResubmitButtonGrouped";
 import { StatusChip } from "./StatusChip";
@@ -85,7 +85,19 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
         borderColor: "border.main",
       }}
     >
-      <Box sx={{ padding: 1, margin: 1 }}>
+      <Box
+        sx={{
+          padding: 1,
+          margin: 1,
+          "& > *": {
+            borderBottom: 1,
+            borderColor: "border.main",
+          },
+          "& > *:last-child": {
+            borderBottom: 0,
+          },
+        }}
+      >
         {groupedEvents.map((groupedEvent) => (
           <SubmissionEvent
             key={groupedEvent.eventId}
@@ -103,6 +115,8 @@ const SubmissionEvent: React.FC<{
   isMostRecent: boolean;
 }> = ({ groupedEvent: { sessionId, events: attempts }, isMostRecent }) => {
   const { eventType, createdAt, status } = attempts[0];
+  const hideResponse =
+    eventType === "Invited to pay" || eventType === "Started session";
 
   return (
     <Box
@@ -111,8 +125,6 @@ const SubmissionEvent: React.FC<{
         width: "100%",
         alignItems: "flex-start",
         mb: 1,
-        borderBottom: 1,
-        borderColor: "border.main",
       }}
     >
       <Box>
@@ -131,7 +143,7 @@ const SubmissionEvent: React.FC<{
         <Typography sx={{ fontWeight: "bold" }}>{eventType}</Typography>
 
         <Permission.IsPlatformAdmin>
-          {isMostRecent && status !== "Success" && eventType !== "Pay" && (
+          {canResubmit(isMostRecent, status, eventType) && (
             <ResubmitButtonGrouped
               sessionId={sessionId}
               eventType={eventType}
@@ -147,6 +159,7 @@ const SubmissionEvent: React.FC<{
                 <OpenResponseButtonGrouped
                   attempt={attempts[0]}
                   sessionId={sessionId}
+                  disabled={hideResponse}
                 />
               </Box>
             </Box>

@@ -1,3 +1,5 @@
+import type { SessionEvent, Submission } from "./types";
+
 export const getConsolidatedStatus = (
   status: string | undefined,
   eventType: string,
@@ -16,4 +18,22 @@ export const getConsolidatedStatus = (
   } else {
     return "Failed";
   }
+};
+
+const NON_RESUBMITTABLE_EVENT_TYPES = [
+  "Pay",
+  "Invited to pay",
+  "Started session",
+];
+
+export const canResubmit = (
+  isMostRecent: boolean,
+  status: string | undefined,
+  eventType: Submission["eventType"] | SessionEvent,
+): eventType is Submission["eventType"] => {
+  return (
+    isMostRecent &&
+    status !== "Success" &&
+    !NON_RESUBMITTABLE_EVENT_TYPES.includes(eventType)
+  );
 };
