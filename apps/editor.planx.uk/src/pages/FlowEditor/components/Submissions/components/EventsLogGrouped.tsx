@@ -79,7 +79,7 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
     {
       field: "flowName",
       headerName: "Service",
-      width: 250,
+      width: 350,
       type: ColumnFilterType.SINGLE_SELECT,
       customComponent: (params) => <strong>{`${params.value}`}</strong>,
       columnOptions: {
@@ -90,7 +90,7 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
     {
       field: "address",
       headerName: "Address",
-      width: 250,
+      width: 350,
       columnOptions: {
         valueFormatter: (value: string | null) => value || "Sanitised",
       },
@@ -98,7 +98,7 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
     {
       field: "consolidatedStatus",
       headerName: "Status",
-      width: 125,
+      width: 200,
       type: ColumnFilterType.SINGLE_SELECT,
       customComponent: StatusChipGrouped,
       columnOptions: {
@@ -108,7 +108,7 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
     {
       field: "eventCreatedAt",
       headerName: "Date",
-      width: 125,
+      width: 200,
       columnOptions: {
         valueFormatter: dateFormatter,
       },
