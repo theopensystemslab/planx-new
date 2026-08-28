@@ -14,7 +14,6 @@ export const SketchPlanFullDescriptionCA: Schema = {
     },
     {
       type: "text",
-      required: false,
       data: {
         title: "Tree description",
         description: "For example 'rear garden, mature (80cm diameter)'.",
@@ -24,7 +23,6 @@ export const SketchPlanFullDescriptionCA: Schema = {
     },
     {
       type: "text",
-      required: false,
       data: {
         title: "Proposed work",
         fn: "work",

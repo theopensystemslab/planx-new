@@ -1,4 +1,4 @@
-import Link from "@mui/material/Link";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import type { SendIntegration } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
@@ -11,7 +11,10 @@ import React, { useState } from "react";
 
 import type { Submission } from "../types";
 
-type ResubmitEventType = Exclude<Submission["eventType"], "Pay">;
+type ResubmitEventType = Exclude<
+  Submission["eventType"],
+  "Pay" | "Started session" | "Invited to pay"
+>;
 
 type Props = {
   sessionId: string;
@@ -63,9 +66,11 @@ export const ResubmitButtonGrouped = (props: Props) => {
 
   return (
     <>
-      <Link
+      <Button
         aria-label="resubmit application"
         onClick={() => setIsDialogOpen(true)}
+        variant="link"
+        sx={{ alignSelf: "start", color: "link.main" }}
       >
         <Typography sx={{ fontWeight: "bold" }}>
           {props.eventType
@@ -73,7 +78,7 @@ export const ResubmitButtonGrouped = (props: Props) => {
             .replace("Submit", "Resubmit")
             .replace("Upload", "Resubmit")}
         </Typography>
-      </Link>
+      </Button>
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleConfirm}

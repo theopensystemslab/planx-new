@@ -7,8 +7,8 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 
-import { Badge } from "./Badge/Badge";
-import { BadgeVariant } from "./Badge/types";
+import { Badge } from "../../../components/Badge/Badge";
+import { BadgeVariant } from "../../../components/Badge/types";
 import { SearchListItem } from "./SearchListItem";
 import type { SearchResult } from "./SearchResult";
 import { TemplateDetailsModal } from "./TemplateDetailsModal";

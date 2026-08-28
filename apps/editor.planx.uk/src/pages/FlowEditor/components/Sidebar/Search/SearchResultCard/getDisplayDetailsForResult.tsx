@@ -34,11 +34,8 @@ const keyFormatters: KeyMap = {
         ? "Option (description)"
         : "Description",
   },
-  "data.text": {
-    getDisplayKey: () => "Note", // Standalone component type
-  },
   "data.notes": {
-    getDisplayKey: () => "Note", // Internal notes
+    getDisplayKey: () => "Note",
   },
   "data.howMeasured": {
     getDisplayKey: () => "How is it defined",

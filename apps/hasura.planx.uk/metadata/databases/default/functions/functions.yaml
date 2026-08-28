@@ -1,2 +1,3 @@
 - "!include public_copy_flow.yaml"
 - "!include public_diff_latest_published_flow.yaml"
+- "!include public_search_flows.yaml"
