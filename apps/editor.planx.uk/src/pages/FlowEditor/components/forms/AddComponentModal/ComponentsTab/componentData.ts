@@ -21,13 +21,13 @@ export const ALL_CATEGORIES: Category[] = [
   ...(hasFeatureFlag("NOTES_V2")
     ? [
         {
-          label: "",
+          label: "", // Notes intentionally not categorised, TODO revisit styling?
           items: [
             {
               type: TYPES.Note,
               slug: "note",
               title: title(TYPES.Note),
-              description: "Add a sticky note visible to editors only",
+              description: "Add a sticky note visible to Editors only",
             },
           ],
         },

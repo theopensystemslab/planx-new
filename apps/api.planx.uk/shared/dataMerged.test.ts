@@ -426,7 +426,7 @@ const draftParentFlow: FlowGraph = {
   n0t3: {
     type: ComponentType.Note,
     data: {
-      note: "This is a sticky note",
+      text: "This is a sticky note",
       tags: ["toReview"],
     },
   },

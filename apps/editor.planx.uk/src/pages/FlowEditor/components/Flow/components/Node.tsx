@@ -100,7 +100,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Note:
       // TODO also "hide" notes if templated flow; always hide notes that come from source versus show notes if inside templated folder i can edit?
       return showNotes ? (
-        <Question {...allProps} text={node?.data?.note ?? "Note"} />
+        <Question {...allProps} text={node?.data?.text ?? "Note"} />
       ) : null;
     case TYPES.Notice:
       return <Question {...allProps} text={node?.data?.title ?? "Notice"} />;
