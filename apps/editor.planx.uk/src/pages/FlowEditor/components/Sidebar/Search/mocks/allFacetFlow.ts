@@ -24,6 +24,7 @@ export const mockFlow: FlowGraph = {
       "G6L9c8Sllg",
       "gyyVEMm9Yb",
       "ZVZx9UDPqb",
+      "n0t3",
     ],
   },
   "6rgnMh94zu": {
@@ -285,6 +286,28 @@ export const mockFlow: FlowGraph = {
     },
     type: 900,
   },
+  n0t3: {
+    type: 999,
+    data: {
+      text: "Yellow sticky note",
+    },
+  },
+};
+
+export const mockNoteResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "n0t3",
+    parentId: "_root",
+    type: 999,
+    data: {
+      text: "Yellow sticky note",
+    },
+  },
+  key: "data.text",
+  matchIndices: [[0, 5]],
+  refIndex: 0,
+  score: 0,
+  matchValue: "Yellow",
 };
 
 export const mockQuestionResult: SearchResult<IndexedNode> = {

@@ -5,7 +5,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 
 import { queryMock } from "../tests/graphqlQueryMock.js";
-import { dataMerged } from "./dataMerged.js";
+import { dataMerged, sanitiseNotes } from "./dataMerged.js";
 
 describe("dataMerged() function", () => {
   beforeEach(() => {
@@ -307,18 +307,39 @@ describe("dataMerged() function", () => {
   });
 });
 
+describe("sanitiseNotes() function", () => {
+  it("removes all data associated with Note component types but preserves their position", () => {
+    const sanitisedFlow = sanitiseNotes(draftParentFlow);
+
+    expect(sanitisedFlow["n0t3"]).not.toHaveProperty("data");
+    expect(sanitisedFlow["_root"].edges).toContain("n0t3");
+    expect(sanitisedFlow["n0t3"]).toEqual({ type: ComponentType.Note });
+  });
+
+  it("removes internal notes prop from any component type which sets it", () => {
+    const sanitisedFlow = sanitiseNotes(draftParentFlow);
+
+    expect(sanitisedFlow["45vie6vizK"]).toHaveProperty("data");
+    expect(sanitisedFlow["45vie6vizK"]).not.toHaveProperty("notes");
+
+    expect(sanitisedFlow["DQRnJfTvkq"]).toHaveProperty("data");
+    expect(sanitisedFlow["DQRnJfTvkq"]).not.toHaveProperty("notes");
+  });
+});
+
 /**
  * Draft parent flow data which includes 3 nested flow nodes (2 unique flows) and 1 folder
  */
 const draftParentFlow: FlowGraph = {
   _root: {
-    edges: ["DQRnJfTvkq", "JtWhixLQQD", "r6ZeA1GFpU"],
+    edges: ["DQRnJfTvkq", "JtWhixLQQD", "r6ZeA1GFpU", "n0t3"],
   },
   "45vie6vizK": {
     data: {
       content: "<h1>Folder</h1><p>This is content in a folder</p>",
       resetButton: false,
       tags: [],
+      notes: "Remember to internally review this content",
     },
     type: ComponentType.Content,
   },
@@ -328,6 +349,7 @@ const draftParentFlow: FlowGraph = {
       text: "Which branch?",
       neverAutoAnswer: false,
       alwaysAutoAnswerBlank: false,
+      notes: "Remember to internally review this question",
     },
     type: ComponentType.Question,
     edges: ["jTi25P1WkE", "xwVz9s9ZVQ", "f6zoaYuboI"],
@@ -401,6 +423,13 @@ const draftParentFlow: FlowGraph = {
       areTemplatedNodeInstructionsRequired: false,
     },
   },
+  n0t3: {
+    type: ComponentType.Note,
+    data: {
+      text: "This is a sticky note",
+      tags: ["toReview"],
+    },
+  },
 };
 
 /**
@@ -411,7 +440,7 @@ const draftParentFlow: FlowGraph = {
  */
 const flattenedParentFlow: FlowGraph = {
   _root: {
-    edges: ["DQRnJfTvkq", "JtWhixLQQD", "r6ZeA1GFpU"],
+    edges: ["DQRnJfTvkq", "JtWhixLQQD", "r6ZeA1GFpU", "n0t3"],
   },
   "0ND9E0ov0D": {
     type: ComponentType.InternalPortal,
@@ -525,6 +554,9 @@ const flattenedParentFlow: FlowGraph = {
     type: ComponentType.Answer,
     edges: ["UZWjLKDsBv"],
   },
+  n0t3: {
+    type: ComponentType.Note,
+  },
 };
 
 /**
@@ -533,7 +565,7 @@ const flattenedParentFlow: FlowGraph = {
  */
 const flattenedParentFlowDraftOnly: FlowGraph = {
   _root: {
-    edges: ["DQRnJfTvkq", "JtWhixLQQD", "r6ZeA1GFpU"],
+    edges: ["DQRnJfTvkq", "JtWhixLQQD", "r6ZeA1GFpU", "n0t3"],
   },
   "0ND9E0ov0D": {
     type: ComponentType.InternalPortal,
@@ -641,6 +673,9 @@ const flattenedParentFlowDraftOnly: FlowGraph = {
     type: ComponentType.Answer,
     edges: ["UZWjLKDsBv"],
   },
+  n0t3: {
+    type: ComponentType.Note,
+  },
 };
 
 const draftNestedFlowA: FlowGraph = {
@@ -680,6 +715,7 @@ const draftNestedFlowB: FlowGraph = {
       content:
         "<h1>Nested B</h1><p>This is UNPUBLISHED nested flow content</p><p></p>",
       resetButton: false,
+      notes: "This is an un-sanitised internal note",
     },
   },
 };

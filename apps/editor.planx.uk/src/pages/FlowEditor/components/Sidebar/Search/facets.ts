@@ -154,6 +154,8 @@ const feedback: SearchFacets = [
   richTextField("data.disclaimer"),
 ];
 
+const note: SearchFacets = ["data.text"];
+
 export const ALL_FACETS: SearchFacets = [
   ...basicFields,
   ...moreInformation,
@@ -171,6 +173,7 @@ export const ALL_FACETS: SearchFacets = [
   ...planningConstraints,
   ...pay,
   ...feedback,
+  ...note,
   ...DATA_FACETS,
 ];
 

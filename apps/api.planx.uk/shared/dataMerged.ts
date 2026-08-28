@@ -1,5 +1,6 @@
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
+import cloneDeep from "lodash/cloneDeep.js";
 
 import { getFlowData, getMostRecentPublishedFlowVersion } from "../helpers.js";
 import type { Node } from "../types.js";
@@ -51,7 +52,25 @@ export const dataMerged = async (
     }
   }
 
-  return mergedGraph as FlowGraph;
+  return sanitiseNotes(mergedGraph) as FlowGraph;
+};
+
+export const sanitiseNotes = (flow: MergedGraph): MergedGraph => {
+  const redactedFlow = cloneDeep(flow);
+
+  for (const [nodeId, node] of Object.entries(redactedFlow)) {
+    // Leave "Note" components in place in the graph, but fully delete their data/content
+    if (node?.type === ComponentType.Note) {
+      delete redactedFlow[nodeId]?.["data"];
+      continue;
+    }
+    // For any component type that has "internal notes", remove only this prop
+    if (node?.data?.notes) {
+      delete redactedFlow[nodeId]?.["data"]?.["notes"];
+    }
+  }
+
+  return redactedFlow;
 };
 
 const fetchAndMergeStack = async (

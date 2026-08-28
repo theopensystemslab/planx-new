@@ -120,6 +120,7 @@ const presentationalComponents: {
   [TYPES.List]: List,
   [TYPES.MapAndLabel]: MapAndLabel,
   [TYPES.NextSteps]: undefined,
+  [TYPES.Note]: undefined,
   [TYPES.Notice]: undefined,
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Page]: Page,

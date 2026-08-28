@@ -28,6 +28,7 @@ import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import Send from "@mui/icons-material/Send";
 import ShapeLine from "@mui/icons-material/ShapeLine";
 import SquareFoot from "@mui/icons-material/SquareFoot";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import TextFields from "@mui/icons-material/TextFields";
 import type { OverridableComponent } from "@mui/material/OverridableComponent";
 import type { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
@@ -66,6 +67,7 @@ export const ICONS: {
   [TYPES.List]: ListAlt,
   [TYPES.MapAndLabel]: ShapeLine,
   [TYPES.NextSteps]: ArrowForwardIcon,
+  [TYPES.Note]: StickyNote2Icon,
   [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NumberInput]: Pin,
   [TYPES.Page]: Article,
