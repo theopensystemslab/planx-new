@@ -87,6 +87,9 @@ export const SubmissionEventsHistory: React.FC<{
             borderBottom: 1,
             borderColor: "lightgrey",
           },
+          "& > *:last-child": {
+            borderBottom: 0,
+          },
         }}
       >
         {groupedEvents.map((groupedEvent) => (
