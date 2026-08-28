@@ -29,14 +29,14 @@ type Props = {
 };
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [isCloneValue, childNodes, showHelpText, showTags, showNotes] =
-    useStore((state) => [
+  const [isCloneValue, childNodes, showHelpText, showTags] = useStore(
+    (state) => [
       state.isClone(props.id),
       state.childNodesOf(props.id),
       state.showHelpText,
       state.showTags,
-      state.showNotes,
-    ]);
+    ],
+  );
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -140,9 +140,7 @@ const Question: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
-          {showNotes && props.data?.notes && (
-            <AttachedNote note={props.data.notes} />
-          )}
+          {props.data?.notes && <AttachedNote note={props.data.notes} />}
         </TemplatedNodeContainer>
         <ol className="options">
           {childNodes.map((child: any) => (

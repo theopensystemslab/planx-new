@@ -19,10 +19,9 @@ type Props = {
 };
 
 const Filter: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, showNotes] = useStore((state) => [
+  const [isClone, childNodes] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
-    state.showNotes,
   ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
@@ -88,9 +87,7 @@ const Filter: React.FC<Props> = React.memo((props) => {
             {Icon && <Icon />}
             <span>{props.text}</span>
           </Link>
-          {showNotes && props.data?.notes && (
-            <AttachedNote note={props.data.notes} />
-          )}
+          {props.data?.notes && <AttachedNote note={props.data.notes} />}
         </div>
         <ol className="options">
           {childNodes.map((child) => (

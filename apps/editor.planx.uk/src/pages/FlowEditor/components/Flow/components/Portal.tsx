@@ -29,11 +29,10 @@ const ExternalPortal: React.FC<any> = (props) => {
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
   const { addRecentFlow } = useRecentFlowsContext();
 
-  const [id, addExternalPortal, showTags, showNotes] = useStore((state) => [
+  const [id, addExternalPortal, showTags] = useStore((state) => [
     state.id,
     state.addExternalPortal,
     state.showTags,
-    state.showNotes,
   ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
@@ -172,9 +171,7 @@ const ExternalPortal: React.FC<any> = (props) => {
               ))}
             </Box>
           )}
-          {showNotes && props.data?.notes && (
-            <AttachedNote note={props.data.notes} />
-          )}
+          {props.data?.notes && <AttachedNote note={props.data.notes} />}
         </Box>
       </li>
     </>
@@ -185,10 +182,9 @@ const InternalPortal: React.FC<any> = (props) => {
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
   const parent = getParentId(props.parent);
 
-  const [isClone, showTags, showNotes] = useStore((state) => [
+  const [isClone, showTags] = useStore((state) => [
     state.isClone,
     state.showTags,
-    state.showNotes,
   ]);
 
   const [{ isDragging }, drag] = useDrag({
@@ -275,9 +271,7 @@ const InternalPortal: React.FC<any> = (props) => {
                 ))}
               </Box>
             )}
-            {showNotes && props.data?.notes && (
-              <AttachedNote note={props.data.notes} />
-            )}
+            {props.data?.notes && <AttachedNote note={props.data.notes} />}
           </TemplatedNodeContainer>
         </Box>
       </li>
