@@ -100,7 +100,7 @@
     "@types/node": "catalog:",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.17",
-    "@types/supertest": "^6.0.3",
+    "@types/supertest": "^7.2.1",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@vitest/coverage-istanbul": "^4.1.9",
