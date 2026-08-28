@@ -4,16 +4,25 @@ import React from "react";
 export const BoundaryDescription: React.FC = () => (
   <>
     <p>
-      The boundary URL is used to retrieve the outer boundary of your council
-      area. The bounding box of your boundary (shown below) limits the area
-      applicants can access via the map within your services.
+      Provide a boundary to ensure that interactive maps displayed throughout
+      your service are correctly centred and clipped. PlanX automatically
+      generates a simplified bounding box (pictured) when a detailed boundary is
+      provided.
     </p>
     <p>
-      The detailed boundary is still referenced when planning constraints are
-      checked.
+      Find your boundary on Planning Data and paste the URL. Most teams use
+      their{" "}
+      <Link
+        href="https://www.planning.data.gov.uk/dataset/local-planning-authority"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Local Planning Authority
+      </Link>{" "}
+      entity.
     </p>
     <p>
-      The boundary should be given as a link from:{" "}
+      Any boundary in the following format is acceptable:{" "}
       <Link
         href="https://www.planning.data.gov.uk/"
         target="_blank"
