@@ -11,7 +11,10 @@ import React, { useState } from "react";
 
 import type { Submission } from "../types";
 
-type ResubmitEventType = Exclude<Submission["eventType"], "Pay">;
+type ResubmitEventType = Exclude<
+  Submission["eventType"],
+  "Pay" | "Started session" | "Invited to pay"
+>;
 
 type Props = {
   sessionId: string;

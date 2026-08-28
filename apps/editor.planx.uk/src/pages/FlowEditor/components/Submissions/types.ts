@@ -9,7 +9,9 @@ export interface Submission {
     | "Send to email"
     | "Upload to AWS S3"
     | "Upload to AWS S3 (no notification)"
-    | "Submit to Idox Nexus";
+    | "Submit to Idox Nexus"
+    | "Started session"
+    | "Invited to pay";
   status?:
     | "Success"
     | "Failed (500)" // Hasura scheduled event status codes

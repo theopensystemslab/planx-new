@@ -86,7 +86,10 @@ const SubmissionModalWrapper = ({
 
 const getSubmittedAt = (events: Submission[]): string | undefined => {
   const successfulSend = events.find(
-    (event) => event.eventType !== "Pay" && event.status === "Success",
+    (event) =>
+      event.eventType !== "Pay" &&
+      event.eventType !== "Started session" &&
+      event.status === "Success",
   );
 
   return successfulSend?.createdAt ?? undefined;
