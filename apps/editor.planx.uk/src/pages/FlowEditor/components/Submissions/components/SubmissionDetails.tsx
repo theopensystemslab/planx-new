@@ -82,7 +82,7 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
         <Typography variant="h3" sx={{ mb: 2 }}>
           {props.latestEvent?.flowName}
         </Typography>
-        <DescriptionList data={submissionData} />
+        <DescriptionList data={submissionData} hideLastBorder={true} />
       </Box>
 
       {(showSubmissionActions || showPaymentActions) && (
