@@ -130,7 +130,7 @@
     "vitest": "^4.1.9"
   },
   "scripts": {
-    "build-storybook": "mkdir -p build && storybook build --quiet --output-dir ./build/storybook",
+    "build-storybook": "pnpm turbo run storybook:build --filter=editor.planx.uk",
     "build": "tsc && NODE_OPTIONS=--max-old-space-size=4096 vite build",
     "check": "pnpm typecheck && pnpm lint",
     "lint:error": "eslint --quiet 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src --ignore-path ../../.prettierignore",
@@ -140,7 +140,9 @@
     "serve": "vite preview",
     "start": "pnpm turbo run dev --filter=editor.planx.uk",
     "dev": "vite --open",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "pnpm turbo run storybook:dev --filter=editor.planx.uk",
+    "storybook:dev": "storybook dev -p 6006",
+    "storybook:build": "mkdir -p build && NODE_OPTIONS=--max-old-space-size=4096 storybook build --quiet --output-dir ./build/storybook",
     "test:silent": "vitest --silent",
     "test": "vitest run",
     "test:watch": "vitest",
