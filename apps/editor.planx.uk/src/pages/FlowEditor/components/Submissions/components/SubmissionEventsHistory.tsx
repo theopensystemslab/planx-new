@@ -75,7 +75,7 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
         background: "background",
         border: 1,
         margin: 1,
-        borderColor: "border.main",
+        borderColor: "lightgrey",
       }}
     >
       <Box
@@ -84,10 +84,7 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
           margin: 1,
           "& > *": {
             borderBottom: 1,
-            borderColor: "border.main",
-          },
-          "& > *:last-child": {
-            borderBottom: 0,
+            borderColor: "lightgrey",
           },
         }}
       >
@@ -146,7 +143,7 @@ const SubmissionEvent: React.FC<{
 
         {attempts.length === 1 ? (
           <>
-            <Box sx={{ display: "flex" }}>
+            <Box sx={{ display: "flex", alignItems: "center", pb: 1 }}>
               <Typography>{new Date(createdAt).toLocaleString()}</Typography>
               <Box sx={{ marginLeft: "auto" }}>
                 <OpenResponseButtonGrouped

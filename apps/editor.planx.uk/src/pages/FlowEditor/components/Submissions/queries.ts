@@ -5,6 +5,7 @@ export const GET_TEAM_LOGO = gql`
     teams(where: { slug: { _eq: $teamSlug } }) {
       theme {
         logo
+        primaryColour: primary_colour
       }
       id
       name

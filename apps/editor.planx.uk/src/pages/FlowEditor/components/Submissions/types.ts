@@ -81,6 +81,7 @@ export type GetTeamLogoQuery = {
   teams: {
     theme: {
       logo: string;
+      primaryColour: string;
     };
     id: number;
     name: string;

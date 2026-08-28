@@ -14,8 +14,8 @@ import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import { slugify } from "utils";
 
-import { Badge } from "./Badge/Badge";
-import { BadgeVariant } from "./Badge/types";
+import { Badge } from "../../../components/Badge/Badge";
+import { BadgeVariant } from "../../../components/Badge/types";
 import { SearchListItemDetail } from "./SearchListItemDetail";
 import { SearchListItemDetailActions } from "./SearchListItemDetailActions";
 import type { SearchResult } from "./SearchResult";

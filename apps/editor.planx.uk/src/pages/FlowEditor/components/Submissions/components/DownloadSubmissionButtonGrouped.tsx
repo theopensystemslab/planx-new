@@ -26,8 +26,8 @@ export const DownloadSubmissionButtonGrouped = (props: Props) => {
       variant="contained"
       onClick={() => window.open(zipUrl, "_blank")}
       disabled={!props.submittedAt}
+      startIcon={<CloudDownload />}
     >
-      <CloudDownload sx={{ mr: 1 }} />
       Download
     </Button>
   );
