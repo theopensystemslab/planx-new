@@ -63,9 +63,10 @@ const getMostRecentEventId = (groupedEvents: GroupedEvent[]): Set<string> => {
   );
 };
 
-export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
-  events,
-}) => {
+export const SubmissionEventsHistory: React.FC<{
+  events: Submission[];
+  isSubmissionAvailable: boolean;
+}> = ({ events, isSubmissionAvailable }) => {
   const groupedEvents = groupEvents(events);
   const mostRecentIds = getMostRecentEventId(groupedEvents);
 
@@ -93,6 +94,7 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
             key={groupedEvent.eventId}
             groupedEvent={groupedEvent}
             isMostRecent={mostRecentIds.has(groupedEvent.eventId)}
+            isSubmissionAvailable={isSubmissionAvailable}
           />
         ))}
       </Box>
@@ -103,7 +105,12 @@ export const SubmissionEventsHistory: React.FC<{ events: Submission[] }> = ({
 const SubmissionEvent: React.FC<{
   groupedEvent: GroupedEvent;
   isMostRecent: boolean;
-}> = ({ groupedEvent: { sessionId, events: attempts }, isMostRecent }) => {
+  isSubmissionAvailable: boolean;
+}> = ({
+  groupedEvent: { sessionId, events: attempts },
+  isMostRecent,
+  isSubmissionAvailable,
+}) => {
   const { eventType, createdAt, status } = attempts[0];
   const hideResponse =
     eventType === "Invited to pay" || eventType === "Started session";
@@ -133,7 +140,12 @@ const SubmissionEvent: React.FC<{
         <Typography sx={{ fontWeight: "bold" }}>{eventType}</Typography>
 
         <Permission.IsPlatformAdmin>
-          {canResubmit(isMostRecent, status, eventType) && (
+          {canResubmit(
+            isMostRecent,
+            status,
+            eventType,
+            isSubmissionAvailable,
+          ) && (
             <ResubmitButtonGrouped
               sessionId={sessionId}
               eventType={eventType}

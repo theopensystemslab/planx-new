@@ -7,6 +7,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { addDays, isBefore } from "date-fns";
+import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { CloseButton } from "ui/icons/CloseButton";
 
@@ -120,6 +122,14 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   const latestEvent = events[0];
   const submittedAt = getSubmittedAt(events);
 
+  const submissionExpirationDate = submittedAt
+    ? addDays(new Date(submittedAt), DAYS_UNTIL_EXPIRY)
+    : null;
+
+  const isSubmissionAvailable = submissionExpirationDate
+    ? isBefore(new Date(), submissionExpirationDate)
+    : false;
+
   if (loading) {
     return (
       <SubmissionModalWrapper handleClose={handleClose}>
@@ -145,11 +155,15 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
             latestEvent={latestEvent}
             teamSlug={teamSlug}
             submittedAt={submittedAt}
+            isSubmissionAvailable={isSubmissionAvailable}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
-          <SubmissionEventsHistory events={events} />
+          <SubmissionEventsHistory
+            events={events}
+            isSubmissionAvailable={isSubmissionAvailable}
+          />
         </Grid>
       </Grid>
     </SubmissionModalWrapper>
