@@ -13,6 +13,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { CloseButton } from "ui/icons/CloseButton";
 
 import type { Submission } from "../types";
+import { hasBeenSanitised } from "../utils";
 import { SubmissionDetails } from "./SubmissionDetails";
 import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
 
@@ -121,6 +122,9 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   const events = data?.submissions || [];
   const latestEvent = events[0];
   const submittedAt = getSubmittedAt(events);
+  const isSanitised = submittedAt
+    ? hasBeenSanitised(new Date(submittedAt))
+    : false;
 
   const submissionExpirationDate = submittedAt
     ? addDays(new Date(submittedAt), DAYS_UNTIL_EXPIRY)
@@ -156,6 +160,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
             teamSlug={teamSlug}
             submittedAt={submittedAt}
             isSubmissionAvailable={isSubmissionAvailable}
+            isSanitised={isSanitised}
           />
         </Grid>
 

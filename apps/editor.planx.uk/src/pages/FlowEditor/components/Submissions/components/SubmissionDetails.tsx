@@ -16,13 +16,15 @@ type SubmissionDetailsProps = {
   teamSlug: string;
   submittedAt?: string;
   isSubmissionAvailable: boolean;
+  isSanitised: boolean;
 };
 
 export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
   const submissionData: DescriptionListItem[] = [
     {
       term: "Property address",
-      details: props.latestEvent.address || "",
+      details:
+        props.latestEvent.address || (props.isSanitised ? "Sanitised" : ""),
     },
     {
       term: "Reference",
