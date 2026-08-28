@@ -13,6 +13,7 @@ import { CloseButton } from "ui/shared/CloseButton";
 
 import type { Submission } from "../types";
 import { getSucceededPayment } from "../utils";
+import { hasBeenSanitised } from "../utils";
 import { SubmissionDetails } from "./SubmissionDetails";
 import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
 
@@ -114,6 +115,9 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   const events = data?.submissions || [];
   const latestEvent = events[0];
   const submittedAt = getSubmittedAt(events);
+  const isSanitised = submittedAt
+    ? hasBeenSanitised(new Date(submittedAt))
+    : false;
   const succeededPayment = getSucceededPayment(events);
 
   const submissionExpirationDate = submittedAt
@@ -150,6 +154,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
             teamSlug={teamSlug}
             submittedAt={submittedAt}
             isSubmissionAvailable={isSubmissionAvailable}
+            isSanitised={isSanitised}
             succeededPayment={succeededPayment}
           />
         </Grid>

@@ -91,6 +91,9 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
       field: "address",
       headerName: "Address",
       width: 250,
+      columnOptions: {
+        valueFormatter: (value: string | null) => value || "Sanitised",
+      },
     },
     {
       field: "consolidatedStatus",

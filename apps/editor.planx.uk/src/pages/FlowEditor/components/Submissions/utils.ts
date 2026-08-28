@@ -46,3 +46,10 @@ export const canResubmit = (
     !NON_RESUBMITTABLE_EVENT_TYPES.includes(eventType)
   );
 };
+
+export const hasBeenSanitised = (submittedAt: Date) => {
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+  return submittedAt < sixMonthsAgo;
+};
