@@ -83,7 +83,7 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
         <DescriptionList data={submissionData} />
       </Box>
 
-      {props.submittedAt && !isSubmissionAvailable && (
+      {props.submittedAt && isSubmissionAvailable && (
         <Box
           sx={{
             display: "flex",
