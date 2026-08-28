@@ -16,7 +16,7 @@ import { Thumbnail } from "./Thumbnail";
 
 const Option: React.FC<any> = (props) => {
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
-  const [childNodes] = useStore((state) => [state.childNodesOf(props.id)]);
+  const childNodes = useStore((state) => state.childNodesOf(props.id));
 
   // The folder containing the Question/Checklist this Option belongs to -
   const containerFolderId = getParentId(props.containerFolderId);

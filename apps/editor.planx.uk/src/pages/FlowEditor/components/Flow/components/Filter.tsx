@@ -19,10 +19,9 @@ type Props = {
 };
 
 const Filter: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, showNotes] = useStore((state) => [
+  const [isClone, childNodes] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
-    state.showNotes,
   ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
