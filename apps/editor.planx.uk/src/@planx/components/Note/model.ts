@@ -1,12 +1,8 @@
-import type { SchemaOf} from "yup";
+import type { SchemaOf } from "yup";
 import { object, string } from "yup";
 
-import type {
-  BaseNodeData} from "../shared";
-import {
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export interface Note extends BaseNodeData {
   note: string;

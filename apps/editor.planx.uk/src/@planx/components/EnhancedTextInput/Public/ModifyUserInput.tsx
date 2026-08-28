@@ -8,13 +8,14 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useFormikContext } from "formik";
 import React from "react";
-import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import type { EnhancedTextInput } from "../types";
 import type { FormValues } from "./types";
+
+const HEADING_ID = "confirm-project-description-heading";
 
 const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
   const { values, errors, setFieldValue } = useFormikContext<FormValues>();
@@ -27,14 +28,14 @@ const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
 
   return (
     <Box sx={{ mb: 2 }}>
-      <Typography variant="h2" component="h1" sx={{ mb: 1 }}>
+      <Typography variant="h2" component="h1" id={HEADING_ID} sx={{ mb: 1 }}>
         Confirm your project description
       </Typography>
       <Typography variant="subtitle1" component="p" sx={{ mb: 2 }}>
         Edit the description below, or continue to submit it as shown.
       </Typography>
       <InputRow>
-        <InputLabel label="Project description" htmlFor={props.id} hidden>
+        <Box sx={{ width: "100%" }}>
           <Input
             type="text"
             multiline
@@ -46,6 +47,7 @@ const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
             errorMessage={showError ? (errors.userInput as string) : undefined}
             id={props.id}
             inputProps={{
+              "aria-labelledby": HEADING_ID,
               "aria-describedby": [
                 props.description ? DESCRIPTION_TEXT : "",
                 "character-hint",
@@ -60,7 +62,7 @@ const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
             count={values.userInput.length}
             error={showError}
           />
-        </InputLabel>
+        </Box>
       </InputRow>
     </Box>
   );

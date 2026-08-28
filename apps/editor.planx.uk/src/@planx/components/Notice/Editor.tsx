@@ -84,15 +84,15 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation formik={formik} disabled={disabled} />
+      <ComponentTagSelect
+        onChange={(value) => formik.setFieldValue("tags", value)}
+        value={values.tags}
+        disabled={disabled}
+      />
       <InternalNotes
         name="notes"
         onChange={handleChange}
         value={values.notes}
-        disabled={disabled}
-      />
-      <ComponentTagSelect
-        onChange={(value) => formik.setFieldValue("tags", value)}
-        value={values.tags}
         disabled={disabled}
       />
       {isTemplate && (

@@ -1,14 +1,12 @@
 import type { Flag } from "@opensystemslab/planx-core/types";
 import { flatFlags } from "@opensystemslab/planx-core/types";
-import { Link } from "@tanstack/react-router";
-import { useParams } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
-import { AttachedNotes } from "../notes/AttachedNotes";
 import { DataField } from "./DataField";
 import { FlagBand, NoFlagBand } from "./FlagBand";
 import Hanger from "./Hanger";
@@ -91,7 +89,6 @@ const Option: React.FC<any> = (props) => {
             <DataField value={props.data.val} variant="child" />
           )}
         </Link>
-        <AttachedNotes nodeId={props.id} />
       </div>
       <ol className="decisions">
         {childNodes.map((child) => (

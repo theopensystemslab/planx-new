@@ -199,15 +199,15 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation {...props} />
+      <ComponentTagSelect
+        value={formik.values.tags}
+        onChange={(value) => formik.setFieldValue("tags", value)}
+        disabled={props.disabled}
+      />
       <InternalNotes
         name="notes"
         onChange={formik.handleChange}
         value={formik.values.notes}
-        disabled={props.disabled}
-      />
-      <ComponentTagSelect
-        value={formik.values.tags}
-        onChange={(value) => formik.setFieldValue("tags", value)}
         disabled={props.disabled}
       />
       {isTemplate && <TemplatedNodeConfiguration {...props} />}

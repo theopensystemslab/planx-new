@@ -7,7 +7,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import type { EditorProps } from "../shared/types";
-import type { Note} from "./model";
+import type { Note } from "./model";
 import { parseContent, validationSchema } from "./model";
 
 type Props = EditorProps<ComponentType.Note, Note>;

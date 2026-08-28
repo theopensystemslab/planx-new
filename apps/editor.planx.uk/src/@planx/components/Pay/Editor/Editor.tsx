@@ -127,15 +127,15 @@ const Component: React.FC<Props> = (props: Props) => {
         <InviteToPaySection disabled={props.disabled} />
         <PaymentMetadataSection disabled={props.disabled} />
         <MoreInformation formik={formik} disabled={props.disabled} />
+        <ComponentTagSelect
+          onChange={(value) => formik.setFieldValue("tags", value)}
+          value={formik.values.tags}
+          disabled={props.disabled}
+        />
         <InternalNotes
           name="notes"
           onChange={formik.handleChange}
           value={formik.values.notes}
-          disabled={props.disabled}
-        />
-        <ComponentTagSelect
-          onChange={(value) => formik.setFieldValue("tags", value)}
-          value={formik.values.tags}
           disabled={props.disabled}
         />
         {isTemplate && (

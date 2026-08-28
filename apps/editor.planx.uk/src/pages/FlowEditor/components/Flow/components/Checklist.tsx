@@ -5,8 +5,7 @@ import type {
   NodeTag,
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
-import { Link } from "@tanstack/react-router";
-import { useParams } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import useFlashOnNodeAdded from "hooks/useFlashOnNodeAdded";
@@ -17,7 +16,7 @@ import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
-import { AttachedNotes } from "../notes/AttachedNotes";
+import { AttachedNote } from "./AttachedNote";
 import { DataField } from "./DataField";
 import Hanger from "./Hanger";
 import Node from "./Node";
@@ -160,7 +159,9 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
-          <AttachedNotes nodeId={props.id} />
+          {showNotes && props.data?.notes && (
+            <AttachedNote note={props.data.notes} />
+          )}
         </TemplatedNodeContainer>
         {groupedOptions ? (
           <ol className="categories">

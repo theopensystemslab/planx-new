@@ -14,7 +14,7 @@ import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
-import { AttachedNotes } from "../notes/AttachedNotes";
+import { AttachedNote } from "./AttachedNote";
 import { DataField } from "./DataField";
 import Hanger from "./Hanger";
 import Node from "./Node";
@@ -29,14 +29,14 @@ type Props = {
 };
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [isCloneValue, childNodes, showHelpText, showTags] = useStore(
-    (state) => [
+  const [isCloneValue, childNodes, showHelpText, showTags, showNotes] =
+    useStore((state) => [
       state.isClone(props.id),
       state.childNodesOf(props.id),
       state.showHelpText,
       state.showTags,
-    ],
-  );
+      state.showNotes,
+    ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -140,7 +140,9 @@ const Question: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
-          <AttachedNotes nodeId={props.id} />
+          {showNotes && props.data?.notes && (
+            <AttachedNote note={props.data.notes} />
+          )}
         </TemplatedNodeContainer>
         <ol className="options">
           {childNodes.map((child: any) => (
