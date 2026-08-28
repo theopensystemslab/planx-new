@@ -89,6 +89,7 @@ const getSubmittedAt = (events: Submission[]): string | undefined => {
     (event) =>
       event.eventType !== "Pay" &&
       event.eventType !== "Started session" &&
+      event.eventType !== "Invited to pay" &&
       event.status === "Success",
   );
 
@@ -118,6 +119,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   const events = data?.submissions || [];
   const latestEvent = events[0];
   const submittedAt = getSubmittedAt(events);
+  console.log({ submittedAt });
 
   if (loading) {
     return (
