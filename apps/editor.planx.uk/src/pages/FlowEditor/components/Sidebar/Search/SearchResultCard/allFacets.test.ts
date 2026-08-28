@@ -12,6 +12,7 @@ import {
   mockFindPropertyResult,
   mockFlow,
   mockNextStepsOptionResult,
+  mockNoteResult,
   mockNumberInputResult,
   mockPayResult,
   mockPlanningConstraintsResult,
@@ -157,6 +158,20 @@ describe("checklist fields", () => {
       componentType: "Checklist",
       title: ".",
       headline: "Duck",
+    });
+  });
+});
+
+describe("note component fields", () => {
+  it("renders data.text", () => {
+    const output = getDisplayDetailsForResult(mockNoteResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title",
+      iconKey: ComponentType.Note,
+      componentType: "Note",
+      title: "Yellow sticky note",
+      headline: "Yellow",
     });
   });
 });
