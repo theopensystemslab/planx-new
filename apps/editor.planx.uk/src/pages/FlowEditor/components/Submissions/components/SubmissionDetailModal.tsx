@@ -119,7 +119,6 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   const events = data?.submissions || [];
   const latestEvent = events[0];
   const submittedAt = getSubmittedAt(events);
-  console.log({ submittedAt });
 
   if (loading) {
     return (
