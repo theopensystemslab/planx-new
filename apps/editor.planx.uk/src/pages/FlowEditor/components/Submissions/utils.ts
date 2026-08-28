@@ -30,8 +30,10 @@ export const canResubmit = (
   isMostRecent: boolean,
   status: string | undefined,
   eventType: Submission["eventType"] | SessionEvent,
+  isSubmissionAvailable: boolean,
 ): eventType is Submission["eventType"] => {
   return (
+    isSubmissionAvailable &&
     isMostRecent &&
     status !== "Success" &&
     !NON_RESUBMITTABLE_EVENT_TYPES.includes(eventType)
