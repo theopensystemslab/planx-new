@@ -345,6 +345,26 @@ $fontMonospace: "Source Code Pro", monospace;
     border-top: none;
   }
 
+  & .card-attached-note {
+    border-color: $optionBorder;
+    background: $noteBackground;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    // TODO debug folded corner
+    &::before {
+      @include paperFoldFront;
+    }
+    &::after {
+      @include paperFoldBack;
+    }
+
+    .flow-locked & {
+      border-color: $lockedBorder;
+      background: $lockedDataBackground;
+    }
+  }
+
   // A note attached directly to a node - rendered as an extra row
   & .attached-note {
     position: relative;

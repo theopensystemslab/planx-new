@@ -2,8 +2,7 @@ import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import type { NodeTag } from "@opensystemslab/planx-core/types";
-import { Link, useRouteContext } from "@tanstack/react-router";
-import { useParams } from "@tanstack/react-router";
+import { Link, useParams, useRouteContext } from "@tanstack/react-router";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useContextMenu } from "hooks/useContextMenu";
@@ -16,7 +15,7 @@ import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 import EditorIcon from "ui/icons/Editor";
 
 import { getParentId } from "../lib/utils";
-import { AttachedNotes } from "../notes/AttachedNotes";
+import { AttachedNote } from "./AttachedNote";
 import Hanger from "./Hanger";
 import Question from "./Question";
 import { Tag } from "./Tag";
@@ -172,7 +171,7 @@ const ExternalPortal: React.FC<any> = (props) => {
               ))}
             </Box>
           )}
-          <AttachedNotes nodeId={props.id} />
+          {props.data?.notes && <AttachedNote note={props.data.notes} />}
         </Box>
       </li>
     </>
@@ -183,10 +182,10 @@ const InternalPortal: React.FC<any> = (props) => {
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
   const parent = getParentId(props.parent);
 
-  const { isClone, showTags } = useStore((state) => ({
-    isClone: state.isClone,
-    showTags: state.showTags,
-  }));
+  const [isClone, showTags] = useStore((state) => [
+    state.isClone,
+    state.showTags,
+  ]);
 
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -272,7 +271,7 @@ const InternalPortal: React.FC<any> = (props) => {
                 ))}
               </Box>
             )}
-            <AttachedNotes nodeId={props.id} />
+            {props.data?.notes && <AttachedNote note={props.data.notes} />}
           </TemplatedNodeContainer>
         </Box>
       </li>

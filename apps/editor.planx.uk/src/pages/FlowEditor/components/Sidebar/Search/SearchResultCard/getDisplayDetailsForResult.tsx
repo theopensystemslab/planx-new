@@ -35,7 +35,7 @@ const keyFormatters: KeyMap = {
         : "Description",
   },
   "data.notes": {
-    getDisplayKey: () => "Internal notes", // TODO rename here and in-modals?
+    getDisplayKey: () => "Note",
   },
   "data.howMeasured": {
     getDisplayKey: () => "How is it defined",
