@@ -3,7 +3,7 @@ import React from "react";
 import type { RenderCellParams } from "ui/shared/DataTable/types";
 
 export const StatusChipGrouped = (params: RenderCellParams) => {
-  if (params.value.includes("failed")) {
+  if (params.value.includes("failed") || params.value === "Failed") {
     return <Chip label={params.value} size="small" color="error" />;
   }
   if (params.value === "Sending") {
