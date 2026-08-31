@@ -37,7 +37,7 @@ router.post(
 
 router.post(
   "/send-email/welcome",
-  useHasuraAuth,
+  useSendEmailAuth,
   useWelcomeEmailGuard,
   validate(resendEmailSchema),
   resendEmailController,
