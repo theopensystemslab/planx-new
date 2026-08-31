@@ -34,9 +34,6 @@ const keyFormatters: KeyMap = {
         ? "Option (description)"
         : "Description",
   },
-  "data.note": {
-    getDisplayKey: () => "Note",
-  },
   "data.notes": {
     getDisplayKey: () => "Note",
   },
