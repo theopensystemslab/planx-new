@@ -719,6 +719,9 @@ describe("basic layout and behaviour", () => {
     expect(
       screen.getByRole("radio", { name: /Use suggested description/i }),
     ).toBeInTheDocument();
+
+    // Returning to the selection step should not re-trigger the API as the input hasn't changed
+    expect(requestSpy).toHaveBeenCalledTimes(1);
   });
 
   test("users can navigate 'back' to the input step", async () => {
@@ -795,8 +798,7 @@ describe("basic layout and behaviour", () => {
     );
   });
 
-  // Revisit this with new UI which doesn't contain a textinput natively on the second step
-  test.skip("navigating 'back' does not re-trigger the API when the input does not change", async () => {
+  test("navigating 'back' does not re-trigger the API when the input does not change", async () => {
     const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"

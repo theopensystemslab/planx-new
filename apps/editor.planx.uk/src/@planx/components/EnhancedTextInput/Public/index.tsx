@@ -19,6 +19,7 @@ const taskComponents: TaskComponentMap = {
 const EnhancedTextInputComponent = (props: Props) => {
   const previous = getPreviouslySubmittedData(props);
   const [step, setStep] = useState<Step>("input");
+  const [queryInput, setQueryInput] = useState("");
   const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
   const initialValues: FormValues = previous
@@ -47,7 +48,10 @@ const EnhancedTextInputComponent = (props: Props) => {
       return props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
     }
 
-    if (step === "input") return setStep("selection");
+    if (step === "input") {
+      setQueryInput(values.userInput);
+      return setStep("selection");
+    }
 
     if (step === "selection") return setStep("modification");
 
@@ -81,9 +85,7 @@ const EnhancedTextInputComponent = (props: Props) => {
           // Repopulate field with user's original input
           if (step === "selection" && !isRunningTask)
             return () => {
-              if (values.status === "success") {
-                setFieldValue("userInput", values.original);
-              }
+              setFieldValue("userInput", queryInput);
               setStep("input");
             };
           return undefined;
@@ -108,7 +110,9 @@ const EnhancedTextInputComponent = (props: Props) => {
             )}
             {step === "input" && <InitialUserInput {...props} />}
             {step === "modification" && <ModifyUserInput {...props} />}
-            {step === "selection" && <TaskComponent {...props} />}
+            {step === "selection" && (
+              <TaskComponent {...props} queryInput={queryInput} />
+            )}
           </Card>
         );
       }}

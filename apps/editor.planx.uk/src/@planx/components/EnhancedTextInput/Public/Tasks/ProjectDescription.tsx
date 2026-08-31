@@ -105,16 +105,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
     useFormikContext<FormValues>();
   const [open, setOpen] = useState(false);
 
-  const initialValueRef = useRef(
-    (() => {
-      if (values.status !== "success") return values.userInput;
-      // If userInput matches a previously-processed value, use the cached original
-      const isPreviouslyProcessed =
-        values.userInput === values.original ||
-        values.userInput === values.enhanced;
-      return isPreviouslyProcessed ? values.original : values.userInput;
-    })(),
-  );
+  const initialValueRef = useRef(props.queryInput);
 
   const { isPending, data, error, isSuccess } = useQuery<
     EnhanceResponse,
