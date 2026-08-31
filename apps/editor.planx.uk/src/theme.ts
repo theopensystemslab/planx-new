@@ -26,7 +26,7 @@ const DEFAULT_TONAL_OFFSET = 0.1;
 export const DEFAULT_CONTRAST_THRESHOLD = 4.5;
 
 // Type styles
-export const FONT_WEIGHT_SEMI_BOLD = "601";
+export const FONT_WEIGHT_SEMI_BOLD = "602";
 export const FONT_WEIGHT_BOLD = "700";
 export const LINE_HEIGHT_BASE = "1.33";
 const SPACING_TIGHT = "-0.02em";
