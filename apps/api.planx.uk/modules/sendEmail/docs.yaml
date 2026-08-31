@@ -40,6 +40,21 @@ components:
         email:
           type: string
           format: email
+    WelcomePayload:
+      type: object
+      properties:
+        userId:
+          type: number
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        defaultTeamId:
+          type: number
+          nullable: true
   responses:
     SendEmailResponse:
       type: object
@@ -51,6 +66,34 @@ components:
           format: date-time
           nullable: true
 paths:
+  /send-email/welcome:
+    post:
+      tags: [send email]
+      summary: Send a welcome email (Resend)
+      description: |
+        Sends the "welcome" email to a newly created user via Resend. Triggered by
+        the Hasura `send_user_welcome_emails` event on user creation.
+      security:
+        - hasuraAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  $ref: "#/components/schemas/WelcomePayload"
+      responses:
+        "200":
+          description: |
+            Email sent successfully, or skipped in non-production/test environments.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/SendEmailResponse"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
   /send-email/{template}:
     post:
       tags: [send email]

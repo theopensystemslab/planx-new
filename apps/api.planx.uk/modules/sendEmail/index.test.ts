@@ -1,6 +1,7 @@
 import supertest from "supertest";
 
 import { NOTIFY_TEST_EMAIL } from "../../lib/notify/utils.js";
+import { sendEmail } from "../../lib/resend/index.js";
 import app from "../../server.js";
 import { queryMock } from "../../tests/graphqlQueryMock.js";
 import {
@@ -10,6 +11,10 @@ import {
   mockValidateSingleSessionRequest,
   mockValidateSingleSessionRequestMissingSession,
 } from "../../tests/mocks/saveAndReturnMocks.js";
+
+vi.mock("../../lib/resend/index.js", () => ({
+  sendEmail: vi.fn(),
+}));
 
 const SAVE_ENDPOINT = "/send-email/save";
 
@@ -128,6 +133,73 @@ describe("Send Email endpoint", () => {
         .then((response) => {
           expect(response.body).toHaveProperty("error", "Invalid template");
         });
+    });
+  });
+
+  describe("'Welcome' template (Resend)", () => {
+    const WELCOME_ENDPOINT = "/send-email/welcome";
+    const validPayload = {
+      payload: {
+        userId: 1,
+        email: NOTIFY_TEST_EMAIL,
+        firstName: "Test",
+        lastName: "User",
+        defaultTeamId: 1,
+      },
+    };
+
+    beforeEach(() => {
+      vi.mocked(sendEmail).mockClear();
+      vi.mocked(sendEmail).mockResolvedValue({
+        message: "welcome email sent successfully",
+      });
+      queryMock.reset();
+      queryMock.mockQuery({
+        name: "GetTeamIsTrial",
+        data: { teamSettings: [{ isTrial: false }] },
+        matchOnVariables: false,
+      });
+    });
+
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it("returns 401 if no auth header is provided", async () => {
+      await supertest(app)
+        .post(WELCOME_ENDPOINT)
+        .send(validPayload)
+        .expect(401);
+
+      expect(sendEmail).not.toHaveBeenCalled();
+    });
+
+    it("sends a welcome email when authorised", async () => {
+      await supertest(app)
+        .post(WELCOME_ENDPOINT)
+        .set("Authorization", "testtesttest")
+        .send(validPayload)
+        .expect(200);
+
+      expect(sendEmail).toHaveBeenCalledWith("welcome", NOTIFY_TEST_EMAIL, {
+        firstName: "Test",
+        subscriptionStatus: "Active",
+      });
+    });
+
+    it("skips sending when APP_ENVIRONMENT is not production or test", async () => {
+      vi.stubEnv("APP_ENVIRONMENT", "staging");
+
+      await supertest(app)
+        .post(WELCOME_ENDPOINT)
+        .set("Authorization", "testtesttest")
+        .send(validPayload)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.message).toMatch(/Skipping welcome email/);
+        });
+
+      expect(sendEmail).not.toHaveBeenCalled();
     });
   });
 
