@@ -140,9 +140,7 @@ const Question: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
-          {showNotes && props.data?.notes && (
-            <AttachedNote note={props.data.notes} />
-          )}
+          {props.data?.notes && <AttachedNote note={props.data.notes} />}
         </TemplatedNodeContainer>
         <ol className="options">
           {childNodes.map((child: any) => (

@@ -2,8 +2,6 @@ import PreviewIcon from "@mui/icons-material/Preview";
 import Button from "@mui/material/Button";
 import { useNavigate } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
-import { addDays, isBefore } from "date-fns";
-import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -13,15 +11,7 @@ type Props = {
 };
 
 export const ViewSubmissionButtonGrouped = (props: Props) => {
-  const submissionDataExpirationDate = props.submittedAt
-    ? addDays(new Date(props.submittedAt), DAYS_UNTIL_EXPIRY)
-    : null;
-
   const teamSlug = useStore((state) => state.teamSlug);
-
-  const showViewButton = submissionDataExpirationDate
-    ? isBefore(new Date(), submissionDataExpirationDate)
-    : false;
 
   const navigate = useNavigate();
   const params = useParams({ strict: false });
@@ -49,16 +39,14 @@ export const ViewSubmissionButtonGrouped = (props: Props) => {
     }
   };
 
-  if (!showViewButton) return;
-
   return (
     <Button
       color="primary"
       variant="contained"
       onClick={handleClick}
       disabled={!props.submittedAt}
+      startIcon={<PreviewIcon />}
     >
-      <PreviewIcon sx={{ mr: 1 }} />
       View submission
     </Button>
   );

@@ -18,7 +18,10 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
     gql`
       query GetSubmissions($team_id: Int!) {
         submissions: submission_services_log(
-          where: { team_id: { _eq: $team_id } }
+          where: {
+            team_id: { _eq: $team_id }
+            event_type: { _nin: ["Started session", "Invited to pay"] }
+          }
           order_by: { created_at: desc }
         ) {
           flowId: flow_id

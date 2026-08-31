@@ -44,22 +44,6 @@ const Node: React.FC<any> = (props) => {
     className: props.className || "",
   };
 
-  // In templated flows, always hide `Note` components that are inherited
-  //   from the source template unless within a templated folder
-  const parent = getParentId(node.id);
-  const indexedParent = orderedFlow?.find(({ id }) => id === parent);
-  const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
-    flow,
-    indexedParent,
-  );
-  const parentIsChildOfTemplatedInternalPortal =
-    nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
-  const renderNoteComponent =
-    showNotes &&
-    (!isTemplatedFrom ||
-      parentIsTemplatedInternalPortal ||
-      parentIsChildOfTemplatedInternalPortal);
-
   const type = props.type as TYPES;
   switch (type) {
     case TYPES.Calculate:
@@ -121,10 +105,27 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.NextSteps:
       return <Question {...allProps} text="Next steps" />;
-    case TYPES.Note:
+    case TYPES.Note: {
+      // In templated flows, always hide `Note` components that are inherited
+      //   from the source template unless within a templated folder
+      const parent = getParentId(node.id);
+      const indexedParent = orderedFlow?.find(({ id }) => id === parent);
+      const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
+        flow,
+        indexedParent,
+      );
+      const parentIsChildOfTemplatedInternalPortal =
+        nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
+      const renderNoteComponent =
+        showNotes &&
+        (!isTemplatedFrom ||
+          parentIsTemplatedInternalPortal ||
+          parentIsChildOfTemplatedInternalPortal);
+
       return renderNoteComponent ? (
-        <Question {...allProps} text={node?.data?.note ?? "Note"} />
+        <Question {...allProps} text={node?.data?.text ?? "Note"} />
       ) : null;
+    }
     case TYPES.Notice:
       return <Question {...allProps} text={node?.data?.title ?? "Notice"} />;
     case TYPES.NumberInput:

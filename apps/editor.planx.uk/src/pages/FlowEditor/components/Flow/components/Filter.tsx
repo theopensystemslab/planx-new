@@ -88,9 +88,7 @@ const Filter: React.FC<Props> = React.memo((props) => {
             {Icon && <Icon />}
             <span>{props.text}</span>
           </Link>
-          {showNotes && props.data?.notes && (
-            <AttachedNote note={props.data.notes} />
-          )}
+          {props.data?.notes && <AttachedNote note={props.data.notes} />}
         </div>
         <ol className="options">
           {childNodes.map((child) => (

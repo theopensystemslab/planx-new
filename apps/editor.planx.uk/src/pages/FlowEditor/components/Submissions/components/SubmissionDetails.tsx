@@ -1,6 +1,10 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import type { DescriptionListItem } from "ui/public/DescriptionList";
+import { DescriptionList } from "ui/public/DescriptionList";
 
+import { Badge } from "../../../../../components/Badge/Badge";
+import { BadgeVariant } from "../../../../../components/Badge/types";
 import { useTeamLogo } from "../hooks";
 import type { Submission } from "../types";
 import { DownloadSubmissionButtonGrouped } from "./DownloadSubmissionButtonGrouped";
@@ -11,32 +15,36 @@ type SubmissionDetailsProps = {
   latestEvent: Submission;
   teamSlug: string;
   submittedAt?: string;
+  isSubmissionAvailable: boolean;
 };
-
-type DetailRowProps = {
-  label: string;
-  value: string | null;
-  border?: boolean;
-};
-
-const DetailRow: React.FC<DetailRowProps> = ({ label, value, border }) => (
-  <Box
-    sx={{
-      display: "flex",
-      py: 2,
-      borderBottom: border ? 1 : 0,
-      borderColor: "border.main",
-    }}
-  >
-    <Typography sx={{ fontWeight: "bold", width: "33%" }}>{label}</Typography>
-    <Typography sx={{ width: "66%" }}>{value}</Typography>
-  </Box>
-);
 
 export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
-  const { data } = useTeamLogo(props.teamSlug);
-  const teamLogo = data?.teams[0].theme.logo;
-  const teamName = data?.teams[0].name;
+  const submissionData: DescriptionListItem[] = [
+    {
+      term: "Property address",
+      details: props.latestEvent.address || "",
+    },
+    {
+      term: "Reference",
+      details: props.sessionId,
+    },
+    {
+      term: "Submitted on",
+      details: props.submittedAt
+        ? new Date(props?.submittedAt).toLocaleDateString()
+        : "",
+    },
+  ];
+
+  const { data: themeData } = useTeamLogo(props.teamSlug);
+
+  if (!themeData?.teams[0]) {
+    return null;
+  }
+
+  const teamLogo = themeData?.teams[0].theme.logo;
+  const teamName = themeData?.teams[0].name;
+  const teamColour = themeData?.teams[0].theme.primaryColour;
 
   return (
     <Box
@@ -48,22 +56,15 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
       }}
     >
       <Box sx={{ padding: 1, margin: 1 }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          {teamLogo ? (
-            <Box
-              component="img"
-              src={teamLogo}
-              alt={teamName}
-              sx={{
-                maxWidth: 100,
-                width: "100%",
-                height: 50,
-                objectFit: "contain",
-                objectPosition: "left",
-                display: "block",
-              }}
-            />
-          ) : null}
+        <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 1 }}>
+          <Badge
+            variant={BadgeVariant.Team}
+            team={{
+              name: teamName,
+              theme: { primaryColour: teamColour, logo: teamLogo },
+            }}
+            size="compact"
+          />
 
           <Typography sx={{ fontWeight: "bold" }}>{teamName}</Typography>
         </Box>
@@ -71,21 +72,10 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
         <Typography variant="h3" sx={{ mb: 2 }}>
           {props.latestEvent?.flowName}
         </Typography>
-        <Box>
-          <DetailRow
-            label="Property address"
-            value={props.latestEvent?.address}
-            border={true}
-          />
-          <DetailRow label="Reference" value={props.sessionId} border={true} />
-          <DetailRow
-            label="Submitted on"
-            value={new Date(props.latestEvent?.createdAt).toLocaleDateString()}
-          />
-        </Box>
+        <DescriptionList data={submissionData} />
       </Box>
 
-      {props.submittedAt ? (
+      {props.submittedAt && props.isSubmissionAvailable && (
         <Box
           sx={{
             display: "flex",
@@ -106,8 +96,6 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
             submittedAt={props.submittedAt}
           />
         </Box>
-      ) : (
-        <></>
       )}
     </Box>
   );
