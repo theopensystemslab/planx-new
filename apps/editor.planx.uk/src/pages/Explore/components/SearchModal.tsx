@@ -78,8 +78,6 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
     setSelectedFlow(null);
   };
 
-  if (!results) return null;
-
   return (
     <Dialog
       open={open}
@@ -172,7 +170,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
               <DelayedLoadingIndicator inline msDelayBeforeVisible={300} />
             </Box>
           )}
-          {!skipped && !loading && Boolean(results?.length) && (
+          {!skipped && !loading && results && results.length > 0 && (
             <Box
               sx={{
                 display: "grid",
@@ -190,7 +188,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
                   minWidth: 0,
                   height: "100%",
                   border: `1px solid ${theme.palette.border.light}`,
-                  borderRadius: 1,
+                  borderRadius: "4px",
                   boxShadow: cardBoxShadow,
                   backgroundColor: theme.palette.background.default,
                   overflowY: "auto",
