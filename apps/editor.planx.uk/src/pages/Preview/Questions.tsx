@@ -175,15 +175,11 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   // manage focus on form step changes
   useEffect(() => {
-    const contentEl = document.querySelector('[data-testid="document-start"]');
+    const contentEl = document.getElementById("main-content");
     if (!contentEl) return;
 
-    if (contentEl instanceof HTMLElement) {
-      contentEl.setAttribute("tabindex", "-1");
-
-      if (!isInitialLoad.current) {
-        contentEl.focus();
-      }
+    if (!isInitialLoad.current) {
+      contentEl.focus();
     }
     isInitialLoad.current = false;
   }, [node?.id]);
