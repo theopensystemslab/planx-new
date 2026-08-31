@@ -23,6 +23,10 @@ env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
+concurrency:
+  group: pull-request-${{ github.event.number }}
+  cancel-in-progress: true
+
 jobs:
   changes:
     name: Check file changes
