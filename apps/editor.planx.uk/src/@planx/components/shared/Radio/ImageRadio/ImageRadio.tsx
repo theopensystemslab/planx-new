@@ -7,10 +7,14 @@ import { useRadioGroup } from "@mui/material/RadioGroup";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Option } from "@planx/components/Option/model";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useId, useLayoutEffect, useRef, useState } from "react";
 
 export interface Props extends Option {
   onChange: RadioProps["onChange"];
+}
+
+interface TextLabelProps extends Props {
+  inputId: string;
 }
 
 const FallbackImage = styled(Box)({
@@ -82,9 +86,10 @@ const StyledFormLabel = styled(FormLabel, {
   height: "100%",
 }));
 
-const TextLabel = (props: Props): FCReturn => {
+const TextLabel = (props: TextLabelProps): FCReturn => {
   const {
     id,
+    inputId,
     onChange,
     data: { text: title, description },
   } = props;
@@ -110,7 +115,7 @@ const TextLabel = (props: Props): FCReturn => {
       sx={{ alignItems: multiline ? "flex-start" : "center", padding: 0.5 }}
     >
       <TextLabelContainer>
-        <Radio value={id} onChange={onChange} />
+        <Radio value={id} onChange={onChange} id={inputId} />
         <Typography sx={{ color: "text.primary" }}>{title}</Typography>
       </TextLabelContainer>
       <Typography variant="body2">{description}</Typography>
@@ -148,11 +153,12 @@ const ImageLabel = (props: Props): FCReturn => {
 const ImageRadio: React.FC<Props> = (props: Props) => {
   const radioGroupState = useRadioGroup();
   const isSelected = radioGroupState?.value === props.id;
+  const inputId = useId();
 
   return (
-    <StyledFormLabel focused={false} isSelected={isSelected}>
+    <StyledFormLabel focused={false} isSelected={isSelected} htmlFor={inputId}>
       <ImageLabel {...props} />
-      <TextLabel {...props} />
+      <TextLabel {...props} inputId={inputId} />
     </StyledFormLabel>
   );
 };

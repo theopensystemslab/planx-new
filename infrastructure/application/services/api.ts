@@ -285,7 +285,7 @@ export const createApiService = async ({
         },
         {
           name: "RESEND_FROM_ADDRESS",
-          value: config.requireSecret("resend-from-address"),
+          value: config.require("resend-from-address"),
         },
         generateCORSAllowList(customDomains, DOMAIN),
         ...generateTeamSecrets(config, env),
