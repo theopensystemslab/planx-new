@@ -1,17 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import ErrorPage from "pages/ErrorPage/ErrorPage";
-import React from "react";
+import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 
 export const Route = createFileRoute("/$")({
   component: CatchAllComponent,
 });
-
-// TODO: export from elsewhere (and import here) to avoid code-split warning
-export function CatchAllComponent() {
-  return (
-    <ErrorPage title="Page not found">
-      The page you're looking for doesn't exist. Please check the URL or go back
-      to the homepage.
-    </ErrorPage>
-  );
-}

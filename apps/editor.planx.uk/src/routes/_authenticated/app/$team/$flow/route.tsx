@@ -5,8 +5,8 @@ import {
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
+import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 import FlowSkeleton from "pages/FlowEditor/FlowSkeleton";
-import { CatchAllComponent } from "routes/$";
 
 import { flowsSearchSchema } from "../flows";
 import { connectToFlowRoute } from "./-route.utils";
