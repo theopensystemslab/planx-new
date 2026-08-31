@@ -13,7 +13,10 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCard";
 import type { FileList } from "../model";
 import { type FileUploadAndLabelSlot } from "../model";
-import { SelectMultipleFileTypes } from "./SelectMultipleFileTypes";
+import {
+  getFileSelectionTitleId,
+  SelectMultipleFileTypes,
+} from "./SelectMultipleFileTypes";
 
 const Root = styled(Box)(({ theme }) => ({
   scrollMarginTop: theme.spacing(2),
@@ -61,6 +64,8 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
       behavior: "smooth",
       block: "start",
     });
+    // Move focus into the newly revealed "Edit labels" section
+    document.getElementById(getFileSelectionTitleId(slot.id))?.focus();
   };
 
   const tags = slot.tags || [];

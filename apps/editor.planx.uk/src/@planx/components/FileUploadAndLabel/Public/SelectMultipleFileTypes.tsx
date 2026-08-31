@@ -51,6 +51,9 @@ const sanitizeId = (str: string): string => {
   return str.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-_]/g, "");
 };
 
+export const getFileSelectionTitleId = (slotId: string): string =>
+  `file-selection-title-${slotId}`;
+
 export const SelectMultipleFileTypes = (props: ChecklistProps) => {
   const {
     uploadedFile,
@@ -64,7 +67,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
 
   const currentTags = uploadedFile.tags || [];
 
-  const titleId = `file-selection-title-${uploadedFile.id}`;
+  const titleId = getFileSelectionTitleId(uploadedFile.id);
 
   /**
    * Options for checklist
@@ -107,7 +110,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
 
   return (
     <Root>
-      <Typography variant="h3" sx={{ mb: 2 }} id={titleId}>
+      <Typography variant="h3" sx={{ mb: 2 }} id={titleId} tabIndex={-1}>
         What does this file show? Select all that apply
         <Box component="span" sx={visuallyHidden}>
           This question refers to file: {uploadedFile.file.name}
