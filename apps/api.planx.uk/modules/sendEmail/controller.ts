@@ -86,14 +86,6 @@ export const confirmationEmailController: ConfirmationEmail = async (
 
 export const resendEmailController: ResendEmail = async (_req, res, next) => {
   const { payload } = res.locals.parsedReq.body;
-  const { template } = res.locals.parsedReq.params;
-
-  // call sendEmail only in production or when testing
-  if (!["production", "test"].includes(process.env.APP_ENVIRONMENT!)) {
-    return res.status(200).send({
-      message: `Skipping ${template} email: APP_ENVIRONMENT is not production or test`,
-    });
-  }
 
   try {
     const isTrial = await getTeamIsTrial(payload.defaultTeamId);
@@ -107,7 +99,7 @@ export const resendEmailController: ResendEmail = async (_req, res, next) => {
   } catch (error) {
     return next(
       new ServerError({
-        message: `Failed to send ${template} email. ${(error as Error).message}`,
+        message: `Failed to send "welcome" email. ${(error as Error).message}`,
         cause: error,
       }),
     );

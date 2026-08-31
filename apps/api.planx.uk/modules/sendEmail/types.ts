@@ -88,9 +88,6 @@ export const resendEmailSchema = z.object({
       defaultTeamId: z.number().nullable(),
     }),
   }),
-  params: z.object({
-    template: z.enum(["welcome"]),
-  }),
 });
 
 export type ResendEmail = ValidatedRequestHandler<
