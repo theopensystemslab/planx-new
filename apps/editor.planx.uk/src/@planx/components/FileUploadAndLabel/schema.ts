@@ -63,8 +63,8 @@ export const slotsSchema = array()
   .required()
   .test({
     name: "minFileUploaded",
-    message: "Upload at least one file",
-    test: (slots, { options: { context } }) => {
+    test: (slots, ctx) => {
+      const { context } = ctx.options;
       if (!context) throw new Error("Missing context for slotsSchema");
       if (!slots) throw new Error("Missing slots for slotsSchema");
 
@@ -73,7 +73,14 @@ export const slotsSchema = array()
       if (noFilesAreRequired) return true;
 
       const isAtLeastOneFileUploaded = slots.length > 0;
-      return isAtLeastOneFileUploaded;
+      if (isAtLeastOneFileUploaded) return true;
+
+      const requiredNames = fileList.required
+        .map((type) => type.name)
+        .join(", ");
+      return ctx.createError({
+        message: `Upload at least one file for: ${requiredNames}`,
+      });
     },
   })
   .test({
@@ -115,9 +122,8 @@ export const slotsSchema = array()
   })
   .test({
     name: "allRequiredFilesUploaded",
-    message: "Please upload and label all required information",
-    test: (slots, context) => {
-      const fileList = context.options.context?.fileList as FileList;
+    test: (slots, ctx) => {
+      const fileList = ctx.options.context?.fileList as FileList;
       if (!fileList) return true;
 
       if (!slots || slots.length === 0) return true;
@@ -126,11 +132,15 @@ export const slotsSchema = array()
         slots?.flatMap((s) => (s as FileUploadAndLabelSlot).tags || []),
       );
 
-      const isEveryRequiredTypeSatisfied = fileList.required.every((type) =>
-        assignedTags.has(type.name),
-      );
+      const missingRequiredNames = fileList.required
+        .filter((type) => !assignedTags.has(type.name))
+        .map((type) => type.name);
 
-      return isEveryRequiredTypeSatisfied;
+      if (!missingRequiredNames.length) return true;
+
+      return ctx.createError({
+        message: `Upload and label: ${missingRequiredNames.join(", ")}`,
+      });
     },
   });
 
