@@ -10,7 +10,12 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { PrintButton } from "components/PrintButton";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { type SetStateAction, useReducer } from "react";
+import React, {
+  type SetStateAction,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { ValidationError } from "yup";
@@ -119,6 +124,8 @@ export default function Component(props: Props) {
     });
   };
 
+  const [failedSubmitCount, setFailedSubmitCount] = useState(0);
+
   const validateAndSubmit = async () => {
     try {
       await slotsSchema.validate(state.slots, {
@@ -134,11 +141,27 @@ export default function Component(props: Props) {
       if (err instanceof ValidationError) {
         const formattedErrors = formatValidationErrors(err);
         dispatch({ type: "SET_ERRORS", payload: formattedErrors });
+        setFailedSubmitCount((count) => count + 1);
       } else {
         console.error("Unexpected submission error:", err);
       }
     }
   };
+
+  // Move focus to the first error message after a failed submit
+  useEffect(() => {
+    if (failedSubmitCount === 0) return;
+
+    const errorEl = Array.from(
+      document.querySelectorAll('[role="alert"]'),
+    ).find((el): el is HTMLElement => Boolean(el.textContent?.trim()));
+
+    if (errorEl) {
+      errorEl.setAttribute("tabindex", "-1");
+      errorEl.focus();
+      errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [failedSubmitCount]);
 
   const isCategoryVisible = (category: keyof typeof state.fileList) => {
     if (props.hideDropZone) {
