@@ -4,7 +4,7 @@ import type { RequestHandler } from "express";
  * Env guard for the Resend "welcome" email template
  *
  * Welcome emails should only be sent in production (and test).
- * These are triggered by INSERT to the users table which happends often
+ * These are triggered by INSERT to the users table which happens often
  * in non-production envs (on each data-sync operation).
  *
  * Returns 200 so the triggering Hasura event does not fail and retry
