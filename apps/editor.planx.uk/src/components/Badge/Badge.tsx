@@ -5,7 +5,7 @@ import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
 
-import type { BadgeProps, BadgeSize } from "./types";
+import type { BadgeProps, BadgeShape, BadgeSize } from "./types";
 import { BadgeVariant } from "./types";
 
 const DIMENSIONS: Record<BadgeSize, { box: number; borderRadius: number }> = {
@@ -13,13 +13,16 @@ const DIMENSIONS: Record<BadgeSize, { box: number; borderRadius: number }> = {
   compact: { box: 50, borderRadius: 50 },
 };
 
+const SQUARE_BORDER_RADIUS = 6;
+
 const Root = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "size",
-})<{ size: BadgeSize }>(({ size }) => ({
+  shouldForwardProp: (prop) => prop !== "size" && prop !== "shape",
+})<{ size: BadgeSize; shape: BadgeShape }>(({ size, shape }) => ({
   width: DIMENSIONS[size].box,
   height: DIMENSIONS[size].box,
   minWidth: DIMENSIONS[size].box,
-  borderRadius: DIMENSIONS[size].borderRadius,
+  borderRadius:
+    shape === "square" ? SQUARE_BORDER_RADIUS : DIMENSIONS[size].borderRadius,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -41,12 +44,13 @@ const Initial = styled("span", {
 }));
 
 export const Badge: React.FC<BadgeProps> = (props) => {
-  const { size = "default" } = props;
+  const { size = "default", shape = "circle" } = props;
 
   if (props.variant === BadgeVariant.SourceTemplate) {
     return (
       <Root
         size={size}
+        shape={shape}
         sx={{ backgroundColor: "template.light" }}
         role="img"
         aria-label="Source template"
@@ -61,6 +65,7 @@ export const Badge: React.FC<BadgeProps> = (props) => {
     return (
       <Root
         size={size}
+        shape={shape}
         sx={{
           backgroundColor: props.backgroundColour,
           color: props.iconColour,
@@ -79,6 +84,7 @@ export const Badge: React.FC<BadgeProps> = (props) => {
     return (
       <Root
         size={size}
+        shape={shape}
         sx={{ backgroundColor: backgroundColour }}
         role="img"
         aria-label={team.name}
@@ -94,6 +100,7 @@ export const Badge: React.FC<BadgeProps> = (props) => {
   return (
     <Root
       size={size}
+      shape={shape}
       sx={{ backgroundColor: backgroundColour }}
       role="img"
       aria-label={team.name}

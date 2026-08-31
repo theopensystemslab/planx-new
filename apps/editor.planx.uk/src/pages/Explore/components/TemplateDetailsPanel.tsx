@@ -1,49 +1,51 @@
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import React from "react";
+import { cardBoxShadow } from "theme";
 
+import { RelatedItemsSection } from "./RelatedItemsSection";
 import { SearchListItemDetail } from "./SearchListItemDetail";
 import { SearchListItemDetailActions } from "./SearchListItemDetailActions";
 import type { Template } from "./types";
 import { useTemplateDetails } from "./useTemplateDetails";
 
-interface TemplateDetailsModalProps {
+interface TemplateDetailsPanelProps {
   template: Template;
-  open: boolean;
-  onClose: () => void;
 }
 
-export const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
+export const TemplateDetailsPanel: React.FC<TemplateDetailsPanelProps> = ({
   template,
-  open,
-  onClose,
 }) => {
   const { result, isConfirmationOpen, setIsConfirmationOpen, handleAddToTeam } =
-    useTemplateDetails(template, { skip: !open, onAdded: onClose });
+    useTemplateDetails(template);
+
+  const { relatedItems, ...resultWithoutRelatedItems } = result;
 
   return (
     <>
-      <Dialog
-        open={open}
-        onClose={onClose}
-        fullWidth
-        maxWidth="formWrap"
-        slotProps={{
-          paper: {
-            sx: (theme) => ({ maxWidth: theme.breakpoints.values.formWrap }),
-          },
-        }}
+      <Box
+        sx={(theme) => ({
+          border: `1px solid ${theme.palette.border.light}`,
+          borderRadius: "4px",
+          boxShadow: cardBoxShadow,
+          backgroundColor: theme.palette.background.default,
+          overflow: "hidden",
+        })}
       >
-        <DialogContent sx={{ backgroundColor: "background.default" }}>
-          <SearchListItemDetail result={result} />
-        </DialogContent>
-        <SearchListItemDetailActions
-          primaryAction={result.primaryAction}
-          onClose={onClose}
-        />
-      </Dialog>
+        <Box sx={{ p: 3 }}>
+          <SearchListItemDetail result={resultWithoutRelatedItems} />
+        </Box>
+        <SearchListItemDetailActions primaryAction={result.primaryAction} />
+        {relatedItems && relatedItems.items.length > 0 && (
+          <Box sx={{ p: 3 }}>
+            <RelatedItemsSection
+              relatedItems={relatedItems}
+              showDivider={false}
+            />
+          </Box>
+        )}
+      </Box>
       <ConfirmationDialog
         open={isConfirmationOpen}
         onClose={(confirmed) => {

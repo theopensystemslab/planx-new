@@ -7,18 +7,24 @@ import type { SearchResult } from "./SearchResult";
 
 interface SearchListItemDetailActionsProps {
   primaryAction?: SearchResult["primaryAction"];
+  secondaryAction?: SearchResult["secondaryAction"];
   onClose?: () => void;
 }
 
 export const SearchListItemDetailActions: React.FC<
   SearchListItemDetailActionsProps
-> = ({ primaryAction, onClose }) => {
-  if (!onClose && !primaryAction) return null;
+> = ({ primaryAction, secondaryAction, onClose }) => {
+  if (!onClose && !primaryAction && !secondaryAction) return null;
 
   return (
     <>
       <Divider />
-      <DialogActions>
+      <DialogActions
+        sx={{
+          bgcolor: "background.paper",
+          justifyContent: onClose ? "flex-end" : "flex-start",
+        }}
+      >
         {onClose && (
           <Button variant="contained" color="secondary" onClick={onClose}>
             Close
@@ -32,6 +38,15 @@ export const SearchListItemDetailActions: React.FC<
             disabled={primaryAction.disabled}
           >
             {primaryAction.label}
+          </Button>
+        )}
+        {secondaryAction && (
+          <Button
+            onClick={secondaryAction.onClick}
+            disabled={secondaryAction.disabled}
+            sx={{ backgroundColor: "background.default" }}
+          >
+            {secondaryAction.label}
           </Button>
         )}
       </DialogActions>

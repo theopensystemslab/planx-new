@@ -1,3 +1,4 @@
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -11,11 +12,13 @@ import type { SearchResult } from "./SearchResult";
 interface SearchListItemProps {
   result: SearchResult;
   onClick?: () => void;
+  selected?: boolean;
 }
 
 export const SearchListItem: React.FC<SearchListItemProps> = ({
   result: { icon, title, description, statusLabel },
   onClick,
+  selected,
 }) => {
   const content = (
     <>
@@ -57,10 +60,12 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
     return (
       <ListItemButton
         onClick={onClick}
-        alignItems="flex-start"
+        alignItems="center"
+        selected={selected}
         sx={{ px: 2, py: 1.5, gap: 1.5 }}
       >
         {content}
+        <ChevronRightIcon sx={{ ml: "auto", color: "text.secondary" }} />
       </ListItemButton>
     );
   }

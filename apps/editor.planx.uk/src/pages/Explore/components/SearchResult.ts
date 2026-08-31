@@ -27,4 +27,5 @@ export interface SearchResult {
   tag?: React.ReactNode;
   relatedItems?: SearchResultRelatedItems;
   primaryAction?: SearchResultAction;
+  secondaryAction?: SearchResultAction;
 }

@@ -1,15 +1,19 @@
+import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import NumbersWidget from "./components/NumbersWidget";
+import { SearchModal } from "./components/SearchModal";
 import TemplatesWidget from "./components/TemplatesWidget";
 
 export default function Explore() {
   const team = useStore((state) => state.getTeam());
+  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
     <Box sx={{ bgcolor: "background.paper", flexGrow: 1 }}>
@@ -27,8 +31,12 @@ export default function Explore() {
           <Typography variant="h2" component="h1">
             Explore Plan✕
           </Typography>
-          {/* TODO: Style search button */}
-          <Button>Search PlanX</Button>
+          <Button
+            startIcon={<SearchIcon />}
+            onClick={() => setSearchOpen(true)}
+          >
+            Search Plan✕
+          </Button>
         </Box>
         <Box
           sx={{
@@ -46,6 +54,7 @@ export default function Explore() {
           </DashboardWidget>
         </Box>
       </Container>
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </Box>
   );
 }
