@@ -42,30 +42,22 @@ test.describe("Focus navigation accessibility", () => {
     await tearDownTestContext();
   });
 
-  test("skip link works consistently across multiple form steps", async ({
+  test("focus moves to main content consistently across multiple form steps", async ({
     page,
   }) => {
+    const mainContent = page.locator("#main-content");
+
     await fillInEmail({ page, context });
     await clickContinue({ page, waitForResponse: true });
 
     await answerQuestion({ page, title: "Question 1", answer: "A" });
     await clickContinue({ page, waitForLogEvent: true });
 
-    await page.keyboard.press("Tab");
-
-    const skipLink = page.getByRole("link", { name: "Skip to main content" });
-    await expect(skipLink).toBeFocused();
-
-    await skipLink.click();
+    await expect(mainContent).toBeFocused();
 
     await answerQuestion({ page, title: "Question 2", answer: "One" });
     await clickContinue({ page, waitForLogEvent: true });
 
-    await page.keyboard.press("Tab");
-
-    const skipLinkAgain = page.getByRole("link", {
-      name: "Skip to main content",
-    });
-    await expect(skipLinkAgain).toBeFocused();
+    await expect(mainContent).toBeFocused();
   });
 });
