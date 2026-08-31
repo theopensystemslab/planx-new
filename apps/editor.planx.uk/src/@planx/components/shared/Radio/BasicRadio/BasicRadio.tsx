@@ -3,7 +3,7 @@ import type { FormControlLabelProps } from "@mui/material/FormControlLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { formControlLabelClasses } from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import React from "react";
+import React, { useId } from "react";
 
 export interface Props {
   id?: string | boolean;
@@ -54,22 +54,32 @@ const BasicRadio: React.FC<Props> = ({
   description,
   variant = "default",
   disabled,
-}) => (
-  <FormControlLabel
-    value={id}
-    onChange={onChange}
-    control={<Radio variant={variant === "inline" ? "compact" : variant} />}
-    label={getLabel(label, description, variant)}
-    disabled={disabled}
-    sx={(theme) => ({
-      ml: theme.spacing(-1),
-      mb: variant === "default" ? 1 : 0,
-      alignItems: "flex-start",
-      [`& .${formControlLabelClasses.label}`]: {
-        paddingTop: theme.spacing(0.95),
-      },
-    })}
-  />
-);
+}) => {
+  const inputId = useId();
+
+  return (
+    <FormControlLabel
+      value={id}
+      onChange={onChange}
+      htmlFor={inputId}
+      control={
+        <Radio
+          variant={variant === "inline" ? "compact" : variant}
+          id={inputId}
+        />
+      }
+      label={getLabel(label, description, variant)}
+      disabled={disabled}
+      sx={(theme) => ({
+        ml: theme.spacing(-1),
+        mb: variant === "default" ? 1 : 0,
+        alignItems: "flex-start",
+        [`& .${formControlLabelClasses.label}`]: {
+          paddingTop: theme.spacing(0.95),
+        },
+      })}
+    />
+  );
+};
 
 export default BasicRadio;

@@ -5,7 +5,7 @@ import Radio from "@mui/material/Radio";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Option } from "@planx/components/Option/model";
-import React from "react";
+import React, { useId } from "react";
 
 export interface Props extends Option {
   onChange: RadioProps["onChange"];
@@ -24,9 +24,11 @@ const DescriptionRadio: React.FC<Props> = ({
   id,
   variant = "default",
 }) => {
+  const inputId = useId();
+
   return (
-    <StyledFormLabel focused={false}>
-      <Radio value={id} onChange={onChange} variant={variant} />
+    <StyledFormLabel focused={false} htmlFor={inputId}>
+      <Radio value={id} onChange={onChange} variant={variant} id={inputId} />
       <Box>
         <Typography
           variant="body1"
