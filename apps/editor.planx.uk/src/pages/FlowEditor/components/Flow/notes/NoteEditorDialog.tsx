@@ -103,11 +103,7 @@ export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = (props) => {
             Note
           </Typography>
         </DialogTitle>
-        <CloseButton
-          onClick={onClose}
-          title="Close panel"
-          sx={{ color: "grey.600" }}
-        />
+        <CloseButton onClick={onClose} title="Close panel" />
       </Box>
       <Box component="form" onSubmit={formik.handleSubmit}>
         <DialogContent dividers sx={{ px: 4, py: 3 }}>

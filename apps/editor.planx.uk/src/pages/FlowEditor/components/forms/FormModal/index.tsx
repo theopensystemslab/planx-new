@@ -267,7 +267,7 @@ const FormModal: React.FC<FormModalProps> = ({
             canChange={!handleDelete}
           />
 
-          <CloseButton onClick={handleClose} />
+          <CloseButton onClick={handleClose} sx={{ marginRight: -1 }} />
         </DialogTitle>
         <DialogContent dividers sx={{ p: 0, position: "relative" }}>
           {!handleDelete && (

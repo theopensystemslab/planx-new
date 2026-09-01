@@ -87,7 +87,10 @@ const Feedback: React.FC = () => {
   function BackAndCloseFeedbackHeader(): FCReturn {
     return (
       <FeedbackHeader>
-        <BackButton onClick={() => handleFeedbackViewClick("back")}>
+        <BackButton
+          onClick={() => handleFeedbackViewClick("back")}
+          variant="link"
+        >
           <ArrowBackIcon fontSize="small" />
           Back
         </BackButton>
@@ -110,7 +113,6 @@ const Feedback: React.FC = () => {
         </FeedbackTitle>
         <CloseButton
           title="Close panel"
-          color="inherit"
           onClick={() => handleFeedbackViewClick("close")}
         />
       </FeedbackHeader>
