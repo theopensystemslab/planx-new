@@ -26,15 +26,20 @@ const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
   };
 
   const showError = Boolean(errors.userInput);
+  const isWritingNew = values.selectedOption === "new";
 
   return (
     <Box sx={{ mb: 2 }}>
       <Typography variant="h2" component="h1" id={HEADING_ID} sx={{ mb: 1 }}>
-        Confirm your project description
+        {isWritingNew
+          ? "Enter your new description"
+          : "Confirm your project description"}
       </Typography>
-      <Typography variant="subtitle1" component="p" sx={{ mb: 1 }}>
-        Edit the description below, or continue to submit it as shown.
-      </Typography>
+      {!isWritingNew && (
+        <Typography variant="subtitle1" component="p" sx={{ mb: 1 }}>
+          Edit the description below, or continue to submit it as shown.
+        </Typography>
+      )}
       <Typography
         variant="subtitle1"
         component="p"
