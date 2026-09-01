@@ -153,6 +153,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
                 bgcolor:
                   index === tabIndex ? "text.primary" : "background.default",
                 color: index === tabIndex ? "background.default" : undefined,
+                "&:hover, &:focus, &:focus-visible, &:active": {
+                  bgcolor: index === tabIndex ? "text.primary" : "action.hover",
+                  color: index === tabIndex ? "background.default" : undefined,
+                },
               }}
             />
           ))}
