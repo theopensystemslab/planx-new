@@ -74,13 +74,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
       maxWidth={false}
       slotProps={{
         paper: {
-          sx: {
+          sx: (theme) => ({
             width: "90vw",
-            maxWidth: "90vw",
+            maxWidth: theme.breakpoints.values.contentWide,
             height: "90vh",
             display: "flex",
             flexDirection: "column",
-          },
+          }),
         },
       }}
     >
