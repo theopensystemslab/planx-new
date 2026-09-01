@@ -115,3 +115,5 @@ config:
   application:uniform-token-url: https://identity.idoxgroup.com/uaa/oauth/token
   cloudflare:apiToken:
     secure: AAABAMbIBX9N21ModHyDYCQCGZXkRUP62NIUMhsxkK+/YUPRQr6PEqgZX9LRP2UuVwvVHd2RxvKGT8lpq8oAgyeDYP1eZSUl
+  application:stripe-secret-key:
+    secure: AAABAJdkS0v68Q8Vr2V7tLSb74ALGCTpjLOG2W6ZTgwb5aRUZkrNRUnv3dL4pdw85YxxOI6KUJnT30cGJyim4A==
