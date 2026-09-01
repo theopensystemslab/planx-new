@@ -1,7 +1,8 @@
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
@@ -11,8 +12,23 @@ import NumbersWidget from "./components/NumbersWidget";
 import { SearchModal } from "./components/SearchModal";
 import TemplatesWidget from "./components/TemplatesWidget";
 
+const SearchBarButton = styled(ButtonBase)(({ theme }) => ({
+  width: "100%",
+  maxWidth: 360,
+  height: 50,
+  padding: theme.spacing(0, 2),
+  gap: theme.spacing(1),
+  justifyContent: "flex-start",
+  border: `1px solid ${theme.palette.border.main}`,
+  borderRadius: 4,
+  backgroundColor: theme.palette.common.white,
+  color: theme.palette.text.placeholder,
+  "&:hover, &:focus-visible": {
+    borderColor: theme.palette.text.primary,
+  },
+}));
+
 export default function Explore() {
-  const team = useStore((state) => state.getTeam());
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
@@ -31,12 +47,15 @@ export default function Explore() {
           <Typography variant="h2" component="h1">
             Explore Plan✕
           </Typography>
-          <Button
-            startIcon={<SearchIcon />}
+          <SearchBarButton
             onClick={() => setSearchOpen(true)}
+            aria-label="Search Plan✕"
           >
-            Search Plan✕
-          </Button>
+            <SearchIcon />
+            <Typography variant="body1" sx={{ color: "inherit" }}>
+              Search flows across Plan✕
+            </Typography>
+          </SearchBarButton>
         </Box>
         <Box
           sx={{
