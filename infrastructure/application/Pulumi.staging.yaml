@@ -102,3 +102,7 @@ config:
   application:uniform-token-url: https://staging.identity.idoxgroup.com/uaa/oauth/token
   cloudflare:apiToken:
     secure: AAABABWhDm+7RstbxLXd1D8CcxkylHS6UKMqk4kOaY7Y0E7FJS4bZfvyGs0nks80hl3vjENH4eDuFbUgA82/sA4SmDlfpNXr
+  application:stripe-connect-client-id:
+    secure: AAABAO7YAHmy748uzNOvl59Q18FnKBSJmjiGj2qiDuUAxGnHBxWHkXMtDxv0eEOp8jQtFRoAG+MgKWBwuS5dB+Hepw==
+  application:stripe-secret-key:
+    secure: AAABAGWwIOWw5cQTSVpgrmFFUCw6U/OqomMVuo8mZEiMNpyFzNY+ZHUtdY8KKektvSuEXuPvbNDSrCh4LVJDJmBA4iyTnphgrjSA1s2g9qbxeL70C7/tjlTvuJLz7ucjdK3GEC/kZJnF4sELdE6Uchn/iLpMy4F3b0jp6lGeSM8slyna7hFR1MGllA==
