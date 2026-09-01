@@ -351,14 +351,6 @@ $fontMonospace: "Source Code Pro", monospace;
     overflow-wrap: break-word;
     word-break: break-word;
 
-    // TODO debug folded corner
-    &::before {
-      @include paperFoldFront;
-    }
-    &::after {
-      @include paperFoldBack;
-    }
-
     .flow-locked & {
       border-color: $lockedBorder;
       background: $lockedDataBackground;
