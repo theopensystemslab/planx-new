@@ -19,6 +19,7 @@ export interface Option {
     text: string;
     val?: string;
     exclusive?: true;
+    notes?: string;
   };
 }
 
@@ -43,6 +44,7 @@ export const optionValidationSchema = object({
     text: string().required().trim(),
     val: string(),
     exclusive: mixed().oneOf([true, undefined]),
+    notes: string(),
     // TODO: Validate rules?
   }),
 });

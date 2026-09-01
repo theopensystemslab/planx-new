@@ -105,6 +105,17 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
           disabled={props.disabled}
           onChange={(ev) => updateSharedField("flags", ev)}
         />
+        {
+          <InputRow>
+            <Input
+              value={props.value.data.notes || ""}
+              placeholder="Note"
+              multiline
+              disabled={props.disabled}
+              onChange={(ev) => updateSharedField("notes", ev.target.value)}
+            />
+          </InputRow>
+        }
         {showRuleBuilder && (
           <RuleBuilder
             labels={{
