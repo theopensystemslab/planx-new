@@ -180,10 +180,10 @@ export const useTemplateDetails = (
   const usedByLabel = (() => {
     if (canUserEditTeam(teamSlug) && isAlreadySubscribed) {
       const otherTeamsCount = usedByCount - 1;
-      if (otherTeamsCount === 0) return `Used by ${teamName}:`;
-      return `Used by ${teamName} and ${otherTeamsCount} other team${otherTeamsCount === 1 ? "" : "s"}:`;
+      if (otherTeamsCount === 0) return `Subscribed to by ${teamName}:`;
+      return `Subscribed to by ${teamName} and ${otherTeamsCount} other team${otherTeamsCount === 1 ? "" : "s"}:`;
     }
-    return `Used by ${usedByCount} team${usedByCount === 1 ? "" : "s"}:`;
+    return `Subscribed to by ${usedByCount} team${usedByCount === 1 ? "" : "s"}:`;
   })();
 
   const result: SearchResult = {
@@ -207,12 +207,7 @@ export const useTemplateDetails = (
               key: team.id,
               tooltip: team.name,
               icon: (
-                <Badge
-                  variant={BadgeVariant.Team}
-                  team={team}
-                  size="compact"
-                  shape="square"
-                />
+                <Badge variant={BadgeVariant.Team} team={team} size="compact" />
               ),
             })),
           }

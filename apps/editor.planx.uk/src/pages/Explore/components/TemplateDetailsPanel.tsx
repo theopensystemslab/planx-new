@@ -35,16 +35,11 @@ export const TemplateDetailsPanel: React.FC<TemplateDetailsPanelProps> = ({
       >
         <Box sx={{ p: 3 }}>
           <SearchListItemDetail result={resultWithoutRelatedItems} />
+          {relatedItems && relatedItems.items.length > 0 && (
+            <RelatedItemsSection relatedItems={relatedItems} />
+          )}
         </Box>
         <SearchListItemDetailActions primaryAction={result.primaryAction} />
-        {relatedItems && relatedItems.items.length > 0 && (
-          <Box sx={{ p: 3 }}>
-            <RelatedItemsSection
-              relatedItems={relatedItems}
-              showDivider={false}
-            />
-          </Box>
-        )}
       </Box>
       <ConfirmationDialog
         open={isConfirmationOpen}

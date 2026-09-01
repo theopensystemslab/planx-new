@@ -22,7 +22,7 @@ export const SearchListItemDetailActions: React.FC<
       <DialogActions
         sx={{
           bgcolor: "background.paper",
-          justifyContent: onClose ? "flex-end" : "flex-start",
+          justifyContent: "flex-end",
         }}
       >
         {onClose && (

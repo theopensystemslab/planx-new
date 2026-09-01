@@ -12,8 +12,6 @@ export type BadgeVariant = ObjectValues<typeof BadgeVariant>;
 
 export type BadgeSize = "default" | "compact";
 
-export type BadgeShape = "circle" | "square";
-
 interface BadgeTeam {
   name: string;
   theme: {
@@ -24,8 +22,6 @@ interface BadgeTeam {
 
 interface BadgeBaseProps {
   size?: BadgeSize;
-  /** @default "circle" */
-  shape?: BadgeShape;
 }
 
 interface SourceTemplateBadgeProps extends BadgeBaseProps {
