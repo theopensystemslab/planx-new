@@ -27,6 +27,27 @@ it("displays the options editor when the 'Add option' button is clicked", async 
   expect(optionsEditor).toBeInTheDocument();
 });
 
+it("displays an error if an editor tries to create a pseudo-note", async () => {
+  const { user } = await setup(
+    <DndProvider backend={HTML5Backend}>
+      <Question node={{}} options={[]} />
+    </DndProvider>,
+  );
+
+  await user.click(screen.getByPlaceholderText("Text"));
+  await user.paste("Note");
+
+  fireEvent.submit(screen.getByTestId("question-component-form"));
+
+  await waitFor(() =>
+    expect(
+      screen.getByText(
+        /Questions can no longer be used as notes and must have at least one option/,
+      ),
+    ).toBeInTheDocument(),
+  );
+});
+
 describe("data field", () => {
   it("clears option val fields when the question data field is cleared", async () => {
     const { user } = await setup(

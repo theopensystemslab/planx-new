@@ -233,6 +233,30 @@ const uniqueLabelsTest: TestConfig<AnyChecklist> = {
   },
 };
 
+const atLeastOneOption: TestConfig<AnyChecklist> = {
+  name: "atLeastOneOption",
+  test: function ({ text, options, groupedOptions }) {
+    if (
+      (options && options.length > 0) ||
+      (groupedOptions && groupedOptions.length > 0)
+    )
+      return true;
+
+    if (text) {
+      return this.createError({
+        path: "text",
+        message:
+          "Checklists can no longer be used as notes and must have at least one option",
+      });
+    } else {
+      return this.createError({
+        path: "options",
+        message: "Add at least one option",
+      });
+    }
+  },
+};
+
 const uniqueLabelsWithinGroupsTest: TestConfig<AnyChecklist> = {
   name: "uniqueLabelsWithinGroups",
   test: function ({ groupedOptions }) {
@@ -281,9 +305,9 @@ const uniqueGroupTitlesTest: TestConfig<AnyChecklist> = {
 export const baseChecklistValidationSchema =
   baseNodeDataValidationSchema.concat(
     object({
+      text: string().required(),
       description: richText(),
       fn: string().nullable(),
-      text: string(),
       img: string(),
       categories: array(
         object({
@@ -298,5 +322,6 @@ export const baseChecklistValidationSchema =
       .test(atLeastOneDataFieldTest as TestConfig<unknown>)
       .test(uniqueLabelsTest as TestConfig<unknown>)
       .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>)
-      .test(uniqueGroupTitlesTest as TestConfig<unknown>),
+      .test(uniqueGroupTitlesTest as TestConfig<unknown>)
+      .test(atLeastOneOption as TestConfig<unknown>),
   );

@@ -144,6 +144,10 @@ describe("Responsive Checklist editor component", () => {
       </DndProvider>,
     );
 
+    // Set title (required)
+    await user.click(screen.getByPlaceholderText("Text"));
+    await user.paste("Test");
+
     const autocompleteComponent = screen.getByTestId("checklist-data-field");
     const autocompleteInput = within(autocompleteComponent).getByRole(
       "combobox",

@@ -7,7 +7,11 @@ import React, { useCallback, useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
-import { COMPONENT_LIST_WIDTH, componentListFrameSx } from "./ComponentsTab";
+import {
+  COMPONENT_LIST_HEIGHT,
+  COMPONENT_LIST_WIDTH,
+  componentListFrameSx,
+} from "./ComponentsTab";
 import type { ModalTab } from "./ModalTabs";
 import { ModalTabs } from "./ModalTabs";
 import { DETAIL_PANEL_WIDTH } from "./PatternsTab/PatternDetailPanel";
@@ -64,7 +68,8 @@ const AddComponentModal: React.FC<Props> = ({
 
   // Flip the popover above the hanger when there isn't room below it
   const rect = anchorEl?.getBoundingClientRect();
-  const showBelow = !rect || window.innerHeight - rect.bottom >= 450;
+  const showBelow =
+    !rect || window.innerHeight - rect.bottom >= COMPONENT_LIST_HEIGHT;
 
   return (
     <Popover
@@ -86,6 +91,7 @@ const AddComponentModal: React.FC<Props> = ({
           sx: {
             ...componentListFrameSx,
             width: popoverWidth,
+            height: `min(${COMPONENT_LIST_HEIGHT}px, 85vh)`,
             mt: showBelow ? "4px" : "-4px",
           },
         },

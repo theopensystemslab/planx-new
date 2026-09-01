@@ -6,7 +6,7 @@ import { object, string } from "yup";
 
 import type { BreadcrumbData, TaskActionDescription } from "../types";
 import { TaskActionMap } from "./../types";
-import type { FormValues, Props } from "./types";
+import type { FormValues, Props, Step } from "./types";
 
 export const getAction = (values: FormValues): TaskActionDescription => {
   if (values.status === "idle")
@@ -48,12 +48,17 @@ export const makeBreadcrumb = (
   } as BreadcrumbData;
 };
 
-export const getValidationSchema = (props: Props) =>
+export const getValidationSchema = (props: Props, step: Step) =>
   object({
     status: string().oneOf(["idle", "success", "error"]).required(),
     userInput: textInputValidationSchema({
       data: { ...props, type: TextInputType.Long },
       required: true,
+    }).when("selectedOption", {
+      // initial input is not required if we are coming from the 'enter a new description' option
+      is: (selectedOption: string | null) =>
+        step === "selection" && selectedOption === "new",
+      then: (schema) => schema.notRequired(),
     }),
     original: string().when("status", {
       is: (status: string) => status === "success" || status === "error",

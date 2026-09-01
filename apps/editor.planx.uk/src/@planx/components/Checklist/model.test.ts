@@ -33,7 +33,7 @@ describe("Editor validation", () => {
   test("both 'allRequired' and 'exclusiveOr' cannot be toggled on together", async () => {
     await expect(() =>
       validationSchema.validate({
-        title: "Test",
+        text: "Test",
         allRequired: true,
         options: [
           {
@@ -50,7 +50,7 @@ describe("Editor validation", () => {
   test("only one exclusive option is permitted", async () => {
     await expect(() =>
       validationSchema.validate({
-        title: "Test",
+        text: "Test",
         allRequired: false,
         options: [
           {
@@ -71,7 +71,7 @@ describe("Editor validation", () => {
   test("options must set data values if the component does", async () => {
     await expect(() =>
       validationSchema.validate({
-        title: "Test",
+        text: "Test",
         fn: "topLevelFn",
         allRequired: false,
         options: [
@@ -91,7 +91,7 @@ describe("Editor validation", () => {
   test("fn is required for alwaysAutoAnswerBlank", async () => {
     await expect(() =>
       validationSchema.validate({
-        title: "Test",
+        text: "Test",
         alwaysAutoAnswerBlank: true,
         fn: null,
         options: [
@@ -113,7 +113,7 @@ describe("Editor validation", () => {
   test("alwaysAutoAnswerBlank allows only one blank value", async () => {
     await expect(() =>
       validationSchema.validate({
-        title: "Test",
+        text: "Test",
         alwaysAutoAnswerBlank: true,
         fn: "test",
         options: [
@@ -138,6 +138,7 @@ describe("Editor validation", () => {
 
   test("checklists - data fields can be set for each option", async () => {
     const result = validationSchema.validate({
+      text: "Test",
       allRequired: false,
       neverAutoAnswer: false,
       alwaysAutoAnswerBlank: false,
@@ -167,7 +168,6 @@ describe("Editor validation", () => {
           ],
         },
       ],
-      text: "Test",
     });
 
     expect(result).toBeDefined();
@@ -175,7 +175,7 @@ describe("Editor validation", () => {
 
   test("grouped checklists - data fields can be set for each option", async () => {
     const result = validationSchema.validate({
-      title: "Test",
+      text: "Test",
       alwaysAutoAnswerBlank: false,
       fn: "test",
       options: [
@@ -197,7 +197,7 @@ describe("Editor validation", () => {
     test("groups must have unique titles", async () => {
       await expect(() =>
         validationSchema.validate({
-          title: "Test",
+          text: "Test",
           groupedOptions: [
             {
               title: "Repeated group name",
@@ -225,7 +225,7 @@ describe("Editor validation", () => {
     test("groups must have unique titles - whitespace is stripped before checks", async () => {
       await expect(() =>
         validationSchema.validate({
-          title: "Test",
+          text: "Test",
           groupedOptions: [
             {
               title: "Whitespace   ",
@@ -254,7 +254,7 @@ describe("Editor validation", () => {
       test("checklists - unique labels must be used for each option", async () => {
         await expect(() =>
           validationSchema.validate({
-            title: "Test",
+            text: "Test",
             options: [
               {
                 id: "a",
@@ -272,7 +272,7 @@ describe("Editor validation", () => {
       test("checklists - unique labels must be used for each option (inc. whitespace)", async () => {
         await expect(() =>
           validationSchema.validate({
-            title: "Test",
+            text: "Test",
             options: [
               {
                 id: "a",
@@ -290,7 +290,7 @@ describe("Editor validation", () => {
       test("grouped checklists - labels must be unique within groups", async () => {
         await expect(() =>
           validationSchema.validate({
-            title: "Test",
+            text: "Test",
             groupedOptions: [
               {
                 title: "Section 1",
@@ -315,7 +315,7 @@ describe("Editor validation", () => {
       test("grouped checklists - labels must be unique within groups (inc. whitespace)", async () => {
         await expect(() =>
           validationSchema.validate({
-            title: "Test",
+            text: "Test",
             groupedOptions: [
               {
                 title: "Section 1",
@@ -339,7 +339,7 @@ describe("Editor validation", () => {
 
       test("grouped checklists - labels can be repeated across groups", async () => {
         const result = validationSchema.validate({
-          title: "Test",
+          text: "Test",
           groupedOptions: [
             {
               title: "Section 1",
@@ -375,7 +375,7 @@ describe("Editor validation", () => {
 
       test("grouped checklists - labels can be repeated across groups (inc. whitespace)", async () => {
         const result = validationSchema.validate({
-          title: "Test",
+          text: "Test",
           groupedOptions: [
             {
               title: "Section 1",
@@ -414,7 +414,7 @@ describe("Editor validation", () => {
       test("checklists - unique labels must be used for each option", async () => {
         await expect(() =>
           validationSchema.validate({
-            title: "Test",
+            text: "Test",
             options: [
               {
                 id: "a",
@@ -431,7 +431,7 @@ describe("Editor validation", () => {
 
       test("checklists - repeated data values are allowed", async () => {
         const result = validationSchema.validate({
-          title: "Test",
+          text: "Test",
           options: [
             {
               id: "a",
@@ -450,7 +450,7 @@ describe("Editor validation", () => {
       test("grouped checklists - labels must be unique within groups", async () => {
         await expect(() =>
           validationSchema.validate({
-            title: "Test",
+            text: "Test",
             groupedOptions: [
               {
                 title: "Section 1",
@@ -474,7 +474,7 @@ describe("Editor validation", () => {
 
       test("grouped checklists - data values can be repeated within groups", async () => {
         const result = validationSchema.validate({
-          title: "Test",
+          text: "Test",
           groupedOptions: [
             {
               title: "Section 1",
@@ -497,7 +497,7 @@ describe("Editor validation", () => {
 
       test("grouped checklists - labels can be repeated across groups", async () => {
         const result = validationSchema.validate({
-          title: "Test",
+          text: "Test",
           groupedOptions: [
             {
               title: "Common property types",
@@ -536,7 +536,7 @@ describe("Editor validation", () => {
 
       test("grouped checklists - data values can be repeated across groups", async () => {
         const result = validationSchema.validate({
-          title: "Test",
+          text: "Test",
           groupedOptions: [
             {
               title: "Section 1",
