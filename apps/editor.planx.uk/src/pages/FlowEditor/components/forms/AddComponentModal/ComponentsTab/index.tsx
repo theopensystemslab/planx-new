@@ -12,13 +12,14 @@ import { ComponentRow } from "./ComponentRow";
 import { NoteRow } from "./NoteRow";
 
 export const COMPONENT_LIST_WIDTH = 300;
+export const COMPONENT_LIST_HEIGHT = 480;
 
 /**
  * Shared frame for the component list wherever it's rendered (both popovers + Story)
  */
 export const componentListFrameSx = {
   width: COMPONENT_LIST_WIDTH,
-  maxHeight: "min(480px, 85vh)",
+  maxHeight: `min(${COMPONENT_LIST_HEIGHT}px, 85vh)`,
   display: "flex",
   flexDirection: "column",
   overflow: "hidden",
