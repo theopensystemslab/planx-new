@@ -602,8 +602,8 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0
       ramda:
-        specifier: ^0.29.1
-        version: 0.29.1
+        specifier: ^0.32.0
+        version: 0.32.0
       react:
         specifier: ^19.2.4
         version: 19.2.5
@@ -732,8 +732,8 @@ importers:
         specifier: 'catalog:'
         version: 24.10.15
       '@types/ramda':
-        specifier: ^0.28.25
-        version: 0.28.25
+        specifier: ^0.32.0
+        version: 0.32.0
       '@types/react':
         specifier: ^19.1.0
         version: 19.2.14
@@ -5294,8 +5294,8 @@ packages:
   '@types/raf@3.4.3':
     resolution: {integrity: sha512-c4YAvMedbPZ5tEyxzQdMoOhhJ4RD3rngZIdwC2/qDN3d7JpEhB6fiBRKVY1lg5B7Wk+uPBjn5f39j1/2MY1oOw==}
 
-  '@types/ramda@0.28.25':
-    resolution: {integrity: sha512-HrQNqQAGcITpn9HAJFamDxm7iZeeXiP/95pN5OMbNniDjzCCeOHbBKNGmUy8NRi0fhYS+/cXeo91MFC+06gbow==}
+  '@types/ramda@0.32.0':
+    resolution: {integrity: sha512-eTRIFYUxjVvZimlPNpXzXc3j4tnSYc7lBsD7X3zwtRvJML3qXclM4+m8vvmAZAHhBASKPmZAp6qu2C/DwJpBGQ==}
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
@@ -9699,8 +9699,8 @@ packages:
   rambda@11.2.0:
     resolution: {integrity: sha512-Shzc8LTC+rhgDYddMEaTYhAo/U6kdp25/6dOymrCRyK3R9vVmt4a0Rl6zFtGEzh0dWYxTgrH3uff53RTzn1Rwg==}
 
-  ramda@0.29.1:
-    resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
+  ramda@0.32.0:
+    resolution: {integrity: sha512-GQWAHhxhxWBWA8oIBr1XahFVjQ9Fic6MK9ikijfd4TZHfE2+urfk+irVlR5VOn48uwMgM+loRRBJd6Yjsbc0zQ==}
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -10847,8 +10847,8 @@ packages:
       '@swc/wasm':
         optional: true
 
-  ts-toolbelt@6.15.5:
-    resolution: {integrity: sha512-FZIXf1ksVyLcfr7M317jbB67XFJhOO1YqdTcuGaq9q5jLUoTikukZ+98TPjKiP2jC5CgmYdWWYs0s2nLSU0/1A==}
+  ts-toolbelt@9.6.0:
+    resolution: {integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==}
 
   tsconfck@3.1.6:
     resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
@@ -10943,6 +10943,9 @@ packages:
 
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
+
+  types-ramda@0.32.0:
+    resolution: {integrity: sha512-iZtriSUdsDqOlip/wUaDNcoiskbVf5RdcqLNpQdUcOM1JKFClochCvPZCDjn/cc9HzoBzi4DEB4iPr1PbrhN1w==}
 
   typesafe-path@0.2.2:
     resolution: {integrity: sha512-OJabfkAg1WLZSqJAJ0Z6Sdt3utnbzr/jh+NAHoyWHJe8CMSy79Gm085094M9nvTPy22KzTVn5Zq5mbapCI/hPA==}
@@ -15792,9 +15795,9 @@ snapshots:
   '@types/raf@3.4.3':
     optional: true
 
-  '@types/ramda@0.28.25':
+  '@types/ramda@0.32.0':
     dependencies:
-      ts-toolbelt: 6.15.5
+      types-ramda: 0.32.0
 
   '@types/range-parser@1.2.7': {}
 
@@ -21038,7 +21041,7 @@ snapshots:
 
   rambda@11.2.0: {}
 
-  ramda@0.29.1: {}
+  ramda@0.32.0: {}
 
   randombytes@2.1.0:
     dependencies:
@@ -22445,7 +22448,7 @@ snapshots:
     optionalDependencies:
       '@swc/core': 1.15.30
 
-  ts-toolbelt@6.15.5: {}
+  ts-toolbelt@9.6.0: {}
 
   tsconfck@3.1.6(typescript@5.9.3):
     optionalDependencies:
@@ -22554,6 +22557,10 @@ snapshots:
   typed-function@4.2.2: {}
 
   typedarray@0.0.6: {}
+
+  types-ramda@0.32.0:
+    dependencies:
+      ts-toolbelt: 9.6.0
 
   typesafe-path@0.2.2: {}
 
