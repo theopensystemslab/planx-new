@@ -4,7 +4,8 @@ import React from "react";
 
 export const AttachedNote: React.FC<{
   note: string;
-}> = ({ note }) => {
+  variant?: "option";
+}> = ({ note, variant }) => {
   const showNotes = useStore((state) => state.showNotes);
 
   // TODO also return null if templated flow and *not* attached to a templated node?
@@ -14,7 +15,7 @@ export const AttachedNote: React.FC<{
     <Box
       className="card-attached-note"
       sx={() => ({
-        borderWidth: "0 1px 1px 1px",
+        borderWidth: variant === "option" ? "1px 0 0 0" : "0 1px 1px 1px",
         borderStyle: "solid",
         width: "100%",
         p: 0.5,

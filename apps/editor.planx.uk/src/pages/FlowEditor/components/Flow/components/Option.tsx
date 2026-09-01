@@ -7,6 +7,7 @@ import React from "react";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
+import { AttachedNote } from "./AttachedNote";
 import { DataField } from "./DataField";
 import { FlagBand, NoFlagBand } from "./FlagBand";
 import Hanger from "./Hanger";
@@ -87,6 +88,9 @@ const Option: React.FC<any> = (props) => {
           <div className="text">{props.data.text}</div>
           {props.data?.val && (
             <DataField value={props.data.val} variant="child" />
+          )}
+          {props.data?.notes && (
+            <AttachedNote note={props.data.notes} variant="option" />
           )}
         </Link>
       </div>

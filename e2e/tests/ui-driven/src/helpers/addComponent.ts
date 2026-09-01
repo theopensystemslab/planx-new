@@ -440,6 +440,8 @@ async function createComponentOptions(
 
   await page.getByPlaceholder("Flags (up to one per category)").nth(1).click();
   await page.getByRole("option", { name: selectedFlag, exact: true }).click();
+  // Close the 'flags' autocomplete
+  await page.keyboard.press("Escape");
 }
 
 async function createComponentOptionsWithDataValues(
@@ -453,6 +455,8 @@ async function createComponentOptionsWithDataValues(
     await page
       .getByRole("option", { name: option.dataValue, exact: true })
       .click();
+    // Close the 'data field' autocomplete
+    await page.keyboard.press("Escape");
   }
 }
 
