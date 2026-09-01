@@ -1,3 +1,5 @@
+import { RETENTION_PERIOD_MONTHS } from "ui/shared/constants";
+
 import type { SessionEvent, Submission } from "./types";
 
 export const getConsolidatedStatus = (
@@ -52,7 +54,7 @@ export const canResubmit = (
 
 export const hasBeenSanitised = (submittedAt: Date) => {
   const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - RETENTION_PERIOD_MONTHS);
 
   return submittedAt < sixMonthsAgo;
 };
