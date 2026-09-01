@@ -178,8 +178,14 @@ describe("Passport generation", () => {
     await user.click(screen.getByTestId("continue-button"));
 
     // Modification step: field starts blank, ready for a new description
+    expect(
+      screen.getByRole("heading", {
+        name: /Enter your new description/i,
+        level: 1,
+      }),
+    ).toBeVisible();
     const textarea = screen.getByRole("textbox", {
-      name: /Confirm your project description/i,
+      name: /Enter your new description/i,
     });
     expect(textarea).toHaveValue("");
     await user.type(textarea, "my custom description");
@@ -606,15 +612,20 @@ describe("basic layout and behaviour", () => {
     await user.click(screen.getByTestId("continue-button"));
     expect(
       screen.getByRole("heading", {
-        name: /Confirm your project description/i,
+        name: /Enter your new description/i,
         level: 1,
       }),
     ).toBeVisible();
     expect(
       screen.getByRole("textbox", {
-        name: /Confirm your project description/i,
+        name: /Enter your new description/i,
       }),
     ).toHaveValue("");
+
+    // The "edit below, or continue" copy doesn't make sense against a blank field
+    expect(
+      screen.queryByText(/Edit the description below/i),
+    ).not.toBeInTheDocument();
   });
 
   it("displays additional information to the user on the 'task' step", async () => {
