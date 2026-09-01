@@ -36,10 +36,14 @@ export const QuestionComponent: React.FC<Props> = (props) => {
       },
       validate: ({ options, ...values }) => {
         const errors: FormikErrors<FormikValues> = {};
-        // if (values.text && !options.length) {
-        //   errors.text =
-        //     "Questions can no longer be used as notes and must have at least one option";
-        // }
+        if (!options.length) {
+          if (values.text) {
+            errors.text =
+              "Questions can no longer be used as notes and must have at least one option";
+          } else {
+            errors.options = "Add at least one option";
+          }
+        }
         if (values.fn && !options.some((option) => option.data.val)) {
           errors.fn = "At least one option must also set a data field";
         }
