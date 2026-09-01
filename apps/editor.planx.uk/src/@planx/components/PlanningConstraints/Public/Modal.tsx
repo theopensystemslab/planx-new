@@ -161,7 +161,7 @@ export const OverrideEntitiesModal = ({
           aria-label="Close"
           onClick={closeModal}
           data-testid="override-modal-close-button"
-          sx={{ color: "grey.600", marginTop: 2, marginRight: 2 }}
+          sx={{ color: "grey.600", marginTop: 1, marginRight: 2 }}
         >
           <Close />
         </IconButton>
