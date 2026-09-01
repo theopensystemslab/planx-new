@@ -8,11 +8,9 @@ import type {
 import { generatePayload } from "@planx/components/shared/BaseChecklist/model";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import type { FormikErrors, FormikValues } from "formik";
 import React from "react";
 
-import type { ChecklistWithOptions } from "./model";
-import type { Checklist } from "./model";
+import type { Checklist, ChecklistWithOptions } from "./model";
 import { parseChecklist, validationSchema } from "./model";
 
 type ExtraProps = FlatOptions<Option> | GroupedOptions<Option>;
@@ -41,13 +39,6 @@ export const ChecklistEditor: React.FC<Props> = (props) => {
               2,
             ),
           );
-        }
-      },
-      validate: ({ options, ...values }) => {
-        const errors: FormikErrors<FormikValues> = {};
-        if (values.text && (!options || !options.length)) {
-          errors.text =
-            "Checklists can no longer be used as notes and must have at least one option";
         }
       },
       validationSchema,

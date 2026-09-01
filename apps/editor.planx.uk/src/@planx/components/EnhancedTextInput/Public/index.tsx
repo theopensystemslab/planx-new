@@ -9,7 +9,7 @@ import type { TaskComponentMap } from "../types";
 import InitialUserInput from "./InitialUserInput";
 import ModifyUserInput from "./ModifyUserInput";
 import ProjectDescription from "./Tasks/ProjectDescription";
-import type { FormValues, Props } from "./types";
+import type { FormValues, Props, Step } from "./types";
 import { getValidationSchema, makeBreadcrumb } from "./utils";
 
 const taskComponents: TaskComponentMap = {
@@ -18,9 +18,8 @@ const taskComponents: TaskComponentMap = {
 
 const EnhancedTextInputComponent = (props: Props) => {
   const previous = getPreviouslySubmittedData(props);
-  const [step, setStep] = useState<"input" | "selection" | "modification">(
-    "input",
-  );
+  const [step, setStep] = useState<Step>("input");
+  const [queryInput, setQueryInput] = useState("");
   const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
   const initialValues: FormValues = previous
@@ -33,7 +32,6 @@ const EnhancedTextInputComponent = (props: Props) => {
           props.previouslySubmittedData?.data?._enhancements[props.fn].enhanced,
         error: null,
         selectedOption: null,
-        customDescription: "",
       }
     : {
         userInput: "",
@@ -41,7 +39,6 @@ const EnhancedTextInputComponent = (props: Props) => {
         enhanced: null,
         error: null,
         selectedOption: null,
-        customDescription: "",
       };
 
   const nextStep = (values: FormValues) => {
@@ -51,12 +48,12 @@ const EnhancedTextInputComponent = (props: Props) => {
       return props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
     }
 
-    if (step === "input") return setStep("selection");
-
-    if (step === "selection") {
-      if (values.selectedOption !== "new") return setStep("modification");
-      return props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
+    if (step === "input") {
+      setQueryInput(values.userInput);
+      return setStep("selection");
     }
+
+    if (step === "selection") return setStep("modification");
 
     if (step === "modification") {
       props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
@@ -66,7 +63,7 @@ const EnhancedTextInputComponent = (props: Props) => {
   const TaskComponent = taskComponents[props.task];
   if (!TaskComponent) return null;
 
-  const validationSchema = getValidationSchema(props);
+  const validationSchema = getValidationSchema(props, step);
 
   return (
     <Formik<FormValues>
@@ -80,7 +77,7 @@ const EnhancedTextInputComponent = (props: Props) => {
       {({ submitForm, values, setFieldValue }) => {
         const showCardHeader =
           step === "input" ||
-          values.status !== "success" ||
+          values.status === "idle" ||
           Boolean(isRunningTask);
 
         const handleBack = (() => {
@@ -88,9 +85,7 @@ const EnhancedTextInputComponent = (props: Props) => {
           // Repopulate field with user's original input
           if (step === "selection" && !isRunningTask)
             return () => {
-              if (values.status === "success") {
-                setFieldValue("userInput", values.original);
-              }
+              setFieldValue("userInput", queryInput);
               setStep("input");
             };
           return undefined;
@@ -115,7 +110,9 @@ const EnhancedTextInputComponent = (props: Props) => {
             )}
             {step === "input" && <InitialUserInput {...props} />}
             {step === "modification" && <ModifyUserInput {...props} />}
-            {step === "selection" && <TaskComponent {...props} />}
+            {step === "selection" && (
+              <TaskComponent {...props} queryInput={queryInput} />
+            )}
           </Card>
         );
       }}

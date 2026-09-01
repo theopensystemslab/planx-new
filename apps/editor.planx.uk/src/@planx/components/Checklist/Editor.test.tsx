@@ -41,6 +41,27 @@ describe("Checklist editor component", () => {
     expect(screen.getByText("Add option")).toBeInTheDocument();
   });
 
+  it("displays an error if an editor tries to create a pseudo-note", async () => {
+    const { user } = await setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor options={[]} />
+      </DndProvider>,
+    );
+
+    await user.click(screen.getByPlaceholderText("Text"));
+    await user.paste("Note");
+
+    fireEvent.submit(screen.getByTestId("checklistEditorForm"));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          /Checklists can no longer be used as notes and must have at least one option/,
+        ),
+      ).toBeInTheDocument(),
+    );
+  });
+
   it("displays the grouped checklist inputs when the 'expandable' toggle is clicked", async () => {
     const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
@@ -193,6 +214,10 @@ describe("Checklist editor component", () => {
         <ChecklistEditor options={[]} handleSubmit={handleSubmit} />
       </DndProvider>,
     );
+
+    // Set title (required)
+    await user.click(screen.getByPlaceholderText("Text"));
+    await user.paste("Test");
 
     const autocompleteComponent = screen.getByTestId("checklist-data-field");
     const autocompleteInput = within(autocompleteComponent).getByRole(

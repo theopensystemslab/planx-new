@@ -1,3 +1,4 @@
+import Close from "@mui/icons-material/CloseOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -6,6 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import type { Constraint, Metadata } from "@opensystemslab/planx-core/types";
 import omit from "lodash/omit";
@@ -61,7 +63,7 @@ export const OverrideEntitiesModal = ({
   } are inaccurate?`;
 
   const closeModal = (_event: any, reason?: string) => {
-    if (reason && reason == "backdropClick") {
+    if (reason && reason === "backdropClick") {
       return;
     }
 
@@ -139,9 +141,31 @@ export const OverrideEntitiesModal = ({
       maxWidth="xl"
       aria-labelledby="dialog-heading"
     >
-      <DialogTitle variant="h3" component="h1" id="dialog-heading">
-        I don't think this constraint applies to this property
-      </DialogTitle>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 2,
+        }}
+      >
+        <DialogTitle
+          variant="h3"
+          component="h2"
+          id="dialog-heading"
+          sx={{ flex: 1 }}
+        >
+          I don't think this constraint applies to this property
+        </DialogTitle>
+        <IconButton
+          aria-label="Close"
+          onClick={closeModal}
+          data-testid="override-modal-close-button"
+          sx={{ color: "grey.600", marginTop: 1, marginRight: 2 }}
+        >
+          <Close />
+        </IconButton>
+      </Box>
       <DialogContent dividers>
         <Box component="form">
           <Typography variant="body2" gutterBottom>
