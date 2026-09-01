@@ -5,6 +5,20 @@ export interface FlowsWhere {
   can_create_from_copy?: { _eq: boolean };
 }
 
+export type FlowFilter = "all" | "templates" | "copyable";
+
+const FILTER_WHERE: Record<FlowFilter, FlowsWhere | undefined> = {
+  all: undefined,
+  templates: {
+    is_template: { _eq: true },
+    can_create_from_copy: { _eq: true },
+  },
+  copyable: {
+    is_template: { _eq: false },
+    can_create_from_copy: { _eq: true },
+  },
+};
+
 export interface FlowSearchResult {
   id: string;
   name: string;
@@ -75,14 +89,14 @@ const SEARCH_FLOWS = gql`
 
 const MIN_SEARCH_LENGTH = 3;
 
-export const useSearchFlows = (search: string, where?: FlowsWhere) => {
+export const useSearchFlows = (search: string, filter: FlowFilter) => {
   // search_flows won't return anything for under 3 characters so don't execute
   const skip = search.trim().length < MIN_SEARCH_LENGTH;
 
   const { data, loading } = useQuery<{ results: FlowSearchResult[] }>(
     SEARCH_FLOWS,
     {
-      variables: { search, where, limit: RESULTS_LIMIT },
+      variables: { search, where: FILTER_WHERE[filter], limit: RESULTS_LIMIT },
       skip,
     },
   );

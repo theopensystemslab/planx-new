@@ -18,30 +18,18 @@ import { BadgeVariant } from "../../../components/Badge/types";
 import { FlowDetailsPanel } from "./FlowDetailsPanel";
 import { SearchListItem } from "./SearchListItem";
 import { TemplateDetailsPanel } from "./TemplateDetailsPanel";
-import type { FlowSearchResult, FlowsWhere } from "./useSearchFlows";
+import type { FlowFilter, FlowSearchResult } from "./useSearchFlows";
 import { useSearchFlows } from "./useSearchFlows";
 
 interface SearchTab {
   label: string;
-  where: FlowsWhere | undefined;
+  filter: FlowFilter;
 }
 
 const TABS: SearchTab[] = [
-  { label: "All flows", where: undefined },
-  {
-    label: "Templates",
-    where: {
-      is_template: { _eq: true },
-      can_create_from_copy: { _eq: true },
-    },
-  },
-  {
-    label: "Flows I can copy",
-    where: {
-      is_template: { _eq: false },
-      can_create_from_copy: { _eq: true },
-    },
-  },
+  { label: "All flows", filter: "all" },
+  { label: "Templates", filter: "templates" },
+  { label: "Flows I can copy", filter: "copyable" },
 ];
 
 interface SearchModalProps {
@@ -63,7 +51,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
 
   const { results, loading, skipped } = useSearchFlows(
     search,
-    TABS[tabIndex].where,
+    TABS[tabIndex].filter,
   );
 
   const canCopy = canUserEditTeam(teamSlug);
