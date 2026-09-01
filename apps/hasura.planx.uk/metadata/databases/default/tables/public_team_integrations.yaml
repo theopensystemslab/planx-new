@@ -17,11 +17,13 @@ insert_permissions:
         - production_file_api_key
         - production_govpay_secret
         - production_power_automate_api_key
+        - production_stripe_account_id
         - staging_bops_secret
         - staging_bops_submission_url
         - staging_file_api_key
         - staging_govpay_secret
         - staging_power_automate_api_key
+        - staging_stripe_account_id
         - team_id
     comment: ""
 select_permissions:
@@ -42,11 +44,13 @@ select_permissions:
         - production_file_api_key
         - production_govpay_secret
         - production_power_automate_api_key
+        - production_stripe_account_id
         - staging_bops_secret
         - staging_bops_submission_url
         - staging_file_api_key
         - staging_govpay_secret
         - staging_power_automate_api_key
+        - staging_stripe_account_id
         - team_id
       filter: {}
   - role: platformAdmin
@@ -71,6 +75,14 @@ select_permissions:
       filter: {}
     comment: ""
 update_permissions:
+  - role: api
+    permission:
+      columns:
+        - production_stripe_account_id
+        - staging_stripe_account_id
+      filter: {}
+      check: null
+    comment: "Team membership is enforced in the API layer (requireTeamMembership) before this role writes a connected Stripe account id"
   - role: platformAdmin
     permission:
       columns:

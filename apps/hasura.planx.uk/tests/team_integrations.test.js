@@ -87,8 +87,10 @@ describe("team_integrations", () => {
       expect(i.queries).toContain("team_integrations");
     });
 
-    test("cannot create, update, or delete team_integrations", () => {
-      expect(i).toHaveNoMutationsFor("team_integrations");
+    test("can update (e.g. Stripe account id), but cannot create or delete team_integrations", () => {
+      expect(i.mutations).toContain("update_team_integrations");
+      expect(i.mutations).not.toContain("insert_team_integrations");
+      expect(i.mutations).not.toContain("delete_team_integrations");
     });
   });
 });
