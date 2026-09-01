@@ -1,12 +1,10 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CloseIcon from "@mui/icons-material/Close";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import Dialog, { dialogClasses } from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -14,6 +12,7 @@ import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { CloseButton } from "ui/shared/CloseButton";
 
 export interface Environment {
   name: string;
@@ -53,14 +52,18 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
-  border: "none",
+const DialogHeader = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   padding: theme.spacing(1),
   backgroundColor: theme.palette.background.dark,
   color: theme.palette.common.white,
+}));
+
+const StyledDialogTitle = styled(DialogTitle)(() => ({
+  border: "none",
+  padding: 0,
 }));
 
 const StyledCard = styled(Card)<{ selected?: boolean }>(() => ({
@@ -150,8 +153,8 @@ export const EnvironmentSelect: React.FC = () => {
           },
         }}
       >
-        <StyledDialogTitle>
-          <Box>
+        <DialogHeader>
+          <StyledDialogTitle>
             <Typography
               variant="subtitle1"
               component="span"
@@ -162,15 +165,14 @@ export const EnvironmentSelect: React.FC = () => {
             <Typography variant="body2" component="span">
               environments
             </Typography>
-          </Box>
-          <IconButton
-            aria-label="close"
+          </StyledDialogTitle>
+          <CloseButton
+            size="small"
             onClick={handleClose}
-            sx={{ color: "#ffffff", padding: 0 }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </StyledDialogTitle>
+            title="Close panel"
+            sx={{ padding: 0 }}
+          />
+        </DialogHeader>
         <Stack
           sx={{
             p: 1,

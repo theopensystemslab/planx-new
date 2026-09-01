@@ -1,5 +1,4 @@
 import { gql, useQuery } from "@apollo/client";
-import Close from "@mui/icons-material/CloseOutlined";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -10,7 +9,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import { addDays, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { CloseButton } from "ui/icons/CloseButton";
+import { CloseButton } from "ui/shared/CloseButton";
 
 import type { Submission } from "../types";
 import { hasBeenSanitised } from "../utils";
@@ -72,14 +71,7 @@ const SubmissionModalWrapper = ({
         }}
       >
         <DialogTitle variant="h2">Submission details</DialogTitle>
-        <CloseButton
-          aria-label="close"
-          onClick={handleClose}
-          size="large"
-          sx={{ paddingTop: 2.5 }}
-        >
-          <Close />
-        </CloseButton>
+        <CloseButton onClick={handleClose} sx={{ paddingTop: 2.5 }} />
       </Box>
 
       <DialogContent children={children} />
