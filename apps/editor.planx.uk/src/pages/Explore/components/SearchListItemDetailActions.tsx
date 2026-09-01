@@ -44,7 +44,8 @@ export const SearchListItemDetailActions: React.FC<
           <Button
             onClick={secondaryAction.onClick}
             disabled={secondaryAction.disabled}
-            sx={{ backgroundColor: "background.default" }}
+            variant="contained"
+            color="secondary"
           >
             {secondaryAction.label}
           </Button>
