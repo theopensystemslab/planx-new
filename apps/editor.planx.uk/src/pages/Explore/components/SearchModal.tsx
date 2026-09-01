@@ -122,15 +122,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
             <CloseIcon />
           </IconButton>
         </Box>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 3,
-            px: 3,
-            pb: 2,
-          }}
-        >
+        <Box sx={{ px: 3, pb: 2 }}>
           <DebouncedSearchInput
             value={search}
             onChange={handleSearchChange}
