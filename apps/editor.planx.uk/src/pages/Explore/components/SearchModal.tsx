@@ -174,6 +174,27 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
               <DelayedLoadingIndicator inline msDelayBeforeVisible={300} />
             </Box>
           )}
+          {!skipped && !loading && results && results.length === 0 && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                flex: 1,
+                px: 3,
+                pb: 3,
+              }}
+            >
+              <Typography variant="h3" component="p">
+                No results found
+              </Typography>
+              <Typography sx={{ color: "text.secondary", pt: 1 }}>
+                Check your search term and try again
+              </Typography>
+            </Box>
+          )}
           {!skipped && !loading && results && results.length > 0 && (
             <Box
               sx={{
