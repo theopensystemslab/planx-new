@@ -102,6 +102,6 @@ export type TaskDefaults = { [K in Task]: TaskRegistry[K]["editorProps"] };
  */
 export type TaskComponentMap = {
   [K in Task]: React.ComponentType<
-    PublicProps<EnhancedTextInputForTask<K>>
+    PublicProps<EnhancedTextInputForTask<K>> & { queryInput: string }
   > | null;
 };

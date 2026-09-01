@@ -65,7 +65,7 @@ describe("error handling", () => {
     // Error status displayed to user
     expect(
       await screen.findByRole("heading", {
-        level: 2,
+        level: 1,
         name: /This doesn't look like a planning project description/,
       }),
     ).toBeVisible();
@@ -97,7 +97,7 @@ describe("error handling", () => {
     // Error status displayed to user
     expect(
       await screen.findByRole("heading", {
-        level: 2,
+        level: 1,
         name: /Service unavailable/,
       }),
     ).toBeVisible();
@@ -129,7 +129,7 @@ describe("error handling", () => {
     // Error status displayed to user
     expect(
       await screen.findByRole("heading", {
-        level: 2,
+        level: 1,
         name: /Rate limit exceeded/,
       }),
     ).toBeVisible();
