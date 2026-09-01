@@ -25,9 +25,9 @@ export interface FlowSearchResult {
   slug: string;
   summary: string | null;
   status: string;
-  is_template: boolean;
-  can_create_from_copy: boolean;
-  templated_from: string | null;
+  isTemplate: boolean;
+  canCreateFromCopy: boolean;
+  templatedFrom: string | null;
   team: {
     id: number;
     name: string;
@@ -58,9 +58,9 @@ const SEARCH_FLOWS = gql`
       slug
       summary
       status
-      is_template
-      can_create_from_copy
-      templated_from
+      isTemplate: is_template
+      canCreateFromCopy: can_create_from_copy
+      templatedFrom: templated_from
       team {
         id
         name

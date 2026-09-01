@@ -207,7 +207,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
                       )}
                       <SearchListItem
                         result={{
-                          icon: flow.is_template ? (
+                          icon: flow.isTemplate ? (
                             <Badge
                               variant={BadgeVariant.SourceTemplate}
                               size="compact"
@@ -220,7 +220,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
                             />
                           ),
                           title: flow.name,
-                          description: flow.is_template
+                          description: flow.isTemplate
                             ? `Template – ${flow.team.name}`
                             : flow.team.name,
                         }}
@@ -233,7 +233,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
               </Box>
               {selectedFlow && (
                 <Box sx={{ minWidth: 0, height: "100%", overflowY: "auto" }}>
-                  {selectedFlow.is_template ? (
+                  {selectedFlow.isTemplate ? (
                     <TemplateDetailsPanel
                       template={{
                         id: selectedFlow.id,

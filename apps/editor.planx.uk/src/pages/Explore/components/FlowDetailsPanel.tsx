@@ -46,7 +46,7 @@ export const FlowDetailsPanel: React.FC<FlowDetailsPanelProps> = ({
     ) : undefined,
     description: flow.summary ?? undefined,
     primaryAction:
-      canCopy && flow.can_create_from_copy
+      canCopy && flow.canCreateFromCopy
         ? {
             label: "Copy to my team",
             onClick: () => copyToTeam(flow),
