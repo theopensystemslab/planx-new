@@ -185,6 +185,14 @@ export const createApiService = async ({
           value: config.requireSecret("google-client-secret"),
         },
         {
+          name: "STRIPE_CONNECT_CLIENT_ID",
+          value: config.requireSecret("stripe-connect-client-id"),
+        },
+        {
+          name: "STRIPE_SECRET_KEY",
+          value: config.requireSecret("stripe-secret-key"),
+        },
+        {
           name: "MICROSOFT_CLIENT_ID",
           value: config.requireSecret("microsoft-client-id"),
         },
