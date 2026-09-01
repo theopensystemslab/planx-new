@@ -1,5 +1,4 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CloseIcon from "@mui/icons-material/Close";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import RuleIcon from "@mui/icons-material/Rule";
@@ -7,7 +6,6 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import {
   getInternalFeedbackMetadata,
@@ -16,8 +14,8 @@ import {
 import { BackButton } from "pages/Preview/Questions";
 import React, { useState } from "react";
 import { usePrevious } from "react-use";
-import { CloseButton } from "ui/icons/CloseButton";
 import FeedbackOption from "ui/public/FeedbackOption";
+import { CloseButton } from "ui/shared/CloseButton";
 
 import FeedbackForm from "./FeedbackForm/FeedbackForm";
 import FeedbackPhaseBanner from "./FeedbackPhaseBanner";
@@ -93,17 +91,10 @@ const Feedback: React.FC = () => {
           <ArrowBackIcon fontSize="small" />
           Back
         </BackButton>
-        <CloseButton onClick={() => handleFeedbackViewClick("close")}>
-          <IconButton
-            role="button"
-            title="Close panel"
-            aria-label="Close panel"
-            size="large"
-            color="inherit"
-          >
-            <CloseIcon />
-          </IconButton>
-        </CloseButton>
+        <CloseButton
+          title="Close panel"
+          onClick={() => handleFeedbackViewClick("close")}
+        />
       </FeedbackHeader>
     );
   }
@@ -117,17 +108,11 @@ const Feedback: React.FC = () => {
             {props.title}
           </Typography>
         </FeedbackTitle>
-        <CloseButton onClick={() => handleFeedbackViewClick("close")}>
-          <IconButton
-            role="button"
-            title="Close panel"
-            aria-label="Close panel"
-            size="large"
-            color="inherit"
-          >
-            <CloseIcon />
-          </IconButton>
-        </CloseButton>
+        <CloseButton
+          title="Close panel"
+          color="inherit"
+          onClick={() => handleFeedbackViewClick("close")}
+        />
       </FeedbackHeader>
     );
   }

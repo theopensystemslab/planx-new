@@ -1,11 +1,9 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CloseIcon from "@mui/icons-material/Close";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -15,6 +13,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import type { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { cardBoxShadow, focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { CloseButton } from "ui/shared/CloseButton";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
@@ -33,8 +32,7 @@ const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
   }),
 );
 
-const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
-  border: "none",
+const DialogHeader = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
@@ -43,6 +41,11 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   top: 0,
   backgroundColor: theme.palette.background.paper,
   zIndex: 1,
+}));
+
+const StyledDialogTitle = styled(DialogTitle)(() => ({
+  border: "none",
+  padding: 0,
 }));
 
 const StyledCard = styled(Card)<{ selected?: boolean; teamcolor?: string }>(
@@ -193,16 +196,15 @@ export const TeamSelect: React.FC<Props> = ({
           },
         }}
       >
-        <StyledDialogTitle>
-          <Box>
-            <Typography variant="h4" component="span">
-              Select a team
-            </Typography>
-          </Box>
-          <IconButton aria-label="close" onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </StyledDialogTitle>
+        <DialogHeader>
+          <StyledDialogTitle variant="h4">Select a team</StyledDialogTitle>
+          <CloseButton
+            onClick={handleClose}
+            size="small"
+            title="Close panel"
+            sx={{ marginRight: -0.5, marginTop: -0.5 }}
+          />
+        </DialogHeader>
         <Box sx={{ p: 1, pb: 1.5, pt: 0 }}>
           <SearchBox
             records={teams}

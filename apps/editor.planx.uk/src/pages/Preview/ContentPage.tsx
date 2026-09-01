@@ -1,12 +1,11 @@
-import Close from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { notFound, useLocation, useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { FOOTER_ITEMS } from "types";
+import { CloseButton } from "ui/shared/CloseButton";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 const Root = styled(Box)(({ theme }) => ({
@@ -19,12 +18,6 @@ const Root = styled(Box)(({ theme }) => ({
   paddingBottom: theme.spacing(10),
 }));
 
-const CloseIconButton = styled(IconButton)(() => ({
-  position: "absolute",
-  right: 20,
-  top: 20,
-}));
-
 function Layout(props: {
   heading?: string;
   content?: string;
@@ -33,9 +26,10 @@ function Layout(props: {
 }) {
   return (
     <Root>
-      <CloseIconButton onClick={props.onClose} size="medium" aria-label="Close">
-        <Close />
-      </CloseIconButton>
+      <CloseButton
+        onClick={props.onClose}
+        sx={{ position: "absolute", right: 20, top: 20 }}
+      />
       <Container maxWidth="md">
         <Typography variant="h1">{props.heading}</Typography>
         <ReactMarkdownOrHtml

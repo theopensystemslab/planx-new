@@ -1,31 +1,26 @@
-import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import MoreInfoFeedbackComponent from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
 import React from "react";
+import { CloseButton } from "ui/shared/CloseButton";
 
 const DrawerContent = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2.5, 4, 2, 0),
   fontSize: "1rem",
   lineHeight: "1.5",
   [theme.breakpoints.up("sm")]: {
-    padding: theme.spacing(6, 4, 4, 1),
+    padding: theme.spacing(3, 4, 3, 1),
   },
 }));
 
-const CloseButton = styled(Box)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
+const CloseButtonWrapper = styled(Box)(({ theme }) => ({
   position: "fixed",
   top: theme.spacing(1),
   right: theme.spacing(1),
-  color: theme.palette.text.primary,
   zIndex: theme.zIndex.drawer + 1,
 }));
 
@@ -41,18 +36,13 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
     open={open}
     onClose={() => handleClose()}
   >
-    <CloseButton>
-      <IconButton
+    <CloseButtonWrapper>
+      <CloseButton
         onClick={() => handleClose()}
-        role="button"
         title="Close panel"
-        aria-label="Close panel"
-        size="large"
         color="inherit"
-      >
-        <CloseIcon />
-      </IconButton>
-    </CloseButton>
+      />
+    </CloseButtonWrapper>
     <Container maxWidth={false} sx={{ bgcolor: "white" }}>
       <Typography variant="h1" sx={visuallyHidden}>
         More information

@@ -1,11 +1,10 @@
-import Close from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
 import React from "react";
-import { CloseButton } from "ui/icons/CloseButton";
+import { CloseButton } from "ui/shared/CloseButton";
 
 interface DataTableModalProps {
   open: boolean;
@@ -37,9 +36,7 @@ export const DataTableModal: React.FC<DataTableModalProps> = ({
     <Dialog open={open} fullWidth onClose={onClose}>
       <ModalHeader>
         <Typography variant="h4">{title}</Typography>
-        <CloseButton aria-label="close" onClick={onClose} size="large">
-          <Close />
-        </CloseButton>
+        <CloseButton onClick={onClose} />
       </ModalHeader>
       <ModalBody>{children}</ModalBody>
     </Dialog>

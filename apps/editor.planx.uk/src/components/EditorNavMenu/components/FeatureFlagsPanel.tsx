@@ -1,8 +1,6 @@
-import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Fade from "@mui/material/Fade";
-import IconButton from "@mui/material/IconButton";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import {
@@ -14,6 +12,7 @@ import {
 import { useMemo, useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import SettingsDescription from "ui/editor/SettingsDescription";
+import { CloseButton } from "ui/shared/CloseButton";
 import { Switch } from "ui/shared/Switch";
 
 interface Props {
@@ -94,9 +93,7 @@ const FeatureFlagsPanel = ({ anchorEl, onClose }: Props) => {
         }}
       >
         <Typography variant="h4">Feature flags</Typography>
-        <IconButton aria-label="close" onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
+        <CloseButton size="small" onClick={onClose} sx={{ marginRight: -1 }} />
       </Box>
       <Box sx={{ px: 1.5, py: 1, flex: 1 }}>
         <SettingsDescription>

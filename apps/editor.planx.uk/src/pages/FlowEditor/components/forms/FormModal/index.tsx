@@ -1,5 +1,4 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import Close from "@mui/icons-material/CloseOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -19,7 +18,7 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useMemo, useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
-import { CloseButton } from "ui/icons/CloseButton";
+import { CloseButton } from "ui/shared/CloseButton";
 import { Switch } from "ui/shared/Switch";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
@@ -268,9 +267,7 @@ const FormModal: React.FC<FormModalProps> = ({
             canChange={!handleDelete}
           />
 
-          <CloseButton aria-label="close" onClick={handleClose} size="large">
-            <Close />
-          </CloseButton>
+          <CloseButton onClick={handleClose} />
         </DialogTitle>
         <DialogContent dividers sx={{ p: 0, position: "relative" }}>
           {!handleDelete && (
