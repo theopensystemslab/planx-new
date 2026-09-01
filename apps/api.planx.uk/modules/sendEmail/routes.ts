@@ -36,7 +36,7 @@ router.post(
 );
 
 router.post(
-  "/send-email/welcome",
+  "/send-email/:template(welcome)",
   useSendEmailAuth,
   useWelcomeEmailGuard,
   validate(resendEmailSchema),
