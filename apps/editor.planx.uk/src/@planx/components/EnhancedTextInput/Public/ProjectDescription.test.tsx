@@ -171,23 +171,25 @@ describe("Passport generation", () => {
       await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // Select "Write a new description" and type a custom value
+    // Select "Write a new description" and advance to modification step
     await user.click(
       screen.getByRole("radio", { name: /Write a new description/i }),
     );
-    const customInput = screen.getByRole("textbox", {
-      name: /Enter your project description/i,
-    });
-    await user.type(customInput, "my custom description");
-
-    // Continuing submits directly without a modification step
     await user.click(screen.getByTestId("continue-button"));
+
+    // Modification step: field starts blank, ready for a new description
     expect(
-      screen.queryByRole("heading", {
-        name: /Confirm your project description/i,
+      screen.getByRole("heading", {
+        name: /Enter your new description/i,
         level: 1,
       }),
-    ).not.toBeInTheDocument();
+    ).toBeVisible();
+    const textarea = screen.getByRole("textbox", {
+      name: /Enter your new description/i,
+    });
+    expect(textarea).toHaveValue("");
+    await user.type(textarea, "my custom description");
+    await user.click(screen.getByTestId("continue-button"));
 
     // Breadcrumb formatted as expected
     expect(handleSubmit).toHaveBeenCalledWith(
@@ -238,7 +240,7 @@ describe("Passport generation", () => {
 
     // Modification step: clear pre-filled text and enter a custom description
     const textarea = screen.getByRole("textbox", {
-      name: /Project description/i,
+      name: /Confirm your project description/i,
     });
     expect(textarea).toHaveValue(ENHANCED);
     await user.clear(textarea);
@@ -577,11 +579,13 @@ describe("basic layout and behaviour", () => {
       }),
     ).toBeVisible();
     expect(
-      screen.getByRole("textbox", { name: /Project description/i }),
+      screen.getByRole("textbox", {
+        name: /Confirm your project description/i,
+      }),
     ).toHaveValue(ORIGINAL);
   });
 
-  it("selecting 'Write a new description' reveals a text input", async () => {
+  it("selecting 'Write a new description' advances to a blank modification step", async () => {
     const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
@@ -600,22 +604,28 @@ describe("basic layout and behaviour", () => {
       await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // No text input visible before selecting the option
-    expect(
-      screen.queryByRole("textbox", {
-        name: /Enter your project description/i,
-      }),
-    ).not.toBeInTheDocument();
-
-    // Selecting the option reveals the text input
+    // Selecting the option and continuing takes the user to the modification step
+    // consistent with the other two options, with the field left blank
     await user.click(
       screen.getByRole("radio", { name: /Write a new description/i }),
     );
+    await user.click(screen.getByTestId("continue-button"));
     expect(
-      screen.getByRole("textbox", {
-        name: /Enter your project description/i,
+      screen.getByRole("heading", {
+        name: /Enter your new description/i,
+        level: 1,
       }),
     ).toBeVisible();
+    expect(
+      screen.getByRole("textbox", {
+        name: /Enter your new description/i,
+      }),
+    ).toHaveValue("");
+
+    // The "edit below, or continue" copy doesn't make sense against a blank field
+    expect(
+      screen.queryByText(/Edit the description below/i),
+    ).not.toBeInTheDocument();
   });
 
   it("displays additional information to the user on the 'task' step", async () => {
@@ -720,6 +730,9 @@ describe("basic layout and behaviour", () => {
     expect(
       screen.getByRole("radio", { name: /Use suggested description/i }),
     ).toBeInTheDocument();
+
+    // Returning to the selection step should not re-trigger the API as the input hasn't changed
+    expect(requestSpy).toHaveBeenCalledTimes(1);
   });
 
   test("users can navigate 'back' to the input step", async () => {
@@ -796,8 +809,7 @@ describe("basic layout and behaviour", () => {
     );
   });
 
-  // Revisit this with new UI which doesn't contain a textinput natively on the second step
-  test.skip("navigating 'back' does not re-trigger the API when the input does not change", async () => {
+  test("navigating 'back' does not re-trigger the API when the input does not change", async () => {
     const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
