@@ -1,7 +1,10 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { useCreateFlow } from "pages/Flows/components/AddFlow/hooks/useCreateFlow";
+import {
+  isUniquenessViolationError,
+  useCreateFlow,
+} from "pages/Flows/components/AddFlow/hooks/useCreateFlow";
 import { slugify } from "utils";
 
 export const useCopyFlowToTeam = () => {
@@ -54,9 +57,15 @@ export const useCopyFlowToTeam = () => {
           });
           hideLoading();
         },
-        onError: () => {
+        onError: (error) => {
           setLoadingCompleteCallback(undefined);
           hideLoading();
+          if (isUniquenessViolationError(error)) {
+            toast.error(
+              `Your team already has a flow named "${name}", rename it and try again`,
+            );
+            return;
+          }
           toast.error("Failed to add flow to your team");
         },
       },

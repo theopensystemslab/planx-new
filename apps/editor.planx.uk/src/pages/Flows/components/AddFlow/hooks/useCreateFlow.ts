@@ -10,6 +10,10 @@ import { useStore } from "pages/FlowEditor/lib/store";
 
 import type { CreateFlow } from "../types";
 
+export const isUniquenessViolationError = (
+  error: APIError<{ error?: string }>,
+): boolean => Boolean(error.data?.error?.includes("Uniqueness violation"));
+
 export const useCreateFlow = () => {
   return useMutation<
     { mode: CreateFlow["mode"]; flow: NewFlow },

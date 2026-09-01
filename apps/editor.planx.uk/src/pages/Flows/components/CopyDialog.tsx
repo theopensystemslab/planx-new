@@ -16,7 +16,10 @@ import Input from "ui/shared/Input/Input";
 import { slugify } from "utils";
 
 import { GET_FLOWS } from "../queries";
-import { useCreateFlow } from "./AddFlow/hooks/useCreateFlow";
+import {
+  isUniquenessViolationError,
+  useCreateFlow,
+} from "./AddFlow/hooks/useCreateFlow";
 import type { CreateFlow } from "./AddFlow/types";
 import { validationSchema } from "./AddFlow/types";
 
@@ -61,8 +64,7 @@ export const CopyDialog: React.FC<Props> = ({
         toast.success(`Created new flow "${values.flow.name}"`);
       },
       onError: (error) => {
-        const message = error.data?.error;
-        if (message?.includes("Uniqueness violation")) {
+        if (isUniquenessViolationError(error)) {
           setFieldError("flow.name", "Flow name must be unique");
           return;
         }

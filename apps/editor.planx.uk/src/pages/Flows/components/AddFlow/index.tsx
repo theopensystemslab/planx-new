@@ -15,7 +15,10 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { BaseFormSection } from "./BaseFormSection";
-import { useCreateFlow } from "./hooks/useCreateFlow";
+import {
+  isUniquenessViolationError,
+  useCreateFlow,
+} from "./hooks/useCreateFlow";
 import type { CreateFlow } from "./types";
 import { validationSchema } from "./types";
 
@@ -67,7 +70,7 @@ export const AddFlow: React.FC = () => {
       onError: (error) => {
         setLoadingCompleteCallback(undefined);
         const message = error.data?.error;
-        if (message?.includes("Uniqueness violation")) {
+        if (isUniquenessViolationError(error)) {
           setFieldError("flow.name", "Flow name must be unique");
           hideLoading();
           return;
