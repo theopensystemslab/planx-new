@@ -1,11 +1,11 @@
-import Close from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { notFound, useLocation, useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { BackButton } from "pages/Preview/Questions";
 import { FOOTER_ITEMS } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
@@ -15,14 +15,6 @@ const Root = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  paddingTop: theme.spacing(2),
-  paddingBottom: theme.spacing(10),
-}));
-
-const CloseIconButton = styled(IconButton)(() => ({
-  position: "absolute",
-  right: 20,
-  top: 20,
 }));
 
 function Layout(props: {
@@ -33,15 +25,23 @@ function Layout(props: {
 }) {
   return (
     <Root>
-      <CloseIconButton onClick={props.onClose} size="medium" aria-label="Close">
-        <Close />
-      </CloseIconButton>
-      <Container maxWidth="md">
-        <Typography variant="h1">{props.heading}</Typography>
-        <ReactMarkdownOrHtml
-          source={props.content}
-          openLinksOnNewTab={props.openLinksOnNewTab}
-        />
+      <Container maxWidth="contentWrap" sx={{ position: "relative" }}>
+        <BackButton onClick={props.onClose} variant="link">
+          <ArrowBackIcon fontSize="small" />
+          Back
+        </BackButton>
+        <Container
+          maxWidth="formWrap"
+          sx={{ margin: 0, padding: "0 !important" }}
+        >
+          <Typography variant="h2" component="h1">
+            {props.heading}
+          </Typography>
+          <ReactMarkdownOrHtml
+            source={props.content}
+            openLinksOnNewTab={props.openLinksOnNewTab}
+          />
+        </Container>
       </Container>
     </Root>
   );

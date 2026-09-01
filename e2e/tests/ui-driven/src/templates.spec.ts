@@ -117,7 +117,7 @@ test.describe("Templates", () => {
       await page.getByLabel("Require edits").click();
 
       // Close modal without saving
-      await page.locator('button[aria-label="close"]').click();
+      await page.locator('button[aria-label="Close"]').click();
       await page.getByRole("button", { name: "Discard changes" }).click();
       await page.getByRole("dialog").waitFor({ state: "detached" });
 
@@ -394,7 +394,7 @@ test.describe("Templates", () => {
       await expect(
         page.getByText(REQUIRED_NODE_INSTRUCTIONS).first(),
       ).toBeVisible();
-      await page.locator('button[aria-label="close"]').click();
+      await page.locator('button[aria-label="Close"]').click();
       await page.getByRole("dialog").waitFor({ state: "detached" });
     });
 
@@ -447,7 +447,7 @@ test.describe("Templates", () => {
         page.locator('button[form="modal"][type="submit"]'),
       ).toBeDisabled();
 
-      await page.locator('button[aria-label="close"]').click();
+      await page.locator('button[aria-label="Close"]').click();
       await page.getByRole("dialog").waitFor({ state: "detached" });
     });
 
