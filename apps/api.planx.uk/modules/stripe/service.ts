@@ -94,11 +94,15 @@ export const exchangeCodeForAccountId = async (
   return token.stripe_user_id;
 };
 
+// Staging uses Stripe test mode keys, production uses live mode keys
+export const getStripeMode = (): "test" | "live" =>
+  process.env.APP_ENVIRONMENT === "production" ? "live" : "test";
+
 /**
  * `team_integrations` stores separate columns per environment
  */
 const stripeAccountIdColumn = (): string =>
-  process.env.APP_ENVIRONMENT === "production"
+  getStripeMode() === "live"
     ? "production_stripe_account_id"
     : "staging_stripe_account_id";
 
