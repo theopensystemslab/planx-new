@@ -21,6 +21,7 @@ export type ConnectStatusController = ValidatedRequestHandler<
 export interface ConnectStatusResponse {
   connected: boolean;
   accountId: string | null;
+  mode: "test" | "live";
 }
 
 export const connectCallbackSchema = z.object({

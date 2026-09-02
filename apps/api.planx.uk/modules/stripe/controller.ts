@@ -40,7 +40,11 @@ export const getConnectStatus: ConnectStatusController = async (
   try {
     const team = res.locals.team as Team;
     const accountId = await Service.getStripeAccountId(team.id);
-    return res.send({ connected: Boolean(accountId), accountId });
+    return res.send({
+      connected: Boolean(accountId),
+      accountId,
+      mode: Service.getStripeMode(),
+    });
   } catch (error) {
     return next(
       new ServerError({
@@ -52,7 +56,7 @@ export const getConnectStatus: ConnectStatusController = async (
 };
 
 const editorPaymentsUrl = (teamSlug: string): string =>
-  `${process.env.EDITOR_URL_EXT}/${teamSlug}/settings/payments`;
+  `${process.env.EDITOR_URL_EXT}/app/${teamSlug}/settings/payments`;
 
 // After the user has connected their Stripe account, get their account ID, store it, and redirect them to the team's payments page
 export const handleCallback: ConnectCallbackController = async (req, res) => {

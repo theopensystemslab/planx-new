@@ -2,6 +2,7 @@ import {
   buildAuthoriseUrl,
   exchangeCodeForAccountId,
   getStripeAccountId,
+  getStripeMode,
   saveStripeAccountId,
 } from "./service.js";
 
@@ -117,6 +118,24 @@ describe("exchangeCodeForAccountId", () => {
     await expect(exchangeCodeForAccountId("auth-code")).rejects.toThrow(
       /STRIPE_SECRET_KEY/,
     );
+  });
+});
+
+describe("getStripeMode", () => {
+  const originalEnv = { ...process.env };
+
+  afterEach(() => {
+    process.env = { ...originalEnv };
+  });
+
+  it("returns test outside of production", () => {
+    process.env.APP_ENVIRONMENT = "staging";
+    expect(getStripeMode()).toBe("test");
+  });
+
+  it("returns live in production", () => {
+    process.env.APP_ENVIRONMENT = "production";
+    expect(getStripeMode()).toBe("live");
   });
 });
 
