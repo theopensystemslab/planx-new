@@ -8,15 +8,10 @@ import {
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
 import React, { useRef, useState } from "react";
-import type { DropTargetMonitor } from "react-dnd";
 import { useDragLayer, useDrop } from "react-dnd";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
-import { useFlowNotesContext } from "../notes/FlowNotesContext";
-import { useMoveFlowNotePosition } from "../notes/hooks/useMoveFlowNotePosition";
-import { placementKey } from "../notes/lib/partitionNotes";
-import { PositionedNoteCard } from "../notes/PositionedNoteCard";
 
 interface HangerProps {
   hidden?: boolean;
@@ -30,17 +25,7 @@ interface Item {
   text: string;
 }
 
-interface NoteItem {
-  positionId: string;
-  text: string;
-}
-
-const DROPPABLE_TYPES = ["DECISION", "PORTAL", "PAGE", "NOTE"];
-
-const isNoteItem = (
-  monitor: DropTargetMonitor<Item | NoteItem, unknown>,
-  _item: Item | NoteItem,
-): _item is NoteItem => monitor.getItemType() === "NOTE";
+const DROPPABLE_TYPES = ["DECISION", "PORTAL", "PAGE"];
 
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
@@ -56,12 +41,6 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
       state.orderedFlow,
       state.showNotes,
     ],
-  );
-  const { moveFlowNotePosition } = useMoveFlowNotePosition();
-
-  const { positioned, clonedContentIds } = useFlowNotesContext();
-  const notes = [...(positioned.get(placementKey(parent, before)) ?? [])].sort(
-    (a, b) => a.createdAt.localeCompare(b.createdAt),
   );
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
@@ -84,12 +63,8 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DROPPABLE_TYPES,
-    drop: (item: Item | NoteItem, monitor) => {
-      if (isNoteItem(monitor, item)) {
-        moveFlowNotePosition(item.positionId, parent, before);
-      } else {
-        moveNode(item.id, item.parent, before, parent);
-      }
+    drop: (item: Item) => {
+      moveNode(item.id, item.parent, before, parent);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -114,21 +89,9 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   const [selectorOpen, setSelectorOpen] = useState(false);
 
   const isHidden = hidden || hideHangerFromUser;
-  const showNoteCards = showNotes && notes.length > 0;
 
   return (
     <>
-      {showNoteCards &&
-        notes.map((note) => (
-          /* decorative only - connector line before each note, oldest to newest */
-          <React.Fragment key={note.positionId}>
-            <li className="hanger note-connector" aria-hidden="true" />
-            <PositionedNoteCard
-              note={note}
-              isClone={clonedContentIds.has(note.contentId)}
-            />
-          </React.Fragment>
-        ))}
       <li
         className={classnames("hanger", {
           hidden: isHidden,

@@ -1,5 +1,4 @@
 import { fireEvent, screen } from "@testing-library/react";
-import type { FlowNote } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
@@ -7,8 +6,6 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "test/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { FlowNotesContext } from "../notes/FlowNotesContext";
-import { placementKey } from "../notes/lib/partitionNotes";
 import Hanger from "./Hanger";
 
 vi.mock("@tanstack/react-router", async () => {
@@ -20,40 +17,12 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
-const makeNote = (overrides: Partial<FlowNote> = {}): FlowNote =>
-  ({
-    positionId: "note-1",
-    contentId: "note-content-1",
-    flowId: "flow-1",
-    nodeId: null,
-    placement: { parent: "root" },
-    text: "A positioned note",
-    createdBy: 1,
-    updatedBy: 1,
-    createdAt: "2026-01-01T00:00:00Z",
-    updatedAt: "2026-01-01T00:00:00Z",
-    ...overrides,
-  }) as FlowNote;
-
-const renderHanger = (
-  props: React.ComponentProps<typeof Hanger>,
-  positioned: Map<string, FlowNote[]> = new Map(),
-  clonedContentIds: Set<string> = new Set(),
-) =>
+const renderHanger = (props: React.ComponentProps<typeof Hanger>) =>
   setup(
     <DndProvider backend={HTML5Backend}>
-      <FlowNotesContext.Provider
-        value={{
-          attached: new Map(),
-          positioned,
-          loading: false,
-          clonedContentIds,
-        }}
-      >
-        <ol>
-          <Hanger {...props} />
-        </ol>
-      </FlowNotesContext.Provider>
+      <ol>
+        <Hanger {...props} />
+      </ol>
     </DndProvider>,
   );
 
@@ -75,135 +44,6 @@ beforeEach(() => {
     } as any,
     contextMenuSource: null,
     contextMenuPosition: null,
-  });
-});
-
-describe("positioned notes", () => {
-  it("renders a note-card for each note at this hanger's coordinate", async () => {
-    const positioned = new Map([
-      [placementKey("root", "node-a"), [makeNote({ text: "First" })]],
-    ]);
-
-    await renderHanger({ parent: "root", before: "node-a" }, positioned);
-
-    expect(screen.getByText("First")).toBeInTheDocument();
-  });
-
-  it("does not render notes belonging to a different coordinate", async () => {
-    const positioned = new Map([
-      [placementKey("root", "node-b"), [makeNote({ text: "Elsewhere" })]],
-    ]);
-
-    await renderHanger({ parent: "root", before: "node-a" }, positioned);
-
-    expect(screen.queryByText("Elsewhere")).not.toBeInTheDocument();
-  });
-
-  it("hides positioned notes when showNotes is false", async () => {
-    useStore.setState({ showNotes: false });
-    const positioned = new Map([
-      [placementKey("root", "node-a"), [makeNote({ text: "Hidden note" })]],
-    ]);
-
-    await renderHanger({ parent: "root", before: "node-a" }, positioned);
-
-    expect(screen.queryByText("Hidden note")).not.toBeInTheDocument();
-  });
-
-  it("renders a decorative connector line separating the note from the preceding node", async () => {
-    const positioned = new Map([
-      [placementKey("root", "node-a"), [makeNote({ text: "First" })]],
-    ]);
-
-    const { container } = await renderHanger(
-      { parent: "root", before: "node-a" },
-      positioned,
-    );
-
-    expect(container.querySelector("li.note-connector")).toBeInTheDocument();
-  });
-
-  it("does not render a connector line when there are no notes to show", async () => {
-    const { container } = await renderHanger({
-      parent: "root",
-      before: "node-a",
-    });
-
-    expect(
-      container.querySelector("li.note-connector"),
-    ).not.toBeInTheDocument();
-  });
-
-  it("orders multiple notes on the same hanger by createdAt ascending, with a connector before each", async () => {
-    const positioned = new Map([
-      [
-        placementKey("root", "node-a"),
-        [
-          makeNote({
-            positionId: "note-newest",
-            text: "Newest",
-            createdAt: "2026-01-03T00:00:00Z",
-          }),
-          makeNote({
-            positionId: "note-oldest",
-            text: "Oldest",
-            createdAt: "2026-01-01T00:00:00Z",
-          }),
-          makeNote({
-            positionId: "note-middle",
-            text: "Middle",
-            createdAt: "2026-01-02T00:00:00Z",
-          }),
-        ],
-      ],
-    ]);
-
-    const { container } = await renderHanger(
-      { parent: "root", before: "node-a" },
-      positioned,
-    );
-
-    const renderedTexts = Array.from(
-      container.querySelectorAll(".note-card .note-text"),
-    ).map((el) => el.textContent);
-    expect(renderedTexts).toEqual(["Oldest", "Middle", "Newest"]);
-
-    expect(container.querySelectorAll("li.note-connector")).toHaveLength(3);
-  });
-
-  it("marks a note-card as a clone when its contentId is in clonedContentIds", async () => {
-    const positioned = new Map([
-      [
-        placementKey("root", "node-a"),
-        [makeNote({ contentId: "shared-content" })],
-      ],
-    ]);
-
-    const { container } = await renderHanger(
-      { parent: "root", before: "node-a" },
-      positioned,
-      new Set(["shared-content"]),
-    );
-
-    expect(container.querySelector("li.note-card.isClone")).toBeInTheDocument();
-  });
-
-  it("does not mark a note-card as a clone when its contentId is unique", async () => {
-    const positioned = new Map([
-      [
-        placementKey("root", "node-a"),
-        [makeNote({ contentId: "unique-content" })],
-      ],
-    ]);
-
-    const { container } = await renderHanger(
-      { parent: "root", before: "node-a" },
-      positioned,
-    );
-
-    expect(
-      container.querySelector("li.note-card.isClone"),
-    ).not.toBeInTheDocument();
   });
 });
 

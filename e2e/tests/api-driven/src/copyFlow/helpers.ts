@@ -204,36 +204,6 @@ export const getOperations = async (flowId: string) => {
   return operations;
 };
 
-export interface FlowNotePosition {
-  noteId: string;
-  nodeId: string | null;
-  placement: { parent: string; before?: string; container?: string } | null;
-  note: { text: string };
-}
-
-export const getNotePositions = async (flowId: string) => {
-  const { flowNotePositions } = await $admin.client.request<{
-    flowNotePositions: FlowNotePosition[];
-  }>(
-    gql`
-      query GetNotePositions($flowId: uuid!) {
-        flowNotePositions: flow_note_positions(
-          where: { flow_id: { _eq: $flowId } }
-        ) {
-          noteId: note_id
-          nodeId: node_id
-          placement
-          note {
-            text
-          }
-        }
-      }
-    `,
-    { flowId },
-  );
-  return flowNotePositions;
-};
-
 export const cleanup = async () => {
   await $admin.client.request(gql`
     mutation {

@@ -1,9 +1,6 @@
 import * as planxCore from "@opensystemslab/planx-core";
 import { waitFor, within } from "@testing-library/react";
-import type { AttachedNote } from "hooks/data/useFlowNotes";
-import { FlowNotesContext } from "pages/FlowEditor/components/Flow/notes/FlowNotesContext";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
@@ -23,19 +20,6 @@ vi.mock("@tanstack/react-router", async () => {
 import Search from ".";
 import { flow } from "./mocks/simple";
 import { VirtuosoWrapper } from "./testUtils";
-
-const mockNote: AttachedNote = {
-  positionId: "note-1",
-  contentId: "note-content-1",
-  flowId: "test-flow-id",
-  nodeId: "Ej0xpn4l8u",
-  placement: null,
-  text: "Sample note text",
-  createdBy: 1,
-  updatedBy: 1,
-  createdAt: "2026-01-01T00:00:00.000Z",
-  updatedAt: "2026-01-01T00:00:00.000Z",
-};
 
 const { setState, getState } = useStore;
 
@@ -187,79 +171,5 @@ describe("rich text fields", () => {
     expect(queryByText(/</)).not.toBeInTheDocument();
     expect(queryByText(/>/)).not.toBeInTheDocument();
     expect(queryByText(/\//)).not.toBeInTheDocument();
-  });
-});
-
-describe("notes", () => {
-  const withNote = (children: React.ReactNode) => (
-    <FlowNotesContext.Provider
-      value={{
-        attached: new Map([[mockNote.nodeId, [mockNote]]]),
-        positioned: new Map(),
-        loading: false,
-        clonedContentIds: new Set(),
-      }}
-    >
-      {children}
-    </FlowNotesContext.Provider>
-  );
-
-  test("a matching note is included alongside node results", async () => {
-    const { user, getAllByRole, getByLabelText } = await setup(
-      withNote(
-        <VirtuosoWrapper>
-          <Search />
-        </VirtuosoWrapper>,
-      ),
-    );
-
-    const searchInput = getByLabelText("Search this flow");
-    user.type(searchInput, "text");
-
-    await waitFor(() => expect(getAllByRole("listitem")).toHaveLength(2));
-  });
-
-  test("clicking a note result navigates to the note edit route", async () => {
-    const { user, getAllByRole, getByLabelText } = await setup(
-      withNote(
-        <VirtuosoWrapper>
-          <Search />
-        </VirtuosoWrapper>,
-      ),
-    );
-
-    const searchInput = getByLabelText("Search this flow");
-    user.type(searchInput, "Sample note text");
-
-    await waitFor(() => expect(getAllByRole("listitem")).toHaveLength(1));
-
-    const [noteItem] = getAllByRole("listitem");
-    await user.click(within(noteItem).getByRole("button"));
-
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({
-        to: "/app/$team/$flow/note/$id/edit",
-        params: expect.objectContaining({ id: mockNote.positionId }),
-      }),
-    );
-  });
-
-  test("notes are excluded when 'Search only data fields' is checked", async () => {
-    const { user, getAllByRole, getByRole, getByLabelText } = await setup(
-      withNote(
-        <VirtuosoWrapper>
-          <Search />
-        </VirtuosoWrapper>,
-      ),
-    );
-
-    const checkbox = getByLabelText("Search only data fields");
-    await user.click(checkbox);
-
-    const searchInput = getByLabelText("Search this flow");
-    user.type(searchInput, "Independent");
-
-    await waitFor(() => expect(getByRole("list")).toBeEmptyDOMElement());
-    expect(() => getAllByRole("listitem")).toThrow();
   });
 });

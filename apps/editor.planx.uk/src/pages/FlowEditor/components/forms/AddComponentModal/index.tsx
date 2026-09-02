@@ -1,9 +1,8 @@
 import Popover from "@mui/material/Popover";
 import type { Graph } from "@planx/graph";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
@@ -57,15 +56,6 @@ const AddComponentModal: React.FC<Props> = ({
     onClose();
   };
 
-  const handleSelectNote = useCallback(() => {
-    onClose();
-    navigate({
-      to: "/app/$team/$flow/note/add",
-      params: { team, flow },
-      search: { parent, before },
-    });
-  }, [navigate, team, flow, parent, before, onClose]);
-
   // Flip the popover above the hanger when there isn't room below it
   const rect = anchorEl?.getBoundingClientRect();
   const showBelow =
@@ -104,7 +94,6 @@ const AddComponentModal: React.FC<Props> = ({
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onComponentSelect={handleComponentSelect}
-        onSelectNote={hasFeatureFlag("NOTES") ? handleSelectNote : undefined}
         onInsertPattern={handleInsertPattern}
       />
     </Popover>

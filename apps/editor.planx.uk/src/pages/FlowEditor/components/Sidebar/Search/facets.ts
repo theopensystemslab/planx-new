@@ -1,7 +1,6 @@
 import type { IndexedNode } from "@opensystemslab/planx-core/types";
 import { flatFlags } from "@opensystemslab/planx-core/types";
 import type { FuseOptionKey, FuseOptionKeyObject } from "fuse.js";
-import type { FlowNote } from "hooks/data/useFlowNotes";
 import { get } from "lodash";
 
 export type SearchFacets = Array<FuseOptionKey<IndexedNode>>;
@@ -176,6 +175,3 @@ export const ALL_FACETS: SearchFacets = [
   ...note,
   ...DATA_FACETS,
 ];
-
-/** Notes aren't flow nodes - they're a separate `FlowNote` shape with a single searchable field */
-export const NOTE_FACETS: Array<FuseOptionKey<FlowNote>> = ["text"];
