@@ -5,15 +5,15 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useToast } from "hooks/useToast";
-import { getStripeConnectStatus } from "lib/api/stripe/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
+
+import { useStripeConnectStatus } from "./hooks/useStripeConnectStatus";
 
 export const Onboarding: React.FC = () => {
   const teamSlug = useStore((state) => state.teamSlug);
@@ -22,17 +22,14 @@ export const Onboarding: React.FC = () => {
   const search = useSearch({ strict: false });
   const { stripeConnected, stripeError } = search;
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["stripeConnectStatus", teamSlug],
-    queryFn: () => getStripeConnectStatus(teamSlug),
-  });
+  const stripeConnectStatusQuery = useStripeConnectStatus(teamSlug);
 
   useEffect(() => {
     if (!stripeConnected && !stripeError) return;
 
     if (stripeConnected) {
       toast.success("Stripe account connected successfully");
-      refetch();
+      stripeConnectStatusQuery.refetch();
     } else if (stripeError) {
       toast.error(
         stripeError === "access_denied"
@@ -91,7 +88,7 @@ export const Onboarding: React.FC = () => {
               paddingTop: 0.25,
             }}
           >
-            {isLoading && (
+            {stripeConnectStatusQuery.isLoading && (
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                 <CircularProgress size={20} />
                 <Typography variant="body2">
@@ -100,41 +97,58 @@ export const Onboarding: React.FC = () => {
               </Box>
             )}
 
-            {!isLoading && !data?.connected && (
-              <>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  No Stripe account connected. Click below to start the
-                  onboarding process.
-                </Typography>
-                <Box>
-                  <Button onClick={handleConnect} variant="contained">
-                    Connect Stripe account
-                  </Button>
-                </Box>
-              </>
-            )}
-
-            {!isLoading && data?.connected && (
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                  <Typography variant="body1">Status:</Typography>
-                  <Chip label="Connected" color="success" size="small" />
-                </Box>
-                <Box>
+            {!stripeConnectStatusQuery.isLoading &&
+              !stripeConnectStatusQuery.data?.connected && (
+                <>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    Account ID
+                    No Stripe account connected. Click below to start the
+                    onboarding process.
                   </Typography>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body1">{data.accountId}</Typography>
-                    <Chip
-                      label={data.mode === "live" ? "Live" : "Test"}
-                      color={data.mode === "live" ? "success" : "warning"}
-                      size="small"
-                    />
+                  <Box>
+                    <Button onClick={handleConnect} variant="contained">
+                      Connect Stripe account
+                    </Button>
+                  </Box>
+                </>
+              )}
+
+            {!stripeConnectStatusQuery.isLoading &&
+              stripeConnectStatusQuery.data?.connected && (
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                    <Typography variant="body1">Status:</Typography>
+                    <Chip label="Connected" color="success" size="small" />
+                  </Box>
+                  <Box>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}
+                    >
+                      Account ID
+                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Typography variant="body1">
+                        {stripeConnectStatusQuery.data.accountId}
+                      </Typography>
+                      <Chip
+                        label={
+                          stripeConnectStatusQuery.data.mode === "live"
+                            ? "Live"
+                            : "Test"
+                        }
+                        color={
+                          stripeConnectStatusQuery.data.mode === "live"
+                            ? "success"
+                            : "warning"
+                        }
+                        size="small"
+                      />
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            )}
+              )}
           </Box>
         </Grid>
       </Grid>
