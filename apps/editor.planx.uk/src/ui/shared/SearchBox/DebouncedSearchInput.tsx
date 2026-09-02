@@ -13,6 +13,8 @@ interface DebouncedSearchInputProps {
   onChange: (value: string) => void;
   hideLabel?: boolean;
   compact?: boolean;
+  fullWidth?: boolean;
+  placeholder?: string;
   debounceMs?: number;
 }
 
@@ -29,6 +31,8 @@ export const DebouncedSearchInput = ({
   onChange,
   hideLabel = false,
   compact = false,
+  fullWidth = false,
+  placeholder,
   debounceMs = DEFAULT_DEBOUNCE_MS,
 }: DebouncedSearchInputProps) => {
   const [localValue, setLocalValue] = useState(value);
@@ -78,6 +82,8 @@ export const DebouncedSearchInput = ({
       isSearching={isSearching}
       hideLabel={hideLabel}
       compact={compact}
+      fullWidth={fullWidth}
+      placeholder={placeholder}
     />
   );
 };
