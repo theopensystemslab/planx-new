@@ -6,8 +6,8 @@ export const getConsolidatedStatus = (
   status: string | undefined,
   eventType: string,
 ): string => {
-  if (status === "Invited to pay") {
-    return status;
+  if (eventType === "Invited to pay" && status === "Success") {
+    return eventType;
   } else if (status === "Started" || status === "Capturable") {
     return "Payment in progress";
   } else if (status === "Submitted") {
