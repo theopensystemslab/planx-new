@@ -26,17 +26,6 @@ const sendToBOPSFailureSummary: SubmissionSummary = {
   consolidatedStatus: "Submit to BOPS failed",
 };
 
-const jsonErrorSummary: SubmissionSummary = {
-  id: "306c7498-9cd3-4e8e-bafe-2e2de5133caa",
-  flowId: "d0744118-f902-4538-b439-573f4b42a727",
-  flowName: "Report a breach",
-  address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
-  eventCreatedAt: "2024-01-12T12:18:12.805747+00:00",
-  eventType: "Submit to Uniform",
-  status: "Failed (500)",
-  consolidatedStatus: "Submit to Uniform failed",
-};
-
 const invitedToPaySummary: SubmissionSummary = {
   id: "6fcb873f-cc7f-4fc0-ad9d-b4148de7a3b5",
   flowId: "d0744118-f902-4538-b439-573f4b42a727",
@@ -47,13 +36,6 @@ const invitedToPaySummary: SubmissionSummary = {
   status: "Success",
   consolidatedStatus: "Invited to pay",
 };
-
-export const mockSubmissionsGrouped: SubmissionSummary[] = [
-  sendToEmailSuccessSummary,
-  sendToBOPSFailureSummary,
-  jsonErrorSummary,
-  invitedToPaySummary,
-];
 
 // multiple events for the same sessionId are for the SubmissionDetailModal tests
 const sendToEmailSuccess: Submission = {
