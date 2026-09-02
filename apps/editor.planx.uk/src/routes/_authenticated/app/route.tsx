@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import gql from "graphql-tag";
-import { CatchAllComponent } from "routes/$";
+import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 
 import { useStore } from "../../../pages/FlowEditor/lib/store";
 import type { TeamSummary } from "../../../pages/FlowEditor/lib/store/team";

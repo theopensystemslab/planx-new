@@ -3,8 +3,8 @@ import { createFileRoute, notFound, Outlet } from "@tanstack/react-router";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
+import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 import React from "react";
-import { CatchAllComponent } from "routes/$";
 
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
 
