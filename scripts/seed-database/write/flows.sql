@@ -25,7 +25,8 @@ CREATE TEMPORARY TABLE sync_flows (
   deleted_at timestamptz,
   email_template text,
   is_service boolean,
-  is_pattern boolean
+  is_pattern boolean,
+  search_vector tsvector
   );
 \copy sync_flows FROM '/tmp/flows.csv' WITH (FORMAT csv, DELIMITER ';');
 
