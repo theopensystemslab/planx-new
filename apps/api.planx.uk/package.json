@@ -19,7 +19,7 @@
     "@types/geojson": "^7946.0.16",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.6.0",
-    "ai": "^6.0.215",
+    "ai": "^7.0.79",
     "axios": "catalog:",
     "body-parser": "^2.3.0",
     "cookie-parser": "^1.4.7",
