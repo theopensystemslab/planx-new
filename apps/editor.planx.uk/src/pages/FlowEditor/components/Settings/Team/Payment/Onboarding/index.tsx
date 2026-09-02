@@ -5,54 +5,57 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useToast } from "hooks/useToast";
+import { getStripeConnectStatus } from "lib/api/stripe/requests";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useEffect } from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
-type OnboardingStatus = "notStarted" | "connecting" | "connected";
-
-/**
- * Rough approximation of details we may want to show
- * Docs: https://docs.stripe.com/api/accounts/object
- */
-interface ConnectedAccount {
-  accountId: string;
-  businessName: string;
-  email: string;
-  chargesEnabled: boolean;
-  payoutsEnabled: boolean;
-}
-
-const PLACEHOLDER_ACCOUNT: ConnectedAccount = {
-  accountId: "acct_1234567890",
-  businessName: "Example Council",
-  email: "payments@example.council.gov.uk",
-  chargesEnabled: true,
-  payoutsEnabled: true,
-};
-
-/**
- * Placeholder — simulates the Stripe Connect OAuth redirect flow
- * @todo Replace with real Stripe Connect onboarding
- */
-const connectToStripe = async (): Promise<ConnectedAccount> => {
-  console.log("[Onboarding] Starting Stripe Connect onboarding...");
-  console.log("[Onboarding] Redirecting to Stripe Connect OAuth...");
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  console.log("[Onboarding] Stripe Connect account linked successfully");
-  return PLACEHOLDER_ACCOUNT;
-};
-
 export const Onboarding: React.FC = () => {
-  const [status, setStatus] = useState<OnboardingStatus>("notStarted");
-  const [account, setAccount] = useState<ConnectedAccount | null>(null);
+  const teamSlug = useStore((state) => state.teamSlug);
+  const toast = useToast();
+  const navigate = useNavigate();
+  const search = useSearch({ strict: false });
+  const { stripeConnected, stripeError } = search;
 
-  const handleConnect = async () => {
-    setStatus("connecting");
-    const connectedAccount = await connectToStripe();
-    setAccount(connectedAccount);
-    setStatus("connected");
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["stripeConnectStatus", teamSlug],
+    queryFn: () => getStripeConnectStatus(teamSlug),
+  });
+
+  useEffect(() => {
+    if (!stripeConnected && !stripeError) return;
+
+    if (stripeConnected) {
+      toast.success("Stripe account connected successfully");
+      refetch();
+    } else if (stripeError) {
+      toast.error(
+        stripeError === "access_denied"
+          ? "Stripe connection was cancelled"
+          : "Failed to connect Stripe account, please try again",
+      );
+    }
+
+    navigate({
+      to: ".",
+      search: (prev) => ({
+        ...prev,
+        stripeConnected: undefined,
+        stripeError: undefined,
+      }),
+      replace: true,
+    });
+    // Only run once, on mount, to consume the redirect params from the URL
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleConnect = () => {
+    window.location.href = `${import.meta.env.VITE_APP_API_URL}/stripe/connect/${teamSlug}`;
   };
 
   return (
@@ -77,11 +80,6 @@ export const Onboarding: React.FC = () => {
               Once connected, Stripe will handle payment processing for all
               application fees collected through your services.
             </p>
-            <p>
-              <Link href="#" target="_blank" rel="noopener noreferrer">
-                Read our full onboarding guide (TODO)
-              </Link>
-            </p>
           </SettingsDescription>
         </Grid>
         <Grid size={{ xs: 12, md: 8 }}>
@@ -93,7 +91,16 @@ export const Onboarding: React.FC = () => {
               paddingTop: 0.25,
             }}
           >
-            {status === "notStarted" && (
+            {isLoading && (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <CircularProgress size={20} />
+                <Typography variant="body2">
+                  Checking connection status...
+                </Typography>
+              </Box>
+            )}
+
+            {!isLoading && !data?.connected && (
               <>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   No Stripe account connected. Click below to start the
@@ -107,14 +114,7 @@ export const Onboarding: React.FC = () => {
               </>
             )}
 
-            {status === "connecting" && (
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <CircularProgress size={20} />
-                <Typography variant="body2">Connecting to Stripe...</Typography>
-              </Box>
-            )}
-
-            {status === "connected" && account && (
+            {!isLoading && data?.connected && (
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                   <Typography variant="body1">Status:</Typography>
@@ -124,35 +124,14 @@ export const Onboarding: React.FC = () => {
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
                     Account ID
                   </Typography>
-                  <Typography variant="body1">{account.accountId}</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    Business name
-                  </Typography>
-                  <Typography variant="body1">
-                    {account.businessName}
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    Email
-                  </Typography>
-                  <Typography variant="body1">{account.email}</Typography>
-                </Box>
-                <Box sx={{ display: "flex", gap: 1, mt: 0.5 }}>
-                  <Chip
-                    label="Charges enabled"
-                    color={account.chargesEnabled ? "success" : "warning"}
-                    size="small"
-                    variant="outlined"
-                  />
-                  <Chip
-                    label="Payouts enabled"
-                    color={account.payoutsEnabled ? "success" : "warning"}
-                    size="small"
-                    variant="outlined"
-                  />
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Typography variant="body1">{data.accountId}</Typography>
+                    <Chip
+                      label={data.mode === "live" ? "Live" : "Test"}
+                      color={data.mode === "live" ? "success" : "warning"}
+                      size="small"
+                    />
+                  </Box>
                 </Box>
               </Box>
             )}
