@@ -1,9 +1,10 @@
 import { strict as assert } from "node:assert";
 
-import { Before, Given, Then, When, World } from "@cucumber/cucumber";
+import { After, Before, Given, Then, When, World } from "@cucumber/cucumber";
 
 import {
   callCopyEndpoint,
+  cleanup,
   getFlowBySlug,
   getOperations,
   setup,
@@ -24,6 +25,10 @@ Before<CustomWorld>("@copy-flow", async function () {
   const world = await setup();
   Object.assign(this, world);
   this.destinationSlug = `e2e-copy-flow-destination-${Date.now()}`;
+});
+
+After("@copy-flow", async function () {
+  await cleanup();
 });
 
 Given<CustomWorld>("a source flow exists", function () {
