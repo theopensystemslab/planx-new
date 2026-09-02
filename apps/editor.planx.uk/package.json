@@ -16,7 +16,7 @@
     "@mui/material": "^9.0.0",
     "@mui/utils": "^9.0.0",
     "@mui/x-charts": "^9.0.0",
-    "@mui/x-data-grid": "^9.0.0",
+    "@mui/x-data-grid": "^9.12.0",
     "@opensystemslab/map": "catalog:",
     "@opensystemslab/planx-core": "catalog:",
     "@planx/file-upload": "workspace:*",
