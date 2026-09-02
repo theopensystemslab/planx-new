@@ -10,6 +10,19 @@ const sendToEmailSuccessSummary: SubmissionSummary = {
   status: "Success",
 };
 
+export const sendToEmailSuccessSubmission: Submission = {
+  flowId: sendToEmailSuccessSummary.flowId,
+  sessionId: sendToEmailSuccessSummary.id,
+  eventId: sendToEmailSuccessSummary.id,
+  eventType: sendToEmailSuccessSummary.eventType,
+  status: sendToEmailSuccessSummary.status,
+  retry: false,
+  response: { data: { message: "Success!" } },
+  createdAt: sendToEmailSuccessSummary.eventCreatedAt,
+  flowName: sendToEmailSuccessSummary.flowName,
+  address: sendToEmailSuccessSummary.address,
+};
+
 const sendToBOPSFailureSummary: SubmissionSummary = {
   id: "556ec0c4-55f2-7709-aa09-15599ec3ee99",
   flowId: "d0744118-f902-4538-b439-573f4b42a727",
