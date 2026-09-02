@@ -235,25 +235,17 @@ const uniqueLabelsTest: TestConfig<AnyChecklist> = {
 
 const atLeastOneOption: TestConfig<AnyChecklist> = {
   name: "atLeastOneOption",
-  test: function ({ text, options, groupedOptions }) {
+  test: function ({ options, groupedOptions }) {
     if (
       (options && options.length > 0) ||
       (groupedOptions && groupedOptions.length > 0)
     )
       return true;
 
-    if (text) {
-      return this.createError({
-        path: "text",
-        message:
-          "Checklists can no longer be used as notes and must have at least one option",
-      });
-    } else {
-      return this.createError({
-        path: "options",
-        message: "Add at least one option",
-      });
-    }
+    return this.createError({
+      path: "options",
+      message: "Add at least one option",
+    });
   },
 };
 

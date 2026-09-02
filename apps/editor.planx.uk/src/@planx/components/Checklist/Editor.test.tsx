@@ -54,11 +54,7 @@ describe("Checklist editor component", () => {
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
 
     await waitFor(() =>
-      expect(
-        screen.getByText(
-          /Checklists can no longer be used as notes and must have at least one option/,
-        ),
-      ).toBeInTheDocument(),
+      expect(screen.getByText(/Add at least one option/)).toBeInTheDocument(),
     );
   });
 

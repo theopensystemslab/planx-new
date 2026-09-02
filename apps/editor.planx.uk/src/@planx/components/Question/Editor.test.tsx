@@ -40,11 +40,7 @@ it("displays an error if an editor tries to create a pseudo-note", async () => {
   fireEvent.submit(screen.getByTestId("question-component-form"));
 
   await waitFor(() =>
-    expect(
-      screen.getByText(
-        /Questions can no longer be used as notes and must have at least one option/,
-      ),
-    ).toBeInTheDocument(),
+    expect(screen.getByText(/Add at least one option/)).toBeInTheDocument(),
   );
 });
 
