@@ -1,3 +1,5 @@
+import { RETENTION_PERIOD_MONTHS } from "ui/shared/constants";
+
 import type { SessionEvent, Submission } from "./types";
 
 export const getConsolidatedStatus = (
@@ -11,15 +13,18 @@ export const getConsolidatedStatus = (
   } else if (status === "Submitted") {
     // "Submitted" status only possible on Pay events, hence "Sending" status
     return "Sending";
+  } else if (eventType === "Pay" && status === "Success") {
+    // Pay succeeded but Send hasn't happened yet
+    return "Sending";
   } else if (status === "Success") {
+    // non-Pay success (Send events)
     return "Success";
   } else if (typeof status === "string" && status.includes("Failed")) {
-    return eventType.replace("(no notification)", "").concat(" failed"); // shortening possible status "Upload to AWS S3 (no notification)"
+    return eventType.replace(" (no notification)", "").concat(" failed");
   } else {
     return "Failed";
   }
 };
-
 export const getSucceededPayment = (
   events: Submission[],
 ): Submission | undefined =>
@@ -45,4 +50,11 @@ export const canResubmit = (
     status !== "Success" &&
     !NON_RESUBMITTABLE_EVENT_TYPES.includes(eventType)
   );
+};
+
+export const hasBeenSanitised = (submittedAt: Date) => {
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - RETENTION_PERIOD_MONTHS);
+
+  return submittedAt < sixMonthsAgo;
 };

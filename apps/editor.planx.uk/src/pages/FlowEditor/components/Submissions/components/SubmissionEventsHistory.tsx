@@ -87,6 +87,9 @@ export const SubmissionEventsHistory: React.FC<{
             borderBottom: 1,
             borderColor: "lightgrey",
           },
+          "& > *:last-child": {
+            borderBottom: 0,
+          },
         }}
       >
         {groupedEvents.map((groupedEvent) => (
@@ -185,7 +188,9 @@ const SubmissionAttempts: React.FC<{
       {attempts.map((attempt, index) => (
         <>
           <Box key={`${index}`} sx={{ display: "flex", gap: 2, my: 1 }}>
-            <StatusChip status={attempt.status} />
+            <Box sx={{ width: 100 }}>
+              <StatusChip status={attempt.status} />
+            </Box>
             <Box>
               <Typography>Attempt {numberAttempts - index}</Typography>
               <Typography>

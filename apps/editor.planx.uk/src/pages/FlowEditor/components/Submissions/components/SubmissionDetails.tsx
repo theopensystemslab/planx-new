@@ -18,6 +18,7 @@ type SubmissionDetailsProps = {
   teamSlug: string;
   submittedAt?: string;
   isSubmissionAvailable: boolean;
+  isSanitised: boolean;
   succeededPayment?: Submission;
 };
 
@@ -25,7 +26,8 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
   const submissionData: DescriptionListItem[] = [
     {
       term: "Property address",
-      details: props.latestEvent.address || "",
+      details:
+        props.latestEvent.address || (props.isSanitised ? "Sanitised" : ""),
     },
     {
       term: "Reference",
@@ -80,7 +82,7 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
         <Typography variant="h3" sx={{ mb: 2 }}>
           {props.latestEvent?.flowName}
         </Typography>
-        <DescriptionList data={submissionData} />
+        <DescriptionList data={submissionData} hideLastBorder={true} />
       </Box>
 
       {(showSubmissionActions || showPaymentActions) && (
