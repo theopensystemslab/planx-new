@@ -1,54 +1,27 @@
-import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Grid from "@mui/material/Grid";
 import { useNavigate } from "@tanstack/react-router";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { addDays, isBefore } from "date-fns";
-import { DAYS_UNTIL_EXPIRY } from "lib/pay";
-import { useStore } from "pages/FlowEditor/lib/store";
 import { CloseButton } from "ui/shared/CloseButton";
 
-import type { Submission } from "../types";
-import { getSucceededPayment } from "../utils";
-import { hasBeenSanitised } from "../utils";
-import { SubmissionDetails } from "./SubmissionDetails";
-import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
-
-// TODO: refactor into hooks / queries pattern
-const GET_SUBMISSION_EVENTS = gql`
-  query GetSubmissionEvents($sessionId: uuid!) {
-    submissions: submission_services_log(
-      where: { session_id: { _eq: $sessionId } }
-      order_by: { created_at: desc }
-    ) {
-      flowId: flow_id
-      sessionId: session_id
-      eventId: event_id
-      eventType: event_type
-      status: status
-      retry: retry
-      response: response
-      address: address
-      createdAt: created_at
-      flowName: flow_name
-    }
-  }
-`;
+import { SubmissionDetailContent } from "./SubmissionDetailContent";
 
 interface SubmissionDetailModalProps {
   sessionId: string;
 }
 
-const SubmissionModalWrapper = ({
-  handleClose,
-  children,
-}: {
-  handleClose: () => void;
-  children: React.ReactNode;
+const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
+  sessionId,
 }) => {
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    navigate({
+      search: undefined,
+    });
+  };
+
   return (
     <Dialog
       open
@@ -75,98 +48,10 @@ const SubmissionModalWrapper = ({
         <CloseButton onClick={handleClose} sx={{ paddingTop: 2.5 }} />
       </Box>
 
-      <DialogContent children={children} />
+      <DialogContent>
+        <SubmissionDetailContent sessionId={sessionId} />
+      </DialogContent>
     </Dialog>
-  );
-};
-
-const getSubmittedAt = (events: Submission[]): string | undefined => {
-  const successfulSend = events.find(
-    (event) =>
-      event.eventType !== "Pay" &&
-      event.eventType !== "Started session" &&
-      event.eventType !== "Invited to pay" &&
-      event.status === "Success",
-  );
-
-  return successfulSend?.createdAt ?? undefined;
-};
-
-const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
-  sessionId,
-}) => {
-  const navigate = useNavigate();
-  const [teamSlug] = useStore((state) => [state.teamSlug]);
-
-  const { data, loading, error } = useQuery<{ submissions: Submission[] }>(
-    GET_SUBMISSION_EVENTS,
-    {
-      variables: { sessionId },
-      skip: !sessionId,
-    },
-  );
-
-  const handleClose = () => {
-    navigate({
-      search: undefined,
-    });
-  };
-
-  const events = data?.submissions || [];
-  const latestEvent = events[0];
-  const submittedAt = getSubmittedAt(events);
-  const isSanitised = submittedAt
-    ? hasBeenSanitised(new Date(submittedAt))
-    : false;
-  const succeededPayment = getSucceededPayment(events);
-
-  const submissionExpirationDate = submittedAt
-    ? addDays(new Date(submittedAt), DAYS_UNTIL_EXPIRY)
-    : null;
-
-  const isSubmissionAvailable = submissionExpirationDate
-    ? isBefore(new Date(), submissionExpirationDate)
-    : false;
-
-  if (loading) {
-    return (
-      <SubmissionModalWrapper handleClose={handleClose}>
-        <DelayedLoadingIndicator />
-      </SubmissionModalWrapper>
-    );
-  }
-
-  if (error) throw error;
-  return (
-    <SubmissionModalWrapper handleClose={handleClose}>
-      <Grid container>
-        <Grid
-          size={{ xs: 12, md: 6 }}
-          sx={{
-            position: { md: "sticky" },
-            top: 0,
-            alignSelf: "flex-start",
-          }}
-        >
-          <SubmissionDetails
-            sessionId={sessionId}
-            latestEvent={latestEvent}
-            teamSlug={teamSlug}
-            submittedAt={submittedAt}
-            isSubmissionAvailable={isSubmissionAvailable}
-            isSanitised={isSanitised}
-            succeededPayment={succeededPayment}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6 }}>
-          <SubmissionEventsHistory
-            events={events}
-            isSubmissionAvailable={isSubmissionAvailable}
-          />
-        </Grid>
-      </Grid>
-    </SubmissionModalWrapper>
   );
 };
 
