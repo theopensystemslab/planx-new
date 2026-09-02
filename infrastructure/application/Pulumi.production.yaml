@@ -117,3 +117,6 @@ config:
     secure: AAABAMbIBX9N21ModHyDYCQCGZXkRUP62NIUMhsxkK+/YUPRQr6PEqgZX9LRP2UuVwvVHd2RxvKGT8lpq8oAgyeDYP1eZSUl
   application:stripe-secret-key:
     secure: AAABAJdkS0v68Q8Vr2V7tLSb74ALGCTpjLOG2W6ZTgwb5aRUZkrNRUnv3dL4pdw85YxxOI6KUJnT30cGJyim4A==
+  # This is a dummy placeholder value until we can switch on oAuth on prod and get the real value
+  application:stripe-connect-client-id:
+    secure: AAABABBT7TG68HoBqVdJHF6dbPr8FZveetwTUZpPyJ92pLYokKu8I58qrA==
