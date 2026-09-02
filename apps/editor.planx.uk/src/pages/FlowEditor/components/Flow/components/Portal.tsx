@@ -171,7 +171,9 @@ const ExternalPortal: React.FC<any> = (props) => {
               ))}
             </Box>
           )}
-          {props.data?.notes && <AttachedNote note={props.data.notes} />}
+          {props.data?.notes && (
+            <AttachedNote nodeId={props.id} note={props.data.notes} />
+          )}
         </Box>
       </li>
     </>
@@ -271,7 +273,9 @@ const InternalPortal: React.FC<any> = (props) => {
                 ))}
               </Box>
             )}
-            {props.data?.notes && <AttachedNote note={props.data.notes} />}
+            {props.data?.notes && (
+              <AttachedNote nodeId={props.id} note={props.data.notes} />
+            )}
           </TemplatedNodeContainer>
         </Box>
       </li>

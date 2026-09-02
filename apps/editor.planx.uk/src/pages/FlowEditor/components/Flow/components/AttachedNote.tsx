@@ -1,15 +1,45 @@
 import Box from "@mui/material/Box";
 import { useStore } from "pages/FlowEditor/lib/store";
+import {
+  nodeIsChildOfTemplatedInternalPortal,
+  nodeIsTemplatedInternalPortal,
+} from "pages/FlowEditor/utils";
 import React from "react";
 
+import { getParentId } from "../lib/utils";
+
 export const AttachedNote: React.FC<{
+  nodeId: string;
   note: string;
   variant?: "option";
-}> = ({ note, variant }) => {
-  const showNotes = useStore((state) => state.showNotes);
+}> = ({ nodeId, note, variant }) => {
+  const [showNotes, isTemplatedFrom, flow, orderedFlow] = useStore((state) => [
+    state.showNotes,
+    state.isTemplatedFrom,
+    state.flow,
+    state.orderedFlow,
+  ]);
 
-  // TODO also return null if templated flow and *not* attached to a templated node?
-  if (!showNotes) return null;
+  // In templated flows, always hide `AttachedNote` in the graph
+  //   unless it is attached to a templated node or within a templated folder
+  const isAttachedToTemplatedNode = flow[nodeId]?.data?.isTemplatedNode;
+  const parent = getParentId(nodeId);
+  const indexedParent = orderedFlow?.find(({ id }) => id === parent);
+  const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
+    flow,
+    indexedParent,
+  );
+  const parentIsChildOfTemplatedInternalPortal =
+    nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
+
+  const showAttachedNote =
+    showNotes &&
+    (!isTemplatedFrom ||
+      isAttachedToTemplatedNode ||
+      parentIsTemplatedInternalPortal ||
+      parentIsChildOfTemplatedInternalPortal);
+
+  if (!showAttachedNote) return null;
 
   return (
     <Box

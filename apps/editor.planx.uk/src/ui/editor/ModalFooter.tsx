@@ -13,6 +13,7 @@ interface Props<T extends BaseNodeData> {
   showMoreInformation?: boolean;
   showInternalNotes?: boolean;
   showTags?: boolean;
+  showTemplateConfiguration?: boolean;
   disabled?: boolean;
 }
 
@@ -21,6 +22,7 @@ export const ModalFooter = <T extends BaseNodeData>({
   showMoreInformation = true,
   showInternalNotes = true,
   showTags = true,
+  showTemplateConfiguration = true,
   disabled,
 }: Props<T>) => {
   const isTemplate = useStore.getState().isTemplate;
@@ -45,7 +47,7 @@ export const ModalFooter = <T extends BaseNodeData>({
           disabled={disabled}
         />
       )}
-      {isTemplate && (
+      {showTemplateConfiguration && isTemplate && (
         <TemplatedNodeConfiguration
           formik={formik}
           isTemplatedNode={formik.values.isTemplatedNode}

@@ -29,7 +29,7 @@ function NoteComponent(props: Props) {
     props.formikRef,
   );
 
-  // Notes will never be "templated", therefore no template fields here
+  // Notes should never be "templated", therefore disable `showTemplateConfiguration` in footer here
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -54,6 +54,7 @@ function NoteComponent(props: Props) {
         showTags={true}
         showInternalNotes={false}
         showMoreInformation={false}
+        showTemplateConfiguration={false}
       />
     </form>
   );

@@ -90,7 +90,11 @@ const Option: React.FC<any> = (props) => {
             <DataField value={props.data.val} variant="child" />
           )}
           {props.data?.notes && (
-            <AttachedNote note={props.data.notes} variant="option" />
+            <AttachedNote
+              nodeId={props.id}
+              note={props.data.notes}
+              variant="option"
+            />
           )}
         </Link>
       </div>
