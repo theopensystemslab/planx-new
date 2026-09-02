@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { hasFeatureFlag } from "lib/featureFlags";
 import type { DescriptionListItem } from "ui/public/DescriptionList";
 import { DescriptionList } from "ui/public/DescriptionList";
 
@@ -8,6 +9,7 @@ import { BadgeVariant } from "../../../../../components/Badge/types";
 import { useTeamLogo } from "../hooks";
 import type { Submission } from "../types";
 import { DownloadSubmissionButtonGrouped } from "./DownloadSubmissionButtonGrouped";
+import { PaymentMenuGrouped } from "./PaymentMenuGrouped";
 import { ViewSubmissionButtonGrouped } from "./ViewSubmissionButtonGrouped";
 
 type SubmissionDetailsProps = {
@@ -16,6 +18,7 @@ type SubmissionDetailsProps = {
   teamSlug: string;
   submittedAt?: string;
   isSubmissionAvailable: boolean;
+  succeededPayment?: Submission;
 };
 
 export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
@@ -46,6 +49,11 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
   const teamName = themeData?.teams[0].name;
   const teamColour = themeData?.teams[0].theme.primaryColour;
 
+  const showSubmissionActions =
+    Boolean(props.submittedAt) && props.isSubmissionAvailable;
+  const showPaymentActions =
+    hasFeatureFlag("STRIPE_MIGRATION") && Boolean(props.succeededPayment);
+
   return (
     <Box
       sx={{
@@ -75,7 +83,7 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
         <DescriptionList data={submissionData} />
       </Box>
 
-      {props.submittedAt && props.isSubmissionAvailable && (
+      {(showSubmissionActions || showPaymentActions) && (
         <Box
           sx={{
             display: "flex",
@@ -87,14 +95,24 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
             borderColor: "border.main",
           }}
         >
-          <ViewSubmissionButtonGrouped
-            sessionId={props.sessionId}
-            submittedAt={props.submittedAt}
-          />
-          <DownloadSubmissionButtonGrouped
-            sessionId={props.sessionId}
-            submittedAt={props.submittedAt}
-          />
+          {showSubmissionActions && props.submittedAt && (
+            <>
+              <ViewSubmissionButtonGrouped
+                sessionId={props.sessionId}
+                submittedAt={props.submittedAt}
+              />
+              <DownloadSubmissionButtonGrouped
+                sessionId={props.sessionId}
+                submittedAt={props.submittedAt}
+              />
+            </>
+          )}
+          {showPaymentActions && props.succeededPayment && (
+            <PaymentMenuGrouped
+              sessionId={props.sessionId}
+              paymentEvent={props.succeededPayment}
+            />
+          )}
         </Box>
       )}
     </Box>

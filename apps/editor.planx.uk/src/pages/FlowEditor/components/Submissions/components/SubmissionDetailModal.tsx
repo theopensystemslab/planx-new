@@ -12,6 +12,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { CloseButton } from "ui/shared/CloseButton";
 
 import type { Submission } from "../types";
+import { getSucceededPayment } from "../utils";
 import { SubmissionDetails } from "./SubmissionDetails";
 import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
 
@@ -113,6 +114,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   const events = data?.submissions || [];
   const latestEvent = events[0];
   const submittedAt = getSubmittedAt(events);
+  const succeededPayment = getSucceededPayment(events);
 
   const submissionExpirationDate = submittedAt
     ? addDays(new Date(submittedAt), DAYS_UNTIL_EXPIRY)
@@ -148,6 +150,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
             teamSlug={teamSlug}
             submittedAt={submittedAt}
             isSubmissionAvailable={isSubmissionAvailable}
+            succeededPayment={succeededPayment}
           />
         </Grid>
 
