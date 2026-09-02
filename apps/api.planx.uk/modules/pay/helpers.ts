@@ -71,7 +71,10 @@ export async function logPaymentStatus({
     } catch (e) {
       reportError({
         error: `Failed to insert a payment status: ${e}`,
-        context: { govUkResponse },
+        context: {
+          govUkResponse,
+          ...(e instanceof Error && { cause: e.cause }),
+        },
       });
     }
   }
