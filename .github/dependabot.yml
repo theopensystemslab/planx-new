@@ -19,10 +19,14 @@ updates:
       sharedb:
         patterns: ["sharedb", "@types/sharedb"]
     ignore:
-      # Node version is managed manually, only allow patches
-      - dependency-name: "@types/node"
+      # Majors only across the workspace so we don't fall too far behind
+      # Security updates bypass this and still raise PRs for CVEs
+      - dependency-name: "*"
         update-types:
-          ["version-update:semver-major", "version-update:semver-minor"]
+          ["version-update:semver-patch", "version-update:semver-minor"]
+      # Node version is managed manually - also ignore major versions
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
     # Matches pnpm's `minimumReleaseAge` in pnpm-workspace.yaml
     cooldown:
       default-days: 7
