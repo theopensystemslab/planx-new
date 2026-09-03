@@ -1,9 +1,12 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Skeleton from "@mui/material/Skeleton";
+import { InternalBackButton } from "@planx/components/shared/Preview/InternalBackButton";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { PrintButton } from "components/PrintButton";
 import { getSubmissionHTML } from "lib/api/submissions/requests";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 
 const LoadingSkeleton = () => (
@@ -28,6 +31,25 @@ const SubmissionHTML: React.FC<{ sessionId: string }> = ({ sessionId }) => {
     queryFn: () => getSubmissionHTML(sessionId),
     enabled: !!sessionId,
   });
+  const navigate = useNavigate();
+  const params = useParams({ strict: false });
+  const teamSlug = useStore((state) => state.teamSlug);
+
+  const handleBack = () => {
+    if (params.flow) {
+      navigate({
+        to: "/app/$team/$flow/submissions",
+        params: { team: teamSlug, flow: params.flow },
+        search: { detail: sessionId },
+      });
+    } else {
+      navigate({
+        to: "/app/$team/submissions",
+        params: { team: teamSlug },
+        search: { detail: sessionId },
+      });
+    }
+  };
 
   useEffect(() => {
     if (!sanitisedHTML) return;
@@ -53,6 +75,7 @@ const SubmissionHTML: React.FC<{ sessionId: string }> = ({ sessionId }) => {
         <LoadingSkeleton />
       ) : (
         <>
+          <InternalBackButton handleBack={handleBack} />
           <Box
             dangerouslySetInnerHTML={{ __html: sanitisedHTML }}
             sx={{ mb: 2 }}
