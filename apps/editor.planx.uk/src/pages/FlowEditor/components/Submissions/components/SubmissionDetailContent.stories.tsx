@@ -71,7 +71,7 @@ const mocks = [
 ];
 
 const meta = {
-  title: "Editor Components/Submissions/Submission detail content",
+  title: "Editor Components/Submissions/Details Modal/Content",
   component: SubmissionDetailContent,
   decorators: [
     (Story) => {
