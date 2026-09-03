@@ -4,7 +4,7 @@
   "license": "MPL-2.0",
   "dependencies": {
     "@airbrake/browser": "^2.1.9",
-    "@apollo/client": "^3.14.0",
+    "@apollo/client": "^4.2.12",
     "@ctrl/tinycolor": "^4.2.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
