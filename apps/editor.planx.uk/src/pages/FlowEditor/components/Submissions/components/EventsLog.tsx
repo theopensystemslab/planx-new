@@ -46,15 +46,13 @@ const EventsLog: React.FC<EventsLogProps> = ({
   };
 
   // consolidate event types and statuses into single status
-  const submissionsWithConsolidatedStatus = useMemo(() => {
-    return submissions.map((submission) => ({
-      ...submission,
-      consolidatedStatus: getConsolidatedStatus(
-        submission.status,
-        submission.eventType,
-      ),
-    }));
-  }, [submissions]);
+  const submissionsWithConsolidatedStatus = submissions.map((submission) => ({
+    ...submission,
+    consolidatedStatus: getConsolidatedStatus(
+      submission.status,
+      submission.eventType,
+    ),
+  }));
 
   if (loading)
     return (
