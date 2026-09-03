@@ -73,7 +73,7 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
     // We generate this JSON ourselves from database content, and hand the council its URL
     // immediately below - long before any scan could land - so exempt it from verification
     const { fileUrl } = await uploadPrivateFile(file, filename, undefined, {
-      scanExempt: true,
+      dangerouslySkipMalwareScan: true,
     });
 
     let webhookRequest: AxiosRequestConfig;

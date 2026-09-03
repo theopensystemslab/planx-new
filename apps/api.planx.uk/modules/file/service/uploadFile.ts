@@ -35,10 +35,14 @@ export const uploadPrivateFile = async (
   filename: string,
   filekey?: string,
   /**
-   * Optionally mark the file as exempt from Scanii checks. Should only be used for files
-   * the API generates itself from trusted data - never for anything a user uploads.
+   * Mark the file as exempt from Scanii checks, so it can be served without ever having
+   * been scanned. Only ever pass this for files the API generates itself from trusted
+   * data - never for anything derived from user input. When in doubt, leave it off: an
+   * unnecessary scan costs a short delay, a missing one costs us the guarantee entirely.
    */
-  { scanExempt = false }: { scanExempt?: boolean } = {},
+  {
+    dangerouslySkipMalwareScan = false,
+  }: { dangerouslySkipMalwareScan?: boolean } = {},
 ) => {
   const s3 = s3Factory();
 
@@ -46,7 +50,7 @@ export const uploadPrivateFile = async (
 
   params.Metadata = {
     is_private: "true",
-    ...(scanExempt && { [SCAN_EXEMPT_METADATA_KEY]: "true" }),
+    ...(dangerouslySkipMalwareScan && { [SCAN_EXEMPT_METADATA_KEY]: "true" }),
   };
 
   await s3.putObject(params);
