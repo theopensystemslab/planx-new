@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
-import { mockSubmissions } from "../mockSubmissions";
+import { mockSubmissionsAllStatuses } from "../mockSubmissions";
 import EventsLog from "./EventsLog";
 
 const meta = {
@@ -23,7 +23,7 @@ export default meta;
 export const Basic = {
   args: {
     loading: false,
-    submissions: mockSubmissions,
+    submissions: mockSubmissionsAllStatuses,
     error: undefined,
   },
 } satisfies Story;

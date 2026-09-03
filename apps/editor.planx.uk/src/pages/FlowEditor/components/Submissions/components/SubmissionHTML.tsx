@@ -1,7 +1,9 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Skeleton from "@mui/material/Skeleton";
+import InternalBackButton from "@planx/components/shared/Preview/InternalBackButton";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { PrintButton } from "components/PrintButton";
 import { getSubmissionHTML } from "lib/api/submissions/requests";
 import React, { useEffect } from "react";
@@ -28,6 +30,11 @@ const SubmissionHTML: React.FC<{ sessionId: string }> = ({ sessionId }) => {
     queryFn: () => getSubmissionHTML(sessionId),
     enabled: !!sessionId,
   });
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate({ to: "..", search: { detail: sessionId } });
+  };
 
   useEffect(() => {
     if (!sanitisedHTML) return;
@@ -53,6 +60,7 @@ const SubmissionHTML: React.FC<{ sessionId: string }> = ({ sessionId }) => {
         <LoadingSkeleton />
       ) : (
         <>
+          <InternalBackButton handleBack={handleBack} />
           <Box
             dangerouslySetInnerHTML={{ __html: sanitisedHTML }}
             sx={{ mb: 2 }}

@@ -8,31 +8,25 @@ import { slugify } from "utils";
 
 import { useStore } from "../../lib/store";
 import EventsLog from "./components/EventsLog";
-import type { Submission, SubmissionsProps } from "./types";
+import type { SubmissionsProps, SubmissionSummary } from "./types";
 
 const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const [teamId] = useStore((state) => [state.teamId]);
 
-  // submission_services_log view is already filtered for events >= Jan 1 2024
-  const { data, loading, error } = useQuery<{ submissions: Submission[] }>(
+  const { data, loading, error } = useQuery<{
+    submissions: SubmissionSummary[];
+  }>(
     gql`
       query GetSubmissions($team_id: Int!) {
-        submissions: submission_services_log(
-          where: {
-            team_id: { _eq: $team_id }
-            event_type: { _nin: ["Started session", "Invited to pay"] }
-          }
-          order_by: { created_at: desc }
+        submissions: submissions_grouped(
+          where: { team_id: { _eq: $team_id } }
         ) {
           flowId: flow_id
-          sessionId: session_id
-          eventId: event_id
+          id: session_id
           eventType: event_type
           status: status
-          retry: retry
-          response: response
           address: address
-          createdAt: created_at
+          eventCreatedAt: created_at
           flowName: flow_name
         }
       }

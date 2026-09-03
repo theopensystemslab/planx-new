@@ -1,7 +1,6 @@
 // add/edit/remove feature flags in array below
 export const AVAILABLE_FEATURE_FLAGS = [
   "EXPLORE",
-  "GROUPED_SUBMISSIONS",
   "NOTES_V2",
   "STRIPE_MIGRATION",
 ] as const;

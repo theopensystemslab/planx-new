@@ -1,30 +1,21 @@
 import BarChartIcon from "@mui/icons-material/BarChart";
-import type { GridFilterItem } from "@mui/x-data-grid";
+import type { GridRowParams } from "@mui/x-data-grid";
+import { useNavigate } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useMemo } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import type { ColumnConfig } from "ui/shared/DataTable/types";
 import { ColumnFilterType } from "ui/shared/DataTable/types";
-import {
-  containsItem,
-  dateFormatter,
-  defaultStringFilterOperator,
-} from "ui/shared/DataTable/utils";
+import { dateFormatter } from "ui/shared/DataTable/utils";
 
-import {
-  submissionEventTypes,
-  submissionStatusOptions,
-} from "../submissionFilterOptions";
-import type { EventsLogProps, Submission } from "../types";
-import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
-import { OpenResponseButton } from "./OpenResponseButton";
-import { ResubmitButton } from "./ResubmitButton";
-import { StatusChip } from "./StatusChip";
-import { SubmissionEvent } from "./SubmissionEvent";
-import { ViewSubmissionButton } from "./ViewSubmissionButton";
+import { submissionStatusOptions } from "../submissionFilterOptions";
+import type { EventsLogProps, SubmissionSummary } from "../types";
+import { getConsolidatedStatus } from "../utils";
+import { StatusChipCell } from "./StatusChip";
 
 const EventsLog: React.FC<EventsLogProps> = ({
   submissions,
@@ -32,9 +23,36 @@ const EventsLog: React.FC<EventsLogProps> = ({
   error,
   filterByFlow,
 }) => {
-  const isPlatformAdmin = useStore((state) =>
-    Boolean(state.user?.isPlatformAdmin),
-  );
+  const navigate = useNavigate();
+  const params = useParams({ strict: false });
+  const teamSlug = useStore((state) => state.teamSlug);
+
+  const handleRowClick = (rowParams: GridRowParams) => {
+    const sessionId = rowParams.row.id;
+
+    if (params.flow) {
+      navigate({
+        to: "/app/$team/$flow/submissions",
+        params: { team: teamSlug, flow: params.flow },
+        search: { detail: sessionId },
+      });
+    } else {
+      navigate({
+        to: "/app/$team/submissions",
+        params: { team: teamSlug },
+        search: { detail: sessionId },
+      });
+    }
+  };
+
+  // consolidate event types and statuses into single status
+  const submissionsWithConsolidatedStatus = submissions.map((submission) => ({
+    ...submission,
+    consolidatedStatus: getConsolidatedStatus(
+      submission.status,
+      submission.eventType,
+    ),
+  }));
 
   if (loading)
     return (
@@ -55,17 +73,11 @@ const EventsLog: React.FC<EventsLogProps> = ({
       />
     );
 
-  const rowData = submissions.map((submission, index) => ({
-    ...submission,
-    id: `${submission.eventId}-${index}`,
-    downloadSubmissionLink: undefined,
-  }));
-
-  const columns: ColumnConfig<Submission>[] = [
+  const columns: ColumnConfig<SubmissionSummary>[] = [
     {
       field: "flowName",
       headerName: "Service",
-      width: 250,
+      width: 350,
       type: ColumnFilterType.SINGLE_SELECT,
       customComponent: (params) => <strong>{`${params.value}`}</strong>,
       columnOptions: {
@@ -76,114 +88,36 @@ const EventsLog: React.FC<EventsLogProps> = ({
     {
       field: "address",
       headerName: "Address",
-      width: 250,
+      width: 350,
     },
     {
-      field: "eventType",
-      headerName: "Event",
-      width: 230,
-      type: ColumnFilterType.SINGLE_SELECT,
-      customComponent: SubmissionEvent,
-      columnOptions: {
-        valueOptions: submissionEventTypes,
-      },
-    },
-    {
-      field: "status",
+      field: "consolidatedStatus",
       headerName: "Status",
-      width: 125,
+      width: 200,
       type: ColumnFilterType.SINGLE_SELECT,
-      customComponent: StatusChip,
+      customComponent: StatusChipCell,
       columnOptions: {
         valueOptions: submissionStatusOptions,
       },
     },
     {
-      field: "createdAt",
+      field: "eventCreatedAt",
       headerName: "Date",
-      width: 125,
+      width: 200,
       columnOptions: {
         valueFormatter: dateFormatter,
       },
       type: ColumnFilterType.DATE,
     },
-    { field: "sessionId", headerName: "Session ID", width: 400 },
-    {
-      field: "viewSubmissionLink" as keyof Submission,
-      headerName: "View Submission",
-      width: 100,
-      type: ColumnFilterType.CUSTOM,
-      customComponent: ViewSubmissionButton,
-      columnOptions: {
-        cellClassName: "MuiDataGrid-cell--textCenter",
-        filterable: false,
-        sortable: false,
-      },
-    },
-    {
-      field: "downloadSubmissionLink" as keyof Submission,
-      headerName: "Download",
-      width: 100,
-      type: ColumnFilterType.CUSTOM,
-      customComponent: DownloadSubmissionButton,
-      columnOptions: {
-        cellClassName: "MuiDataGrid-cell--textCenter",
-        filterable: false,
-        sortable: false,
-      },
-    },
-    {
-      field: "response",
-      headerName: "Response",
-      width: 100,
-      type: ColumnFilterType.CUSTOM,
-      customComponent: OpenResponseButton,
-      columnOptions: {
-        sortable: false,
-        cellClassName: "MuiDataGrid-cell--textCenter",
-        filterOperators: [
-          {
-            value: "contains",
-            getApplyFilterFn: (filterItem: GridFilterItem) => {
-              // return a function that is applied to all the rows in turn
-              return (currentRowValue: Record<any, any>): boolean => {
-                if (!currentRowValue?.data?.body) {
-                  return false;
-                }
-
-                return containsItem(
-                  currentRowValue.data.body,
-                  filterItem.value,
-                );
-              };
-            },
-            InputComponent: defaultStringFilterOperator?.InputComponent,
-            InputComponentProps:
-              defaultStringFilterOperator?.InputComponentProps,
-          },
-        ],
-      },
-    },
+    { field: "id", headerName: "Session ID", width: 400 },
   ];
-
-  if (isPlatformAdmin) {
-    columns.push({
-      field: "resubmit" as keyof Submission,
-      headerName: "Resubmit",
-      width: 100,
-      type: ColumnFilterType.CUSTOM,
-      customComponent: ResubmitButton,
-      columnOptions: {
-        cellClassName: "MuiDataGrid-cell--textCenter",
-        filterable: false,
-        sortable: false,
-      },
-    });
-  }
-
   return (
     <AppErrorBoundary>
-      <DataTable columns={columns} rows={rowData} />
+      <DataTable
+        columns={columns}
+        rows={submissionsWithConsolidatedStatus}
+        onRowClick={handleRowClick}
+      />
     </AppErrorBoundary>
   );
 };

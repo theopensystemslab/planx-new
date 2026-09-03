@@ -2,21 +2,29 @@ import Chip from "@mui/material/Chip";
 import React from "react";
 import type { RenderCellParams } from "ui/shared/DataTable/types";
 
-import type { Submission } from "../types";
+interface Props {
+  status?: string;
+}
 
-type Props = RenderCellParams | { status: Submission["status"] };
+export const StatusChip: React.FC<Props> = ({ status }) => {
+  if (!status) return null;
 
-const isRenderCellParams = (props: Props): props is RenderCellParams => {
-  // TODO: when removing feature flag, conditional isRenderCellParams not needed
-  return "value" in props;
+  if (status.includes("failed") || status.includes("Failed")) {
+    return <Chip label={status} size="small" color="error" />;
+  }
+  if (status === "Sending") {
+    return <Chip label={status} size="small" color="sending" />;
+  }
+  if (status === "Invited to pay" || status === "Payment in progress") {
+    return <Chip label={status} size="small" color="paymentPending" />;
+  }
+  if (status === "Success") {
+    return <Chip label={status} size="small" color="success" />;
+  }
+
+  return null;
 };
 
-export const StatusChip = (props: Props) => {
-  const statusValue = isRenderCellParams(props) ? props.value : props.status;
-
-  return statusValue === "Success" ? (
-    <Chip label="Success" size="small" color="success" />
-  ) : (
-    <Chip label={statusValue} size="small" color="error" />
-  );
-};
+export const StatusChipCell = (params: RenderCellParams) => (
+  <StatusChip status={params.value} />
+);
