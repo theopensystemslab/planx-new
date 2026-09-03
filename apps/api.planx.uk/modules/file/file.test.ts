@@ -1,4 +1,5 @@
 import type * as s3Client from "@aws-sdk/client-s3";
+import { NoSuchKey, NotFound } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import fs from "fs";
 import path from "path";
@@ -476,8 +477,10 @@ describe("File download", () => {
     });
 
     it("should 404 when the file is not in S3", async () => {
-      const noSuchKey = new Error("The specified key does not exist.");
-      noSuchKey.name = "NoSuchKey";
+      const noSuchKey = new NoSuchKey({
+        message: "The specified key does not exist.",
+        $metadata: { httpStatusCode: 404 },
+      });
       mockGetObject = vi.fn(() => Promise.reject(noSuchKey));
 
       await supertest(app)
@@ -742,8 +745,10 @@ describe("DELETE /file/public/:fileKey/:fileName", () => {
   });
 
   it("404s when the file is not in S3", async () => {
-    const notFound = new Error("Not Found");
-    notFound.name = "NotFound";
+    const notFound = new NotFound({
+      message: "Not Found",
+      $metadata: { httpStatusCode: 404 },
+    });
     mockHeadObject = vi.fn(() => Promise.reject(notFound));
 
     await del()

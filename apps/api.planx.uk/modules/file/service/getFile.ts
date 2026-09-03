@@ -1,4 +1,5 @@
 import type { GetObjectCommandOutput } from "@aws-sdk/client-s3";
+import { NoSuchKey, NotFound, S3ServiceException } from "@aws-sdk/client-s3";
 import { Readable } from "stream";
 
 import { getScanStatus } from "./scanStatus.js";
@@ -120,13 +121,14 @@ const discardBody = (file: GetObjectCommandOutput) => {
 };
 
 /**
- * S3 signals a missing object as `NoSuchKey` on GetObject and `NotFound` on HeadObject,
- * the latter without a usable message - fall back to the response status.
+ * S3 signals a missing object as `NoSuchKey` on GetObject and `NotFound` on HeadObject.
+ * Any other unmodelled shape carrying a 404 counts too - `$metadata` is on the shared
+ * `S3ServiceException` base, so the response status is available without casting.
  */
 const isNotFound = (error: unknown): boolean => {
-  if (!(error instanceof Error)) return false;
-  if (error.name === "NoSuchKey" || error.name === "NotFound") return true;
+  if (error instanceof NoSuchKey || error instanceof NotFound) return true;
+  if (error instanceof S3ServiceException)
+    return error.$metadata.httpStatusCode === 404;
 
-  const { $metadata } = error as { $metadata?: { httpStatusCode?: number } };
-  return $metadata?.httpStatusCode === 404;
+  return false;
 };
