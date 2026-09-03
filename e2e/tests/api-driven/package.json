@@ -7,7 +7,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@cucumber/cucumber": "^12.8.3",
+    "@cucumber/cucumber": "^13.2.1",
     "@opensystemslab/planx-core": "catalog:",
     "axios": "catalog:",
     "dotenv-expand": "^10.0.0",
