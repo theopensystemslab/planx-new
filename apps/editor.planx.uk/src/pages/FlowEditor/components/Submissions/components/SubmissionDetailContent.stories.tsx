@@ -92,6 +92,12 @@ type Story = StoryObj<typeof meta>;
 
 export default meta;
 
+export const Basic = {
+  args: {
+    sessionId: "6fcb873f-cc7f-4fc0-ad9d-b4148de7a3b5",
+  },
+};
+
 export const InvitedToPay = {
   args: {
     sessionId: "invited-to-pay-0000-0000-000000000000",
