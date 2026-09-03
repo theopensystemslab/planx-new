@@ -18,11 +18,11 @@ let mockHeadObject: Mocked<() => void>;
 let mockDeleteObjects: Mocked<() => void>;
 let getObjectResponse = {};
 
-/** Tags as written by the Scanii callback Lambda for a file it scanned and cleared */
+// tags as written by the Scanii callback Lambda for a file it scanned and cleared
 const CLEAN_TAGS = {
   TagSet: [
-    { Key: "ScaniiId", Value: "0ba8a1f0dd1d11eea1b40e7c1e0f1d2c" },
-    { Key: "ScaniiFindings", Value: "" },
+    { Key: "ScaniiId", Value: "c13cedff8cd47119a538d4fa2202f97e" },
+    { Key: "ScaniiFindings", Value: "None" },
   ],
 };
 
@@ -657,6 +657,48 @@ describe("File download", () => {
                 Key: "ScaniiFindings",
                 Value: "content.malicious.eicar-test-signature",
               },
+            ],
+          }),
+        );
+
+        await get()
+          .expect(404)
+          .then((res) => expect(res.body.error).toBe("FILE_FLAGGED"));
+      });
+
+      // regression: "None" is what the Lambda actually writes for a clean file
+      // Reading it as a 'finding' meant every scanned file 404'd on staging
+      it.each(["None", "none", "NONE", " None ", ""])(
+        "serves a file whose findings tag is %j",
+        async (findings) => {
+          getObjectResponse = {
+            ...getObjectResponse,
+            LastModified: new Date("2026-08-01T00:00:00Z"),
+          };
+          mockGetObjectTagging = vi.fn(() =>
+            Promise.resolve({
+              TagSet: [
+                { Key: "ScaniiId", Value: "abc123" },
+                { Key: "ScaniiFindings", Value: findings },
+              ],
+            }),
+          );
+
+          await get().expect(200);
+        },
+      );
+
+      // an unrecognised findings format must fail closed rather than be waved through
+      it("returns 404 when the findings tag holds something we don't recognise", async () => {
+        getObjectResponse = {
+          ...getObjectResponse,
+          LastModified: new Date("2026-08-01T00:00:00Z"),
+        };
+        mockGetObjectTagging = vi.fn(() =>
+          Promise.resolve({
+            TagSet: [
+              { Key: "ScaniiId", Value: "abc123" },
+              { Key: "ScaniiFindings", Value: "unexpected-new-format" },
             ],
           }),
         );

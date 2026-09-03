@@ -31,6 +31,8 @@ You can inspect an object's tags directly:
 aws s3api get-object-tagging --bucket <bucket> --key 'abc12345/my_file.jpg'
 ```
 
+A file that was scanned and cleared carries `ScaniiFindings` set to the literal string `None` - **not** an empty value. A real finding looks similar to `content.malicious.eicar-test-signature`. Anything we don't recognise is treated as a finding and the file is refused, so if Scanii ever changes this format, expect `FILE_FLAGGED` on healthy files.
+
 ## Steps
 If the above is reported (failure to download files) please take the following steps to identify the issue.
 
