@@ -48,7 +48,6 @@ catalogs:
     "@types/sharedb": ^6.0.0
     sharedb: ^6.0.1
   typescript:
-    "@babel/preset-typescript": ^7.29.7
     typescript: ~5.9.3
 
 minimumReleaseAge: 10080
