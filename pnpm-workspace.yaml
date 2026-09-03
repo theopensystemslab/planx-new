@@ -45,8 +45,8 @@ catalogs:
     "@types/lodash": ^4.17.24
     lodash: ^4.18.1
   sharedb:
-    "@types/sharedb": ^5.1.0
-    sharedb: ^5.2.2
+    "@types/sharedb": ^6.0.0
+    sharedb: ^6.0.1
   typescript:
     "@babel/preset-typescript": ^7.29.7
     typescript: ~5.9.3
