@@ -1,5 +1,9 @@
 # NB. this file configures dependabot's approach to general version updates of dependencies
 # fixes for vulnerabilities/CVEs (i.e. security updates) are handled automatically as per repo settings
+#
+# Every entry carries a "[skip pizza]" commit-message prefix - we rarely need these environments for 
+# a package update. CI linting, testing, and building (via E2E) should be sufficient here
+
 version: 2
 
 updates:
@@ -8,6 +12,8 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["pnpm"]
+    commit-message:
+      prefix: "[skip pizza] "
     open-pull-requests-limit: 10
     groups:
       tiptap:
@@ -39,6 +45,8 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["hasura", "docker"]
+    commit-message:
+      prefix: "[skip pizza] "
     open-pull-requests-limit: 1
 
   - package-ecosystem: "docker"
@@ -46,6 +54,8 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["hasura", "caddy", "docker"]
+    commit-message:
+      prefix: "[skip pizza] "
     open-pull-requests-limit: 1
 
   - package-ecosystem: "docker"
@@ -53,6 +63,8 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["sharedb", "docker"]
+    commit-message:
+      prefix: "[skip pizza] "
     open-pull-requests-limit: 1
 
   - package-ecosystem: "docker"
@@ -60,6 +72,8 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["api", "docker"]
+    commit-message:
+      prefix: "[skip pizza] "
     open-pull-requests-limit: 1
 
   # Caddy container (reverse proxy for pizzas)
@@ -68,6 +82,8 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["ci", "caddy", "docker"]
+    commit-message:
+      prefix: "[skip pizza] "
     open-pull-requests-limit: 1
 
   # custom postgres container
@@ -76,6 +92,8 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["ci", "postgres", "docker"]
+    commit-message:
+      prefix: "[skip pizza] "
     open-pull-requests-limit: 1
 
   - package-ecosystem: "github-actions"
@@ -83,3 +101,5 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["ci", "github-actions"]
+    commit-message:
+      prefix: "[skip pizza] "
