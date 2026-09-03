@@ -6,7 +6,11 @@ import { ServerError } from "../../errors/index.js";
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 import { validateExtension } from "./middleware/useFileUpload.js";
 import { deleteFilesByKey } from "./service/deleteFile.js";
-import { getFileFromS3 } from "./service/getFile.js";
+import {
+  getFileFromS3,
+  type GetFileResult,
+  headFileInS3,
+} from "./service/getFile.js";
 import { uploadPrivateFile, uploadPublicFile } from "./service/uploadFile.js";
 import { buildFilePath } from "./service/utils.js";
 
@@ -86,6 +90,46 @@ export type DownloadController = ValidatedRequestHandler<
   Buffer | { error: string }
 >;
 
+type DownloadResponse = Parameters<DownloadController>[1];
+type DownloadNext = Parameters<DownloadController>[2];
+
+/** How long we ask a client to wait before retrying a file whose scan is still pending */
+const SCAN_RETRY_AFTER_SECONDS = 30;
+
+/**
+ * Map a failed read of the user-data bucket onto an HTTP response.
+ *
+ * Request bodies should carry a stable code: councils and their integrations can branch on
+ * these, and the human-readable detail (e.g. file key) belongs in our logs rather than on the wire.
+ */
+const handleFileError = (
+  result: Exclude<GetFileResult, { outcome: "ok" }>,
+  filePath: string,
+  res: DownloadResponse,
+  next: DownloadNext,
+) => {
+  switch (result.outcome) {
+    case "pending-scan":
+      // 503 is the only status where Retry-After is formally defined, and the code
+      // distinguishes this from a genuine outage
+      return res
+        .status(503)
+        .set("Retry-After", String(SCAN_RETRY_AFTER_SECONDS))
+        .json({ error: "FILE_SCAN_PENDING" });
+    case "malicious":
+      return res.status(404).json({ error: "FILE_FLAGGED" });
+    case "not-found":
+      return res.status(404).json({ error: "FILE_NOT_FOUND" });
+    case "error":
+      return next(
+        new ServerError({
+          message: `Failed to download file ${filePath}`,
+          cause: result.cause,
+        }),
+      );
+  }
+};
+
 export const publicDownloadController: DownloadController = async (
   _req,
   res,
@@ -94,25 +138,17 @@ export const publicDownloadController: DownloadController = async (
   const { fileKey, fileName } = res.locals.parsedReq.params;
   const filePath = buildFilePath(fileKey, fileName);
 
-  try {
-    const file = await getFileFromS3(filePath);
-    if (!file) {
-      return res.status(404).json({
-        error: `Missing file - this file has been deleted by our automated content filtering system. Please contact PlanX for further details quoting file ID ${filePath}`,
-      });
-    }
+  const result = await getFileFromS3(filePath);
 
-    const { body, headers, isPrivate } = file;
+  if (result.outcome !== "ok")
+    return handleFileError(result, filePath, res, next);
 
-    if (isPrivate) throw Error("Bad request");
+  // public route should not reveal that a private file exists
+  if (result.isPrivate)
+    return res.status(404).json({ error: "FILE_NOT_FOUND" });
 
-    res.set(headers);
-    res.send(body);
-  } catch (error) {
-    return next(
-      new ServerError({ message: `Failed to download public file: ${error}` }),
-    );
-  }
+  res.set(result.headers);
+  return res.send(result.body);
 };
 
 export const privateDownloadController: DownloadController = async (
@@ -123,21 +159,13 @@ export const privateDownloadController: DownloadController = async (
   const { fileKey, fileName } = res.locals.parsedReq.params;
   const filePath = buildFilePath(fileKey, fileName);
 
-  try {
-    const file = await getFileFromS3(filePath);
-    if (!file) {
-      return res.status(404).json({
-        error: `Missing file - this file has been deleted by our automated content filtering system. Please contact PlanX for further details quoting file ID ${filePath}`,
-      });
-    }
+  const result = await getFileFromS3(filePath);
 
-    res.set(file.headers);
-    res.send(file.body);
-  } catch (error) {
-    return next(
-      new ServerError({ message: `Failed to download private file: ${error}` }),
-    );
-  }
+  if (result.outcome !== "ok")
+    return handleFileError(result, filePath, res, next);
+
+  res.set(result.headers);
+  return res.send(result.body);
 };
 
 export type DeleteController = ValidatedRequestHandler<
@@ -153,19 +181,26 @@ export const publicDeleteController: DeleteController = async (
   const { fileKey, fileName } = res.locals.parsedReq.params;
   const filePath = buildFilePath(fileKey, fileName);
 
+  // Metadata-only read - should be able to delete a file regardless of scan status
+  const file = await headFileInS3(filePath);
+
+  if (file.outcome === "not-found")
+    return res.status(404).json({ error: "FILE_NOT_FOUND" });
+
+  if (file.outcome === "error")
+    return next(
+      new ServerError({
+        message: `Failed to delete public file ${filePath}`,
+        cause: file.cause,
+      }),
+    );
+
+  if (file.isPrivate) return res.status(404).json({ error: "FILE_NOT_FOUND" });
+
   try {
-    const file = await getFileFromS3(filePath);
-    if (!file) {
-      return res.status(404).json({
-        error: `Missing file - this file has been deleted by our automated content filtering system. Please contact PlanX for further details quoting file ID ${filePath}`,
-      });
-    }
-
-    if (file.isPrivate) throw Error("Bad request");
-
     // once we've established that the file is public, we can delete it
     await deleteFilesByKey([filePath]);
-    res.status(204).send();
+    return res.status(204).send();
   } catch (error) {
     return next(
       new ServerError({ message: `Failed to delete public file: ${error}` }),

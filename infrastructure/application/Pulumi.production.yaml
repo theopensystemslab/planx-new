@@ -17,6 +17,8 @@ config:
     secure: AAABADikgxQsKaFgnsvx8YPBM2fFGrz8F6m5gMd3agb6ldEHySEDYgqhZCYypyfJaNpnSlFTPEdZ/Ze5fETzg496j3D7hHGe/Q7bM1A557EVbFHIfdGDAjPtgL2dXvNPY6hlw84GIUZuKHg5fqItVUJSIZWthSeIlTLHHqUpUuZJp+6L4le/HcgNRMkr8t5QuPSvBw==
   application:encryption-key:
     secure: AAABAGbTpoRtazwoNFNmaPCW0RdeTqjhEzQuYR1kl4ft7EWNxqswAu8Dc9T+YBxkYr3uaHbu5obzyo8I4QuVgg==
+  application:enforce-scan-from:
+    secure: AAABAERqq1ix/30HQGpkErGYiKW0bHSceUQxl5AynUazmIG0VcAeqf+phxcvmhzVjO3pYbjvvZI=
   application:file-api-key:
     secure: AAABAGyTfLujGho+V0tEhFXQRET5FjYK6txyaFTB3gY/VaKzq8yNlocJTAM5nt8mBhF6T+AeQD2GxW63
   application:file-api-key-barnet:

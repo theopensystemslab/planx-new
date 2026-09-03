@@ -8,6 +8,7 @@ import mime from "mime";
 import { customAlphabet } from "nanoid";
 
 import { isLiveEnv } from "../../../helpers.js";
+import { SCAN_EXEMPT_METADATA_KEY } from "./scanStatus.js";
 import { s3Factory } from "./utils.js";
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 8);
 
@@ -33,6 +34,15 @@ export const uploadPrivateFile = async (
   file: Express.Multer.File,
   filename: string,
   filekey?: string,
+  /**
+   * Mark the file as exempt from Scanii checks, so it can be served without ever having
+   * been scanned. Only ever pass this for files the API generates itself from trusted
+   * data - never for anything derived from user input. When in doubt, leave it off: an
+   * unnecessary scan costs a short delay, a missing one costs us the guarantee entirely.
+   */
+  {
+    dangerouslySkipMalwareScan = false,
+  }: { dangerouslySkipMalwareScan?: boolean } = {},
 ) => {
   const s3 = s3Factory();
 
@@ -40,6 +50,7 @@ export const uploadPrivateFile = async (
 
   params.Metadata = {
     is_private: "true",
+    ...(dangerouslySkipMalwareScan && { [SCAN_EXEMPT_METADATA_KEY]: "true" }),
   };
 
   await s3.putObject(params);

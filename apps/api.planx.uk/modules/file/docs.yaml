@@ -75,7 +75,9 @@ components:
             type: string
             format: binary
     MissingFile:
-      description: Missing file - this file has been deleted by our content moderation system (Scanii)
+      description: |
+        The file cannot be served. `FILE_NOT_FOUND` means no such object exists (or, on the
+        public route, it exists but is private). `FILE_FLAGGED` means Scanii reported findings.
       content:
         application/json:
           schema:
@@ -83,7 +85,26 @@ components:
             properties:
               error:
                 type: "string"
-                example: "Missing file"
+                enum: ["FILE_NOT_FOUND", "FILE_FLAGGED"]
+                example: "FILE_NOT_FOUND"
+    FileScanPending:
+      description: |
+        Our content moderation system (Scanii) has not finished scanning this file, so we won't serve it yet.
+        This is transient - retry after the number of seconds given in the `Retry-After` header.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying
+          schema:
+            type: integer
+            example: 30
+      content:
+        application/json:
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                example: "FILE_SCAN_PENDING"
 paths:
   /file/private/upload:
     post:
@@ -134,6 +155,8 @@ paths:
           $ref: "#/components/responses/MissingFile"
         "500":
           $ref: "#/components/responses/ErrorMessage"
+        "503":
+          $ref: "#/components/responses/FileScanPending"
     delete:
       tags: ["file"]
       parameters:
@@ -143,7 +166,7 @@ paths:
         - bearerAuth: []
       responses:
         "204":
-          $ref: "#/components/responses/UploadFile"
+          description: Successful deletion
         "404":
           $ref: "#/components/responses/MissingFile"
         "500":
@@ -157,9 +180,11 @@ paths:
       security:
         - fileAPIKeyAuth: []
       responses:
-        "204":
-          description: Successful deletion
+        "200":
+          $ref: "#/components/responses/DownloadFile"
         "404":
           $ref: "#/components/responses/MissingFile"
         "500":
           $ref: "#/components/responses/ErrorMessage"
+        "503":
+          $ref: "#/components/responses/FileScanPending"

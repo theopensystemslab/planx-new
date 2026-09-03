@@ -15,6 +15,7 @@ import sanitize from "sanitize-filename";
 import str from "string-to-stream";
 
 import { $api } from "../../../client/index.js";
+import { ServerError } from "../../../errors/index.js";
 import { logDuration } from "../../../lib/performance.js";
 import type { Passport as IPassport } from "../../../types.js";
 import { getFileFromS3 } from "../../file/service/getFile.js";
@@ -240,7 +241,17 @@ export class ExportZip {
     const decodedS3Key = decodeURIComponent(s3Key);
     const file = await getFileFromS3(decodedS3Key);
 
-    if (file) this.zip.addFile(name, file.body);
+    // Fail the whole zip rather than silently handing a council an incomplete submission.
+    // A pending scan should resolve, so failing here lets the send event's Hasura retry kick in.
+    if (file.outcome !== "ok") {
+      throw new ServerError({
+        message: `Failed to add file ${decodedS3Key} to zip: ${file.outcome}`,
+        status: file.outcome === "pending-scan" ? 503 : 500,
+        cause: file.outcome === "error" ? file.cause : undefined,
+      });
+    }
+
+    this.zip.addFile(name, file.body);
   }
 
   toBuffer(): Buffer {

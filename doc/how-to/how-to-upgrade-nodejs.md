@@ -40,21 +40,15 @@ Steps 1, 2, 4, 5 & 9 also apply here and should be updated shortly after.
 
 ## AWS Lambda
 
-NB. This part probably only needs to be done for major versions, since the runtime appears to be minor-version-agnostic (i.e. is listed as `Node.js 22.x`, for example).
+### Scanii
 
-We have an AWS Lambda application (Scanii) which also runs on Node. This application is installed manually, and not managed via IaC (Pulumi).
+We maintain three serverless applications across our two AWS accounts — one per `user-data` bucket (staging, production), and the `pizza-user-uploads` bucket that pizzas write to. These send all uploaded files to the Scanii API to check for malicious content, then delete or tag the files as appropriate. They are installed manually rather than managed via IaC/Pulumi, as per [this section in the data layer README](../../infrastructure/data/README.md#Scanii).
 
-The runtime Node version used for Lambda functions is not tied to the Node version used by PlanX, but it's worth upgrading at the same time to keep these in sync.
+These include lambdas which run on Node, but these are not tied to the Node version used by PlanX. Nevertheless, this is a good opportunity to upgrade!
 
-The following steps need to be taken on both AWS Staging and Production account -
+**Do not edit the runtime on the Scanii functions directly.** It is tempting to bump `Runtime settings` directly in the Lambda console, but we did not author these functions and have no guarantees that expected behaviour will be maintained.
 
-1. Log in to AWS environment
-2. Navigate to AWS Lambda > Functions
-3. For each function (currently 2) update the runtime
-
-**Steps**
-
-Select function > Runtime settings > Edit > Runtime > Select Node version > Save
+Instead, deploy the latest version of the serverless application by following [this section in the data layer README](../../infrastructure/data/README.md#upgrading-to-a-new-version), which will come packaged with an appropriate runtime. Note in particular that the trigger migration needs uploads blocked for its duration, so this is not a change to make casually — and that it has to be repeated for all three stacks.
 
 ### Lambda@Edge function runtime
 

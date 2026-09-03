@@ -24,6 +24,71 @@ We are currently running Postgres 16, which is [supported until Nov 2028](https:
 
 4. Confirm success/"available" status and new configurations in AWS RDS console
 
+## Scanii
+
+All objects uploaded to the `user-data` buckets are scanned for malware and NSFW content (images only) by [Scanii](https://scanii.com/). This works via a trigger on the bucket which submits each object to a pair of lambdas (`Submit` and `Callback`). These (and other related resources) are manually provisioned as a [serverless application](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:484983087487:applications~UvaSoftware-Scanii-Lambda) (single CloudFormation stack) per bucket, rather than being scheduled in code and managed via Pulumi.
+
+> [!IMPORTANT]
+> There are **three** Scanii stacks across our two AWS environments. Each stack watches exactly one bucket, so each needs deploying, parameterising and upgrading separately.
+
+| Stack      | AWS account | Bucket               | `ENFORCE_SCAN_FROM` set via                                 |
+| ---------- | ----------- | -------------------- | ----------------------------------------------------------- |
+| pizza      | staging     | `pizza-user-uploads` | [`.env.staging`](../../.env.staging) (tracked in this repo) |
+| staging    | staging     | `user-data-xxx`      | Pulumi (`application:enforce-scan-from`, staging stack)     |
+| production | production  | `user-data-xxx`      | Pulumi (`application:enforce-scan-from`, production stack)  |
+
+The pizza stack covers the bucket that all PR preview environments upload to. It exists so that pizzas behave like production for file scanning — without it, the API's scan guard could not be switched on for pizzas, and the feature would first meet a real scanner on staging.
+
+Installation follows Scanii's [guide to analysing content stored on S3](https://docs.scanii.com/article/151-how-do-i-analyze-content-stored-on-amazon-s3). Note that you may not have the right AWS permissions to follow it through, so pair up and tread carefully!
+
+### Parameters
+
+Here we note some exemplar values to be passed to the application as parameters on deployment.
+
+| Parameter                     | Example                         | Notes                                                                                                                                                                                                                                                         |
+| ----------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Application name`            | `UvaSoftware-Scanii-Lambda-v99` | The CloudFormation stack name. Use a sensible version reference based on the latest [release](https://github.com/scanii/scanii-lambda/releases).                                                                                                              |
+| `actionDeleteObjectOnFinding` | `true`                          | Determines whether the callback lambda deletes an object outright if the Scanii API flags it. Should be **true**.                                                                                                                                             |
+| `actionTagObject`             | `true`                          | Determines whether the callback lambda writes AWS tags to the scanned object (i.e. `ScaniiId`, `ScaniiFindings` and `ScaniiContentType` (the PlanX API enforces their presence before serving any file). Should be **true**.                                  |
+| `bucketName`                  | `user-data-xxx`                 | Differs per stack. For staging/production, retrieve from the `data` layer by `pulumi stack output apiBucketId`, or check AWS console. For the pizza stack it is the literal `pizza-user-uploads`, which is **not** Pulumi-managed and so has no stack output. |
+| `scaniiApiEndpoint`           | `api-eu2.scanii.com`            | See [endpoints and regions](https://docs.scanii.com/article/161-endpoints-and-regions).                                                                                                                                                                       |
+| `scaniiApiKey`                | `abc123xyz`                     | Secret from the Scanii web console. Differs per environment.                                                                                                                                                                                                  |
+| `scaniiApiSecret`             | `efg456`                        | Secret from the Scanii web console. Differs per environment.                                                                                                                                                                                                  |
+
+### Upgrading to a new version
+
+> [!WARNING]
+> **Repeat this whole procedure for all three stacks.** The steps below migrate one bucket. It is easy to bump the two `user-data` stacks and silently leave pizzas running the old Scanii version. Please keep them all aligned!
+
+S3 rejects overlapping triggers on the same bucket, so the trigger has to be detached from the old `Submit` lambda before it can be attached to the new one. This can be done in a matter of seconds, but anything uploaded during that gap is not scanned or tagged (and so cannot be served). We therefore block any and all uploads during that window (users can simply 'retry' a few seconds later).
+
+Because that window admits no unscanned objects, **`ENFORCE_SCAN_FROM` does not need changing when you upgrade a stack.** It only moves when a bucket is first brought into scope, in which case it should be set to the moment the trigger was attached.
+
+1. Deploy the new version as above, but **stop** before the guide's second step (setting up the bucket trigger).
+
+2. Copy the existing bucket policy and keep it handy, then **extend** it with a statement denying all writes (substituting the bucket name — `user-data-xxx` or `pizza-user-uploads`):
+
+   ```json
+   {
+     "Sid": "TempBlockForTriggerMigration",
+     "Effect": "Deny",
+     "Principal": "*",
+     "Action": [
+       "s3:PutObject",
+       "s3:PutObjectAcl",
+       "s3:PutObjectTagging",
+       "s3:AbortMultipartUpload"
+     ],
+     "Resource": "arn:aws:s3:::user-data-xxx/*"
+   }
+   ```
+
+3. Move the trigger across — delete it from the old lambda, then add it to the new one (see 2nd step of guide).
+
+4. Restore the original bucket policy, then verify end to end by uploading a file and confirming it comes back tagged:
+
+5. Once satisfied, delete the old Scanii stack.
+
 ## General prep for major Postgres version upgrades
 
 - Ensure that other parts of our stack are compatible with the Postgres target version (Hasura, ShareDB (SSL configs), Metabase)
