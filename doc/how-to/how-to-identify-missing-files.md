@@ -13,7 +13,7 @@ As these images are automatically deleted, this can lead to issues when trying t
 
 ## Scan verification
 
-Once Scanii has scanned an object, a callback Lambda tags it with `ScaniiId` and `ScaniiFindings`. The API will not serve a file from the user-data bucket unless those tags are present, so a file that has not yet been scanned is never handed to a council. This is controlled by the `ENFORCE_SCAN_FROM` env var (an ISO8601 date). When unset the check is disabled entirely (which is the case locally and in CI where Minio has no Scanii equivalent and no object is ever tagged).
+Once Scanii has scanned an object, a callback Lambda tags it with `ScaniiId` and `ScaniiFindings`. The API will not serve a file from the user-data bucket unless those tags are present, so a file that has not yet been scanned is never handed to a council. This is controlled by the `ENFORCE_SCAN_FROM` env var (an ISO8601 date), which is set in every environment backed by a bucket Scanii watches: staging and production (from Pulumi config) and pizzas (from `.env.staging`). When unset the check is disabled entirely, which is the case in local development and in e2e/integration tests - both run against Minio, which has no Scanii equivalent, so no object is ever tagged.
 
 The API response tells you which situation you're in before you go near CloudWatch:
 
@@ -27,7 +27,8 @@ The API response tells you which situation you're in before you go near CloudWat
 You can inspect an object's tags directly:
 
 ```sh
-aws s3api get-object-tagging --bucket <user-data-bucket> --key 'abc12345/my_file.jpg'
+# <bucket> is the user-data bucket for staging/production, or pizza-user-uploads for a pizza
+aws s3api get-object-tagging --bucket <bucket> --key 'abc12345/my_file.jpg'
 ```
 
 ## Steps

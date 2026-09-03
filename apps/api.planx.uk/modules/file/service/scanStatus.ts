@@ -50,8 +50,10 @@ export const getScanStatus = async (
 
   const enforceFrom = getEnforcementDate();
 
-  // Unset enforcement date means the guard is off. This is the state locally and in CI,
-  // where there is no Scanii equivalent behind Minio - so nothing gets scanned/tagged
+  // Unset enforcement date means the guard is off. That is the state in local development
+  // and in e2e/integration tests, which run against Minio - there is no Scanii equivalent
+  // behind it, so nothing is ever scanned or tagged. Every environment backed by a real
+  // bucket (pizzas, staging, and production) has a scanner attached and enforces!
   if (!enforceFrom) return CLEAN;
 
   // We don't expect objects predating Scanii upgrade to be tagged

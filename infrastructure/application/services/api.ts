@@ -175,7 +175,7 @@ export const createApiService = async ({
         {
           // ISO8601 date from which API refuses to serve user-data files not scanned + tagged by Scanii
           name: "ENFORCE_SCAN_FROM",
-          value: config.get("enforce-scan-from") ?? "",
+          value: config.requireSecret("enforce-scan-from"),
         },
         {
           name: "SKIP_RATE_LIMIT_SECRET",

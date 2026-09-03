@@ -3,12 +3,17 @@
  *
  * Anything Scanii flags is deleted at scan time, so an object still sitting in the
  * user-data bucket has by definition been scanned and passed. Tagging those survivors lets
- * us drop ENFORCE_SCAN_FROM back to an early date, so there is no window in which a
- * legitimate file is unreadable.
+ * us drop ENFORCE_SCAN_FROM back to an early date (or remove it altogether).
  *
  * Run with:
  *   pnpm tsx scripts/backfillScanTags.ts --dry-run
  *   pnpm tsx scripts/backfillScanTags.ts
+ *
+ * This routes through s3Factory(), so it follows NODE_ENV like the API does. Without
+ * NODE_ENV set to a live value it targets Minio and reports success having tagged nothing
+ * of consequence - so set both it and the bucket explicitly, e.g.
+ *   NODE_ENV=staging AWS_S3_BUCKET=user-data-xxx pnpm tsx scripts/backfillScanTags.ts
+ *   NODE_ENV=pizza AWS_S3_BUCKET=pizza-user-uploads pnpm tsx scripts/backfillScanTags.ts
  *
  * Safe to re-run: objects that already carry a ScaniiId are skipped.
  */

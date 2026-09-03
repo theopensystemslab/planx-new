@@ -42,13 +42,13 @@ Steps 1, 2, 4, 5 & 9 also apply here and should be updated shortly after.
 
 ### Scanii
 
-We maintain serverless applications in both AWS environments which send all uploaded files to the Scanii API to check for malicious content, then delete or tag the files as appropriate. , and are installed manually (rather than managed via IaC/Pulumi), as per [this section in the data layer README](../../infrastructure/data/README.md#Scanii).
+We maintain three serverless applications across our two AWS accounts — one per `user-data` bucket (staging, production), and the `pizza-user-uploads` bucket that pizzas write to. These send all uploaded files to the Scanii API to check for malicious content, then delete or tag the files as appropriate. They are installed manually rather than managed via IaC/Pulumi, as per [this section in the data layer README](../../infrastructure/data/README.md#Scanii).
 
 These include lambdas which run on Node, but these are not tied to the Node version used by PlanX. Nevertheless, this is a good opportunity to upgrade!
 
 **Do not edit the runtime on the Scanii functions directly.** It is tempting to bump `Runtime settings` directly in the Lambda console, but we did not author these functions and have no guarantees that expected behaviour will be maintained.
 
-Instead, [this section in the data layer README](../../infrastructure/data/README.md#upgrading-to-a-new-version), which will come packaged with an appropriate runtime. Note in particular that the trigger migration needs uploads blocked for its duration, so this is not a change to make casually.
+Instead, deploy the latest version of the serverless application by following [this section in the data layer README](../../infrastructure/data/README.md#upgrading-to-a-new-version), which will come packaged with an appropriate runtime. Note in particular that the trigger migration needs uploads blocked for its duration, so this is not a change to make casually — and that it has to be repeated for all three stacks.
 
 ### Lambda@Edge function runtime
 

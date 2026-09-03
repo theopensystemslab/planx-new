@@ -590,7 +590,7 @@ describe("File download", () => {
         .set({ "api-key": "test" });
 
     it("serves any file when ENFORCE_SCAN_FROM is unset", async () => {
-      // The guard is off by default - this is always the state locally and in CI
+      // The guard is off by default - this is the state in local development and in e2e
       getObjectResponse = { ...getObjectResponse, TagCount: 0 };
 
       await get().expect(200);
