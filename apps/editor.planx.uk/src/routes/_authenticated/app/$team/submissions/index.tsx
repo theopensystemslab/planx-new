@@ -1,8 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { hasFeatureFlag } from "lib/featureFlags";
 import SubmissionDetailModal from "pages/FlowEditor/components/Submissions/components/SubmissionDetailModal";
-import Submissions from "pages/FlowEditor/components/Submissions/Submissions";
-import SubmissionsGrouped from "pages/FlowEditor/components/Submissions/SubmissionsGrouped";
+import SubmissionsGrouped from "pages/FlowEditor/components/Submissions/Submissions";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/app/$team/submissions/")({
@@ -18,13 +16,9 @@ export const Route = createFileRoute("/_authenticated/app/$team/submissions/")({
 function RouteComponent() {
   const { detail } = Route.useSearch();
 
-  const SubmissionsWrapper = hasFeatureFlag("GROUPED_SUBMISSIONS")
-    ? SubmissionsGrouped
-    : Submissions;
-
   return (
     <>
-      <SubmissionsWrapper />
+      <SubmissionsGrouped />
       {detail && <SubmissionDetailModal sessionId={detail} />}
     </>
   );

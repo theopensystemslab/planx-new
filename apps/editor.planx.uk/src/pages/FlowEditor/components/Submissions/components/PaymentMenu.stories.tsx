@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import type { Submission } from "../types";
-import { PaymentMenuGrouped } from "./PaymentMenuGrouped";
+import { PaymentMenu } from "./PaymentMenu";
 
 const mockSucceededPayment: Submission = {
   flowId: "d0744118-f902-4538-b439-573f4b42a727",
@@ -20,7 +20,7 @@ const mockSucceededPayment: Submission = {
 const meta = {
   // TODO: Match Ollie's paths
   title: "Editor Components/Submissions/Details Modal/Payment menu",
-  component: PaymentMenuGrouped,
+  component: PaymentMenu,
   decorators: [
     (Story) => (
       <Box sx={{ p: 2 }}>
@@ -28,7 +28,7 @@ const meta = {
       </Box>
     ),
   ],
-} satisfies Meta<typeof PaymentMenuGrouped>;
+} satisfies Meta<typeof PaymentMenu>;
 
 type Story = StoryObj<typeof meta>;
 

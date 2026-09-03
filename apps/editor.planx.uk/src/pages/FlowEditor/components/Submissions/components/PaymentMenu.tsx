@@ -16,7 +16,7 @@ type Props = {
 /**
  * Groups payment-related actions behind a single "Payment" dropdown
  */
-export const PaymentMenuGrouped = ({ sessionId, paymentEvent }: Props) => {
+export const PaymentMenu = ({ sessionId, paymentEvent }: Props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isRefundDialogOpen, setIsRefundDialogOpen] = useState(false);
   const isMenuOpen = Boolean(anchorEl);

@@ -5,8 +5,8 @@ import Permission from "ui/editor/Permission";
 
 import type { Attempt, GroupedEvent, Submission } from "../types";
 import { canResubmit } from "../utils";
-import { OpenResponseButtonGrouped } from "./OpenResponseButtonGrouped";
-import { ResubmitButtonGrouped } from "./ResubmitButtonGrouped";
+import { OpenResponseButton } from "./OpenResponseButton";
+import { ResubmitButton } from "./ResubmitButton";
 import { StatusChip } from "./StatusChip";
 import { StatusIcon } from "./StatusIcon";
 
@@ -148,12 +148,7 @@ const SubmissionEvent: React.FC<{
             status,
             eventType,
             isSubmissionAvailable,
-          ) && (
-            <ResubmitButtonGrouped
-              sessionId={sessionId}
-              eventType={eventType}
-            />
-          )}
+          ) && <ResubmitButton sessionId={sessionId} eventType={eventType} />}
         </Permission.IsPlatformAdmin>
 
         {attempts.length === 1 ? (
@@ -161,7 +156,7 @@ const SubmissionEvent: React.FC<{
             <Box sx={{ display: "flex", alignItems: "center", pb: 1 }}>
               <Typography>{new Date(createdAt).toLocaleString()}</Typography>
               <Box sx={{ marginLeft: "auto" }}>
-                <OpenResponseButtonGrouped
+                <OpenResponseButton
                   attempt={attempts[0]}
                   sessionId={sessionId}
                   disabled={hideResponse}
@@ -199,10 +194,7 @@ const SubmissionAttempts: React.FC<{
             </Box>
 
             <Box sx={{ marginLeft: "auto" }}>
-              <OpenResponseButtonGrouped
-                attempt={attempt}
-                sessionId={sessionId}
-              />
+              <OpenResponseButton attempt={attempt} sessionId={sessionId} />
             </Box>
           </Box>
         </>

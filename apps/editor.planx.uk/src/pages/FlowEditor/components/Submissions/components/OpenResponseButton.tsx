@@ -1,67 +1,51 @@
 import PreviewIcon from "@mui/icons-material/Preview";
-import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import type { GridCellParams } from "@mui/x-data-grid";
 import React, { useState } from "react";
 import { DataTableModal } from "ui/shared/DataTable/components/DataTableModal";
 
-import type { Attempt, Submission } from "../types";
+import type { Attempt } from "../types";
 import { FormattedResponse } from "./FormattedResponse";
 
-type Props = GridCellParams | { attempt: Attempt; sessionId: string };
-
-const isGridCellParams = (props: Props): props is GridCellParams => {
-  return "row" in props;
-};
+type Props = { attempt: Attempt; sessionId: string; disabled?: boolean };
 
 export const OpenResponseButton = (props: Props) => {
-  const submission = isGridCellParams(props) ? props.row : props.attempt; // TODO: when removing feature flag, conditional isGridCellParams not needed
-  const sessionId = isGridCellParams(props)
-    ? props.row.sessionId
-    : props.sessionId;
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [response, setResponse] = useState<Record<string, any> | null>(null);
+  if (props.disabled) return;
 
-  const getResponse = ({ eventType, status, response }: Submission) => {
-    if (eventType === "Pay") return response;
-    if (status === "Success") return response?.data?.body;
+  const parseResponse = ({ eventType, status, response }: Attempt) => {
+    let data;
+    if (eventType === "Pay") data = response;
+    else if (status === "Success") data = response?.data?.body;
+    else data = response?.data?.message;
 
-    return response?.data?.message;
-  };
-
-  const handleButtonClick = () => {
-    setModalIsOpen(true);
-    if (!response) {
-      let parsedData = getResponse(submission);
-      try {
-        parsedData =
-          typeof parsedData === "string" ? JSON.parse(parsedData) : parsedData;
-      } catch (error) {
-        parsedData = { error: "Invalid JSON format", raw: parsedData };
-      }
-      setResponse(parsedData);
+    try {
+      return typeof data === "string" ? JSON.parse(data) : data;
+    } catch (error) {
+      return {
+        error: "Unable to parse response data",
+        message: error instanceof Error ? error.message : "Invalid JSON format",
+        raw: data,
+      };
     }
   };
 
   return (
     <>
       <Tooltip title="View response">
-        <IconButton aria-label="View response" onClick={handleButtonClick}>
+        <IconButton
+          aria-label="View response"
+          onClick={() => setModalIsOpen(true)}
+        >
           <PreviewIcon />
         </IconButton>
       </Tooltip>
       <DataTableModal
-        title={`Response for ${sessionId || "unknown"}`}
+        title={`Response for ${props.sessionId || "unknown"}`}
         open={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
       >
-        {response ? (
-          <FormattedResponse response={response} />
-        ) : (
-          <CircularProgress />
-        )}
+        <FormattedResponse response={parseResponse(props.attempt)} />
       </DataTableModal>
     </>
   );

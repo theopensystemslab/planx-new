@@ -5,13 +5,13 @@ import server from "test/mockServer";
 import { setup } from "test/utils";
 import { it } from "vitest";
 
-import EventsLogGrouped from "./components/EventsLogGrouped";
-import { mockSubmissionsGroupedAllStatuses } from "./mockSubmissionsGrouped";
+import EventsLog from "./components/EventsLog";
+import { mockSubmissionsAllStatuses } from "./mockSubmissions";
 
 const handlers = [
   graphql.query("GetSubmissions", () =>
     HttpResponse.json({
-      data: { submissions: mockSubmissionsGroupedAllStatuses },
+      data: { submissions: mockSubmissionsAllStatuses },
     }),
   ),
 ];
@@ -23,8 +23,8 @@ beforeEach(() => {
 describe("When the submissions log renders", () => {
   beforeEach(async () => {
     await setup(
-      <EventsLogGrouped
-        submissions={mockSubmissionsGroupedAllStatuses}
+      <EventsLog
+        submissions={mockSubmissionsAllStatuses}
         error={undefined}
         loading={false}
       />,

@@ -9,7 +9,7 @@ import {
   mockSubmissionEvents,
   mockUnresolvedFailureEvents,
   teamData,
-} from "../mockSubmissionsGrouped";
+} from "../mockSubmissions";
 import { GET_TEAM_LOGO } from "../queries";
 import SubmissionDetailContent from "./SubmissionDetailContent";
 import { GET_SUBMISSION_EVENTS } from "./SubmissionDetailContent";

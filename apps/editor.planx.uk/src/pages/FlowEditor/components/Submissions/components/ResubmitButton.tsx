@@ -1,6 +1,4 @@
-import ReplayIcon from "@mui/icons-material/Replay";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import type { SendIntegration } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
@@ -10,7 +8,6 @@ import { createSendEvents } from "lib/api/send/requests";
 import type { CombinedEventsPayload } from "lib/api/send/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
-import type { RenderCellParams } from "ui/shared/DataTable/types";
 
 import type { Submission } from "../types";
 
@@ -19,22 +16,23 @@ type ResubmitEventType = Exclude<
   "Pay" | "Started session" | "Invited to pay"
 >;
 
-export const ResubmitButton = (params: RenderCellParams) => {
+type Props = {
+  sessionId: string;
+  eventType: Submission["eventType"];
+};
+
+export const ResubmitButton = (props: Props) => {
   const teamSlug = useStore((state) => state.teamSlug);
   const toast = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const isHidden = params.row.eventType === "Pay";
-
-  const { mutate, isPending, isSuccess } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: createSendEvents,
     onSuccess: () =>
-      toast.success(
-        `Created new send event for session ${params.row.sessionId}`,
-      ),
+      toast.success(`Created new send event for session ${props.sessionId}`),
     onError: () =>
       toast.error(
-        `Failed to create new sent event for session ${params.row.sessionId}`,
+        `Failed to create new sent event for session ${props.sessionId}`,
       ),
   });
 
@@ -50,8 +48,7 @@ export const ResubmitButton = (params: RenderCellParams) => {
       "Submit to Idox Nexus": "idox",
     };
 
-    const destination =
-      destinationMap[params.row.eventType as ResubmitEventType];
+    const destination = destinationMap[props.eventType as ResubmitEventType];
 
     if (!destination) return;
 
@@ -59,30 +56,30 @@ export const ResubmitButton = (params: RenderCellParams) => {
       [destination]: {
         localAuthority: teamSlug,
         body: {
-          sessionId: params.row.sessionId,
+          sessionId: props.sessionId,
         },
       },
     };
 
-    mutate({ sessionId: params.row.sessionId, ...payload });
+    mutate({ sessionId: props.sessionId, ...payload });
     setIsDialogOpen(false);
   };
 
-  const isDisabled = params.row.status === "Success" || isPending || isSuccess;
-
-  if (isHidden) return;
-
   return (
     <>
-      <Tooltip title="Resubmit">
-        <IconButton
-          disabled={isDisabled}
-          aria-label="resubmit application"
-          onClick={() => setIsDialogOpen(true)}
-        >
-          <ReplayIcon />
-        </IconButton>
-      </Tooltip>
+      <Button
+        aria-label="resubmit application"
+        onClick={() => setIsDialogOpen(true)}
+        variant="link"
+        sx={{ alignSelf: "start", color: "link.main" }}
+      >
+        <Typography sx={{ fontWeight: "bold" }}>
+          {props.eventType
+            .replace("Send", "Resubmit")
+            .replace("Submit", "Resubmit")
+            .replace("Upload", "Resubmit")}
+        </Typography>
+      </Button>
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleConfirm}

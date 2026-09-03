@@ -1,42 +1,24 @@
 import CloudDownload from "@mui/icons-material/CloudDownload";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import { addDays, isBefore } from "date-fns";
-import { DAYS_UNTIL_EXPIRY } from "lib/pay";
-import { useStore } from "pages/FlowEditor/lib/store";
+import Button from "@mui/material/Button";
 import React from "react";
-import type { RenderCellParams } from "ui/shared/DataTable/types";
 
-export const DownloadSubmissionButton = (params: RenderCellParams) => {
-  const [teamSlug, canUserEditTeam] = useStore((state) => [
-    state.teamSlug,
-    state.canUserEditTeam,
-  ]);
+type Props = {
+  sessionId: string;
+  submittedAt: string;
+};
 
-  const submissionDataExpirationDate = addDays(
-    new Date(params.row.createdAt),
-    DAYS_UNTIL_EXPIRY,
-  );
-
-  const showDownloadButton =
-    teamSlug &&
-    canUserEditTeam(teamSlug) &&
-    params.row.status === "Success" &&
-    params.row.eventType !== "Pay" &&
-    isBefore(new Date(), submissionDataExpirationDate);
-
-  if (!showDownloadButton) return;
-
-  const zipUrl = `${import.meta.env.VITE_APP_API_URL}/submission/${params.row.sessionId}/zip`;
+export const DownloadSubmissionButton = (props: Props) => {
+  const zipUrl = `${import.meta.env.VITE_APP_API_URL}/submission/${props.sessionId}/zip`;
 
   return (
-    <Tooltip title="Download application data">
-      <IconButton
-        aria-label="download application"
-        onClick={() => window.open(zipUrl, "_blank")}
-      >
-        <CloudDownload />
-      </IconButton>
-    </Tooltip>
+    <Button
+      color="primary"
+      variant="contained"
+      onClick={() => window.open(zipUrl, "_blank")}
+      disabled={!props.submittedAt}
+      startIcon={<CloudDownload />}
+    >
+      Download
+    </Button>
   );
 };
