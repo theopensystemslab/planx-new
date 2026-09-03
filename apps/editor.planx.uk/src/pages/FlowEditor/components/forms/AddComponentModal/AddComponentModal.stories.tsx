@@ -16,21 +16,19 @@ import { DETAIL_PANEL_WIDTH } from "./PatternsTab/PatternDetailPanel";
 const meta: Meta<typeof ModalTabs> = {
   title: "Editor Components/Modal/AddComponentModal",
   component: ModalTabs,
-  parameters: {
-    msw: {
-      handlers: [
-        graphql.query("GetPatterns", () =>
-          HttpResponse.json({ data: { patterns: mockPatterns } }),
-        ),
-        graphql.query("GetPatternData", ({ variables }) =>
-          HttpResponse.json({
-            data: {
-              pattern: { id: variables.id, data: mockPatternData },
-            },
-          }),
-        ),
-      ],
-    },
+  beforeEach({ msw }) {
+    msw.use(
+      graphql.query("GetPatterns", () =>
+        HttpResponse.json({ data: { patterns: mockPatterns } }),
+      ),
+      graphql.query("GetPatternData", ({ variables }) =>
+        HttpResponse.json({
+          data: {
+            pattern: { id: variables.id, data: mockPatternData },
+          },
+        }),
+      ),
+    );
   },
 };
 

@@ -9,7 +9,7 @@ import { StyledEngineProvider,ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
 import type { Decorator } from "@storybook/tanstack-react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { initialize, mswLoader } from "msw-storybook-addon";
+import { mswLoader } from "msw-storybook-addon/csf3";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -43,8 +43,6 @@ const testApolloClient = new ApolloClient({
   },
 });
 
-initialize();
-
 export const decorators: Decorator[] = [
   (Story, context) => (
     <ApolloProvider client={testApolloClient}>
@@ -64,7 +62,7 @@ export const decorators: Decorator[] = [
 
 export const tags = ["autodocs"];
 
-export const loaders = [mswLoader];
+export const loaders = [mswLoader()];
 
 export const parameters = {
   msw: {

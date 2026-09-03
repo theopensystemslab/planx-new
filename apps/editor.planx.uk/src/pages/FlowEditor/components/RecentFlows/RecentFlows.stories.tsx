@@ -36,19 +36,17 @@ const mockFlows: Record<string, ExternalPortal> = {
 const meta: Meta<typeof RecentFlows> = {
   title: "Design System/Molecules/RecentFlows",
   component: RecentFlows,
-  parameters: {
-    msw: {
-      handlers: [
-        graphql.query("GetExternalPortal", ({ variables }) => {
-          const requestedPortal = mockFlows[variables.id];
-          return HttpResponse.json({
-            data: {
-              externalPortal: requestedPortal || null,
-            },
-          });
-        }),
-      ],
-    },
+  beforeEach({ msw }) {
+    msw.use(
+      graphql.query("GetExternalPortal", ({ variables }) => {
+        const requestedPortal = mockFlows[variables.id];
+        return HttpResponse.json({
+          data: {
+            externalPortal: requestedPortal || null,
+          },
+        });
+      }),
+    );
   },
 };
 

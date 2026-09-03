@@ -45,17 +45,15 @@ const setTeamBoundaryBBox = (boundaryBBox: Feature<Polygon> | undefined) => {
 export default {
   title: "PlanX Components/FindProperty",
   component: FindProperty,
-  parameters: {
-    msw: {
-      handlers: [
-        http.get("https://www.planning.data.gov.uk/*", async () =>
-          HttpResponse.json(localAuthorityMock, { status: 200 }),
-        ),
-        graphql.query("FetchBLPUCodes", () =>
-          HttpResponse.json({ data: fetchBLPUCodesMock }),
-        ),
-      ],
-    },
+  beforeEach({ msw }) {
+    msw.use(
+      http.get("https://www.planning.data.gov.uk/*", async () =>
+        HttpResponse.json(localAuthorityMock, { status: 200 }),
+      ),
+      graphql.query("FetchBLPUCodes", () =>
+        HttpResponse.json({ data: fetchBLPUCodesMock }),
+      ),
+    );
   },
 } satisfies Meta<typeof FindProperty>;
 
@@ -69,14 +67,12 @@ export const EmptyForm: StoryObj = {
 };
 
 export const OSDatastoreError: StoryObj = {
-  parameters: {
-    msw: {
-      handlers: [
-        http.get("*/proxy/ordnance-survey/search/places/v1/postcode", () =>
-          HttpResponse.json(osDatastoreErrorMock, { status: 500 }),
-        ),
-      ],
-    },
+  beforeEach({ msw }) {
+    msw.use(
+      http.get("*/proxy/ordnance-survey/search/places/v1/postcode", () =>
+        HttpResponse.json(osDatastoreErrorMock, { status: 500 }),
+      ),
+    );
   },
   render: () => (
     <FindProperty

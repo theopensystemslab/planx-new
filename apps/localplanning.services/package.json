@@ -46,7 +46,7 @@
     "@storybook/react-vite": "^10",
     "@storybook/react": "^10",
     "@types/node": "catalog:",
-    "msw-storybook-addon": "^2.0.7",
+    "msw-storybook-addon": "^3.0.0",
     "msw": "^2.14.3",
     "storybook": "^10",
     "typescript-plugin-css-modules": "^5.2.0",
