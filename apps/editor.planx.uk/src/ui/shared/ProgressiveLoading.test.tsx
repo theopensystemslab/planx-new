@@ -42,6 +42,12 @@ describe("ProgressiveLoading", () => {
     expect(screen.getByRole("status")).not.toHaveAttribute("aria-hidden");
   });
 
+  it("moves focus to the live region on mount, so it is announced", async () => {
+    await setup(<ProgressiveLoading stages={STAGES} interval={1000} />);
+
+    expect(screen.getByRole("status")).toHaveFocus();
+  });
+
   it("does not contain accessibility violations", async () => {
     const { container } = await setup(
       <ProgressiveLoading stages={STAGES} interval={1000} />,

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { keyframes, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const pulseAnimation = keyframes`
   0% {
@@ -60,6 +60,7 @@ const ProgressiveLoading: React.FC<ProgressiveLoadingProps> = ({
   interval = 1000,
 }) => {
   const [visibleStages, setVisibleStages] = useState(0);
+  const statusRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (visibleStages < stages.length - 1) {
@@ -69,6 +70,11 @@ const ProgressiveLoading: React.FC<ProgressiveLoadingProps> = ({
       return () => clearTimeout(timer);
     }
   }, [visibleStages, stages.length, interval]);
+
+  useEffect(() => {
+    // Move focus to the live region, allowing screen readers to announce the stages
+    statusRef.current?.focus();
+  }, []);
 
   return (
     <Box
@@ -80,7 +86,13 @@ const ProgressiveLoading: React.FC<ProgressiveLoadingProps> = ({
       }}
       aria-busy="true"
     >
-      <Box role="status" aria-live="polite" style={visuallyHidden}>
+      <Box
+        ref={statusRef}
+        tabIndex={-1}
+        role="status"
+        aria-live="polite"
+        style={visuallyHidden}
+      >
         {stages.join(". ")}
       </Box>
       <Box
