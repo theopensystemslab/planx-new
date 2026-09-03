@@ -5,15 +5,11 @@ import { NodeCard } from "ui/editor/NodeCard";
 import { DATA_FACETS } from "../facets";
 import { Headline } from "../Headline";
 import type { SearchableResult } from "../types";
-import { isNoteResult } from "../types";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
-import { NoteResultCard } from "./NoteResultCard";
 
 export const SearchResultCard: React.FC<{
   result: SearchableResult;
 }> = ({ result }) => {
-  if (isNoteResult(result)) return <NoteResultCard result={result} />;
-
   const { key, headline } = getDisplayDetailsForResult(result);
 
   const isDataKey = DATA_FACETS.includes(result.key);

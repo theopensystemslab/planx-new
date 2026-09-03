@@ -32,15 +32,6 @@ import type {
   ContextMenuPosition,
   ContextMenuSource,
 } from "pages/FlowEditor/components/Flow/components/ContextMenu";
-import type { CopiedAttachedNote } from "pages/FlowEditor/components/Flow/notes/lib/copyNotesForNodes";
-import {
-  fetchAttachedFlowNotesForNodes,
-  pasteAttachedFlowNotes,
-} from "pages/FlowEditor/components/Flow/notes/lib/copyNotesForNodes";
-import {
-  repositionNotesForDeletedNodes,
-  repositionNotesForMovedNode,
-} from "pages/FlowEditor/components/Flow/notes/lib/repositionNotes";
 import type { Doc } from "sharedb/lib/client";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
@@ -274,7 +265,6 @@ interface CopiedPayload {
   rootId: string;
   nodes: { originalId: string; nodeData: Store.Node }[];
   isTemplate: boolean;
-  notes: CopiedAttachedNote[];
 }
 
 interface CutPayload {
@@ -479,17 +469,10 @@ export const editorStore: StateCreator<
 
     getDescendants(id);
 
-    const flowId = get().id;
-    const notes = await fetchAttachedFlowNotesForNodes(
-      flowId,
-      nodesToCopy.map(({ originalId }) => originalId),
-    );
-
     const payload: CopiedPayload = {
       rootId: id,
       nodes: nodesToCopy,
       isTemplate: isTemplate,
-      notes,
     };
 
     try {
@@ -678,20 +661,11 @@ export const editorStore: StateCreator<
     toParent = undefined,
   ) {
     try {
-      const [after, ops] = move(id, parent as unknown as string, {
+      const [, ops] = move(id, parent as unknown as string, {
         toParent,
         toBefore,
       })(get().flow);
       send(ops);
-
-      if (parent) {
-        const oldParent = parent as unknown as string;
-        repositionNotesForMovedNode(
-          id,
-          oldParent,
-          after[oldParent]?.edges?.[0],
-        );
-      }
     } catch (err: any) {
       alert(err.message);
     }
@@ -739,7 +713,6 @@ export const editorStore: StateCreator<
         rootId,
         nodes: copiedNodes,
         isTemplate: copiedFromTemplate,
-        notes: copiedNotes,
       }: CopiedPayload = JSON.parse(copiedString);
       if (!copiedNodes || copiedNodes.length === 0) return;
 
@@ -772,10 +745,6 @@ export const editorStore: StateCreator<
       })(get().flow);
       send(ops);
       set({ lastAddedNodeIds: insertedIds });
-
-      if (copiedNotes?.length) {
-        pasteAttachedFlowNotes(copiedNotes, insertedIdMap, get().id);
-      }
     } catch (err) {
       alert((err as Error).message);
     }
@@ -783,13 +752,8 @@ export const editorStore: StateCreator<
 
   removeNode: (id, parent) => {
     const before = get().flow;
-    const [after, ops] = remove(id, parent)(before);
+    const [, ops] = remove(id, parent)(before);
     send(ops);
-
-    const deletedNodeIds = Object.keys(before).filter((k) => !after[k]);
-    if (deletedNodeIds.length > 0) {
-      repositionNotesForDeletedNodes(deletedNodeIds, before, after);
-    }
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {

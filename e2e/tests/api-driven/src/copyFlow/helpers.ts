@@ -50,86 +50,7 @@ export const setup = async (): Promise<Setup> => {
     data: { _root: { edges: ["soloNode", "cloneNode"] } },
   });
 
-  await createNotes({ flowId: sourceFlowId, userId });
-
   return { teamId, otherTeamId, jwt, otherTeamJwt, sourceFlowId };
-};
-
-const createNotes = async ({
-  flowId,
-  userId,
-}: {
-  flowId: string;
-  userId: number;
-}) => {
-  const contentRes = await $admin.client.request<{
-    solo: { id: string };
-    clone: { id: string };
-  }>(
-    gql`
-      mutation InsertNoteContent($userId: Int!) {
-        solo: insert_flow_note_content_one(
-          object: {
-            text: "Solo note"
-            created_by: $userId
-            updated_by: $userId
-          }
-        ) {
-          id
-        }
-        clone: insert_flow_note_content_one(
-          object: {
-            text: "Cloned note"
-            created_by: $userId
-            updated_by: $userId
-          }
-        ) {
-          id
-        }
-      }
-    `,
-    { userId },
-  );
-
-  const soloNoteId = contentRes.solo.id;
-  const cloneNoteId = contentRes.clone.id;
-
-  await $admin.client.request(
-    gql`
-      mutation InsertPositions(
-        $flowId: uuid!
-        $userId: Int!
-        $soloNoteId: uuid!
-        $cloneNoteId: uuid!
-      ) {
-        insert_flow_note_positions(
-          objects: [
-            {
-              flow_id: $flowId
-              note_id: $soloNoteId
-              node_id: "soloNode"
-              created_by: $userId
-            }
-            {
-              flow_id: $flowId
-              note_id: $cloneNoteId
-              placement: { parent: "_root", before: "beforeNode" }
-              created_by: $userId
-            }
-            {
-              flow_id: $flowId
-              note_id: $cloneNoteId
-              node_id: "cloneNode"
-              created_by: $userId
-            }
-          ]
-        ) {
-          affected_rows
-        }
-      }
-    `,
-    { flowId, userId, soloNoteId, cloneNoteId },
-  );
 };
 
 interface CallCopyEndpointArgs {
@@ -204,51 +125,7 @@ export const getOperations = async (flowId: string) => {
   return operations;
 };
 
-export interface FlowNotePosition {
-  noteId: string;
-  nodeId: string | null;
-  placement: { parent: string; before?: string; container?: string } | null;
-  note: { text: string };
-}
-
-export const getNotePositions = async (flowId: string) => {
-  const { flowNotePositions } = await $admin.client.request<{
-    flowNotePositions: FlowNotePosition[];
-  }>(
-    gql`
-      query GetNotePositions($flowId: uuid!) {
-        flowNotePositions: flow_note_positions(
-          where: { flow_id: { _eq: $flowId } }
-        ) {
-          noteId: note_id
-          nodeId: node_id
-          placement
-          note {
-            text
-          }
-        }
-      }
-    `,
-    { flowId },
-  );
-  return flowNotePositions;
-};
-
 export const cleanup = async () => {
-  await $admin.client.request(gql`
-    mutation {
-      delete_flow_note_positions(where: { id: { _is_null: false } }) {
-        affected_rows
-      }
-    }
-  `);
-  await $admin.client.request(gql`
-    mutation {
-      delete_flow_note_content(where: { id: { _is_null: false } }) {
-        affected_rows
-      }
-    }
-  `);
   await $admin.flow._destroyPublishedAll();
   await $admin.flow._destroyAll();
   await $admin.user._destroyAll();

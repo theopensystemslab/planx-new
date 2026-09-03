@@ -6,10 +6,7 @@ import {
   callCopyEndpoint,
   cleanup,
   getFlowBySlug,
-  getNotePositions,
   getOperations,
-  renameNodeId,
-  REPLACE_VALUE,
   setup,
 } from "./helpers.js";
 
@@ -34,7 +31,7 @@ After("@copy-flow", async function () {
   await cleanup();
 });
 
-Given<CustomWorld>("a source flow with notes exists", function () {
+Given<CustomWorld>("a source flow exists", function () {
   assert.ok(this.sourceFlowId, "source flow should already be set up");
 });
 
@@ -106,37 +103,6 @@ Then<CustomWorld>(
       1,
       "Expected exactly one operations row for the copied flow",
     );
-  },
-);
-
-Then<CustomWorld>(
-  "the new flow's notes are copied with remapped node ids and preserved clone relationships",
-  async function () {
-    assert.ok(this.newFlowId, "newFlowId should already be set");
-    const positions = await getNotePositions(this.newFlowId);
-    assert.equal(positions.length, 3);
-
-    const solo = positions.find(
-      (p) => p.nodeId === renameNodeId("soloNode", REPLACE_VALUE),
-    );
-    assert.ok(solo, "solo note position not found");
-    assert.equal(solo.note.text, "Solo note");
-
-    const cloneWithPlacement = positions.find((p) => p.placement);
-    assert.ok(cloneWithPlacement, "clone position with placement not found");
-    assert.deepEqual(cloneWithPlacement.placement, {
-      parent: "_root", // unchanged - renameNodeId leaves _root untouched
-      before: renameNodeId("beforeNode", REPLACE_VALUE),
-    });
-
-    const cloneWithNode = positions.find(
-      (p) => p.nodeId === renameNodeId("cloneNode", REPLACE_VALUE),
-    );
-    assert.ok(cloneWithNode, "clone position with node_id not found");
-    assert.equal(cloneWithNode.note.text, "Cloned note");
-
-    assert.equal(cloneWithNode.noteId, cloneWithPlacement.noteId);
-    assert.notEqual(cloneWithNode.noteId, solo.noteId);
   },
 );
 

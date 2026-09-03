@@ -4,7 +4,6 @@ import { useTheme } from "@mui/material/styles";
 import { useFormik } from "formik";
 import { useSearch } from "hooks/useSearch";
 import { debounce } from "lodash";
-import { useFlowNotesContext } from "pages/FlowEditor/components/Flow/notes/FlowNotesContext";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useMemo, useState } from "react";
 import type { Components } from "react-virtuoso";
@@ -13,7 +12,7 @@ import { SEARCH_DEBOUNCE_MS } from "ui/shared/constants";
 
 import { ExternalPortalList } from "./ExternalPortalList/ExternalPortalList";
 import type { SearchFacets } from "./facets";
-import { ALL_FACETS, NOTE_FACETS } from "./facets";
+import { ALL_FACETS } from "./facets";
 import { SearchHeader } from "./SearchHeader";
 import { SearchResultCard } from "./SearchResultCard";
 import type { SearchableResult } from "./types";
@@ -80,29 +79,10 @@ const Search: React.FC = () => {
     keys: formik.values.facets,
   });
 
-  // Notes aren't part of the flow graph, so they're searched separately and merged into `results`
-  const { attached, positioned } = useFlowNotesContext();
-  const notes = useMemo(
-    () => [...attached.values(), ...positioned.values()].flat(),
-    [attached, positioned],
-  );
-
-  const isDataOnlySearch = !formik.values.facets.includes("data.title");
-
-  const noteSearchList = useMemo(
-    () => (isDataOnlySearch ? [] : notes),
-    [isDataOnlySearch, notes],
-  );
-
-  const { results: noteResults, search: searchNotes } = useSearch({
-    list: noteSearchList,
-    keys: NOTE_FACETS,
-  });
-
-  // Interleave notes and nodes search results by relevance
+  // Order node search results by relevance
   const results = useMemo<SearchableResult[]>(
-    () => [...nodeResults, ...noteResults].sort((a, b) => a.score - b.score),
-    [nodeResults, noteResults],
+    () => nodeResults.sort((a, b) => a.score - b.score),
+    [nodeResults],
   );
 
   const debouncedSearch = useMemo(
@@ -110,11 +90,10 @@ const Search: React.FC = () => {
       debounce((pattern: string) => {
         console.debug("Search term: ", pattern);
         searchNodes(pattern);
-        searchNotes(pattern);
         setLastPattern(pattern);
         setIsSearching(false);
       }, SEARCH_DEBOUNCE_MS),
-    [searchNodes, searchNotes],
+    [searchNodes],
   );
 
   const theme = useTheme();
