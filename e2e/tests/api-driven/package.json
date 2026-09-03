@@ -15,7 +15,7 @@
     "graphql-tag": "catalog:graphql",
     "graphql": "catalog:graphql",
     "jsonwebtoken": "catalog:jwt",
-    "nock": "^13.5.6"
+    "nock": "^14.0.17"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "catalog:jwt",
