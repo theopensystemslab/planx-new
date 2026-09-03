@@ -235,7 +235,7 @@ const sanitisedApplicationSummary: SubmissionSummary = {
   consolidatedStatus: "Success",
 };
 
-export const mockSubmissionsGroupedAllStatuses: SubmissionSummary[] = [
+export const mockSubmissionsAllStatuses: SubmissionSummary[] = [
   sendToEmailSuccessSummary,
   invitedToPaySummary,
   paymentInProgressSummary,
@@ -249,7 +249,7 @@ export const mockSubmissionsGroupedAllStatuses: SubmissionSummary[] = [
   noAddressSendToEmailSummary,
 ];
 
-export const mockSubmissionsGroupedPartialStatuses: SubmissionSummary[] = [
+export const mockSubmissionsPartialStatuses: SubmissionSummary[] = [
   sendToEmailSuccessSummary,
   sendToEmailFailureSummary,
 ];

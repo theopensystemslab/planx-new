@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
-import { mockSubmissionsGroupedAllStatuses } from "../mockSubmissionsGrouped";
-import EventsLogGrouped from "./EventsLogGrouped";
+import { mockSubmissionsAllStatuses } from "../mockSubmissions";
+import EventsLog from "./EventsLog";
 
 const meta = {
-  title: "Editor Components/Submissions/Events log grouped",
-  component: EventsLogGrouped,
+  title: "Editor Components/Submissions/Events log",
+  component: EventsLog,
   decorators: [
     (Story) => (
       <Box sx={{ height: "500px" }}>
@@ -14,7 +14,7 @@ const meta = {
       </Box>
     ),
   ],
-} satisfies Meta<typeof EventsLogGrouped>;
+} satisfies Meta<typeof EventsLog>;
 
 type Story = StoryObj<typeof meta>;
 
@@ -23,7 +23,7 @@ export default meta;
 export const Basic = {
   args: {
     loading: false,
-    submissions: mockSubmissionsGroupedAllStatuses,
+    submissions: mockSubmissionsAllStatuses,
     error: undefined,
   },
 } satisfies Story;

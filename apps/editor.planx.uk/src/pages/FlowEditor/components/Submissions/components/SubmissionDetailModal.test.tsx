@@ -10,7 +10,7 @@ import {
   mockSubmissionEvents,
   mockSubmissionFailureEvents,
   teamData,
-} from "../mockSubmissionsGrouped";
+} from "../mockSubmissions";
 import SubmissionDetailModal from "./SubmissionDetailModal";
 
 const mockGetUserRoleForCurrentTeam = vi.fn();

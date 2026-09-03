@@ -8,9 +8,9 @@ import { Badge } from "../../../../../components/Badge/Badge";
 import { BadgeVariant } from "../../../../../components/Badge/types";
 import { useTeamLogo } from "../hooks";
 import type { Submission } from "../types";
-import { DownloadSubmissionButtonGrouped } from "./DownloadSubmissionButtonGrouped";
-import { PaymentMenuGrouped } from "./PaymentMenuGrouped";
-import { ViewSubmissionButtonGrouped } from "./ViewSubmissionButtonGrouped";
+import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
+import { PaymentMenu } from "./PaymentMenu";
+import { ViewSubmissionButton } from "./ViewSubmissionButton";
 
 type SubmissionDetailsProps = {
   sessionId: string;
@@ -99,18 +99,18 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
         >
           {showSubmissionActions && props.submittedAt && (
             <>
-              <ViewSubmissionButtonGrouped
+              <ViewSubmissionButton
                 sessionId={props.sessionId}
                 submittedAt={props.submittedAt}
               />
-              <DownloadSubmissionButtonGrouped
+              <DownloadSubmissionButton
                 sessionId={props.sessionId}
                 submittedAt={props.submittedAt}
               />
             </>
           )}
           {showPaymentActions && props.succeededPayment && (
-            <PaymentMenuGrouped
+            <PaymentMenu
               sessionId={props.sessionId}
               paymentEvent={props.succeededPayment}
             />

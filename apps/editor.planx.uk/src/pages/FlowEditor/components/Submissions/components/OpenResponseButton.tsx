@@ -9,7 +9,7 @@ import { FormattedResponse } from "./FormattedResponse";
 
 type Props = { attempt: Attempt; sessionId: string; disabled?: boolean };
 
-export const OpenResponseButtonGrouped = (props: Props) => {
+export const OpenResponseButton = (props: Props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   if (props.disabled) return;
 

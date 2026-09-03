@@ -7,7 +7,7 @@ type Props = {
   submittedAt: string;
 };
 
-export const DownloadSubmissionButtonGrouped = (props: Props) => {
+export const DownloadSubmissionButton = (props: Props) => {
   const zipUrl = `${import.meta.env.VITE_APP_API_URL}/submission/${props.sessionId}/zip`;
 
   return (

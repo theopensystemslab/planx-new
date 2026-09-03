@@ -20,7 +20,7 @@ type Props = {
   sessionId: string;
   eventType: Submission["eventType"];
 };
-export const ResubmitButtonGrouped = (props: Props) => {
+export const ResubmitButton = (props: Props) => {
   const teamSlug = useStore((state) => state.teamSlug);
   const toast = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);

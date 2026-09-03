@@ -10,7 +10,7 @@ type Props = {
   submittedAt: string;
 };
 
-export const ViewSubmissionButtonGrouped = (props: Props) => {
+export const ViewSubmissionButton = (props: Props) => {
   const teamSlug = useStore((state) => state.teamSlug);
 
   const navigate = useNavigate();

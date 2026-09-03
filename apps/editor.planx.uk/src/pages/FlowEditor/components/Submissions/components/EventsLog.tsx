@@ -12,12 +12,12 @@ import type { ColumnConfig } from "ui/shared/DataTable/types";
 import { ColumnFilterType } from "ui/shared/DataTable/types";
 import { dateFormatter } from "ui/shared/DataTable/utils";
 
-import { submissionStatusGroupedOptions } from "../submissionFilterOptions";
-import type { EventsLogGroupedProps, SubmissionSummary } from "../types";
+import { submissionStatusOptions } from "../submissionFilterOptions";
+import type { EventsLogProps, SubmissionSummary } from "../types";
 import { getConsolidatedStatus } from "../utils";
-import { StatusChipGrouped } from "./StatusChipGrouped";
+import { StatusChipCell } from "./StatusChip";
 
-const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
+const EventsLog: React.FC<EventsLogProps> = ({
   submissions,
   loading,
   error,
@@ -97,9 +97,9 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
       headerName: "Status",
       width: 200,
       type: ColumnFilterType.SINGLE_SELECT,
-      customComponent: StatusChipGrouped,
+      customComponent: StatusChipCell,
       columnOptions: {
-        valueOptions: submissionStatusGroupedOptions,
+        valueOptions: submissionStatusOptions,
       },
     },
     {
@@ -124,4 +124,4 @@ const EventsLogGrouped: React.FC<EventsLogGroupedProps> = ({
   );
 };
 
-export default EventsLogGrouped;
+export default EventsLog;

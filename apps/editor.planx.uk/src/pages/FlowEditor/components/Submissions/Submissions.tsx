@@ -7,10 +7,10 @@ import SettingsSection from "ui/editor/SettingsSection";
 import { slugify } from "utils";
 
 import { useStore } from "../../lib/store";
-import EventsLogGrouped from "./components/EventsLogGrouped";
+import EventsLog from "./components/EventsLog";
 import type { SubmissionsProps, SubmissionSummary } from "./types";
 
-const SubmissionsGrouped: React.FC<SubmissionsProps> = ({ flowSlug }) => {
+const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const [teamId] = useStore((state) => [state.teamId]);
 
   const { data, loading, error } = useQuery<{
@@ -61,7 +61,7 @@ const SubmissionsGrouped: React.FC<SubmissionsProps> = ({ flowSlug }) => {
           download. This table includes events since 1st January 2024.
         </Typography>
       </SettingsSection>
-      <EventsLogGrouped
+      <EventsLog
         submissions={filteredSubmissions}
         loading={loading}
         error={error}
@@ -71,4 +71,4 @@ const SubmissionsGrouped: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   );
 };
 
-export default SubmissionsGrouped;
+export default Submissions;

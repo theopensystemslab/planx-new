@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import SubmissionDetailModal from "pages/FlowEditor/components/Submissions/components/SubmissionDetailModal";
-import SubmissionsGrouped from "pages/FlowEditor/components/Submissions/SubmissionsGrouped";
+import SubmissionsGrouped from "pages/FlowEditor/components/Submissions/Submissions";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute(

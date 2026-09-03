@@ -61,7 +61,7 @@ export interface SubmissionSummary {
   consolidatedStatus?: string;
 }
 
-export interface EventsLogGroupedProps {
+export interface EventsLogProps {
   submissions: SubmissionSummary[];
   loading: boolean;
   error: Error | undefined;
