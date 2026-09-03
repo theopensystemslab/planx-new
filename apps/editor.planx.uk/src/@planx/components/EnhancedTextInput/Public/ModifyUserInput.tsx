@@ -1,9 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {
-  DESCRIPTION_TEXT,
-  ERROR_MESSAGE,
-} from "@planx/components/shared/constants";
+import { ERROR_MESSAGE } from "@planx/components/shared/constants";
 import type { PublicProps } from "@planx/components/shared/types";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useFormikContext } from "formik";
@@ -15,7 +12,6 @@ import InputRow from "ui/shared/InputRow";
 import type { EnhancedTextInput } from "../types";
 import type { FormValues } from "./types";
 
-const HEADING_ID = "confirm-project-description-heading";
 const NOT_CHECKED_HINT_ID = "confirm-project-description-not-checked-hint";
 
 const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
@@ -30,10 +26,12 @@ const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
 
   return (
     <Box sx={{ mb: 2 }}>
-      <Typography variant="h2" component="h1" id={HEADING_ID} sx={{ mb: 1 }}>
-        {isWritingNew
-          ? "Enter your new description"
-          : "Confirm your project description"}
+      <Typography variant="h2" component="h1" sx={{ mb: 1 }}>
+        <Box component="label" htmlFor={props.id}>
+          {isWritingNew
+            ? "Enter your new description"
+            : "Confirm your project description"}
+        </Box>
       </Typography>
       {!isWritingNew && (
         <Typography variant="subtitle1" component="p" sx={{ mb: 1 }}>
@@ -61,9 +59,7 @@ const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
             errorMessage={showError ? (errors.userInput as string) : undefined}
             id={props.id}
             inputProps={{
-              "aria-labelledby": HEADING_ID,
               "aria-describedby": [
-                props.description ? DESCRIPTION_TEXT : "",
                 NOT_CHECKED_HINT_ID,
                 "character-hint",
                 showError ? `${ERROR_MESSAGE}-${props.id}` : "",
