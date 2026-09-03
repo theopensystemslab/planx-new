@@ -1,5 +1,3 @@
-import "themeOverrides.d.ts";
-
 import { buttonClasses } from "@mui/material/Button";
 import { radioClasses } from "@mui/material/Radio";
 import type { Theme as MUITheme, ThemeOptions } from "@mui/material/styles";
