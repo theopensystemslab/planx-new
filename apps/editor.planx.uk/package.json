@@ -111,7 +111,7 @@
     "@types/ramda": "^0.28.25",
     "@types/react-color": "^3.0.13",
     "@types/react-dom": "^19.1.0",
-    "@vitejs/plugin-react": "^4.7.0",
+    "@vitejs/plugin-react": "^6.1.0",
     "@types/react": "^19.1.0",
     "@types/sharedb": "catalog:sharedb",
     "@vitest/coverage-v8": "^4.1.9",
