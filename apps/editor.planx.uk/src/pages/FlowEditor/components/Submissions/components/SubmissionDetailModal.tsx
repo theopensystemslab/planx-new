@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "@tanstack/react-router";
 import { CloseButton } from "ui/shared/CloseButton";
@@ -48,9 +47,7 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
         <CloseButton onClick={handleClose} sx={{ paddingTop: 2.5 }} />
       </Box>
 
-      <DialogContent>
-        <SubmissionDetailContent sessionId={sessionId} />
-      </DialogContent>
+      <SubmissionDetailContent sessionId={sessionId} />
     </Dialog>
   );
 };

@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { addDays, isBefore } from "date-fns";
@@ -80,33 +81,35 @@ export const SubmissionDetailContent: React.FC<
     : false;
 
   return (
-    <Grid container>
-      <Grid
-        size={{ xs: 12, md: 6 }}
-        sx={{
-          position: { md: "sticky" },
-          top: 0,
-          alignSelf: "flex-start",
-        }}
-      >
-        <SubmissionDetails
-          sessionId={sessionId}
-          latestEvent={latestEvent}
-          teamSlug={teamSlug}
-          submittedAt={submittedAt}
-          isSubmissionAvailable={isSubmissionAvailable}
-          isSanitised={isSanitised}
-          succeededPayment={succeededPayment}
-        />
-      </Grid>
+    <DialogContent>
+      <Grid container>
+        <Grid
+          size={{ xs: 12, md: 6 }}
+          sx={{
+            position: { md: "sticky" },
+            top: 0,
+            alignSelf: "flex-start",
+          }}
+        >
+          <SubmissionDetails
+            sessionId={sessionId}
+            latestEvent={latestEvent}
+            teamSlug={teamSlug}
+            submittedAt={submittedAt}
+            isSubmissionAvailable={isSubmissionAvailable}
+            isSanitised={isSanitised}
+            succeededPayment={succeededPayment}
+          />
+        </Grid>
 
-      <Grid size={{ xs: 12, md: 6 }}>
-        <SubmissionEventsHistory
-          events={events}
-          isSubmissionAvailable={isSubmissionAvailable}
-        />
+        <Grid size={{ xs: 12, md: 6 }}>
+          <SubmissionEventsHistory
+            events={events}
+            isSubmissionAvailable={isSubmissionAvailable}
+          />
+        </Grid>
       </Grid>
-    </Grid>
+    </DialogContent>
   );
 };
 
