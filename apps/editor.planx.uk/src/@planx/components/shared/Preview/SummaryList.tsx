@@ -11,7 +11,7 @@ import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLab
 import { formatSchemaDisplayValue } from "@planx/components/List/utils";
 import type { Page } from "@planx/components/Page/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import { useBLPUCodes } from "hooks/data/useBLPUCodes";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";

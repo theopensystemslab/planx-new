@@ -27,6 +27,9 @@ catalogs:
     csv-stringify:
       specifier: ^6.8.0
       version: 6.8.0
+    date-fns:
+      specifier: ^4.4.0
+      version: 4.4.0
     dompurify:
       specifier: ^3.4.13
       version: 3.4.13
@@ -196,7 +199,7 @@ importers:
         specifier: 'catalog:'
         version: 6.8.0
       date-fns:
-        specifier: ^4.4.0
+        specifier: 'catalog:'
         version: 4.4.0
       dompurify:
         specifier: 'catalog:'
@@ -542,8 +545,8 @@ importers:
         specifier: 'catalog:'
         version: 6.8.0
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: 'catalog:'
+        version: 4.4.0
       dompurify:
         specifier: 'catalog:'
         version: 3.4.13
@@ -6674,10 +6677,6 @@ packages:
   data-view-byte-offset@1.0.1:
     resolution: {integrity: sha512-BS8PfmtDGnrgYdOonGZQdLZslWIeCGFP9tpan0hi1Co2Zr2NKADsvGYA8XxuG/4UWgJ6Cjtv+YJnB6MM69QGlQ==}
     engines: {node: '>= 0.4'}
-
-  date-fns@2.30.0:
-    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
-    engines: {node: '>=0.11'}
 
   date-fns@4.4.0:
     resolution: {integrity: sha512-+1UMbeh68lH1SegH83CGWwpb6OHHbpSgr3+s5Eww5M4CAgswBpoWS0AjTOfEJ33HiYKz1hdj/KTFprzXHmq/6w==}
@@ -17535,10 +17534,6 @@ snapshots:
       call-bound: 1.0.4
       es-errors: 1.3.0
       is-data-view: 1.0.2
-
-  date-fns@2.30.0:
-    dependencies:
-      '@babel/runtime': 7.29.2
 
   date-fns@4.4.0: {}
 

@@ -27,7 +27,7 @@
     "copyfiles": "^2.4.1",
     "cors": "^2.8.6",
     "csv-stringify": "catalog:",
-    "date-fns": "^4.4.0",
+    "date-fns": "catalog:",
     "dompurify": "catalog:",
     "express": "^4.22.2",
     "express-async-errors": "^3.1.1",
