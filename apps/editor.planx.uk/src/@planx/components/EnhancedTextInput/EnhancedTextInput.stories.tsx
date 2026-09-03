@@ -33,21 +33,19 @@ const meta = {
       '<a href="https://www.legislation.gov.uk/ukpga/2023/36/section/3/made" target="_blank">https://www.legislation.gov.uk/ukpga/2023/36/section/3/made</a>',
     info: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   },
-  parameters: {
-    msw: {
-      handlers: [
-        http.post("*/ai/project-description/enhance", async () => {
-          await delay(6_000);
-          return HttpResponse.json(
-            {
-              original: ORIGINAL,
-              enhanced: ENHANCED,
-            },
-            { status: 200 },
-          );
-        }),
-      ],
-    },
+  beforeEach({ msw }) {
+    msw.use(
+      http.post("*/ai/project-description/enhance", async () => {
+        await delay(6_000);
+        return HttpResponse.json(
+          {
+            original: ORIGINAL,
+            enhanced: ENHANCED,
+          },
+          { status: 200 },
+        );
+      }),
+    );
   },
 } satisfies Meta<typeof Public>;
 
@@ -71,60 +69,54 @@ export const Basic: StoryObj = {
 };
 
 export const Invalid = {
-  parameters: {
-    msw: {
-      handlers: [
-        http.post("*/ai/project-description/enhance", async () => {
-          await delay(3_000);
-          return HttpResponse.json(
-            {
-              error: "INVALID_INPUT",
-              message:
-                "The description doesn't appear to be related to a planning application.",
-            },
-            { status: 400 },
-          );
-        }),
-      ],
-    },
+  beforeEach({ msw }) {
+    msw.use(
+      http.post("*/ai/project-description/enhance", async () => {
+        await delay(3_000);
+        return HttpResponse.json(
+          {
+            error: "INVALID_INPUT",
+            message:
+              "The description doesn't appear to be related to a planning application.",
+          },
+          { status: 400 },
+        );
+      }),
+    );
   },
 } satisfies Story;
 
 export const ServiceUnavailable = {
-  parameters: {
-    msw: {
-      handlers: [
-        http.post("*/ai/project-description/enhance", async () => {
-          await delay(3_000);
-          return HttpResponse.json(
-            {
-              error: "GATEWAY_ERROR",
-              message:
-                "There was an error with the request to upstream AI gateway",
-            },
-            { status: 400 },
-          );
-        }),
-      ],
-    },
+  beforeEach({ msw }) {
+    msw.use(
+      http.post("*/ai/project-description/enhance", async () => {
+        await delay(3_000);
+        return HttpResponse.json(
+          {
+            error: "GATEWAY_ERROR",
+            message:
+              "There was an error with the request to upstream AI gateway",
+          },
+          { status: 400 },
+        );
+      }),
+    );
   },
 } satisfies Story;
 
 export const RateLimitExceeded = {
-  parameters: {
-    msw: {
-      handlers: [
-        http.post("*/ai/project-description/enhance", async () => {
-          await delay(3_000);
-          return HttpResponse.json(
-            {
-              error: "TOO_MANY_REQUESTS",
-            },
-            { status: 429 },
-          );
-        }),
-      ],
-    },
+  beforeEach({ msw }) {
+    msw.use(
+      http.post("*/ai/project-description/enhance", async () => {
+        await delay(3_000);
+        return HttpResponse.json(
+          {
+            error: "TOO_MANY_REQUESTS",
+          },
+          { status: 429 },
+        );
+      }),
+    );
   },
 } satisfies Story;
 

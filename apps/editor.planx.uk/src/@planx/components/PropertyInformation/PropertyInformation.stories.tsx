@@ -33,14 +33,12 @@ export const WithPropertyTypeOverride: StoryObj = {
 };
 
 export const OSTileError: StoryObj = {
-  parameters: {
-    msw: {
-      handlers: [
-        http.get("*/proxy/ordnance-survey/maps/vector/v1/", () =>
-          HttpResponse.json(osTileError, { status: 500 }),
-        ),
-      ],
-    },
+  beforeEach({ msw }) {
+    msw.use(
+      http.get("*/proxy/ordnance-survey/maps/vector/v1/", () =>
+        HttpResponse.json(osTileError, { status: 500 }),
+      ),
+    );
   },
   render: () => (
     <Presentational
