@@ -5,21 +5,21 @@ import {
 } from "lib/planningData/requests";
 import { useEffect, useState } from "react";
 
-export type UseFileUrlProps =
-  { file: File } | { url: string } | { file: File; url: string };
+export type UseFileUrlProps = { file: File };
 
 /**
- * Returns fileUrl for uploaded files, either private or public.
+ * Returns a local object URL for a file the user has just selected.
+ *
+ * Deliberately only ever resolves to a `blob:` URL for an in-memory File - it must not be given
+ * a remote URL to hand back. Rendering a stored file inline would mean loading user-uploaded
+ * bytes into our own origin, which is precisely what we don't want to do.
  */
-export const useFileUrl = (props: UseFileUrlProps) => {
+export const useFileUrl = ({ file }: UseFileUrlProps) => {
   const [fileUrl, setFileUrl] = useState("");
 
   useEffect(() => {
-    if ("file" in props && props.file instanceof File) {
-      setFileUrl(URL.createObjectURL(props.file));
-    } else if ("url" in props && props.url) {
-      // XXX: Backwards compatibility to accept files uploaded directly to S3.
-      setFileUrl(props.url);
+    if (file instanceof File) {
+      setFileUrl(URL.createObjectURL(file));
     }
 
     return () => {

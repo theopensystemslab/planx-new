@@ -13,6 +13,20 @@ const EXTENSION_ALIASES: Record<string, string> = {
 };
 
 /**
+ * Extensions file-type has no entry for doc/xls, whose container format it can still identify.
+ *
+ * Legacy Office files are OLE compound documents, which file-type reports as 'cfb' rather than
+ * as 'doc'/'xls'. Without this they would skip validation entirely (see the supportedExtensions
+ * check below) - which would make them the only widely-used formats we accept whose content is
+ * never checked at all. Verifying the container does not say anything about macros; it just
+ * stops arbitrary bytes being accepted under a .doc or .xls name.
+ */
+const CONTAINER_TYPES: Record<string, string> = {
+  doc: "cfb",
+  xls: "cfb",
+};
+
+/**
  * Verify sniffed file content against the claimed extension, for any extension file-type is
  * able to reliably detect (see `supportedExtensions`).
  *
@@ -31,9 +45,10 @@ export const validateModernFileContent = async (
 ): Promise<boolean> => {
   const bareExt = ext.replace(/^\./, "");
   const canonicalExt = EXTENSION_ALIASES[bareExt] || bareExt;
+  const expectedExt = CONTAINER_TYPES[canonicalExt] ?? canonicalExt;
 
   // full list of supported types: https://github.com/sindresorhus/file-type#supported-file-types
-  if (!supportedExtensions.has(canonicalExt)) return true;
+  if (!supportedExtensions.has(expectedExt)) return true;
 
   const detected = await fileTypeFromBuffer(buffer, {
     // allow some grace in case an audio MPEG is misaligned (technically invalid, but it happens)
@@ -41,7 +56,7 @@ export const validateModernFileContent = async (
   });
   if (!detected) return true;
 
-  return detected.ext === canonicalExt;
+  return detected.ext === expectedExt;
 };
 
 /**
@@ -50,8 +65,10 @@ export const validateModernFileContent = async (
  * This middleware should be used after useFileUpload, so the extension itself is
  * already validated, and the file has been read into memory and can be analysed.
  *
- * TODO: add logic to detect and drop macros in office files (a la defense in depth)
- * inspiration: https://github.com/decalage2/oletools/wiki/olevba
+ * Note this checks content against the claimed extension only - it is not a malware or macro
+ * check. Every upload is scanned by Scanii, and councils are expected to run their own scans
+ * and to take responsibility for files they choose to open. See the scan verification section
+ * of doc/how-to/how-to-identify-missing-files.md.
  */
 export const useFileContentValidation: RequestHandler = async (
   req,

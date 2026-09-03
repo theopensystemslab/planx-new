@@ -15,6 +15,13 @@ As these images are automatically deleted, this can lead to issues when trying t
 
 Once Scanii has scanned an object, a callback Lambda tags it with `ScaniiId` and `ScaniiFindings`. The API will not serve a file from the user-data bucket unless those tags are present, so a file that has not yet been scanned is never handed to a council. This is controlled by the `ENFORCE_SCAN_FROM` env var (an ISO8601 date), which is set in every environment backed by a bucket Scanii watches: staging and production (from Pulumi config) and pizzas (from `.env.staging`). When unset the check is disabled entirely, which is the case in local development and in e2e/integration tests - both run against Minio, which has no Scanii equivalent, so no object is ever tagged.
 
+<!-- TODO: this policy-statement as regards file uploads belongs elsewhere, e.g. in an ADR -->
+### Where our responsibility ends
+
+We accept a broad range of file types (see `ALLOWED_EXTENSIONS_BY_MIME_TYPE` in `packages/file-upload`), and we do two things with every upload: check that its content matches its claimed extension, and scan it with Scanii, deleting anything flagged. We deliberately do **not** attempt to detect or strip macros in Office files, and we do not treat "accepted by PlanX" as "safe to execute".
+
+End-users are expected to run their own scanning if they wish to, and fundamentally to take responsibility for any file delivered via PlanX that they choose to open or execute.
+
 The API response tells you which situation you're in before you go near CloudWatch:
 
 | Response | Meaning |

@@ -7,6 +7,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import type { FileUploadSlot } from "@planx/components/FileUpload/model";
+import { PREVIEWABLE_MIME_TYPES } from "@planx/file-upload";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -94,7 +95,6 @@ export const UploadedFileCard: React.FC<Props> = ({
   id,
   file,
   progress,
-  url,
   removeFile,
   onChange,
   changeLabel = "Edit",
@@ -133,8 +133,9 @@ export const UploadedFileCard: React.FC<Props> = ({
               }}
             >
               <FilePreview>
-                {file instanceof File && file?.type?.includes("image") ? (
-                  <ImagePreview file={file} url={url} />
+                {file instanceof File &&
+                PREVIEWABLE_MIME_TYPES.has(file.type) ? (
+                  <ImagePreview file={file} />
                 ) : (
                   <FileIcon />
                 )}

@@ -158,6 +158,64 @@ describe("File upload", () => {
           .expect(200);
         expect(mockPutObject).toHaveBeenCalledTimes(1);
       });
+
+      // file-type has no doc/xls entries - legacy Office files are OLE compound documents, which are
+      // reported as "cfb" - without the CONTAINER_TYPES mapping these would skip validation altogether
+      const CFB_HEADER = Buffer.concat([
+        Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]),
+        Buffer.alloc(512),
+      ]);
+      const EXE_HEADER = Buffer.concat([
+        Buffer.from("MZ\x90\x00", "binary"),
+        Buffer.alloc(512),
+      ]);
+
+      it("should reject an executable disguised as a legacy Office file", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .set(auth)
+          .field("filename", "some_file.doc")
+          .attach("file", EXE_HEADER, "some_file.doc")
+          .expect(415)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(
+              /File content does not match given extension/,
+            );
+          });
+      });
+
+      it("should reject an image disguised as a legacy Office file", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .set(auth)
+          .field("filename", "some_file.xls")
+          .attach("file", PNG_FIXTURE, "some_file.xls")
+          .expect(415);
+        expect(mockPutObject).not.toHaveBeenCalled();
+      });
+
+      it("should allow a genuine OLE compound document as .doc", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .set(auth)
+          .field("filename", "some_file.doc")
+          .attach("file", CFB_HEADER, "some_file.doc")
+          .expect(200);
+        expect(mockPutObject).toHaveBeenCalledTimes(1);
+      });
+
+      // file-type cannot identify plain text, so these are allowed through unchecked - we only
+      // reject confirmed mismatches rather than penalising formats we cannot verify
+      it("should allow a newly-enabled extension file-type cannot sniff", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .set(auth)
+          .field("filename", "some_file.csv")
+          .attach("file", Buffer.from("a,b,c\n1,2,3"), "some_file.csv")
+          .expect(200);
+        expect(mockPutObject).toHaveBeenCalledTimes(1);
+      });
     },
   );
 
