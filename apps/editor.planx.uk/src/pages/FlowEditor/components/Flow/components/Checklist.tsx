@@ -159,7 +159,9 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
-          {props.data?.notes && <AttachedNote note={props.data.notes} />}
+          {props.data?.notes && (
+            <AttachedNote nodeId={props.id} note={props.data.notes} />
+          )}
         </TemplatedNodeContainer>
         {groupedOptions ? (
           <ol className="categories">
