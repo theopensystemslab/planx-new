@@ -10,7 +10,7 @@ import React from "react";
  * Mimics the global `BackButton` UI but accepts a `handleBack` prop
  * to control local component state (steps) rather than node-by-node navigation
  */
-export const InternalBackButton: React.FC<{ handleBack: () => void }> = ({
+const InternalBackButton: React.FC<{ handleBack: () => void }> = ({
   handleBack,
 }) => (
   <Box

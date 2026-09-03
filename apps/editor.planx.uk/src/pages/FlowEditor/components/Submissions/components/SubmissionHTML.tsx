@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Skeleton from "@mui/material/Skeleton";
-import { InternalBackButton } from "@planx/components/shared/Preview/InternalBackButton";
+import InternalBackButton from "@planx/components/shared/Preview/InternalBackButton";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { PrintButton } from "components/PrintButton";

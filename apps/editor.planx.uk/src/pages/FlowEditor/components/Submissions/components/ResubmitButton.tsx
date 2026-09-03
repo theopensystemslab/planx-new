@@ -20,6 +20,7 @@ type Props = {
   sessionId: string;
   eventType: Submission["eventType"];
 };
+
 export const ResubmitButton = (props: Props) => {
   const teamSlug = useStore((state) => state.teamSlug);
   const toast = useToast();

@@ -177,7 +177,7 @@ const SubmissionAttempts: React.FC<{
   sessionId: string;
 }> = ({ attempts, sessionId }) => {
   const numberAttempts = attempts.length;
-  console.log({ attempts });
+
   return (
     <Box>
       {attempts.map((attempt, index) => (
