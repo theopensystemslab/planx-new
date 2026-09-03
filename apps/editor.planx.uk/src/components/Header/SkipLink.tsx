@@ -21,7 +21,7 @@ const Root = styled("a")(({ theme }) => ({
   },
 }));
 
-export const SkipLink: React.FC = () => {
+const SkipLink: React.FC = () => {
   const handleClick = (e: SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
 

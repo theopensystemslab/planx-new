@@ -48,9 +48,9 @@ const getSubmittedAt = (events: Submission[]): string | undefined => {
   return successfulSend?.createdAt ?? undefined;
 };
 
-export const SubmissionDetailContent: React.FC<
-  SubmissionDetailContentProps
-> = ({ sessionId }) => {
+const SubmissionDetailContent: React.FC<SubmissionDetailContentProps> = ({
+  sessionId,
+}) => {
   const [teamSlug] = useStore((state) => [state.teamSlug]);
 
   const { data, loading, error } = useQuery<{ submissions: Submission[] }>(

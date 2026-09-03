@@ -42,7 +42,7 @@ import FeatureFlagsPanel from "./components/FeatureFlagsPanel";
 import NavMenuHeader from "./components/NavMenuHeader";
 import NavMenuItem from "./components/NavMenuItem";
 import NotificationsPanel from "./components/NotificationsPanel";
-import { TeamSelect } from "./components/TeamSelect";
+import TeamSelect from "./components/TeamSelect";
 import {
   AccordionContent,
   MenuItem,

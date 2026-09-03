@@ -4,7 +4,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "@tanstack/react-router";
 import { CloseButton } from "ui/shared/CloseButton";
 
-import { SubmissionDetailContent } from "./SubmissionDetailContent";
+import SubmissionDetailContent from "./SubmissionDetailContent";
 
 interface SubmissionDetailModalProps {
   sessionId: string;

@@ -71,10 +71,7 @@ interface Props {
   onTeamSelect: (teamSlug: string) => void;
 }
 
-export const TeamSelect: React.FC<Props> = ({
-  currentTeamSlug,
-  onTeamSelect,
-}) => {
+const TeamSelect: React.FC<Props> = ({ currentTeamSlug, onTeamSelect }) => {
   const { teams } = useLoaderData({ from: "/_authenticated/app" });
   const [open, setOpen] = useState(false);
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);

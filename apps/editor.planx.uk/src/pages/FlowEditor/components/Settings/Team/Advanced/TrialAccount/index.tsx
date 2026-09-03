@@ -12,7 +12,7 @@ import type {
   UpdateTeamSettingsVariables,
 } from "./types";
 
-export const TrailAccount: React.FC = () => {
+const TrailAccount: React.FC = () => {
   const [teamId, teamSlug] = useStore((state) => [
     state.teamId,
     state.teamSlug,

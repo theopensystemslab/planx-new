@@ -44,7 +44,7 @@ const connectToStripe = async (): Promise<ConnectedAccount> => {
   return PLACEHOLDER_ACCOUNT;
 };
 
-export const Onboarding: React.FC = () => {
+const Onboarding: React.FC = () => {
   const [status, setStatus] = useState<OnboardingStatus>("notStarted");
   const [account, setAccount] = useState<ConnectedAccount | null>(null);
 
