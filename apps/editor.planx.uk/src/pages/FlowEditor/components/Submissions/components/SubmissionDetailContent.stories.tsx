@@ -1,0 +1,117 @@
+import { MockedProvider } from "@apollo/client/testing";
+import Box from "@mui/material/Box";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
+
+import { useStore } from "../../../lib/store";
+import {
+  mockInvitedToPayEvents,
+  mockSanitisedSuccessEvents,
+  mockSubmissionEvents,
+  mockUnresolvedFailureEvents,
+  teamData,
+} from "../mockSubmissionsGrouped";
+import { GET_TEAM_LOGO } from "../queries";
+import SubmissionDetailContent from "./SubmissionDetailContent";
+import { GET_SUBMISSION_EVENTS } from "./SubmissionDetailContent";
+
+const mocks = [
+  {
+    request: {
+      query: GET_SUBMISSION_EVENTS,
+      variables: { sessionId: "6fcb873f-cc7f-4fc0-ad9d-b4148de7a3b5" },
+    },
+    result: {
+      data: {
+        submissions: mockSubmissionEvents,
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_TEAM_LOGO,
+      variables: { teamSlug: "test-council" },
+    },
+    result: {
+      data: teamData,
+    },
+  },
+  {
+    request: {
+      query: GET_SUBMISSION_EVENTS,
+      variables: { sessionId: "invited-to-pay-0000-0000-000000000000" },
+    },
+    result: {
+      data: {
+        submissions: mockInvitedToPayEvents,
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_SUBMISSION_EVENTS,
+      variables: { sessionId: "unresolved-failure-0000-0000-00000000" },
+    },
+    result: {
+      data: {
+        submissions: mockUnresolvedFailureEvents,
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_SUBMISSION_EVENTS,
+      variables: { sessionId: "sanitised-success-0000-0000-0000000" },
+    },
+    result: {
+      data: {
+        submissions: mockSanitisedSuccessEvents,
+      },
+    },
+  },
+];
+
+const meta = {
+  title: "Editor Components/Submissions/Details Modal/Content",
+  component: SubmissionDetailContent,
+  decorators: [
+    (Story) => {
+      useStore.setState({ teamSlug: "test-council" });
+
+      return (
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <Box>
+            <Story />
+          </Box>
+        </MockedProvider>
+      );
+    },
+  ],
+} satisfies Meta<typeof SubmissionDetailContent>;
+
+type Story = StoryObj<typeof meta>;
+
+export default meta;
+
+export const Basic = {
+  args: {
+    sessionId: "6fcb873f-cc7f-4fc0-ad9d-b4148de7a3b5",
+  },
+};
+
+export const InvitedToPay = {
+  args: {
+    sessionId: "invited-to-pay-0000-0000-000000000000",
+  },
+} satisfies Story;
+
+export const UnresolvedFailure = {
+  args: {
+    sessionId: "unresolved-failure-0000-0000-00000000",
+  },
+} satisfies Story;
+
+export const SanitisedSuccess = {
+  args: {
+    sessionId: "sanitised-success-0000-0000-0000000",
+  },
+} satisfies Story;
