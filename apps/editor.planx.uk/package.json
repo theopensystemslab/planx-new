@@ -119,7 +119,7 @@
     "eslint": "catalog:",
     "fake-indexeddb": "^6.2.5",
     "jsdom": "catalog:",
-    "msw-storybook-addon": "^2.0.7",
+    "msw-storybook-addon": "^3.0.0",
     "prettier": "catalog:",
     "sass": "^1.97.3",
     "storybook": "10.4.1",
