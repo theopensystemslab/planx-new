@@ -80,7 +80,7 @@
   },
   "prettier": "@planx/prettier-config",
   "devDependencies": {
-    "@babel/core": "^7.29.7",
+    "@babel/core": "^8.0.1",
     "@babel/preset-typescript": "catalog:typescript",
     "@planx/eslint-config": "workspace:*",
     "@planx/prettier-config": "workspace:*",
