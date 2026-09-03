@@ -52,6 +52,15 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
   const radioGroupState = useRadioGroup();
   const isSelected = radioGroupState?.value === id;
   const recommendedTagId = `${id}-recommended`;
+  const titleId = `${id}-title`;
+  const descriptionId = `${id}-description`;
+
+  // Accessible name: "Recommended" (when present) then the visible choice
+  const labelledBy = [recommended ? recommendedTagId : "", titleId]
+    .filter(Boolean)
+    .join(" ");
+
+  const describedBy = description ? descriptionId : undefined;
 
   return (
     <Box sx={{ position: "relative" }}>
@@ -70,12 +79,14 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
           onChange={onChange}
           slotProps={{
             input: {
-              "aria-describedby": recommended ? recommendedTagId : undefined,
+              "aria-labelledby": labelledBy,
+              "aria-describedby": describedBy,
             },
           }}
         />
         <Box sx={{ position: "relative" }}>
           <Typography
+            id={titleId}
             variant="body1"
             sx={{
               color: "text.primary",
@@ -85,7 +96,13 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
             {title}
           </Typography>
           {description && (
-            <QuoteDescription variant="subtitle1" component="blockquote">
+            <QuoteDescription
+              id={descriptionId}
+              // Excluded as referenced by the radio's aria-describedby
+              aria-hidden="true"
+              variant="subtitle1"
+              component="blockquote"
+            >
               {description}
             </QuoteDescription>
           )}
