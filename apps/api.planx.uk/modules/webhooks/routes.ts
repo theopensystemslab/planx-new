@@ -15,7 +15,10 @@ import {
   failedSubmissionsController,
   isCleanJSONBController,
   reconcilePaymentsController,
-  sanitiseApplicationDataController,
+  sanitiseAuditRecordsDataController,
+  sanitiseFeedbackDataController,
+  sanitiseHasuraEventsDataController,
+  sanitiseRawApplicationDataController,
   sendSlackMessageController,
   sendSlackNotificationController,
   updateTemplatedFlowEditsController,
@@ -80,8 +83,20 @@ router.post(
   deleteSessionController,
 );
 router.post(
-  "/webhooks/hasura/sanitise-application-data",
-  sanitiseApplicationDataController,
+  "/webhooks/hasura/sanitise-raw-application-data",
+  sanitiseRawApplicationDataController,
+);
+router.post(
+  "/webhooks/hasura/sanitise-audit-records-data",
+  sanitiseAuditRecordsDataController,
+);
+router.post(
+  "/webhooks/hasura/sanitise-hasura-events-data",
+  sanitiseHasuraEventsDataController,
+);
+router.post(
+  "/webhooks/hasura/sanitise-feedback-data",
+  sanitiseFeedbackDataController,
 );
 router.post("/webhooks/hasura/analyze-sessions", analyzeSessionsController);
 router.post(
