@@ -5,23 +5,46 @@ import { Readable } from "stream";
 import { getScanStatus } from "./scanStatus.js";
 import { s3Factory } from "./utils.js";
 
-const buildHeaders = (file: GetObjectCommandOutput) => ({
-  "Content-Type": file.ContentType,
-  "Content-Length": file.ContentLength,
-  "Content-Disposition": file.ContentDisposition,
-  "Content-Encoding": file.ContentEncoding,
-  "Cache-Control": file.CacheControl,
-  Expires: file.ExpiresString,
-  "Last-Modified": file.LastModified,
-  ETag: file.ETag,
-  "cross-origin-resource-policy": "cross-site",
-});
+/**
+ * Headers we are willing to pass on from S3, plus additional protections.
+ *
+ * Deliberately does *not* include Content-Type or Content-Disposition. Callers to getFile set both via
+ * `res.attachment(filename)` instead, deriving the type from the extension we validated at upload time.
+ *
+ * We also don't echo Cache-Control or Expires to avoid overruling our useNoCache middleware.
+ */
+const buildHeaders = (file: GetObjectCommandOutput) => {
+  const headers: Record<string, string> = {
+    // allows the editor to load public-bucket images cross-origin
+    "cross-origin-resource-policy": "cross-site",
+    // our Content-Type is authoritative - never let a browser sniff its way past it
+    "X-Content-Type-Options": "nosniff",
+  };
+
+  if (file.ETag) headers["ETag"] = file.ETag;
+  // an HTTP-date must be RFC7231-safe: https://www.rfc-editor.org/info/rfc7231/#section-7.1.1.1
+  if (file.LastModified)
+    headers["Last-Modified"] = file.LastModified.toUTCString();
+
+  return headers;
+};
+
+/**
+ * S3 keys are `<nanoid>/<filename>`, so the name to serve under is the last segment.
+ *
+ * Falls back to a generic name without extension, so that `res.attachment`
+ * determines Content-Type as application/octet-stream, which is the safe default.
+ */
+const filenameFromKey = (fileId: string): string =>
+  fileId.split("/").filter(Boolean).pop() || "download";
 
 export type GetFileResult =
   | {
       outcome: "ok";
       body: Buffer;
       isPrivate: boolean;
+      /** Name to serve the file as - drives both Content-Disposition and Content-Type */
+      filename: string;
       headers: ReturnType<typeof buildHeaders>;
     }
   | { outcome: "pending-scan" }
@@ -70,6 +93,7 @@ export const getFileFromS3 = async (fileId: string): Promise<GetFileResult> => {
       outcome: "ok",
       body,
       isPrivate: file.Metadata?.is_private === "true",
+      filename: filenameFromKey(fileId),
       headers: buildHeaders(file),
     };
   } catch (error) {

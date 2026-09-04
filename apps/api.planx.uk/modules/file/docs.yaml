@@ -68,7 +68,21 @@ components:
                 type: string
                 example: "File too large"
     DownloadFile:
-      description: Successful response
+      description: |
+        Successful response. Files are always served as a download, never inline, and the
+        `Content-Type` is derived from the file's extension rather than from anything the
+        uploading client supplied - so it may differ from the type given at upload.
+      headers:
+        Content-Disposition:
+          description: Always `attachment`, with the stored filename
+          schema:
+            type: string
+            example: 'attachment; filename="site-plan.pdf"'
+        X-Content-Type-Options:
+          description: Always `nosniff` - our Content-Type is authoritative
+          schema:
+            type: string
+            example: nosniff
       content:
         application/octet-stream:
           schema:

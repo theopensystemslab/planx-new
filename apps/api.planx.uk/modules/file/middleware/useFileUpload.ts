@@ -17,7 +17,7 @@ export const validateExtension = (filename: string): boolean => {
  */
 const fileFilter: multer.Options["fileFilter"] = (_req, file, callback) => {
   if (!validateExtension(file.originalname)) {
-    callback(
+    return callback(
       new Error(
         `Unsupported file type. Extension: ${getFileExtension(file.originalname)}`,
       ),

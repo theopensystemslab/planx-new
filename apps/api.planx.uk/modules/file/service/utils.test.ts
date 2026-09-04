@@ -1,4 +1,4 @@
-import { getS3KeyFromURL, s3Factory } from "./utils.js";
+import { getS3KeyFromURL, s3Factory, safeDecode } from "./utils.js";
 
 describe("s3 Factory", () => {
   afterEach(() => vi.unstubAllEnvs());
@@ -44,4 +44,26 @@ describe("getS3KeyFromURL()", () => {
     const badURL = "this is not a url";
     expect(() => getS3KeyFromURL(badURL)).toThrow();
   });
+});
+
+describe("safeDecode()", () => {
+  it.each([
+    ["my%20plan.pdf", "my plan.pdf"],
+    ["my%20file%20(1).pdf", "my file (1).pdf"],
+    ["it's%20a%20plan.pdf", "it's a plan.pdf"],
+    ["plain.png", "plain.png"],
+  ])("decodes %j to %j", (encoded, decoded) => {
+    expect(safeDecode(encoded)).toBe(decoded);
+  });
+
+  // decodeURIComponent throws on these. Express rejects a malformed path param with a 400
+  // before our handlers see it, but getFileFromS3 is also reached from the zip builder with
+  // keys derived elsewhere - a name we cannot decode is no reason to fail a download
+  it.each(["malformed%.pdf", "%E0%A4%A.pdf", "100%.pdf"])(
+    "returns %j unchanged rather than throwing",
+    (undecodable) => {
+      expect(() => safeDecode(undecodable)).not.toThrow();
+      expect(safeDecode(undecodable)).toBe(undecodable);
+    },
+  );
 });
