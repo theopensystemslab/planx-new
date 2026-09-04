@@ -1,6 +1,5 @@
 import DataFieldIcon from "@mui/icons-material/Code";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import ToggleIconButton from "ui/editor/ToggleIconButton";
 
 export const ToggleDataFieldsButton: React.FC = () => {

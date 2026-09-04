@@ -14,7 +14,6 @@ import {
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import type { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ErrorWrapper from "ui/shared/ErrorWrapper";

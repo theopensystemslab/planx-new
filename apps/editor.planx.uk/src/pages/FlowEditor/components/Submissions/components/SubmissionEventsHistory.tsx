@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import Permission from "ui/editor/Permission";
 
 import type { Attempt, GroupedEvent, Submission } from "../types";

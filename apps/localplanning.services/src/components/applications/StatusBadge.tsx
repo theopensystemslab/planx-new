@@ -1,5 +1,3 @@
-import React from "react";
-
 import draftIcon from "/icons/draft-icon.svg?url";
 import paymentIcon from "/icons/payment-icon.svg?url";
 import successIcon from "/icons/success-icon.svg?url";

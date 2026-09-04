@@ -8,7 +8,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import { Switch } from "ui/shared/Switch";

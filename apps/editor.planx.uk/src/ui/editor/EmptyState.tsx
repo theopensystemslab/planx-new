@@ -2,7 +2,6 @@ import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React from "react";
 
 type EmptyStateSize = "medium" | "small";
 

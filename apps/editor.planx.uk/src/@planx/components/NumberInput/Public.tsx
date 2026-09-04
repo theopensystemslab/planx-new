@@ -3,7 +3,7 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import type { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import isNil from "lodash/isNil";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";

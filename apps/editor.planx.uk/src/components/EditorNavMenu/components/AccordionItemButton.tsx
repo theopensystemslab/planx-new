@@ -1,7 +1,6 @@
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
-import React from "react";
 
 import { MenuButton, MenuTitle, StyledChip } from "../styles";
 

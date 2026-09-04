@@ -5,7 +5,6 @@ import FormatListNumbered from "@mui/icons-material/FormatListNumbered";
 import IconButton from "@mui/material/IconButton";
 import { type Editor } from "@tiptap/core";
 import type { ReactElement } from "react";
-import React from "react";
 
 const RichTextInputButton = ({
   editor,

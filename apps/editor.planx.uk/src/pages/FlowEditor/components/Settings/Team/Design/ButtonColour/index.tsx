@@ -2,7 +2,6 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { darken, useTheme } from "@mui/material/styles";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import InputRow from "ui/shared/InputRow";

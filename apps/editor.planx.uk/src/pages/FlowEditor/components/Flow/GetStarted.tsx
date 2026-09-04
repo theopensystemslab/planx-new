@@ -4,7 +4,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
-import React from "react";
 
 const Root = styled(Box)(({ theme }) => ({
   display: "flex",

@@ -2,7 +2,6 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import type { QuestionField } from "@planx/components/shared/Schema/model";
-import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import BasicRadio from "../../Radio/BasicRadio/BasicRadio";

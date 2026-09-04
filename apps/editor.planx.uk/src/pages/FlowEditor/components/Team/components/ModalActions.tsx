@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useFormikContext } from "formik";
-import React from "react";
 
 export const ModalActions = ({
   submitDataTestId,

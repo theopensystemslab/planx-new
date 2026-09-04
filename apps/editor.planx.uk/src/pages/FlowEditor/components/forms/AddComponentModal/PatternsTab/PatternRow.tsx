@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Typography, { typographyClasses } from "@mui/material/Typography";
-import React from "react";
 import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import type { Pattern } from "./queries";

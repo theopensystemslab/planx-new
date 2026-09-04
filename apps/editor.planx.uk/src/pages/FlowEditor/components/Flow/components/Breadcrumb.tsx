@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import React from "react";
 
 const Breadcrumb: React.FC<any> = ({ className = "", ...props }) => (
   <li className={`card portal breadcrumb ${className}`}>

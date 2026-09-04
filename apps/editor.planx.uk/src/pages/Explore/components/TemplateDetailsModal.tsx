@@ -2,7 +2,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
-import React from "react";
 
 import { SearchListItemDetail } from "./SearchListItemDetail";
 import { SearchListItemDetailActions } from "./SearchListItemDetailActions";

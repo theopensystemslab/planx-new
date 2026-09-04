@@ -1,6 +1,5 @@
 import Typography from "@mui/material/Typography";
 import StatusPage from "pages/Preview/StatusPage";
-import React from "react";
 
 export const OfflinePage: React.FC = () => (
   <StatusPage bannerHeading="Service offline">

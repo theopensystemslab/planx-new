@@ -1,7 +1,6 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";

@@ -19,7 +19,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
-import React from "react";
 import type { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import { StyledAddButton } from "ui/editor/ListManager/ListManager";

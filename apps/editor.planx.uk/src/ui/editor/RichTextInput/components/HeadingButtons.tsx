@@ -1,6 +1,5 @@
 import IconButton from "@mui/material/IconButton";
 import { type Editor } from "@tiptap/core";
-import React from "react";
 
 const HeadingButton = ({
   editor,

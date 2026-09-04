@@ -2,7 +2,6 @@ import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import MakePayment from "pages/Pay/MakePayment";
-import React from "react";
 import { getPaymentRequest } from "utils/routeUtils/payQueries";
 import { z } from "zod";
 

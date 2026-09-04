@@ -4,7 +4,6 @@ import { useParams } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
 import { clearLocalFlow } from "lib/local";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 const NavigateToPublishedButton: React.FC = () => {
   const navigate = useNavigate();

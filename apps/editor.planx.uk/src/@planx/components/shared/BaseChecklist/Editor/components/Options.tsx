@@ -1,7 +1,6 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import type { ChecklistWithOptions } from "@planx/components/Checklist/model";
 import type { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
-import React from "react";
 
 import type { Props } from "../types";
 import { Options } from "./Options/index";

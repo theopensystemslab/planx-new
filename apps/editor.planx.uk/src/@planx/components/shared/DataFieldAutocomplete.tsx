@@ -2,7 +2,6 @@ import type { AutocompleteProps } from "@mui/material/Autocomplete";
 import { createFilterOptions } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import InputRow from "ui/shared/InputRow";

@@ -8,7 +8,6 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { FormikProvider, useFormikContext } from "formik";
 import groupBy from "lodash/groupBy";
-import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";

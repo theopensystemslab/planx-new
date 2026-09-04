@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React from "react";
 
 const DowntimeBannerWrapper = styled(Box)(({ theme }) => ({
   display: "flex",

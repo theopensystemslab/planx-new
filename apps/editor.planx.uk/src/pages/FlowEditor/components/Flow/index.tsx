@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { Link, useParams, useRouteContext } from "@tanstack/react-router";
-import React from "react";
 
 import { useStore } from "../../lib/store";
 import { ContextMenu } from "./components/ContextMenu";

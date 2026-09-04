@@ -5,7 +5,6 @@ import {
 import type { PublicProps } from "@planx/components/shared/types";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useFormikContext } from "formik";
-import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";

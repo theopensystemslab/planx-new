@@ -9,7 +9,6 @@ import type {
   PublishHistoryItem,
 } from "lib/api/publishFlow/types";
 import type { Store } from "pages/FlowEditor/lib/store";
-import React from "react";
 import BlockQuote from "ui/editor/BlockQuote";
 
 import { isAutoComment } from "../utils";

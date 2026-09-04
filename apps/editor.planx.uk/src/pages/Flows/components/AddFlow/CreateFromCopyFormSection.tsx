@@ -1,7 +1,6 @@
 import MenuItem from "@mui/material/MenuItem";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import { useFormikContext } from "formik";
-import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { slugify } from "utils";

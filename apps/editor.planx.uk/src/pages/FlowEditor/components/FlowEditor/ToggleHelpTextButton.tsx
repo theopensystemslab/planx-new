@@ -1,6 +1,5 @@
 import HelpTextIcon from "@mui/icons-material/Help";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import ToggleIconButton from "ui/editor/ToggleIconButton";
 
 export const ToggleHelpTextButton: React.FC = () => {

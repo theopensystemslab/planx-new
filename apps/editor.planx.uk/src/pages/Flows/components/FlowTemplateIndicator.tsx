@@ -1,7 +1,6 @@
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props {

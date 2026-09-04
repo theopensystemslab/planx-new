@@ -1,5 +1,3 @@
-import React from "react";
-
 import Boundary from "./Boundary";
 import ReferenceCode from "./ReferenceCode";
 

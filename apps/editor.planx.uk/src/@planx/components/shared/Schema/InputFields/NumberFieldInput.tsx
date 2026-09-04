@@ -1,5 +1,4 @@
 import type { NumberField } from "@planx/components/shared/Schema/model";
-import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";

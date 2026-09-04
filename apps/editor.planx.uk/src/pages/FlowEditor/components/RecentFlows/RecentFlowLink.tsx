@@ -1,7 +1,6 @@
 import TurnSharpLeftIcon from "@mui/icons-material/TurnSharpLeft";
 import Box from "@mui/material/Box";
 import { useExternalPortal } from "hooks/data/useExternalPortal";
-import React from "react";
 
 import { useRecentFlowsContext } from "./RecentFlowsContext";
 import { RecentFlowLinkRoot } from "./styles";

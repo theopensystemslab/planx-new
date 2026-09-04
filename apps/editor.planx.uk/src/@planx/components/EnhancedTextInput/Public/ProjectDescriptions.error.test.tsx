@@ -1,6 +1,5 @@
 import { screen } from "@testing-library/react";
 import { http, type HttpHandler, HttpResponse } from "msw";
-import React from "react";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 

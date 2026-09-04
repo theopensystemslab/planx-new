@@ -1,6 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import React from "react";
 import { z } from "zod";
 
 const nodeSearchSchema = z.object({

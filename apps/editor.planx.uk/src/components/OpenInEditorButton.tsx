@@ -3,7 +3,6 @@ import Fab from "@mui/material/Fab";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 const StyledFab = styled(Fab)(() => ({
   position: "fixed",

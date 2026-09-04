@@ -1,6 +1,5 @@
 import Link from "@mui/material/Link";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";

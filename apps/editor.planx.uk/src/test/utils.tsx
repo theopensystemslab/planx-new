@@ -23,7 +23,6 @@ import userEvent, {
 } from "@testing-library/user-event";
 import { ToastContextProvider } from "contexts/ToastContext";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
-import React from "react";
 
 import { defaultTheme } from "../theme";
 

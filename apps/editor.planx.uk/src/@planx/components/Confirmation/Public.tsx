@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import type { PublicProps } from "@planx/components/shared/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import ApplicationSummary from "ui/public/ApplicationSummary";
 import Banner from "ui/public/Banner";
 import NumberedList from "ui/public/NumberedList";

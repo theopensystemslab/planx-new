@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import { useNavigate } from "@tanstack/react-router";
 import { formatLastEditMessage } from "pages/FlowEditor/utils";
-import React from "react";
 import { cardBoxShadow } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";

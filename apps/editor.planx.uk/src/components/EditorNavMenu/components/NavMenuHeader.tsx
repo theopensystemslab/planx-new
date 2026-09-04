@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import EnvironmentSelect from "components/EditorNavMenu/components/EnvironmentSelect";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 const HeaderRoot = styled(Box)(({ theme }) => ({

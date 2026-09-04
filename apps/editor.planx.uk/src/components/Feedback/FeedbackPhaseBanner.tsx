@@ -4,7 +4,6 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React from "react";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",

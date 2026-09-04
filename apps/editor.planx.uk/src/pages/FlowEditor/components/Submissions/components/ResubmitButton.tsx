@@ -7,7 +7,7 @@ import { useToast } from "hooks/useToast";
 import { createSendEvents } from "lib/api/send/requests";
 import type { CombinedEventsPayload } from "lib/api/send/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import type { Submission } from "../types";
 

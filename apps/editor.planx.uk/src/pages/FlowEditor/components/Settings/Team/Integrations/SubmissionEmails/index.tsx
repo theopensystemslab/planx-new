@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import React from "react";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 
 import { EmailsTable } from "./EmailsTable";

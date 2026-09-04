@@ -7,7 +7,6 @@ import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
 import { merge } from "lodash";
-import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
 import ListManager from "ui/editor/ListManager/ListManager";

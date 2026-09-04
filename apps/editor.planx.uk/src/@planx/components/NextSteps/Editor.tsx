@@ -10,7 +10,6 @@ import {
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import type { ChangeEvent } from "react";
-import React from "react";
 import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
 import ListManager from "ui/editor/ListManager/ListManager";
 import { ModalFooter } from "ui/editor/ModalFooter";

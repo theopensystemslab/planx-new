@@ -5,7 +5,6 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import type { FlowView } from "pages/Flows";
-import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import Permission from "ui/editor/Permission";

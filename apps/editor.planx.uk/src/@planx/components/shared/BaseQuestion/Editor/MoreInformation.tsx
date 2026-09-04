@@ -1,5 +1,4 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import React from "react";
 import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
 
 import type { Props } from "./types";

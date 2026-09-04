@@ -1,5 +1,4 @@
 import type { PublicProps } from "@planx/components/shared/types";
-import React from "react";
 import NextStepsList from "ui/public/NextStepsList";
 
 import Card from "../shared/Preview/Card";

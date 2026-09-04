@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { MembersTable } from "pages/FlowEditor/components/Team/components/MembersTable";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { useToggle } from "react-use";
 import { AddButton } from "ui/editor/AddButton";
 import SettingsSection from "ui/editor/SettingsSection";

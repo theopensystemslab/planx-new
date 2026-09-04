@@ -1,5 +1,4 @@
 import { visuallyHidden } from "@mui/utils";
-import React from "react";
 
 interface Props {
   status?: string;

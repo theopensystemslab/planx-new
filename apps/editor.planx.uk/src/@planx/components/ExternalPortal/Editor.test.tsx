@@ -1,6 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
-import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 

@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import type { PropsWithChildren } from "react";
-import React from "react";
 
 const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "sectionBackgroundColor",

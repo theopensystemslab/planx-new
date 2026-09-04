@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import type { Flag } from "@opensystemslab/planx-core/types";
-import React from "react";
 
 export const FlagBand: React.FC<{
   flag: Flag;
