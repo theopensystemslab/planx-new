@@ -1,5 +1,3 @@
-import type { LanguageModel } from "ai";
-
 // we use plain objects w/ const assertion in place of problematic TS enums
 export const GATEWAY_STATUS = {
   ENHANCED: "ENHANCED",
@@ -27,7 +25,6 @@ export type GatewayFailureStatus = (typeof GATEWAY_FAILURE_STATUSES)[number];
 type GatewaySuccess = {
   ok: true;
   value?: string;
-  model?: LanguageModel;
 };
 
 type GatewayFailure = {
