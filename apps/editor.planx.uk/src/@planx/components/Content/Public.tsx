@@ -10,6 +10,7 @@ import Card, {
 } from "@planx/components/shared/Preview/Card";
 import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
+import { useState } from "react";
 import { getContrastTextColor } from "styleUtils";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
@@ -48,7 +49,7 @@ const ContentComponent: React.FC<Props> = (props) => {
     resetButton,
   } = props;
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const { trackEvent } = useAnalyticsTracking();
 
   const handleHelpClick = () => {

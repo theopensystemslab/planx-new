@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import React from "react";
 import { EmptyLoadingBar, LoadingBar } from "ui/editor/LoadingBar";
 import { formatDelta } from "utils";
 

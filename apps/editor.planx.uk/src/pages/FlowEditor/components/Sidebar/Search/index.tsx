@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { useSearch } from "hooks/useSearch";
 import { debounce } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { forwardRef, useEffect, useMemo, useState } from "react";
 import type { Components } from "react-virtuoso";
 import { Virtuoso } from "react-virtuoso";
 import { SEARCH_DEBOUNCE_MS } from "ui/shared/constants";
@@ -35,14 +35,14 @@ export type Context = {
 /**
  * Accessibility - Render the Virtuoso list as a HTMLUListElement, not a HTMLDivElement
  */
-const ListComponent = React.forwardRef<HTMLUListElement>((props, ref) => (
+const ListComponent = forwardRef<HTMLUListElement>((props, ref) => (
   <List {...props} ref={ref} sx={{ mx: 3 }} />
 )) as Components<Data, Context>["List"];
 
 /**
  * Accessibility - Render the Virtuoso item as a HTMLLiElement, not a HTMLDivElement
  */
-const ListItemComponent = React.forwardRef<HTMLLIElement>((props, ref) => (
+const ListItemComponent = forwardRef<HTMLLIElement>((props, ref) => (
   <ListItem disablePadding sx={{ pb: 2 }} {...props} ref={ref} />
 )) as Components<Data, Context>["Item"];
 
