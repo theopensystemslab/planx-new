@@ -271,7 +271,7 @@ describe("slotsSchema", () => {
     };
 
     await expect(slotsSchema.validate(mockSlots, { context })).rejects.toThrow(
-      /Please upload and label all required information/,
+      /Upload and label: Required Document/,
     );
   });
 

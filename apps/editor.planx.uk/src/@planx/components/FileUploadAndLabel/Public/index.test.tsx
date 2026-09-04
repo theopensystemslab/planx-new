@@ -424,7 +424,7 @@ describe("Adding tags", () => {
     await user.click(getByText("Continue"));
     expect(handleSubmit).toHaveBeenCalledTimes(0);
     const error = await within(document.body).findByText(
-      /Please upload and label all required information/,
+      /Upload and label: Roof plan/,
     );
     expect(error).toBeVisible();
   });
