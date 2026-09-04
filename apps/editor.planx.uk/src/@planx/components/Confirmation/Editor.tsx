@@ -37,6 +37,7 @@ function NextStepEditor(props: ListManagerEditorProps<Step>) {
             });
           }}
           placeholder="Title"
+          format="bold"
           disabled={props.disabled}
         />
       </InputRow>
@@ -92,6 +93,7 @@ export default function ConfirmationEditor(props: Props) {
             <Input
               placeholder="Heading"
               name="heading"
+              format="bold"
               value={formik.values.heading}
               onChange={formik.handleChange}
               disabled={props.disabled}

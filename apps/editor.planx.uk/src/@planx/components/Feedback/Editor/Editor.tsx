@@ -51,7 +51,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
             <InputRow>
               <InputLabel label="Title">
                 <Input
-                  format="large"
+                  format="bold"
                   placeholder={defaultContent.title}
                   name="title"
                   value={formik.values.title}

@@ -82,7 +82,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
             <InputRow>
               <Input
                 errorMessage={formik.errors.text}
-                format="large"
+                format="bold"
                 name="text"
                 value={formik.values.text}
                 placeholder="Text"

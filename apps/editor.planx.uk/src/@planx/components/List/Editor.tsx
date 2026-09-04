@@ -126,7 +126,7 @@ function ListComponent(props: Props) {
         <ModalSectionContent>
           <InputRow>
             <Input
-              format="large"
+              format="bold"
               name="title"
               value={formik.values.title}
               placeholder="Title"

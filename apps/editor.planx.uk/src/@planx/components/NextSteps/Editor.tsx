@@ -45,6 +45,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
             });
           }}
           placeholder="Title"
+          format="bold"
           disabled={props.disabled}
         />
       </InputRow>
@@ -120,7 +121,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
                 value={formik.values.title}
                 onChange={formik.handleChange}
                 placeholder="Main Title"
-                format="large"
+                format="bold"
                 disabled={props.disabled}
                 errorMessage={formik.errors.title}
               />

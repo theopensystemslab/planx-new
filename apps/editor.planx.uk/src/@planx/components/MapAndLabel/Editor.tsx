@@ -84,7 +84,7 @@ function MapAndLabelComponent(props: Props) {
           <InputGroup>
             <InputRow>
               <Input
-                format="large"
+                format="bold"
                 name="title"
                 placeholder={"Title"}
                 value={formik.values.title}

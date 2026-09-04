@@ -94,7 +94,7 @@ function PlanningConstraintsComponent(props: Props) {
           <InputGroup>
             <InputRow>
               <Input
-                format="large"
+                format="bold"
                 name="title"
                 placeholder={formik.values.title}
                 value={formik.values.title}
@@ -187,7 +187,7 @@ function PlanningConstraintsComponent(props: Props) {
                             <InputGroup>
                               <InputRow>
                                 <Input
-                                  format="large"
+                                  format="bold"
                                   name="text"
                                   value={dataset.text}
                                   aria-label="Constraint name"

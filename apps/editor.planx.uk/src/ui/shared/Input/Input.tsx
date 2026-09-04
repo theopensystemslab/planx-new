@@ -19,11 +19,10 @@ const classes: Partial<InputBaseClasses> = {
 };
 
 export interface Props extends Omit<InputBaseProps, "ref"> {
-  format?: "large" | "bold" | "data" | "note";
+  format?: "bold" | "data" | "note";
   classes?: InputBaseClasses;
   className?: string;
   grow?: boolean;
-  large?: boolean;
   bordered?: boolean;
   errorMessage?: string;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
@@ -66,12 +65,6 @@ const StyledInputBase = styled(InputBase, {
     backgroundColor: lighten(theme.palette.background.note, 0.6),
   }),
   ...(format === "bold" && {
-    fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  }),
-  ...(format === "large" && {
-    backgroundColor: theme.palette.common.white,
-    height: 50,
-    width: "100%",
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
   }),
   [`&.${classes.multiline}`]: {

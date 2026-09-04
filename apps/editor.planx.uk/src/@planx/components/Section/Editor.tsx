@@ -83,7 +83,7 @@ function SectionComponent(props: Props) {
           <InputRow>
             <Input
               required
-              format="large"
+              format="bold"
               name="title"
               placeholder="Title"
               value={formik.values.title}

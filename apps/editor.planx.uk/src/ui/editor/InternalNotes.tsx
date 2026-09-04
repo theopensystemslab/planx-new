@@ -1,5 +1,4 @@
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
-import { lighten, useTheme } from "@mui/material/styles";
 import type { ChangeEvent } from "react";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
@@ -20,12 +19,8 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
   onChange,
   disabled,
 }) => {
-  const theme = useTheme();
-
   return (
-    <ModalSection
-      sectionBackgroundColor={lighten(theme.palette.background.note, 0.6)}
-    >
+    <ModalSection>
       <ModalSectionContent title="Note" Icon={StickyNote2Icon}>
         <InputRow>
           <Input
@@ -35,6 +30,7 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
             onChange={onChange}
             multiline
             placeholder="Note"
+            format="note"
             rows={3}
             disabled={disabled}
           />

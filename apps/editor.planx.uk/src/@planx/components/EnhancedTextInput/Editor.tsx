@@ -104,7 +104,7 @@ const EnhancedTextInputComponent = (props: Props) => {
         <ModalSectionContent title="Initial screen">
           <InputRow>
             <Input
-              format="large"
+              format="bold"
               name="title"
               value={formik.values.title}
               placeholder="Title"
@@ -141,7 +141,7 @@ const EnhancedTextInputComponent = (props: Props) => {
           <ModalSectionContent title="Results screen">
             <InputRow>
               <Input
-                format="large"
+                format="bold"
                 name="revisionTitle"
                 value={formik.values.revisionTitle}
                 placeholder="Revision title"

@@ -1,4 +1,3 @@
-import { lighten, useTheme } from "@mui/material/styles";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -29,19 +28,16 @@ function NoteComponent(props: Props) {
     },
     props.formikRef,
   );
-  const theme = useTheme();
 
   // Notes should never be "templated", therefore disable `showTemplateConfiguration` in footer here
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      <ModalSection
-        sectionBackgroundColor={lighten(theme.palette.background.note, 0.6)}
-      >
+      <ModalSection>
         <ModalSectionContent>
           <InputRow>
             <Input
               name="text"
-              format="large"
+              format="note"
               minRows={4}
               multiline={true}
               placeholder="Note"
