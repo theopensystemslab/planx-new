@@ -23,7 +23,6 @@
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "@types/geojson": "^7946.0.16",
-    "@types/node": "catalog:",
-    "eslint-plugin-playwright": "^0.20.0"
+    "@types/node": "catalog:"
   }
 }
