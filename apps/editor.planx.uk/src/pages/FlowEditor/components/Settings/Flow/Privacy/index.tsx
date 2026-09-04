@@ -3,7 +3,6 @@ import { useToast } from "hooks/useToast";
 import { merge } from "lodash";
 import { TextInput } from "pages/FlowEditor/components/Settings/shared/TextInput";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import type { TextContent } from "types";
 
 import SettingsFormContainer from "../../shared/SettingsForm";

@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 type Props = {
   sessionId: string;

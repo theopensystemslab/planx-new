@@ -5,7 +5,6 @@ import { useParams } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import type { ColumnConfig } from "ui/shared/DataTable/types";

@@ -1,7 +1,6 @@
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
-import React from "react";
 
 import { Root } from "./styles";
 import type { ExternalPortalsProps } from "./types";

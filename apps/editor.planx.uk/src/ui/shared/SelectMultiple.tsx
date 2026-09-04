@@ -2,7 +2,6 @@ import type { AutocompleteProps } from "@mui/material/Autocomplete";
 import Autocomplete from "@mui/material/Autocomplete";
 import FormControl from "@mui/material/FormControl";
 import { styled } from "@mui/material/styles";
-import React from "react";
 
 import { StyledTextField } from "./Autocomplete/styles";
 import { PopupIcon } from "./PopUpIcon";

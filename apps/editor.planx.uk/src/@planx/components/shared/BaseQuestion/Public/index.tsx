@@ -12,7 +12,6 @@ import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio/DescriptionRadio";
 import ImageRadio from "@planx/components/shared/Radio/ImageRadio/ImageRadio";
 import { useFormik } from "formik";
-import React from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";

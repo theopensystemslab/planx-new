@@ -2,7 +2,6 @@ import type { Team } from "@opensystemslab/planx-core/types";
 import * as TanStackRouter from "@tanstack/react-router";
 import { act, fireEvent, screen } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";

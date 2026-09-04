@@ -3,7 +3,6 @@ import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { ExternalPortals } from "pages/FlowEditor/components/Sidebar/Search/ExternalPortalList/ExternalPortals";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import InputLegend from "ui/editor/InputLegend";
 
 const ExternalPortalList = () => {

@@ -1,4 +1,3 @@
-import React from "react";
 import CheckCircleIcon from "ui/icons/CheckCircle";
 import SlashCircleIcon from "ui/icons/SlashCircle";
 

@@ -1,7 +1,6 @@
 import { client } from "lib/graphql";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { type Store, useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import type { PublicContext } from "routes/_public/-loader";
 import { z } from "zod";
 

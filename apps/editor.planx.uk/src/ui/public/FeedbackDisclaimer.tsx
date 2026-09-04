@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { PropsWithChildren } from "react";
-import React from "react";
 
 export default function FeedbackDisclaimer({
   children,

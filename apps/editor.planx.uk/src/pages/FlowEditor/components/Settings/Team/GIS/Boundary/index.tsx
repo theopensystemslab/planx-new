@@ -1,7 +1,6 @@
 import { convertToBoundingBox } from "lib/gis";
 import { getEntity } from "lib/planningData/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 

@@ -3,7 +3,6 @@ import Dialog from "@mui/material/Dialog";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
-import React from "react";
 import { CloseButton } from "ui/shared/CloseButton";
 
 interface DataTableModalProps {

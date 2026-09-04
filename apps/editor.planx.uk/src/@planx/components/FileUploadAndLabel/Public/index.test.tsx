@@ -4,7 +4,6 @@ import type { UserEvent } from "@testing-library/user-event";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import type { FullStore } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { setup } from "test/utils";
 import type { Breadcrumbs } from "types";
 import { vi } from "vitest";
@@ -743,6 +742,6 @@ const uploadAndTagSingleFile = async (user: UserEvent) => {
   // Wait for upload to complete
   const progressBar = screen.getByRole("progressbar");
   await waitFor(() => {
-    expect(progressBar).toHaveAttribute("aria-valuenow", "100");
+    expect(progressBar).toHaveValue("100");
   });
 };

@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";

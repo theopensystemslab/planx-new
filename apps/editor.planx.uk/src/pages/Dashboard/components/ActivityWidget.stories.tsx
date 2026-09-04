@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
-import React from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { ActivityWidget } from "./ActivityWidget";

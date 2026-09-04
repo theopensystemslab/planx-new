@@ -6,7 +6,6 @@ import { PrintButton } from "components/PrintButton";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import type { HandleSubmit } from "pages/Preview/Node";
-import React from "react";
 
 import type { Review } from "../model";
 

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { ReviewCard } from "./ReviewCard";
 

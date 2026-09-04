@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
-import React from "react";
 import { cardBoxShadow } from "theme";
 
 import { RelatedItemsSection } from "./RelatedItemsSection";

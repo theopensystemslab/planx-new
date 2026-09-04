@@ -7,7 +7,6 @@ import {
 import { client } from "lib/graphql";
 import GlobalSettingsLayout from "pages/GlobalSettings/Layout";
 import { GET_GLOBAL_SETTINGS } from "pages/GlobalSettings/queries";
-import React from "react";
 
 export const Route = createFileRoute("/_authenticated/app/global-settings")({
   loader: async ({ context }) => {

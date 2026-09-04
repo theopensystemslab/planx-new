@@ -3,7 +3,6 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import { getFlattenedFlowData } from "lib/api/flow/requests";
 import { type Store } from "pages/FlowEditor/lib/store";
 import Questions from "pages/Preview/Questions";
-import React from "react";
 import { updateStoreWithFlowData } from "utils/routeUtils/publicRouteHelpers";
 
 interface Props {

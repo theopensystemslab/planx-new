@@ -1,5 +1,4 @@
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import InputLabel from "ui/editor/InputLabel";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 

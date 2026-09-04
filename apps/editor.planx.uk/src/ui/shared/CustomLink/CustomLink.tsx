@@ -1,11 +1,11 @@
 import Link from "@mui/material/Link";
 import type { LinkComponent } from "@tanstack/react-router";
 import { createLink } from "@tanstack/react-router";
-import React from "react";
+import { forwardRef } from "react";
 
 type MUILinkProps = React.ComponentProps<typeof Link>;
 
-const MUILinkComponent = React.forwardRef<HTMLAnchorElement, MUILinkProps>(
+const MUILinkComponent = forwardRef<HTMLAnchorElement, MUILinkProps>(
   (props, ref) => <Link ref={ref} {...props} />,
 );
 

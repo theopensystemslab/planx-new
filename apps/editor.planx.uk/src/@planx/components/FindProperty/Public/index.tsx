@@ -10,7 +10,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import type { Feature } from "geojson";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { parse } from "postcode";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import type { FindProperty, SiteAddress } from "../model";
 import {

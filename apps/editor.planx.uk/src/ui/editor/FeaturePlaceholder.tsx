@@ -2,7 +2,6 @@ import BuildIcon from "@mui/icons-material/Build";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React from "react";
 
 interface Props {
   title: string;

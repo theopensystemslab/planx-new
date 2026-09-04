@@ -10,7 +10,6 @@ import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList
 import type { ReconciliationResponse } from "lib/api/saveAndReturn/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
-import React from "react";
 import Banner from "ui/public/Banner";
 
 interface Props {

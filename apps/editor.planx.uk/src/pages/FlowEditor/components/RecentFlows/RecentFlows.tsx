@@ -2,7 +2,7 @@ import Close from "@mui/icons-material/Close";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { RecentFlowLink } from "./RecentFlowLink";
 import { useRecentFlowsContext } from "./RecentFlowsContext";

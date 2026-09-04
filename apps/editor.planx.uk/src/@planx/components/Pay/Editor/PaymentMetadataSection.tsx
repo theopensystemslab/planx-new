@@ -7,7 +7,6 @@ import type { PaymentMetadata } from "@opensystemslab/planx-core/types";
 import type { Pay } from "@planx/components/Pay/model";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { useFormikContext } from "formik";
-import React from "react";
 import { useCallback } from "react";
 import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
 import ListManager from "ui/editor/ListManager/ListManager";

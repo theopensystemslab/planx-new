@@ -6,7 +6,6 @@ import type { Option } from "@planx/components/Option/model";
 import { ChecklistLayout } from "@planx/components/shared/BaseChecklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import type { FormikProps } from "formik";
-import React from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 

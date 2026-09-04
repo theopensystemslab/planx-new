@@ -3,7 +3,7 @@ import "vitest-axe/extend-expect";
 
 import type { CollapseProps } from "@mui/material/Collapse";
 import type { FadeProps } from "@mui/material/Fade";
-import React from "react";
+import { useEffect } from "react";
 import { vi } from "vitest";
 
 /**
@@ -23,7 +23,7 @@ function MockCollapseImpl({
   "data-testid": dataTestId,
 }: CollapseProps & { "data-testid"?: string }) {
   // Fire onExited immediately when closing to simulate animation completion
-  React.useEffect(() => {
+  useEffect(() => {
     if (!inProp) onExited?.(null!);
   }, [inProp, onExited]);
 

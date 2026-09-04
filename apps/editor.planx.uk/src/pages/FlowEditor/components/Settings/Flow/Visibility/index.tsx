@@ -1,6 +1,5 @@
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import FlowCopy from "./FlowCopy";

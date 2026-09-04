@@ -1,7 +1,6 @@
 import { useSlackMessage } from "pages/FlowEditor/components/Settings/hooks/useSlackMessage";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { ChangeEvent } from "react";
-import React from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 

@@ -1,4 +1,3 @@
-import React from "react";
 import type { EditorProps } from "ui/editor/ListManager/ListManager";
 
 import type { ConditionalOption, Option } from "../Option/model";

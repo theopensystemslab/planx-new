@@ -6,7 +6,6 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "@tanstack/react-router";
-import React from "react";
 import { useLocation } from "react-use";
 import StyledTab from "ui/editor/StyledTab";
 

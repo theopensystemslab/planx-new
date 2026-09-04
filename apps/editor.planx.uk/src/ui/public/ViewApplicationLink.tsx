@@ -1,6 +1,5 @@
 import Button from "@mui/material/Button";
 import { usePublicRouteContext } from "hooks/usePublicRouteContext";
-import React from "react";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 const ViewApplicationLink: React.FC = () => {

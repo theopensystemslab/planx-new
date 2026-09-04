@@ -1,6 +1,5 @@
 import CloudDownload from "@mui/icons-material/CloudDownload";
 import Button from "@mui/material/Button";
-import React from "react";
 
 type Props = {
   sessionId: string;

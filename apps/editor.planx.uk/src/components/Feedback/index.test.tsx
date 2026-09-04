@@ -5,7 +5,6 @@ import {
   insertFeedbackMutation,
 } from "lib/feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";

@@ -1,6 +1,5 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { toggleExpandableChecklist } from "@planx/components/shared/BaseChecklist/model";
-import React from "react";
 import { Switch } from "ui/shared/Switch";
 
 import type { Props } from "../types";

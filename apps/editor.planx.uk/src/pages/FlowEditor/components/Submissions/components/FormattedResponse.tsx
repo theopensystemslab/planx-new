@@ -1,7 +1,6 @@
 import ReactJson from "@microlink/react-json-view";
 import { styled } from "@mui/material/styles";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
-import React from "react";
 
 const Root = styled("pre")(({ theme }) => ({
   padding: theme.spacing(2.5, 2),

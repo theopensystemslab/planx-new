@@ -1,5 +1,4 @@
 import { screen, waitFor } from "@testing-library/react";
-import React from "react";
 import { setup } from "test/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 

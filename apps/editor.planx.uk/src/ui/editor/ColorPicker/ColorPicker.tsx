@@ -4,7 +4,7 @@ import type { ButtonBaseProps } from "@mui/material/ButtonBase";
 import ButtonBase from "@mui/material/ButtonBase";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import { useState } from "react";
 import type { ColorChangeHandler } from "react-color";
 import { ChromePicker } from "react-color";
 import ErrorWrapper from "ui/shared/ErrorWrapper";

@@ -3,7 +3,6 @@ import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLab
 import { act, screen, waitFor } from "@testing-library/react";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
@@ -203,7 +202,7 @@ test("captures output data in the correct format when uploading a file", async (
   // Wait for upload to complete
   const progressBar = screen.getByRole("progressbar");
   await waitFor(() => {
-    expect(progressBar).toHaveAttribute("aria-valuenow", "100");
+    expect(progressBar).toHaveValue("100");
   });
 
   await user.click(screen.getByTestId("continue-button"));
@@ -351,7 +350,7 @@ test("appends to existing '_requestedFiles' value", async () => {
   // Wait for upload to complete
   const progressBar = screen.getByRole("progressbar");
   await waitFor(() => {
-    expect(progressBar).toHaveAttribute("aria-valuenow", "100");
+    expect(progressBar).toHaveValue("100");
   });
 
   await user.click(screen.getByTestId("continue-button"));

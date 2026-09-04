@@ -1,5 +1,4 @@
 import Link from "@mui/material/Link";
-import React from "react";
 
 export const BoundaryDescription: React.FC = () => (
   <>

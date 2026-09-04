@@ -2,7 +2,6 @@ import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import type { BaseNodeData } from "@planx/components/shared";
 import { getIn } from "formik";
-import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";

@@ -6,7 +6,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
-import React from "react";
 
 import { REMOVE_TEAM_MEMBER } from "../queries";
 import type { RemoveUserModalProps } from "../types";

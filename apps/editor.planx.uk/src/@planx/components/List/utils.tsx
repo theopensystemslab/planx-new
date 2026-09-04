@@ -1,5 +1,4 @@
 import { styled } from "@mui/material/styles";
-import React from "react";
 
 import { formatAsSingleLineAddress } from "../AddressInput/model";
 import type {

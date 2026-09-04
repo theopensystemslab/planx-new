@@ -8,7 +8,7 @@ import {
   useGridApiContext,
   useGridSelector,
 } from "@mui/x-data-grid";
-import * as React from "react";
+import { useState } from "react";
 
 import { statusOptions } from "../feedbackFilterOptions";
 import { updateFeedbackStatus } from "../queries/updateFeedbackStatus";
@@ -32,7 +32,7 @@ export const ChangeStatusTool: React.FC = () => {
   const apiRef = useGridApiContext();
   const selectedRowIds = useGridSelector(apiRef, gridRowSelectionStateSelector);
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

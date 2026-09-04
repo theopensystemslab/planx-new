@@ -3,7 +3,6 @@ import type {
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
-import React from "react";
 
 import type { Feedback } from "../types";
 import { feedbackStatusText } from "../utils";

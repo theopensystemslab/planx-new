@@ -9,7 +9,6 @@ import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { client } from "lib/graphql";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { URLPrefix } from "ui/editor/URLPrefix";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";

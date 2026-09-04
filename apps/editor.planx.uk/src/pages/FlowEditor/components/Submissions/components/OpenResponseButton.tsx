@@ -1,7 +1,7 @@
 import PreviewIcon from "@mui/icons-material/Preview";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import React, { useState } from "react";
+import { useState } from "react";
 import { DataTableModal } from "ui/shared/DataTable/components/DataTableModal";
 
 import type { Attempt } from "../types";

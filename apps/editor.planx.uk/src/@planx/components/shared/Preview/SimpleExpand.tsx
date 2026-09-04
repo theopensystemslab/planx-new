@@ -2,8 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
-import type { PropsWithChildren } from "react";
-import React from "react";
+import { type PropsWithChildren, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 
@@ -32,7 +31,7 @@ const SimpleExpand: React.FC<PropsWithChildren<Props>> = ({
   id,
   lightFontStyle,
 }) => {
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
   return (
     <>
       <Box>

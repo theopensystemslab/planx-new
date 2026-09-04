@@ -9,7 +9,7 @@ import { downloadSubmission } from "lib/api/send/requests";
 import type { DownloadSubmissionResponse } from "lib/api/send/types";
 import PublicLayout from "pages/layout/PublicLayout";
 import StatusPage from "pages/Preview/StatusPage";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import z from "zod";
 
 const searchSchema = z.object({

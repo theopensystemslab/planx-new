@@ -5,7 +5,6 @@ import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { Subscription } from "pages/FlowEditor/components/Subscription/Subscription";
 import type { ServiceCharge } from "pages/FlowEditor/components/Subscription/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
   loader: async ({ params, context }) => {

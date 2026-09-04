@@ -3,7 +3,7 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import { getPreviouslySubmittedData } from "@planx/components/shared/utils";
 import { useIsFetching } from "@tanstack/react-query";
 import { Formik } from "formik";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import type { TaskComponentMap } from "../types";
 import InitialUserInput from "./InitialUserInput";

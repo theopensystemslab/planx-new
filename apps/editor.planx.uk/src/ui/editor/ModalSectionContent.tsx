@@ -3,7 +3,6 @@ import type { OverridableComponent } from "@mui/material/OverridableComponent";
 import { styled } from "@mui/material/styles";
 import type { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props {

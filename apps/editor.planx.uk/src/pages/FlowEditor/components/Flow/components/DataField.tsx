@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 export const DataField: React.FC<{
   value: string;

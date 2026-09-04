@@ -1,7 +1,6 @@
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import type { SyntheticEvent } from "react";
-import React from "react";
 import { focusStyle } from "theme";
 
 const Root = styled("a")(({ theme }) => ({

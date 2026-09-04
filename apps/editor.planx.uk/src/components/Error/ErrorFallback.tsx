@@ -1,7 +1,6 @@
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
-import React from "react";
 import type { FallbackProps } from "react-error-boundary";
 
 import { GraphErrorComponent, isGraphError } from "./GraphError";

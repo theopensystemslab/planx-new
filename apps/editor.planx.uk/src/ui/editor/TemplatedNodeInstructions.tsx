@@ -2,7 +2,6 @@ import StarIcon from "@mui/icons-material/Star";
 import { useTheme } from "@mui/material/styles";
 import type { BaseNodeData } from "@planx/components/shared";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import BlockQuote from "ui/editor/BlockQuote";
 
 import ModalSection from "./ModalSection";

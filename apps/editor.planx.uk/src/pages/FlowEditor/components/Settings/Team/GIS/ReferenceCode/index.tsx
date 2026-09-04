@@ -2,7 +2,6 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { ChangeEvent } from "react";
-import React from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 

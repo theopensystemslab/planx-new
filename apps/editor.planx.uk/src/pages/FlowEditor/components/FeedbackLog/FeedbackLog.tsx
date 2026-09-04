@@ -3,7 +3,6 @@ import Typography from "@mui/material/Typography";
 import { BREADCRUMBS_HEIGHT } from "components/Breadcrumbs";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
-import React from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";

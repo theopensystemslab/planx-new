@@ -5,7 +5,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import type { SxProps, Theme } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
-import React from "react";
 
 import Input from "../Input/Input";
 import InputRow from "../InputRow";

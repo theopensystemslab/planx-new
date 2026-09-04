@@ -5,7 +5,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { usePinFlow, useUnpinFlow } from "./FlowCard/queries";
 

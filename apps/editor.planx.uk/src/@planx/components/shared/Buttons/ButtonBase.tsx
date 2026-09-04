@@ -1,6 +1,5 @@
 import MuiButtonBase from "@mui/material/ButtonBase";
 import { styled } from "@mui/material/styles";
-import React from "react";
 
 interface RootProps {
   selected: boolean;

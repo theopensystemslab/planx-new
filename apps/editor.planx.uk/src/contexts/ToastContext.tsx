@@ -6,7 +6,7 @@ import type {
   ToastType,
 } from "components/Toast/types";
 import type { ReactNode } from "react";
-import React, { createContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
 import { toastReducer } from "reducers/toastReducer";
 import { v4 as uuidv4 } from "uuid";
 

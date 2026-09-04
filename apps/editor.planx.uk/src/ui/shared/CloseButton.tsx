@@ -1,7 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import React from "react";
 
 const StyledIconButton = styled(IconButton)(({ theme, size }) => ({
   margin: "0 0 0 auto",

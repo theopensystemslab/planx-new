@@ -78,7 +78,6 @@ import type { TextInput } from "@planx/components/TextInput/model";
 import TextInputComponent from "@planx/components/TextInput/Public";
 import type { AutoAnswerableInputMap } from "pages/FlowEditor/lib/store/preview";
 import mapAccum from "ramda/src/mapAccum";
-import React from "react";
 import { exhaustiveCheck } from "utils";
 
 import type { Store } from "../FlowEditor/lib/store";

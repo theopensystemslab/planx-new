@@ -1,6 +1,5 @@
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import type { ChangeEvent } from "react";
-import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input/Input";

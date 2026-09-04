@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 // eslint-disable-next-line no-restricted-imports
 import type { SwitchProps } from "@mui/material/Switch";
-import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";

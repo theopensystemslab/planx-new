@@ -1,7 +1,6 @@
 import Alert, { alertClasses } from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import { useToast } from "hooks/useToast";
-import React from "react";
 
 import type { Toast as ToastProps } from "./types";
 

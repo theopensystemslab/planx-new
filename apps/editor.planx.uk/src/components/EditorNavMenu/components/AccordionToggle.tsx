@@ -1,6 +1,5 @@
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import React from "react";
 
 import { MenuButton, MenuTitle } from "../styles";
 import type { Route } from "../types";
