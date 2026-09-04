@@ -1,5 +1,19 @@
 import { gql } from "@apollo/client";
 
+export const GET_SUBMISSIONS = gql`
+  query GetSubmissions($teamId: Int!) {
+    submissions: submissions_grouped(where: { team_id: { _eq: $teamId } }) {
+      flowId: flow_id
+      id: session_id
+      eventType: event_type
+      status: status
+      address: address
+      eventCreatedAt: created_at
+      flowName: flow_name
+    }
+  }
+`;
+
 export const GET_SUBMISSION_EVENTS = gql`
   query GetSubmissionEvents($sessionId: uuid!) {
     submissions: submission_services_log(

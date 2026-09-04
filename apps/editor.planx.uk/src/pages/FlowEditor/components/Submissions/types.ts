@@ -94,3 +94,11 @@ export type GetSubmissionEventsQuery = {
 export type GetSubmissionEventsVariables = {
   sessionId: string;
 };
+
+export type GetSubmissionsQuery = {
+  submissions: SubmissionSummary[];
+};
+
+export type GetSubmissionsVariables = {
+  teamId: number;
+};

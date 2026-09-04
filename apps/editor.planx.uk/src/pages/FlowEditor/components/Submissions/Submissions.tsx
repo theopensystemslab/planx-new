@@ -1,4 +1,3 @@
-import { gql, useQuery } from "@apollo/client";
 import Typography from "@mui/material/Typography";
 import { BREADCRUMBS_HEIGHT } from "components/Breadcrumbs";
 import React, { useMemo } from "react";
@@ -8,35 +7,12 @@ import { slugify } from "utils";
 
 import { useStore } from "../../lib/store";
 import EventsLog from "./components/EventsLog";
-import type { SubmissionsProps, SubmissionSummary } from "./types";
+import { useGetSubmissions } from "./hooks";
+import type { SubmissionsProps } from "./types";
 
 const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const [teamId] = useStore((state) => [state.teamId]);
-
-  const { data, loading, error } = useQuery<{
-    submissions: SubmissionSummary[];
-  }>(
-    gql`
-      query GetSubmissions($team_id: Int!) {
-        submissions: submissions_grouped(
-          where: { team_id: { _eq: $team_id } }
-        ) {
-          flowId: flow_id
-          id: session_id
-          eventType: event_type
-          status: status
-          address: address
-          eventCreatedAt: created_at
-          flowName: flow_name
-        }
-      }
-    `,
-    {
-      variables: { team_id: teamId },
-      skip: !teamId,
-      pollInterval: 10_000,
-    },
-  );
+  const { data, loading, error } = useGetSubmissions(teamId);
 
   const submissions = useMemo(() => data?.submissions || [], [data]);
 
