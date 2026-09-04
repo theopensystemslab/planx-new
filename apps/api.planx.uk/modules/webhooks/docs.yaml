@@ -455,13 +455,49 @@ paths:
           $ref: "#/components/responses/SuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"
-  /webhooks/hasura/sanitise-application-data:
+  /webhooks/hasura/sanitise-raw-application-data:
     post:
       tags: ["webhooks"]
       security:
         - hasuraAuth: []
-      summary: Sanitise application data
-      description: Called by Hasura cron job "sanitise_application_data" on a nightly basis
+      summary: Sanitise raw application data
+      description: Called by Hasura cron job to sanitise raw application data on a nightly basis
+      responses:
+        "200":
+          $ref: "#/components/responses/OperationResultSuccess"
+        "500":
+          $ref: "#/components/responses/OperationResultFailure"
+  /webhooks/hasura/sanitise-audit-records-data:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth: []
+      summary: Sanitise audit records data
+      description: Called by Hasura cron job to sanitise audit records data on a nightly basis
+      responses:
+        "200":
+          $ref: "#/components/responses/OperationResultSuccess"
+        "500":
+          $ref: "#/components/responses/OperationResultFailure"
+  /webhooks/hasura/sanitise-hasura-events-data:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth: []
+      summary: Sanitise Hasura events data
+      description: Called by Hasura cron job to sanitise Hasura events data on a nightly basis
+      responses:
+        "200":
+          $ref: "#/components/responses/OperationResultSuccess"
+        "500":
+          $ref: "#/components/responses/OperationResultFailure"
+  /webhooks/hasura/sanitise-feedback-data:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth: []
+      summary: Sanitise feedback data
+      description: Called by Hasura cron job to sanitise feedback data on a nightly basis
       responses:
         "200":
           $ref: "#/components/responses/OperationResultSuccess"

@@ -24,7 +24,12 @@ import {
 import type { CreatePaymentEventController } from "./service/paymentRequestEvents/schema.js";
 import { reconcilePayments } from "./service/reconcilePayments/index.js";
 import type { ReconcilePaymentsController } from "./service/reconcilePayments/types.js";
-import { sanitiseApplicationData } from "./service/sanitiseApplicationData/index.js";
+import {
+  sanitiseAuditRecordsData,
+  sanitiseFeedbackData,
+  sanitiseHasuraEventsData,
+  sanitiseRawApplicationData,
+} from "./service/sanitiseApplicationData/index.js";
 import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/types.js";
 import { sendSlackNotification } from "./service/sendNotification/index.js";
 import type { SendSlackNotification } from "./service/sendNotification/types.js";
@@ -214,21 +219,72 @@ export const deleteSessionController: DeleteSessionController = async (
   }
 };
 
-export const sanitiseApplicationDataController: SanitiseApplicationData =
+export const sanitiseRawApplicationDataController: SanitiseApplicationData =
   async (_req, res, next) => {
     try {
-      const { operationFailed, results } = await sanitiseApplicationData();
+      const { operationFailed, results } = await sanitiseRawApplicationData();
       if (operationFailed) res.status(500);
       return res.json(results);
     } catch (error) {
       return next(
         new ServerError({
-          message: "Failed to sanitise application data",
+          message: "Failed to sanitise raw application data",
           cause: error,
         }),
       );
     }
   };
+
+export const sanitiseAuditRecordsDataController: SanitiseApplicationData =
+  async (_req, res, next) => {
+    try {
+      const { operationFailed, results } = await sanitiseAuditRecordsData();
+      if (operationFailed) res.status(500);
+      return res.json(results);
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: "Failed to sanitise audit records data",
+          cause: error,
+        }),
+      );
+    }
+  };
+
+export const sanitiseHasuraEventsDataController: SanitiseApplicationData =
+  async (_req, res, next) => {
+    try {
+      const { operationFailed, results } = await sanitiseHasuraEventsData();
+      if (operationFailed) res.status(500);
+      return res.json(results);
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: "Failed to sanitise Hasura event data",
+          cause: error,
+        }),
+      );
+    }
+  };
+
+export const sanitiseFeedbackDataController: SanitiseApplicationData = async (
+  _req,
+  res,
+  next,
+) => {
+  try {
+    const { operationFailed, results } = await sanitiseFeedbackData();
+    if (operationFailed) res.status(500);
+    return res.json(results);
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: "Failed to sanitise feedback data",
+        cause: error,
+      }),
+    );
+  }
+};
 
 export const analyzeSessionsController: SanitiseApplicationData = async (
   _req,

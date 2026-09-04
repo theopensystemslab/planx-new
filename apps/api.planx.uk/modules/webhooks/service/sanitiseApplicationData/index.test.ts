@@ -13,8 +13,8 @@ vi.mock("slack-notify", () => ({
 
 const { post } = supertest(app);
 
-describe("Sanitise application data webhook", () => {
-  const ENDPOINT = "/webhooks/hasura/sanitise-application-data";
+describe("Sanitise raw application data webhook", () => {
+  const ENDPOINT = "/webhooks/hasura/sanitise-raw-application-data";
 
   it("returns a 401 without correct authentication", async () => {
     await post(ENDPOINT)
@@ -35,7 +35,7 @@ describe("Sanitise application data webhook", () => {
       .expect(500)
       .then((response) =>
         expect(response.body.error).toMatch(
-          /Failed to sanitise application data/,
+          /Failed to sanitise raw application data/,
         ),
       );
   });
@@ -45,7 +45,10 @@ describe("Sanitise application data webhook", () => {
     const mockOperation2 = vi.fn().mockResolvedValue(["456", "789"]);
     const mockOperation3 = vi.fn().mockResolvedValue(["abc", "def", "ghi"]);
 
-    const mockGetOperations = vi.spyOn(operations, "getOperations");
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseRawApplicationDataOperations",
+    );
     mockGetOperations.mockImplementationOnce(() => [
       mockOperation1,
       mockOperation2,
@@ -86,7 +89,10 @@ describe("Sanitise application data webhook", () => {
       .mockRejectedValue(new Error("Query failed!"));
     const mockOperation3 = vi.fn().mockResolvedValue(["abc", "def", "ghi"]);
 
-    const mockGetOperations = vi.spyOn(operations, "getOperations");
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseRawApplicationDataOperations",
+    );
     mockGetOperations.mockImplementationOnce(() => [
       mockOperation1,
       mockOperation2,
@@ -140,7 +146,10 @@ describe("Sanitise application data webhook", () => {
       .fn()
       .mockRejectedValue(new Error("Query failed!"));
 
-    const mockGetOperations = vi.spyOn(operations, "getOperations");
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseRawApplicationDataOperations",
+    );
     mockGetOperations.mockImplementationOnce(() => [
       mockOperation1,
       mockOperation2,
@@ -170,6 +179,414 @@ describe("Sanitise application data webhook", () => {
               errorMessage: "Query failed!",
             }),
           ]),
+        );
+      });
+  });
+});
+
+describe("Sanitise audit records data webhook", () => {
+  const ENDPOINT = "/webhooks/hasura/sanitise-audit-records-data";
+
+  it("returns a 401 without correct authentication", async () => {
+    await post(ENDPOINT)
+      .expect(401)
+      .then((response) => {
+        expect(response.body).toEqual({
+          error: "Unauthorised",
+        });
+      });
+  });
+
+  it("returns a 500 if an unhandled error is thrown whilst running operations", async () => {
+    const mockOperationHandler = vi.spyOn(operations, "operationHandler");
+    mockOperationHandler.mockRejectedValueOnce("Unhandled error!");
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(500)
+      .then((response) =>
+        expect(response.body.error).toMatch(
+          /Failed to sanitise audit records data/,
+        ),
+      );
+  });
+
+  it("returns a 200 when all operations are successful", async () => {
+    const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
+    const mockOperation2 = vi.fn().mockResolvedValue(["456", "789"]);
+    const mockOperation3 = vi.fn().mockResolvedValue(["abc", "def", "ghi"]);
+
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseAuditRecordsOperations",
+    );
+    mockGetOperations.mockImplementationOnce(() => [
+      mockOperation1,
+      mockOperation2,
+      mockOperation3,
+    ]);
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(200)
+      .then((response) => {
+        expect(mockOperation1).toHaveBeenCalled();
+        expect(mockOperation2).toHaveBeenCalled();
+        expect(mockOperation3).toHaveBeenCalled();
+
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              status: "success",
+              count: 1,
+            }),
+            expect.objectContaining({
+              status: "success",
+              count: 2,
+            }),
+            expect.objectContaining({
+              status: "success",
+              count: 3,
+            }),
+          ]),
+        );
+      });
+  });
+
+  it("returns a 500 when only a single operation fails", async () => {
+    const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
+    const mockOperation2 = vi
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+    const mockOperation3 = vi.fn().mockResolvedValue(["abc", "def", "ghi"]);
+
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseAuditRecordsOperations",
+    );
+    mockGetOperations.mockImplementationOnce(() => [
+      mockOperation1,
+      mockOperation2,
+      mockOperation3,
+    ]);
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(500)
+      .then((response) => {
+        expect(mockOperation1).toHaveBeenCalled();
+        expect(mockOperation2).toHaveBeenCalled();
+        expect(mockOperation3).toHaveBeenCalled();
+
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              status: "success",
+              count: 1,
+            }),
+            expect.objectContaining({
+              status: "failure",
+              errorMessage: "Query failed!",
+            }),
+            expect.objectContaining({
+              status: "success",
+              count: 3,
+            }),
+          ]),
+        );
+
+        expect(mockSlackNotify).toHaveBeenCalledWith(
+          process.env.SLACK_WEBHOOK_URL,
+        );
+        expect(mockSend).toHaveBeenCalledWith(
+          expect.objectContaining({
+            text: expect.stringMatching(/Error: Query failed!/),
+          }),
+        );
+      });
+  });
+
+  it("returns a 500 if all operations fail", async () => {
+    const mockOperation1 = vi
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+    const mockOperation2 = vi
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+    const mockOperation3 = vi
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseAuditRecordsOperations",
+    );
+    mockGetOperations.mockImplementationOnce(() => [
+      mockOperation1,
+      mockOperation2,
+      mockOperation3,
+    ]);
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(500)
+      .then((response) => {
+        expect(mockOperation1).toHaveBeenCalled();
+        expect(mockOperation2).toHaveBeenCalled();
+        expect(mockOperation3).toHaveBeenCalled();
+
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              status: "failure",
+              errorMessage: "Query failed!",
+            }),
+            expect.objectContaining({
+              status: "failure",
+              errorMessage: "Query failed!",
+            }),
+            expect.objectContaining({
+              status: "failure",
+              errorMessage: "Query failed!",
+            }),
+          ]),
+        );
+      });
+  });
+});
+
+describe("Sanitise hasura events data webhook", () => {
+  const ENDPOINT = "/webhooks/hasura/sanitise-hasura-events-data";
+
+  it("returns a 401 without correct authentication", async () => {
+    await post(ENDPOINT)
+      .expect(401)
+      .then((response) => {
+        expect(response.body).toEqual({
+          error: "Unauthorised",
+        });
+      });
+  });
+
+  it("returns a 500 if an unhandled error is thrown whilst running operations", async () => {
+    const mockOperationHandler = vi.spyOn(operations, "operationHandler");
+    mockOperationHandler.mockRejectedValueOnce("Unhandled error!");
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(500)
+      .then((response) =>
+        expect(response.body.error).toMatch(
+          /Failed to sanitise Hasura event data/,
+        ),
+      );
+  });
+
+  it("returns a 200 when all operations are successful", async () => {
+    const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
+    const mockOperation2 = vi.fn().mockResolvedValue(["456", "789"]);
+
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseHasuraEventsOperations",
+    );
+    mockGetOperations.mockImplementationOnce(() => [
+      mockOperation1,
+      mockOperation2,
+    ]);
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(200)
+      .then((response) => {
+        expect(mockOperation1).toHaveBeenCalled();
+        expect(mockOperation2).toHaveBeenCalled();
+
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              status: "success",
+              count: 1,
+            }),
+            expect.objectContaining({
+              status: "success",
+              count: 2,
+            }),
+          ]),
+        );
+      });
+  });
+
+  it("returns a 500 when only a single operation fails", async () => {
+    const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
+    const mockOperation2 = vi
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseHasuraEventsOperations",
+    );
+    mockGetOperations.mockImplementationOnce(() => [
+      mockOperation1,
+      mockOperation2,
+    ]);
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(500)
+      .then((response) => {
+        expect(mockOperation1).toHaveBeenCalled();
+        expect(mockOperation2).toHaveBeenCalled();
+
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              status: "success",
+              count: 1,
+            }),
+            expect.objectContaining({
+              status: "failure",
+              errorMessage: "Query failed!",
+            }),
+          ]),
+        );
+
+        expect(mockSlackNotify).toHaveBeenCalledWith(
+          process.env.SLACK_WEBHOOK_URL,
+        );
+        expect(mockSend).toHaveBeenCalledWith(
+          expect.objectContaining({
+            text: expect.stringMatching(/Error: Query failed!/),
+          }),
+        );
+      });
+  });
+
+  it("returns a 500 if all operations fail", async () => {
+    const mockOperation1 = vi
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+    const mockOperation2 = vi
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseHasuraEventsOperations",
+    );
+    mockGetOperations.mockImplementationOnce(() => [
+      mockOperation1,
+      mockOperation2,
+    ]);
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(500)
+      .then((response) => {
+        expect(mockOperation1).toHaveBeenCalled();
+        expect(mockOperation2).toHaveBeenCalled();
+
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              status: "failure",
+              errorMessage: "Query failed!",
+            }),
+            expect.objectContaining({
+              status: "failure",
+              errorMessage: "Query failed!",
+            }),
+          ]),
+        );
+      });
+  });
+});
+
+describe("Sanitise feedback data webhook", () => {
+  const ENDPOINT = "/webhooks/hasura/sanitise-feedback-data";
+
+  it("returns a 401 without correct authentication", async () => {
+    await post(ENDPOINT)
+      .expect(401)
+      .then((response) => {
+        expect(response.body).toEqual({
+          error: "Unauthorised",
+        });
+      });
+  });
+
+  it("returns a 500 if an unhandled error is thrown whilst running operations", async () => {
+    const mockOperationHandler = vi.spyOn(operations, "operationHandler");
+    mockOperationHandler.mockRejectedValueOnce("Unhandled error!");
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(500)
+      .then((response) =>
+        expect(response.body.error).toMatch(/Failed to sanitise feedback data/),
+      );
+  });
+
+  it("returns a 200 when operation is successful", async () => {
+    const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
+
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseFeedbackOperations",
+    );
+    mockGetOperations.mockImplementationOnce(() => [mockOperation1]);
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(200)
+      .then((response) => {
+        expect(mockOperation1).toHaveBeenCalled();
+
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              status: "success",
+              count: 1,
+            }),
+          ]),
+        );
+      });
+  });
+
+  it("returns a 500 when an operation fails", async () => {
+    const mockOperation1 = vi
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+
+    const mockGetOperations = vi.spyOn(
+      operations,
+      "sanitiseFeedbackOperations",
+    );
+    mockGetOperations.mockImplementationOnce(() => [mockOperation1]);
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .expect(500)
+      .then((response) => {
+        expect(mockOperation1).toHaveBeenCalled();
+
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              status: "failure",
+              errorMessage: "Query failed!",
+            }),
+          ]),
+        );
+
+        expect(mockSlackNotify).toHaveBeenCalledWith(
+          process.env.SLACK_WEBHOOK_URL,
+        );
+        expect(mockSend).toHaveBeenCalledWith(
+          expect.objectContaining({
+            text: expect.stringMatching(/Error: Query failed!/),
+          }),
         );
       });
   });

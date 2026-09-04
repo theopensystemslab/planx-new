@@ -16,27 +16,28 @@ export const getRetentionPeriod = () =>
  * List of data sanitation operations
  * XXX: Analytics logs do not contain application data
  */
-export const getOperations = (): Operation[] => [
-  // Raw application data
+export const sanitiseRawApplicationDataOperations = (): Operation[] => [
   deleteApplicationFiles,
   sanitiseLowcalSessions,
   deletePaymentRequests,
+];
 
-  // Audit records
+export const sanitiseAuditRecordsOperations = (): Operation[] => [
   sanitiseUniformApplications,
   sanitiseBOPSApplications,
   sanitiseEmailApplications,
   deleteReconciliationRequests,
+];
 
+export const sanitiseHasuraEventsOperations = (): Operation[] => [
   // Event logs
   deleteHasuraEventLogs,
 
   // Queued up scheduled events (backup method to PG function/trigger)
   deleteHasuraScheduledEventsForSubmittedSessions,
-
-  // Feedback records
-  deleteFeedback,
 ];
+
+export const sanitiseFeedbackOperations = (): Operation[] => [deleteFeedback];
 
 export const operationHandler = async (
   operation: Operation,
