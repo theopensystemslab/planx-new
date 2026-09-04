@@ -12,10 +12,8 @@
     "@opensystemslab/planx-core": "catalog:",
     "axios": "catalog:",
     "dotenv": "catalog:",
-    "eslint": "catalog:",
     "graphql": "catalog:graphql",
     "graphql-request": "^6.1.0",
-    "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "catalog:jwt",
     "serve": "^14.2.6",
     "uuid": "catalog:"
