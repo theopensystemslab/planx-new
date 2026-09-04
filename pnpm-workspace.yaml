@@ -13,7 +13,6 @@ catalog:
   "@opensystemslab/planx-core": github:theopensystemslab/planx-core#2a08123
   "@types/jsdom": ^30.0.0
   "@types/node": ~24.10.15
-  "@vitest/eslint-plugin": ^1.6.20
   axios: ^1.18.1
   csv-stringify: ^6.8.0
   date-fns: ^4.4.0

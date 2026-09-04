@@ -19,7 +19,6 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "catalog:jwt",
-    "@types/lodash.zipobject": "^4.1.9",
     "@types/node": "catalog:",
     "ts-node": "^10.9.2",
     "typescript": "catalog:typescript"
