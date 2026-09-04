@@ -1,5 +1,4 @@
 import Chip from "@mui/material/Chip";
-import React from "react";
 import type { RenderCellParams } from "ui/shared/DataTable/types";
 
 interface Props {

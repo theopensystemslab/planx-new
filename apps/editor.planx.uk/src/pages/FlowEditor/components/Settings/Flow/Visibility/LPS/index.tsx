@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useLPS } from "hooks/useLPS";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import CategorySelection from "./components/CategorySelection";

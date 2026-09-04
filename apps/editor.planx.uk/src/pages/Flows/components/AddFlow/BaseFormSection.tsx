@@ -4,7 +4,6 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikContext } from "formik";
-import React from "react";
 import Permission from "ui/editor/Permission";
 import { URLPrefix } from "ui/editor/URLPrefix";
 import InputLabel from "ui/public/InputLabel";

@@ -1,7 +1,6 @@
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
 

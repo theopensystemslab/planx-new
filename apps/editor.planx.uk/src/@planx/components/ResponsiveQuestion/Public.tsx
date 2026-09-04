@@ -1,5 +1,4 @@
 import type { PublicProps } from "@planx/components/shared/types";
-import React from "react";
 
 import BaseQuestionComponent from "../shared/BaseQuestion/Public";
 import { useConditionalOptions } from "../shared/RuleBuilder/hooks/useConditionalResponses";

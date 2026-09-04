@@ -1,6 +1,5 @@
 import MenuItem from "@mui/material/MenuItem";
 import type { QuestionField } from "@planx/components/shared/Schema/model";
-import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import SelectInput from "ui/shared/SelectInput/SelectInput";

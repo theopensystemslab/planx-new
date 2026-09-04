@@ -3,7 +3,6 @@ import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
-import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 

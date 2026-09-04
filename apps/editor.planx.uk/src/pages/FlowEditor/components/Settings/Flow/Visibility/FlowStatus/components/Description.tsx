@@ -1,5 +1,3 @@
-import React from "react";
-
 export const Description: React.FC = () => {
   const isProduction = import.meta.env.VITE_APP_ENV === "production";
 

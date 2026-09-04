@@ -4,7 +4,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { LinkOptions, RegisteredRouter } from "@tanstack/react-router";
 import { BadgeChip } from "components/EditorNavMenu/styles";
-import React from "react";
 import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 

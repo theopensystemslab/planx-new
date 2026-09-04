@@ -6,7 +6,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { Form, Formik } from "formik";
-import React from "react";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { useAddUserModal } from "../hooks/useAddUserModal";

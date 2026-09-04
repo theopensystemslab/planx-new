@@ -4,7 +4,6 @@ import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React from "react";
 
 import { getParentId } from "../lib/utils";
 

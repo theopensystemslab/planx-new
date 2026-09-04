@@ -3,7 +3,6 @@ import { waitFor } from "@testing-library/react";
 import { delay, http, HttpResponse } from "msw";
 import type { FullStore } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { act } from "react";
 import server from "test/mockServer";
 import { setup } from "test/utils";

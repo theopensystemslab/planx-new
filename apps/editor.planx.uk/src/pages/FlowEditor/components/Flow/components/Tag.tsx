@@ -4,7 +4,6 @@ import type { Palette } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
 import type { NodeTag, Role } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 

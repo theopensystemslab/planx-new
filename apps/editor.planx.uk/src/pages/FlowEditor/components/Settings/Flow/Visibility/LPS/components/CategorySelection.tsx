@@ -4,7 +4,6 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikContext } from "formik";
-import React from "react";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 

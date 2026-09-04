@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import React from "react";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 import { FlattenedFlow } from "../../../../../../utils/routeUtils/FlattenedFlow";

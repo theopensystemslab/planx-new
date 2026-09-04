@@ -4,7 +4,6 @@ import { ERROR_MESSAGE } from "@planx/components/shared/constants";
 import type { PublicProps } from "@planx/components/shared/types";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useFormikContext } from "formik";
-import React from "react";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";

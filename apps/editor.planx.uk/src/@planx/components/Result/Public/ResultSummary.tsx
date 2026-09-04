@@ -1,5 +1,4 @@
 import Typography from "@mui/material/Typography";
-import React from "react";
 import Banner from "ui/public/Banner";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 

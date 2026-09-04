@@ -8,7 +8,6 @@ import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import useFlashOnNodeAdded from "hooks/useFlashOnNodeAdded";
-import React from "react";
 import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 

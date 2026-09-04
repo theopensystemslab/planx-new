@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import type { SearchResultRelatedItems } from "./SearchResult";

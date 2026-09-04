@@ -1,5 +1,4 @@
 import Typography from "@mui/material/Typography";
-import React from "react";
 import { NodeCard } from "ui/editor/NodeCard";
 
 import { DATA_FACETS } from "../facets";

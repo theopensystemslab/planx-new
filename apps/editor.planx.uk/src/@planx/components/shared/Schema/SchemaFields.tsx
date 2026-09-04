@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import type { SxProps, Theme } from "@mui/material/styles";
 import type { FormikProps } from "formik";
-import React from "react";
 import InputRow from "ui/shared/InputRow";
 
 import { InputFields } from "./InputFields";

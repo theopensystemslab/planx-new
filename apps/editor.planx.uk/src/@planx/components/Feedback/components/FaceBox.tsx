@@ -3,7 +3,6 @@ import Grid from "@mui/material/Grid";
 import ToggleButton, { toggleButtonClasses } from "@mui/material/ToggleButton";
 import Typography from "@mui/material/Typography";
 import type { ReactElement } from "react";
-import React from "react";
 
 interface FaceBoxProps {
   icon: string;

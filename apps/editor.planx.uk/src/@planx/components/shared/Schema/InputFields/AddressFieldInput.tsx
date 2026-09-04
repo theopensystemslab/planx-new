@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { AddressFieldsProps } from "@planx/components/AddressInput/Public";
 import { AddressFields } from "@planx/components/AddressInput/Public";
-import React from "react";
 import InputLegend from "ui/editor/InputLegend";
 
 import type { AddressField } from "../model";

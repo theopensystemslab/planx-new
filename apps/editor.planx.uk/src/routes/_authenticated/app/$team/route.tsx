@@ -4,7 +4,6 @@ import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
-import React from "react";
 
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
 

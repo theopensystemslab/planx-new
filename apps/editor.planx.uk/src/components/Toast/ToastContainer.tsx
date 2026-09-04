@@ -1,5 +1,3 @@
-import React from "react";
-
 import Toast from "./Toast";
 import type { Toast as ToastComponent } from "./types";
 

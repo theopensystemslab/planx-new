@@ -1,5 +1,3 @@
-import React from "react";
-
 import Description from "./components/Description";
 import ExternalPortalList from "./components/ExternalPortalList";
 import Limitations from "./components/Limitations";

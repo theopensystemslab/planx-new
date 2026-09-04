@@ -1,6 +1,5 @@
 import Typography from "@mui/material/Typography";
 import type { GeoJsonObject } from "geojson";
-import React from "react";
 import InputLegend from "ui/editor/InputLegend";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";

@@ -15,7 +15,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { ValidationCheck } from "lib/api/publishFlow/types";
 import countBy from "lodash/countBy";
-import React from "react";
 import { useState } from "react";
 import Caret from "ui/icons/Caret";
 import CheckCircleIcon from "ui/icons/CheckCircle";

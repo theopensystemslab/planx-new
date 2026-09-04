@@ -3,7 +3,6 @@ import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { Form, Formik, useFormikContext } from "formik";
 import { usePublicRouteContext } from "hooks/usePublicRouteContext";
-import React from "react";
 import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import InputLabel from "ui/public/InputLabel";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";

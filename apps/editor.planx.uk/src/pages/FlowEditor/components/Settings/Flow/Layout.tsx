@@ -9,7 +9,6 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useParams } from "@tanstack/react-router";
 import { BREADCRUMBS_HEIGHT } from "components/Breadcrumbs";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 import SettingsLayout from "../SettingsLayout";
 import { GET_FLOW_TEMPLATE_STATUS } from "./Template/queries";

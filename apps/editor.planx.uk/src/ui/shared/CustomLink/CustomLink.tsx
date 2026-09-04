@@ -1,7 +1,6 @@
 import Link from "@mui/material/Link";
 import type { LinkComponent } from "@tanstack/react-router";
 import { createLink } from "@tanstack/react-router";
-import React from "react";
 
 type MUILinkProps = React.ComponentProps<typeof Link>;
 

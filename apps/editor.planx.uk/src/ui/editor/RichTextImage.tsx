@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import { Image } from "@tiptap/extension-image";
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
-import React from "react";
 
 const StyledNodeViewWrapper = styled(NodeViewWrapper, {
   shouldForwardProp: (prop) => prop !== "selected",

@@ -3,7 +3,6 @@ import { act, screen } from "@testing-library/react";
 import { graphql, HttpResponse } from "msw";
 import type { FullStore } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import { it } from "vitest";

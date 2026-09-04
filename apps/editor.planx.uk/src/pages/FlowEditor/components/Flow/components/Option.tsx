@@ -3,7 +3,6 @@ import { flatFlags } from "@opensystemslab/planx-core/types";
 import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
-import React from "react";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";

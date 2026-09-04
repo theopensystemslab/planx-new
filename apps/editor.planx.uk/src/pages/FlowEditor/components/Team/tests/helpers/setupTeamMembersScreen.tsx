@@ -1,6 +1,5 @@
 import { screen } from "@testing-library/react";
 import { graphql, HttpResponse } from "msw";
-import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import server from "test/mockServer";

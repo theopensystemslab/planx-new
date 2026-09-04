@@ -1,5 +1,4 @@
 import { useFormikContext } from "formik";
-import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";

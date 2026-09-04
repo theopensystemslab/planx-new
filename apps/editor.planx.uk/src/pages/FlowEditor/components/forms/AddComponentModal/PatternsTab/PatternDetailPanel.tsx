@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { EllipsesText } from "components/EllipsesText/EllipsesText";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { PatternMosaic } from "./PatternMosaic";

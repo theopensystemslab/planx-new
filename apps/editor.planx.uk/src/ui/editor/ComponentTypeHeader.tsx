@@ -3,7 +3,6 @@ import Typography from "@mui/material/Typography";
 import type { ComponentType } from "@opensystemslab/planx-core/types";
 import { COMPONENT_TITLES } from "@planx/components/shared/componentTitles";
 import { ICONS } from "@planx/components/shared/icons";
-import React from "react";
 
 interface Props {
   type: ComponentType;

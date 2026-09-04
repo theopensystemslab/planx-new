@@ -2,7 +2,6 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { PublicProps } from "@planx/components/shared/types";
 import type { FormikConfig } from "formik";
 import { useFormik } from "formik";
-import React from "react";
 
 import { flatten } from "../List/utils";
 import Card from "../shared/Preview/Card";

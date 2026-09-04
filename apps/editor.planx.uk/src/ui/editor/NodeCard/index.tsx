@@ -6,7 +6,6 @@ import { ICONS } from "@planx/components/shared/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { getDisplayDetailsForNodeCard } from "./getDisplayDetailsForNodeCard";

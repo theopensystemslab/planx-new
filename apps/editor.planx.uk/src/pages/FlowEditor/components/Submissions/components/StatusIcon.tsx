@@ -1,7 +1,6 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PendingIcon from "@mui/icons-material/Pending";
-import React from "react";
 
 import type { Submission } from "../types";
 

@@ -10,7 +10,6 @@ import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import Feedback from "components/Feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
-import React from "react";
 import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 import Main from "ui/shared/Main";

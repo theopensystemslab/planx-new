@@ -3,7 +3,6 @@ import "vitest-axe/extend-expect";
 
 import type { CollapseProps } from "@mui/material/Collapse";
 import type { FadeProps } from "@mui/material/Fade";
-import React from "react";
 import { vi } from "vitest";
 
 /**

@@ -3,7 +3,6 @@ import Typography from "@mui/material/Typography";
 import type { TemplatedNodeData } from "@opensystemslab/planx-core/types";
 import type { BaseNodeData } from "@planx/components/shared";
 import type { FormikProps, useFormik } from "formik";
-import React from "react";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";

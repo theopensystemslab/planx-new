@@ -10,7 +10,6 @@ import type { TeamRole } from "@opensystemslab/planx-core/types";
 import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { upsertMemberSchema } from "../formSchema";

@@ -5,7 +5,6 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 const Wrapper = styled(Box)(({ theme }) => ({
