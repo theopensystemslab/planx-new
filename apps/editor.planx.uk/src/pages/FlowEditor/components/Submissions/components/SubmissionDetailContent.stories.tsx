@@ -10,9 +10,8 @@ import {
   mockUnresolvedFailureEvents,
   teamData,
 } from "../mockSubmissions";
-import { GET_TEAM_LOGO } from "../queries";
+import { GET_SUBMISSION_EVENTS, GET_TEAM_LOGO } from "../queries";
 import SubmissionDetailContent from "./SubmissionDetailContent";
-import { GET_SUBMISSION_EVENTS } from "./SubmissionDetailContent";
 
 const mocks = [
   {
