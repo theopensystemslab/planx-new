@@ -48,7 +48,7 @@ function NoteComponent(props: Props) {
               value={formik.values.text}
               onChange={formik.handleChange}
               disabled={props.disabled}
-              errorMessage={formik.errors.text as string}
+              errorMessage={getIn(formik.errors, "text")}
             />
           </InputRow>
         </ModalSectionContent>
