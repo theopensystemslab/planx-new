@@ -56,5 +56,6 @@
     "workerDirectory": [
       "public"
     ]
-  }
+  },
+  "prettier": "@planx/prettier-config"
 }
