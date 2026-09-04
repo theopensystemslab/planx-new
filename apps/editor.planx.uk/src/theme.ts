@@ -40,7 +40,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     dark: "#2C2C2C",
     disabled: "#EEEEEE",
     data: "#F0F0F0",
-    note: "#fffdb0",
+    note: "#FFFDB0",
   },
   secondary: {
     main: "#F3F2F1",
