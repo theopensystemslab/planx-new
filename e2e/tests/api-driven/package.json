@@ -14,8 +14,7 @@
     "dotenv": "catalog:",
     "graphql-tag": "catalog:graphql",
     "graphql": "catalog:graphql",
-    "jsonwebtoken": "catalog:jwt",
-    "nock": "^13.5.6"
+    "jsonwebtoken": "catalog:jwt"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "catalog:jwt",
