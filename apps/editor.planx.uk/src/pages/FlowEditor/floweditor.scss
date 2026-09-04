@@ -12,6 +12,7 @@ $folderBackground: #b5d1f7;
 $folderBorder: #2c4b88;
 $primaryAction: #0010a4;
 $noteBackground: #fffdb0;
+$lockedNoteBackground: #f5f4d2;
 
 $endpointWidth: 50px;
 $hangerWidth: 16px;
@@ -320,7 +321,7 @@ $fontMonospace: "Source Code Pro", monospace;
 
     .flow-locked & {
       border-color: $lockedBorder;
-      background: $lockedDataBackground;
+      background: $lockedNoteBackground;
     }
   }
 
@@ -723,16 +724,16 @@ $fontMonospace: "Source Code Pro", monospace;
   // TODO retire `.question.` prefix
   &.question.isNote {
     a {
-      background: #fffdb0 !important;
+      background: $noteBackground !important;
       position: relative;
       padding-right: 20px;
       .flow-locked & {
-        background: #f5f4d2 !important;
+        background: $lockedNoteBackground !important;
       }
     }
     & .template-card > a {
       .flow-locked & {
-        background: #fffdb0 !important;
+        background: $noteBackground !important;
         border-color: $nodeBorder;
       }
     }
