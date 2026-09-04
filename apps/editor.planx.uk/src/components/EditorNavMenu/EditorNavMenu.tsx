@@ -2,8 +2,8 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ExploreIcon from "@mui/icons-material/Explore";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
+import FindInPageIcon from "@mui/icons-material/FindInPage";
 import FlagIcon from "@mui/icons-material/Flag";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
@@ -158,20 +158,6 @@ function EditorNavMenu() {
             route: `/app/${teamSlug}/flows`,
             accessibleBy: "*" as const,
           },
-          ...(hasFeatureFlag("EXPLORE")
-            ? [
-                {
-                  title: "Explore",
-                  Icon: ExploreIcon,
-                  route: `/app/${teamSlug}/explore`,
-                  accessibleBy: [
-                    "platformAdmin",
-                    "teamAdmin",
-                    "teamEditor",
-                  ] satisfies Role[],
-                },
-              ]
-            : []),
         ],
       },
       {
@@ -364,6 +350,13 @@ function EditorNavMenu() {
     return accessibleByCurrentUserRole;
   };
 
+  const exploreRoute: Route = {
+    title: "Explore & search",
+    Icon: FindInPageIcon,
+    route: `/app/${teamSlug}/explore`,
+    accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"] satisfies Role[],
+  };
+
   // Filter accessible routes within each section
   const visibleSections = sections
     .map((section) => ({
@@ -388,8 +381,33 @@ function EditorNavMenu() {
     <Root compact={compact}>
       <NavBarContainer>
         <NavMenuHeader compact={compact} />
+        {isTeamRoute &&
+          !compact &&
+          teamSlug &&
+          hasFeatureFlag("EXPLORE") &&
+          isRouteAccessible(exploreRoute) && (
+            <Box
+              component="ul"
+              sx={(theme) => ({
+                listStyle: "none",
+                margin: 0,
+                padding: theme.spacing(0, 0.5, 0, 0.5),
+              })}
+            >
+              <MenuItem>
+                <NavMenuItem
+                  title={exploreRoute.title}
+                  Icon={exploreRoute.Icon}
+                  isActive={isActive(exploreRoute.route)}
+                  isExternal={isExternalLink(exploreRoute.route)}
+                  compact={compact}
+                  onClick={() => handleClick(exploreRoute.route)}
+                />
+              </MenuItem>
+            </Box>
+          )}
         {teamSlug && !compact && (
-          <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
+          <Box sx={(theme) => ({ padding: theme.spacing(0.5, 0.5, 0, 0.5) })}>
             <TeamSelect
               currentTeamSlug={teamSlug}
               onTeamSelect={(slug) =>
