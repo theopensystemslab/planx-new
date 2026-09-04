@@ -2,6 +2,7 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import FlowEditor from "pages/FlowEditor";
 import { RecentFlowsProvider } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
+import React from "react";
 
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/_flowEditor",

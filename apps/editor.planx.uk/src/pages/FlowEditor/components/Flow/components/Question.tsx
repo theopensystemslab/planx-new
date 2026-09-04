@@ -8,6 +8,7 @@ import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import useFlashOnNodeAdded from "hooks/useFlashOnNodeAdded";
+import { memo } from "react";
 import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
@@ -27,7 +28,7 @@ type Props = {
   showTemplatedNodeStatus: boolean;
 };
 
-const Question: React.FC<Props> = React.memo((props) => {
+const Question: React.FC<Props> = memo((props) => {
   const [isCloneValue, childNodes, showHelpText, showTags] = useStore(
     (state) => [
       state.isClone(props.id),

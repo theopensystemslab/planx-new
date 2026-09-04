@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { PropsWithChildren } from "react";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
 type Props = React.PropsWithChildren<{
@@ -123,7 +123,7 @@ export default function InputGroup({
   handleMove,
   flowSpacing,
 }: Props): FCReturn {
-  const [deleteHover, setDeleteHover] = React.useState(false);
+  const [deleteHover, setDeleteHover] = useState(false);
 
   const ref = useRef<HTMLFieldSetElement>(null);
 

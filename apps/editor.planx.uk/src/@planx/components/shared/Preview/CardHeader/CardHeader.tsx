@@ -1,6 +1,7 @@
 import HelpIcon from "@mui/icons-material/Help";
 import Typography from "@mui/material/Typography";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
+import { useState } from "react";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
@@ -26,7 +27,7 @@ export const CardHeader: React.FC<ICardHeader> = ({
   img,
   titleId,
 }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const { trackEvent } = useAnalyticsTracking();
 
   const handleHelpClick = () => {

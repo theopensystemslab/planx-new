@@ -3,6 +3,7 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { Link } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import React from "react";
 
 import { useStore } from "../../FlowEditor/lib/store";
 import type { FlowSummary } from "./useUnreadFeedback";
