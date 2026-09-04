@@ -14,7 +14,7 @@ import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import * as React from "react";
+import type { ReactNode } from "react";
 import CloneIcon from "ui/icons/Clone";
 import CopyIcon from "ui/icons/Copy";
 
@@ -23,7 +23,7 @@ export type ContextMenuSource = "node" | "hanger" | "positioned-note" | null;
 interface ContextMenuAction {
   id: string;
   label: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   disabled: boolean;
   onClick: () => void;
 }
