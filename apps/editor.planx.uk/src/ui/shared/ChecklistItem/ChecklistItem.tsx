@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
 
 import Checkbox from "../Checkbox/Checkbox";
 
