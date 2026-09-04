@@ -333,9 +333,27 @@ describe("File upload", () => {
       expect(getSignedUrl).toHaveBeenCalledTimes(1);
     });
 
-    // TODO: re-evaluate this test when re-enabling commented out file types
-    // eslint-disable-next-line vitest/no-disabled-tests
-    it.skip.each([
+    // objects are written with a public-read ACL, so what we persist is what a client fetching
+    // straight from S3 would be handed - it should match what the API itself would serve
+    it("should store headers we chose, not ones the client supplied", async () => {
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "some_file.png")
+        .attach("file", Buffer.from("some data"), {
+          filename: "some_file.png",
+          contentType: "text/html", // an uploader's claim about their own bytes
+        })
+        .expect(200);
+
+      expect(mockPutObject).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ContentType: "image/png",
+          ContentDisposition: 'attachment;filename="some_file.png"',
+        }),
+      );
+    });
+
+    it.each([
       "drawing.plt",
       "model.gml",
       "report.docx",
@@ -498,6 +516,105 @@ describe("File download", () => {
 
     mockGetObject = vi.fn(() => Promise.resolve(getObjectResponse));
     mockGetObjectTagging = vi.fn(() => Promise.resolve(CLEAN_TAGS));
+  });
+
+  // we set Content-Type and Content-Disposition ourselves rather than echoing what S3 holds
+  describe.each([
+    ["public", "/file/public", {}],
+    ["private", "/file/private", { "api-key": "test" }],
+  ])("response headers on the %s route", (_name, route, headers) => {
+    const get = (key: string) =>
+      supertest(app).get(`${route}/${key}`).set(headers);
+
+    it("serves as an attachment rather than inline", async () => {
+      const res = await get("somekey/file_name.txt").expect(200);
+
+      expect(res.headers["content-disposition"]).toBe(
+        'attachment; filename="file_name.txt"',
+      );
+    });
+
+    /**
+     * S3 keys use the %-encoded filename, and the signed-URL we build API URLs from
+     * escapes that again - so a real request path is double-encoded. Express decodes
+     * path params once, leaving our own encoding for the handler to undo.
+     */
+    const requestPathFor = (filename: string) =>
+      `somekey/${encodeURIComponent(encodeURIComponent(filename))}`;
+
+    it.each([
+      "my plan.pdf",
+      "my file (1).pdf",
+      "it's a plan.pdf",
+      "star*.png",
+      "plain.png",
+    ])("serves %j under its decoded name", async (original) => {
+      const res = await get(requestPathFor(original)).expect(200);
+
+      expect(res.headers["content-disposition"]).toBe(
+        `attachment; filename="${original}"`,
+      );
+    });
+
+    it("derives Content-Type from the extension, ignoring what S3 stored", async () => {
+      getObjectResponse = {
+        ...getObjectResponse,
+        // as if an uploader had claimed their .png was HTML
+        ContentType: "text/html",
+      };
+
+      const res = await get("somekey/picture.png").expect(200);
+      expect(res.headers["content-type"]).toMatch(/^image\/png/);
+    });
+
+    it("serves an SVG as an attachment, so it is never loaded as a document", async () => {
+      const res = await get("somekey/drawing.svg").expect(200);
+
+      expect(res.headers["content-disposition"]).toMatch(/^attachment/);
+      expect(res.headers["content-type"]).toMatch(/^image\/svg\+xml/);
+    });
+
+    it("falls back to octet-stream for an extension with no known type", async () => {
+      const res = await get("somekey/model.ifc").expect(200);
+      expect(res.headers["content-type"]).toMatch(/^application\/octet-stream/);
+    });
+
+    it("sets nosniff so the browser cannot second-guess our Content-Type", async () => {
+      const res = await get("somekey/file_name.txt").expect(200);
+      expect(res.headers["x-content-type-options"]).toBe("nosniff");
+    });
+
+    it("allows cross-origin embedding, which the editor relies on for public images", async () => {
+      const res = await get("somekey/file_name.txt").expect(200);
+      expect(res.headers["cross-origin-resource-policy"]).toBe("cross-site");
+    });
+
+    it("emits a valid HTTP-date for Last-Modified, and no phantom headers", async () => {
+      const res = await get("somekey/file_name.txt").expect(200);
+
+      expect(res.headers["last-modified"]).toBe(
+        "Tue, 31 May 2022 12:21:37 GMT",
+      );
+      // absent S3 fields used to be echoed as the literal string "undefined"
+      expect(res.headers["cache-control"]).not.toBe("undefined");
+      expect(res.headers["expires"]).not.toBe("undefined");
+      expect(res.headers["content-encoding"]).toBeUndefined();
+    });
+  });
+
+  // useNoCache runs before the controller, so echoing S3's (absent) Cache-Control and Expires
+  // used to overwrite both - meaning private files were served without no-store at all
+  it("does not let echoed S3 headers overwrite the private route's no-store", async () => {
+    const res = await supertest(app)
+      .get("/file/private/somekey/file_name.txt")
+      .set({ "api-key": "test" })
+      .expect(200);
+
+    expect(res.headers["cache-control"]).toBe(
+      "no-store, no-cache, must-revalidate, proxy-revalidate",
+    );
+    expect(res.headers["expires"]).toBe("0");
+    expect(res.headers["surrogate-control"]).toBe("no-store");
   });
 
   describe("Public", () => {

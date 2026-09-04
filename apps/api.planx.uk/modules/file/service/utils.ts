@@ -35,6 +35,21 @@ export function buildFilePath(fileKey: string, fileName: string): string {
 }
 
 /**
+ * Reverse the `encodeURIComponent` applied to filenames at upload.
+ *
+ * Falls back to the encoded value rather than throwing: `decodeURIComponent` rejects malformed
+ * input (a lone `%`, say), but inability to decode a filename is no reason to fail the download.
+ */
+export function safeDecode(filename: string): string {
+  try {
+    return decodeURIComponent(filename);
+  } catch {
+    console.debug(`Failed to decode filename: ${filename}`);
+    return filename;
+  }
+}
+
+/**
  * Return an S3 key in the fileKey/fileName format, based on a file's API URL
  */
 export function getS3KeyFromURL(fileURL: string): string {

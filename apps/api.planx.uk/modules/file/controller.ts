@@ -12,7 +12,7 @@ import {
   headFileInS3,
 } from "./service/getFile.js";
 import { uploadPrivateFile, uploadPublicFile } from "./service/uploadFile.js";
-import { buildFilePath } from "./service/utils.js";
+import { buildFilePath, safeDecode } from "./service/utils.js";
 
 assert(process.env.AWS_S3_BUCKET);
 assert(process.env.AWS_S3_REGION);
@@ -130,6 +130,26 @@ const handleFileError = (
   }
 };
 
+/**
+ * Hand back the bytes, as a download rather than something the browser will render 'inline'.
+ *
+ * `res.attachment` does several jobs: it sets `Content-Disposition: attachment`, derives Content-Type
+ * from the filename's extension (which we validated against actual content at upload), and sets the
+ * Content-Disposition 'filename = ' parameter. Unknown extensions fall back to application/octet-stream.
+ *
+ * NB. This does not affect `<img src>` embeds: Content-Disposition applies to navigations/downloads, not subresource loads.
+ */
+const sendFile = (
+  result: Extract<GetFileResult, { outcome: "ok" }>,
+  res: DownloadResponse,
+) => {
+  // we decode first, or the browser saves the file under our own escaping (e.g. "my%20plan.pdf")
+  // Express can re-encode as required,see: https://expressjs.com/en/4x/api/response/#resattachment
+  res.attachment(safeDecode(result.filename));
+  res.set(result.headers);
+  return res.send(result.body);
+};
+
 export const publicDownloadController: DownloadController = async (
   _req,
   res,
@@ -147,8 +167,7 @@ export const publicDownloadController: DownloadController = async (
   if (result.isPrivate)
     return res.status(404).json({ error: "FILE_NOT_FOUND" });
 
-  res.set(result.headers);
-  return res.send(result.body);
+  return sendFile(result, res);
 };
 
 export const privateDownloadController: DownloadController = async (
@@ -164,8 +183,7 @@ export const privateDownloadController: DownloadController = async (
   if (result.outcome !== "ok")
     return handleFileError(result, filePath, res, next);
 
-  res.set(result.headers);
-  return res.send(result.body);
+  return sendFile(result, res);
 };
 
 export type DeleteController = ValidatedRequestHandler<

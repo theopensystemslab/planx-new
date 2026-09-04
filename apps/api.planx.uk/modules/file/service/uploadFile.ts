@@ -96,8 +96,12 @@ export function generateFileParams(
     Bucket: process.env.AWS_S3_BUCKET,
     Key: key,
     Body: file.buffer,
-    ContentDisposition: `inline;filename="${filename}"`,
-    ContentType: file.mimetype,
+    // We practice defence in depth for any fetch that bypasses the API by storing the headers we would serve.
+    // Notably we do not persist file.mimetype because we want to control how the bytes are interpreted.
+    ContentDisposition: `attachment;filename="${filename}"`,
+    // `filename` is %-encoded on upload, so it is guaranteed ASCII with no quotes to break out of the header,
+    // so interpolating here is safe. Downloads via the API get the decoded name - see sendFile.
+    ContentType: fileType ?? "application/octet-stream",
   };
 
   return {
