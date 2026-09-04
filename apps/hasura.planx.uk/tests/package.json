@@ -13,14 +13,14 @@
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "catalog:jwt",
     "uuid": "catalog:",
-    "vite": "^8.0.16",
+    "vite": "^8.2.2",
     "vitest": "catalog:"
   },
   "devDependencies": {
-    "eslint": "catalog:",
-    "globals": "catalog:",
     "@planx/eslint-config": "workspace:*",
-    "@planx/prettier-config": "workspace:*"
+    "@planx/prettier-config": "workspace:*",
+    "eslint": "catalog:",
+    "globals": "catalog:"
   },
   "prettier": "@planx/prettier-config"
 }
