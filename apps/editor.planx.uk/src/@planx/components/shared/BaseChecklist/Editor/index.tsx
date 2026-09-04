@@ -52,7 +52,7 @@ export const BaseChecklistComponent: React.FC<Props> = (props) => {
           <InputGroup>
             <InputRow>
               <Input
-                format="large"
+                format="bold"
                 name="text"
                 value={formik.values.text}
                 placeholder="Text"

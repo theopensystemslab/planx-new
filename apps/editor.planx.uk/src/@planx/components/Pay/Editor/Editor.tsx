@@ -57,7 +57,7 @@ const Component: React.FC<Props> = (props: Props) => {
           <ModalSectionContent>
             <InputRow>
               <Input
-                format="large"
+                format="bold"
                 placeholder="Page title"
                 name="title"
                 value={formik.values.title}
@@ -93,7 +93,7 @@ const Component: React.FC<Props> = (props: Props) => {
           <ModalSectionContent>
             <InputRow>
               <Input
-                format="large"
+                format="bold"
                 placeholder="Instructions title"
                 name="instructionsTitle"
                 value={formik.values.instructionsTitle}

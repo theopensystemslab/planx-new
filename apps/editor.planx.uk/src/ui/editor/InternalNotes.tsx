@@ -30,6 +30,7 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
             onChange={onChange}
             multiline
             placeholder="Note"
+            format="note"
             rows={3}
             disabled={disabled}
           />

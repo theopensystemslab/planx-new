@@ -53,7 +53,7 @@ function Component(props: Props) {
           <InputRow>
             <Input
               required
-              format="large"
+              format="bold"
               placeholder="Title"
               name="title"
               value={formik.values.title}

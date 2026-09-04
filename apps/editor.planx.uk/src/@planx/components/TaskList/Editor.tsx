@@ -46,6 +46,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
             });
           }}
           placeholder="Title"
+          format="bold"
           disabled={props.disabled}
           errorMessage={getIn(errors, `tasks[${props.index}].title`)}
         />
@@ -106,7 +107,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
                     value={formik.values.title}
                     onChange={formik.handleChange}
                     placeholder="Main title"
-                    format="large"
+                    format="bold"
                     disabled={props.disabled}
                   />
                 </ErrorWrapper>

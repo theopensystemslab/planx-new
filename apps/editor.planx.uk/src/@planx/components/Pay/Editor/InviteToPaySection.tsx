@@ -41,7 +41,7 @@ export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
               <InputRow>
                 <Input
                   required
-                  format="large"
+                  format="bold"
                   name="secondaryPageTitle"
                   placeholder="Card title"
                   value={values.secondaryPageTitle}
@@ -54,7 +54,7 @@ export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
               <InputRow>
                 <Input
                   required
-                  format="large"
+                  format="bold"
                   name="nomineeTitle"
                   placeholder="Title"
                   value={values.nomineeTitle}
@@ -78,7 +78,7 @@ export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
               <InputRow>
                 <Input
                   required
-                  format="large"
+                  format="bold"
                   name="yourDetailsTitle"
                   placeholder="Title"
                   value={values.yourDetailsTitle}

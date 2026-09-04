@@ -43,7 +43,7 @@ function Component(props: Props) {
         <ModalSectionContent>
           <InputRow>
             <Input
-              format="large"
+              format="bold"
               name="title"
               placeholder={formik.values.title}
               value={formik.values.title}

@@ -37,7 +37,7 @@ function NoteComponent(props: Props) {
           <InputRow>
             <Input
               name="text"
-              format="large"
+              format="note"
               minRows={4}
               multiline={true}
               placeholder="Note"

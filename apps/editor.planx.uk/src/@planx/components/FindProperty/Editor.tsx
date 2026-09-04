@@ -48,7 +48,7 @@ function FindPropertyComponent(props: Props) {
         <ModalSectionContent>
           <InputRow>
             <Input
-              format="large"
+              format="bold"
               placeholder="Title"
               name="title"
               value={formik.values.title}
@@ -85,7 +85,7 @@ function FindPropertyComponent(props: Props) {
             <br />
             <InputRow>
               <Input
-                format="large"
+                format="bold"
                 placeholder="Title"
                 name="newAddressTitle"
                 value={formik.values.newAddressTitle}

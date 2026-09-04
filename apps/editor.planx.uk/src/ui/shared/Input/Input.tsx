@@ -1,6 +1,6 @@
 import type { InputBaseClasses, InputBaseProps } from "@mui/material/InputBase";
 import InputBase from "@mui/material/InputBase";
-import { styled } from "@mui/material/styles";
+import { lighten, styled } from "@mui/material/styles";
 import type { ChangeEvent } from "react";
 import React, { forwardRef } from "react";
 import {
@@ -19,11 +19,10 @@ const classes: Partial<InputBaseClasses> = {
 };
 
 export interface Props extends Omit<InputBaseProps, "ref"> {
-  format?: "large" | "bold" | "data";
+  format?: "bold" | "data" | "note";
   classes?: InputBaseClasses;
   className?: string;
   grow?: boolean;
-  large?: boolean;
   bordered?: boolean;
   errorMessage?: string;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
@@ -62,13 +61,10 @@ const StyledInputBase = styled(InputBase, {
       fontSize: theme.typography.body2.fontSize,
     },
   }),
-  ...(format === "bold" && {
-    fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  ...(format === "note" && {
+    backgroundColor: lighten(theme.palette.background.note, 0.6),
   }),
-  ...(format === "large" && {
-    backgroundColor: theme.palette.common.white,
-    height: 50,
-    width: "100%",
+  ...(format === "bold" && {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
   }),
   [`&.${classes.multiline}`]: {

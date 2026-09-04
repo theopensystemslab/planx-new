@@ -59,7 +59,7 @@ function FileUploadAndLabelComponent(props: Props) {
           <InputRow>
             <Input
               errorMessage={formik.errors.title}
-              format="large"
+              format="bold"
               name="title"
               placeholder={formik.values.title}
               value={formik.values.title}

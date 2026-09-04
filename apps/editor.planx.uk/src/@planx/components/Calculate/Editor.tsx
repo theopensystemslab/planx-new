@@ -134,7 +134,7 @@ export default function Component(props: Props) {
           </Typography>
           <InputRow>
             <Input
-              format="large"
+              format="bold"
               placeholder="Title"
               name="title"
               value={formik.values.title}

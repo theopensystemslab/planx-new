@@ -49,7 +49,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
         <ModalSectionContent>
           <InputRow>
             <Input
-              format="large"
+              format="bold"
               name="title"
               value={formik.values.title}
               placeholder="Title"

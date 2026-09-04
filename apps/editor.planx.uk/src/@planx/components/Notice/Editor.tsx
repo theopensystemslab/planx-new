@@ -46,7 +46,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
           <InputRow>
             <Input
               name="title"
-              format="large"
+              format="bold"
               placeholder="Notice"
               value={values.title}
               onChange={handleChange}

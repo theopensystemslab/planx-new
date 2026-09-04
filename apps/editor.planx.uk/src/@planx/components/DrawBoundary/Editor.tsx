@@ -46,7 +46,7 @@ function DrawBoundaryComponent(props: Props) {
         <ModalSectionContent>
           <InputRow>
             <Input
-              format="large"
+              format="bold"
               placeholder={props.node?.data?.title}
               name="title"
               value={formik.values.title}
@@ -86,7 +86,7 @@ function DrawBoundaryComponent(props: Props) {
         >
           <InputRow>
             <Input
-              format="large"
+              format="bold"
               placeholder={props.node?.data?.titleForUploading}
               name="titleForUploading"
               value={formik.values.titleForUploading}

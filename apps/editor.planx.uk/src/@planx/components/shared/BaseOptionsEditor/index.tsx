@@ -110,6 +110,7 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
             <Input
               value={props.value.data.notes || ""}
               placeholder="Note"
+              format="note"
               multiline
               disabled={props.disabled}
               onChange={(ev) => updateSharedField("notes", ev.target.value)}
