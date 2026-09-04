@@ -86,3 +86,11 @@ export type GetTeamLogoQuery = {
 export type GetTeamLogoVariables = {
   teamSlug: string;
 };
+
+export type GetSubmissionEventsQuery = {
+  submissions: Submission[];
+};
+
+export type GetSubmissionEventsVariables = {
+  sessionId: string;
+};
