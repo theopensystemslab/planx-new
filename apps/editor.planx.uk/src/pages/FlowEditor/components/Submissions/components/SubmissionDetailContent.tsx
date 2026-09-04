@@ -1,4 +1,3 @@
-import { gql, useQuery } from "@apollo/client";
 import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -6,31 +5,11 @@ import { addDays, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 
+import { useGetSubmissionEvents } from "../hooks";
 import type { Submission } from "../types";
 import { getSucceededPayment, hasBeenSanitised } from "../utils";
 import { SubmissionDetails } from "./SubmissionDetails";
 import { SubmissionEventsHistory } from "./SubmissionEventsHistory";
-
-// TODO: refactor into hooks / queries pattern
-export const GET_SUBMISSION_EVENTS = gql`
-  query GetSubmissionEvents($sessionId: uuid!) {
-    submissions: submission_services_log(
-      where: { session_id: { _eq: $sessionId } }
-      order_by: { created_at: desc }
-    ) {
-      flowId: flow_id
-      sessionId: session_id
-      eventId: event_id
-      eventType: event_type
-      status: status
-      retry: retry
-      response: response
-      address: address
-      createdAt: created_at
-      flowName: flow_name
-    }
-  }
-`;
 
 interface SubmissionDetailContentProps {
   sessionId: string;
@@ -53,13 +32,7 @@ const SubmissionDetailContent: React.FC<SubmissionDetailContentProps> = ({
 }) => {
   const [teamSlug] = useStore((state) => [state.teamSlug]);
 
-  const { data, loading, error } = useQuery<{ submissions: Submission[] }>(
-    GET_SUBMISSION_EVENTS,
-    {
-      variables: { sessionId },
-      skip: !sessionId,
-    },
-  );
+  const { data, loading, error } = useGetSubmissionEvents(sessionId);
 
   if (loading) return <DelayedLoadingIndicator />;
   if (error) throw error;
