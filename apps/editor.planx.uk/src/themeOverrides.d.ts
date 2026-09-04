@@ -137,6 +137,7 @@ declare module "@mui/material/styles" {
     dark: string;
     disabled: string;
     data: string;
+    note: string;
   }
 
   interface TypeBackgroundOptions {
@@ -145,6 +146,7 @@ declare module "@mui/material/styles" {
     dark: string;
     disabled: string;
     data: string;
+    note: string;
   }
 }
 
