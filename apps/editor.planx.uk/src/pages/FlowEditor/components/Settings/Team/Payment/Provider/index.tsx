@@ -45,7 +45,7 @@ const checkActiveSessions = async (
   return { count, canMigrate: count === 0 };
 };
 
-export const Provider: React.FC = () => {
+const Provider: React.FC = () => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
   const [provider, setProvider] = useState<PaymentProvider>("govpay");

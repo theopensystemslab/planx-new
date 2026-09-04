@@ -4,13 +4,12 @@ import type { Group } from "@planx/components/shared/BaseChecklist/model";
 import type { EditorProps } from "@planx/components/shared/types";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 
-import { ChecklistEditor } from "./Editor";
+import ChecklistEditor from "./Editor";
 import type { Checklist } from "./model";
 
 const { setState } = useStore;

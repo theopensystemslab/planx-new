@@ -64,7 +64,7 @@ const HorizontalConnector = () => (
   />
 );
 
-export const FlowSkeleton = () => {
+const FlowSkeleton = () => {
   return (
     <Container>
       <TerminalNode />

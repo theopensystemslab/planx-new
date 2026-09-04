@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useNavigate, useSearch } from "@tanstack/react-router";
-import React from "react";
 import type { Paths } from "type-fest";
 import { slugify } from "utils";
 
@@ -40,7 +39,7 @@ interface FiltersProps<T> {
  * />
  */
 
-export const Filters = <T extends object>({
+const FiltersComponent = <T extends object>({
   filterOptions,
 }: FiltersProps<T>) => {
   const navigate = useNavigate();
@@ -129,4 +128,4 @@ export const Filters = <T extends object>({
   );
 };
 
-export default Filters;
+export default FiltersComponent;

@@ -115,7 +115,7 @@ const ENV_DISPLAY_NAMES: Record<string, string> = {
   development: "Dev",
 };
 
-export const EnvironmentSelect: React.FC = () => {
+const EnvironmentSelect: React.FC = () => {
   const [open, setOpen] = useState(false);
   const currentEnv = import.meta.env.VITE_APP_ENV;
   const displayEnv = ENV_DISPLAY_NAMES[currentEnv] ?? currentEnv;

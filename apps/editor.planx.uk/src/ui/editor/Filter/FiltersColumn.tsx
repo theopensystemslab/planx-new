@@ -4,10 +4,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { capitalize, get } from "lodash";
-import React from "react";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
-import type Filters from "./Filter";
+import type { Filters } from "./Filter";
 import type { FilterKey, FilterValues } from "./Filter";
 import { StyledChip } from "./FilterStyles";
 

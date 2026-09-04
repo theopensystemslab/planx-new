@@ -16,7 +16,7 @@ export type Props = EditorProps<
   { options: Option[] }
 >;
 
-export const QuestionComponent: React.FC<Props> = (props) => {
+const QuestionComponent: React.FC<Props> = (props) => {
   const type = TYPES.Question;
 
   const formik = useFormikWithRef<QuestionWithOptions>(

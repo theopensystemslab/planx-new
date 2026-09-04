@@ -4,7 +4,7 @@ import NewSettingsSection from "ui/editor/NewSettingsSection";
 
 import { EmailsTable } from "./EmailsTable";
 
-export const SubmissionEmails: React.FC = () => {
+const SubmissionEmails: React.FC = () => {
   return (
     <NewSettingsSection>
       <Box sx={{ mt: 2 }}>

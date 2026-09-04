@@ -14,7 +14,7 @@ import type {
   UpdateTeamSettingsVariables,
 } from "./types";
 
-export const Contact: React.FC = () => {
+const Contact: React.FC = () => {
   const [teamId, teamSlug] = useStore((state) => [
     state.teamId,
     state.teamSlug,

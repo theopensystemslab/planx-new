@@ -16,7 +16,7 @@ import { parseChecklist, validationSchema } from "./model";
 type ExtraProps = FlatOptions<Option> | GroupedOptions<Option>;
 export type Props = EditorProps<TYPES.Checklist, Checklist, ExtraProps>;
 
-export const ChecklistEditor: React.FC<Props> = (props) => {
+const ChecklistEditor: React.FC<Props> = (props) => {
   const type = TYPES.Checklist;
 
   const formik = useFormikWithRef<ChecklistWithOptions>(
