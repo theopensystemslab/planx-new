@@ -9,48 +9,48 @@ packages:
   - scripts/*
 
 catalog:
-  "@opensystemslab/map": 1.0.0-alpha.15
-  "@opensystemslab/planx-core": github:theopensystemslab/planx-core#2a08123
-  "@types/jsdom": ^30.0.0
-  "@types/node": ~24.10.15
-  axios: ^1.18.1
-  csv-stringify: ^6.8.0
+  '@opensystemslab/map': 1.0.0-alpha.15
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#0e21ea2
+  '@types/jsdom': ^30.0.0
+  '@types/node': ~24.10.15
+  axios: ^1.20.0
+  csv-stringify: ^6.8.3
   date-fns: ^4.4.0
-  dompurify: ^3.4.13
+  dompurify: ^3.4.14
   dotenv: ^17.4.2
   eslint: ^9.39.5
   globals: ^16.5.0
   jsdom: ^30.0.1
-  nanoid: ^3.3.17
-  prettier: ^3.9.3
-  uuid: ^14.0.1
+  nanoid: ^3.3.18
+  prettier: ^3.9.6
+  uuid: ^14.0.2
   vite: ^6.4.3
-  vitest: ^4.1.9
+  vitest: ^4.1.11
 
 catalogs:
   graphql:
     graphql: ^16.14.2
     graphql-request: 4.3.0
-    graphql-tag: ^2.12.6
+    graphql-tag: ^2.12.7
   infrastructure:
-    "@pulumi/aws": ^7.35.0
-    "@pulumi/awsx": ^3.7.0
-    "@pulumi/cloudflare": ^6.14.0
-    "@pulumi/postgresql": ^3.16.2
-    "@pulumi/pulumi": ^3.250.0
+    '@pulumi/aws': ^7.43.0
+    '@pulumi/awsx': ^3.9.0
+    '@pulumi/cloudflare': ^6.20.0
+    '@pulumi/postgresql': ^3.18.0
+    '@pulumi/pulumi': ^3.259.0
   jwt:
-    "@types/jsonwebtoken": ^9.0.10
+    '@types/jsonwebtoken': ^9.0.10
     jsonwebtoken: ^9.0.3
   lodash:
-    "@types/lodash": ^4.17.24
+    '@types/lodash': ^4.17.25
     lodash: ^4.18.1
   sharedb:
-    "@types/sharedb": ^6.0.0
-    sharedb: ^6.0.1
+    '@types/sharedb': ^6.0.1
+    sharedb: ^6.0.2
   typescript:
     typescript: ~5.9.3
 
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
-  - "@opensystemslab/map@1.0.0-alpha.15"
+  - '@opensystemslab/map@1.0.0-alpha.15'

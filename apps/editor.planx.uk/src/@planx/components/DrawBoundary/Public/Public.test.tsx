@@ -203,7 +203,7 @@ test("captures output data in the correct format when uploading a file", async (
   // Wait for upload to complete
   const progressBar = screen.getByRole("progressbar");
   await waitFor(() => {
-    expect(progressBar).toHaveAttribute("aria-valuenow", "100");
+    expect(progressBar).toHaveValue(100);
   });
 
   await user.click(screen.getByTestId("continue-button"));
@@ -351,7 +351,7 @@ test("appends to existing '_requestedFiles' value", async () => {
   // Wait for upload to complete
   const progressBar = screen.getByRole("progressbar");
   await waitFor(() => {
-    expect(progressBar).toHaveAttribute("aria-valuenow", "100");
+    expect(progressBar).toHaveValue(100);
   });
 
   await user.click(screen.getByTestId("continue-button"));
