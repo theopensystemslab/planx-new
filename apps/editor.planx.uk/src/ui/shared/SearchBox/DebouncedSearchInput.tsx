@@ -1,5 +1,6 @@
 import type { DebouncedFunc } from "lodash";
 import { debounce } from "lodash";
+import type { Ref } from "react";
 import { useEffect, useRef, useState } from "react";
 
 import { SearchInput } from "./SearchInput";
@@ -16,6 +17,7 @@ interface DebouncedSearchInputProps {
   fullWidth?: boolean;
   placeholder?: string;
   debounceMs?: number;
+  inputRef?: Ref<HTMLInputElement>;
 }
 
 /**
@@ -34,6 +36,7 @@ export const DebouncedSearchInput = ({
   fullWidth = false,
   placeholder,
   debounceMs = DEFAULT_DEBOUNCE_MS,
+  inputRef,
 }: DebouncedSearchInputProps) => {
   const [localValue, setLocalValue] = useState(value);
   const [isSearching, setIsSearching] = useState(false);
@@ -84,6 +87,7 @@ export const DebouncedSearchInput = ({
       compact={compact}
       fullWidth={fullWidth}
       placeholder={placeholder}
+      inputRef={inputRef}
     />
   );
 };

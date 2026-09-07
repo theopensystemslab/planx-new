@@ -9,7 +9,7 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { cardBoxShadow } from "theme";
 import { DebouncedSearchInput } from "ui/shared/SearchBox/DebouncedSearchInput";
 
@@ -38,6 +38,7 @@ interface SearchModalProps {
 }
 
 export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
   const [tabIndex, setTabIndex] = useState(0);
   const [selectedFlow, setSelectedFlow] = useState<FlowSearchResult | null>(
@@ -82,6 +83,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
             flexDirection: "column",
           }),
         },
+        // Move focus into the search field once the dialog has finished opening
+        transition: {
+          onEntered: () => searchInputRef.current?.focus(),
+        },
       }}
     >
       <DialogContent
@@ -117,6 +122,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
             placeholder="Search flows across Plan✕"
             fullWidth
             hideLabel
+            inputRef={searchInputRef}
           />
         </Box>
         <Box sx={{ display: "flex", gap: 1, px: 3, pb: 2 }}>
