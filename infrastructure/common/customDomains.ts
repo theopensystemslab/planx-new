@@ -141,6 +141,11 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           domain: "planningservices.greatercambridgeplanning.org",
           cloudFrontState: "validation-only",
         },
+        {
+          name: "maidstone",
+          domain: "planningservices.maidstone.gov.uk",
+          cloudFrontState: "validation-only",
+        },
       ]
     : [
         // we keep one custom domain on staging to function as a canary (monitored by UptimeRobot)
