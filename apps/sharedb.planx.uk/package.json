@@ -6,9 +6,9 @@
     "@teamwork/websocket-json-stream": "^2.0.0",
     "dompurify": "catalog:",
     "jsdom": "catalog:",
-    "pg": "^8.19.0",
+    "pg": "^8.23.0",
     "sharedb": "catalog:sharedb",
-    "ws": "^8.21.1"
+    "ws": "^8.21.3"
   },
   "scripts": {
     "dev": "node --watch server.js",

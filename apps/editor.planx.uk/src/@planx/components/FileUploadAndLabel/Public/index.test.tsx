@@ -743,6 +743,6 @@ const uploadAndTagSingleFile = async (user: UserEvent) => {
   // Wait for upload to complete
   const progressBar = screen.getByRole("progressbar");
   await waitFor(() => {
-    expect(progressBar).toHaveAttribute("aria-valuenow", "100");
+    expect(progressBar).toHaveValue(100);
   });
 };

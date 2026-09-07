@@ -16,17 +16,17 @@
     "lint:fix": "eslint --fix '*.js' && prettier -w ."
   },
   "dependencies": {
-    "@eslint/js": "^9.39.0",
-    "@tanstack/eslint-plugin-query": "^5.83.0",
-    "@vitest/eslint-plugin": "^1.6.9",
+    "@eslint/js": "^9.39.5",
+    "@tanstack/eslint-plugin-query": "^5.102.8",
+    "@vitest/eslint-plugin": "^1.6.27",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jest-dom": "^5.5.0",
+    "eslint-plugin-jest-dom": "^5.10.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-playwright": "^2.2.0",
-    "eslint-plugin-react-hooks": "^7.0.0",
+    "eslint-plugin-playwright": "^2.11.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-simple-import-sort": "^13.0.0",
-    "eslint-plugin-testing-library": "^7.16.0",
-    "typescript-eslint": "^8.46.0"
+    "eslint-plugin-testing-library": "^7.16.2",
+    "typescript-eslint": "^8.68.0"
   },
   "devDependencies": {
     "@planx/prettier-config": "workspace:*",
