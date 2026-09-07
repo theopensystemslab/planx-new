@@ -354,7 +354,12 @@ function EditorNavMenu() {
     title: "Explore & search",
     Icon: FindInPageIcon,
     route: `/app/${teamSlug}/explore`,
-    accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"] satisfies Role[],
+    accessibleBy: [
+      "platformAdmin",
+      "teamAdmin",
+      "teamEditor",
+      "analyst",
+    ] satisfies Role[],
   };
 
   // Filter accessible routes within each section
