@@ -8,7 +8,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { visuallyHidden } from "@mui/utils";
 import type { FeeBreakdown as IFeeBreakdown } from "@opensystemslab/planx-core/types";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { formattedPriceWithCurrencySymbol } from "../../model";

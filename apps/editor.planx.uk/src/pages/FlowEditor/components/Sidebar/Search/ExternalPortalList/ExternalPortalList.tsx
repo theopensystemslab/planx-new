@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import type { Components } from "react-virtuoso";
 
 import type { Context, Data } from "..";

@@ -1,7 +1,6 @@
 import RadioGroup from "@mui/material/RadioGroup";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio/DescriptionRadio";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import {

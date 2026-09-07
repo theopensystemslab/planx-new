@@ -8,7 +8,6 @@ import type {
 import { generatePayload } from "@planx/components/shared/BaseChecklist/model";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import React from "react";
 
 import type { Checklist, ChecklistWithOptions } from "./model";
 import { parseChecklist, validationSchema } from "./model";

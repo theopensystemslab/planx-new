@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
-import React from "react";
 
 export const Route = createFileRoute(
   "/_public/_customDomain/$flow/pay/not-found",

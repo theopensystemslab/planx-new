@@ -5,7 +5,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { MENU_WIDTH_COMPACT } from "components/EditorNavMenu/styles";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
-import React, { useRef } from "react";
+import { useRef } from "react";
 
 import Flow from "./components/Flow";
 import { getParentId } from "./components/Flow/lib/utils";

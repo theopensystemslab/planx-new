@@ -1,7 +1,6 @@
 import type { InputBaseProps } from "@mui/material/InputBase";
 import InputBase from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
-import React from "react";
 
 const PREFIX = "InputField";
 

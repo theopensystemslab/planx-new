@@ -4,7 +4,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import type { FormikErrors } from "formik";
-import React from "react";
+import { useMemo } from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -71,7 +71,7 @@ export default function Component(props: Props) {
     props.formikRef,
   );
 
-  const sampleResult = React.useMemo(() => {
+  const sampleResult = useMemo(() => {
     try {
       const result = evaluate(
         formik.values.formula,
@@ -104,7 +104,7 @@ export default function Component(props: Props) {
     });
   };
 
-  const variables = React.useMemo(() => {
+  const variables = useMemo(() => {
     try {
       const variables = getVariables(formik.values.formula);
       removeUnusedDefaults(variables);

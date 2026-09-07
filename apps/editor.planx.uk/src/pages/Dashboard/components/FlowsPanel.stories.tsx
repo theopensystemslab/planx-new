@@ -7,7 +7,6 @@ import {
 } from "@tanstack/react-router";
 import { subDays, subHours, subMinutes } from "date-fns";
 import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
-import React from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { FlowsPanel } from "./FlowsPanel";

@@ -1,6 +1,5 @@
 import * as TanStackRouter from "@tanstack/react-router";
 import { screen } from "@testing-library/react";
-import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 

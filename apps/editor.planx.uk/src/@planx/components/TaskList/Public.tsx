@@ -2,7 +2,6 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
 import type { TaskList } from "@planx/components/TaskList/model";
-import React from "react";
 import NumberedList from "ui/public/NumberedList";
 
 export type Props = PublicProps<TaskList>;

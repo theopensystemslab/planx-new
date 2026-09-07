@@ -1,5 +1,4 @@
 import { screen } from "@testing-library/react";
-import React from "react";
 import { setup } from "test/utils";
 import type { SectionNode } from "types";
 import { SectionStatus } from "types";

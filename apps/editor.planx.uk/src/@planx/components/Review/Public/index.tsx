@@ -1,6 +1,5 @@
 import type { PublicProps } from "@planx/components/shared/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 import type { Review } from "../model";
 import { DEFAULT_REVIEW_DISCLAIMER } from "../model";

@@ -7,7 +7,6 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
-import React from "react";
 import Filters from "ui/editor/Filter/Filter";
 import type { SortableFields } from "ui/editor/SortControl/SortControl";
 import { SortControl } from "ui/editor/SortControl/SortControl";

@@ -2,7 +2,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRowItem from "ui/shared/InputRowItem";

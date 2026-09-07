@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import React from "react";
 
 const StyledListManagerHeader = styled(Box)(({ theme }) => ({
   display: "flex",

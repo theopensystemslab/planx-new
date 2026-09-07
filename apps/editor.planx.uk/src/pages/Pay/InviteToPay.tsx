@@ -9,7 +9,6 @@ import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import Banner from "ui/public/Banner";
 import ViewApplicationLink from "ui/public/ViewApplicationLink";
 

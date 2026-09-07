@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import components from "pages/FlowEditor/components/forms";
 import FormModal from "pages/FlowEditor/components/forms/FormModal";
-import React from "react";
 
 import { loader } from "./-loader";
 

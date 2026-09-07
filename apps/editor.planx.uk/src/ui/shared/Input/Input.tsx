@@ -2,7 +2,7 @@ import type { InputBaseClasses, InputBaseProps } from "@mui/material/InputBase";
 import InputBase from "@mui/material/InputBase";
 import { lighten, styled } from "@mui/material/styles";
 import type { ChangeEvent } from "react";
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,

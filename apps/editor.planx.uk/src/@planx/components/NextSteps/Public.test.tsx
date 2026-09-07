@@ -1,4 +1,3 @@
-import React from "react";
 import { setup } from "test/utils";
 import { axe } from "vitest-axe";
 

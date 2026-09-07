@@ -4,7 +4,6 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import capitalize from "lodash/capitalize";
 import type { HandleSubmit } from "pages/Preview/Node";
-import React from "react";
 
 import { Disclaimer } from "../../shared/Disclaimer";
 import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";

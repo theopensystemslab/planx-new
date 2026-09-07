@@ -8,7 +8,6 @@ import {
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikProvider } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
 import ModalSection from "ui/editor/ModalSection";

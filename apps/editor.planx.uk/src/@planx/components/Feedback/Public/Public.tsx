@@ -15,7 +15,6 @@ import {
   insertFeedbackMutation,
 } from "lib/feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import TerribleFace from "ui/images/feedback_filled-01.svg";
 import PoorFace from "ui/images/feedback_filled-02.svg";

@@ -1,6 +1,5 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
-import React from "react";
 
 import { ApplicationPath as AppPath } from "../../types";
 import ResumePage from "../Preview/Resume";

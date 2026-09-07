@@ -7,7 +7,6 @@ import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { ModalActions } from "pages/FlowEditor/components/Team/components/ModalActions";
 import { upsertMemberSchema } from "pages/FlowEditor/components/Team/formSchema";
-import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";

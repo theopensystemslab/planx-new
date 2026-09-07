@@ -1,5 +1,4 @@
 import { MyMap } from "@opensystemslab/map";
-import React from "react";
 import { setup } from "test/utils";
 import { it, vi } from "vitest";
 

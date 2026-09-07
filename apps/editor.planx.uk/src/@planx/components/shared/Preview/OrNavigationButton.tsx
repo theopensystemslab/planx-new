@@ -3,7 +3,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { ApplicationPath } from "types";
 
 import { contentFlowSpacing } from "./Card";

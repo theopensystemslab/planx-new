@@ -2,7 +2,6 @@ import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { Switch } from "ui/shared/Switch";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";

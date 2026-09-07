@@ -4,7 +4,6 @@ import { parseNotice, validationSchema } from "@planx/components/Notice/model";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import type { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ModalSection from "ui/editor/ModalSection";

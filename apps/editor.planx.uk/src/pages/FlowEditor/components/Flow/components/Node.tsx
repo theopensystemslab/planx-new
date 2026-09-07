@@ -9,7 +9,6 @@ import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React from "react";
 import { exhaustiveCheck } from "utils";
 
 import type { Store } from "../../../lib/store";

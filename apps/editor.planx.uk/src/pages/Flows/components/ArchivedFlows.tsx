@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 

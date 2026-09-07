@@ -1,6 +1,5 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
 import { Contract } from "./components/Contract";

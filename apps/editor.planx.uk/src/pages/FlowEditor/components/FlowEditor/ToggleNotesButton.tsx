@@ -1,6 +1,5 @@
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import ToggleIconButton from "ui/editor/ToggleIconButton";
 
 export const ToggleNotesButton: React.FC = () => {

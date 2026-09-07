@@ -1,6 +1,5 @@
 import LabelIcon from "@mui/icons-material/Label";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import ToggleIconButton from "ui/editor/ToggleIconButton";
 
 export const ToggleTagsButton: React.FC = () => {

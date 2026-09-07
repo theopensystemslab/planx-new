@@ -1,6 +1,5 @@
 import type { TextField } from "@planx/components/shared/Schema/model";
 import { getTextLimit, TextInputType } from "@planx/components/TextInput/model";
-import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";

@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import { useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 

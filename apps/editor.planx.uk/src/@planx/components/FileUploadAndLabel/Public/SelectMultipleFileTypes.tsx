@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { groupBy } from "lodash";
 import capitalize from "lodash/capitalize";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import Input from "ui/shared/Input/Input";

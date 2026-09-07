@@ -3,7 +3,6 @@ import type { SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { lowerCase, merge, upperFirst } from "lodash";
-import React from "react";
 import { ModalSubtitle } from "ui/editor/ModalSubtitle";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";

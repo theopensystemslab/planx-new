@@ -10,13 +10,7 @@ import Mention from "@tiptap/extension-mention";
 import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
 import type { ChangeEvent } from "react";
-import React, {
-  type FC,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type FC, useCallback, useEffect, useRef, useState } from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Input from "../../shared/Input/Input";

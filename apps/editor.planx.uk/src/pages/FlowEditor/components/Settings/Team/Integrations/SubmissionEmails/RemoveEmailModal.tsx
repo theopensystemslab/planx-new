@@ -10,7 +10,6 @@ import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 import { DELETE_TEAM_SUBMISSION_EMAILS } from "./queries";
 import type { EditorModalProps, SubmissionEmailWithFlows } from "./types";

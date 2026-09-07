@@ -3,7 +3,6 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 const Root = styled(LinearProgress)(({ theme }) => ({
   height: theme.spacing(2),

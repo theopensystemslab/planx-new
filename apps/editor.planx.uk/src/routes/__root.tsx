@@ -8,7 +8,6 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
-import React from "react";
 import { createPortal } from "react-dom";
 import { z } from "zod";
 

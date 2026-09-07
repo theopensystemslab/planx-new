@@ -3,7 +3,6 @@ import type { FormikProps } from "formik";
 import type { Store } from "pages/FlowEditor/lib/store";
 import type { HandleSubmit } from "pages/Preview/Node";
 import type { MutableRefObject } from "react";
-import React from "react";
 
 import type { Option } from "../Option/model";
 

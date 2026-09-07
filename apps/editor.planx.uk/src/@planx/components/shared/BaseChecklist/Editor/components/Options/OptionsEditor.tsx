@@ -1,7 +1,6 @@
 import type { Option } from "@planx/components/Option/model";
 import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
 import type { OptionEditor } from "@planx/components/shared/BaseOptionsEditor/types";
-import React from "react";
 import type { EditorProps } from "ui/editor/ListManager/ListManager";
 import SimpleMenu from "ui/editor/SimpleMenu";
 

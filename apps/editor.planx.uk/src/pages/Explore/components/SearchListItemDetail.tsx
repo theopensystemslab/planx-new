@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import CheckCircleIcon from "ui/icons/CheckCircle";
 

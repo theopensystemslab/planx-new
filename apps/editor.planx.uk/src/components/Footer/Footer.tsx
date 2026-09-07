@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatServiceLastUpdated } from "pages/FlowEditor/utils";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 

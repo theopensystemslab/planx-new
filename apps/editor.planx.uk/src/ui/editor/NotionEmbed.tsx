@@ -1,5 +1,3 @@
-import React from "react";
-
 const NOTION_PAGES = {
   resources: "6b896f88be4c4b4c8ec8474a34c70d7c",
   onboarding: "2e6ea7226c53440280fbd0aaaa1a0fa3",
