@@ -34,16 +34,16 @@ describe("when the Feedback component is rendered", async () => {
 
     const ratingButtons = screen.getAllByRole("button");
 
-    // user tabs through all rating buttons and selects the last one
+    // The rating buttons are an exclusive ToggleButtonGroup, which uses a roving tabindex
     await user.tab();
     expect(ratingButtons[0]).toHaveFocus();
-    await user.tab();
+    await user.keyboard("{ArrowRight}");
     expect(ratingButtons[1]).toHaveFocus();
-    await user.tab();
+    await user.keyboard("{ArrowRight}");
     expect(ratingButtons[2]).toHaveFocus();
-    await user.tab();
+    await user.keyboard("{ArrowRight}");
     expect(ratingButtons[3]).toHaveFocus();
-    await user.tab();
+    await user.keyboard("{ArrowRight}");
     expect(ratingButtons[4]).toHaveFocus();
     await user.keyboard("[Space]"); // select 'Excellent' button
 
