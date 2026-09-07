@@ -627,19 +627,8 @@ const getThemeOptions = ({
           role: "dialog",
         },
         styleOverrides: {
-          root: ({ theme, open }) => ({
-            width: 600,
-            flexShrink: 0,
+          root: ({ theme }) => ({
             color: theme.palette.text.primary,
-            transition: theme.transitions.create("margin", {
-              easing: theme.transitions.easing.easeOut,
-              duration: theme.transitions.duration.enteringScreen,
-            }),
-            marginRight: open ? 0 : -600,
-            [theme.breakpoints.only("xs")]: {
-              width: "100%",
-              marginRight: "-100%",
-            },
           }),
           paper: ({ theme }) => ({
             width: "100%",
