@@ -364,7 +364,7 @@ jobs:
           host: ${{ env.FULL_DOMAIN }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          command_timeout: 10m
+          # command_timeout: 10m
           # TODO: some of below script might be superfluous for server update (rather than create)
           script: |
             apk update
