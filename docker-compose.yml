@@ -2,9 +2,7 @@ services:
   postgres:
     platform: linux/amd64
     container_name: postgres
-    build:
-      context: ./apps/postgres
-      dockerfile: Dockerfile
+    image: ghcr.io/theopensystemslab/planx-postgres:latest
     restart: unless-stopped
     ports:
       - "${PG_PORT}:5432"
