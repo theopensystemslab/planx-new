@@ -1,7 +1,6 @@
+import { getFileExtension } from "@planx/file-upload";
 import type { RequestHandler } from "express";
 import { fileTypeFromBuffer, supportedExtensions } from "file-type";
-
-import { getFileExtension } from "./utils.js";
 
 /**
  * Maps our accepted extension variants to file-type's canonical 'ext' values

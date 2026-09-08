@@ -1,30 +1,40 @@
-import { ALLOWED_EXTENSIONS, MAX_UPLOAD_SIZE_BYTES } from "@planx/file-upload";
+import { ALLOWED_EXTENSIONS, MAX_UPLOAD_SIZE_MB } from "@planx/file-upload";
 import type { FileRejection } from "react-dropzone";
+import { ErrorCode } from "react-dropzone";
 
 /**
- * Shows an alert to the user with errors that are probably going to
- * be related to either invalid file size or type.
+ * Builds a user-facing alert for a rejection by react-dropzone.
  *
  * @param fileRejections - array of errors provided by Dropzone
+ * @param allowedExtensions - defaults to the full allowlist; can also pass a narrower list
  */
-function handleRejectedUpload(fileRejections: Array<FileRejection>) {
+export const getRejectionMessage = (
+  fileRejections: Array<FileRejection>,
+  allowedExtensions: string[] = ALLOWED_EXTENSIONS,
+): string => {
   // XXX: There can be multiple file rejections with different errors
   // We display only the first error to keep the UI simple and easy to understand
-  const errorCode = fileRejections[0].errors[0].code;
-  const message = (() => {
-    switch (errorCode) {
-      case "file-too-large":
-        return `File must be smaller than ${MAX_UPLOAD_SIZE_BYTES * 1e-6}MB`;
-      case "file-invalid-type":
-        return (
-          "File must be one of the following types: " +
-          ALLOWED_EXTENSIONS.map((ext) => ext.replace(/^\./, "")).join(", ")
-        );
-      default:
-        return fileRejections[0].errors[0].message;
-    }
-  })();
-  window.alert(message);
+  const { code, message } = fileRejections[0].errors[0];
+
+  switch (code) {
+    case ErrorCode.FileTooLarge:
+      return `File must be smaller than ${MAX_UPLOAD_SIZE_MB}MB`;
+    case ErrorCode.FileInvalidType:
+      return (
+        "File must be one of the following types: " +
+        allowedExtensions.map((ext) => ext.replace(/^\./, "")).join(", ")
+      );
+    default:
+      return message;
+  }
+};
+
+/**
+ * Shows the above as an alert/modal. Dropzones with somewhere better to put an error
+ * (e.g. an ErrorWrapper or tooltip) should call getRejectionMessage directly.
+ */
+function handleRejectedUpload(fileRejections: Array<FileRejection>) {
+  window.alert(getRejectionMessage(fileRejections));
 }
 
 export default handleRejectedUpload;
