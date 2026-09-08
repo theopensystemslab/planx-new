@@ -59,7 +59,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "gateshead",
           domain: "planningservices.gateshead.gov.uk",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "cutover-ongoing",
         },
         {
           name: "gloucester",
