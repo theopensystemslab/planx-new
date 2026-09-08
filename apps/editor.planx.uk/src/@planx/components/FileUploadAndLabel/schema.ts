@@ -139,7 +139,7 @@ export const slotsSchema = array()
       if (!missingRequiredNames.length) return true;
 
       return ctx.createError({
-        message: `Upload and label: ${missingRequiredNames.join(", ")}`,
+        message: `Upload and label files containing: ${missingRequiredNames.join(", ")}`,
       });
     },
   });
