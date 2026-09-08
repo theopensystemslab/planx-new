@@ -3,17 +3,25 @@ import { gql, useQuery } from "@apollo/client";
 export interface FlowsWhere {
   is_template?: { _eq: boolean };
   can_create_from_copy?: { _eq: boolean };
+  templated_from?: { _is_null: boolean };
 }
 
 export type FlowFilter = "all" | "templates" | "copyable";
 
-const FILTER_WHERE: Record<FlowFilter, FlowsWhere | undefined> = {
-  all: undefined,
+// Exclude templated flows, showing only source templates and subscriptions within that
+const EXCLUDE_TEMPLATED_FLOWS: FlowsWhere = {
+  templated_from: { _is_null: true },
+};
+
+const FILTER_WHERE: Record<FlowFilter, FlowsWhere> = {
+  all: EXCLUDE_TEMPLATED_FLOWS,
   templates: {
+    ...EXCLUDE_TEMPLATED_FLOWS,
     is_template: { _eq: true },
     can_create_from_copy: { _eq: true },
   },
   copyable: {
+    ...EXCLUDE_TEMPLATED_FLOWS,
     is_template: { _eq: false },
     can_create_from_copy: { _eq: true },
   },
