@@ -11,11 +11,10 @@ import { useStore } from "../../../FlowEditor/lib/store";
 import type { FlowSummary } from "../../../FlowEditor/lib/store/editor";
 import ActiveFlowMenu from "../ActiveFlowMenu";
 import ArchivedFlowMenu from "../ArchivedFlowMenu";
+import { FlowIndicator } from "../FlowIndicator";
 import { FlowPinButton } from "../FlowPinButton";
-import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
 import { useFlowMetadata } from "../hooks/useFlowMetadata";
-import { PatternIndicator } from "../PatternIndicator";
 import {
   Card,
   CardBanner,
@@ -74,16 +73,21 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
       >
         {isAnyTemplate && (
           <CardBanner>
-            <FlowTemplateIndicator
+            <FlowIndicator
               isSourceTemplate={isSourceTemplate}
               isTemplatedFlow={isTemplatedFlow}
+              isPattern={isPattern}
               teamName={flow.template?.team.name}
             />
           </CardBanner>
         )}
         {isPattern && (
           <PatternCardBanner>
-            <PatternIndicator />
+            <FlowIndicator
+              isSourceTemplate={isSourceTemplate}
+              isTemplatedFlow={isTemplatedFlow}
+              isPattern={isPattern}
+            />
           </PatternCardBanner>
         )}
         <CardContent>

@@ -13,12 +13,11 @@ import TruncatedText from "ui/editor/TruncatedText";
 import { useStore } from "../../../FlowEditor/lib/store";
 import ActiveFlowMenu from "../ActiveFlowMenu";
 import ArchivedFlowMenu from "../ArchivedFlowMenu";
+import { FlowIndicator } from "../FlowIndicator";
 import { FlowPinButton } from "../FlowPinButton";
-import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
 import { useFlowMetadata } from "../hooks/useFlowMetadata";
 import { useFlowSortDisplay } from "../hooks/useFlowSortDisplay";
-import { PatternIndicator } from "../PatternIndicator";
 import {
   FlowActionsCell,
   FlowDateCell,
@@ -149,18 +148,14 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     >
       <FlowTitleCell>
         <Box>
-          {isAnyTemplate && (
+          {(isAnyTemplate || isPattern) && (
             <Box sx={{ mb: 0.5 }}>
-              <FlowTemplateIndicator
+              <FlowIndicator
                 isSourceTemplate={isSourceTemplate}
                 isTemplatedFlow={isTemplatedFlow}
+                isPattern={isPattern}
                 teamName={flow.template?.team.name}
               />
-            </Box>
-          )}
-          {isPattern && (
-            <Box sx={{ mb: 0.5 }}>
-              <PatternIndicator />
             </Box>
           )}
           <Typography variant="h4" component="span">
