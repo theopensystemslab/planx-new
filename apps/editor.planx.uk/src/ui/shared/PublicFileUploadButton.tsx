@@ -5,8 +5,14 @@ import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { createExtensionValidator } from "@planx/components/shared/extensionValidator";
 import { getRejectionMessage } from "@planx/components/shared/handleRejectedUpload";
-import { MAX_UPLOAD_SIZE_BYTES } from "@planx/file-upload";
-import { uploadPublicFile } from "lib/api/fileUpload/requests";
+import {
+  getAllowedExtensions,
+  MAX_UPLOAD_SIZE_BYTES,
+} from "@planx/file-upload";
+import {
+  uploadPublicFile,
+  waitForPublicFile,
+} from "lib/api/fileUpload/requests";
 import { useCallback, useEffect, useState } from "react";
 import type { FileRejection, FileWithPath } from "react-dropzone";
 import { useDropzone } from "react-dropzone";
@@ -115,8 +121,23 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
       }
       setStatus({ type: "loading" });
       uploadPublicFile(file)
-        .then(({ fileUrl }) => {
-          setStatus({ type: "none" });
+        // we wait while uploaded object is scanned, i.e. until it is fetchable, else
+        // whatever we hand to onChange renders as a broken image until page refresh
+        .then(async ({ fileUrl }) => {
+          const { status } = await waitForPublicFile(fileUrl);
+
+          if (status === "rejected") {
+            return setStatus({
+              type: "error",
+              msg: "File could not be processed. Please try again.",
+            });
+          } else if (status === "pending") {
+            setStatus({
+              type: "error",
+              msg: "File uploaded - your image may take a moment to appear",
+            });
+          } else setStatus({ type: "none" });
+
           onChange && onChange(fileUrl);
         })
         .catch(() => {
@@ -130,10 +151,9 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
   );
 
   const accept = acceptedFileTypes || DEFAULT_FILETYPES;
-
   // `accept` alone is not enough (see extensionValidator.ts). For example, DEFAULT_FILETYPES uses the
   // `image/*` wildcard, which would otherwise let through image formats the API refuses (e.g. .avif, .heic)
-  const allowedExtensions = Object.values(accept).flat();
+  const allowedExtensions = getAllowedExtensions(accept);
 
   // rather than using window.alert, we use the native error display in this component
   const onDropRejected = (fileRejections: FileRejection[]) =>

@@ -31,7 +31,9 @@ const apiCors = cors({
     "Origin",
     "X-Requested-With",
   ],
-  exposedHeaders: ["Content-Disposition"],
+  // Content-Disposition lets browser JS read the filename off a download. Retry-After is sent with
+  // a 503 FILE_SCAN_PENDING, so a client waiting on a file it just uploaded can read the interval
+  exposedHeaders: ["Content-Disposition", "Retry-After"],
 });
 
 const skipApiCors = ["/proxy/ordnance-survey"];

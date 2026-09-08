@@ -6,6 +6,17 @@ import { getScanStatus } from "./scanStatus.js";
 import { s3Factory } from "./utils.js";
 
 /**
+ * Relaxes helmet's default `same-origin` policy, which would otherwise have the browser block the response
+ * before the client sees it (recall that a subdomain is a separate origin, although the same site).
+ *
+ * Needed on error responses as well as success, o/w a client cannot tell a 'pending' file from other failures.
+ */
+export const PUBLIC_FILE_CROSS_ORIGIN_RESOURCE_POLICY = {
+  // one of `same-origin`, `same-site` or `cross-origin` - any other value is simply ignored
+  "cross-origin-resource-policy": "cross-origin",
+} as const;
+
+/**
  * Headers we are willing to pass on from S3, plus additional protections.
  *
  * Deliberately does *not* include Content-Type or Content-Disposition. Callers to getFile set both via
@@ -16,7 +27,7 @@ import { s3Factory } from "./utils.js";
 const buildHeaders = (file: GetObjectCommandOutput) => {
   const headers: Record<string, string> = {
     // allows the editor to load public-bucket images cross-origin
-    "cross-origin-resource-policy": "cross-site",
+    ...PUBLIC_FILE_CROSS_ORIGIN_RESOURCE_POLICY,
     // our Content-Type is authoritative - never let a browser sniff its way past it
     "X-Content-Type-Options": "nosniff",
   };

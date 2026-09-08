@@ -77,11 +77,16 @@ export const PREVIEWABLE_MIME_TYPES: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * Flat, deduplicated list of allowed extensions, derived from ALLOWED_EXTENSIONS_BY_MIME_TYPE above.
+ * Get flat, deduplicated list of allowed extensions from a MIME type to extensions map.
  * Used to 'validate' files by extension only (since MIME types are not reliable).
  */
-export const ALLOWED_EXTENSIONS: string[] = Array.from(
-  new Set(Object.values(ALLOWED_EXTENSIONS_BY_MIME_TYPE).flat()),
+export const getAllowedExtensions = (
+  allowedExtensionsByMimeType: Record<string, string[]>,
+): string[] =>
+  Array.from(new Set(Object.values(allowedExtensionsByMimeType).flat()));
+
+export const ALLOWED_EXTENSIONS: string[] = getAllowedExtensions(
+  ALLOWED_EXTENSIONS_BY_MIME_TYPE,
 );
 
 /**

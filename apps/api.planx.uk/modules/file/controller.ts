@@ -9,6 +9,7 @@ import {
   getFileFromS3,
   type GetFileResult,
   headFileInS3,
+  PUBLIC_FILE_CROSS_ORIGIN_RESOURCE_POLICY,
 } from "./service/getFile.js";
 import { uploadPrivateFile, uploadPublicFile } from "./service/uploadFile.js";
 import { buildFilePath, safeDecode } from "./service/utils.js";
@@ -96,6 +97,25 @@ type DownloadNext = Parameters<DownloadController>[2];
 const SCAN_RETRY_AFTER_SECONDS = 30;
 
 /**
+ * Public files are worth caching. Team logos in particular are served on many pages,
+ * and each uncached hit costs us a full S3 read into memory.
+ *
+ * Without this, browsers fall back to heuristic freshness based on `Last-Modified`.
+ * See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching
+ */
+const PUBLIC_FILE_CACHE_CONTROL_SUCCESS = {
+  "cache-control": "public, max-age=3600",
+} as const;
+
+/**
+ * Note the public GET route has no useNoCache (unlike private), so we set this on error responses to
+ * keep failures out of caches, e.g. a cached 503 would leave a file looking broken when it's servable.
+ */
+const PUBLIC_FILE_CACHE_CONTROL_SUCCESS_FAILURE = {
+  "cache-control": "no-store",
+} as const;
+
+/**
  * Map a failed read of the user-data bucket onto an HTTP response.
  *
  * Request bodies should carry a stable code: councils and their integrations can branch on
@@ -107,10 +127,13 @@ const handleFileError = (
   res: DownloadResponse,
   next: DownloadNext,
 ) => {
+  res.set({
+    ...PUBLIC_FILE_CROSS_ORIGIN_RESOURCE_POLICY,
+    ...PUBLIC_FILE_CACHE_CONTROL_SUCCESS_FAILURE,
+  });
+
   switch (result.outcome) {
     case "pending-scan":
-      // 503 is the only status where Retry-After is formally defined, and the code
-      // distinguishes this from a genuine outage
       return res
         .status(503)
         .set("Retry-After", String(SCAN_RETRY_AFTER_SECONDS))
@@ -164,8 +187,15 @@ export const publicDownloadController: DownloadController = async (
 
   // public route should not reveal that a private file exists
   if (result.isPrivate)
-    return res.status(404).json({ error: "FILE_NOT_FOUND" });
+    return res
+      .status(404)
+      .set({
+        ...PUBLIC_FILE_CROSS_ORIGIN_RESOURCE_POLICY,
+        ...PUBLIC_FILE_CACHE_CONTROL_SUCCESS_FAILURE,
+      })
+      .json({ error: "FILE_NOT_FOUND" });
 
+  res.set(PUBLIC_FILE_CACHE_CONTROL_SUCCESS);
   return sendFile(result, res);
 };
 

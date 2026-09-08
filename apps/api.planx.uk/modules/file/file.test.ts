@@ -618,7 +618,7 @@ describe("File download", () => {
 
     it("allows cross-origin embedding, which the editor relies on for public images", async () => {
       const res = await get("somekey/file_name.txt").expect(200);
-      expect(res.headers["cross-origin-resource-policy"]).toBe("cross-site");
+      expect(res.headers["cross-origin-resource-policy"]).toBe("cross-origin");
     });
 
     it("emits a valid HTTP-date for Last-Modified, and no phantom headers", async () => {
@@ -661,6 +661,15 @@ describe("File download", () => {
         .then((_res) => {
           expect(mockGetObject).toHaveBeenCalledTimes(1);
         });
+    });
+
+    it("lets a public file be cached", async () => {
+      await supertest(app)
+        .get("/file/public/somekey/file_name.txt")
+        .expect(200)
+        .then((res) =>
+          expect(res.headers["cache-control"]).toBe("public, max-age=3600"),
+        );
     });
 
     it("should not download private files", async () => {
@@ -837,6 +846,39 @@ describe("File download", () => {
         expect(mockGetObjectTagging).not.toHaveBeenCalled();
       });
 
+      it("relaxes helmet's cross-origin resource policy on a failure, as on a success", async () => {
+        getObjectResponse = {
+          ...getObjectResponse,
+          LastModified: new Date("2026-08-01T00:00:00Z"),
+          TagCount: 0,
+        };
+
+        await get()
+          .expect(503)
+          .then((res) =>
+            expect(res.headers["cross-origin-resource-policy"]).toBe(
+              "cross-origin",
+            ),
+          );
+      });
+
+      it.each([
+        // the private route is covered by useNoCache middleware in all cases
+        ["private", () => get()],
+        // whereas cache control for the public route is handled directly in the controller
+        ["public", () => supertest(app).get(`/file/public/${FILE_PATH}`)],
+      ])("refuses to let a %s failure be cached", async (_route, request) => {
+        getObjectResponse = {
+          ...getObjectResponse,
+          LastModified: new Date("2026-08-01T00:00:00Z"),
+          TagCount: 0,
+        };
+
+        await request()
+          .expect(503)
+          .then((res) => expect(res.headers["cache-control"]).toBe("no-store"));
+      });
+
       it("returns 503 FILE_SCAN_PENDING when non-Scanii tags are present", async () => {
         getObjectResponse = {
           ...getObjectResponse,
@@ -870,7 +912,12 @@ describe("File download", () => {
 
         await get()
           .expect(404)
-          .then((res) => expect(res.body.error).toBe("FILE_FLAGGED"));
+          .then((res) => {
+            expect(res.body.error).toBe("FILE_FLAGGED");
+            expect(res.headers["cross-origin-resource-policy"]).toBe(
+              "cross-origin",
+            );
+          });
       });
 
       // regression: "None" is what the Lambda actually writes for a clean file
