@@ -8,7 +8,7 @@ export interface FlowsWhere {
 
 export type FlowFilter = "all" | "templates" | "copyable";
 
-// Exclude templated flows, showing only source templates and subscriptions within that
+// Exclude templated flows, showing only source templates and subscriptions within those
 const EXCLUDE_TEMPLATED_FLOWS: FlowsWhere = {
   templated_from: { _is_null: true },
 };
