@@ -17,9 +17,13 @@ components:
           type: string
           format: date-time
           description: When the underlying Notion fetch ran (not when the cache was read)
+        pageId:
+          type: string
+          description: The Notion page id the content was taken from
       required:
         - markdown
         - fetchedAt
+        - pageId
 
 paths:
   /notion/component-guide:
@@ -27,9 +31,19 @@ paths:
       tags: ["notion"]
       summary: Get the "How to use this component" guide
       description: >
-        Returns the child blocks of a fixed Notion page, converted to CommonMark,
-        for rendering in the editor's node modal. Responses are cached in-memory
-        for ~10 minutes.
+        Returns the child blocks of a Notion page, converted to CommonMark, for
+        rendering in the editor's node modal. Defaults to a fixed page; pass
+        `?pageId` to read a different one. Responses are cached in-memory per
+        page id for ~10 minutes.
+      parameters:
+        - in: query
+          name: pageId
+          required: false
+          schema:
+            type: string
+          description: >
+            A 32-character Notion page id (dashed or bare). Overrides the default
+            source page.
       responses:
         "200":
           description: Successfully fetched and converted the Notion page

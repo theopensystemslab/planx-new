@@ -8,7 +8,8 @@ export const componentGuideController: ComponentGuideController = async (
   next,
 ) => {
   try {
-    const result = await getComponentGuideMarkdown();
+    const { pageId } = res.locals.parsedReq.query;
+    const result = await getComponentGuideMarkdown(pageId);
     return res.json(result);
   } catch (error) {
     if (error instanceof ServerError) return next(error);

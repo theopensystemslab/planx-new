@@ -84,7 +84,37 @@ describe("GET /notion/component-guide", () => {
           "## Overview\n\nFirst line.\n\nSecond line.",
         );
         expect(res.body.fetchedAt).toEqual(expect.any(String));
+        expect(res.body.pageId).toBe(COMPONENT_GUIDE_PAGE_ID);
       });
+  });
+
+  it("reads a different page when ?pageId is given", async () => {
+    const overrideId = "0123456789abcdef0123456789abcdef";
+    nock(NOTION_HOST)
+      .get(childrenPath(overrideId))
+      .query(true)
+      .reply(200, {
+        results: [paragraph("Override content.")],
+        next_cursor: null,
+        has_more: false,
+      });
+
+    await supertest(app)
+      // dashed UUID form is accepted and normalised to the bare id
+      .get(
+        "/notion/component-guide?pageId=01234567-89ab-cdef-0123-456789abcdef",
+      )
+      .expect(200)
+      .then((res) => {
+        expect(res.body.markdown).toBe("Override content.");
+        expect(res.body.pageId).toBe(overrideId);
+      });
+  });
+
+  it("rejects a malformed ?pageId with 400", async () => {
+    await supertest(app)
+      .get("/notion/component-guide?pageId=not-a-notion-id")
+      .expect(400);
   });
 
   it("recursively fetches nested blocks", async () => {

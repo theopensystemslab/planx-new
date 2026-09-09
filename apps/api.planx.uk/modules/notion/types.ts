@@ -1,4 +1,6 @@
-import type { RequestHandler } from "express";
+import { z } from "zod";
+
+import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 
 /**
  * A deliberately narrow subset of Notion's API types — only the fields the
@@ -71,9 +73,24 @@ export interface ComponentGuideResponse {
   markdown: string;
   /** ISO timestamp of when the underlying Notion fetch ran (not the cache read) */
   fetchedAt: string;
+  /** The Notion page id the content was taken from (default or the `?pageId` override) */
+  pageId: string;
 }
 
-export type ComponentGuideController = RequestHandler<
-  Record<string, never>,
+// A Notion page id is 32 hex chars; accept it dashed (UUID form) or bare
+export const componentGuideSchema = z.object({
+  query: z.object({
+    pageId: z
+      .string()
+      .transform((value) => value.replace(/-/g, "").toLowerCase())
+      .refine((value) => /^[0-9a-f]{32}$/.test(value), {
+        message: "pageId must be a 32-character Notion page id",
+      })
+      .optional(),
+  }),
+});
+
+export type ComponentGuideController = ValidatedRequestHandler<
+  typeof componentGuideSchema,
   ComponentGuideResponse
 >;
