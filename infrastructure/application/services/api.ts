@@ -125,6 +125,10 @@ export const createApiService = async ({
           value: config.requireSecret("ai-gateway-api-key"),
         },
         {
+          name: "NOTION_API_KEY",
+          value: config.requireSecret("notion-api-key"),
+        },
+        {
           name: "FILE_API_KEY",
           value: config.requireSecret("file-api-key"),
         },

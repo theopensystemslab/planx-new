@@ -1,0 +1,43 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: notion
+    description: Content sourced from Notion
+components:
+  schemas:
+    ComponentGuideResponse:
+      type: object
+      properties:
+        markdown:
+          type: string
+          description: CommonMark rendering of the source Notion page's block tree
+        fetchedAt:
+          type: string
+          format: date-time
+          description: When the underlying Notion fetch ran (not when the cache was read)
+      required:
+        - markdown
+        - fetchedAt
+
+paths:
+  /notion/component-guide:
+    get:
+      tags: ["notion"]
+      summary: Get the "How to use this component" guide
+      description: >
+        Returns the child blocks of a fixed Notion page, converted to CommonMark,
+        for rendering in the editor's node modal. Responses are cached in-memory
+        for ~10 minutes.
+      responses:
+        "200":
+          description: Successfully fetched and converted the Notion page
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComponentGuideResponse"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+        "502":
+          $ref: "#/components/responses/ErrorMessage"
