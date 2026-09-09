@@ -107,7 +107,6 @@ const Node: React.FC<any> = (props) => {
       //   from the source template unless within a templated folder
       const showNoteComponent =
         showNotes &&
-        node.id &&
         (!isTemplatedFrom ||
           showNoteInTemplatedFlow(node.id, flow, orderedFlow));
 
