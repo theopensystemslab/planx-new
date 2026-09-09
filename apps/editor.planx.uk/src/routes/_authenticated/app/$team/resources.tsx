@@ -1,6 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
-import NotionEmbed from "ui/editor/NotionEmbed";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
+// Legacy path. The docs now open in a dialog via `?guide` (see EditorNavMenu),
+// so redirect old links onto a real page with the dialog open.
 export const Route = createFileRoute("/_authenticated/app/$team/resources")({
-  component: () => <NotionEmbed page="resources" title="Resources" />,
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: "/app/$team/flows",
+      params: { team: params.team },
+      search: { guide: "resources" },
+    });
+  },
 });

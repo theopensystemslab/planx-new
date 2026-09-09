@@ -5,6 +5,8 @@ import { vi } from "vitest";
 
 import EditorNavMenu from "./EditorNavMenu";
 
+let mockSearch: Record<string, unknown> = {};
+
 vi.mock("@tanstack/react-router", async () => {
   const actual = await vi.importActual("@tanstack/react-router");
   return {
@@ -13,6 +15,18 @@ vi.mock("@tanstack/react-router", async () => {
     useNavigate: vi.fn(() => vi.fn()),
     useParams: vi.fn(() => ({})),
     useLoaderData: vi.fn(() => ({ teams: [] })),
+    useSearch: vi.fn((opts?: { select?: (s: unknown) => unknown }) =>
+      opts?.select ? opts.select(mockSearch) : mockSearch,
+    ),
+  };
+});
+
+// Stub the embed so jsdom doesn't try to load the real notion.site iframe
+vi.mock("ui/editor/NotionEmbed", async () => {
+  const React = await import("react");
+  return {
+    default: ({ title }: { title: string }) =>
+      React.createElement("iframe", { title }),
   };
 });
 
@@ -82,6 +96,7 @@ const setRouteContext = (
 afterEach(() => {
   vi.clearAllMocks();
   mockAnalyticsLink = undefined;
+  mockSearch = {};
 });
 
 describe("globalLayoutRoutes", () => {
@@ -155,6 +170,47 @@ describe("teamLayoutRoutes", () => {
     expect(getByText("Settings")).toBeInTheDocument();
     expect(getByText("Data")).toBeInTheDocument();
     expect(getByText("Documentation")).toBeInTheDocument();
+  });
+
+  it("opens a doc item via the ?guide search param, not by navigating pages", async () => {
+    const mockNavigate = vi.fn();
+    vi.mocked(TanStackRouter.useNavigate).mockReturnValue(mockNavigate);
+    mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
+
+    const { getByRole, queryByRole, user } = await setup(<EditorNavMenu />);
+    expect(queryByRole("dialog")).not.toBeInTheDocument();
+
+    await user.click(getByRole("button", { name: "Documentation" }));
+    await user.click(getByRole("button", { name: "Resources" }));
+
+    expect(mockNavigate).toHaveBeenCalledTimes(1);
+    const [arg] = mockNavigate.mock.calls[0];
+    expect(arg.to).toBe(".");
+    // search is an updater that only sets `guide`, leaving the rest of the URL
+    expect(arg.search({ existing: 1 })).toEqual({
+      existing: 1,
+      guide: "resources",
+    });
+  });
+
+  it("shows the Notion dialog when ?guide is set", async () => {
+    const mockNavigate = vi.fn();
+    vi.mocked(TanStackRouter.useNavigate).mockReturnValue(mockNavigate);
+    mockSearch = { guide: "resources" };
+    mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
+
+    const { getByRole, user } = await setup(<EditorNavMenu />);
+
+    const dialog = getByRole("dialog");
+    expect(within(dialog).getByTitle("Resources")).toBeInTheDocument();
+
+    // Closing clears the guide param
+    await user.click(within(dialog).getByRole("button", { name: "Close" }));
+    const [arg] = mockNavigate.mock.calls.at(-1)!;
+    expect(arg.search({ guide: "resources", other: 2 })).toEqual({
+      other: 2,
+      guide: undefined,
+    });
   });
 });
 

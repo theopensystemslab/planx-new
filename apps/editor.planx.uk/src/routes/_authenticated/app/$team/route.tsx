@@ -1,13 +1,24 @@
 import type { Team } from "@opensystemslab/planx-core/types";
 import { createFileRoute, notFound, Outlet } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
+import { z } from "zod";
 
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
 
+// `guide` opens a Notion documentation page in a dialog (rendered by
+// EditorNavMenu) without changing the pathname, so the page behind stays mounted
+const teamSearchSchema = z.object({
+  guide: z.enum(["resources", "onboarding", "tutorials"]).optional(),
+});
+
+export type TeamSearchParams = z.infer<typeof teamSearchSchema>;
+
 export const Route = createFileRoute("/_authenticated/app/$team")({
+  validateSearch: zodValidator(teamSearchSchema),
   pendingComponent: RouteLoadingIndicator,
   beforeLoad: async ({ params }) => {
     const { data } = await client.query<{ teams: Team[] }>({

@@ -13,8 +13,10 @@ const NOTION_PAGES = {
   },
 } as const;
 
+export type NotionEmbedPage = keyof typeof NOTION_PAGES;
+
 const NotionEmbed: React.FC<{
-  page: keyof typeof NOTION_PAGES;
+  page: NotionEmbedPage;
   title: string;
 }> = ({ page, title }) => {
   const entry = NOTION_PAGES[page];

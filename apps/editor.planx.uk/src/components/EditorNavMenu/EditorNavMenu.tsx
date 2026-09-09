@@ -22,6 +22,7 @@ import {
   useMatches,
   useNavigate,
   useParams,
+  useSearch,
 } from "@tanstack/react-router";
 import AccountMenu from "components/AccountMenu";
 import { useFlowAnalyticsLink } from "hooks/analyticsLinks/useFlowAnalyticsLink";
@@ -30,6 +31,7 @@ import { AVAILABLE_FEATURE_FLAGS, hasFeatureFlag } from "lib/featureFlags";
 import { isSystemTeam } from "lib/systemTeams";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useRef, useState } from "react";
+import NotionDialog from "ui/editor/NotionDialog";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
@@ -51,7 +53,7 @@ import {
   Root,
   Subtitle,
 } from "./styles";
-import type { MenuSection, Route } from "./types";
+import type { GuidePage, MenuSection, Route } from "./types";
 
 function EditorNavMenu() {
   const navigate = useNavigate();
@@ -100,6 +102,33 @@ function EditorNavMenu() {
       navigate({ to: route });
     }
   };
+
+  // The `?guide` search param opens a Notion documentation page in a dialog
+  // (rendered below) without changing the pathname, so the page behind stays
+  // mounted - like the node editor modal over the flow editor
+  const activeNotionPage = useSearch({
+    strict: false,
+    select: (search) => (search as { guide?: GuidePage }).guide,
+  });
+  const notionDialogTitle = activeNotionPage
+    ? activeNotionPage.charAt(0).toUpperCase() + activeNotionPage.slice(1)
+    : "";
+
+  const setGuide = (guide: GuidePage | undefined) =>
+    navigate({ to: ".", search: (prev) => ({ ...prev, guide }) });
+
+  // Documentation items open a dialog via `?guide` rather than navigating
+  const handleRouteClick = ({ route, disabled, guide }: Route) => {
+    if (disabled) return;
+    if (guide) {
+      setGuide(guide);
+      return;
+    }
+    handleClick(route, disabled);
+  };
+
+  const isRouteActive = ({ route, guide }: Route) =>
+    guide ? activeNotionPage === guide : isActive(route);
 
   const teamAnalyticsLink = useTeamAnalyticsLink();
   const flowAnalyticsLink = useFlowAnalyticsLink();
@@ -235,18 +264,21 @@ function EditorNavMenu() {
             title: "Resources",
             Icon: MenuBookIcon,
             route: `/app/${teamSlug}/resources`,
+            guide: "resources",
             accessibleBy: "*",
           },
           {
             title: "Onboarding",
             Icon: AssignmentTurnedInIcon,
             route: `/app/${teamSlug}/onboarding`,
+            guide: "onboarding",
             accessibleBy: "*",
           },
           {
             title: "Tutorials",
             Icon: SchoolIcon,
             route: `/app/${teamSlug}/tutorials`,
+            guide: "tutorials",
             accessibleBy: "*",
           },
         ],
@@ -436,20 +468,18 @@ function EditorNavMenu() {
                   />
                   <Collapse in={isOpen}>
                     <AccordionContent>
-                      {section.routes.map(
-                        ({ title, route, disabled, isNew }) => (
-                          <MenuItem key={title}>
-                            <AccordionItemButton
-                              title={title}
-                              disabled={disabled}
-                              isNew={isNew}
-                              isActive={isActive(route)}
-                              isExternal={isExternalLink(route)}
-                              onClick={() => handleClick(route, disabled)}
-                            />
-                          </MenuItem>
-                        ),
-                      )}
+                      {section.routes.map((routeItem) => (
+                        <MenuItem key={routeItem.title}>
+                          <AccordionItemButton
+                            title={routeItem.title}
+                            disabled={routeItem.disabled}
+                            isNew={routeItem.isNew}
+                            isActive={isRouteActive(routeItem)}
+                            isExternal={isExternalLink(routeItem.route)}
+                            onClick={() => handleRouteClick(routeItem)}
+                          />
+                        </MenuItem>
+                      ))}
                     </AccordionContent>
                   </Collapse>
                 </MenuItem>
@@ -461,22 +491,20 @@ function EditorNavMenu() {
                 {section.subtitle && (
                   <Subtitle variant="body3">{section.subtitle}</Subtitle>
                 )}
-                {section.routes.map(
-                  ({ title, Icon, route, disabled, isNew }) => (
-                    <MenuItem key={title}>
-                      <NavMenuItem
-                        title={title}
-                        Icon={Icon}
-                        disabled={disabled}
-                        isNew={isNew}
-                        isActive={isActive(route)}
-                        isExternal={isExternalLink(route)}
-                        compact={compact}
-                        onClick={() => handleClick(route, disabled)}
-                      />
-                    </MenuItem>
-                  ),
-                )}
+                {section.routes.map((routeItem) => (
+                  <MenuItem key={routeItem.title}>
+                    <NavMenuItem
+                      title={routeItem.title}
+                      Icon={routeItem.Icon}
+                      disabled={routeItem.disabled}
+                      isNew={routeItem.isNew}
+                      isActive={isRouteActive(routeItem)}
+                      isExternal={isExternalLink(routeItem.route)}
+                      compact={compact}
+                      onClick={() => handleRouteClick(routeItem)}
+                    />
+                  </MenuItem>
+                ))}
               </React.Fragment>
             );
           })}
@@ -540,6 +568,12 @@ function EditorNavMenu() {
         </Box>
         <AccountMenu compact={compact} />
       </NavBarContainer>
+      <NotionDialog
+        open={Boolean(activeNotionPage)}
+        page={activeNotionPage}
+        title={notionDialogTitle}
+        onClose={() => setGuide(undefined)}
+      />
     </Root>
   );
 }
