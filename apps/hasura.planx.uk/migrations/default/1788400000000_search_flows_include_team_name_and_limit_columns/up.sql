@@ -97,6 +97,7 @@ RETURNS SETOF public.flows AS $$
     NULL::tsvector AS search_vector
   FROM public.flows, q
   WHERE deleted_at IS NULL
+    AND archived_at IS NULL
     AND search_vector @@ q.tsq
   ORDER BY ts_rank(search_vector, q.tsq) DESC;
 $$ LANGUAGE sql STABLE;
