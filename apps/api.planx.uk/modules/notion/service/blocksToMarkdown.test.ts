@@ -122,6 +122,39 @@ describe("blocksToMarkdown", () => {
     expect(md).toBe("![A diagram](https://example.com/a.png)");
   });
 
+  it("renders embed blocks as links (caption as text, url as fallback)", () => {
+    const storybookUrl =
+      "https://storybook.planx.uk/iframe.html?id=planx-components-section--basic&viewMode=story";
+    expect(
+      blocksToMarkdown([
+        block("embed", {
+          embed: { url: storybookUrl, caption: [rt("Section")] },
+        }),
+      ]),
+    ).toBe(`[Section](${storybookUrl})`);
+    expect(
+      blocksToMarkdown([block("embed", { embed: { url: storybookUrl } })]),
+    ).toBe(`[${storybookUrl}](${storybookUrl})`);
+  });
+
+  it("renders video and bookmark blocks as links", () => {
+    expect(
+      blocksToMarkdown([
+        block("video", {
+          video: {
+            type: "external",
+            external: { url: "https://youtu.be/abc" },
+          },
+        }),
+      ]),
+    ).toBe("[https://youtu.be/abc](https://youtu.be/abc)");
+    expect(
+      blocksToMarkdown([
+        block("bookmark", { bookmark: { url: "https://example.com" } }),
+      ]),
+    ).toBe("[https://example.com](https://example.com)");
+  });
+
   it("emits nested content for unhandled container blocks", () => {
     const md = blocksToMarkdown([
       block("column_list", {

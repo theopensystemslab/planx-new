@@ -41,6 +41,15 @@ const imageUrl = (block: NotionBlock): string | undefined =>
     ? block.image.external?.url
     : block.image?.file?.url;
 
+/** URL of an embed-like block (embed / video / bookmark / link_preview) */
+const embedUrl = (block: NotionBlock): string | undefined =>
+  block.embed?.url ??
+  block.bookmark?.url ??
+  block.link_preview?.url ??
+  (block.video?.type === "external"
+    ? block.video.external?.url
+    : block.video?.file?.url);
+
 /** Indent every non-empty line of a nested block's markdown by one level */
 const indent = (markdown: string): string =>
   markdown
@@ -152,6 +161,23 @@ export const blocksToMarkdown = (blocks: NotionBlock[] = []): string => {
         chunks.push({ text: `**${text(block.toggle)}**` });
         if (childMarkdown) chunks.push({ text: childMarkdown });
         break;
+      case "embed":
+      case "video":
+      case "bookmark":
+      case "link_preview": {
+        // Emitted as a plain link. ComponentGuide upgrades links to trusted
+        // hosts (e.g. storybook.planx.uk) into an inline <iframe> at render time.
+        const url = embedUrl(block);
+        if (url) {
+          const caption = richTextToMarkdown(
+            block.embed?.caption ??
+              block.video?.caption ??
+              block.bookmark?.caption,
+          ).replace(/[[\]]/g, "");
+          chunks.push({ text: `[${caption || url}](${url})` });
+        }
+        break;
+      }
       default:
         // Unhandled container types (columns, synced blocks, tables, ...) —
         // still emit any nested content we fetched.

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import DOMPurify from "dompurify";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
 
 const styles = (theme: Theme) => ({
@@ -56,6 +56,8 @@ export default function ReactMarkdownOrHtml(props: {
   openLinksOnNewTab?: boolean;
   id?: string;
   manuallyIncrementHeaders?: boolean;
+  /** Custom element renderers, forwarded to react-markdown (markdown path only) */
+  components?: Components;
 }): FCReturn {
   if (typeof props.source !== "string") {
     return null;
@@ -82,7 +84,9 @@ export default function ReactMarkdownOrHtml(props: {
   }
   return (
     <MarkdownRoot id={props.id} color={props.textColor}>
-      <ReactMarkdown>{props.source}</ReactMarkdown>
+      <ReactMarkdown components={props.components}>
+        {props.source}
+      </ReactMarkdown>
     </MarkdownRoot>
   );
 }

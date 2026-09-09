@@ -71,13 +71,13 @@ const MODAL_TABS: {
   { label: "Configure", value: "configure" },
   { label: "Preview", value: "preview", icon: <Visibility /> },
   {
-    label: "How to (API)",
-    value: "resources",
+    label: "How to (embed)",
+    value: "resourcesEmbed",
     icon: <MenuBook />,
   },
   {
-    label: "How to (embed)",
-    value: "resourcesEmbed",
+    label: "How to (API)",
+    value: "resources",
     icon: <MenuBook />,
   },
 ];

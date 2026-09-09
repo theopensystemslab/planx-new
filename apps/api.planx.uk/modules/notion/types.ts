@@ -47,6 +47,16 @@ export interface NotionBlock {
     file?: { url: string };
     caption: NotionRichText[];
   };
+  // embed / video / bookmark / link_preview all expose a `url` (+ optional caption)
+  embed?: { url: string; caption?: NotionRichText[] };
+  video?: {
+    type: "external" | "file";
+    external?: { url: string };
+    file?: { url: string };
+    caption?: NotionRichText[];
+  };
+  bookmark?: { url: string; caption?: NotionRichText[] };
+  link_preview?: { url: string };
   [key: string]: unknown;
 }
 
