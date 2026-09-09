@@ -6,7 +6,8 @@ import { ClientError, gql } from "graphql-request";
 import { $api } from "../../../../client/index.js";
 import { runSQL } from "../../../../lib/hasura/schema/index.js";
 import { deleteFilesByURL } from "../../../file/service/deleteFile.js";
-import type { Operation, OperationResult, QueryResult } from "./types.js";
+import type { OperationResult } from "../../types.js";
+import type { Operation, QueryResult } from "./types.js";
 
 export const RETENTION_PERIOD_MONTHS = 6;
 export const getRetentionPeriod = () =>
