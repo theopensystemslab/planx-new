@@ -1,12 +1,19 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { REDIRECT_KEY } from "utils/routeUtils/redirectUtils";
+import {
+  persistJwtFromUrl,
+  REDIRECT_KEY,
+} from "utils/routeUtils/redirectUtils";
 
 import { validateDomain } from "./-loader";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ location }) => {
     validateDomain();
+
+    if (persistJwtFromUrl(location.searchStr)) {
+      throw redirect({ to: location.pathname, replace: true });
+    }
 
     const { authStatus, initAuthStore } = useStore.getState();
 
