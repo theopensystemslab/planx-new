@@ -80,7 +80,7 @@ export default function ImgInput({
         }}
       >
         <MenuItem component="a" href={img} target="_blank">
-          View
+          Download
         </MenuItem>
         <MenuItem onClick={handleRemove} disabled={disabled}>
           Remove

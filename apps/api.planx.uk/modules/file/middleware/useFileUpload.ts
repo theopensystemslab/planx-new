@@ -1,22 +1,19 @@
-import { ALLOWED_EXTENSIONS, MAX_UPLOAD_SIZE_BYTES } from "@planx/file-upload";
+import {
+  getFileExtension,
+  isAllowedExtension,
+  MAX_UPLOAD_SIZE_BYTES,
+} from "@planx/file-upload";
 import type { RequestHandler } from "express";
 import multer from "multer";
 
-import { getFileExtension } from "./utils.js";
-
-export const validateExtension = (filename: string): boolean => {
-  return ALLOWED_EXTENSIONS.includes(getFileExtension(filename));
-};
-
 /**
  * Filter out invalid files based on their extension.
- * See @planx/file-upload for the shared, canonical ALLOWED_EXTENSIONS list
- * (kept in sync with the frontend dropzone's ALLOWED_EXTENSIONS_BY_MIME_TYPE map).
+ * See @planx/file-upload for the shared, canonical allowlist.
  *
- * NB. We would also validate ext against magic number here, but fileFilter runs before file is read into memory (i.e. no buffer)
+ * NB. We would also validate ext against magic number here, but fileFilter runs before file is read into memory (i.e. no buffer).
  */
 const fileFilter: multer.Options["fileFilter"] = (_req, file, callback) => {
-  if (!validateExtension(file.originalname)) {
+  if (!isAllowedExtension(file.originalname)) {
     return callback(
       new Error(
         `Unsupported file type. Extension: ${getFileExtension(file.originalname)}`,

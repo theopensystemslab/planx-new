@@ -3,14 +3,28 @@ import Image from "@mui/icons-material/Image";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
+import { createExtensionValidator } from "@planx/components/shared/extensionValidator";
+import { getRejectionMessage } from "@planx/components/shared/handleRejectedUpload";
+import { MAX_UPLOAD_SIZE_BYTES } from "@planx/file-upload";
 import { uploadPublicFile } from "lib/api/fileUpload/requests";
 import { useCallback, useEffect, useState } from "react";
-import type { FileWithPath } from "react-dropzone";
+import type { FileRejection, FileWithPath } from "react-dropzone";
 import { useDropzone } from "react-dropzone";
 
 export type AcceptedFileTypes = Record<string, ImageFileExtensions[]>;
 
-export type ImageFileExtensions = ".jpg" | ".jpeg" | ".png" | ".svg" | ".ico";
+// all raster and vector graphic extensions from canonical allowlist in file-upload package
+export type ImageFileExtensions =
+  | ".bmp"
+  | ".gif"
+  | ".ico"
+  | ".jpg"
+  | ".jpeg"
+  | ".png"
+  | ".svg"
+  | ".tif"
+  | ".tiff"
+  | ".webp";
 
 export const DEFAULT_FILETYPES: AcceptedFileTypes = {
   "image/*": [".jpg", ".jpeg", ".png", ".svg"],
@@ -115,10 +129,26 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
     [onChange],
   );
 
+  const accept = acceptedFileTypes || DEFAULT_FILETYPES;
+
+  // `accept` alone is not enough (see extensionValidator.ts). For example, DEFAULT_FILETYPES uses the
+  // `image/*` wildcard, which would otherwise let through image formats the API refuses (e.g. .avif, .heic)
+  const allowedExtensions = Object.values(accept).flat();
+
+  // rather than using window.alert, we use the native error display in this component
+  const onDropRejected = (fileRejections: FileRejection[]) =>
+    setStatus({
+      type: "error",
+      msg: getRejectionMessage(fileRejections, allowedExtensions),
+    });
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: acceptedFileTypes || DEFAULT_FILETYPES,
+    accept,
+    validator: createExtensionValidator(allowedExtensions),
+    maxSize: MAX_UPLOAD_SIZE_BYTES,
     disabled,
+    onDropRejected,
   });
 
   if (status.type === "loading") {

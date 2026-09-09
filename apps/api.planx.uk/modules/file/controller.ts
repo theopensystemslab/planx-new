@@ -1,10 +1,9 @@
+import { getFileExtension, isAllowedExtension } from "@planx/file-upload";
 import assert from "assert";
-import path from "path";
 import { z } from "zod";
 
 import { ServerError } from "../../errors/index.js";
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
-import { validateExtension } from "./middleware/useFileUpload.js";
 import { deleteFilesByKey } from "./service/deleteFile.js";
 import {
   getFileFromS3,
@@ -30,8 +29,8 @@ export const uploadFileSchema = z.object({
       .string()
       .trim()
       .min(1)
-      .refine(validateExtension, (input) => ({
-        message: `Unsupported file type for given filename: ${path.extname(input).toLowerCase()}`,
+      .refine(isAllowedExtension, (input) => ({
+        message: `Unsupported file type for given filename: ${getFileExtension(input)}`,
       }))
       .transform((filename) => encodeURIComponent(filename)),
   }),

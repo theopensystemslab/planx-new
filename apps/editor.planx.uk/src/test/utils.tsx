@@ -63,9 +63,14 @@ const testApolloClient = new ApolloClient({
  *
  * Note: This function is async to allow the router to finish rendering.
  * Tests must await the setup() call.
+ *
+ * All userEventOptions are accepted, to enable the rare test which needs to change user behaviour
+ * e.g. `{ applyAccept: false }` so that a file upload test can exercise a dropzone's own validation.
+ * See: http://testing-library.com/docs/user-event/options
  */
 export const setup = async (
   jsx: React.JSX.Element,
+  userEventOptions?: Parameters<typeof userEvent.setup>[0],
 ): Promise<Record<"user", UserEvent> & RenderResult> => {
   testQueryClient.clear();
   const user = userEvent.setup({
@@ -74,6 +79,7 @@ export const setup = async (
     // Drop this Never check if resolved
     // Source: https://github.com/jsdom/jsdom/issues/3985
     pointerEventsCheck: PointerEventsCheckLevel.Never,
+    ...userEventOptions,
   });
 
   const rootRoute = createRootRoute({

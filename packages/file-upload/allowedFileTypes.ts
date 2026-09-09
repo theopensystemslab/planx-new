@@ -1,8 +1,11 @@
 /**
- * Single source of truth for file types accepted for upload.
+ * Single source of truth for file types accepted for upload across the stack.
  *
- * Some formats do not have reliable MIME types, so files are ultimately checked API-side against extension only
- * (see ALLOWED_EXTENSIONS below). The MIME keys are best-effort hints for the native file picker on the frontend.
+ * Some formats do not have reliable MIME types, so files are ultimately checked against extension only.
+ *
+ * Note that the MIME keys act as hints for the native file picker (so users may see some files which they cannot upload),
+ * while react-dropzone 'accepts' a file if its browser-reported MIME type matches a key below, even if its extension does
+ * not feature in the following list. We therefore roll our own validator to narrow the field - see the editor's extensionValidator.ts.
  *
  * Refer to MDN for common MIME types: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
  * And IANA for the source of truth: https://www.iana.org/assignments/media-types/media-types.xhtml
@@ -19,13 +22,15 @@ export const ALLOWED_EXTENSIONS_BY_MIME_TYPE: Record<string, string[]> = {
   "image/jpeg": [".jpg", ".jpeg"],
   "image/png": [".png"],
   "image/tiff": [".tif", ".tiff"],
+  "image/vnd.microsoft.icon": [".ico"],
   "image/webp": [".webp"],
+  "image/x-icon": [".ico"],
   // vector graphics
   "image/svg+xml": [".svg"],
   // CAD and BIM
   "image/vnd.dwg": [".dwg"],
   "image/vnd.dxf": [".dxf"],
-  // Text, MS Office documents and spreadsheets
+  // text, MS Office documents and spreadsheets
   "text/csv": [".csv"],
   "text/plain": [".txt"],
   "application/rtf": [".rtf"],
@@ -47,7 +52,7 @@ export const ALLOWED_EXTENSIONS_BY_MIME_TYPE: Record<string, string[]> = {
   "video/x-ms-wmv": [".wmv"],
   // GML (Geographic Markup Language)
   "application/gml+xml": [".gml"],
-  // binary files without custom MIME, for which we fall back to catchall octet-stream
+  // binary files with no registered and reliable MIME type, so we fall back to catchall octet-stream
   "application/octet-stream": [".bim", ".ifc", ".plt", ".rvt", ".skp"],
 };
 
@@ -73,8 +78,25 @@ export const PREVIEWABLE_MIME_TYPES: ReadonlySet<string> = new Set([
 
 /**
  * Flat, deduplicated list of allowed extensions, derived from ALLOWED_EXTENSIONS_BY_MIME_TYPE above.
- * Used by the backend to validate uploads by extension (since MIME types are not reliable).
+ * Used to 'validate' files by extension only (since MIME types are not reliable).
  */
 export const ALLOWED_EXTENSIONS: string[] = Array.from(
   new Set(Object.values(ALLOWED_EXTENSIONS_BY_MIME_TYPE).flat()),
 );
+
+/**
+ * Returns lowercased extension, with leading dot, e.g. '.pdf'.
+ * Returns  "" for a filename with no extension, or for dotfiles ().
+ *
+ * Modelled on node's `path.extname`, which we avoid using so this package can be imported by the frontend.
+ */
+export const getFileExtension = (filename: string): string => {
+  const lastDot = filename.lastIndexOf(".");
+  return lastDot <= 0 ? "" : filename.slice(lastDot).toLowerCase();
+};
+
+/**
+ * Single rule for whether we accept a file, shared by the API's upload middleware and frontend dropzones.
+ */
+export const isAllowedExtension = (filename: string): boolean =>
+  ALLOWED_EXTENSIONS.includes(getFileExtension(filename));

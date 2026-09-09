@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { useOptionalListContext } from "@planx/components/List/Public/Context";
+import { validateExtension } from "@planx/components/shared/extensionValidator";
 import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload";
 import {
   ALLOWED_EXTENSIONS_BY_MIME_TYPE,
@@ -166,6 +167,8 @@ export function Dropzone<T extends FileUploadSlot>({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: ALLOWED_EXTENSIONS_BY_MIME_TYPE,
+    // `accept` alone is not enough - see extensionValidator.ts
+    validator: validateExtension,
     maxSize: MAX_UPLOAD_SIZE_BYTES,
     multiple: maxFiles !== 1,
     disabled: Boolean(maxFiles && slots.length >= maxFiles),

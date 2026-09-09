@@ -99,6 +99,8 @@ describe("File upload", () => {
   describe.each([PRIVATE_ENDPOINT, PUBLIC_ENDPOINT])(
     "File type validation for %s",
     (ENDPOINT) => {
+      const auth = authHeader({ role: "teamEditor" });
+
       it("should not upload a file with an unsupported extension", async () => {
         await supertest(app)
           .post(ENDPOINT)
@@ -108,6 +110,36 @@ describe("File upload", () => {
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/Unsupported file type/);
+          });
+      });
+
+      it("should reject an executable sent as the catchall octet-stream MIME type", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .field("filename", "virus.com")
+          .attach("file", Buffer.from("some data"), {
+            filename: "virus.com",
+            contentType: "application/octet-stream",
+          })
+          .expect(415)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(/Unsupported file type/);
+          });
+      });
+
+      it("should still accept an extension which has no reliable MIME type", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .set(auth)
+          .field("filename", "model.ifc")
+          .attach("file", Buffer.from("some data"), {
+            filename: "model.ifc",
+            contentType: "application/octet-stream",
+          })
+          .expect(200)
+          .then(() => {
+            expect(mockPutObject).toHaveBeenCalled();
           });
       });
 
