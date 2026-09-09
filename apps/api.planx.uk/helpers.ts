@@ -428,10 +428,6 @@ function renameNodeId(nodeId: string, replaceValue: string): string;
 function renameNodeId(
   nodeId: string | null | undefined,
   replaceValue: string,
-): string | null | undefined;
-function renameNodeId(
-  nodeId: string | null | undefined,
-  replaceValue: string,
 ): string | null | undefined {
   if (!nodeId || nodeId === "_root") return nodeId;
   return nodeId.slice(0, -replaceValue.length) + replaceValue;
