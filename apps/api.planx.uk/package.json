@@ -65,7 +65,7 @@
     "zod": "^3.25.76"
   },
   "scripts": {
-    "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files && pnpm copy-prompt-files",
+    "build": "rimraf ./dist && NODE_OPTIONS=--max-old-space-size=4096 npx tsc && pnpm copy-swagger-files && pnpm copy-prompt-files",
     "check": "pnpm typecheck && pnpm lint",
     "copy-prompt-files": "copyfiles 'modules/ai/**/*.md' dist",
     "copy-swagger-files": "copyfiles '**/docs.yaml' dist",
