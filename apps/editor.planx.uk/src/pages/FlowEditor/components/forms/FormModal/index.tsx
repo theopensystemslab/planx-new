@@ -26,6 +26,7 @@ import {
 import React, { useMemo, useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import ComponentGuide from "ui/editor/ComponentGuide";
+import NotionEmbed from "ui/editor/NotionEmbed";
 import StyledTab from "ui/editor/StyledTab";
 import { CloseButton } from "ui/shared/CloseButton";
 import { Switch } from "ui/shared/Switch";
@@ -58,7 +59,7 @@ const TabList = styled(Box)(() => ({
   },
 }));
 
-type ModalTab = "configure" | "preview" | "resources";
+type ModalTab = "configure" | "preview" | "resources" | "resourcesEmbed";
 
 const noopHandleSubmit = () => undefined;
 
@@ -70,8 +71,13 @@ const MODAL_TABS: {
   { label: "Configure", value: "configure" },
   { label: "Preview", value: "preview", icon: <Visibility /> },
   {
-    label: "How to use this component",
+    label: "How to (API)",
     value: "resources",
+    icon: <MenuBook />,
+  },
+  {
+    label: "How to (embed)",
+    value: "resourcesEmbed",
     icon: <MenuBook />,
   },
 ];
@@ -419,6 +425,14 @@ const FormModal: React.FC<FormModalProps> = ({
           {activeTab === "resources" && (
             <Box sx={{ height: "100%", overflowY: "auto" }}>
               <ComponentGuide />
+            </Box>
+          )}
+          {activeTab === "resourcesEmbed" && (
+            <Box sx={{ height: "100%" }}>
+              <NotionEmbed
+                page="howToUseComponent"
+                title="How to use this component"
+              />
             </Box>
           )}
         </DialogContent>
