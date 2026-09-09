@@ -4,7 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { uploadPublicFile } from "lib/api/fileUpload/requests";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FileWithPath } from "react-dropzone";
 import { useDropzone } from "react-dropzone";
 

@@ -2,7 +2,6 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { ApplicationPath } from "types";
 const SaveResumeButton: React.FC = () => {
   const saveToEmail = useStore((state) => state.saveToEmail);

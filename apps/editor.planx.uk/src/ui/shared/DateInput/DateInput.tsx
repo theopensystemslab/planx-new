@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { FocusEvent } from "react";
-import React from "react";
 
 import ErrorWrapper from "../ErrorWrapper";
 import Input from "../Input/Input";

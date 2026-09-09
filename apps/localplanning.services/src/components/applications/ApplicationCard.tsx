@@ -1,6 +1,5 @@
 import { formatDate } from "@lib/date";
 import { $applicationId } from "@stores/applicationId";
-import React from "react";
 
 import { useDeleteApplication } from "./hooks/useDeleteApplication";
 import type { Application } from "./hooks/useFetchApplications";

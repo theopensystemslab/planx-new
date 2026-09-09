@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { useParams } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";

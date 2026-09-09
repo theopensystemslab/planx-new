@@ -11,7 +11,7 @@ import type { PublicProps } from "@planx/components/shared/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { GraphError } from "components/Error/GraphError";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import type { SiteAddress } from "../../FindProperty/model";
 import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";

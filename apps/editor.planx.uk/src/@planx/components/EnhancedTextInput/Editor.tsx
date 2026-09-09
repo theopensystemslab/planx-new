@@ -6,7 +6,6 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { FormikProvider } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
 import ModalSection from "ui/editor/ModalSection";

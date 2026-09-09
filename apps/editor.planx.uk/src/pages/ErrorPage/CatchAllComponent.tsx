@@ -1,5 +1,4 @@
 import ErrorPage from "pages/ErrorPage/ErrorPage";
-import React from "react";
 
 export function CatchAllComponent() {
   return (

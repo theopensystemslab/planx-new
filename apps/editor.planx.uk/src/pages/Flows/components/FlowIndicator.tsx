@@ -1,23 +1,27 @@
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props {
   isSourceTemplate: boolean;
   isTemplatedFlow: boolean;
+  isPattern: boolean;
   teamName?: string;
 }
 
-export const FlowTemplateIndicator: React.FC<Props> = ({
+export const FlowIndicator: React.FC<Props> = ({
   isSourceTemplate,
   isTemplatedFlow,
+  isPattern,
   teamName,
 }) => {
-  if (!isSourceTemplate && !isTemplatedFlow) return null;
+  if (!isSourceTemplate && !isTemplatedFlow && !isPattern) return null;
 
-  const text = isSourceTemplate ? "Source template" : `${teamName}`;
+  let text: string;
+  if (isSourceTemplate) text = "Source template";
+  else if (isTemplatedFlow) text = `${teamName}`;
+  else text = "Pattern";
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>

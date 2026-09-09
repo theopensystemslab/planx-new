@@ -2,7 +2,6 @@ import PrintIcon from "@mui/icons-material/Print";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React from "react";
 
 const StyledPrintButton = styled(Button)(() => ({
   "@media print": {

@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";

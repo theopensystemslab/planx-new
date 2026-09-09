@@ -1,7 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";

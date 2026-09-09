@@ -12,7 +12,7 @@ import Card, {
 } from "@planx/components/shared/Preview/Card";
 import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import React from "react";
+import { useId, useState } from "react";
 import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
@@ -79,7 +79,7 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const NoticeComponent: React.FC<Props> = (props) => {
   const theme = useTheme();
-  const titleId = React.useId();
+  const titleId = useId();
   const textColor = getContrastTextColor(
     props.color,
     theme.palette.text.primary,
@@ -87,7 +87,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
 
   const { info, policyRef, howMeasured, definitionImg } = props;
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const { trackEvent } = useAnalyticsTracking();
 
   const handleHelpClick = () => {

@@ -4,7 +4,6 @@ import { FeeBreakdown } from "@planx/components/Pay/Public/FeeBreakdown/FeeBreak
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
 import { PrintButton } from "components/PrintButton";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { useLocation } from "react-use";
 import ApplicationSummary from "ui/public/ApplicationSummary";
 

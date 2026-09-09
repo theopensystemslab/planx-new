@@ -4,7 +4,7 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import type { ActivityItem } from "hooks/data/useActivityData";
 import { useActivityData } from "hooks/data/useActivityData";
-import React, { useState } from "react";
+import { useState } from "react";
 import StyledTab from "ui/editor/StyledTab";
 
 import ServiceListWithCount from "./ServiceListWithCount";

@@ -6,7 +6,7 @@ import type { MoreInformation } from "@planx/components/shared";
 import { StatusIcon } from "@planx/components/shared/Icons/StatusIcon";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import type { HelpClickMetadata } from "pages/FlowEditor/lib/analytics/types";
-import React, { useState } from "react";
+import { useState } from "react";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 

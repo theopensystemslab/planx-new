@@ -13,7 +13,6 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { Response } from "pages/FlowEditor/lib/store/preview";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 

@@ -4,7 +4,7 @@ import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import useFlashOnNodeAdded from "hooks/useFlashOnNodeAdded";
-import React from "react";
+import { memo } from "react";
 import { useDrag } from "react-dnd";
 
 import { useStore } from "../../../lib/store";
@@ -17,7 +17,7 @@ type Props = {
   [key: string]: any;
 };
 
-const Filter: React.FC<Props> = React.memo((props) => {
+const Filter: React.FC<Props> = memo((props) => {
   const [isClone, childNodes] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),

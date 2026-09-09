@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import type { Step as StyledListItem } from "@planx/components/NextSteps/model";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import type { HandleSubmit } from "pages/Preview/Node";
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface NextStepsListProps {
   steps: StyledListItem[];

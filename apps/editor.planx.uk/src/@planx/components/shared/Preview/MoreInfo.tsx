@@ -5,7 +5,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import MoreInfoFeedbackComponent from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
-import React from "react";
 import { CloseButton } from "ui/shared/CloseButton";
 
 const DrawerContent = styled(Box)(({ theme }) => ({

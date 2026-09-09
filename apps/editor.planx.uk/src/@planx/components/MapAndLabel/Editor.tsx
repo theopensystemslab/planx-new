@@ -4,7 +4,6 @@ import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";

@@ -8,7 +8,6 @@ import { useParams } from "@tanstack/react-router";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
-import React from "react";
 
 import SettingsLayout, { type SettingsLink } from "../SettingsLayout";
 

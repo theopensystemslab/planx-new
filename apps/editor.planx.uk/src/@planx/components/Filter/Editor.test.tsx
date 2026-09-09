@@ -4,7 +4,6 @@ import {
   flatFlags,
 } from "@opensystemslab/planx-core/types";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
-import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 

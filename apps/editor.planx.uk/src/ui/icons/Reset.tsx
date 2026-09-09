@@ -1,6 +1,5 @@
 import type { SvgIconProps } from "@mui/material/SvgIcon";
 import SvgIcon from "@mui/material/SvgIcon";
-import React from "react";
 
 export default function Reset(props: SvgIconProps) {
   return (

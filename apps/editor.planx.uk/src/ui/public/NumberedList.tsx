@@ -3,7 +3,7 @@ import ButtonBase from "@mui/material/ButtonBase";
 import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
@@ -110,7 +110,7 @@ interface Item {
 }
 
 function ListItem(props: Item & { index: number; heading?: HeadingLevel }) {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
   const handleChange = () => {
     setExpanded(!expanded);
   };

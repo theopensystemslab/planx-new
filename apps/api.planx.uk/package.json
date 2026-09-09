@@ -46,7 +46,7 @@
     "jsonwebtoken": "catalog:jwt",
     "lodash": "catalog:lodash",
     "mime": "^4.1.0",
-    "multer": "^2.2.0",
+    "multer": "^2.3.0",
     "nanoid": "catalog:",
     "notifications-node-client": "^8.4.0",
     "openid-client": "^5.7.1",

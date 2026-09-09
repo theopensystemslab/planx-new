@@ -4,7 +4,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useMatches } from "@tanstack/react-router";
 import { capitalize } from "lodash";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ApplicationPath } from "types";
 

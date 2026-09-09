@@ -1,6 +1,5 @@
 import type { UseFileUrlProps } from "@planx/components/shared/hooks";
 import { useFileUrl } from "@planx/components/shared/hooks";
-import React from "react";
 
 export default function ImagePreview({ file }: UseFileUrlProps) {
   const { fileUrl } = useFileUrl({ file });

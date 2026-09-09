@@ -4,7 +4,6 @@ import Select, { selectClasses } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 import type { ReactNode } from "react";
-import React from "react";
 
 import Input from "../../shared/Input/Input";
 

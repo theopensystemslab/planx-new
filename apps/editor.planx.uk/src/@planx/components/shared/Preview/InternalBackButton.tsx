@@ -2,7 +2,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { BackButton } from "pages/Preview/Questions";
-import React from "react";
 
 /**
  * A presentation-only back button for in-component navigation

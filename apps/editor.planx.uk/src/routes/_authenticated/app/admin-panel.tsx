@@ -1,5 +1,4 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import React from "react";
 
 import { PlatformAdminPanel } from "../../../pages/PlatformAdminPanel/PlatformAdminPanel";
 

@@ -7,7 +7,6 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import type { SectionNode } from "types";
 import { SectionStatus as SectionStatusEnum } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";

@@ -1,7 +1,6 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import ImgInput from "ui/editor/ImgInput/ImgInput";

@@ -1,7 +1,6 @@
 import Link from "@mui/material/Link";
 import { useLPS } from "hooks/useLPS";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import InputLabel from "ui/editor/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";

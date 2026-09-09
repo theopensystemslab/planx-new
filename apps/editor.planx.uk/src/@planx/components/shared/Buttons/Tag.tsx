@@ -1,5 +1,4 @@
 import { styled } from "@mui/material/styles";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export enum TagType {

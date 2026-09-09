@@ -1,6 +1,5 @@
 import ArticleIcon from "@mui/icons-material/Article";
 import type { PropsWithChildren } from "react";
-import React from "react";
 
 import SettingsLayout, {
   type SettingsLink,

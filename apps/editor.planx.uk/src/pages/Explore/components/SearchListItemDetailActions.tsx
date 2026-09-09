@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 import Divider from "@mui/material/Divider";
-import React from "react";
 
 import type { SearchResult } from "./SearchResult";
 

@@ -8,7 +8,6 @@ import {
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { partition } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import type { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";

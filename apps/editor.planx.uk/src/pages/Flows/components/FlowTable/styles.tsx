@@ -58,8 +58,10 @@ export const StyledTableRow = styled(TableRow, {
   clickable = true,
 }) => {
   let hoverBackground: string | undefined;
-  if (clickable && isTemplated && isPattern) {
+  if (clickable && isTemplated) {
     hoverBackground = theme.palette.template.main;
+  } else if (clickable && isPattern) {
+    hoverBackground = theme.palette.pattern.dark;
   } else if (clickable) {
     hoverBackground = theme.palette.background.paper;
   }

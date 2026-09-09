@@ -4,7 +4,6 @@ import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
-import React from "react";
 
 import Caret from "../icons/Caret";
 

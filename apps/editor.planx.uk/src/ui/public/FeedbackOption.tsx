@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import type SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
-import React from "react";
 
 interface Props {
   label: string;

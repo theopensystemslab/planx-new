@@ -1,6 +1,5 @@
 import { screen, waitFor } from "@testing-library/react";
 import { graphql, HttpResponse } from "msw";
-import React from "react";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";

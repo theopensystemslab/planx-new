@@ -1,5 +1,4 @@
 import { logger } from "airbrake";
-import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 

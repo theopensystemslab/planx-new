@@ -1,5 +1,4 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import React from "react";
 import { TemplatedNodeConfiguration } from "ui/editor/TemplatedNodeConfiguration";
 
 import type { Props } from "./types";

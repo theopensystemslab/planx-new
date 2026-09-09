@@ -9,7 +9,6 @@ import { visuallyHidden } from "@mui/utils";
 import type { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { PREVIEWABLE_MIME_TYPES } from "@planx/file-upload";
 import ImagePreview from "components/ImagePreview";
-import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 

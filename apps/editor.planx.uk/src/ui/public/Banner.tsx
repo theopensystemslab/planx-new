@@ -4,7 +4,6 @@ import type { Theme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import type SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import { getContrastTextColor } from "styleUtils";
 
 interface BannerProps {
