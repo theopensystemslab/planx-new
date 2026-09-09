@@ -56,10 +56,17 @@ SET search_vector = public.compute_flow_search_vector(f.name, t.name, f.summary,
 FROM public.teams t
 WHERE f.team_id = t.id;
 
+
+--
 -- return null values for columns we don't need in the search results
 -- this improves search performance
 CREATE OR REPLACE FUNCTION public.search_flows(search text)
 RETURNS SETOF public.flows AS $$
+  WITH q AS (
+    -- prefix-match each word in the search term (e.g. "appl" matches "apply", "application")
+    SELECT to_tsquery('english', string_agg(lexeme || ':*', ' & ')) AS tsq
+    FROM unnest(tsvector_to_array(to_tsvector('simple', search))) AS lexeme
+  )
   SELECT
     id,
     team_id,
@@ -88,8 +95,8 @@ RETURNS SETOF public.flows AS $$
     NULL::boolean AS is_service,
     NULL::boolean AS is_pattern,
     NULL::tsvector AS search_vector
-  FROM public.flows
+  FROM public.flows, q
   WHERE deleted_at IS NULL
-    AND search_vector @@ plainto_tsquery('english', search)
-  ORDER BY ts_rank(search_vector, plainto_tsquery('english', search)) DESC;
+    AND search_vector @@ q.tsq
+  ORDER BY ts_rank(search_vector, q.tsq) DESC;
 $$ LANGUAGE sql STABLE;
