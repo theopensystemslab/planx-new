@@ -5,16 +5,13 @@ import {
 import { TASKS } from "@planx/components/EnhancedTextInput/model";
 import type { Task } from "@planx/components/EnhancedTextInput/types";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
-import {
-  nodeIsChildOfTemplatedInternalPortal,
-  nodeIsTemplatedInternalPortal,
-} from "pages/FlowEditor/utils";
+import { showNoteInTemplatedFlow } from "pages/FlowEditor/lib/store/utils/showNoteInTemplatedFlow";
 import React from "react";
 import { exhaustiveCheck } from "utils";
 
 import type { Store } from "../../../lib/store";
 import { useStore } from "../../../lib/store";
-import { getParentId, stripTagsAndLimitLength } from "../lib/utils";
+import { stripTagsAndLimitLength } from "../lib/utils";
 import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";
 import Filter from "./Filter";
@@ -108,21 +105,13 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Note: {
       // In templated flows, always hide `Note` components that are inherited
       //   from the source template unless within a templated folder
-      const parent = getParentId(node.id);
-      const indexedParent = orderedFlow?.find(({ id }) => id === parent);
-      const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
-        flow,
-        indexedParent,
-      );
-      const parentIsChildOfTemplatedInternalPortal =
-        nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
-      const renderNoteComponent =
+      const showNoteComponent =
         showNotes &&
+        node.id &&
         (!isTemplatedFrom ||
-          parentIsTemplatedInternalPortal ||
-          parentIsChildOfTemplatedInternalPortal);
+          showNoteInTemplatedFlow(node.id, flow, orderedFlow));
 
-      return renderNoteComponent ? (
+      return showNoteComponent ? (
         <Question {...allProps} text={node?.data?.text ?? "Note"} />
       ) : null;
     }

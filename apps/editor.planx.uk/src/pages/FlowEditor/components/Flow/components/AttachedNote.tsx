@@ -1,12 +1,7 @@
 import Box from "@mui/material/Box";
 import { useStore } from "pages/FlowEditor/lib/store";
-import {
-  nodeIsChildOfTemplatedInternalPortal,
-  nodeIsTemplatedInternalPortal,
-} from "pages/FlowEditor/utils";
+import { showNoteInTemplatedFlow } from "pages/FlowEditor/lib/store/utils/showNoteInTemplatedFlow";
 import React from "react";
-
-import { getParentId } from "../lib/utils";
 
 export const AttachedNote: React.FC<{
   nodeId: string;
@@ -22,22 +17,9 @@ export const AttachedNote: React.FC<{
 
   // In templated flows, always hide `AttachedNote` in the graph
   //   unless it is attached to a templated node or within a templated folder
-  const isAttachedToTemplatedNode = flow[nodeId]?.data?.isTemplatedNode;
-  const parent = getParentId(nodeId);
-  const indexedParent = orderedFlow?.find(({ id }) => id === parent);
-  const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
-    flow,
-    indexedParent,
-  );
-  const parentIsChildOfTemplatedInternalPortal =
-    nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
-
   const showAttachedNote =
     showNotes &&
-    (!isTemplatedFrom ||
-      isAttachedToTemplatedNode ||
-      parentIsTemplatedInternalPortal ||
-      parentIsChildOfTemplatedInternalPortal);
+    (!isTemplatedFrom || showNoteInTemplatedFlow(nodeId, flow, orderedFlow));
 
   if (!showAttachedNote) return null;
 
