@@ -26,19 +26,17 @@ vi.mock("../../client/index.js", () => ({
 }));
 
 describe("buildAuthoriseUrl", () => {
-  const originalEnv = { ...process.env };
-
   beforeEach(() => {
-    process.env.STRIPE_CONNECT_CLIENT_ID = "ca_test123";
-    process.env.STRIPE_SECRET_KEY = "sk_test_123";
-    process.env.API_URL_EXT = "https://api.example.com";
+    vi.stubEnv("STRIPE_CONNECT_CLIENT_ID", "ca_test123");
+    vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_123");
+    vi.stubEnv("API_URL_EXT", "https://api.example.com");
     mockAuthorizeUrl.mockReturnValue(
       "https://connect.stripe.com/oauth/authorize?mock=1",
     );
   });
 
   afterEach(() => {
-    process.env = { ...originalEnv };
+    vi.unstubAllEnvs();
     mockAuthorizeUrl.mockReset();
   });
 
@@ -56,7 +54,7 @@ describe("buildAuthoriseUrl", () => {
   });
 
   it("throws if STRIPE_CONNECT_CLIENT_ID is not configured", () => {
-    delete process.env.STRIPE_CONNECT_CLIENT_ID;
+    vi.stubEnv("STRIPE_CONNECT_CLIENT_ID", undefined);
 
     expect(() => buildAuthoriseUrl("some-nonce")).toThrow(
       /STRIPE_CONNECT_CLIENT_ID/,
@@ -64,21 +62,19 @@ describe("buildAuthoriseUrl", () => {
   });
 
   it("throws if STRIPE_SECRET_KEY is not configured", () => {
-    delete process.env.STRIPE_SECRET_KEY;
+    vi.stubEnv("STRIPE_SECRET_KEY", undefined);
 
     expect(() => buildAuthoriseUrl("some-nonce")).toThrow(/STRIPE_SECRET_KEY/);
   });
 });
 
 describe("exchangeCodeForAccountId", () => {
-  const originalEnv = { ...process.env };
-
   beforeEach(() => {
-    process.env.STRIPE_SECRET_KEY = "sk_test_123";
+    vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_123");
   });
 
   afterEach(() => {
-    process.env = { ...originalEnv };
+    vi.unstubAllEnvs();
     mockToken.mockReset();
   });
 
@@ -113,7 +109,7 @@ describe("exchangeCodeForAccountId", () => {
   });
 
   it("throws if STRIPE_SECRET_KEY is not configured", async () => {
-    delete process.env.STRIPE_SECRET_KEY;
+    vi.stubEnv("STRIPE_SECRET_KEY", undefined);
 
     await expect(exchangeCodeForAccountId("auth-code")).rejects.toThrow(
       /STRIPE_SECRET_KEY/,
@@ -122,33 +118,29 @@ describe("exchangeCodeForAccountId", () => {
 });
 
 describe("getStripeMode", () => {
-  const originalEnv = { ...process.env };
-
   afterEach(() => {
-    process.env = { ...originalEnv };
+    vi.unstubAllEnvs();
   });
 
   it("returns test outside of production", () => {
-    process.env.APP_ENVIRONMENT = "staging";
+    vi.stubEnv("APP_ENVIRONMENT", "staging");
     expect(getStripeMode()).toBe("test");
   });
 
   it("returns live in production", () => {
-    process.env.APP_ENVIRONMENT = "production";
+    vi.stubEnv("APP_ENVIRONMENT", "production");
     expect(getStripeMode()).toBe("live");
   });
 });
 
 describe("saveStripeAccountId / getStripeAccountId", () => {
-  const originalEnv = { ...process.env };
-
   afterEach(() => {
-    process.env = { ...originalEnv };
+    vi.unstubAllEnvs();
     mockRequest.mockReset();
   });
 
   it("writes to the staging column outside of production", async () => {
-    process.env.APP_ENVIRONMENT = "staging";
+    vi.stubEnv("APP_ENVIRONMENT", "staging");
     mockRequest.mockResolvedValue({});
 
     await saveStripeAccountId(42, "acct_abc");
@@ -159,7 +151,7 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
   });
 
   it("writes to the production column in production", async () => {
-    process.env.APP_ENVIRONMENT = "production";
+    vi.stubEnv("APP_ENVIRONMENT", "production");
     mockRequest.mockResolvedValue({});
 
     await saveStripeAccountId(42, "acct_abc");
@@ -170,7 +162,7 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
   });
 
   it("reads back the account id for the current environment", async () => {
-    process.env.APP_ENVIRONMENT = "staging";
+    vi.stubEnv("APP_ENVIRONMENT", "staging");
     mockRequest.mockResolvedValue({
       team_integrations: [{ accountId: "acct_abc" }],
     });
