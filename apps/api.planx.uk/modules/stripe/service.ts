@@ -101,7 +101,7 @@ export const getStripeMode = (): "test" | "live" =>
 /**
  * `team_integrations` stores separate columns per environment
  */
-const stripeAccountIdColumn = (): string =>
+const stripeAccountIdColumn = () =>
   getStripeMode() === "live"
     ? "production_stripe_account_id"
     : "staging_stripe_account_id";
