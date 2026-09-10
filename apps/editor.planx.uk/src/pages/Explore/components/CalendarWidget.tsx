@@ -8,18 +8,27 @@ import type { CalendarView } from "pages/FlowEditor/lib/store/editor";
 import { StyledToggleButton } from "pages/Flows/components/StyledToggleButton";
 
 const CALENDAR_SRC =
-  "c_539668a746760a3dae793103004f774c5fa21e5cfd5f6974a9f36e9ec5a2962e%40group.calendar.google.com";
+  "c_539668a746760a3dae793103004f774c5fa21e5cfd5f6974a9f36e9ec5a2962e@group.calendar.google.com";
 
-const VIEW_PARAMS: Record<CalendarView, string> = {
-  grid: "&mode=MONTH&wkst=2",
-  list: "&mode=AGENDA",
+const BASE_PARAMS: Record<string, string> = {
+  src: CALENDAR_SRC,
+  ctz: "Europe/London",
+  showTitle: "0",
+  showPrint: "0",
+  showTabs: "0",
+  showCalendars: "0",
+  showTz: "0",
 };
 
-const embedUrl = (view: CalendarView) =>
-  `https://calendar.google.com/calendar/embed?src=${CALENDAR_SRC}` +
-  "&ctz=Europe%2FLondon" +
-  VIEW_PARAMS[view] +
-  "&showTitle=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0";
+const VIEW_PARAMS: Record<CalendarView, Record<string, string>> = {
+  grid: { mode: "MONTH", wkst: "2" },
+  list: { mode: "AGENDA" },
+};
+
+const embedUrl = (view: CalendarView) => {
+  const params = new URLSearchParams({ ...BASE_PARAMS, ...VIEW_PARAMS[view] });
+  return `https://calendar.google.com/calendar/embed?${params.toString()}`;
+};
 
 const EMBED_BG = "#F1F4F9";
 
