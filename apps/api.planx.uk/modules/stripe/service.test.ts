@@ -164,7 +164,7 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
   it("reads back the account id for the current environment", async () => {
     vi.stubEnv("APP_ENVIRONMENT", "staging");
     mockRequest.mockResolvedValue({
-      team_integrations: [{ accountId: "acct_abc" }],
+      teamIntegrations: [{ accountId: "acct_abc" }],
     });
 
     const accountId = await getStripeAccountId(42);
@@ -173,7 +173,7 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
   });
 
   it("returns null when no team_integrations row exists", async () => {
-    mockRequest.mockResolvedValue({ team_integrations: [] });
+    mockRequest.mockResolvedValue({ teamIntegrations: [] });
 
     const accountId = await getStripeAccountId(42);
 
