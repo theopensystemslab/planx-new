@@ -3,13 +3,12 @@ import crypto from "crypto";
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 import { assertTeamEditPermission } from "../auth/requireTeamMembership.js";
 import { getTeamBySlug } from "./service.js";
-import type { connectSchema, TeamLocals } from "./types.js";
-
-interface StripeConnectSessionState {
-  teamId: number;
-  teamSlug: string;
-  nonce: string;
-}
+import {
+  type connectSchema,
+  type StripeConnectSessionState,
+  stripeConnectSessionStateSchema,
+  type TeamLocals,
+} from "./types.js";
 
 /**
  * Only the `session` property is needed for these middleware functions
@@ -51,10 +50,9 @@ export const setConnectState = (
 export const consumeConnectState = (
   req: RequestWithSession,
 ): StripeConnectSessionState | undefined => {
-  const state = req.session?.stripeConnect as
-    StripeConnectSessionState | undefined;
+  const stripeConnect = req.session?.stripeConnect;
   req.session!.stripeConnect = undefined;
-  return state;
+  return stripeConnectSessionStateSchema.safeParse(stripeConnect).data;
 };
 
 export const generateNonce = (): string => crypto.randomUUID();

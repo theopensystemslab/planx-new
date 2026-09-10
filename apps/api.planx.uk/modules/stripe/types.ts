@@ -11,6 +11,16 @@ export const connectSchema = z.object({
 
 export type TeamLocals = { team: Team };
 
+export const stripeConnectSessionStateSchema = z.object({
+  teamId: z.number(),
+  teamSlug: z.string(),
+  nonce: z.string(),
+});
+
+export type StripeConnectSessionState = z.infer<
+  typeof stripeConnectSessionStateSchema
+>;
+
 export type InitiateConnectController = ValidatedRequestHandler<
   typeof connectSchema,
   never,
