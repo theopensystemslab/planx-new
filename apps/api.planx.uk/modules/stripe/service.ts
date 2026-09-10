@@ -132,12 +132,12 @@ export const getStripeAccountId = async (
 ): Promise<string | null> => {
   const column = stripeAccountIdColumn();
 
-  const { team_integrations } = await $api.client.request<{
-    team_integrations: { accountId: string | null }[];
+  const { teamIntegrations } = await $api.client.request<{
+    teamIntegrations: { accountId: string | null }[];
   }>(
     gql`
       query GetStripeAccountId($teamId: Int!) {
-        team_integrations(where: { team_id: { _eq: $teamId } }) {
+        teamIntegrations: team_integrations(where: { team_id: { _eq: $teamId } }) {
           accountId: ${column}
         }
       }
@@ -145,5 +145,5 @@ export const getStripeAccountId = async (
     { teamId },
   );
 
-  return team_integrations[0]?.accountId ?? null;
+  return teamIntegrations[0]?.accountId ?? null;
 };
