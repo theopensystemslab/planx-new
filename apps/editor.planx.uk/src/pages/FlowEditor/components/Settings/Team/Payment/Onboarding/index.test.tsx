@@ -12,7 +12,6 @@ const API_URL = import.meta.env.VITE_APP_API_URL;
 const { getState, setState } = useStore;
 let initialState: FullStore;
 
-let mockSearchParams: Record<string, string | undefined> = {};
 const mockNavigate = vi.fn();
 
 vi.mock("@tanstack/react-router", async () => {
@@ -20,7 +19,6 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useSearch: () => mockSearchParams,
   };
 });
 
@@ -40,7 +38,6 @@ describe("Onboarding", () => {
 
   beforeEach(() => {
     setState({ teamSlug: "lambeth" });
-    mockSearchParams = {};
     mockNavigate.mockClear();
   });
 
@@ -139,7 +136,6 @@ describe("Onboarding", () => {
   });
 
   it("shows a success toast and clears the redirect params after a successful connect", async () => {
-    mockSearchParams = { stripeConnected: "true" };
     server.use(
       statusHandler({
         connected: true,
@@ -148,7 +144,7 @@ describe("Onboarding", () => {
       }),
     );
 
-    await setup(<Onboarding />);
+    await setup(<Onboarding stripeResult={{ type: "success" }} />);
 
     expect(
       await screen.findByText("Stripe account connected successfully"),
@@ -158,31 +154,36 @@ describe("Onboarding", () => {
     );
   });
 
-  it("shows a cancellation toast when the council declines the Stripe consent screen", async () => {
-    mockSearchParams = { stripeError: "access_denied" };
+  it("shows the toast message when passed a Stripe error", async () => {
     server.use(
       statusHandler({ connected: false, accountId: null, mode: "test" }),
     );
 
-    await setup(<Onboarding />);
+    await setup(
+      <Onboarding
+        stripeResult={{
+          type: "error",
+          message: "Stripe connection was cancelled",
+        }}
+      />,
+    );
 
     expect(
       await screen.findByText("Stripe connection was cancelled"),
     ).toBeInTheDocument();
+    expect(mockNavigate).toHaveBeenCalledWith(
+      expect.objectContaining({ to: ".", replace: true }),
+    );
   });
 
-  it("shows a generic error toast for other Stripe errors", async () => {
-    mockSearchParams = { stripeError: "connect_failed" };
+  it("does not toast or clear params when there is no Stripe result", async () => {
     server.use(
       statusHandler({ connected: false, accountId: null, mode: "test" }),
     );
 
     await setup(<Onboarding />);
+    await screen.findByRole("button", { name: "Connect Stripe account" });
 
-    expect(
-      await screen.findByText(
-        "Failed to connect Stripe account, please try again",
-      ),
-    ).toBeInTheDocument();
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });

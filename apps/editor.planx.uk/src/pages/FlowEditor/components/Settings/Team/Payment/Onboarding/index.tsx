@@ -5,9 +5,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useToast } from "hooks/useToast";
-import type { STRIPE_CONNECT_ERRORS } from "lib/api/stripe/types";
+import type { StripeConnectResult } from "lib/api/stripe/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import InputLegend from "ui/editor/InputLegend";
@@ -16,42 +16,25 @@ import SettingsDescription from "ui/editor/SettingsDescription";
 
 import { useStripeConnectStatus } from "./hooks/useStripeConnectStatus";
 
-const DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE =
-  "Failed to connect Stripe account, please try again";
+interface OnboardingProps {
+  stripeResult?: StripeConnectResult;
+}
 
-const STRIPE_CONNECT_ERROR_MESSAGES: Record<
-  (typeof STRIPE_CONNECT_ERRORS)[number],
-  string
-> = {
-  invalid_state: DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
-  access_denied: "Stripe connection was cancelled",
-  missing_code: DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
-  connect_failed: DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
-};
-
-export const Onboarding: React.FC = () => {
+export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
   const teamSlug = useStore((state) => state.teamSlug);
   const toast = useToast();
   const navigate = useNavigate();
-  const search = useSearch({
-    from: "/_authenticated/app/$team/settings/payments",
-  });
-  const { stripeConnected, stripeError } = search;
 
   const { data, isLoading, refetch } = useStripeConnectStatus(teamSlug);
 
   useEffect(() => {
-    if (!stripeConnected && !stripeError) return;
+    if (!stripeResult) return;
 
-    if (stripeConnected) {
+    if (stripeResult.type === "success") {
       toast.success("Stripe account connected successfully");
       refetch();
-    } else if (stripeError) {
-      toast.error(
-        STRIPE_CONNECT_ERROR_MESSAGES[
-          stripeError as (typeof STRIPE_CONNECT_ERRORS)[number]
-        ] ?? DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
-      );
+    } else {
+      toast.error(stripeResult.message);
     }
 
     navigate({

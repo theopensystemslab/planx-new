@@ -5,6 +5,8 @@ import { hasFeatureFlag } from "lib/featureFlags";
 import PaymentSettings from "pages/FlowEditor/components/Settings/Team/Payment";
 import { z } from "zod";
 
+import { getStripeConnectResult } from "./-payments.utils";
+
 export const paymentsSearchSchema = z.object({
   stripeConnected: z.boolean().optional(),
   stripeError: z
@@ -27,5 +29,10 @@ export const Route = createFileRoute(
     }
   },
   validateSearch: zodValidator(paymentsSearchSchema),
+  loaderDeps: ({ search }) => ({
+    stripeConnected: search.stripeConnected,
+    stripeError: search.stripeError,
+  }),
+  loader: ({ deps }) => getStripeConnectResult(deps),
   component: PaymentSettings,
 });

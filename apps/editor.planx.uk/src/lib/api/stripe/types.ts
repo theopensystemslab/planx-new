@@ -17,3 +17,6 @@ export const STRIPE_CONNECT_ERRORS = [
 
 export type StripeConnectError =
   (typeof STRIPE_CONNECT_ERRORS)[number] | (string & {});
+
+export type StripeConnectResult =
+  { type: "success" } | { type: "error"; message: StripeConnectError };
