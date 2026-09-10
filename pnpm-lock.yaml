@@ -147,6 +147,9 @@ importers:
 
   apps/api.planx.uk:
     dependencies:
+      '@ai-sdk/gateway':
+        specifier: ^4.0.72
+        version: 4.0.73(zod@3.25.76)
       '@airbrake/node':
         specifier: ^2.1.9
         version: 2.1.9

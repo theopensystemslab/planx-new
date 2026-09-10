@@ -1,3 +1,4 @@
+import { GatewayInvalidRequestError } from "@ai-sdk/gateway";
 import {
   APICallError,
   generateText,
@@ -84,60 +85,54 @@ export const enhanceProjectDescription = async (
       : { ok: true, value: output.enhancedDescription };
   } catch (error) {
     // full list of AI SDK errors: https://ai-sdk.dev/docs/reference/ai-sdk-errors
-    if (InvalidPromptError.isInstance(error)) {
-      console.error(
-        "Prompt provided to model was determined to be invalid",
-        error,
-      );
-      return { ok: false, error: GATEWAY_STATUS.INVALID };
-    } else if (NoContentGeneratedError.isInstance(error)) {
-      console.error("Model failed to generate any content", error);
-    } else if (NoObjectGeneratedError.isInstance(error)) {
-      console.error(
-        "Model failed to return an output compliant with given schema",
-        error,
-      );
-    } else if (NoOutputGeneratedError.isInstance(error)) {
-      console.error("Model failed to return any output whatsoever", error);
-    } else if (isUnroutableRequestError(error)) {
-      console.error(
-        `No AI Gateway provider for '${DEFAULT_MODEL_ID}' meets the requirements in request (and/or in account-wide settings) - ${
-          getGatewayRejectionName(error) ?? "reason unknown"
-        }`,
-        error,
-      );
-    } else {
-      console.error(
-        "Unexpected error with request to Vercel AI Gateway",
-        error,
-      );
+    switch (true) {
+      case InvalidPromptError.isInstance(error):
+        console.error(
+          "Prompt provided to model was determined to be invalid",
+          error,
+        );
+        return { ok: false, error: GATEWAY_STATUS.INVALID };
+      case NoContentGeneratedError.isInstance(error):
+        console.error("Model failed to generate any content", error);
+        break;
+      case NoObjectGeneratedError.isInstance(error):
+        console.error(
+          "Model failed to return an output compliant with given schema",
+          error,
+        );
+        break;
+      case NoOutputGeneratedError.isInstance(error):
+        console.error("Model failed to return any output whatsoever", error);
+        break;
+      case GatewayInvalidRequestError.isInstance(error):
+        console.error(
+          `No AI Gateway provider for '${DEFAULT_MODEL_ID}' meets the requirements in request (and/or in account-wide settings) - ${
+            getGatewayRejectionName(error) ?? "reason unknown"
+          }`,
+          error,
+        );
+        break;
+      default:
+        console.error(
+          "Unexpected error with request to Vercel AI Gateway",
+          error,
+        );
     }
     return { ok: false, error: GATEWAY_STATUS.ERROR };
   }
 };
 
 /**
- * The Gateway rejects a request with 400 invalid_request_error when no provider can
- * satisfy the requested constraints, e.g. inference region, ZDR, etc. It names the
- * specific reason in `error.param.name`, e.g. NoInferenceEndpointProvidersError.
+ * The Gateway rejects a request with a 400 `invalid_request_error` when no provider can satisfy
+ * the requested constraints, e.g. inference region/ZDR. We burrow into its `cause`, which is an
+ * APICallError, to find the reason in `error.param.name` e.g. NoInferenceEndpointProvidersError.
  */
-const isUnroutableRequestError = (error: unknown): boolean =>
-  error instanceof Error &&
-  "type" in error &&
-  error.type === "invalid_request_error" &&
-  "statusCode" in error &&
-  error.statusCode === 400;
+const getGatewayRejectionName = (
+  error: GatewayInvalidRequestError,
+): string | undefined => {
+  if (!APICallError.isInstance(error.cause)) return undefined;
 
-/**
- * The Gateway*Error classes from `@ai-sdk/gateway` aren't re-exported from `ai` package,
- * so we catch this error by duck-type, as above. Its `cause` is an APICallError,
- * which *is* exported and carries the parsed response body on `data`.
- */
-const getGatewayRejectionName = (error: unknown): string | undefined => {
-  const cause = error instanceof Error ? error.cause : undefined;
-  if (!APICallError.isInstance(cause)) return undefined;
-
-  const body = cause.data as
+  const body = error.cause.data as
     { error?: { param?: { name?: unknown } } } | undefined;
   const name = body?.error?.param?.name;
 

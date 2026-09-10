@@ -1,3 +1,4 @@
+import { GatewayInvalidRequestError } from "@ai-sdk/gateway";
 import { APICallError } from "ai";
 // see: https://ai-sdk.dev/docs/ai-sdk-core/testing
 import { MockLanguageModelV4 } from "ai/test";
@@ -161,8 +162,8 @@ describe("enhanceProjectDescription", () => {
           param: { name: "NoInferenceEndpointProvidersError" },
         },
       };
-      const unroutable = Object.assign(new Error(message), {
-        type: "invalid_request_error",
+      const unroutable = new GatewayInvalidRequestError({
+        message,
         statusCode: 400,
         cause: new APICallError({
           message,
@@ -194,6 +195,34 @@ describe("enhanceProjectDescription", () => {
 
       expect(consoleError).toHaveBeenCalledWith(
         expect.stringContaining("NoInferenceEndpointProvidersError"),
+        expect.anything(),
+      );
+
+      consoleError.mockRestore();
+    });
+
+    it("falls back to 'reason unknown' when the rejection carries no APICallError cause", async () => {
+      mockGetModel.mockReturnValueOnce(
+        new MockLanguageModelV4({
+          doGenerate: async () => {
+            throw new GatewayInvalidRequestError({
+              message: "Invalid request",
+            });
+          },
+        }),
+      );
+
+      const consoleError = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      await expect(enhance()).resolves.toEqual({
+        ok: false,
+        error: GATEWAY_STATUS.ERROR,
+      });
+
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining("reason unknown"),
         expect.anything(),
       );
 
