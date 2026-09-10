@@ -74,7 +74,7 @@ export default function Explore() {
             <TemplatesWidget />
           </DashboardWidget>
           <DashboardWidget
-            title="Calendar"
+            title="Events & learning sessions"
             headerAction={<CalendarViewToggle />}
           >
             <CalendarWidget />

@@ -7,15 +7,20 @@ import { BadgeChip } from "components/EditorNavMenu/styles";
 import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
-interface DashboardWidgetProps {
+type WidgetLinkOptions = LinkOptions<RegisteredRouter> & { label: string };
+
+type HeaderSlot =
+  | { link?: never; headerAction?: never }
+  | { link: WidgetLinkOptions; headerAction?: never }
+  | { headerAction: React.ReactNode; link?: never };
+
+type DashboardWidgetProps = {
   title: string;
   subtitle?: string;
   count?: number;
-  link?: LinkOptions<RegisteredRouter> & { label: string };
-  headerAction?: React.ReactNode;
   children: React.ReactNode;
   sx?: SxProps<Theme>;
-}
+} & HeaderSlot;
 
 const Root = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -44,9 +49,7 @@ const StyledWidgetLink = styled(CustomLink)(({ theme }) => ({
   },
 })) as typeof CustomLink;
 
-type WidgetLinkProps = LinkOptions<RegisteredRouter> & { label: string };
-
-export const WidgetLink = ({ label, ...linkProps }: WidgetLinkProps) => (
+export const WidgetLink = ({ label, ...linkProps }: WidgetLinkOptions) => (
   <StyledWidgetLink
     {...(linkProps as React.ComponentProps<typeof StyledWidgetLink>)}
   >
@@ -82,7 +85,8 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
           />
         )}
       </Box>
-      {headerAction ?? (link && <WidgetLink {...link} />)}
+      {headerAction}
+      {link && <WidgetLink {...link} />}
     </Header>
     {children}
   </Root>
