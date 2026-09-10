@@ -177,7 +177,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
                 No results found
               </Typography>
               <Typography sx={{ color: "text.secondary", pt: 1 }}>
-                Check your search term and try again
+                {search.trim()
+                  ? "Check your search term and try again"
+                  : "Nothing to show here yet"}
               </Typography>
             </Box>
           )}
