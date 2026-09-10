@@ -7,6 +7,7 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useToast } from "hooks/useToast";
+import type { STRIPE_CONNECT_ERRORS } from "lib/api/stripe/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import InputLegend from "ui/editor/InputLegend";
@@ -14,6 +15,19 @@ import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
 import { useStripeConnectStatus } from "./hooks/useStripeConnectStatus";
+
+const DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE =
+  "Failed to connect Stripe account, please try again";
+
+const STRIPE_CONNECT_ERROR_MESSAGES: Record<
+  (typeof STRIPE_CONNECT_ERRORS)[number],
+  string
+> = {
+  invalid_state: DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
+  access_denied: "Stripe connection was cancelled",
+  missing_code: DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
+  connect_failed: DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
+};
 
 export const Onboarding: React.FC = () => {
   const teamSlug = useStore((state) => state.teamSlug);
@@ -24,7 +38,7 @@ export const Onboarding: React.FC = () => {
   });
   const { stripeConnected, stripeError } = search;
 
-  const { refetch } = useStripeConnectStatus(teamSlug);
+  const { data, isLoading, refetch } = useStripeConnectStatus(teamSlug);
 
   useEffect(() => {
     if (!stripeConnected && !stripeError) return;
@@ -34,9 +48,9 @@ export const Onboarding: React.FC = () => {
       refetch();
     } else if (stripeError) {
       toast.error(
-        stripeError === "access_denied"
-          ? "Stripe connection was cancelled"
-          : "Failed to connect Stripe account, please try again",
+        STRIPE_CONNECT_ERROR_MESSAGES[
+          stripeError as (typeof STRIPE_CONNECT_ERRORS)[number]
+        ] ?? DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
       );
     }
 
@@ -90,7 +104,7 @@ export const Onboarding: React.FC = () => {
               paddingTop: 0.25,
             }}
           >
-            {stripeConnectStatusQuery.isLoading && (
+            {isLoading && (
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                 <CircularProgress size={20} />
                 <Typography variant="body2">
@@ -99,58 +113,41 @@ export const Onboarding: React.FC = () => {
               </Box>
             )}
 
-            {!stripeConnectStatusQuery.isLoading &&
-              !stripeConnectStatusQuery.data?.connected && (
-                <>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    No Stripe account connected. Click below to start the
-                    onboarding process.
-                  </Typography>
-                  <Box>
-                    <Button onClick={handleConnect} variant="contained">
-                      Connect Stripe account
-                    </Button>
-                  </Box>
-                </>
-              )}
+            {!isLoading && !data?.connected && (
+              <>
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  No Stripe account connected. Click below to start the
+                  onboarding process.
+                </Typography>
+                <Box>
+                  <Button onClick={handleConnect} variant="contained">
+                    Connect Stripe account
+                  </Button>
+                </Box>
+              </>
+            )}
 
-            {!stripeConnectStatusQuery.isLoading &&
-              stripeConnectStatusQuery.data?.connected && (
-                <Box
-                  sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}
-                >
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                    <Typography variant="body1">Status:</Typography>
-                    <Chip label="Connected" color="success" size="small" />
-                  </Box>
-                  <Box>
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      Account ID
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <Typography variant="body1">
-                        {stripeConnectStatusQuery.data.accountId}
-                      </Typography>
-                      <Chip
-                        label={
-                          stripeConnectStatusQuery.data.mode === "live"
-                            ? "Live"
-                            : "Test"
-                        }
-                        color={
-                          stripeConnectStatusQuery.data.mode === "live"
-                            ? "success"
-                            : "warning"
-                        }
-                        size="small"
-                      />
-                    </Box>
+            {!isLoading && data?.connected && (
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Typography variant="body1">Status:</Typography>
+                  <Chip label="Connected" color="success" size="small" />
+                </Box>
+                <Box>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    Account ID
+                  </Typography>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Typography variant="body1">{data.accountId}</Typography>
+                    <Chip
+                      label={data.mode === "live" ? "Live" : "Test"}
+                      color={data.mode === "live" ? "success" : "warning"}
+                      size="small"
+                    />
                   </Box>
                 </Box>
-              )}
+              </Box>
+            )}
           </Box>
         </Grid>
       </Grid>
