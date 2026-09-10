@@ -11,6 +11,12 @@ object_relationships:
         remote_table:
           name: lowcal_sessions
           schema: public
+  - name: payment_status_enum
+    using:
+      foreign_key_constraint_on: status
+  - name: stripe_payment_status_enum
+    using:
+      foreign_key_constraint_on: stripe_status
 insert_permissions:
   - role: api
     permission:
