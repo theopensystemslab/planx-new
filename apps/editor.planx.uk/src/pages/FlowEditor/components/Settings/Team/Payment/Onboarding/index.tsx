@@ -19,7 +19,9 @@ export const Onboarding: React.FC = () => {
   const teamSlug = useStore((state) => state.teamSlug);
   const toast = useToast();
   const navigate = useNavigate();
-  const search = useSearch({ strict: false });
+  const search = useSearch({
+    from: "/_authenticated/app/$team/settings/payments",
+  });
   const { stripeConnected, stripeError } = search;
 
   const stripeConnectStatusQuery = useStripeConnectStatus(teamSlug);
