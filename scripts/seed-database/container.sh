@@ -21,8 +21,6 @@ touch '/tmp/sync.sql'
 tables=(
   # Mandatory tables
   flows 
-  flow_note_positions
-  flow_note_content
   users 
   teams 
   team_members 
@@ -60,7 +58,6 @@ echo published_flows downloaded
 
 if [[ ${RESET} == "reset_flows" ]]; then
   cat 'write/truncate_flows.sql' >> '/tmp/sync.sql'
-  cat 'write/truncate_flow_notes.sql' >> '/tmp/sync.sql'
   cat 'write/truncate_team_members.sql' >> '/tmp/sync.sql'
 fi
 

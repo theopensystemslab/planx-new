@@ -8,18 +8,6 @@ import { userContext } from "../../auth/middleware.js";
 
 beforeEach(() => {
   queryMock.mockQuery({
-    name: "GetUserById",
-    matchOnVariables: false,
-    data: {
-      user: {
-        id: 123,
-        isPlatformAdmin: false,
-        teams: [{ role: "teamEditor", team: { id: 1, slug: "my-team" } }],
-      },
-    },
-  });
-
-  queryMock.mockQuery({
     name: "GetFlowData",
     matchOnVariables: false,
     data: {
@@ -30,11 +18,21 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
-    name: "CopyFlow",
+    name: "InsertFlow",
     matchOnVariables: false,
     data: {
-      copyFlow: {
+      insertFlow: {
         id: 2,
+      },
+    },
+  });
+
+  queryMock.mockQuery({
+    name: "InsertOperation",
+    matchOnVariables: false,
+    data: {
+      operation: {
+        id: 1,
       },
     },
   });
@@ -119,30 +117,6 @@ describe("authentication and error handling", () => {
       });
   });
 
-  it("returns an error if the user is not a member of the target team", async () => {
-    queryMock.mockQuery({
-      name: "GetUserById",
-      matchOnVariables: false,
-      data: {
-        user: {
-          id: 123,
-          isPlatformAdmin: false,
-          teams: [{ role: "teamEditor", team: { id: 2, slug: "other-team" } }],
-        },
-      },
-    });
-
-    const body = {
-      insert: true,
-      replaceValue: "T3ST1",
-      teamId: 1,
-      name: "test (copy)",
-      slug: "test-copy",
-    };
-
-    await supertest(app).post("/flows/1/copy").send(body).set(auth).expect(403);
-  });
-
   it("returns an error if the operation to insert a new flow fails", async () => {
     const body = {
       insert: true,
@@ -153,14 +127,31 @@ describe("authentication and error handling", () => {
     };
 
     queryMock.mockQuery({
-      name: "CopyFlow",
+      name: "GetFlowData",
       matchOnVariables: false,
-      data: { copyFlow: null },
+      data: {
+        flow: {
+          data: mockFlowData,
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "InsertFlow",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          id: 2,
+        },
+      },
       graphqlErrors: [
         {
           message: "Something went wrong",
         },
       ],
+      variables: {
+        id: "3",
+      },
     });
 
     await supertest(app)
@@ -169,7 +160,8 @@ describe("authentication and error handling", () => {
       .set(auth)
       .expect(500)
       .then((res) => {
-        expect(res.body.error).toMatch(/Failed to copy flow/);
+        expect(res.body.error).toMatch(/failed to insert flow/);
+        expect(res.body.error).toMatch(/Please check permissions/);
       });
   });
 });
@@ -246,7 +238,7 @@ it("throws an error if the a GraphQL operation fails", async () => {
     });
 });
 
-it("returns an error if user details are missing", async () => {
+it("throws an error if user details are missing", async () => {
   const getStoreMock = vi.spyOn(userContext, "getStore");
   getStoreMock.mockReturnValue(undefined);
 
@@ -258,7 +250,14 @@ it("returns an error if user details are missing", async () => {
     slug: "test-copy",
   };
 
-  await supertest(app).post("/flows/1/copy").send(body).set(auth).expect(403);
+  await supertest(app)
+    .post("/flows/1/copy")
+    .send(body)
+    .set(auth)
+    .expect(500)
+    .then((res) => {
+      expect(res.body.error).toMatch(/Failed to copy flow/);
+    });
 });
 
 // the original flow

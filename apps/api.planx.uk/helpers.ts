@@ -424,15 +424,7 @@ const getChildren = (
  * Rename a single node id the same way `makeUniqueFlow` renames the flow it belongs to
  * (replace last n characters), leaving `_root` and nullish ids untouched.
  */
-function renameNodeId(nodeId: string, replaceValue: string): string;
-function renameNodeId(
-  nodeId: string | null | undefined,
-  replaceValue: string,
-): string | null | undefined;
-function renameNodeId(
-  nodeId: string | null | undefined,
-  replaceValue: string,
-): string | null | undefined {
+function renameNodeId(nodeId: string, replaceValue: string): string {
   if (!nodeId || nodeId === "_root") return nodeId;
   return nodeId.slice(0, -replaceValue.length) + replaceValue;
 }

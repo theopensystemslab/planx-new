@@ -82,7 +82,7 @@ update_permissions:
         - staging_stripe_account_id
       filter: {}
       check: null
-    comment: "Team membership is enforced in the API layer (requireTeamMembership) before this role writes a connected Stripe account id"
+    comment: Team membership is enforced in the API layer (requireTeamMembership) before this role writes a connected Stripe account id
   - role: platformAdmin
     permission:
       columns:

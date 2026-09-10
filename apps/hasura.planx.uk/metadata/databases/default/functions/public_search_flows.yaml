@@ -2,6 +2,7 @@ function:
   name: search_flows
   schema: public
 configuration:
+  custom_root_fields: {}
   exposed_as: query
 permissions:
   - role: analyst
