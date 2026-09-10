@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { formatLastEditMessage } from "pages/FlowEditor/utils";
 import { cardBoxShadow } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType } from "ui/editor/FlowTag/types";
+import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 
 import { Badge } from "../../../components/Badge/Badge";
 import { BadgeVariant } from "../../../components/Badge/types";
@@ -33,16 +33,24 @@ export const FlowDetailsPanel: React.FC<FlowDetailsPanelProps> = ({
     : undefined;
 
   const hasSendComponent = Boolean(flow.publishedFlows[0]?.hasSendComponent);
+  const statusVariant =
+    flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
 
   const result: SearchResult = {
     icon: <Badge variant={BadgeVariant.Team} team={flow.team} size="compact" />,
     sourceTeam: flow.team.name,
-    statusLabel: flow.status === "online" ? "Online" : undefined,
     title: flow.name,
     meta: editMessage,
-    tag: hasSendComponent ? (
-      <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
-    ) : undefined,
+    tag: (
+      <>
+        <FlowTag tagType={FlowTagType.Status} statusVariant={statusVariant}>
+          {statusVariant}
+        </FlowTag>
+        {hasSendComponent && (
+          <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
+        )}
+      </>
+    ),
     description: flow.summary ?? undefined,
     primaryAction:
       canCopy && flow.canCreateFromCopy

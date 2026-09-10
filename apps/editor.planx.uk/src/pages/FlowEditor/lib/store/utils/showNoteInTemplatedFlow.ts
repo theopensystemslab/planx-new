@@ -10,10 +10,12 @@ import type { Store } from "..";
 // In templated flows, always hide `Note` components and attached `notes` props in the graph
 //   unless either is attached to a templated node or within a templated folder
 export const showNoteInTemplatedFlow = (
-  nodeId: string,
+  nodeId: string | undefined,
   flow: Store.Flow,
   orderedFlow: OrderedFlow | undefined,
 ) => {
+  if (!nodeId || !flow[nodeId]) return false;
+
   const isAttachedToTemplatedNode = flow[nodeId]?.data?.isTemplatedNode;
   const parent = getParentId(nodeId);
   const indexedParent = orderedFlow?.find(({ id }) => id === parent);
