@@ -1,8 +1,11 @@
+import { GatewayInvalidRequestError } from "@ai-sdk/gateway";
 import {
+  APICallError,
   generateText,
   InvalidPromptError,
   NoContentGeneratedError,
   NoObjectGeneratedError,
+  NoOutputGeneratedError,
   Output,
 } from "ai";
 import { readFileSync } from "fs";
@@ -37,37 +40,39 @@ export const enhanceProjectDescription = async (
 ): Promise<GatewayResult> => {
   try {
     const startTime = Date.now();
-    const result = getModel(DEFAULT_MODEL_ID);
-    if (!result.ok) {
-      return { ok: false, error: result.error };
-    }
-    if (!result.model) {
-      return { ok: false, error: GATEWAY_STATUS.ERROR };
-    }
+    const model = getModel(DEFAULT_MODEL_ID);
     const prompt = `<user_input>${original_description}</user_input>`;
     const res = await generateText({
-      model: result.model,
+      model,
       output: Output.object({
         schema: projectDescriptionOutputSchema,
       }),
-      system: loadSystemPrompt(),
+      instructions: loadSystemPrompt(),
       prompt,
+      // XXX: we enforce only routing to providers which don't train on prompt data
+      // we want to upgrade to ZDR + in-EU inference in future (depending on model availability)
+      providerOptions: {
+        gateway: {
+          disallowPromptTraining: true,
+        },
+      },
     });
     const responseTimeMs = Date.now() - startTime;
 
     // log the exchange w/ Vercel AI Gateway to the audit table in db
     await logAiGatewayExchange({
       endpoint,
-      modelId: res.response?.modelId || DEFAULT_MODEL_ID,
+      modelId: res.finalStep.response.modelId || DEFAULT_MODEL_ID,
       prompt,
       response: res.output.enhancedDescription ?? undefined,
       gatewayStatus: res.output.status || undefined,
       tokenUsage: res.usage?.totalTokens,
-      costUsd: res.providerMetadata?.gateway?.cost
-        ? parseFloat(res.providerMetadata.gateway.cost as string)
+      costUsd: res.finalStep.providerMetadata?.gateway?.cost
+        ? parseFloat(res.finalStep.providerMetadata.gateway.cost as string)
         : undefined,
       vercelGenerationId:
-        (res.providerMetadata?.gateway?.generationId as string) || undefined,
+        (res.finalStep.providerMetadata?.gateway?.generationId as string) ||
+        undefined,
       responseTimeMs,
       flowId,
       sessionId,
@@ -79,25 +84,57 @@ export const enhanceProjectDescription = async (
       ? { ok: false, error: output.status }
       : { ok: true, value: output.enhancedDescription };
   } catch (error) {
-    if (InvalidPromptError.isInstance(error)) {
-      console.error(
-        "Prompt provided to model was determined to be invalid",
-        error,
-      );
-      return { ok: false, error: GATEWAY_STATUS.INVALID };
-    } else if (NoContentGeneratedError.isInstance(error)) {
-      console.error("Model failed to generate any content", error);
-    } else if (NoObjectGeneratedError.isInstance(error)) {
-      console.error(
-        "Model failed to return an output compliant with given schema",
-        error,
-      );
-    } else {
-      console.error(
-        "Unexpected error with request to Vercel AI Gateway",
-        error,
-      );
+    // full list of AI SDK errors: https://ai-sdk.dev/docs/reference/ai-sdk-errors
+    switch (true) {
+      case InvalidPromptError.isInstance(error):
+        console.error(
+          "Prompt provided to model was determined to be invalid",
+          error,
+        );
+        return { ok: false, error: GATEWAY_STATUS.INVALID };
+      case NoContentGeneratedError.isInstance(error):
+        console.error("Model failed to generate any content", error);
+        break;
+      case NoObjectGeneratedError.isInstance(error):
+        console.error(
+          "Model failed to return an output compliant with given schema",
+          error,
+        );
+        break;
+      case NoOutputGeneratedError.isInstance(error):
+        console.error("Model failed to return any output whatsoever", error);
+        break;
+      case GatewayInvalidRequestError.isInstance(error):
+        console.error(
+          `No AI Gateway provider for '${DEFAULT_MODEL_ID}' meets the requirements in request (and/or in account-wide settings) - ${
+            getGatewayRejectionName(error) ?? "reason unknown"
+          }`,
+          error,
+        );
+        break;
+      default:
+        console.error(
+          "Unexpected error with request to Vercel AI Gateway",
+          error,
+        );
     }
     return { ok: false, error: GATEWAY_STATUS.ERROR };
   }
+};
+
+/**
+ * The Gateway rejects a request with a 400 `invalid_request_error` when no provider can satisfy
+ * the requested constraints, e.g. inference region/ZDR. We burrow into its `cause`, which is an
+ * APICallError, to find the reason in `error.param.name` e.g. NoInferenceEndpointProvidersError.
+ */
+const getGatewayRejectionName = (
+  error: GatewayInvalidRequestError,
+): string | undefined => {
+  if (!APICallError.isInstance(error.cause)) return undefined;
+
+  const body = error.cause.data as
+    { error?: { param?: { name?: unknown } } } | undefined;
+  const name = body?.error?.param?.name;
+
+  return typeof name === "string" ? name : undefined;
 };
