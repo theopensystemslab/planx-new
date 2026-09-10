@@ -2,6 +2,7 @@ import type { Request } from "express";
 
 import { ServerError } from "../../errors/index.js";
 import {
+  consumeConnectState,
   requireStripeConnectTeamAuth,
   setConnectState,
   verifyState,
@@ -59,6 +60,28 @@ describe("setConnectState / verifyState", () => {
     const req = buildRequest();
 
     expect(verifyState(req, "abc")).toBeUndefined();
+  });
+
+  it("returns undefined when the saved state doesn't match the expected shape", () => {
+    const req = {
+      session: { stripeConnect: { nonce: "abc" } },
+    } as unknown as Request;
+
+    expect(consumeConnectState(req)).toBeUndefined();
+  });
+
+  it("throws when there is no session to save state into", () => {
+    const req = { session: null } as unknown as Request;
+
+    expect(() =>
+      setConnectState(req, { teamId: 1, teamSlug: "lambeth", nonce: "abc" }),
+    ).toThrow();
+  });
+
+  it("returns undefined, without throwing, when consuming state from a request with no session", () => {
+    const req = { session: null } as unknown as Request;
+
+    expect(consumeConnectState(req)).toBeUndefined();
   });
 });
 

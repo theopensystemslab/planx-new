@@ -43,7 +43,10 @@ export const setConnectState = (
   req: RequestWithSession,
   state: StripeConnectSessionState,
 ): void => {
-  req.session!.stripeConnect = state;
+  if (!req.session) {
+    throw new Error("Cannot save Stripe Connect state: request has no session");
+  }
+  req.session.stripeConnect = state;
 };
 
 // Read the connect state from the session and clear it so it can't be reused
@@ -51,7 +54,9 @@ export const consumeConnectState = (
   req: RequestWithSession,
 ): StripeConnectSessionState | undefined => {
   const stripeConnect = req.session?.stripeConnect;
-  req.session!.stripeConnect = undefined;
+  if (req.session) {
+    req.session.stripeConnect = undefined;
+  }
   return stripeConnectSessionStateSchema.safeParse(stripeConnect).data;
 };
 
