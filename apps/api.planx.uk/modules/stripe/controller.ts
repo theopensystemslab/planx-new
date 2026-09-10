@@ -1,5 +1,3 @@
-import type { Team } from "@opensystemslab/planx-core/types";
-
 import { ServerError } from "../../errors/index.js";
 import { generateNonce, setConnectState, verifyState } from "./middleware.js";
 import * as Service from "./service.js";
@@ -15,7 +13,7 @@ export const initiateConnect: InitiateConnectController = async (
   next,
 ) => {
   try {
-    const team = res.locals.team as Team;
+    const { team } = res.locals;
 
     const nonce = generateNonce();
     setConnectState(req, { teamId: team.id, teamSlug: team.slug, nonce });
@@ -38,7 +36,7 @@ export const getConnectStatus: ConnectStatusController = async (
   next,
 ) => {
   try {
-    const team = res.locals.team as Team;
+    const { team } = res.locals;
     const accountId = await Service.getStripeAccountId(team.id);
     return res.send({
       connected: Boolean(accountId),

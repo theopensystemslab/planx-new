@@ -1,3 +1,4 @@
+import type { Team } from "@opensystemslab/planx-core/types";
 import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
@@ -8,14 +9,18 @@ export const connectSchema = z.object({
   }),
 });
 
+type TeamLocals = { team: Team };
+
 export type InitiateConnectController = ValidatedRequestHandler<
   typeof connectSchema,
-  never
+  never,
+  TeamLocals
 >;
 
 export type ConnectStatusController = ValidatedRequestHandler<
   typeof connectSchema,
-  ConnectStatusResponse
+  ConnectStatusResponse,
+  TeamLocals
 >;
 
 export interface ConnectStatusResponse {
