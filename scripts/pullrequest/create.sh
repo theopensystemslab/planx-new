@@ -42,12 +42,11 @@ function compose() {
     "$@"
 }
 
-# Build outside the lock. Images don't collide, so this keeps the lock short-lived
-compose build
-
 # Use a lock to ensure overlapping runs of this script (pushes to GH in short succession) can't collide
 exec 9>/tmp/pizza-deploy.lock
-flock 9
+flock -w 900 9
+
+compose build
 
 # Drop any leftover containers/network from an interrupted run before starting
 compose down --remove-orphans
