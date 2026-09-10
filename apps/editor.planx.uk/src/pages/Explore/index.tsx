@@ -7,8 +7,9 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
-import CalendarGridWidget from "./components/CalendarGridWidget";
-import CalendarListWidget from "./components/CalendarListWidget";
+import CalendarWidget, {
+  CalendarViewToggle,
+} from "./components/CalendarWidget";
 import NumbersWidget from "./components/NumbersWidget";
 import { SearchModal } from "./components/SearchModal";
 import TemplatesWidget from "./components/TemplatesWidget";
@@ -72,11 +73,11 @@ export default function Explore() {
           <DashboardWidget title="Templates">
             <TemplatesWidget />
           </DashboardWidget>
-          <DashboardWidget title="Plan✕ calendar" subtitle="(list view)">
-            <CalendarListWidget />
-          </DashboardWidget>
-          <DashboardWidget title="Plan✕ calendar" subtitle="(grid view)">
-            <CalendarGridWidget />
+          <DashboardWidget
+            title="Calendar"
+            headerAction={<CalendarViewToggle />}
+          >
+            <CalendarWidget />
           </DashboardWidget>
         </Box>
       </Container>

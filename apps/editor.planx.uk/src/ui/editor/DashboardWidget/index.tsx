@@ -12,6 +12,7 @@ interface DashboardWidgetProps {
   subtitle?: string;
   count?: number;
   link?: LinkOptions<RegisteredRouter> & { label: string };
+  headerAction?: React.ReactNode;
   children: React.ReactNode;
   sx?: SxProps<Theme>;
 }
@@ -58,11 +59,12 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   subtitle,
   count,
   link,
+  headerAction,
   children,
   sx,
 }) => (
   <Root sx={sx}>
-    <Header>
+    <Header sx={headerAction ? { alignItems: "center", py: 1 } : undefined}>
       <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
         <Typography variant="h3" component="h2">
           {title}
@@ -80,7 +82,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
           />
         )}
       </Box>
-      {link && <WidgetLink {...link} />}
+      {headerAction ?? (link && <WidgetLink {...link} />)}
     </Header>
     {children}
   </Root>
