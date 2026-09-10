@@ -11,14 +11,12 @@ import type { SearchResult } from "./SearchResult";
 interface SearchListItemProps {
   result: SearchResult;
   onClick?: () => void;
-  onHover?: () => void;
   selected?: boolean;
 }
 
 export const SearchListItem: React.FC<SearchListItemProps> = ({
   result: { icon, title, description, statusLabel },
   onClick,
-  onHover,
   selected,
 }) => {
   const content = (
@@ -61,8 +59,6 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
     return (
       <ListItemButton
         onClick={onClick}
-        onMouseEnter={onHover}
-        onFocus={onHover}
         alignItems="center"
         selected={selected}
         sx={{ px: 2, py: 1.5, gap: 1.5 }}

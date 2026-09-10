@@ -54,7 +54,7 @@ export const SearchListItemDetail: React.FC<SearchListItemDetailProps> = ({
           {meta}
         </Typography>
       )}
-      {tag && <Box sx={{ mt: 1.5, display: "flex" }}>{tag}</Box>}
+      {tag && <Box sx={{ mt: 1.5, display: "flex", gap: 1 }}>{tag}</Box>}
       {description && (
         <Typography variant="body1" sx={{ mt: 2 }}>
           {description}

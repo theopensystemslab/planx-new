@@ -233,7 +233,6 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
                             : flow.team.name,
                         }}
                         onClick={() => setSelectedFlow(flow)}
-                        onHover={() => setSelectedFlow(flow)}
                         selected={selectedFlow?.id === flow.id}
                       />
                     </React.Fragment>
