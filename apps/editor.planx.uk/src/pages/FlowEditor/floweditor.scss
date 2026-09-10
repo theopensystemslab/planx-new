@@ -161,8 +161,12 @@ $fontMonospace: "Source Code Pro", monospace;
     }
   }
 
+  &.portal {
+    max-width: $nodeMaxWidth;
+  }
+
   &.portal .card-wrapper {
-    max-width: 260px;
+    max-width: $nodeMaxWidth;
     & > a {
       flex-direction: row;
     }
@@ -668,7 +672,7 @@ $fontMonospace: "Source Code Pro", monospace;
 
   &.external-portal {
     &[data-loading="true"] {
-      width: 260px;
+      width: $nodeMaxWidth;
     }
   }
 
