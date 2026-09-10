@@ -9,7 +9,7 @@ export const connectSchema = z.object({
   }),
 });
 
-type TeamLocals = { team: Team };
+export type TeamLocals = { team: Team };
 
 export type InitiateConnectController = ValidatedRequestHandler<
   typeof connectSchema,

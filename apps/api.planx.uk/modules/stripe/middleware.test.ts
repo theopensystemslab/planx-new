@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { Request } from "express";
 
 import { ServerError } from "../../errors/index.js";
 import {
@@ -63,11 +63,12 @@ describe("setConnectState / verifyState", () => {
 });
 
 describe("requireStripeConnectTeamAuth", () => {
-  const buildArgs = () => {
-    const req = {} as Request;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const buildArgs = (): any => {
+    const req = {};
     const res = {
       locals: { parsedReq: { params: { teamSlug: "lambeth" } } },
-    } as unknown as Response;
+    };
     const next = vi.fn();
     return { req, res, next };
   };

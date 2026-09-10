@@ -1,8 +1,9 @@
 import crypto from "crypto";
-import type { RequestHandler } from "express";
 
+import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 import { assertTeamEditPermission } from "../auth/requireTeamMembership.js";
 import { getTeamBySlug } from "./service.js";
+import type { connectSchema, TeamLocals } from "./types.js";
 
 interface StripeConnectSessionState {
   teamId: number;
@@ -20,12 +21,12 @@ interface RequestWithSession {
 /**
  * Look up the team and confirm the requesting user is a teamEditor/teamAdmin for it (or a platformAdmin)
  */
-export const requireStripeConnectTeamAuth: RequestHandler = async (
-  _,
-  res,
-  next,
-) => {
-  const { teamSlug } = res.locals.parsedReq.params as { teamSlug: string };
+export const requireStripeConnectTeamAuth: ValidatedRequestHandler<
+  typeof connectSchema,
+  never,
+  TeamLocals
+> = async (_, res, next) => {
+  const { teamSlug } = res.locals.parsedReq.params;
 
   try {
     const team = await getTeamBySlug(teamSlug);
