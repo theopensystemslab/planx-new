@@ -24,14 +24,14 @@ export const Onboarding: React.FC = () => {
   });
   const { stripeConnected, stripeError } = search;
 
-  const stripeConnectStatusQuery = useStripeConnectStatus(teamSlug);
+  const { refetch } = useStripeConnectStatus(teamSlug);
 
   useEffect(() => {
     if (!stripeConnected && !stripeError) return;
 
     if (stripeConnected) {
       toast.success("Stripe account connected successfully");
-      stripeConnectStatusQuery.refetch();
+      refetch();
     } else if (stripeError) {
       toast.error(
         stripeError === "access_denied"
