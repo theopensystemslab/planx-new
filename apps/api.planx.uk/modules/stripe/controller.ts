@@ -1,6 +1,9 @@
 import { ServerError } from "../../errors/index.js";
 import { stripe } from "./client.js";
-import type { CreateCheckoutSessionController } from "./types.js";
+import type {
+  CreateCheckoutSessionController,
+  StripeWebhookController,
+} from "./types.js";
 
 /**
  * Create a Stripe Checkout Session and return the URL
@@ -46,4 +49,26 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
       }),
     );
   }
+};
+
+/**
+ * Handle a verified inbound Stripe webhook event
+ *
+ * Signature verification and parsing happens upstream in `verifyStripeWebhook()`
+ */
+export const handleStripeWebhook: StripeWebhookController = (_req, res) => {
+  const { stripeEvent: event } = res.locals;
+
+  switch (event.type) {
+    case "payment_intent.succeeded":
+    case "payment_intent.payment_failed":
+      // TODO: Persist payment status, don't just log
+      console.log(`Stripe event ${event.id} ${event.type}`);
+      break;
+    default:
+      console.log(`Ignoring unhandled Stripe event ${event.id} ${event.type}`);
+  }
+
+  // TODO: Persist raw Stripe event to DB
+  return res.status(200).send();
 };

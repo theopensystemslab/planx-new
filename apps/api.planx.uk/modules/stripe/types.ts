@@ -1,3 +1,5 @@
+import type { Request, RequestHandler } from "express";
+import type Stripe from "stripe";
 import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
@@ -22,4 +24,12 @@ export interface CreateCheckoutSessionResponse {
 export type CreateCheckoutSessionController = ValidatedRequestHandler<
   typeof createCheckoutSessionSchema,
   CreateCheckoutSessionResponse
+>;
+
+export type StripeWebhookController = RequestHandler<
+  Request["params"],
+  unknown,
+  Request["body"],
+  Request["query"],
+  { stripeEvent: Stripe.Event }
 >;
