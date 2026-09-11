@@ -78,3 +78,23 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CreateCheckoutSessionResponse"
+  /stripe/webhook:
+    post:
+      summary: Receive a Stripe webhook event
+      description: |
+        Endpoint which Stripe POSTs events to.
+
+        Docs: [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
+      tags:
+        - stripe
+      requestBody:
+        description: The raw Stripe event payload.
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Event received (verified, or an ignored/unhandled type).
+        "400":
+          description: Missing or invalid `stripe-signature` - verification failed.
