@@ -1,4 +1,5 @@
 ---
+import ExternalLink from "@components/ExternalLink.astro";
 import type { LPA, Service } from "@lib/lpa-api";
 import { getServiceURL } from "@lib/utils";
 
@@ -19,19 +20,16 @@ if (!services.length) return;
     {
       services.map((service) => (
         <li class="py-2">
-          <a
-            class="paragraph-link paragraph-link--external text-body-lg"
+          <ExternalLink
+            class="text-body-lg"
             href={getServiceURL({
               domain: lpa.domain,
               lpaSlug: lpa.slug,
               serviceSlug: service.slug,
             })}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
           >
             {service.name}
-            <span class="sr-only"> (opens in a new tab)</span>
-          </a>
+          </ExternalLink>
           <p class="text-body-md m-0 py-2 text-text-secondary">{service.summary}</p>
         </li>
       ))
