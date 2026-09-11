@@ -57,6 +57,7 @@
     "resend": "^6.24.0",
     "sanitize-filename": "^1.6.4",
     "slack-notify": "^2.0.7",
+    "stripe": "^22.1.1",
     "string-to-stream": "^3.0.1",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
@@ -64,7 +65,7 @@
     "zod": "^3.25.76"
   },
   "scripts": {
-    "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files && pnpm copy-prompt-files",
+    "build": "rimraf ./dist && NODE_OPTIONS=--max-old-space-size=4096 npx tsc && pnpm copy-swagger-files && pnpm copy-prompt-files",
     "check": "pnpm typecheck && pnpm lint",
     "copy-prompt-files": "copyfiles 'modules/ai/**/*.md' dist",
     "copy-swagger-files": "copyfiles '**/docs.yaml' dist",

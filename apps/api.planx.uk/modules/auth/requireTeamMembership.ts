@@ -1,7 +1,47 @@
 import type { NextFunction, Request, Response } from "express";
 
 import { $api } from "../../client/index.js";
+import { ServerError } from "../../errors/index.js";
 import { userContext } from "./middleware.js";
+
+/**
+ * Confirm that the current user can edit the given team - a teamEditor/teamAdmin of that team, or a platformAdmin
+ * Shared business logic behind `requireTeamMembership` and `../stripe/middleware.ts`->`requireStripeConnectTeamAuth`
+ *
+ * `teamLabel` is only used in the rejection message, defaults to team id but can be customised if the caller has it
+ */
+export const assertTeamEditPermission = async (
+  teamId: number,
+  teamLabel: string | number = teamId,
+): Promise<void> => {
+  const userId = userContext.getStore()?.user?.sub;
+  if (!userId) {
+    throw new ServerError({
+      status: 403,
+      message: "Access denied - userId missing from request",
+    });
+  }
+
+  const user = await $api.user.getById(Number(userId));
+  if (!user) {
+    throw new ServerError({
+      status: 403,
+      message: `Access denied - unable to find user matching ID ${userId}`,
+    });
+  }
+
+  const isUserInTeam = user.teams.some(
+    ({ team, role }) =>
+      team.id === teamId && (role === "teamEditor" || role === "teamAdmin"),
+  );
+
+  if (!user.isPlatformAdmin && !isUserInTeam) {
+    throw new ServerError({
+      status: 403,
+      message: `Access denied. User ${userId} is not a member of team ${teamLabel} with permission to edit it`,
+    });
+  }
+};
 
 /**
  * Authorise that the current user can edit the team targeted by a request
@@ -18,35 +58,11 @@ import { userContext } from "./middleware.js";
 export const requireTeamMembership =
   <T>(getTeamId: (parsedReq: T) => number) =>
   async (_req: Request, res: Response, next: NextFunction) => {
-    const userId = userContext.getStore()?.user?.sub;
-    if (!userId)
-      return next({
-        status: 403,
-        message: "Access denied - userId missing from request",
-      });
-
-    const teamId = getTeamId(res.locals.parsedReq as T);
-
-    const user = await $api.user.getById(Number(userId));
-    if (!user)
-      return next({
-        status: 403,
-        message: `Access denied - unable to find user matching ID ${userId}`,
-      });
-
-    const isUserInTeam = user.teams.some(
-      ({ team, role }) =>
-        team.id === teamId && (role === "teamEditor" || role === "teamAdmin"),
-    );
-
-    const isAuthorised = user.isPlatformAdmin || isUserInTeam;
-
-    if (!isAuthorised) {
-      return next({
-        status: 403,
-        message: `Access denied. User ${userId} is not a member of team ${teamId} with permission to edit it`,
-      });
+    try {
+      const teamId = getTeamId(res.locals.parsedReq as T);
+      await assertTeamEditPermission(teamId);
+      return next();
+    } catch (error) {
+      return next(error);
     }
-
-    return next();
   };
