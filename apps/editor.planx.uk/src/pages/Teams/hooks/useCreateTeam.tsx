@@ -7,6 +7,7 @@ const CREATE_TEAM_MUTATION = gql`
     $domain: String
     $settings: team_settings_insert_input!
     $theme: team_themes_insert_input!
+    $invoice_details: team_invoice_details_insert_input!
   ) {
     insert_teams_one(
       object: {
@@ -16,6 +17,7 @@ const CREATE_TEAM_MUTATION = gql`
         team_settings: { data: $settings }
         theme: { data: $theme }
         integrations: { data: {} }
+        invoice_details: { data: $invoice_details }
       }
     ) {
       id
@@ -43,6 +45,7 @@ export const useCreateTeam = () => {
           is_trial: settings.isTrial,
         },
         theme: {},
+        invoice_details: {},
       },
     });
   };
