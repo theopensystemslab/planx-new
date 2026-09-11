@@ -4,6 +4,7 @@ import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
+import { useEffect } from "react";
 
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
 
@@ -66,16 +67,17 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
 
     return { team };
   },
-  loader: ({ context, cause }) => {
-    if (cause !== "preload") {
-      useStore.getState().setTeam(context.team);
-    }
-    return context.team;
-  },
+  loader: ({ context }) => context.team,
   component: FlowsLayout,
   notFoundComponent: CatchAllComponent,
 });
 
 function FlowsLayout() {
+  const team = Route.useLoaderData();
+
+  useEffect(() => {
+    useStore.getState().setTeam(team);
+  }, [team]);
+
   return <Outlet />;
 }
