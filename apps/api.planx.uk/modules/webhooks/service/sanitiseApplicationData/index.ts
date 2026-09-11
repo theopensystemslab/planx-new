@@ -16,8 +16,27 @@ export const sanitiseApplicationData = async () => {
     results.push(result);
   }
 
-  const operationFailed = results.some((result) => result.status === "failure");
-  if (operationFailed) await postToSlack(results, "Data Sanitation");
+  const failedOperations = results.filter(
+    (result) => result.status === "failure",
+  );
+  const operationFailed = failedOperations.length > 0;
+
+  if (operationFailed) {
+    const failedOperationNames = failedOperations.map(
+      (result) => result.operationName,
+    );
+    console.error(
+      `Data Sanitation failed for: ${failedOperationNames.join(", ")}`,
+    );
+    await postToSlack(results, "Data Sanitation");
+  } else {
+    const succeededOperationNames = results.map(
+      (result) => result.operationName,
+    );
+    console.log(
+      `Data Sanitation succeeded for: ${succeededOperationNames.join(", ")}`,
+    );
+  }
 
   return { operationFailed, results };
 };
