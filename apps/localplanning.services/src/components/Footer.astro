@@ -1,5 +1,6 @@
 ---
 import Container from "@components/Container.astro";
+import ExternalLink from "@components/ExternalLink.astro";
 import { Image } from "astro:assets";
 import mhclgLogo from "/public/mhclg-logo.svg";
 import odpLogo from "/public//odp-logo.svg";
@@ -57,11 +58,9 @@ const lastUpdatedAt = new Date(buildDateTime).toLocaleString("en-GB", {
       </div>
       <div class="flex flex-col sm:flex-row justify-between gap-8">
         <p class="text-body-md">
-          All content is available under the <a
-            class="paragraph-link paragraph-link--external"
+          All content is available under the <ExternalLink
             href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-            target="_blank"
-            rel="noopener noreferrer nofollow">Open Government License v3</a
+            >Open Government License v3</ExternalLink
           >, except where otherwise stated
         </p>
         <p class="text-body-sm">
