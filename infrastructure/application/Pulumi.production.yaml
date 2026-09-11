@@ -122,3 +122,5 @@ config:
   # This is a dummy placeholder value until we can switch on oAuth on prod and get the real value
   application:stripe-connect-client-id:
     secure: AAABABBT7TG68HoBqVdJHF6dbPr8FZveetwTUZpPyJ92pLYokKu8I58qrA==
+  application:stripe-webhook-secret:
+    secure: AAABAGr/VtVQykWP+59NpEdGASf1nqLP4jHGiS43QHbwp0O61VdwVApd5h87ww==

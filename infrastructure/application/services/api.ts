@@ -198,6 +198,10 @@ export const createApiService = async ({
           value: config.requireSecret("stripe-secret-key"),
         },
         {
+          name: "STRIPE_WEBHOOK_SECRET",
+          value: config.requireSecret("stripe-webhook-secret"),
+        },
+        {
           name: "MICROSOFT_CLIENT_ID",
           value: config.requireSecret("microsoft-client-id"),
         },
