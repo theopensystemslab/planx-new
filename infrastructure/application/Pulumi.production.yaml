@@ -121,3 +121,5 @@ config:
     secure: AAABAJdkS0v68Q8Vr2V7tLSb74ALGCTpjLOG2W6ZTgwb5aRUZkrNRUnv3dL4pdw85YxxOI6KUJnT30cGJyim4A==
   application:stripe-connect-client-id:
     secure: AAABAEGQOw44bXhdtDjhJiZVF3HPz8ZAkhH6aw6PCj3y7Vz1bBpyVDgaWiLsmt9h+R8S/3a9XZgnubQgvO9kiRh8Cg==
+  application:stripe-webhook-secret:
+    secure: AAABAGr/VtVQykWP+59NpEdGASf1nqLP4jHGiS43QHbwp0O61VdwVApd5h87ww==
