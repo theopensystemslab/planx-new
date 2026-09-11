@@ -3,6 +3,7 @@ import isNull from "lodash/isNull.js";
 import { ServerError } from ".././../errors/index.js";
 import { sendSlackMessage } from "../slack/utils.js";
 import { analyzeSessions } from "./service/analyzeSessions/index.js";
+import type { AnalyzeSessions } from "./service/analyzeSessions/types.js";
 import { getDailyFailedSubmissions } from "./service/dailyFailedSubmissions/index.js";
 import type { FailedSubmissionController } from "./service/dailyFailedSubmissions/types.js";
 import { softDeleteSession } from "./service/deleteSession/index.js";
@@ -217,9 +218,11 @@ export const deleteSessionController: DeleteSessionController = async (
 export const sanitiseApplicationDataController: SanitiseApplicationData =
   async (_req, res, next) => {
     try {
-      const { operationFailed, results } = await sanitiseApplicationData();
-      if (operationFailed) res.status(500);
-      return res.json(results);
+      res.status(202).json({ message: "Sanitation job started" });
+
+      sanitiseApplicationData().catch((error) => {
+        console.error("Unhandled error in sanitiseApplicationData", error);
+      });
     } catch (error) {
       return next(
         new ServerError({
@@ -230,7 +233,7 @@ export const sanitiseApplicationDataController: SanitiseApplicationData =
     }
   };
 
-export const analyzeSessionsController: SanitiseApplicationData = async (
+export const analyzeSessionsController: AnalyzeSessions = async (
   _req,
   res,
   next,
