@@ -33,7 +33,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "stalbans",
           domain: "planningservices.stalbans.gov.uk",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "cutover-ongoing",
         },
         {
           name: "camden",
