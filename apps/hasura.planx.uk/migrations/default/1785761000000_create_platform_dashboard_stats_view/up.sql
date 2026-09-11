@@ -8,7 +8,7 @@ filtered_flows AS (
   SELECT f.id, f.status
   FROM flows f
   JOIN lpa_teams t ON t.id = f.team_id
-  WHERE f.deleted_at IS NULL
+  WHERE f.archived_at IS NULL
 ),
 platform_sessions AS (
   SELECT
