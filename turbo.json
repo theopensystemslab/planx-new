@@ -14,6 +14,9 @@
     // compiled workspace packages resolve via dist/, so consumers reading types or importing at
     // runtime (including tests) must build any such dependencies first (`pnpm install` only symlinks)
     // workspace packages - it never builds them.
+    // Raw invocations that bypass turbo (vite, vitest, `tsc --noEmit`, tsserver) don't get this, so
+    // scripts/build-packages.sh covers fresh clones, installs and `git pull` - see
+    // packages/file-upload/README.md. It skips in CI, where every job builds explicitly.
     "typecheck": {
       "dependsOn": ["^build"]
     },

@@ -10,6 +10,13 @@ services:
     volumes:
       - "./apps/api.planx.uk:/api"
       - "/api/node_modules"
+      # `pnpm deploy --inject-workspace-packages` bakes a *copy* of @planx/file-upload's dist/
+      # into the image, and the anonymous volume above pins /api/node_modules for the life of
+      # the volume (`--force-recreate` reuses it; only `pnpm up`/`pnpm recreate` renew it), so
+      # the copy goes stale as soon as the package gains an export. Shadow it with the host
+      # package, whose dist/ is kept fresh by scripts/build-packages.sh (root `postinstall`).
+      # Dev only: production/e2e/pizza never load this file and keep using the baked copy.
+      - "./packages/file-upload:/api/node_modules/@planx/file-upload:ro"
 
     environment:
       NODE_ENV: "development"
