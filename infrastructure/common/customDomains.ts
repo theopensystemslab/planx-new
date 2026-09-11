@@ -59,7 +59,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "gateshead",
           domain: "planningservices.gateshead.gov.uk",
-          cloudFrontState: "cutover-ongoing",
+          cloudFrontState: "shared-final",
         },
         {
           name: "gloucester",
