@@ -657,7 +657,15 @@ describe("basic layout and behaviour", () => {
     ).toBeVisible();
 
     // Exit sidebar
-    await user.keyboard("{Esc}");
+    await user.click(screen.getByRole("button", { name: "Close panel" }));
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("heading", {
+          level: 2,
+          name: "Why does it matter?",
+        }),
+      ).not.toBeInTheDocument(),
+    );
 
     await user.click(screen.getByRole("textbox", { name: /test/i }));
     await user.paste(ORIGINAL);
@@ -688,7 +696,7 @@ describe("basic layout and behaviour", () => {
     ).toBeVisible();
 
     // Exit sidebar
-    await user.keyboard("{Esc}");
+    await user.click(screen.getByRole("button", { name: "Close panel" }));
   });
 
   test("users can navigate 'back' from the modification step to the selection step", async () => {
