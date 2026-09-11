@@ -1,0 +1,56 @@
+table:
+  name: platform_dashboard_stats
+  schema: public
+select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - lpas_current
+        - lpas_previous
+        - online_flows_current
+        - online_flows_previous
+        - sessions_current
+        - sessions_previous
+        - submissions_current
+        - submissions_previous
+      filter: {}
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - lpas_current
+        - lpas_previous
+        - online_flows_current
+        - online_flows_previous
+        - sessions_current
+        - sessions_previous
+        - submissions_current
+        - submissions_previous
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - lpas_current
+        - lpas_previous
+        - online_flows_current
+        - online_flows_previous
+        - sessions_current
+        - sessions_previous
+        - submissions_current
+        - submissions_previous
+      filter: {}
+    comment: ""
+  - role: teamViewer
+    permission:
+      columns:
+        - lpas_current
+        - lpas_previous
+        - online_flows_current
+        - online_flows_previous
+        - sessions_current
+        - sessions_previous
+        - submissions_current
+        - submissions_previous
+      filter: {}
+    comment: ""
