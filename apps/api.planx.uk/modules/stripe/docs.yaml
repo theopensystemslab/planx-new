@@ -1,0 +1,80 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: stripe
+    description: Endpoints for interacting with the Stripe API
+    externalDocs:
+      url: https://docs.stripe.com/
+components:
+  parameters:
+    localAuthority:
+      in: path
+      name: localAuthority
+      required: true
+      schema:
+        type: string
+  schemas:
+    CreateCheckoutSessionRequest:
+      description: |
+        Details required to create a Stripe hosted Checkout Session.
+
+        Docs: [https://docs.stripe.com/api/checkout/sessions/create](https://docs.stripe.com/api/checkout/sessions/create)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - sessionId
+              - flowId
+              - amount
+              - returnURL
+            properties:
+              sessionId:
+                type: string
+                format: uuid
+              flowId:
+                type: string
+                format: uuid
+              amount:
+                type: integer
+                format: int32
+                description: Amount to charge, in pence
+                example: 14500
+              returnURL:
+                type: string
+                format: uri
+                example: "https://editor.planx.uk/team/flow/published"
+  responses:
+    CreateCheckoutSessionResponse:
+      content:
+        application/json:
+          description: |
+            The hosted Checkout Session URL to redirect the applicant to.
+          schema:
+            type: object
+            properties:
+              url:
+                type: string
+                format: uri
+                nullable: true
+                example: "https://checkout.stripe.com/c/pay/cs_test_a1b2c3"
+paths:
+  /stripe/checkout-session/{localAuthority}:
+    post:
+      summary: Create a Stripe Checkout Session
+      description: |
+        Create a bare Stripe hosted Checkout Session on the platform account and
+        return its URL.
+
+        Docs: [https://docs.stripe.com/api/checkout/sessions/create](https://docs.stripe.com/api/checkout/sessions/create)
+      tags:
+        - stripe
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+      requestBody:
+        $ref: "#/components/schemas/CreateCheckoutSessionRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/CreateCheckoutSessionResponse"
