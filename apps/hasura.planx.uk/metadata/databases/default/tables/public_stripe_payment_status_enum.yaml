@@ -1,0 +1,4 @@
+table:
+  name: stripe_payment_status_enum
+  schema: public
+is_enum: true
