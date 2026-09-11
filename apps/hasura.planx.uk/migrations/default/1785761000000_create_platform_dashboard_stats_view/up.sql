@@ -2,7 +2,12 @@ CREATE OR REPLACE VIEW "public"."platform_dashboard_stats" AS
 WITH lpa_teams AS (
   SELECT id, created_at
   FROM teams
-  WHERE name NOT IN ('Open Digital Planning', 'Open Systems Lab', 'PlanX', 'Templates', 'Testing', 'WikiHouse')
+  WHERE name NOT IN (
+    'Open Digital Planning', 'Open Systems Lab', 'PlanX', 'Templates', 'Testing', 'WikiHouse',
+    'Council Onboarding', 'Environment Agency (Trial)', 'Historic England (Trial)',
+    'Lambeth Sandbox (Trial)', 'Madetech (Trial)', 'Planning Advisory Service (Trial)',
+    'Scotland (Trial)', 'TPX (Trial)'
+  )
 ),
 filtered_flows AS (
   SELECT f.id, f.status
