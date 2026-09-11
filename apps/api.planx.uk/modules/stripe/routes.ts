@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express, { Router } from "express";
 
 import { validate } from "../../shared/middleware/validate.js";
 import { useTeamEditorAuth } from "../auth/middleware.js";
@@ -7,6 +7,8 @@ import { createCheckoutSessionSchema } from "./checkout/types.js";
 import * as Controller from "./connect/controller.js";
 import { requireStripeConnectTeamAuth } from "./connect/middleware.js";
 import { connectCallbackSchema, connectSchema } from "./connect/types.js";
+import { handleStripeWebhook } from "./webhook/controller.js";
+import { verifyStripeWebhook } from "./webhook/middleware.js";
 
 const router = Router();
 
@@ -38,6 +40,16 @@ router.post(
   validate(createCheckoutSessionSchema),
   // TODO: Guard on connected accounts only
   createCheckoutSession,
+);
+
+// Stripe authenticates via the `stripe-signature` header, and signature verification requires
+// the raw request body
+// Docs: https://docs.stripe.com/webhooks/signature
+router.post(
+  "/stripe/webhook",
+  express.raw({ type: "application/json" }),
+  verifyStripeWebhook,
+  handleStripeWebhook,
 );
 
 export default router;
