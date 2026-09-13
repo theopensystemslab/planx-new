@@ -115,7 +115,7 @@ const ActionButtons: React.FC<Application> = (application) => {
               target="_blank"
               aria-label={`Resume application to ${application.service.name} at ${
                 application.address || "an undeclared address"
-              }, started ${formatDate(application.createdAt)}`}
+              }, started ${formatDate(application.createdAt)} (opens in a new tab)`}
               className="button button--primary button--small button-focus-style paragraph-link--external"
             >
               Resume
@@ -131,7 +131,7 @@ const ActionButtons: React.FC<Application> = (application) => {
               target="_blank"
               aria-label={`Go to payment URL for application to ${application.service.name} at ${
                 application.address || "an undeclared address"
-              }, started ${formatDate(application.createdAt)}`}
+              }, started ${formatDate(application.createdAt)} (opens in a new tab)`}
               className="button button--primary button--small button-focus-style paragraph-link--external"
             >
               Go to payment URL

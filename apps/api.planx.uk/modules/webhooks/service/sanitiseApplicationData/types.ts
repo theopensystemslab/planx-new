@@ -2,18 +2,11 @@ import type { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 
-export interface OperationResult {
-  operationName: string;
-  status: "processing" | "success" | "failure";
-  count?: number;
-  errorMessage?: string;
-}
-
 export type QueryResult = string[] | string;
 
 export type Operation = () => Promise<QueryResult>;
 
 export type SanitiseApplicationData = ValidatedRequestHandler<
   z.ZodUndefined,
-  OperationResult[]
+  { message: string }
 >;

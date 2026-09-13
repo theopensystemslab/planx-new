@@ -54,6 +54,8 @@ const send = (ops: Array<any>) => {
 
 export type FlowCardView = "grid" | "row";
 
+export type CalendarView = "list" | "grid";
+
 export interface EditorUIStore {
   flowLayout: FlowLayout;
   showSidebar: boolean;
@@ -66,6 +68,8 @@ export interface EditorUIStore {
   setLoadingCompleteCallback: (callback: (() => void) | undefined) => void;
   flowCardView: FlowCardView;
   setFlowCardView: (view: FlowCardView) => void;
+  calendarView: CalendarView;
+  setCalendarView: (view: CalendarView) => void;
   dashboardFlowsTab: "recent" | "pinned";
   setDashboardFlowsTab: (tab: "recent" | "pinned") => void;
   showTags: boolean;
@@ -127,6 +131,12 @@ export const editorUIStore: StateCreator<
 
     setFlowCardView: (view: FlowCardView) => {
       set({ flowCardView: view });
+    },
+
+    calendarView: "grid",
+
+    setCalendarView: (view: CalendarView) => {
+      set({ calendarView: view });
     },
 
     dashboardFlowsTab: "recent",
@@ -214,6 +224,7 @@ export const editorUIStore: StateCreator<
     name: "editorUIStore",
     partialize: (state) => ({
       flowCardView: state.flowCardView,
+      calendarView: state.calendarView,
       dashboardFlowsTab: state.dashboardFlowsTab,
       showTags: state.showTags,
       showImages: state.showImages,

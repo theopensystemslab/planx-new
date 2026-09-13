@@ -1,6 +1,7 @@
 import supertest from "supertest";
 
 import app from "../../../../server.js";
+import { sanitiseApplicationData } from "./index.js";
 import * as operations from "./operations.js";
 
 const mockSend = vi.fn();
@@ -12,6 +13,59 @@ vi.mock("slack-notify", () => ({
 }));
 
 const { post } = supertest(app);
+
+describe("sanitiseApplicationData", () => {
+  it("aggregates results and does not post to Slack when all operations succeed", async () => {
+    const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
+    const mockOperation2 = vi.fn().mockResolvedValue(["456", "789"]);
+
+    vi.spyOn(operations, "getOperations").mockReturnValueOnce([
+      mockOperation1,
+      mockOperation2,
+    ]);
+
+    const { operationFailed, results } = await sanitiseApplicationData();
+
+    expect(operationFailed).toBe(false);
+    expect(results).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ status: "success", count: 1 }),
+        expect.objectContaining({ status: "success", count: 2 }),
+      ]),
+    );
+    expect(mockSlackNotify).not.toHaveBeenCalled();
+  });
+
+  it("posts to Slack and marks operationFailed when an operation fails", async () => {
+    const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
+    const mockOperation2 = vi
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+
+    vi.spyOn(operations, "getOperations").mockReturnValueOnce([
+      mockOperation1,
+      mockOperation2,
+    ]);
+
+    const { operationFailed, results } = await sanitiseApplicationData();
+
+    expect(operationFailed).toBe(true);
+    expect(results).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          status: "failure",
+          errorMessage: "Query failed!",
+        }),
+      ]),
+    );
+    expect(mockSlackNotify).toHaveBeenCalledWith(process.env.SLACK_WEBHOOK_URL);
+    expect(mockSend).toHaveBeenCalledWith(
+      expect.objectContaining({
+        text: expect.stringMatching(/Error: Query failed!/),
+      }),
+    );
+  });
+});
 
 describe("Sanitise application data webhook", () => {
   const ENDPOINT = "/webhooks/hasura/sanitise-application-data";
@@ -26,151 +80,44 @@ describe("Sanitise application data webhook", () => {
       });
   });
 
-  it("returns a 500 if an unhandled error is thrown whilst running operations", async () => {
-    const mockOperationHandler = vi.spyOn(operations, "operationHandler");
-    mockOperationHandler.mockRejectedValueOnce("Unhandled error!");
-
-    await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .expect(500)
-      .then((response) =>
-        expect(response.body.error).toMatch(
-          /Failed to sanitise application data/,
-        ),
-      );
-  });
-
-  it("returns a 200 when all operations are successful", async () => {
+  it("returns a 202 when called with correct authorization", async () => {
     const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
-    const mockOperation2 = vi.fn().mockResolvedValue(["456", "789"]);
-    const mockOperation3 = vi.fn().mockResolvedValue(["abc", "def", "ghi"]);
-
-    const mockGetOperations = vi.spyOn(operations, "getOperations");
-    mockGetOperations.mockImplementationOnce(() => [
-      mockOperation1,
-      mockOperation2,
-      mockOperation3,
-    ]);
+    vi.spyOn(operations, "getOperations").mockReturnValueOnce([mockOperation1]);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .expect(200)
+      .expect(202)
       .then((response) => {
-        expect(mockOperation1).toHaveBeenCalled();
-        expect(mockOperation2).toHaveBeenCalled();
-        expect(mockOperation3).toHaveBeenCalled();
-
-        expect(response.body).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              status: "success",
-              count: 1,
-            }),
-            expect.objectContaining({
-              status: "success",
-              count: 2,
-            }),
-            expect.objectContaining({
-              status: "success",
-              count: 3,
-            }),
-          ]),
-        );
+        expect(response.body).toEqual({
+          message: "Sanitation job started",
+        });
       });
   });
 
-  it("returns a 500 when only a single operation fails", async () => {
-    const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
-    const mockOperation2 = vi
-      .fn()
-      .mockRejectedValue(new Error("Query failed!"));
-    const mockOperation3 = vi.fn().mockResolvedValue(["abc", "def", "ghi"]);
-
-    const mockGetOperations = vi.spyOn(operations, "getOperations");
-    mockGetOperations.mockImplementationOnce(() => [
-      mockOperation1,
-      mockOperation2,
-      mockOperation3,
-    ]);
+  it("still returns a 202 and logs the error if sanitiseApplicationData rejects", async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const sanitiseModule = await import("./index.js");
+    const mockSanitiseApplicationData = vi
+      .spyOn(sanitiseModule, "sanitiseApplicationData")
+      .mockRejectedValueOnce(new Error("Unhandled failure!"));
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .expect(500)
+      .expect(202)
       .then((response) => {
-        expect(mockOperation1).toHaveBeenCalled();
-        expect(mockOperation2).toHaveBeenCalled();
-        expect(mockOperation3).toHaveBeenCalled();
-
-        expect(response.body).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              status: "success",
-              count: 1,
-            }),
-            expect.objectContaining({
-              status: "failure",
-              errorMessage: "Query failed!",
-            }),
-            expect.objectContaining({
-              status: "success",
-              count: 3,
-            }),
-          ]),
-        );
-
-        expect(mockSlackNotify).toHaveBeenCalledWith(
-          process.env.SLACK_WEBHOOK_URL,
-        );
-        expect(mockSend).toHaveBeenCalledWith(
-          expect.objectContaining({
-            text: expect.stringMatching(/Error: Query failed!/),
-          }),
-        );
+        expect(response.body).toEqual({ message: "Sanitation job started" });
       });
-  });
 
-  it("returns a 500 if all operations fail", async () => {
-    const mockOperation1 = vi
-      .fn()
-      .mockRejectedValue(new Error("Query failed!"));
-    const mockOperation2 = vi
-      .fn()
-      .mockRejectedValue(new Error("Query failed!"));
-    const mockOperation3 = vi
-      .fn()
-      .mockRejectedValue(new Error("Query failed!"));
+    await vi.waitFor(() =>
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Unhandled error in sanitiseApplicationData",
+        expect.any(Error),
+      ),
+    );
 
-    const mockGetOperations = vi.spyOn(operations, "getOperations");
-    mockGetOperations.mockImplementationOnce(() => [
-      mockOperation1,
-      mockOperation2,
-      mockOperation3,
-    ]);
-
-    await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .expect(500)
-      .then((response) => {
-        expect(mockOperation1).toHaveBeenCalled();
-        expect(mockOperation2).toHaveBeenCalled();
-        expect(mockOperation3).toHaveBeenCalled();
-
-        expect(response.body).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              status: "failure",
-              errorMessage: "Query failed!",
-            }),
-            expect.objectContaining({
-              status: "failure",
-              errorMessage: "Query failed!",
-            }),
-            expect.objectContaining({
-              status: "failure",
-              errorMessage: "Query failed!",
-            }),
-          ]),
-        );
-      });
+    mockSanitiseApplicationData.mockRestore();
+    consoleErrorSpy.mockRestore();
   });
 });

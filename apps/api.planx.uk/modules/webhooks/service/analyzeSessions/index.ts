@@ -1,6 +1,6 @@
+import type { OperationResult } from "../../types.js";
 import { postToSlack } from "../sanitiseApplicationData/index.js";
 import { operationHandler } from "../sanitiseApplicationData/operations.js";
-import type { OperationResult } from "../sanitiseApplicationData/types.js";
 import { getAnalyzeSessionOperations } from "./operations.js";
 
 /**

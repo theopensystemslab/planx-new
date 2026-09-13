@@ -5,6 +5,7 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField, fontProviders } from "astro/config";
 import icon from "astro-icon";
+import rehypeExternalLinks from "rehype-external-links";
 
 // BUILD_MODE must be an env var for Turbo caching
 // The dev / pizza / staging / prod builds must have their own cache-key
@@ -15,6 +16,20 @@ const isCloudfrontBuild = ["staging", "production"].includes(mode);
 export default defineConfig({
   site: process.env.SITE_URL,
   integrations: [react(), icon(), sitemap()],
+  markdown: {
+    rehypePlugins: [
+      [
+        rehypeExternalLinks,
+        {
+          target: "_blank",
+          rel: ["noopener", "noreferrer", "nofollow"],
+          properties: { className: ["external"] },
+          content: { type: "text", value: " (opens in a new tab)" },
+          contentProperties: { className: ["sr-only"] },
+        },
+      ],
+    ],
+  },
   env: {
     schema: {
       PUBLIC_PLANX_EDITOR_URL: envField.string({

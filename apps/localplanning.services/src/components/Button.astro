@@ -41,4 +41,5 @@ const classes: AstroBuiltinAttributes["class:list"] = [
 
 <a class:list={classes} {...rest}>
   <slot />
+  {external && <span class="sr-only"> (opens in a new tab)</span>}
 </a>
