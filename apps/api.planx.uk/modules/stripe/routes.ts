@@ -2,9 +2,9 @@ import { Router } from "express";
 
 import { validate } from "../../shared/middleware/validate.js";
 import { useTeamEditorAuth } from "../auth/middleware.js";
-import * as Controller from "./controller.js";
-import { requireStripeConnectTeamAuth } from "./middleware.js";
-import { connectCallbackSchema, connectSchema } from "./types.js";
+import * as Controller from "./connect/controller.js";
+import { requireStripeConnectTeamAuth } from "./connect/middleware.js";
+import { connectCallbackSchema, connectSchema } from "./connect/types.js";
 
 const router = Router();
 
