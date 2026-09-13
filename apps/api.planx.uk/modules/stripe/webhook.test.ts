@@ -1,11 +1,7 @@
-import Stripe from "stripe";
 import supertest from "supertest";
 
 import app from "../../server.js";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-08-26.dahlia",
-});
+import { stripe } from "./client.js";
 
 /** Serialise an event and sign it exactly as Stripe would */
 const sign = (event: Record<string, unknown>) => {
