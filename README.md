@@ -100,6 +100,18 @@ The root of the project has several scripts set up to help you manage your docke
 - `pnpm analytics` will recreate your docker containers and include [Metabase](https://www.metabase.com/)
 - `pnpm logs` will print docker log entries (this can be filtered by appending `-- [service name]`, for example `pnpm logs -- api`)
 
+#### Stripe webhooks (local)
+
+Stripe's servers can't reach your dev machine directly, so to exercise the webhook endpoint (`POST /stripe/webhook`) locally you forward test events to the API with the [Stripe CLI](https://docs.stripe.com/cli) - 
+
+```
+stripe listen --forward-to localhost:7002/stripe/webhook
+```
+
+Copy the `whsec_…` it prints into `STRIPE_WEBHOOK_SECRET` in your `.env` and restart the API container (`pnpm start`) to ensure that signature verification matches. The secret will be stable, so this is a one-time setup step. Then fire events with `stripe trigger payment_intent.succeeded` or a real test payment through a Checkout Session - both are delivered to your API via the running `stripe listen` which holds an outbound connection to Stripe.
+
+If you're not working directly on payments you can skip this step. The API will start fine without `STRIPE_WEBHOOK_SECRET` being set, and only return a HTTP 500 if a webhook is triggered locally.
+
 ### Task running (Turborepo)
 
 [Turborepo](https://turborepo.com) runs and caches tasks across the pnpm workspace. From the project root:
