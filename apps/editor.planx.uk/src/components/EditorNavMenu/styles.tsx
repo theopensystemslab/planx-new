@@ -39,10 +39,12 @@ export const NavScrollArea = styled(Box)(() => ({
   flexDirection: "column",
 }));
 
-export const MenuWrap = styled("ul")(({ theme }) => ({
+export const MenuWrap = styled("ul", {
+  shouldForwardProp: (prop) => prop !== "compact",
+})<{ compact?: boolean }>(({ theme, compact }) => ({
   listStyle: "none",
   margin: 0,
-  padding: theme.spacing(1, 0.5, 2, 0.5),
+  padding: compact ? 0 : theme.spacing(1, 0.5, 2, 0.5),
 }));
 
 export const MenuItem = styled("li")(() => ({

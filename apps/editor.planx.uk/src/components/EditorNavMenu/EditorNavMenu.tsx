@@ -507,7 +507,8 @@ function EditorNavMenu() {
               </TeamCard>
             </Box>
           )}
-          <MenuWrap>
+          <MenuWrap compact={compact}>
+            {compact && <Divider />}
             {visibleUngroupedSections.map((section, sectionIndex) =>
               renderSection(section, sectionIndex),
             )}
@@ -515,7 +516,7 @@ function EditorNavMenu() {
         </NavScrollArea>
         <Box
           sx={(theme) => ({
-            padding: theme.spacing(0, 0.5, 0.5),
+            padding: compact ? 0 : theme.spacing(0, 0.5, 0.5),
             display: "flex",
             flexDirection: "column",
           })}
