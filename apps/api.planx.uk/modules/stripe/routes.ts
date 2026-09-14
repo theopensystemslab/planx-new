@@ -36,6 +36,7 @@ router.get(
 router.post(
   "/stripe/checkout-session/:localAuthority",
   validate(createCheckoutSessionSchema),
+  // TODO: Guard on connected accounts only
   createCheckoutSession,
 );
 
