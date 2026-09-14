@@ -16,6 +16,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
+import Divider from "@mui/material/Divider";
 import type { Role } from "@opensystemslab/planx-core/types";
 import {
   useLocation,
@@ -49,8 +50,11 @@ import {
   MenuItem,
   MenuWrap,
   NavBarContainer,
+  NavScrollArea,
   Root,
   Subtitle,
+  TeamCard,
+  TeamSectionGroup,
 } from "./styles";
 import type { MenuSection, Route } from "./types";
 
@@ -77,6 +81,7 @@ function EditorNavMenu() {
   ]);
 
   const referenceCode = team?.settings?.referenceCode;
+  const teamColour = team?.theme?.primaryColour;
   const { url: lpsBaseUrl } = useLPS();
 
   const isActive = (route: string) => {
@@ -139,7 +144,7 @@ function EditorNavMenu() {
     },
   ];
 
-  const teamLayoutSections: MenuSection[] = useMemo(
+  const teamGroupedSections: MenuSection[] = useMemo(
     () => [
       {
         routes: [
@@ -228,6 +233,12 @@ function EditorNavMenu() {
           },
         ],
       },
+    ],
+    [teamSlug, lpsBaseUrl, referenceCode, teamAnalyticsLink],
+  );
+
+  const teamDocumentationSections: MenuSection[] = useMemo(
+    () => [
       {
         subtitle: "Documentation",
         accordion: true,
@@ -253,7 +264,7 @@ function EditorNavMenu() {
         ],
       },
     ],
-    [teamSlug, lpsBaseUrl, referenceCode, teamAnalyticsLink],
+    [teamSlug],
   );
 
   const flowLayoutSections: MenuSection[] = useMemo(
@@ -319,17 +330,33 @@ function EditorNavMenu() {
     [teamSlug, flowSlug],
   );
 
-  const getRoutesForUrl = (): { sections: MenuSection[]; compact: boolean } => {
+  const getRoutesForUrl = (): {
+    groupedSections: MenuSection[];
+    ungroupedSections: MenuSection[];
+    compact: boolean;
+  } => {
     if (isFlowRoute)
       return {
-        sections: isPattern ? patternLayoutSections : flowLayoutSections,
+        groupedSections: [],
+        ungroupedSections: isPattern
+          ? patternLayoutSections
+          : flowLayoutSections,
         compact: true,
       };
-    if (isTeamRoute) return { sections: teamLayoutSections, compact: false };
-    return { sections: globalLayoutSections, compact: false };
+    if (isTeamRoute)
+      return {
+        groupedSections: teamGroupedSections,
+        ungroupedSections: teamDocumentationSections,
+        compact: false,
+      };
+    return {
+      groupedSections: [],
+      ungroupedSections: globalLayoutSections,
+      compact: false,
+    };
   };
 
-  const { sections, compact } = getRoutesForUrl();
+  const { groupedSections, ungroupedSections, compact } = getRoutesForUrl();
 
   const totalFlagCount = AVAILABLE_FEATURE_FLAGS.length;
   const enabledFlagCount =
@@ -364,12 +391,16 @@ function EditorNavMenu() {
   };
 
   // Filter accessible routes within each section
-  const visibleSections = sections
-    .map((section) => ({
-      ...section,
-      routes: section.routes.filter(isRouteAccessible),
-    }))
-    .filter((section) => section.routes.length > 0);
+  const getVisibleSections = (sectionsToFilter: MenuSection[]) =>
+    sectionsToFilter
+      .map((section) => ({
+        ...section,
+        routes: section.routes.filter(isRouteAccessible),
+      }))
+      .filter((section) => section.routes.length > 0);
+
+  const visibleGroupedSections = getVisibleSections(groupedSections);
+  const visibleUngroupedSections = getVisibleSections(ungroupedSections);
 
   const toggleAccordion = (subtitle: string) => {
     setOpenAccordions((prev) => {
@@ -383,97 +414,108 @@ function EditorNavMenu() {
     });
   };
 
+  const renderSection = (section: MenuSection, key: React.Key) => {
+    if (section.accordion && section.subtitle) {
+      const FirstIcon = section.icon ?? section.routes[0].Icon;
+      const isOpen = openAccordions.has(section.subtitle);
+      return (
+        <MenuItem key={key}>
+          <AccordionToggle
+            subtitle={section.subtitle}
+            Icon={FirstIcon}
+            isOpen={isOpen}
+            onToggle={() => toggleAccordion(section.subtitle!)}
+          />
+          <Collapse in={isOpen}>
+            <AccordionContent>
+              {section.routes.map(({ title, route, disabled, isNew }) => (
+                <MenuItem key={title}>
+                  <AccordionItemButton
+                    title={title}
+                    disabled={disabled}
+                    isNew={isNew}
+                    isActive={isActive(route)}
+                    isExternal={isExternalLink(route)}
+                    onClick={() => handleClick(route, disabled)}
+                  />
+                </MenuItem>
+              ))}
+            </AccordionContent>
+          </Collapse>
+        </MenuItem>
+      );
+    }
+
+    return (
+      <React.Fragment key={key}>
+        {section.subtitle && (
+          <Subtitle variant="body3">{section.subtitle}</Subtitle>
+        )}
+        {section.routes.map(({ title, Icon, route, disabled, isNew }) => (
+          <MenuItem key={title}>
+            <NavMenuItem
+              title={title}
+              Icon={Icon}
+              disabled={disabled}
+              isNew={isNew}
+              isActive={isActive(route)}
+              isExternal={isExternalLink(route)}
+              compact={compact}
+              onClick={() => handleClick(route, disabled)}
+            />
+          </MenuItem>
+        ))}
+      </React.Fragment>
+    );
+  };
+
   return (
     <Root compact={compact}>
       <NavBarContainer>
         <NavMenuHeader compact={compact} />
-        {isTeamRoute &&
-          !compact &&
-          teamSlug &&
-          hasFeatureFlag("EXPLORE") &&
-          isRouteAccessible(exploreRoute) && (
-            <Box sx={(theme) => ({ padding: theme.spacing(0.5) })}>
-              <ExploreSearchButton
-                title={exploreRoute.title}
-                isActive={isActive(exploreRoute.route)}
-                onClick={() => handleClick(exploreRoute.route)}
-              />
+        <NavScrollArea>
+          {isTeamRoute &&
+            !compact &&
+            teamSlug &&
+            hasFeatureFlag("EXPLORE") &&
+            isRouteAccessible(exploreRoute) && (
+              <Box sx={(theme) => ({ padding: theme.spacing(0.5) })}>
+                <ExploreSearchButton
+                  title={exploreRoute.title}
+                  isActive={isActive(exploreRoute.route)}
+                  onClick={() => handleClick(exploreRoute.route)}
+                />
+              </Box>
+            )}
+          {teamSlug && !compact && (
+            <Box sx={(theme) => ({ padding: theme.spacing(0.5, 0.5, 0, 0.5) })}>
+              <TeamCard>
+                <TeamSelect
+                  currentTeamSlug={teamSlug}
+                  onTeamSelect={(slug) =>
+                    navigate({ to: "/app/$team", params: { team: slug } })
+                  }
+                />
+                {visibleGroupedSections.length > 0 && (
+                  <TeamSectionGroup teamColour={teamColour}>
+                    <Divider />
+                    {visibleGroupedSections.map((section, sectionIndex) =>
+                      renderSection(section, sectionIndex),
+                    )}
+                  </TeamSectionGroup>
+                )}
+              </TeamCard>
             </Box>
           )}
-        {teamSlug && !compact && (
-          <Box sx={(theme) => ({ padding: theme.spacing(0.5, 0.5, 0, 0.5) })}>
-            <TeamSelect
-              currentTeamSlug={teamSlug}
-              onTeamSelect={(slug) =>
-                navigate({ to: "/app/$team", params: { team: slug } })
-              }
-            />
-          </Box>
-        )}
-        <MenuWrap>
-          {visibleSections.map((section, sectionIndex) => {
-            if (section.accordion && section.subtitle) {
-              const FirstIcon = section.icon ?? section.routes[0].Icon;
-              const isOpen = openAccordions.has(section.subtitle);
-              return (
-                <MenuItem key={sectionIndex}>
-                  <AccordionToggle
-                    subtitle={section.subtitle}
-                    Icon={FirstIcon}
-                    isOpen={isOpen}
-                    onToggle={() => toggleAccordion(section.subtitle!)}
-                  />
-                  <Collapse in={isOpen}>
-                    <AccordionContent>
-                      {section.routes.map(
-                        ({ title, route, disabled, isNew }) => (
-                          <MenuItem key={title}>
-                            <AccordionItemButton
-                              title={title}
-                              disabled={disabled}
-                              isNew={isNew}
-                              isActive={isActive(route)}
-                              isExternal={isExternalLink(route)}
-                              onClick={() => handleClick(route, disabled)}
-                            />
-                          </MenuItem>
-                        ),
-                      )}
-                    </AccordionContent>
-                  </Collapse>
-                </MenuItem>
-              );
-            }
-
-            return (
-              <React.Fragment key={sectionIndex}>
-                {section.subtitle && (
-                  <Subtitle variant="body3">{section.subtitle}</Subtitle>
-                )}
-                {section.routes.map(
-                  ({ title, Icon, route, disabled, isNew }) => (
-                    <MenuItem key={title}>
-                      <NavMenuItem
-                        title={title}
-                        Icon={Icon}
-                        disabled={disabled}
-                        isNew={isNew}
-                        isActive={isActive(route)}
-                        isExternal={isExternalLink(route)}
-                        compact={compact}
-                        onClick={() => handleClick(route, disabled)}
-                      />
-                    </MenuItem>
-                  ),
-                )}
-              </React.Fragment>
-            );
-          })}
-        </MenuWrap>
+          <MenuWrap>
+            {visibleUngroupedSections.map((section, sectionIndex) =>
+              renderSection(section, sectionIndex),
+            )}
+          </MenuWrap>
+        </NavScrollArea>
         <Box
           sx={(theme) => ({
-            padding: theme.spacing(0, 0.5, 1),
-            gap: theme.spacing(0.5),
+            padding: theme.spacing(0, 0.5, 0.5),
             display: "flex",
             flexDirection: "column",
           })}

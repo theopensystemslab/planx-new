@@ -20,11 +20,9 @@ const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
   ({ theme, teamcolor }) => ({
     backgroundColor: theme.palette.background.default,
     width: "100%",
-    borderLeft: `8px solid ${teamcolor || theme.palette.primary.main}`,
-    borderRadius: theme.shape.borderRadius,
+    borderLeft: `6px solid ${teamcolor || theme.palette.primary.main}`,
     padding: theme.spacing(1, 0.5, 1, 1),
     justifyContent: "space-between",
-    boxShadow: cardBoxShadow,
     "&:hover": {
       backgroundColor: theme.palette.background.paper,
       color: "inherit",

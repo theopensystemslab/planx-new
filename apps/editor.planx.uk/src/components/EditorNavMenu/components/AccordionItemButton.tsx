@@ -29,11 +29,9 @@ const AccordionItemButton = ({
       disabled={disabled}
       disableRipple
       onClick={onClick}
-      sx={{ p: 0.8 }}
+      sx={{ px: 1, py: 1.1 }}
     >
-      <MenuTitle variant="body3" sx={{ pt: 0.15 }}>
-        {title}
-      </MenuTitle>
+      <MenuTitle variant="body3">{title}</MenuTitle>
       {isNew && <StyledChip label="new" size="small" color="success" />}
       {showExternalIcon && (
         <NorthEastIcon sx={{ fontSize: "0.8rem", ml: "auto", mt: 0.2 }} />

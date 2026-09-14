@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const MENU_WIDTH_COMPACT = 48;
-export const MENU_WIDTH_FULL = 200;
+export const MENU_WIDTH_FULL = 210;
 
 export const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "compact",
@@ -31,17 +31,23 @@ export const NavBarContainer = styled(Box)(() => ({
   top: 0,
 }));
 
+export const NavScrollArea = styled(Box)(() => ({
+  flex: 1,
+  minHeight: 0,
+  overflowY: "auto",
+  display: "flex",
+  flexDirection: "column",
+}));
+
 export const MenuWrap = styled("ul")(({ theme }) => ({
   listStyle: "none",
   margin: 0,
   padding: theme.spacing(1, 0.5, 2, 0.5),
-  flex: 1,
-  overflowY: "auto",
 }));
 
-export const MenuItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.75, 0),
-  padding: 0,
+export const MenuItem = styled("li")(() => ({
+  listStyle: "none",
+  margin: 0,
 }));
 
 export const MenuTitle = styled(Typography)(({ theme }) => ({
@@ -53,21 +59,29 @@ export const MenuTitle = styled(Typography)(({ theme }) => ({
 export const MenuButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== "isActive",
 })<{ isActive: boolean }>(({ theme, isActive, disabled }) => ({
+  position: "relative",
   color: theme.palette.text.primary,
   width: "100%",
   justifyContent: "flex-start",
   gap: theme.spacing(0.65),
   alignItems: "center",
-  borderRadius: theme.shape.borderRadiusSm,
-  padding: theme.spacing(0.8, 0.5),
+  borderRadius: 0,
+  padding: theme.spacing(1.25, 0.75),
   "&:hover": {
-    background: theme.palette.common.white,
-    boxShadow: cardBoxShadow,
+    background: theme.palette.background.disabled,
   },
   ...(isActive && {
-    background: theme.palette.common.white,
+    background: theme.palette.secondary.main,
     color: theme.palette.text.primary,
-    boxShadow: cardBoxShadow,
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      right: 0,
+      width: "4px",
+      backgroundColor: theme.palette.grey[700],
+    },
   }),
   ...(disabled && {
     color: theme.palette.text.disabled,
@@ -107,12 +121,26 @@ export const ExploreButton = styled(ButtonBase, {
   },
 }));
 
+export const TeamCard = styled(Box)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: cardBoxShadow,
+  overflow: "hidden",
+  backgroundColor: theme.palette.common.white,
+}));
+
+export const TeamSectionGroup = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "teamColour",
+})<{ teamColour?: string }>(({ theme, teamColour }) => ({
+  borderLeft: `6px solid ${teamColour || theme.palette.primary.main}`,
+  overflow: "hidden",
+}));
+
 export const AccordionContent = styled("ul")(({ theme }) => ({
   listStyle: "none",
-  margin: theme.spacing(0, 0.25, 0, 1.75),
+  margin: theme.spacing(0, 0, 1, 1.6),
   padding: 0,
-  borderLeft: `2px solid ${theme.palette.border.light}`,
-  paddingLeft: theme.spacing(0.8),
+  borderLeft: `2px solid ${theme.palette.border.main}`,
+  paddingLeft: 0,
 }));
 
 export const Subtitle = styled(Typography)(({ theme }) => ({
