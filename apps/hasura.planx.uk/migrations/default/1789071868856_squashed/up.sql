@@ -38,9 +38,10 @@ alter table "public"."payment_status"
 add constraint "single_provider_status" 
 check (num_nonnulls(status, stripe_status) = 1);
 
+-- metadata can be null for both or exactly one
 alter table "public"."payment_status" 
 add constraint "single_provider_metadata" 
-check (num_nonnulls(gov_pay_metadata, stripe_metadata) = 1);
+check (num_nonnulls(gov_pay_metadata, stripe_metadata) = 1 OR num_nulls(gov_pay_metadata, stripe_metadata) = 2);
 
 -- Create new enum table for Stripe, one existing record is required to toggle "Set table as enum" in console
 comment on table "public"."payment_status_enum" is E'GOV.UK Pay statuses';
