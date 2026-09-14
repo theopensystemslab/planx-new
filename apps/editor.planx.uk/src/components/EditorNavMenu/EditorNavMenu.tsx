@@ -38,6 +38,7 @@ import { useRecentNotifications } from "../../hooks/data/useRecentNotifications"
 import { useLPS } from "../../hooks/useLPS";
 import AccordionItemButton from "./components/AccordionItemButton";
 import AccordionToggle from "./components/AccordionToggle";
+import ExploreSearchButton from "./components/ExploreSearchButton";
 import FeatureFlagsPanel from "./components/FeatureFlagsPanel";
 import NavMenuHeader from "./components/NavMenuHeader";
 import NavMenuItem from "./components/NavMenuItem";
@@ -391,24 +392,12 @@ function EditorNavMenu() {
           teamSlug &&
           hasFeatureFlag("EXPLORE") &&
           isRouteAccessible(exploreRoute) && (
-            <Box
-              component="ul"
-              sx={(theme) => ({
-                listStyle: "none",
-                margin: 0,
-                padding: theme.spacing(0, 0.5, 0, 0.5),
-              })}
-            >
-              <MenuItem>
-                <NavMenuItem
-                  title={exploreRoute.title}
-                  Icon={exploreRoute.Icon}
-                  isActive={isActive(exploreRoute.route)}
-                  isExternal={isExternalLink(exploreRoute.route)}
-                  compact={compact}
-                  onClick={() => handleClick(exploreRoute.route)}
-                />
-              </MenuItem>
+            <Box sx={(theme) => ({ padding: theme.spacing(0.5) })}>
+              <ExploreSearchButton
+                title={exploreRoute.title}
+                isActive={isActive(exploreRoute.route)}
+                onClick={() => handleClick(exploreRoute.route)}
+              />
             </Box>
           )}
         {teamSlug && !compact && (
