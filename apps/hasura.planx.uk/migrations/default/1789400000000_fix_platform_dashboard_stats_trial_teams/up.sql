@@ -3,7 +3,7 @@ WITH lpa_teams AS (
   SELECT t.id, t.created_at
   FROM teams t
   JOIN team_settings ts ON ts.team_id = t.id
-  WHERE t.name NOT IN ('Open Digital Planning', 'Open Systems Lab', 'PlanX', 'Templates', 'Testing', 'WikiHouse')
+  WHERE t.name NOT IN ('Open Digital Planning', 'Open Systems Lab', 'PlanX', 'Templates', 'Testing', 'WikiHouse', 'Council Onboarding')
     AND COALESCE(ts.is_trial, false) = false
 ),
 filtered_flows AS (
