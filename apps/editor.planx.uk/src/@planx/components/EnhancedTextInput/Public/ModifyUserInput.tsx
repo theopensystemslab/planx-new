@@ -2,12 +2,12 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { ERROR_MESSAGE } from "@planx/components/shared/constants";
 import type { PublicProps } from "@planx/components/shared/types";
-import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useFormikContext } from "formik";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { PROJECT_DESCRIPTION_LIMIT } from "../model";
 import type { EnhancedTextInput } from "../types";
 import type { FormValues } from "./types";
 
@@ -68,7 +68,7 @@ const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
             }}
           />
           <CharacterCounter
-            limit={TEXT_LIMITS[TextInputType.Long]}
+            limit={PROJECT_DESCRIPTION_LIMIT}
             count={values.userInput.length}
             error={showError}
           />
