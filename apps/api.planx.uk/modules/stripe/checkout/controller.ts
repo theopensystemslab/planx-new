@@ -1,6 +1,7 @@
 import { ServerError } from "../../../errors/index.js";
 import { stripe } from "../client.js";
 import type { CreateCheckoutSessionController } from "./types.js";
+
 /**
  * Create a Stripe Checkout Session and return the URL
  */

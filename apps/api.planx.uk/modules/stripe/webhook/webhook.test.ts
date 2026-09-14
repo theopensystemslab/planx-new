@@ -1,7 +1,7 @@
 import supertest from "supertest";
 
-import app from "../../server.js";
-import { stripe } from "./client.js";
+import app from "../../../server.js";
+import { stripe } from "../client.js";
 
 /** Serialise an event and sign it exactly as Stripe would */
 const sign = (event: Record<string, unknown>) => {
