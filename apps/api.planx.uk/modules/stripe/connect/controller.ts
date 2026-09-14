@@ -1,4 +1,4 @@
-import { ServerError } from "../../errors/index.js";
+import { ServerError } from "../../../errors/index.js";
 import { generateNonce, setConnectState, verifyState } from "./middleware.js";
 import * as Service from "./service.js";
 import type {

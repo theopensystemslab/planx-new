@@ -21,7 +21,7 @@ vi.mock("stripe", () => {
 });
 
 const mockRequest = vi.fn();
-vi.mock("../../client/index.js", () => ({
+vi.mock("../../../client/index.js", () => ({
   $api: { client: { request: (...args: unknown[]) => mockRequest(...args) } },
 }));
 

@@ -2,8 +2,8 @@ import type { Team } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import Stripe from "stripe";
 
-import { $api } from "../../client/index.js";
-import { ServerError } from "../../errors/index.js";
+import { $api } from "../../../client/index.js";
+import { ServerError } from "../../../errors/index.js";
 
 const getStripeClient = (): Stripe => {
   const secretKey = process.env.STRIPE_SECRET_KEY;

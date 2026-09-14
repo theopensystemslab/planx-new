@@ -1,7 +1,7 @@
 import type { Team } from "@opensystemslab/planx-core/types";
 import { z } from "zod";
 
-import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
 export const connectSchema = z.object({
   params: z.object({
