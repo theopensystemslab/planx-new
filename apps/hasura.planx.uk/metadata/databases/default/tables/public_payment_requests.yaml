@@ -22,22 +22,26 @@ insert_permissions:
         - payment_amount
         - session_id
         - session_preview_data
+        - stripe_metadata
+        - stripe_payment_id
 select_permissions:
   - role: api
     permission:
       columns:
-        - applicant_name
-        - created_at
         - fee_breakdown
         - govpay_metadata
-        - govpay_payment_id
-        - id
-        - paid_at
+        - session_preview_data
+        - stripe_metadata
+        - applicant_name
         - payee_email
         - payee_name
-        - payment_amount
+        - stripe_payment_id
+        - created_at
+        - paid_at
+        - id
         - session_id
-        - session_preview_data
+        - govpay_payment_id
+        - payment_amount
       filter: {}
   - role: public
     permission:
@@ -50,6 +54,7 @@ select_permissions:
         - paid_at
         - payment_amount
         - session_preview_data
+        - stripe_payment_id
       filter:
         id:
           _eq: x-hasura-payment-request-id
@@ -57,18 +62,20 @@ update_permissions:
   - role: api
     permission:
       columns:
-        - applicant_name
-        - created_at
         - fee_breakdown
         - govpay_metadata
-        - govpay_payment_id
-        - id
-        - paid_at
+        - session_preview_data
+        - stripe_metadata
+        - applicant_name
         - payee_email
         - payee_name
-        - payment_amount
+        - stripe_payment_id
+        - created_at
+        - paid_at
+        - id
         - session_id
-        - session_preview_data
+        - govpay_payment_id
+        - payment_amount
       filter: {}
       check: {}
 delete_permissions:

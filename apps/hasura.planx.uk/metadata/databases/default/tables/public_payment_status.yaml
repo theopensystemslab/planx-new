@@ -11,31 +11,43 @@ object_relationships:
         remote_table:
           name: lowcal_sessions
           schema: public
+  - name: payment_status_enum
+    using:
+      foreign_key_constraint_on: status
+  - name: stripe_payment_status_enum
+    using:
+      foreign_key_constraint_on: stripe_status
 insert_permissions:
   - role: api
     permission:
       check: {}
       columns:
-        - amount
-        - created_at
         - fee_breakdown
-        - flow_id
         - gov_pay_metadata
-        - payment_id
-        - session_id
-        - status
+        - stripe_metadata
+        - stripe_payment_id
+        - stripe_status
         - team_slug
+        - created_at
+        - flow_id
+        - session_id
+        - payment_id
+        - status
+        - amount
 select_permissions:
   - role: api
     permission:
       columns:
-        - amount
-        - created_at
         - fee_breakdown
-        - flow_id
         - gov_pay_metadata
-        - payment_id
-        - session_id
-        - status
+        - stripe_metadata
+        - stripe_payment_id
+        - stripe_status
         - team_slug
+        - created_at
+        - flow_id
+        - session_id
+        - payment_id
+        - status
+        - amount
       filter: {}
