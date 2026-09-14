@@ -3,7 +3,6 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
-import FindInPageIcon from "@mui/icons-material/FindInPage";
 import FlagIcon from "@mui/icons-material/Flag";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
@@ -13,6 +12,7 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
@@ -379,7 +379,7 @@ function EditorNavMenu() {
 
   const exploreRoute: Route = {
     title: "Explore & search",
-    Icon: FindInPageIcon,
+    Icon: TravelExploreIcon,
     route: `/app/${teamSlug}/explore`,
     accessibleBy: "*",
   };

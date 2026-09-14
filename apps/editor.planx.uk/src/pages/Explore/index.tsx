@@ -1,4 +1,4 @@
-import SearchIcon from "@mui/icons-material/Search";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
@@ -53,7 +53,7 @@ export default function Explore() {
             onClick={() => setSearchOpen(true)}
             aria-label="Search Plan✕"
           >
-            <SearchIcon />
+            <TravelExploreIcon />
             <Typography variant="body1" sx={{ color: "inherit" }}>
               Search flows across Plan✕
             </Typography>

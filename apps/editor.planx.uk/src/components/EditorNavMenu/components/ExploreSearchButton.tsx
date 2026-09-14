@@ -1,4 +1,4 @@
-import SearchIcon from "@mui/icons-material/Search";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 
 import { ExploreButton } from "../styles";
 
@@ -14,7 +14,7 @@ const ExploreSearchButton = ({
   onClick,
 }: ExploreSearchButtonProps) => (
   <ExploreButton isActive={isActive} disableRipple onClick={onClick}>
-    <SearchIcon fontSize="small" />
+    <TravelExploreIcon fontSize="small" />
     {title}
   </ExploreButton>
 );
