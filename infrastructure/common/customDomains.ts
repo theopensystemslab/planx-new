@@ -149,7 +149,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "adur-worthing",
           domain: "planx.adur-worthing.gov.uk",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
       ]
     : [
