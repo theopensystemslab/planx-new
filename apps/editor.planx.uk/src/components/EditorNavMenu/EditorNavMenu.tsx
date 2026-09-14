@@ -17,7 +17,6 @@ import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Divider from "@mui/material/Divider";
-import type { Role } from "@opensystemslab/planx-core/types";
 import {
   useLocation,
   useMatches,
@@ -382,12 +381,7 @@ function EditorNavMenu() {
     title: "Explore & search",
     Icon: FindInPageIcon,
     route: `/app/${teamSlug}/explore`,
-    accessibleBy: [
-      "platformAdmin",
-      "teamAdmin",
-      "teamEditor",
-      "analyst",
-    ] satisfies Role[],
+    accessibleBy: "*",
   };
 
   // Filter accessible routes within each section
