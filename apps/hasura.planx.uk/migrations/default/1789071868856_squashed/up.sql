@@ -5,14 +5,11 @@ add column "stripe_payment_id" text null unique;
 alter table "public"."payment_requests" 
 add column "stripe_metadata" jsonb not null default '[]'::jsonb;
 
--- payment_id and payment_metadata are nullable until ITP request is paid, so check needs to allow both null or max one not-null
+-- payment_id is nullable until ITP request is paid, so check needs to allow one not-null OR both null
+--   same goes for payment_metadata, but jsonb uses `[]` default and is not nullable so don't enforce num_nonnulls check constraint here
 alter table "public"."payment_requests" 
 add constraint "single_provider_id_or_neither" 
-check (num_nonnulls(govpay_payment_id, stripe_payment_id) <= 1);
-
-alter table "public"."payment_requests" 
-add constraint "single_provider_metadata_or_neither" 
-check (num_nonnulls(govpay_metadata, stripe_metadata) <= 1);
+check (num_nonnulls(govpay_payment_id, stripe_payment_id) = 1 OR num_nulls(govpay_payment_id, stripe_payment_id) = 2);
 
 -- PAYMENT STATUS: new columns, constraints, and new enum table fkey
 alter table "public"."payment_status" 

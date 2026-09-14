@@ -1,5 +1,4 @@
 -- PAYMENT REQUESTS
-alter table "public"."payment_requests" drop constraint "single_provider_metadata_or_neither";
 alter table "public"."payment_requests" drop constraint "single_provider_id_or_neither";
 alter table "public"."payment_requests" drop column "stripe_payment_id";
 alter table "public"."payment_requests" drop column "stripe_metadata";
