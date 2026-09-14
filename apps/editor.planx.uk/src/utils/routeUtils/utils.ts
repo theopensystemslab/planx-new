@@ -59,6 +59,7 @@ const PREVIEW_ONLY_DOMAINS = [
   "planningservices.stoke.gov.uk",
   "planningservices.tewkesbury.gov.uk",
   "planningservices.westberks.gov.uk",
+  "planx.adur-worthing.gov.uk",
   // XXX: un-comment the next line to test custom domains locally
   // "localhost",
 ];
