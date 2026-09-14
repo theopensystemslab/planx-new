@@ -13,7 +13,7 @@ components:
         original:
           type: string
           description: The original project description
-          maxLength: 250
+          maxLength: 300
         flowId:
           type: string
           format: uuid

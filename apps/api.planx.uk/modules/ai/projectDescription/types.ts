@@ -10,7 +10,7 @@ import {
 
 export const projectDescriptionSchema = z.object({
   body: z.object({
-    original: z.string().trim().max(250),
+    original: z.string().trim().max(300),
     flowId: z.string().uuid(),
     sessionId: z.string().uuid().optional(),
   }),
@@ -32,6 +32,6 @@ export type ProjectDescriptionController = ValidatedRequestHandler<
 >;
 
 export const projectDescriptionOutputSchema = z.object({
-  enhancedDescription: z.string().trim().max(250),
+  enhancedDescription: z.string().trim().max(300),
   status: z.enum([...GATEWAY_SUCCESS_STATUSES, GATEWAY_STATUS.INVALID]),
 });

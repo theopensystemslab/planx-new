@@ -4,6 +4,7 @@ import {
 } from "@planx/components/TextInput/model";
 import { object, string } from "yup";
 
+import { PROJECT_DESCRIPTION_LIMIT } from "../model";
 import type { BreadcrumbData, TaskActionDescription } from "../types";
 import { TaskActionMap } from "./../types";
 import type { FormValues, Props, Step } from "./types";
@@ -52,7 +53,11 @@ export const getValidationSchema = (props: Props, step: Step) =>
   object({
     status: string().oneOf(["idle", "success", "error"]).required(),
     userInput: textInputValidationSchema({
-      data: { ...props, type: TextInputType.Long },
+      data: {
+        ...props,
+        type: TextInputType.Custom,
+        customLength: PROJECT_DESCRIPTION_LIMIT,
+      },
       required: true,
     }).when("selectedOption", {
       // initial input is not required if we are coming from the 'enter a new description' option
