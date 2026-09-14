@@ -2,6 +2,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
+import Chip, { chipClasses } from "@mui/material/Chip";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
@@ -29,6 +30,19 @@ const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
     },
   }),
 );
+
+const ViewOnlyChip = styled(Chip)(({ theme }) => ({
+  height: "16px",
+  fontSize: "0.625rem",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  textTransform: "uppercase",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.secondary.dark,
+  color: theme.palette.text.secondary,
+  [`& .${chipClasses.label}`]: {
+    padding: theme.spacing(0, 0.5),
+  },
+}));
 
 const DialogHeader = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -144,15 +158,20 @@ const TeamSelect: React.FC<Props> = ({ currentTeamSlug, onTeamSelect }) => {
             alignItems: "flex-start",
           }}
         >
-          <Typography
-            variant="body3"
-            component="span"
-            sx={{
-              color: "text.secondary",
-            }}
-          >
-            Team
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            <Typography
+              variant="body3"
+              component="span"
+              sx={{
+                color: "text.secondary",
+              }}
+            >
+              Team
+            </Typography>
+            {currentTeamSlug && !canUserEditTeam(currentTeamSlug) && (
+              <ViewOnlyChip label="View only" size="small" />
+            )}
+          </Box>
           <Typography
             variant="body3"
             component="span"
