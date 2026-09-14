@@ -345,7 +345,7 @@ function EditorNavMenu() {
     if (isTeamRoute)
       return {
         groupedSections: teamGroupedSections,
-        ungroupedSections: teamDocumentationSections,
+        ungroupedSections: [],
         compact: false,
       };
     return {
@@ -395,6 +395,9 @@ function EditorNavMenu() {
 
   const visibleGroupedSections = getVisibleSections(groupedSections);
   const visibleUngroupedSections = getVisibleSections(ungroupedSections);
+  const visibleDocumentationSections = getVisibleSections(
+    teamDocumentationSections,
+  );
 
   const toggleAccordion = (subtitle: string) => {
     setOpenAccordions((prev) => {
@@ -537,6 +540,11 @@ function EditorNavMenu() {
               />
             </>
           )}
+          {isTeamRoute &&
+            !compact &&
+            visibleDocumentationSections.map((section, sectionIndex) =>
+              renderSection(section, sectionIndex),
+            )}
           {isTeamRoute &&
             (role === "platformAdmin" || role === "teamEditor") && (
               <>
