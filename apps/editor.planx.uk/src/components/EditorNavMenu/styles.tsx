@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import ButtonBase from "@mui/material/ButtonBase";
 import Chip, { chipClasses } from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
@@ -90,33 +89,6 @@ export const MenuButton = styled(IconButton, {
     "&:hover": {
       background: "none",
     },
-  }),
-  "& > svg": {
-    opacity: 0.75,
-  },
-}));
-
-export const ExploreButton = styled(ButtonBase, {
-  shouldForwardProp: (prop) => prop !== "isActive",
-})<{ isActive: boolean }>(({ theme, isActive }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-start",
-  gap: theme.spacing(0.65),
-  width: "100%",
-  color: theme.palette.text.primary,
-  fontSize: "0.875rem",
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  textAlign: "left",
-  border: `1px solid ${theme.palette.border.main}`,
-  borderRadius: theme.shape.borderRadiusSm,
-  padding: theme.spacing(0.8, 1),
-  background: theme.palette.background.default,
-  "&:hover": {
-    borderColor: theme.palette.border.input,
-  },
-  ...(isActive && {
-    borderColor: theme.palette.border.input,
   }),
   "& > svg": {
     opacity: 0.75,

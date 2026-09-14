@@ -38,7 +38,6 @@ import { useRecentNotifications } from "../../hooks/data/useRecentNotifications"
 import { useLPS } from "../../hooks/useLPS";
 import AccordionItemButton from "./components/AccordionItemButton";
 import AccordionToggle from "./components/AccordionToggle";
-import ExploreSearchButton from "./components/ExploreSearchButton";
 import FeatureFlagsPanel from "./components/FeatureFlagsPanel";
 import NavMenuHeader from "./components/NavMenuHeader";
 import NavMenuItem from "./components/NavMenuItem";
@@ -378,7 +377,7 @@ function EditorNavMenu() {
   };
 
   const exploreRoute: Route = {
-    title: "Explore & search",
+    title: "Explore Plan✕",
     Icon: TravelExploreIcon,
     route: `/app/${teamSlug}/explore`,
     accessibleBy: "*",
@@ -395,9 +394,11 @@ function EditorNavMenu() {
 
   const visibleGroupedSections = getVisibleSections(groupedSections);
   const visibleUngroupedSections = getVisibleSections(ungroupedSections);
-  const visibleDocumentationSections = getVisibleSections(
-    teamDocumentationSections,
-  );
+
+  const utilitySections: MenuSection[] = hasFeatureFlag("EXPLORE")
+    ? [{ routes: [exploreRoute] }, ...teamDocumentationSections]
+    : teamDocumentationSections;
+  const visibleUtilitySections = getVisibleSections(utilitySections);
 
   const toggleAccordion = (subtitle: string) => {
     setOpenAccordions((prev) => {
@@ -471,19 +472,6 @@ function EditorNavMenu() {
       <NavBarContainer>
         <NavMenuHeader compact={compact} />
         <NavScrollArea>
-          {isTeamRoute &&
-            !compact &&
-            teamSlug &&
-            hasFeatureFlag("EXPLORE") &&
-            isRouteAccessible(exploreRoute) && (
-              <Box sx={(theme) => ({ padding: theme.spacing(0.5) })}>
-                <ExploreSearchButton
-                  title={exploreRoute.title}
-                  isActive={isActive(exploreRoute.route)}
-                  onClick={() => handleClick(exploreRoute.route)}
-                />
-              </Box>
-            )}
           {teamSlug && !compact && (
             <Box sx={(theme) => ({ padding: theme.spacing(0.5, 0.5, 0, 0.5) })}>
               <TeamCard>
@@ -503,6 +491,13 @@ function EditorNavMenu() {
                 )}
               </TeamCard>
             </Box>
+          )}
+          {teamSlug && !compact && visibleUtilitySections.length > 0 && (
+            <MenuWrap compact={compact}>
+              {visibleUtilitySections.map((section, sectionIndex) =>
+                renderSection(section, sectionIndex),
+              )}
+            </MenuWrap>
           )}
           <MenuWrap compact={compact}>
             {compact && <Divider />}
@@ -540,11 +535,6 @@ function EditorNavMenu() {
               />
             </>
           )}
-          {isTeamRoute &&
-            !compact &&
-            visibleDocumentationSections.map((section, sectionIndex) =>
-              renderSection(section, sectionIndex),
-            )}
           {isTeamRoute &&
             (role === "platformAdmin" || role === "teamEditor") && (
               <>
