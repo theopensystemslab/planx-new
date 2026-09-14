@@ -1,6 +1,6 @@
 import type { Request } from "express";
 
-import { ServerError } from "../../errors/index.js";
+import { ServerError } from "../../../errors/index.js";
 import {
   consumeConnectState,
   requireStripeConnectTeamAuth,
@@ -14,7 +14,7 @@ vi.mock("./service.js", () => ({
 }));
 
 const mockAssertTeamEditPermission = vi.fn();
-vi.mock("../auth/requireTeamMembership.js", () => ({
+vi.mock("../../auth/requireTeamMembership.js", () => ({
   assertTeamEditPermission: (...args: unknown[]) =>
     mockAssertTeamEditPermission(...args),
 }));

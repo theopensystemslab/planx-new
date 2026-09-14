@@ -1,7 +1,7 @@
 import crypto from "crypto";
 
-import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
-import { assertTeamEditPermission } from "../auth/requireTeamMembership.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import { assertTeamEditPermission } from "../../auth/requireTeamMembership.js";
 import { getTeamBySlug } from "./service.js";
 import {
   type connectSchema,

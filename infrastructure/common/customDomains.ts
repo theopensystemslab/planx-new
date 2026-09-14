@@ -33,7 +33,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "stalbans",
           domain: "planningservices.stalbans.gov.uk",
-          cloudFrontState: "cutover-ongoing",
+          cloudFrontState: "shared-final",
         },
         {
           name: "camden",
@@ -149,7 +149,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "adur-worthing",
           domain: "planx.adur-worthing.gov.uk",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
       ]
     : [

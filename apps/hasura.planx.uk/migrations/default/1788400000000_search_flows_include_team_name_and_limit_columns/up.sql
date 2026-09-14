@@ -58,8 +58,6 @@ WHERE f.team_id = t.id;
 
 
 --
--- return null values for columns we don't need in the search results
--- this improves search performance
 CREATE OR REPLACE FUNCTION public.search_flows(search text)
 RETURNS SETOF public.flows AS $$
   WITH q AS (
@@ -67,34 +65,7 @@ RETURNS SETOF public.flows AS $$
     SELECT to_tsquery('english', string_agg(lexeme || ':*', ' & ')) AS tsq
     FROM unnest(tsvector_to_array(to_tsvector('simple', search))) AS lexeme
   )
-  SELECT
-    id,
-    team_id,
-    slug,
-    NULL::integer AS creator_id,
-    NULL::jsonb AS data,
-    NULL::integer AS version,
-    NULL::timestamptz AS created_at,
-    NULL::timestamptz AS updated_at,
-    NULL::jsonb AS settings,
-    NULL::uuid AS copied_from,
-    status,
-    name,
-    NULL::text AS description,
-    templated_from,
-    summary,
-    NULL::text AS limitations,
-    NULL::timestamptz AS archived_at,
-    is_template,
-    can_create_from_copy,
-    NULL::boolean AS is_listed_on_lps,
-    NULL::text AS category,
-    NULL::uuid AS submission_email_id,
-    NULL::timestamptz AS deleted_at,
-    NULL::text AS email_template,
-    NULL::boolean AS is_service,
-    NULL::boolean AS is_pattern,
-    NULL::tsvector AS search_vector
+  SELECT flows.*
   FROM public.flows, q
   WHERE deleted_at IS NULL
     AND archived_at IS NULL
