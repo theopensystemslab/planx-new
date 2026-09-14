@@ -5,14 +5,14 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
-import Input from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
+import { getOptionsSchemaByFn } from "../shared/utils";
 import type { SetValue } from "./model";
 import { parseSetValue, validationSchema } from "./model";
 
@@ -93,6 +93,14 @@ function SetValueComponent(props: Props) {
     props.formikRef,
   );
 
+  const flowSchema = useStore((state) => state.getFlowSchema());
+
+  const valueSchema = getOptionsSchemaByFn(
+    formik.values.fn,
+    flowSchema?.options,
+    [formik.values.val],
+  );
+
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;
     formik.setFieldValue("operation", target.value);
@@ -118,17 +126,14 @@ function SetValueComponent(props: Props) {
         </ModalSectionContent>
         {formik.values.operation !== "removeAll" && (
           <ModalSectionContent title="Field value">
-            <InputRow>
-              <Input
-                required
-                format="data"
-                name="val"
-                value={formik.values.val}
-                placeholder="value"
-                onChange={formik.handleChange}
-                disabled={props.disabled}
-              />
-            </InputRow>
+            <DataFieldAutocomplete
+              required
+              schema={valueSchema}
+              value={formik.values.val}
+              placeholder="value"
+              onChange={(value) => formik.setFieldValue("val", value)}
+              disabled={props.disabled}
+            />
           </ModalSectionContent>
         )}
         <ModalSectionContent title="Operation">
