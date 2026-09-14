@@ -10,6 +10,9 @@ import {
   type TaskDefaults,
 } from "./types";
 
+// custom 300 character limit under [TextInputType.Custom]
+export const PROJECT_DESCRIPTION_LIMIT = 300;
+
 export const taskDefaults: TaskDefaults = {
   projectDescription: {
     fn: "proposal.description",
@@ -74,7 +77,7 @@ export const validationSchema = lazy(
 
 export const TASKS: Record<Task, { label: string; description: string }> = {
   projectDescription: {
-    label: "Project description (max 250 characters)",
+    label: "Project description (max ${PROJECT_DESCRIPTION_LIMIT} characters)",
     description: "Lorem ispum....",
   },
 };

@@ -41,8 +41,8 @@ describe("/ai/project-description/enhance", () => {
         });
     });
 
-    it("returns 400 when original exceeds 250 characters", async () => {
-      const longDescription = "abcde12345".repeat(26); // 260 chars
+    it("returns 400 when original exceeds 300 characters", async () => {
+      const longDescription = "abcde12345".repeat(31); // 310 chars
       await supertest(app)
         .post("/ai/project-description/enhance")
         .send({ original: longDescription })
@@ -50,7 +50,7 @@ describe("/ai/project-description/enhance", () => {
         .then((res) => {
           expect(res.body).toHaveProperty("issues");
           expect(res.body).toHaveProperty("name", "ZodError");
-          expect(res.body.issues[0].message).toMatch(/250/);
+          expect(res.body.issues[0].message).toMatch(/300/);
         });
     });
 
