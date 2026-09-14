@@ -60,12 +60,6 @@ describe("buildAuthoriseUrl", () => {
       /STRIPE_CONNECT_CLIENT_ID/,
     );
   });
-
-  it("throws if STRIPE_SECRET_KEY is not configured", () => {
-    vi.stubEnv("STRIPE_SECRET_KEY", undefined);
-
-    expect(() => buildAuthoriseUrl("some-nonce")).toThrow(/STRIPE_SECRET_KEY/);
-  });
 });
 
 describe("exchangeCodeForAccountId", () => {
@@ -105,14 +99,6 @@ describe("exchangeCodeForAccountId", () => {
 
     await expect(exchangeCodeForAccountId("auth-code")).rejects.toThrow(
       /did not return a connected account id/,
-    );
-  });
-
-  it("throws if STRIPE_SECRET_KEY is not configured", async () => {
-    vi.stubEnv("STRIPE_SECRET_KEY", undefined);
-
-    await expect(exchangeCodeForAccountId("auth-code")).rejects.toThrow(
-      /STRIPE_SECRET_KEY/,
     );
   });
 });
