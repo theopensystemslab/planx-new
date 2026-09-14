@@ -5,6 +5,7 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import CalendarWidget, {
@@ -15,18 +16,17 @@ import { SearchModal } from "./components/SearchModal";
 import TemplatesWidget from "./components/TemplatesWidget";
 
 const SearchBarButton = styled(ButtonBase)(({ theme }) => ({
-  width: "100%",
-  maxWidth: 360,
-  height: 50,
-  padding: theme.spacing(0, 2),
+  padding: theme.spacing(1.5, 2.5, 1.5, 2),
   gap: theme.spacing(1),
   justifyContent: "flex-start",
   border: `1px solid ${theme.palette.border.main}`,
-  borderRadius: 4,
+  borderRadius: theme.shape.borderRadius,
   backgroundColor: theme.palette.common.white,
-  color: theme.palette.text.placeholder,
   "&:hover, &:focus-visible": {
-    borderColor: theme.palette.text.primary,
+    backgroundColor: theme.palette.background.paper,
+  },
+  "& > svg": {
+    color: theme.palette.text.secondary,
   },
 }));
 
@@ -54,7 +54,11 @@ export default function Explore() {
             aria-label="Search Plan✕"
           >
             <TravelExploreIcon />
-            <Typography variant="body1" sx={{ color: "inherit" }}>
+            <Typography
+              component="span"
+              variant="body1"
+              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            >
               Search flows across Plan✕
             </Typography>
           </SearchBarButton>
