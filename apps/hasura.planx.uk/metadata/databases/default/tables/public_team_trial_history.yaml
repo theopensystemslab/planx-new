@@ -1,0 +1,29 @@
+table:
+  name: team_trial_history
+  schema: public
+object_relationships:
+  - name: team
+    using:
+      foreign_key_constraint_on: team_id
+select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - team_id
+        - is_trial
+      filter: {}
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - team_id
+        - is_trial
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - team_id
+        - is_trial
+      filter: {}
+    comment: ""
