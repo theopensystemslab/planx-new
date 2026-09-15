@@ -58,14 +58,14 @@ export function CalendarViewToggle() {
       onChange={handleViewChange}
       size="small"
     >
-      <Tooltip title="Grid view" placement="bottom">
-        <StyledToggleButton value="grid" disableRipple>
-          <ViewModuleIcon />
-        </StyledToggleButton>
-      </Tooltip>
       <Tooltip title="List view" placement="bottom">
         <StyledToggleButton value="list" disableRipple>
           <TableRowsIcon />
+        </StyledToggleButton>
+      </Tooltip>
+      <Tooltip title="Month view" placement="bottom">
+        <StyledToggleButton value="grid" disableRipple>
+          <ViewModuleIcon />
         </StyledToggleButton>
       </Tooltip>
     </ToggleButtonGroup>

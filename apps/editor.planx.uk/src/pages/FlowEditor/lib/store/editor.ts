@@ -133,7 +133,7 @@ export const editorUIStore: StateCreator<
       set({ flowCardView: view });
     },
 
-    calendarView: "grid",
+    calendarView: "list",
 
     setCalendarView: (view: CalendarView) => {
       set({ calendarView: view });
