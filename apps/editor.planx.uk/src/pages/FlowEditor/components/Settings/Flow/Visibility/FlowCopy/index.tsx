@@ -1,4 +1,5 @@
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -12,6 +13,9 @@ import type {
   UpdateFlowVisibilityVariables,
   VisibilityFormValues,
 } from "./types";
+
+const REQUEST_A_REVIEW_URL =
+  "https://editor.planx.uk/opensystemslab/request-a-review/published";
 
 type Props = { isService: boolean };
 
@@ -31,7 +35,23 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
       mutation={UPDATE_FLOW_VISIBILITY}
       validationSchema={validationSchema}
       legend={`${isService ? "Service" : "Flow"} copy permission`}
-      description={`Control if this ${isService ? "service" : "flow"} can be used to create new ${isService ? "services" : "flows"} in other teams. It can still be copied and modified within your team.`}
+      description={
+        <>
+          <p>
+            {`Control if this ${isService ? "service" : "flow"} can be used to create new ${isService ? "services" : "flows"} in other teams. It can still be copied and modified within your team.`}
+          </p>
+          <p>
+            <Link
+              href={REQUEST_A_REVIEW_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Request a review (opens in a new tab)
+            </Link>
+            {` by our services team before making this ${isService ? "service" : "flow"} available to copy.`}
+          </p>
+        </>
+      }
       defaultValues={defaultValues}
       getInitialValues={({ flows: [flow] }) => ({
         canCreateFromCopy: flow.canCreateFromCopy,
