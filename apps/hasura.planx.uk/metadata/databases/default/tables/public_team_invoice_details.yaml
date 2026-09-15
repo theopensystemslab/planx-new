@@ -1,0 +1,104 @@
+table:
+  name: team_invoice_details
+  schema: public
+object_relationships:
+  - name: team
+    using:
+      foreign_key_constraint_on: team_id
+insert_permissions:
+  - role: platformAdmin
+    permission:
+      check: {}
+      columns:
+        - id
+        - team_id
+        - address_line1
+        - address_line2
+        - business_name
+        - company_registration
+        - county
+        - email_address
+        - postcode
+        - town_city
+        - vat_number
+    comment: ""
+select_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - id
+        - team_id
+        - address_line1
+        - address_line2
+        - business_name
+        - company_registration
+        - county
+        - email_address
+        - postcode
+        - town_city
+        - vat_number
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - id
+        - team_id
+        - address_line1
+        - address_line2
+        - business_name
+        - company_registration
+        - county
+        - email_address
+        - postcode
+        - town_city
+        - vat_number
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamEditor
+    comment: ""
+update_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - address_line1
+        - address_line2
+        - business_name
+        - company_registration
+        - county
+        - email_address
+        - postcode
+        - team_id
+        - town_city
+        - vat_number
+      filter: {}
+      check: null
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - address_line1
+        - address_line2
+        - business_name
+        - company_registration
+        - county
+        - email_address
+        - postcode
+        - team_id
+        - town_city
+        - vat_number
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamEditor
+      check: null
+    comment: ""
