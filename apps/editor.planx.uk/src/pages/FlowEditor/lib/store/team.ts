@@ -4,6 +4,7 @@ import type {
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
+import { setFavicon } from "utils/favicon";
 import type { StateCreator } from "zustand";
 
 import type { SharedStore } from "./shared";
@@ -20,10 +21,15 @@ export interface TeamStore {
   teamTheme: TeamTheme;
   teamDomain: string;
 
-  setTeam: (team: Team) => void;
+  setTeam: (team: Team, options?: { useCustomFavicon?: boolean }) => void;
   getTeam: () => Team;
   clearTeamStore: () => void;
 }
+
+const generateCircleFavicon = (color: string): string => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="${color}"/></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+};
 
 export const teamStore: StateCreator<
   TeamStore & SharedStore,
@@ -44,7 +50,7 @@ export const teamStore: StateCreator<
   },
   teamDomain: "",
 
-  setTeam: (team) => {
+  setTeam: (team, options = { useCustomFavicon: true }) => {
     set({
       teamId: team.id,
       teamName: team.name,
@@ -53,6 +59,13 @@ export const teamStore: StateCreator<
       teamTheme: team.theme,
       teamDomain: team.domain,
     });
+
+    if (options.useCustomFavicon && team.theme?.favicon) {
+      setFavicon(team.theme.favicon);
+    } else {
+      const color = team.theme?.primaryColour ?? DEFAULT_PRIMARY_COLOR;
+      setFavicon(generateCircleFavicon(color));
+    }
   },
 
   getTeam: () => ({

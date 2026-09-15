@@ -76,7 +76,7 @@ function FlowsLayout() {
   const team = Route.useLoaderData();
 
   useEffect(() => {
-    useStore.getState().setTeam(team);
+    useStore.getState().setTeam(team, { useCustomFavicon: false });
   }, [team]);
 
   return <Outlet />;

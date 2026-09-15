@@ -41,6 +41,7 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
       getUserRole: vi.fn(),
       getTeam: mockGetTeam,
       setIsNavMenuVisible: mockSetIsNavMenuVisible,
+      canUserEditTeam: vi.fn(() => true),
       user: mockUser,
     }),
   ),

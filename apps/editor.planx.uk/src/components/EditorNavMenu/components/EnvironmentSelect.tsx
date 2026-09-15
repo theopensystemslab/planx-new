@@ -40,8 +40,11 @@ const StyledButtonBase = styled(ButtonBase)(({ theme }) => ({
   height: "auto",
   width: "auto",
   textTransform: "capitalize",
-  color: theme.palette.common.white,
+  color: theme.palette.text.primary,
+  fontSize: theme.typography.body4.fontSize,
+  gap: 0,
   "&:hover": {
+    color: theme.palette.text.primary,
     backgroundColor: "transparent",
   },
 }));
@@ -128,10 +131,7 @@ const EnvironmentSelect: React.FC = () => {
     <Root>
       <StyledButtonBase onClick={handleOpen} selected={false}>
         {displayEnv}
-        <UnfoldMoreIcon
-          fontSize="small"
-          sx={(theme) => ({ color: theme.palette.secondary.dark, ml: 0.25 })}
-        />
+        <UnfoldMoreIcon fontSize="small" />
       </StyledButtonBase>
       <StyledDialog
         open={open}
