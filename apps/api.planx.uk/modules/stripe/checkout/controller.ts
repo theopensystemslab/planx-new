@@ -13,6 +13,8 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
   const { localAuthority } = res.locals.parsedReq.params;
   const { sessionId, flowId, amount, returnURL } = res.locals.parsedReq.body;
 
+  const separator = returnURL.includes("?") ? "&" : "?";
+
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -29,8 +31,8 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
           quantity: 1,
         },
       ],
-      success_url: `${returnURL}?stripeSessionId={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${returnURL}?cancelled=true`,
+      success_url: `${returnURL}${separator}stripeSessionId={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${returnURL}${separator}cancelled=true`,
       // TODO: Metadata population
       metadata: { sessionId, flowId },
       payment_intent_data: { metadata: { sessionId, flowId } },

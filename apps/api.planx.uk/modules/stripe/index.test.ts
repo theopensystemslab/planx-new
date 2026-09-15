@@ -76,6 +76,24 @@ describe("creating a Stripe Checkout Session", () => {
     );
   });
 
+  it("appends params with & when the returnURL already has a query string", async () => {
+    const returnURL = "https://editor.planx.uk/team/flow/published?foo=bar";
+
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send({ ...validBody, returnURL })
+      .expect(200);
+
+    const { success_url, cancel_url } = mockCreate.mock.calls[0][0];
+
+    expect(success_url).toBe(
+      "https://editor.planx.uk/team/flow/published?foo=bar&stripeSessionId={CHECKOUT_SESSION_ID}",
+    );
+    expect(cancel_url).toBe(
+      "https://editor.planx.uk/team/flow/published?foo=bar&cancelled=true",
+    );
+  });
+
   it("rejects an invalid request body with a 400", async () => {
     await supertest(app)
       .post("/stripe/checkout-session/southwark")
