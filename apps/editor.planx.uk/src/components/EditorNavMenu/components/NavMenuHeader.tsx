@@ -29,14 +29,14 @@ const LogoLink = styled(CustomLink)(({ theme }) => ({
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
 }));
 
-const LogoIcon = styled(Box)<{ teamcolour?: string }>(
-  ({ theme, teamcolour }) => ({
-    width: 12,
-    height: 12,
-    backgroundColor: teamcolour ?? theme.palette.primary.main,
-    borderRadius: "50%",
-  }),
-);
+const LogoIcon = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "teamcolour",
+})<{ teamcolour?: string }>(({ theme, teamcolour }) => ({
+  width: 12,
+  height: 12,
+  backgroundColor: teamcolour ?? theme.palette.primary.main,
+  borderRadius: "50%",
+}));
 
 export interface NavMenuHeaderProps {
   compact?: boolean;
