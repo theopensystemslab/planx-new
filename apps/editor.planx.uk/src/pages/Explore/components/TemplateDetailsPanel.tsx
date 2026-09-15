@@ -1,11 +1,9 @@
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
-import { cardBoxShadow } from "theme";
 
+import { DetailsPanelCard } from "./DetailsPanelCard";
 import { RelatedItemsSection } from "./RelatedItemsSection";
 import { SearchListItemDetail } from "./SearchListItemDetail";
-import { SearchListItemDetailActions } from "./SearchListItemDetailActions";
 import type { Template } from "./types";
 import { useTemplateDetails } from "./useTemplateDetails";
 
@@ -23,23 +21,12 @@ export const TemplateDetailsPanel: React.FC<TemplateDetailsPanelProps> = ({
 
   return (
     <>
-      <Box
-        sx={(theme) => ({
-          border: `1px solid ${theme.palette.border.light}`,
-          borderRadius: "4px",
-          boxShadow: cardBoxShadow,
-          backgroundColor: theme.palette.background.default,
-          overflow: "hidden",
-        })}
-      >
-        <Box sx={{ p: 3 }}>
-          <SearchListItemDetail result={resultWithoutRelatedItems} />
-          {relatedItems && relatedItems.items.length > 0 && (
-            <RelatedItemsSection relatedItems={relatedItems} />
-          )}
-        </Box>
-        <SearchListItemDetailActions primaryAction={result.primaryAction} />
-      </Box>
+      <DetailsPanelCard primaryAction={result.primaryAction}>
+        <SearchListItemDetail result={resultWithoutRelatedItems} />
+        {relatedItems && relatedItems.items.length > 0 && (
+          <RelatedItemsSection relatedItems={relatedItems} />
+        )}
+      </DetailsPanelCard>
       <ConfirmationDialog
         open={isConfirmationOpen}
         onClose={(confirmed) => {

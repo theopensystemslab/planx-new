@@ -61,7 +61,15 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
         onClick={onClick}
         alignItems="center"
         selected={selected}
-        sx={{ px: 2, py: 1.5, gap: 1.5 }}
+        sx={{
+          p: 1.5,
+          gap: 1.5,
+          "&:hover": { backgroundColor: "secondary.main" },
+          "&.Mui-selected": {
+            backgroundColor: "background.disabled",
+            "&:hover": { backgroundColor: "secondary.main" },
+          },
+        }}
       >
         {content}
         <ChevronRightIcon sx={{ ml: "auto", color: "text.secondary" }} />
