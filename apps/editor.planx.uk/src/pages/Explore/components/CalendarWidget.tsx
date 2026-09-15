@@ -1,11 +1,12 @@
-import TableRowsIcon from "@mui/icons-material/TableRows";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import Box from "@mui/material/Box";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Tooltip from "@mui/material/Tooltip";
-import { useStore } from "pages/FlowEditor/lib/store";
-import type { CalendarView } from "pages/FlowEditor/lib/store/editor";
-import { StyledToggleButton } from "pages/Flows/components/StyledToggleButton";
+
+export type CalendarView = "grid" | "week" | "list";
+
+export const CALENDAR_VIEW_LABELS: Record<CalendarView, string> = {
+  grid: "Month view",
+  week: "Week view",
+  list: "List view",
+};
 
 const CALENDAR_SRC =
   "c_539668a746760a3dae793103004f774c5fa21e5cfd5f6974a9f36e9ec5a2962e@group.calendar.google.com";
@@ -22,6 +23,7 @@ const BASE_PARAMS: Record<string, string> = {
 
 const VIEW_PARAMS: Record<CalendarView, Record<string, string>> = {
   grid: { mode: "MONTH", wkst: "2" },
+  week: { mode: "WEEK", wkst: "2" },
   list: { mode: "AGENDA" },
 };
 
@@ -36,45 +38,7 @@ const EMBED_BG = "#F1F4F9";
 const OVERFLOW_OFFSET = 20;
 const MASK_HEIGHT = 10;
 
-export function CalendarViewToggle() {
-  const [calendarView, setCalendarView] = useStore((state) => [
-    state.calendarView,
-    state.setCalendarView,
-  ]);
-
-  const handleViewChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    newView: CalendarView | null,
-  ) => {
-    if (newView !== null) {
-      setCalendarView(newView);
-    }
-  };
-
-  return (
-    <ToggleButtonGroup
-      value={calendarView}
-      exclusive
-      onChange={handleViewChange}
-      size="small"
-    >
-      <Tooltip title="Grid view" placement="bottom">
-        <StyledToggleButton value="grid" disableRipple>
-          <ViewModuleIcon />
-        </StyledToggleButton>
-      </Tooltip>
-      <Tooltip title="List view" placement="bottom">
-        <StyledToggleButton value="list" disableRipple>
-          <TableRowsIcon />
-        </StyledToggleButton>
-      </Tooltip>
-    </ToggleButtonGroup>
-  );
-}
-
-export default function CalendarWidget() {
-  const calendarView = useStore((state) => state.calendarView);
-
+export default function CalendarWidget({ view }: { view: CalendarView }) {
   return (
     <Box
       sx={{
@@ -90,9 +54,8 @@ export default function CalendarWidget() {
       }}
     >
       <iframe
-        key={calendarView}
-        src={embedUrl(calendarView)}
-        title="Plan✕ calendar"
+        src={embedUrl(view)}
+        title={`Plan✕ calendar – ${CALENDAR_VIEW_LABELS[view]}`}
         style={{
           display: "block",
           width: "100%",
