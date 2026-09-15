@@ -151,6 +151,11 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           domain: "planx.adur-worthing.gov.uk",
           cloudFrontState: "shared-final",
         },
+        {
+          name: "swale",
+          domain: "planningservices.swale.gov.uk",
+          cloudFrontState: "validation-only",
+        },
       ]
     : [
         // we keep one custom domain on staging to function as a canary (monitored by UptimeRobot)
