@@ -4,17 +4,7 @@ import Stripe from "stripe";
 
 import { $api } from "../../../client/index.js";
 import { ServerError } from "../../../errors/index.js";
-
-const getStripeClient = (): Stripe => {
-  const secretKey = process.env.STRIPE_SECRET_KEY;
-  if (!secretKey) {
-    throw new ServerError({
-      status: 500,
-      message: "STRIPE_SECRET_KEY is not configured",
-    });
-  }
-  return new Stripe(secretKey);
-};
+import { stripe } from "../client.js";
 
 export const getCallbackUrl = (): string =>
   `${process.env.API_URL_EXT}/stripe/connect/callback`;
@@ -44,8 +34,6 @@ export const buildAuthoriseUrl = (state: string): string => {
     });
   }
 
-  const stripe = getStripeClient();
-
   return stripe.oauth.authorizeUrl({
     response_type: "code",
     client_id: clientId,
@@ -63,8 +51,6 @@ export const buildAuthoriseUrl = (state: string): string => {
 export const exchangeCodeForAccountId = async (
   code: string,
 ): Promise<string> => {
-  const stripe = getStripeClient();
-
   let token: Stripe.OAuthToken;
   try {
     token = await stripe.oauth.token({

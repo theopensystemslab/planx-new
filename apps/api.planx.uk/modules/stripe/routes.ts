@@ -2,6 +2,8 @@ import { Router } from "express";
 
 import { validate } from "../../shared/middleware/validate.js";
 import { useTeamEditorAuth } from "../auth/middleware.js";
+import { createCheckoutSession } from "./checkout/controller.js";
+import { createCheckoutSessionSchema } from "./checkout/types.js";
 import * as Controller from "./connect/controller.js";
 import { requireStripeConnectTeamAuth } from "./connect/middleware.js";
 import { connectCallbackSchema, connectSchema } from "./connect/types.js";
@@ -29,6 +31,13 @@ router.get(
   validate(connectSchema),
   requireStripeConnectTeamAuth,
   Controller.initiateConnect,
+);
+
+router.post(
+  "/stripe/checkout-session/:localAuthority",
+  validate(createCheckoutSessionSchema),
+  // TODO: Guard on connected accounts only
+  createCheckoutSession,
 );
 
 export default router;
