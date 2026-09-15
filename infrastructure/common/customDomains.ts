@@ -139,7 +139,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "greater-cambridge-shared-planning",
           domain: "planningservices.greatercambridgeplanning.org",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
         {
           name: "maidstone",
