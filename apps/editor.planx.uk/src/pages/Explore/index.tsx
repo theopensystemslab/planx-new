@@ -1,67 +1,23 @@
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import Box from "@mui/material/Box";
-import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import CalendarWidget, {
-  CalendarViewToggle,
+  CALENDAR_VIEW_LABELS,
+  type CalendarView,
 } from "./components/CalendarWidget";
-import NumbersWidget from "./components/NumbersWidget";
-import { SearchModal } from "./components/SearchModal";
-import TemplatesWidget from "./components/TemplatesWidget";
 
-const SearchBarButton = styled(ButtonBase)(({ theme }) => ({
-  padding: theme.spacing(1.5, 2.5, 1.5, 2),
-  gap: theme.spacing(1),
-  justifyContent: "flex-start",
-  border: `1px solid ${theme.palette.border.main}`,
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.common.white,
-  "&:hover, &:focus-visible": {
-    backgroundColor: theme.palette.background.paper,
-  },
-  "& > svg": {
-    color: theme.palette.text.secondary,
-  },
-}));
+const CALENDAR_VIEWS: CalendarView[] = ["grid", "week", "list"];
 
 export default function Explore() {
-  const [searchOpen, setSearchOpen] = useState(false);
-
   return (
     <Box sx={{ bgcolor: "background.paper", flexGrow: 1 }}>
       <Container maxWidth="contentWide">
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: 2,
-            justifyContent: "space-between",
-            alignItems: "center",
-            pb: 2,
-          }}
-        >
+        <Box sx={{ pb: 2 }}>
           <Typography variant="h2" component="h1">
-            Explore Plan✕
+            Calendar view options
           </Typography>
-          <SearchBarButton
-            onClick={() => setSearchOpen(true)}
-            aria-label="Search Plan✕"
-          >
-            <TravelExploreIcon />
-            <Typography
-              component="span"
-              variant="body1"
-              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-            >
-              Search flows across Plan✕
-            </Typography>
-          </SearchBarButton>
         </Box>
         <Box
           sx={{
@@ -71,21 +27,13 @@ export default function Explore() {
             gridTemplateColumns: "repeat(auto-fit, minmax(470px, 1fr))",
           }}
         >
-          <DashboardWidget title="Plan✕ in numbers" subtitle="last 30 days">
-            <NumbersWidget />
-          </DashboardWidget>
-          <DashboardWidget title="Templates">
-            <TemplatesWidget />
-          </DashboardWidget>
-          <DashboardWidget
-            title="Events & learning sessions"
-            headerAction={<CalendarViewToggle />}
-          >
-            <CalendarWidget />
-          </DashboardWidget>
+          {CALENDAR_VIEWS.map((view) => (
+            <DashboardWidget key={view} title={CALENDAR_VIEW_LABELS[view]}>
+              <CalendarWidget view={view} />
+            </DashboardWidget>
+          ))}
         </Box>
       </Container>
-      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </Box>
   );
 }
