@@ -206,9 +206,7 @@ export const useTemplateDetails = (
             items: usedByTeams.map(({ team }) => ({
               key: team.id,
               tooltip: team.name,
-              icon: (
-                <Badge variant={BadgeVariant.Team} team={team} size="compact" />
-              ),
+              icon: <Badge variant={BadgeVariant.Team} team={team} />,
             })),
           }
         : undefined,

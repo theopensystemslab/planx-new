@@ -1,14 +1,12 @@
-import Box from "@mui/material/Box";
 import { useNavigate } from "@tanstack/react-router";
 import { formatLastEditMessage } from "pages/FlowEditor/utils";
-import { cardBoxShadow } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 
 import { Badge } from "../../../components/Badge/Badge";
 import { BadgeVariant } from "../../../components/Badge/types";
+import { DetailsPanelCard } from "./DetailsPanelCard";
 import { SearchListItemDetail } from "./SearchListItemDetail";
-import { SearchListItemDetailActions } from "./SearchListItemDetailActions";
 import type { SearchResult } from "./SearchResult";
 import { useCopyFlowToTeam } from "./useCopyFlowToTeam";
 import type { FlowSearchResult } from "./useSearchFlows";
@@ -71,22 +69,11 @@ export const FlowDetailsPanel: React.FC<FlowDetailsPanelProps> = ({
   };
 
   return (
-    <Box
-      sx={(theme) => ({
-        border: `1px solid ${theme.palette.border.light}`,
-        borderRadius: "4px",
-        boxShadow: cardBoxShadow,
-        backgroundColor: theme.palette.background.default,
-        overflow: "hidden",
-      })}
+    <DetailsPanelCard
+      primaryAction={result.primaryAction}
+      secondaryAction={result.secondaryAction}
     >
-      <Box sx={{ p: 3 }}>
-        <SearchListItemDetail result={result} />
-      </Box>
-      <SearchListItemDetailActions
-        primaryAction={result.primaryAction}
-        secondaryAction={result.secondaryAction}
-      />
-    </Box>
+      <SearchListItemDetail result={result} />
+    </DetailsPanelCard>
   );
 };
