@@ -1,0 +1,44 @@
+table:
+  name: platform_activity_feed
+  schema: public
+select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - id
+        - type
+        - event_time
+        - team_name
+        - flow_name
+      filter: {}
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - id
+        - type
+        - event_time
+        - team_name
+        - flow_name
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - id
+        - type
+        - event_time
+        - team_name
+        - flow_name
+      filter: {}
+    comment: ""
+  - role: teamViewer
+    permission:
+      columns:
+        - id
+        - type
+        - event_time
+        - team_name
+        - flow_name
+      filter: {}
+    comment: ""
