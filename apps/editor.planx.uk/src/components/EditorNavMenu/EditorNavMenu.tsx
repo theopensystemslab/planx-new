@@ -142,128 +142,122 @@ function EditorNavMenu() {
     },
   ];
 
-  const teamGroupedSections: MenuSection[] = useMemo(
-    () => [
-      {
-        routes: [
-          ...(teamSlug && !isSystemTeam(teamSlug)
-            ? [
-                {
-                  title: "Dashboard",
-                  Icon: DashboardIcon,
-                  route: `/app/${teamSlug}/dashboard`,
-                  accessibleBy: "*" as const,
-                },
-              ]
-            : []),
-          {
-            title: "Flows",
-            Icon: EditorIcon,
-            route: `/app/${teamSlug}/flows`,
-            accessibleBy: "*" as const,
-          },
-        ],
-      },
-      {
-        subtitle: "Settings",
-        accordion: true,
-        routes: [
-          {
-            title: "Team settings",
-            Icon: TuneIcon,
-            route: `/app/${teamSlug}/settings`,
-            accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
-          },
-          {
-            title: "Team members",
-            Icon: GroupIcon,
-            route: `/app/${teamSlug}/members`,
-            accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
-          },
-          {
-            title: "Subscription",
-            Icon: CurrencyPoundIcon,
-            route: `/app/${teamSlug}/subscription`,
-            accessibleBy: ["platformAdmin", "teamAdmin"],
-            isNew: true,
-          },
-        ],
-      },
-      {
-        subtitle: "Data",
-        accordion: true,
-        icon: LeaderboardIcon,
-        routes: [
-          {
-            title: "Submissions",
-            Icon: FactCheckIcon,
-            route: `/app/${teamSlug}/submissions`,
-            accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
-          },
-          {
-            title: "Feedback",
-            Icon: RateReviewIcon,
-            route: `/app/${teamSlug}/feedback`,
-            accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
-          },
-          {
-            title: "Analytics",
-            Icon: LeaderboardIcon,
-            route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
-            accessibleBy: "*",
-            disabled: !teamAnalyticsLink,
-          },
-          {
-            title: "Planning Data",
-            Icon: LayersIcon,
-            route: referenceCode
-              ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
-              : `#`,
-            accessibleBy: "*",
-            disabled: !referenceCode,
-          },
-          {
-            title: "Local Planning Services",
-            Icon: LocalPlanningServicesIcon,
-            route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
-            accessibleBy: "*",
-            disabled: !referenceCode,
-          },
-        ],
-      },
-    ],
-    [teamSlug, lpsBaseUrl, referenceCode, teamAnalyticsLink],
-  );
+  const teamGroupedSections: MenuSection[] = [
+    {
+      routes: [
+        ...(teamSlug && !isSystemTeam(teamSlug)
+          ? [
+              {
+                title: "Dashboard",
+                Icon: DashboardIcon,
+                route: `/app/${teamSlug}/dashboard`,
+                accessibleBy: "*" as const,
+              },
+            ]
+          : []),
+        {
+          title: "Flows",
+          Icon: EditorIcon,
+          route: `/app/${teamSlug}/flows`,
+          accessibleBy: "*" as const,
+        },
+      ],
+    },
+    {
+      subtitle: "Settings",
+      accordion: true,
+      routes: [
+        {
+          title: "Team settings",
+          Icon: TuneIcon,
+          route: `/app/${teamSlug}/settings`,
+          accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
+        },
+        {
+          title: "Team members",
+          Icon: GroupIcon,
+          route: `/app/${teamSlug}/members`,
+          accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
+        },
+        {
+          title: "Subscription",
+          Icon: CurrencyPoundIcon,
+          route: `/app/${teamSlug}/subscription`,
+          accessibleBy: ["platformAdmin", "teamAdmin"],
+          isNew: true,
+        },
+      ],
+    },
+    {
+      subtitle: "Data",
+      accordion: true,
+      icon: LeaderboardIcon,
+      routes: [
+        {
+          title: "Submissions",
+          Icon: FactCheckIcon,
+          route: `/app/${teamSlug}/submissions`,
+          accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
+        },
+        {
+          title: "Feedback",
+          Icon: RateReviewIcon,
+          route: `/app/${teamSlug}/feedback`,
+          accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
+        },
+        {
+          title: "Analytics",
+          Icon: LeaderboardIcon,
+          route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
+          accessibleBy: "*",
+          disabled: !teamAnalyticsLink,
+        },
+        {
+          title: "Planning Data",
+          Icon: LayersIcon,
+          route: referenceCode
+            ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
+            : `#`,
+          accessibleBy: "*",
+          disabled: !referenceCode,
+        },
+        {
+          title: "Local Planning Services",
+          Icon: LocalPlanningServicesIcon,
+          route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
+          accessibleBy: "*",
+          disabled: !referenceCode,
+        },
+      ],
+    },
+  ];
 
-  const teamDocumentationSections: MenuSection[] = useMemo(
-    () => [
-      {
-        subtitle: "Documentation",
-        accordion: true,
-        routes: [
-          {
-            title: "Resources",
-            Icon: MenuBookIcon,
-            route: `/app/${teamSlug}/resources`,
-            accessibleBy: "*",
-          },
-          {
-            title: "Onboarding",
-            Icon: AssignmentTurnedInIcon,
-            route: `/app/${teamSlug}/onboarding`,
-            accessibleBy: "*",
-          },
-          {
-            title: "Tutorials",
-            Icon: SchoolIcon,
-            route: `/app/${teamSlug}/tutorials`,
-            accessibleBy: "*",
-          },
-        ],
-      },
-    ],
-    [teamSlug],
-  );
+  const teamDocumentationSections: MenuSection[] = [
+    {
+      subtitle: "Documentation",
+      accordion: true,
+      routes: [
+        {
+          title: "Resources",
+          Icon: MenuBookIcon,
+          route: `/app/${teamSlug}/resources`,
+          accessibleBy: "*",
+        },
+        {
+          title: "Onboarding",
+          Icon: AssignmentTurnedInIcon,
+          route: `/app/${teamSlug}/onboarding`,
+          accessibleBy: "*",
+        },
+        {
+          title: "Tutorials",
+          Icon: SchoolIcon,
+          route: `/app/${teamSlug}/tutorials`,
+          accessibleBy: "*",
+        },
+      ],
+    },
+  ];
 
   const flowLayoutSections: MenuSection[] = useMemo(
     () => [
