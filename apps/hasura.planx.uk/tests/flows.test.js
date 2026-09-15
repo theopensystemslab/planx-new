@@ -148,23 +148,23 @@ describe("flows and operations", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query flows and their associated operations", () => {
-      expect(i.queries).toContain("flows");
-      expect(i.queries).toContain("operations");
+    test("cannot query flows and their associated operations", () => {
+      expect(i.queries).not.toContain("flows");
+      expect(i.queries).not.toContain("operations");
     });
 
-    test("can update flows and their associated operations", () => {
-      expect(i.mutations).toContain("update_flows_by_pk");
-      expect(i.mutations).toContain("update_flows");
-      expect(i.mutations).toContain("update_operations_by_pk");
-      expect(i.mutations).toContain("update_operations");
+    test("cannot update flows and their associated operations", () => {
+      expect(i.mutations).not.toContain("update_flows_by_pk");
+      expect(i.mutations).not.toContain("update_flows");
+      expect(i.mutations).not.toContain("update_operations_by_pk");
+      expect(i.mutations).not.toContain("update_operations");
     });
 
-    test("can create flows and their associated operations", () => {
-      expect(i.mutations).toContain("insert_flows_one");
-      expect(i.mutations).toContain("insert_flows");
-      expect(i.mutations).toContain("insert_operations_one");
-      expect(i.mutations).toContain("insert_operations");
+    test("cannot create flows and their associated operations", () => {
+      expect(i.mutations).not.toContain("insert_flows_one");
+      expect(i.mutations).not.toContain("insert_flows");
+      expect(i.mutations).not.toContain("insert_operations_one");
+      expect(i.mutations).not.toContain("insert_operations");
     });
 
     test("cannot delete flows", () => {
@@ -177,13 +177,13 @@ describe("flows and operations", () => {
       expect(i.mutations).not.toContain("delete_operations");
     });
 
-    test("can query published flows", () => {
-      expect(i.queries).toContain("published_flows");
+    test("cannot query published flows", () => {
+      expect(i.queries).not.toContain("published_flows");
     });
 
-    test("can create published_flows", () => {
-      expect(i.mutations).toContain("insert_published_flows_one");
-      expect(i.mutations).toContain("insert_published_flows");
+    test("cannot create published_flows", () => {
+      expect(i.mutations).not.toContain("insert_published_flows_one");
+      expect(i.mutations).not.toContain("insert_published_flows");
     });
 
     test("cannot update or delete published_flows", () => {
