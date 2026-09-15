@@ -51,7 +51,12 @@ app.set("trust proxy", 1);
 
 app.use(defaultCors);
 
-app.use(bodyParser.json({ limit: "100mb" }));
+const jsonParser = bodyParser.json({ limit: "100mb" });
+
+app.use((req, res, next) =>
+  // The Stripe webhook needs the raw, unparsed, request body for signature verification, so we skip bodyParser here
+  req.path === "/stripe/webhook" ? next() : jsonParser(req, res, next),
+);
 
 // Converts req.headers.cookie: string, to req.cookies: Record<string, string>
 app.use(cookieParser());
