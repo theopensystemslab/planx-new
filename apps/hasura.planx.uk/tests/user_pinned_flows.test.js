@@ -90,12 +90,12 @@ describe("user_pinned_flows", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query user_pinned_flows", () => {
-      expect(i.queries).toContain("user_pinned_flows");
+    test("cannot query user_pinned_flows", () => {
+      expect(i.queries).not.toContain("user_pinned_flows");
     });
 
-    test("can create user_pinned_flows", () => {
-      expect(i.mutations).toContain("insert_user_pinned_flows");
+    test("cannot create user_pinned_flows", () => {
+      expect(i.mutations).not.toContain("insert_user_pinned_flows");
     });
 
     test("cannot update user_pinned_flows", () => {
@@ -103,8 +103,8 @@ describe("user_pinned_flows", () => {
       expect(i.mutations).not.toContain("update_user_pinned_flows_by_pk");
     });
 
-    test("can delete user_pinned_flows", () => {
-      expect(i.mutations).toContain("delete_user_pinned_flows");
+    test("cannot delete user_pinned_flows", () => {
+      expect(i.mutations).not.toContain("delete_user_pinned_flows");
     });
   });
 

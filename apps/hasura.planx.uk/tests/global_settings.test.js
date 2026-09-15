@@ -70,8 +70,8 @@ describe("global_settings", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query global_settings view", () => {
-      expect(i.queries).toContain("global_settings");
+    test("cannot query global_settings view", () => {
+      expect(i.queries).not.toContain("global_settings");
     });
 
     test("cannot create, update, or delete global_settings", () => {

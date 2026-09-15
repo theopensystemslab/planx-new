@@ -9,9 +9,8 @@ export const Route = createFileRoute("/_authenticated/app/$team/explore")({
       throw redirect({ to: "/app/$team", params });
     }
 
-    const { canUserEditTeam, getUserRoleForCurrentTeam } = useStore.getState();
-    const isAuthorised =
-      getUserRoleForCurrentTeam() === "analyst" || canUserEditTeam(params.team);
+    const { getUserRoleForCurrentTeam } = useStore.getState();
+    const isAuthorised = Boolean(getUserRoleForCurrentTeam());
     if (!isAuthorised) {
       throw notFound();
     }

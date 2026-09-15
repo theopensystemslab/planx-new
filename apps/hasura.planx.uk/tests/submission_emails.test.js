@@ -86,21 +86,21 @@ describe("submission_emails", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query flow integrations", () => {
-      expect(i.queries).toContain("submission_emails");
+    test("cannot query flow integrations", () => {
+      expect(i.queries).not.toContain("submission_emails");
     });
 
     test("can update flow integrations", () => {
-      expect(i.mutations).toContain("update_submission_emails");
-      expect(i.mutations).toContain("update_submission_emails_by_pk");
+      expect(i.mutations).not.toContain("update_submission_emails");
+      expect(i.mutations).not.toContain("update_submission_emails_by_pk");
     });
 
     test("can delete flow integrations", async () => {
-      expect(i.mutations).toContain("delete_submission_emails");
+      expect(i.mutations).not.toContain("delete_submission_emails");
     });
 
     test("can add flow integrations", async () => {
-      expect(i.mutations).toContain("insert_submission_emails");
+      expect(i.mutations).not.toContain("insert_submission_emails");
     });
   });
 

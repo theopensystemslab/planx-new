@@ -85,13 +85,13 @@ describe("team_themes", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query team_themes", () => {
-      expect(i.queries).toContain("team_themes");
+    test("cannot query team_themes", () => {
+      expect(i.queries).not.toContain("team_themes");
     });
 
-    test("can update team_themes", () => {
-      expect(i.mutations).toContain("update_team_themes");
-      expect(i.mutations).toContain("update_team_themes_by_pk");
+    test("cannot update team_themes", () => {
+      expect(i.mutations).not.toContain("update_team_themes");
+      expect(i.mutations).not.toContain("update_team_themes_by_pk");
     });
 
     test("cannot delete team_themes", async () => {

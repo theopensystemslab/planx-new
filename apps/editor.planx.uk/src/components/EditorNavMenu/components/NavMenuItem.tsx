@@ -32,7 +32,7 @@ const NavMenuItem = ({
       disabled={disabled}
       disableRipple
       onClick={onClick}
-      sx={{ padding: "8px", ...sx }}
+      sx={{ py: 1.25, px: 0.4, justifyContent: "center", ...sx }}
     >
       <Box
         sx={{
@@ -42,7 +42,7 @@ const NavMenuItem = ({
           gap: 0.25,
         }}
       >
-        <Icon />
+        <Icon sx={{ fontSize: "1.4rem" }} />
         {badgeCount !== undefined ? (
           <BadgeChip
             label={badgeCount}

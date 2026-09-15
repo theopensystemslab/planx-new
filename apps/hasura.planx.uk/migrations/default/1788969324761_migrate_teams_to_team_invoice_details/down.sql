@@ -1,0 +1,1 @@
+TRUNCATE TABLE "public"."team_invoice_details" RESTART IDENTITY;

@@ -56,12 +56,12 @@ describe("notifications", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query notifications", () => {
-      expect(i.queries).toContain("notifications");
+    test("cannot query notifications", () => {
+      expect(i.queries).not.toContain("notifications");
     });
 
-    test("can delete notifications in their own team", () => {
-      expect(i.mutations).toContain("delete_notifications");
+    test("cannot delete notifications in their own team", () => {
+      expect(i.mutations).not.toContain("delete_notifications");
     });
 
     test("cannot create or update notifications", () => {

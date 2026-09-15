@@ -63,8 +63,8 @@ describe("platform_dashboard_stats", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query platform_dashboard_stats", () => {
-      expect(i.queries).toContain("platform_dashboard_stats");
+    test("cannot query platform_dashboard_stats", () => {
+      expect(i.queries).not.toContain("platform_dashboard_stats");
     });
 
     test("cannot create, update, or delete platform_dashboard_stats", () => {

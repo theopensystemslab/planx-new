@@ -9,6 +9,13 @@ object_relationships:
         table:
           name: team_integrations
           schema: public
+  - name: invoice_details
+    using:
+      foreign_key_constraint_on:
+        column: team_id
+        table:
+          name: team_invoice_details
+          schema: public
   - name: team_settings
     using:
       foreign_key_constraint_on:
