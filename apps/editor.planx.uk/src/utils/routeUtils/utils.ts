@@ -44,6 +44,7 @@ const PREVIEW_ONLY_DOMAINS = [
   "planningservices.epsom-ewell.gov.uk",
   "planningservices.gateshead.gov.uk",
   "planningservices.gloucester.gov.uk",
+  "planningservices.greatercambridgeplanning.org",
   "planningservices.horsham.gov.uk",
   "planningservices.kingston.gov.uk",
   "planningservices.lambeth.gov.uk",
