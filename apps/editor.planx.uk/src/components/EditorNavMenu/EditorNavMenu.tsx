@@ -65,6 +65,7 @@ function EditorNavMenu() {
   const matches = useMatches();
   const isFlowRoute = matches.some((match) => match.routeId.includes("$flow"));
   const isTeamRoute = matches.some((match) => match.routeId.includes("$team"));
+  const isGlobalRoute = !isFlowRoute && !isTeamRoute;
 
   const [openAccordions, setOpenAccordions] = useState<Set<string>>(new Set());
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
@@ -494,7 +495,7 @@ function EditorNavMenu() {
             </MenuWrap>
           )}
           <MenuWrap compact={compact}>
-            {compact && <Divider />}
+            {(compact || isGlobalRoute) && <Divider />}
             {visibleUngroupedSections.map((section, sectionIndex) =>
               renderSection(section, sectionIndex),
             )}
