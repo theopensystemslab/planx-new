@@ -570,8 +570,8 @@ describe("lowcal_sessions", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query lowcal_sessions", () => {
-      expect(i.queries).toContain("lowcal_sessions");
+    test("cannot query lowcal_sessions", () => {
+      expect(i.queries).not.toContain("lowcal_sessions");
     });
 
     test("cannot create, update, or delete lowcal_sessions", () => {

@@ -79,8 +79,8 @@ describe("teams", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query teams", () => {
-      expect(i.queries).toContain("teams");
+    test("cannot query teams", () => {
+      expect(i.queries).not.toContain("teams");
     });
 
     test("cannot update teams", () => {

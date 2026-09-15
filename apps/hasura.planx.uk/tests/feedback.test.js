@@ -102,8 +102,8 @@ describe("feedback", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query feedback", () => {
-      expect(i.queries).toContain("feedback");
+    test("cannot query feedback", () => {
+      expect(i.queries).not.toContain("feedback");
     });
 
     test("cannot insert feedback", async () => {
@@ -116,10 +116,10 @@ describe("feedback", () => {
       expect(i.mutations).not.toContain("delete_feedback_by_pk");
     });
 
-    test("can update feedback", async () => {
-      expect(i.mutations).toContain("update_feedback");
-      expect(i.mutations).toContain("update_feedback_by_pk");
-      expect(i.mutations).toContain("update_feedback_many");
+    test("cannot update feedback", async () => {
+      expect(i.mutations).not.toContain("update_feedback");
+      expect(i.mutations).not.toContain("update_feedback_by_pk");
+      expect(i.mutations).not.toContain("update_feedback_many");
     });
   });
 

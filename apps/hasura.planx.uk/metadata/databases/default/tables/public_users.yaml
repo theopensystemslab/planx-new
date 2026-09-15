@@ -109,6 +109,26 @@ select_permissions:
         - last_name
         - updated_at
       filter: {}
+  - role: teamAdmin
+    permission:
+      columns:
+        - created_at
+        - default_team_id
+        - email
+        - first_name
+        - id
+        - last_name
+        - updated_at
+      filter:
+        teams:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: X-Hasura-User-Id
+                - role:
+                    _eq: teamAdmin
+    comment: ""
   - role: teamEditor
     permission:
       columns:
