@@ -4,6 +4,7 @@ import type {
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
+import { setFavicon } from "utils/favicon";
 import type { StateCreator } from "zustand";
 
 import type { SharedStore } from "./shared";
@@ -59,12 +60,11 @@ export const teamStore: StateCreator<
       teamDomain: team.domain,
     });
 
-    const favicon = document.getElementById("favicon") as HTMLLinkElement;
     if (options.useCustomFavicon && team.theme?.favicon) {
-      favicon.href = team.theme.favicon;
+      setFavicon(team.theme.favicon);
     } else {
       const color = team.theme?.primaryColour ?? DEFAULT_PRIMARY_COLOR;
-      favicon.href = generateCircleFavicon(color);
+      setFavicon(generateCircleFavicon(color));
     }
   },
 
