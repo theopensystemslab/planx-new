@@ -13,7 +13,9 @@ team_joined AS (
         'team_joined' AS type,
         tfa.event_start AS event_time,
         t.name AS team_name,
-        NULL::text AS flow_name
+        t.slug AS team_slug,
+        NULL::text AS flow_name,
+        NULL::text AS flow_slug
     FROM teams t
     JOIN team_settings ts ON ts.team_id = t.id
     JOIN team_first_active tfa ON tfa.team_id = t.id
@@ -29,7 +31,9 @@ service_online AS (
         'service_online' AS type,
         flow_first_online_at(f.*) AS event_time,
         t.name AS team_name,
-        f.name AS flow_name
+        t.slug AS team_slug,
+        f.name AS flow_name,
+        f.slug AS flow_slug
     FROM flows f
     JOIN teams t ON t.id = f.team_id
     WHERE f.is_service IS TRUE
