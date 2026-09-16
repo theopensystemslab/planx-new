@@ -10,9 +10,11 @@ services:
     volumes:
       - "./apps/api.planx.uk:/api"
       - "/api/node_modules"
+      # Mount of all workspace packages, for watching rather than resolution: tsx hard-ignores
+      # `**/node_modules/**` so the mount(s) below can never trigger a reload on their own.
+      - "./packages:/packages:ro"
       # `pnpm deploy --inject-workspace-packages` bakes a *copy* of compiled `.packages/*` dist/'s into the image.
       # To avoid stale copies we shadow it with the host package, which is kept fresh by scripts/build-packages.sh.
-      # Dev only: production/e2e/pizza never load this file and keep using the baked copy.
       - "./packages/file-upload:/api/node_modules/@planx/file-upload:ro"
 
     environment:
