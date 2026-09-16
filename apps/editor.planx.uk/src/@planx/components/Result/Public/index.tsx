@@ -13,6 +13,7 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { Response } from "pages/FlowEditor/lib/store/preview";
+import { useId } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
@@ -88,6 +89,7 @@ export const Presentational: React.FC<PresentationalProps> = ({
 }) => {
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
+  const disclaimerId = useId();
 
   const { trackEvent } = useAnalyticsTracking();
 
@@ -149,11 +151,14 @@ export const Presentational: React.FC<PresentationalProps> = ({
           )}
         </Box>
         {disclaimer?.show && (
-          <WarningContainer>
+          <WarningContainer aria-labelledby={disclaimerId}>
             <Box sx={{ flex: 1 }}>
               <TitleWrap>
                 <ErrorOutline sx={{ width: 34, height: 34 }} />
-                <Title variant="h3"> {disclaimer.heading}</Title>
+                <Title id={disclaimerId} variant="h3">
+                  {" "}
+                  {disclaimer.heading}
+                </Title>
               </TitleWrap>
               <Box sx={{ mt: 2 }}>
                 <ReactMarkdownOrHtml

@@ -15,6 +15,7 @@ import {
   insertFeedbackMutation,
 } from "lib/feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { useId } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import TerribleFace from "ui/images/feedback_filled-01.svg";
 import PoorFace from "ui/images/feedback_filled-02.svg";
@@ -40,6 +41,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
     state.flowSlug,
   ]);
   const feedbackDataSchema = createFeedbackSchema(props.feedbackRequired);
+  const warningId = useId();
 
   const logFeedback = async (values: FormProps) => {
     const metadata = await getInternalFeedbackMetadata();
@@ -181,9 +183,10 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           sx={{ mt: 1 }}
         />
       </Box>
-      <WarningContainer>
+      <WarningContainer aria-labelledby={warningId}>
         <ErrorOutline />
         <Typography
+          id={warningId}
           variant="body2"
           component="div"
           sx={{ ml: 2, "& p:first-of-type": { marginTop: 0 } }}

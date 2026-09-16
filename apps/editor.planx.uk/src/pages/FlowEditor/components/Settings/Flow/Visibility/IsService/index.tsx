@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
@@ -22,6 +22,7 @@ const IsService: React.FC = () => {
   const [flowId] = useStore((state) => [state.id]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { refetch } = useGetIsService(flowId);
+  const trialWarningId = useId();
 
   return (
     <SettingsFormContainer<
@@ -51,9 +52,9 @@ const IsService: React.FC = () => {
         return (
           <>
             {isTrial && (
-              <WarningContainer>
+              <WarningContainer aria-labelledby={trialWarningId}>
                 <PendingActionsIcon sx={{ mr: 1 }} />
-                <Typography variant="body2">
+                <Typography id={trialWarningId} variant="body2">
                   Trial accounts cannot create publicly-accessible services.
                 </Typography>
               </WarningContainer>

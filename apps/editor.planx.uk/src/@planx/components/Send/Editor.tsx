@@ -8,7 +8,7 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikProvider, getIn } from "formik";
 import type { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useCallback } from "react";
+import React, { useCallback, useId } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -37,6 +37,7 @@ const SendComponent: React.FC<Props> = (props) => {
     state.flowSlug,
     state.id,
   ]);
+  const submissionsWarningId = useId();
 
   const { data: flowData } = useFlowEmailId(id);
   const existingEmailId = flowData?.flowsByPK?.submissionEmailId;
@@ -268,9 +269,13 @@ const SendComponent: React.FC<Props> = (props) => {
             </>
           </ErrorWrapper>
           <ModalSectionContent>
-            <WarningContainer>
+            <WarningContainer aria-labelledby={submissionsWarningId}>
               <FactCheckIcon />
-              <Typography variant="body2" sx={{ ml: 2 }}>
+              <Typography
+                id={submissionsWarningId}
+                variant="body2"
+                sx={{ ml: 2 }}
+              >
                 Records of submissions can be viewed in the{" "}
                 <Link
                   href={`/${teamSlug}/${flowSlug}/submissions`}

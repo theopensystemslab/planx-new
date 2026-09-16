@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useLPS } from "hooks/useLPS";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { useId } from "react";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import CategorySelection from "./components/CategorySelection";
@@ -22,6 +23,7 @@ const LPSListingSettings: React.FC = () => {
     state.getTeam().settings.isTrial,
   ]);
   const { url } = useLPS();
+  const trialWarningId = useId();
 
   return (
     <SettingsFormContainer<
@@ -55,9 +57,9 @@ const LPSListingSettings: React.FC = () => {
       {() => (
         <>
           {isTrial && (
-            <WarningContainer>
+            <WarningContainer aria-labelledby={trialWarningId}>
               <PendingActionsIcon sx={{ mr: 1 }} />
-              <Typography variant="body2">
+              <Typography id={trialWarningId} variant="body2">
                 Trial accounts cannot list services on LPS.
               </Typography>
             </WarningContainer>
