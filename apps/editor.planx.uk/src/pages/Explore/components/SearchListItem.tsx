@@ -1,7 +1,9 @@
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
+import ListItemButton, {
+  listItemButtonClasses,
+} from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import CheckCircleIcon from "ui/icons/CheckCircle";
@@ -65,7 +67,7 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
           p: 1.5,
           gap: 1.5,
           "&:hover": { backgroundColor: "secondary.main" },
-          "&.Mui-selected": {
+          [`&.${listItemButtonClasses.selected}`]: {
             backgroundColor: "background.disabled",
             "&:hover": { backgroundColor: "secondary.main" },
           },
