@@ -72,10 +72,6 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
               </Link>{" "}
               to securely link your account without sharing credentials.
             </p>
-            <p>
-              Once connected, Stripe will handle payment processing for all
-              application fees collected through your services.
-            </p>
           </SettingsDescription>
         </Grid>
         <Grid size={{ xs: 12, md: 8 }}>

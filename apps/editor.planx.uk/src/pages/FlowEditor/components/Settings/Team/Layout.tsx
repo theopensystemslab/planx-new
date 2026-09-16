@@ -5,7 +5,6 @@ import LockIcon from "@mui/icons-material/Lock";
 import MapIcon from "@mui/icons-material/Map";
 import PaletteIcon from "@mui/icons-material/Palette";
 import { useParams } from "@tanstack/react-router";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
 
@@ -28,9 +27,7 @@ const TeamSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
       path: "/gis-data",
       icon: MapIcon,
     },
-    ...(hasFeatureFlag("STRIPE_MIGRATION")
-      ? [{ label: "Payments", path: "/payments", icon: AccountBalanceIcon }]
-      : []),
+    { label: "Payments", path: "/payments", icon: AccountBalanceIcon },
     {
       label: "Integrations",
       path: "/integrations",
