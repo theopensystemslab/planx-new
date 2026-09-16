@@ -81,13 +81,13 @@ describe("team_invoice_details", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("can query team_invoice_details", () => {
-      expect(i.queries).toContain("team_invoice_details");
+    test("cannot query team_invoice_details", () => {
+      expect(i.queries).not.toContain("team_invoice_details");
     });
 
-    test("can update team_invoice_details", () => {
-      expect(i.mutations).toContain("update_team_invoice_details");
-      expect(i.mutations).toContain("update_team_invoice_details_by_pk");
+    test("cannot update team_invoice_details", () => {
+      expect(i.mutations).not.toContain("update_team_invoice_details");
+      expect(i.mutations).not.toContain("update_team_invoice_details_by_pk");
     });
 
     test("cannot delete or insert team_invoice_details", () => {
