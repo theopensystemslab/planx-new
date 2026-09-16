@@ -26,6 +26,18 @@ select_permissions:
         - flow_slug
       filter: {}
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - id
+        - type
+        - event_time
+        - team_name
+        - team_slug
+        - flow_name
+        - flow_slug
+      filter: {}
+    comment: ""
   - role: teamEditor
     permission:
       columns:
