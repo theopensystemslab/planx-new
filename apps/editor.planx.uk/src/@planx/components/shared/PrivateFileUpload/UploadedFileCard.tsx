@@ -119,7 +119,7 @@ export const UploadedFileCard: React.FC<Props> = ({
             sx={{ width: `${Math.min(Math.ceil(progress * 100), 100)}%` }}
             role="progressbar"
             aria-valuenow={progress * 100 || 0}
-            aria-label={`Upload progress of file ${file.name}`}
+            aria-label={`Upload progress of file ${getFileDisplayName(file)}`}
           />
           <FileCard>
             <Box
@@ -149,7 +149,7 @@ export const UploadedFileCard: React.FC<Props> = ({
                   }}
                   data-testid={file.name}
                 >
-                  {file.name}
+                  {getFileDisplayName(file, { includeSize: false })}
                 </Typography>
                 <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
                 {drawingNumber && (
@@ -180,13 +180,13 @@ export const UploadedFileCard: React.FC<Props> = ({
                 >
                   {changeLabel}
                   <Box sx={visuallyHidden} component="span">
-                    {` what ${file.name} shows`}
+                    {` what ${getFileDisplayName(file)} shows`}
                   </Box>
                 </Button>
               )}
               <Button
                 size="small"
-                title={`Delete ${file.name}`}
+                title={`Delete ${getFileDisplayName(file)}`}
                 onClick={removeFile}
                 sx={{ gap: 1, backgroundColor: "white" }}
                 data-testid={`delete-${file.name}`}
@@ -194,7 +194,8 @@ export const UploadedFileCard: React.FC<Props> = ({
                 color="secondary"
               >
                 <DeleteIcon color="warning" fontSize="small" />
-                Remove <span style={visuallyHidden}>{file.name}</span>
+                Remove{" "}
+                <span style={visuallyHidden}>{getFileDisplayName(file)}</span>
               </Button>
             </ActionButtons>
           </FileCard>
@@ -233,6 +234,16 @@ export const UploadedFileCard: React.FC<Props> = ({
     </ErrorWrapper>
   </Box>
 );
+
+export function getFileDisplayName(
+  file: { name?: string; size: number },
+  { includeSize = true }: { includeSize?: boolean } = {},
+) {
+  if (file.name) return file.name;
+  return includeSize
+    ? `unnamed document - ${formatBytes(file.size)}`
+    : "unnamed document";
+}
 
 function formatBytes(a: number, b = 2) {
   if (0 === a) return "0 Bytes";
