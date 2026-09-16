@@ -3,6 +3,7 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { useId } from "react";
 import { Switch } from "ui/shared/Switch";
 
 import { useSlackMessage } from "../../../hooks/useSlackMessage";
@@ -29,6 +30,7 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
   ]);
 
   const { mutate: sendSlackMessage } = useSlackMessage();
+  const trialWarningId = useId();
 
   return (
     <SettingsFormContainer<
@@ -76,9 +78,9 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
       {({ formik }) => (
         <>
           {isTrial && (
-            <WarningContainer>
+            <WarningContainer aria-labelledby={trialWarningId}>
               <PendingActionsIcon sx={{ mr: 1 }} />
-              <Typography variant="body2">
+              <Typography id={trialWarningId} variant="body2">
                 Trial accounts cannot set flow copy permissions.
               </Typography>
             </WarningContainer>

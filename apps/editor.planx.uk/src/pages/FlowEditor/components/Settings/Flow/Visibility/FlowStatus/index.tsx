@@ -8,7 +8,7 @@ import { WarningContainer } from "@planx/components/shared/Preview/WarningContai
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { format } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import { useLocation } from "react-use";
 import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
@@ -45,6 +45,8 @@ const FlowStatus: React.FC = () => {
   const [privacyError, setPrivacyError] = useState(false);
 
   const { mutate: sendSlackMessage } = useSlackMessage();
+  const trialWarningId = useId();
+  const templateWarningId = useId();
 
   const { origin } = useLocation();
 
@@ -94,17 +96,17 @@ const FlowStatus: React.FC = () => {
         return (
           <>
             {isTrial && (
-              <WarningContainer>
+              <WarningContainer aria-labelledby={trialWarningId}>
                 <PendingActionsIcon sx={{ mr: 1 }} />
-                <Typography variant="body2">
+                <Typography id={trialWarningId} variant="body2">
                   Trial accounts cannot set flows online.
                 </Typography>
               </WarningContainer>
             )}
             {isTemplate && (
-              <WarningContainer>
+              <WarningContainer aria-labelledby={templateWarningId}>
                 <PendingActionsIcon sx={{ mr: 1 }} />
-                <Typography variant="body2">
+                <Typography id={templateWarningId} variant="body2">
                   Source templates are discoverable from the "Add a new flow"
                   modal when they are online.
                 </Typography>
