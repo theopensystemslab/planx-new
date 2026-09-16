@@ -24,7 +24,8 @@
     "lint:fix": "turbo run lint:fix",
     "check": "turbo run typecheck lint",
     "build": "turbo run build",
-    "test": "turbo run test --concurrency=1"
+    "test": "turbo run test --concurrency=1",
+    "watch:packages": "turbo watch build --filter=\"./packages/*\""
   },
   "lint-staged": {
     "apps/editor.planx.uk/src/**/*.{js,jsx,ts,tsx}": "eslint --fix --flag v10_config_lookup_from_file",
