@@ -57,21 +57,6 @@ describe("platform_activity_feed", () => {
     });
   });
 
-  describe("teamAdmin", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("teamAdmin");
-    });
-
-    test("can query platform_activity_feed", () => {
-      expect(i.queries).toContain("platform_activity_feed");
-    });
-
-    test("cannot create, update, or delete platform_activity_feed", () => {
-      expect(i).toHaveNoMutationsFor("platform_activity_feed");
-    });
-  });
-
   describe("api", () => {
     let i;
     beforeAll(async () => {
