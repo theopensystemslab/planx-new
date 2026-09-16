@@ -5,6 +5,7 @@ import FormLabel from "@mui/material/FormLabel";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { getFileDisplayName } from "@planx/components/shared/PrivateFileUpload/UploadedFileCard";
 import { groupBy } from "lodash";
 import capitalize from "lodash/capitalize";
 import { useMemo } from "react";
@@ -113,7 +114,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
       <Typography variant="h3" sx={{ mb: 2 }} id={titleId} tabIndex={-1}>
         What does this file show? Select all that apply
         <Box component="span" sx={visuallyHidden}>
-          This question refers to file: {uploadedFile.file.name}
+          This question refers to file: {getFileDisplayName(uploadedFile.file)}
         </Box>
       </Typography>
       {Object.entries(groupedOptions).map(([category, categoryOptions]) => (
@@ -189,7 +190,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
         >
           Save{" "}
           <Box sx={visuallyHidden} component="span">
-            {`labels for ${uploadedFile.file.name}`}
+            {`labels for ${getFileDisplayName(uploadedFile.file)}`}
           </Box>
         </Button>
       )}

@@ -71,7 +71,7 @@ export interface FormattedUserFile {
    * This allows us to restore the UI on refresh / resume / back
    */
   cachedSlot: Omit<FileUploadAndLabelSlot, "file"> & {
-    file: Pick<FileWithPath, "path" | "type" | "size">;
+    file: Pick<FileWithPath, "name" | "path" | "type" | "size">;
   };
 }
 
@@ -212,6 +212,7 @@ export const generatePayload = (
         cachedSlot: {
           ...slot,
           file: {
+            name: slot.file.name,
             path: slot.file.path,
             type: slot.file.type,
             size: slot.file.size,
