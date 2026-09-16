@@ -21,7 +21,7 @@ team_joined AS (
     JOIN team_first_active tfa ON tfa.team_id = t.id
     WHERE ts.is_trial IS NOT TRUE
       AND t.name <> ALL (
-        ARRAY ['Open Digital Planning'::text, 'Open Systems Lab'::text, 'PlanX'::text, 'Templates'::text, 'Testing'::text, 'WikiHouse'::text]
+        ARRAY ['Open Digital Planning'::text, 'Open Systems Lab'::text, 'PlanX'::text, 'Templates'::text, 'Testing'::text, 'WikiHouse'::text, 'Council Onboarding'::text, 'Strategic and Local Plan'::text, 'Plan✕ Academy'::text]
       )
 ),
 service_online AS (
@@ -36,11 +36,13 @@ service_online AS (
         f.slug AS flow_slug
     FROM flows f
     JOIN teams t ON t.id = f.team_id
+    JOIN team_settings ts ON ts.team_id = t.id
     WHERE f.is_service IS TRUE
       AND f.archived_at IS NULL
       AND flow_first_online_at(f.*) IS NOT NULL
+      AND ts.is_trial IS NOT TRUE
       AND t.name <> ALL (
-        ARRAY ['Open Digital Planning'::text, 'Open Systems Lab'::text, 'PlanX'::text, 'Templates'::text, 'Testing'::text, 'WikiHouse'::text]
+        ARRAY ['Open Digital Planning'::text, 'Open Systems Lab'::text, 'PlanX'::text, 'Templates'::text, 'Testing'::text, 'WikiHouse'::text, 'Council Onboarding'::text, 'Strategic and Local Plan'::text, 'Plan✕ Academy'::text]
       )
 )
 SELECT * FROM team_joined
@@ -48,4 +50,4 @@ UNION ALL
 SELECT * FROM service_online
 ORDER BY event_time DESC;
 
-COMMENT ON VIEW "public"."platform_activity_feed" IS E'Chronological feed of platform-wide activity for the Explore page: teams becoming active on PlanX (created as non-trial, or graduating out of trial mode) and services going online for the first time';
+COMMENT ON VIEW "public"."platform_activity_feed" IS E'Chronological feed of platform-wide activity for the Explore page: teams becoming active on PlanX (created as non-trial, or graduating out of trial mode) and services going online for the first time. Excludes trial teams (team_settings.is_trial) and non-LPA internal/service teams by name.';
