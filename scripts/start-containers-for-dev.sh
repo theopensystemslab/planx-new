@@ -19,6 +19,10 @@ trap 'echo "Error detected! Saving logs..."; \
       dev_compose down --remove-orphans' ERR
 
 function setupContainers(){
+  # Compiled workspace packages should be built before `up`: the api container now reads
+  # @planx/file-upload's dist/ straight off the host (see docker-compose.local.yml)
+  ./scripts/build-packages.sh
+
   # Bring down e2e containers and their volumes - we're done with testing
   # project-name planx-e2e matches what start-containers-for-tests.sh uses
   DOCKER_DEFAULT_PLATFORM= docker compose \
@@ -34,9 +38,11 @@ function setupContainers(){
 
   echo "Starting docker…"
 
-  # Bring dev containers back up, preserving existing volumes so local data changes are not lost.
+  # Bring dev containers back up, preserving local data changes in the named postgres_data volume.
   # For a clean first-time setup (including seeding the db), use `pnpm run up` instead.
-  DOCKER_BUILDKIT=1 dev_compose up -d --quiet-pull --build --force-recreate
+  #
+  # --renew-anon-volumes re-seeds */node_modules from the freshly built images
+  DOCKER_BUILDKIT=1 dev_compose up -d --quiet-pull --build --force-recreate --renew-anon-volumes
 
   echo "All containers ready."
 }
