@@ -98,8 +98,6 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
           {description && (
             <QuoteDescription
               id={descriptionId}
-              // Excluded as referenced by the radio's aria-describedby
-              aria-hidden="true"
               variant="subtitle1"
               component="blockquote"
             >
