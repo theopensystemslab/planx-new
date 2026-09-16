@@ -186,10 +186,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
           {!skipped && !loading && results && results.length > 0 && (
             <Box
               sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 3,
-                alignItems: "flex-start",
+                display: "flex",
+                alignItems: "stretch",
+                gap: 2,
                 px: 3,
                 pb: 3,
                 flex: 1,
@@ -198,50 +197,51 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
             >
               <Box
                 sx={(theme) => ({
+                  flex: 1,
                   minWidth: 0,
-                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
                   border: `1px solid ${theme.palette.border.light}`,
-                  borderRadius: "4px",
+                  borderRadius: 1,
                   boxShadow: cardBoxShadow,
                   backgroundColor: theme.palette.background.default,
-                  overflowY: "auto",
                 })}
               >
-                <List disablePadding>
-                  {results.map((flow, index) => (
-                    <React.Fragment key={flow.id}>
-                      {index > 0 && (
+                <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
+                  <List disablePadding>
+                    {results.map((flow) => (
+                      <React.Fragment key={flow.id}>
+                        <SearchListItem
+                          result={{
+                            icon: flow.isTemplate ? (
+                              <Badge
+                                variant={BadgeVariant.SourceTemplate}
+                                size="compact"
+                              />
+                            ) : (
+                              <Badge
+                                variant={BadgeVariant.Team}
+                                team={flow.team}
+                                size="compact"
+                              />
+                            ),
+                            title: flow.name,
+                            description: flow.isTemplate
+                              ? `Template – ${flow.team.name}`
+                              : flow.team.name,
+                          }}
+                          onClick={() => setSelectedFlow(flow)}
+                          selected={selectedFlow?.id === flow.id}
+                        />
                         <Divider sx={{ borderColor: "border.main" }} />
-                      )}
-                      <SearchListItem
-                        result={{
-                          icon: flow.isTemplate ? (
-                            <Badge
-                              variant={BadgeVariant.SourceTemplate}
-                              size="compact"
-                            />
-                          ) : (
-                            <Badge
-                              variant={BadgeVariant.Team}
-                              team={flow.team}
-                              size="compact"
-                            />
-                          ),
-                          title: flow.name,
-                          description: flow.isTemplate
-                            ? `Template – ${flow.team.name}`
-                            : flow.team.name,
-                        }}
-                        onClick={() => setSelectedFlow(flow)}
-                        selected={selectedFlow?.id === flow.id}
-                      />
-                    </React.Fragment>
-                  ))}
-                </List>
+                      </React.Fragment>
+                    ))}
+                  </List>
+                </Box>
               </Box>
-              {selectedFlow && (
-                <Box sx={{ minWidth: 0, height: "100%", overflowY: "auto" }}>
-                  {selectedFlow.isTemplate ? (
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                {selectedFlow &&
+                  (selectedFlow.isTemplate ? (
                     <TemplateDetailsPanel
                       template={{
                         id: selectedFlow.id,
@@ -252,9 +252,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
                     />
                   ) : (
                     <FlowDetailsPanel flow={selectedFlow} canCopy={canCopy} />
-                  )}
-                </Box>
-              )}
+                  ))}
+              </Box>
             </Box>
           )}
         </Box>

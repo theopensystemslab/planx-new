@@ -1,7 +1,9 @@
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
+import ListItemButton, {
+  listItemButtonClasses,
+} from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import CheckCircleIcon from "ui/icons/CheckCircle";
@@ -61,7 +63,15 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
         onClick={onClick}
         alignItems="center"
         selected={selected}
-        sx={{ px: 2, py: 1.5, gap: 1.5 }}
+        sx={{
+          p: 1.5,
+          gap: 1.5,
+          "&:hover": { backgroundColor: "secondary.main" },
+          [`&.${listItemButtonClasses.selected}`]: {
+            backgroundColor: "background.disabled",
+            "&:hover": { backgroundColor: "secondary.main" },
+          },
+        }}
       >
         {content}
         <ChevronRightIcon sx={{ ml: "auto", color: "text.secondary" }} />
