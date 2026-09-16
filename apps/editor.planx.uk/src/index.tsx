@@ -11,10 +11,11 @@ import { MyMap } from "@opensystemslab/map";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider as TanStackRouterProvider } from "@tanstack/react-router";
 import { ToastContextProvider } from "contexts/ToastContext";
+import usePageTitleFromHeading from "hooks/usePageTitleFromHeading";
 import { initFeatureFlags } from "lib/featureFlags";
 import { queryClient } from "lib/queryClient";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { Bounce, ToastContainer } from "react-toastify";
 import { router } from "router";
@@ -47,26 +48,7 @@ initFeatureFlags();
 const Layout: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      // set the page title based on whatever heading is currently shown
-      // on screen. If there's no heading then the title will be "PlanX"
-      document.title = [
-        document.querySelector("[role=heading],h1,h2,h3")?.textContent,
-        "PlanX",
-      ]
-        .filter(Boolean)
-        .join(" - ");
-    });
-
-    observer.observe(document.getElementById("root")!, {
-      attributes: false,
-      childList: true,
-      subtree: true,
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  usePageTitleFromHeading();
 
   return (
     <StyledEngineProvider injectFirst>
