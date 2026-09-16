@@ -10,6 +10,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
@@ -80,6 +81,37 @@ const Provider: React.FC = () => {
   const handleClose = () => setDialogState({ type: "closed" });
 
   const isStripe = provider === "stripe";
+  const canMigrateToStripe = hasFeatureFlag("STRIPE_MIGRATION");
+
+  const renderProviderAction = () => {
+    if (isStripe) {
+      return (
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          This team has been migrated to Stripe. No further action is needed.
+        </Typography>
+      );
+    }
+
+    if (canMigrateToStripe) {
+      return (
+        <Box>
+          <Button
+            onClick={handleMigrateClick}
+            variant="contained"
+            disabled={dialogState.type === "checking"}
+          >
+            Migrate to Stripe
+          </Button>
+        </Box>
+      );
+    }
+
+    return (
+      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+        Switching to Stripe is not yet available.
+      </Typography>
+    );
+  };
 
   return (
     <NewSettingsSection>
@@ -119,22 +151,7 @@ const Provider: React.FC = () => {
                 size="small"
               />
             </Box>
-            {isStripe ? (
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                This team has been migrated to Stripe. No further action is
-                needed.
-              </Typography>
-            ) : (
-              <Box>
-                <Button
-                  onClick={handleMigrateClick}
-                  variant="contained"
-                  disabled={dialogState.type === "checking"}
-                >
-                  Migrate to Stripe
-                </Button>
-              </Box>
-            )}
+            {renderProviderAction()}
           </Box>
         </Grid>
       </Grid>

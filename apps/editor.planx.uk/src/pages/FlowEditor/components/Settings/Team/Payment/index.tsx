@@ -1,6 +1,5 @@
 import Stack from "@mui/material/Stack";
 import { getRouteApi } from "@tanstack/react-router";
-import { hasFeatureFlag } from "lib/featureFlags";
 
 import Address from "./Address";
 import Details from "./Details";
@@ -15,7 +14,7 @@ const PaymentSettings = () => {
   return (
     <Stack spacing={2}>
       <Onboarding stripeResult={stripeResult} />
-      {hasFeatureFlag("STRIPE_MIGRATION") && <Provider />}
+      <Provider />
       <Details />
       <Address />
     </Stack>
