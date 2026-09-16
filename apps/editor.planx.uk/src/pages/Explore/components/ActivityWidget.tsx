@@ -12,7 +12,7 @@ import { Dot } from "ui/shared/Dot";
 import { RelativeTime } from "ui/shared/RelativeTime";
 
 import type { ActivityEvent } from "./useActivityFeed";
-import { useActivityFeed } from "./useActivityFeed";
+import { ActivityEventType, useActivityFeed } from "./useActivityFeed";
 
 const ActivityListItemLink = createLink(ListItemButton);
 
@@ -21,7 +21,7 @@ type ActivityLinkProps =
   | { to: "/app/$team"; params: { team: string } };
 
 function getActivityLink(event: ActivityEvent): ActivityLinkProps {
-  if (event.type === "service_online" && event.flowSlug) {
+  if (event.type === ActivityEventType.ServiceOnline && event.flowSlug) {
     return {
       to: "/app/$team/$flow",
       params: { team: event.teamSlug, flow: event.flowSlug },
@@ -42,9 +42,9 @@ interface ActivityMessage {
 
 function getActivityMessage(event: ActivityEvent): ActivityMessage {
   switch (event.type) {
-    case "team_joined":
+    case ActivityEventType.TeamJoined:
       return { primary: `${event.teamName} joined Plan✕` };
-    case "service_online":
+    case ActivityEventType.ServiceOnline:
       return {
         primary: `${event.teamName} set a service online`,
         secondary: event.flowName ?? undefined,
@@ -52,9 +52,9 @@ function getActivityMessage(event: ActivityEvent): ActivityMessage {
   }
 }
 
-const EVENT_DOT_COLOR: Record<ActivityEvent["type"], string> = {
-  team_joined: "primary.main",
-  service_online: "success.main",
+const EVENT_DOT_COLOR: Record<ActivityEventType, string> = {
+  [ActivityEventType.TeamJoined]: "primary.main",
+  [ActivityEventType.ServiceOnline]: "success.main",
 };
 
 export function ActivityWidget({
