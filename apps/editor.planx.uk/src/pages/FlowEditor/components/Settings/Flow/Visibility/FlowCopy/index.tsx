@@ -5,6 +5,7 @@ import { WarningContainer } from "@planx/components/shared/Preview/WarningContai
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Switch } from "ui/shared/Switch";
 
+import { useSlackMessage } from "../../../hooks/useSlackMessage";
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_FLOW_VISIBILITY, UPDATE_FLOW_VISIBILITY } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
@@ -20,10 +21,14 @@ const REQUEST_A_REVIEW_URL =
 type Props = { isService: boolean };
 
 const FlowCopySettings: React.FC<Props> = ({ isService }) => {
-  const [flowId, isTrial] = useStore((state) => [
+  const [flowId, flowSlug, teamSlug, isTrial] = useStore((state) => [
     state.id,
+    state.flowSlug,
+    state.teamSlug,
     state.getTeam().settings.isTrial,
   ]);
+
+  const { mutate: sendSlackMessage } = useSlackMessage();
 
   return (
     <SettingsFormContainer<
@@ -58,6 +63,15 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
       })}
       queryVariables={{ flowId }}
       getMutationVariables={(values) => ({ flowId, ...values })}
+      onSuccess={(data, _formikHelpers, values) => {
+        const wasCopyable = data?.flows[0].canCreateFromCopy;
+        const hasBeenEnabled = values.canCreateFromCopy && !wasCopyable;
+        if (hasBeenEnabled) {
+          sendSlackMessage(
+            `:unlock: *${teamSlug}/${flowSlug}* can now be copied by other teams`,
+          );
+        }
+      }}
     >
       {({ formik }) => (
         <>
