@@ -52,7 +52,7 @@ const Details: React.FC = () => {
       validationSchema={validationSchema}
       legend="Invoice details"
       description={
-        <>These are the details that PlanX invoices will be made out to.</>
+        <>These are the details that Plan✕ invoices will be made out to.</>
       }
       onSuccess={(data, _formikHelpers, values) => {
         const oldEmail = data?.teamInvoiceDetails[0].emailAddress;

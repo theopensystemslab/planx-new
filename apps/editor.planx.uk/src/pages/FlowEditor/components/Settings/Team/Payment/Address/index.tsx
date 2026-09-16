@@ -46,12 +46,9 @@ const Address: React.FC = () => {
         },
       })}
       validationSchema={validationSchema}
-      legend="Contact information"
+      legend="Address information"
       description={
-        <>
-          Populates Gov UK Notify templates for email replies and footer contact
-          information. Gov UK Notify templates apply to all submission services.
-        </>
+        <>This is the address that Plan✕ invoices will be made out to.</>
       }
     >
       {({ formik }) => (
