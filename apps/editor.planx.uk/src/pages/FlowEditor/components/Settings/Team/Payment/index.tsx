@@ -1,6 +1,8 @@
 import Stack from "@mui/material/Stack";
 import { getRouteApi } from "@tanstack/react-router";
 
+import Address from "./Address";
+import Details from "./Details";
 import Onboarding from "./Onboarding";
 import Provider from "./Provider";
 
@@ -13,6 +15,8 @@ const PaymentSettings = () => {
     <Stack spacing={2}>
       <Onboarding stripeResult={stripeResult} />
       <Provider />
+      <Details />
+      <Address />
     </Stack>
   );
 };
