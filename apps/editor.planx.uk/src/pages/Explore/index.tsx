@@ -8,6 +8,7 @@ import { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
+import ActivityWidget from "./components/ActivityWidget";
 import CalendarWidget, {
   CalendarViewToggle,
 } from "./components/CalendarWidget";
@@ -82,6 +83,9 @@ export default function Explore() {
             headerAction={<CalendarViewToggle />}
           >
             <CalendarWidget />
+          </DashboardWidget>
+          <DashboardWidget title="Activity across Plan✕">
+            <ActivityWidget />
           </DashboardWidget>
         </Box>
       </Container>
