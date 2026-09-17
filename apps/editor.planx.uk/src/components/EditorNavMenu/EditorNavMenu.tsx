@@ -184,7 +184,6 @@ function EditorNavMenu() {
           Icon: CurrencyPoundIcon,
           route: `/app/${teamSlug}/subscription`,
           accessibleBy: ["platformAdmin", "teamAdmin"],
-          isNew: true,
         },
       ],
     },
@@ -375,6 +374,7 @@ function EditorNavMenu() {
     Icon: TravelExploreIcon,
     route: `/app/${teamSlug}/explore`,
     accessibleBy: "*",
+    isNew: true,
   };
 
   // Filter accessible routes within each section
