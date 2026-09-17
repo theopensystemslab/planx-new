@@ -4,6 +4,24 @@ export interface StripeConnectStatus {
   mode: "test" | "live";
 }
 
+export interface CreateStripeCheckoutSession {
+  teamSlug: string;
+  sessionId: string;
+  flowId: string;
+  /** Fee in pence */
+  amount: number;
+  returnURL: string;
+}
+
+export interface StripeCheckoutSession {
+  url: string | null;
+}
+
+export interface StripeCheckoutSessionStatus {
+  status: "complete" | "expired" | "open" | null;
+  paymentStatus: "paid" | "unpaid" | "no_payment_required";
+}
+
 /**
  * Values that the API Stripe Connect callback can redirect back with via the `stripeError` search param
  * `string & {}` keeps these as autocomplete hints without excluding other error codes Stripe may send
