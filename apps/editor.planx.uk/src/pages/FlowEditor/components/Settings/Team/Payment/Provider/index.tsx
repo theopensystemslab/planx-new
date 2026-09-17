@@ -9,6 +9,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -17,7 +18,7 @@ import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
-type PaymentProvider = "govpay" | "stripe";
+type PaymentProvider = TeamSettings["paymentProvider"];
 
 type DialogState =
   | { type: "closed" }
@@ -25,7 +26,7 @@ type DialogState =
   | { type: "blocked"; sessionCount: number }
   | { type: "confirm" };
 
-const PROVIDER_LABELS: Record<PaymentProvider, string> = {
+const PROVIDER_LABELS: Record<NonNullable<PaymentProvider>, string> = {
   govpay: "GOV.UK Pay",
   stripe: "Stripe",
 };
@@ -49,7 +50,11 @@ const checkActiveSessions = async (
 const Provider: React.FC = () => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
-  const [provider, setProvider] = useState<PaymentProvider>("govpay");
+  const paymentProvider = useStore(
+    (state) => state.teamSettings?.paymentProvider,
+  );
+  const [provider, setProvider] =
+    useState<TeamSettings["paymentProvider"]>(paymentProvider);
   const [dialogState, setDialogState] = useState<DialogState>({
     type: "closed",
   });
@@ -70,7 +75,7 @@ const Provider: React.FC = () => {
    */
   const handleConfirmMigration = () => {
     console.log(
-      `[Provider] Migrating team ${teamId} from ${PROVIDER_LABELS[provider]} to Stripe`,
+      `[Provider] Migrating team ${teamId} from ${PROVIDER_LABELS[provider!]} to Stripe`,
     );
     setProvider("stripe");
     setDialogState({ type: "closed" });
@@ -143,15 +148,23 @@ const Provider: React.FC = () => {
               paddingTop: 0.25,
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              <Typography variant="body1">Current provider:</Typography>
-              <Chip
-                label={PROVIDER_LABELS[provider]}
-                color="info"
-                size="small"
-              />
-            </Box>
-            {renderProviderAction()}
+            {provider ? (
+              <>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Typography variant="body1">Current provider:</Typography>
+                  <Chip
+                    label={PROVIDER_LABELS[provider]}
+                    color="info"
+                    size="small"
+                  />
+                </Box>
+                {renderProviderAction()}
+              </>
+            ) : (
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                No active payment provider
+              </Typography>
+            )}
           </Box>
         </Grid>
       </Grid>

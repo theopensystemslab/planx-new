@@ -20,6 +20,7 @@ insert_permissions:
         - homepage
         - id
         - is_trial
+        - payment_provider
         - reference_code
         - team_id
     comment: ""
@@ -37,6 +38,7 @@ select_permissions:
         - homepage
         - id
         - is_trial
+        - payment_provider
         - reference_code
         - team_id
       filter: {}
@@ -54,6 +56,7 @@ select_permissions:
         - homepage
         - id
         - is_trial
+        - payment_provider
         - reference_code
         - team_id
       filter: {}
@@ -71,6 +74,7 @@ select_permissions:
         - homepage
         - id
         - is_trial
+        - payment_provider
         - reference_code
         - team_id
       filter: {}
@@ -88,6 +92,7 @@ select_permissions:
         - homepage
         - id
         - is_trial
+        - payment_provider
         - reference_code
         - team_id
       filter: {}
@@ -105,6 +110,7 @@ select_permissions:
         - homepage
         - id
         - is_trial
+        - payment_provider
         - reference_code
         - team_id
       filter: {}
@@ -123,6 +129,7 @@ update_permissions:
         - homepage
         - id
         - is_trial
+        - payment_provider
         - reference_code
         - team_id
       filter: {}

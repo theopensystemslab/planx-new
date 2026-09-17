@@ -52,6 +52,7 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
               emailReplyToId: email_reply_to_id
               homepage: homepage
               isTrial: is_trial
+              paymentProvider: payment_provider
             }
           }
         }
