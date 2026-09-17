@@ -1,14 +1,11 @@
-import Person from "@mui/icons-material/Person";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import { grey } from "@mui/material/colors";
+import Fade from "@mui/material/Fade";
 import IconButton from "@mui/material/IconButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import MenuItem from "@mui/material/MenuItem";
-import MenuList from "@mui/material/MenuList";
-import Paper from "@mui/material/Paper";
-import Popover, { popoverClasses } from "@mui/material/Popover";
+import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
@@ -17,6 +14,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { CloseButton } from "ui/shared/CloseButton";
 
 const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   width: "inherit",
@@ -30,25 +28,6 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   zIndex: theme.zIndex.appBar,
   "@media print": {
     visibility: "hidden",
-  },
-}));
-
-const StyledPopover = styled(Popover)(({ theme }) => ({
-  [`& .${popoverClasses.paper}`]: {
-    boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
-    backgroundColor: theme.palette.background.dark,
-    borderRadius: 0,
-  },
-}));
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.background.dark,
-  color: theme.palette.common.white,
-  borderRadius: 0,
-  boxShadow: "none",
-  minWidth: 180,
-  "& li": {
-    padding: theme.spacing(1.5, 2),
   },
 }));
 
@@ -126,32 +105,66 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ compact = false }) => {
           )}
         </IconButton>
       </ProfileSection>
-
-      <StyledPopover
+      <Popover
         open={open}
         anchorEl={anchorRef.current}
         onClose={handleClose}
+        slots={{ transition: Fade }}
+        marginThreshold={0}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "right",
+          horizontal: "left",
         }}
         transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        slotProps={{
+          paper: {
+            sx: {
+              width: 300,
+              display: "flex",
+              flexDirection: "column",
+              borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+            },
+          },
+          // TODO: standardise backdrop scrim across the app
+          backdrop: {
+            sx: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          },
         }}
       >
-        <StyledPaper>
-          <MenuList>
-            <MenuItem disabled>
-              <ListItemIcon>
-                <Person fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>{user.email}</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleLogout}>Log out</MenuItem>
-          </MenuList>
-        </StyledPaper>
-      </StyledPopover>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            px: 1.5,
+            py: 0.5,
+            position: "sticky",
+            top: 0,
+            backgroundColor: "background.paper",
+            zIndex: 1,
+          }}
+        >
+          <Typography variant="h4">
+            {user.firstName} {user.lastName}
+          </Typography>
+          <CloseButton
+            size="small"
+            onClick={handleClose}
+            sx={{ marginRight: -1 }}
+          />
+        </Box>
+        <Box sx={{ px: 1.5, py: 1, flex: 1 }}>
+          <Typography variant="body2">{user.email}</Typography>
+        </Box>
+        <Box sx={{ px: 1.5, py: 1, display: "flex", gap: 1 }}>
+          <Button variant="contained" fullWidth onClick={handleLogout}>
+            Log out of Plan✕
+          </Button>
+        </Box>
+      </Popover>
     </>
   );
 };
