@@ -1,4 +1,4 @@
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import Search from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
@@ -55,7 +55,7 @@ export default function Explore() {
             onClick={() => setSearchOpen(true)}
             aria-label="Search Plan✕"
           >
-            <TravelExploreIcon />
+            <Search />
             <Typography
               component="span"
               variant="body1"
