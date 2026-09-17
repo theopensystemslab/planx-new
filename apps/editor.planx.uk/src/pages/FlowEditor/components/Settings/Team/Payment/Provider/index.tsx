@@ -162,7 +162,7 @@ const Provider: React.FC = () => {
               </>
             ) : (
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                No payment provider connected to your account
+                No active payment provider
               </Typography>
             )}
           </Box>
