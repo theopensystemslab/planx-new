@@ -1,9 +1,14 @@
-import { subDays, subMonths } from "date-fns";
+import { addMinutes, subDays, subMonths } from "date-fns";
 
 import type { Submission, SubmissionSummary } from "./types";
 
 const daysAgo = (n: number): string => subDays(new Date(), n).toISOString();
 const monthsAgo = (n: number): string => subMonths(new Date(), n).toISOString();
+
+// Anchor the event sequence to relative time so it never ages past the 28-day submission expiry window
+const submissionBase = subDays(new Date(), 1);
+const createdAtSeq = (minutes: number): string =>
+  addMinutes(submissionBase, minutes).toISOString();
 
 const sendToEmailSuccessSummary: SubmissionSummary = {
   id: "126ec0c4-12f2-1209-aa09-11294ec3ee12",
@@ -46,7 +51,7 @@ const sendToEmailSuccess: Submission = {
   status: "Success",
   retry: true,
   response: { data: { message: "Success!" } },
-  createdAt: "2026-08-20T09:03:00.021681+00:00", // events happen in specified sequence to test groupEvents logic
+  createdAt: createdAtSeq(3), // events happen in specified sequence to test groupEvents logic
   flowName: "Report a planning breach",
   address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
@@ -58,7 +63,7 @@ const sendToBOPSSuccess: Submission = {
   status: "Success",
   retry: true,
   response: { data: { message: "Success!" } },
-  createdAt: "2026-08-20T09:04:00.021681+00:00",
+  createdAt: createdAtSeq(4),
   flowName: "Report a planning breach",
   address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
@@ -70,7 +75,7 @@ const sendToEmailFailure: Submission = {
   status: "Failed (500)",
   retry: false,
   response: { data: { message: "Failure" } },
-  createdAt: "2026-08-20T09:01:00.021681+00:00",
+  createdAt: createdAtSeq(1),
   flowName: "Report a planning breach",
   address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
@@ -83,7 +88,7 @@ const sendToBOPSFailure: Submission = {
   status: "Failed (400)",
   retry: false,
   response: { data: { message: "Failure" } },
-  createdAt: "2026-08-20T09:00:00.021681+00:00",
+  createdAt: createdAtSeq(0),
   flowName: "Report a planning breach",
   address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
@@ -96,7 +101,7 @@ const sendToAWSFailureAttempt1: Submission = {
   status: "Failed (400)",
   retry: false,
   response: { data: { message: "Failure" } },
-  createdAt: "2026-08-20T09:00:00.021681+00:00",
+  createdAt: createdAtSeq(0),
   flowName: "Report a planning breach",
   address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
@@ -109,7 +114,7 @@ const sendToAWSFailureAttempt2: Submission = {
   status: "Failed (400)",
   retry: false,
   response: { data: { message: "Failure" } },
-  createdAt: "2026-08-20T09:01:00.021681+00:00",
+  createdAt: createdAtSeq(1),
   flowName: "Report a planning breach",
   address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
@@ -122,7 +127,7 @@ export const mockPay = {
   status: "Failed" as const,
   retry: false,
   response: {},
-  createdAt: "2026-08-20T09:05:00.021681+00:00",
+  createdAt: createdAtSeq(5),
   flowName: "Report a planning breach",
   address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
