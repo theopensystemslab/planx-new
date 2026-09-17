@@ -2,11 +2,16 @@ import supertest from "supertest";
 
 import app from "../../../server.js";
 
-const { mockCreate } = vi.hoisted(() => ({ mockCreate: vi.fn() }));
+const { mockCreate, mockRetrieve } = vi.hoisted(() => ({
+  mockCreate: vi.fn(),
+  mockRetrieve: vi.fn(),
+}));
 
 vi.mock("stripe", () => ({
   default: class MockStripe {
-    checkout = { sessions: { create: mockCreate } };
+    checkout = {
+      sessions: { create: mockCreate, retrieve: mockRetrieve },
+    };
   },
 }));
 
@@ -110,6 +115,55 @@ describe("creating a Stripe Checkout Session", () => {
     await supertest(app)
       .post("/stripe/checkout-session/southwark")
       .send(validBody)
+      .expect(500);
+  });
+});
+
+describe("retrieving a Stripe Checkout Session status", () => {
+  beforeEach(() => {
+    mockRetrieve.mockReset();
+  });
+
+  it("returns the session status and payment status", async () => {
+    mockRetrieve.mockResolvedValue({
+      id: "cs_test_a1b2c3",
+      status: "complete",
+      payment_status: "paid",
+    });
+
+    await supertest(app)
+      .get(`/stripe/checkout-session/southwark/cs_test_a1b2c3`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({ status: "complete", paymentStatus: "paid" });
+      });
+
+    expect(mockRetrieve).toHaveBeenCalledWith("cs_test_a1b2c3");
+  });
+
+  it("handles in-flight sessions", async () => {
+    mockRetrieve.mockResolvedValue({
+      id: "cs_test_unpaid",
+      status: "complete",
+      payment_status: "unpaid",
+    });
+
+    await supertest(app)
+      .get(`/stripe/checkout-session/southwark/cs_test_unpaid`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          status: "complete",
+          paymentStatus: "unpaid",
+        });
+      });
+  });
+
+  it("returns a 500 when Stripe rejects the request", async () => {
+    mockRetrieve.mockRejectedValueOnce(new Error("No such checkout session"));
+
+    await supertest(app)
+      .get(`/stripe/checkout-session/southwark/cs_missing`)
       .expect(500);
   });
 });

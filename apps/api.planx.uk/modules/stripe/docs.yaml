@@ -60,6 +60,23 @@ components:
                 format: uri
                 nullable: true
                 example: "https://checkout.stripe.com/c/pay/cs_test_a1b2c3"
+    CheckoutSessionStatusResponse:
+      content:
+        application/json:
+          description: |
+            The Checkout Session's status, for the applicant's return page.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                nullable: true
+                enum: [complete, expired, open]
+                example: complete
+              paymentStatus:
+                type: string
+                enum: [paid, unpaid, no_payment_required]
+                example: paid
 paths:
   /stripe/checkout-session/{localAuthority}:
     post:
@@ -78,6 +95,27 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CreateCheckoutSessionResponse"
+  /stripe/checkout-session/{localAuthority}/{checkoutSessionId}:
+    get:
+      summary: Retrieve a Stripe Checkout Session's status
+      description: |
+        Retrieve a Checkout Session's status from the Pay component on return.
+        The webhook remains the source of truth for fulfilment.
+
+        Docs: [https://docs.stripe.com/checkout/fulfillment](https://docs.stripe.com/checkout/fulfillment)
+      tags:
+        - stripe
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+        - in: path
+          name: checkoutSessionId
+          required: true
+          schema:
+            type: string
+          example: cs_test_a1b2c3
+      responses:
+        "200":
+          $ref: "#/components/responses/CheckoutSessionStatusResponse"
   /stripe/webhook:
     post:
       summary: Receive a Stripe webhook event
