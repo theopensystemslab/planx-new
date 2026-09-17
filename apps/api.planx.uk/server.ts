@@ -35,7 +35,9 @@ import saveAndReturnRoutes from "./modules/saveAndReturn/routes.js";
 import sendRoutes from "./modules/send/routes.js";
 import sendEmailRoutes from "./modules/sendEmail/routes.js";
 import slackRoutes from "./modules/slack/routes.js";
-import stripeRoutes from "./modules/stripe/routes.js";
+import stripeRoutes, {
+  STRIPE_WEBHOOK_ENDPOINT,
+} from "./modules/stripe/routes.js";
 import teamRoutes from "./modules/team/routes.js";
 import testRoutes from "./modules/test/routes.js";
 import userRoutes from "./modules/user/routes.js";
@@ -51,7 +53,12 @@ app.set("trust proxy", 1);
 
 app.use(defaultCors);
 
-app.use(bodyParser.json({ limit: "100mb" }));
+const jsonParser = bodyParser.json({ limit: "100mb" });
+
+app.use((req, res, next) =>
+  // The Stripe webhook needs the raw, unparsed, request body for signature verification, so we skip bodyParser here
+  req.path === STRIPE_WEBHOOK_ENDPOINT ? next() : jsonParser(req, res, next),
+);
 
 // Converts req.headers.cookie: string, to req.cookies: Record<string, string>
 app.use(cookieParser());
