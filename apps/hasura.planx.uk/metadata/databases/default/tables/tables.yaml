@@ -62,6 +62,7 @@
 - "!include public_team_members.yaml"
 - "!include public_team_settings.yaml"
 - "!include public_team_themes.yaml"
+- "!include public_team_trial_history.yaml"
 - "!include public_teams.yaml"
 - "!include public_teams_summary.yaml"
 - "!include public_temp_data_migrations_audit.yaml"
