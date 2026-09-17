@@ -5,7 +5,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect, useReducer } from "react";
 
 import type { Pay } from "../model";
-import { getDefaultContent } from "../model";
 import Confirm from "./Confirm";
 import { usePaymentFlow } from "./hooks/usePaymentFlow";
 import { Action } from "./types";
@@ -24,7 +23,9 @@ type ComponentState =
   | { status: "success"; displayText?: string }
   | { status: "unsupported_team" }
   | { status: "undefined_fee" }
-  | { status: "zero_fee" };
+  | { status: "zero_fee" }
+  | { status: "payment_pending"; displayText?: string }
+  | { status: "payment_cancelled" };
 
 export const PAY_API_ERROR_UNSUPPORTED_TEAM =
   "Online payments are not enabled for";
@@ -60,30 +61,32 @@ const reducer = (_state: ComponentState, action: Action): ComponentState => {
       return { status: "success", displayText: "Payment Successful" };
     case Action.ZeroFee:
       return { status: "zero_fee" };
+    case Action.PaymentPending:
+      return {
+        status: "payment_pending",
+        displayText: "Confirming your payment",
+      };
+    case Action.PaymentCancelled:
+      return { status: "payment_cancelled" };
   }
 };
 
 function Component(props: Props) {
-  const [sessionId, govUkPayment, passport] = useStore((state) => [
+  const [sessionId, passport] = useStore((state) => [
     state.sessionId,
-    state.govUkPayment,
     state.computePassport(),
   ]);
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
-
-  const defaultMetadata = getDefaultContent().govPayMetadata;
-  const metadata = [...(props.govPayMetadata || []), ...defaultMetadata];
 
   const [state, dispatch] = useReducer(reducer, {
     status: "indeterminate",
     displayText: "Loading...",
   });
 
-  const { actions, hasExistingPayment } = usePaymentFlow(
+  const { actions, hasExistingPayment, existingPaymentStatus } = usePaymentFlow(
     props,
     dispatch,
     fee,
-    metadata,
   );
 
   const isTeamSupported = state.status !== "unsupported_team";
@@ -116,11 +119,9 @@ function Component(props: Props) {
       return;
     }
 
-    if (govUkPayment?.state.status === "success") {
-      actions.handleSuccess();
-    } else {
-      actions.refetchPayment();
-    }
+    // Let the provider resolve the existing payment
+    // GOV.UK Pay re-fetches status, Stripe confirms the returning checkout session
+    actions.refetchPayment();
   }, []);
 
   const continueWithoutPaying = () => {
@@ -132,7 +133,9 @@ function Component(props: Props) {
       fee === 0 || props.hidePay || state.status === "unsupported_team";
 
     if (shouldContinueWithoutPaying) continueWithoutPaying();
-    if (["no_payment_found", "init"].includes(state.status))
+    if (
+      ["no_payment_found", "init", "payment_cancelled"].includes(state.status)
+    )
       actions.startNewPayment();
     if (state.status === "retry") actions.resumeExistingPayment();
     if (state.status === "status_unknown") actions.refetchPayment();
@@ -157,7 +160,8 @@ function Component(props: Props) {
       state.status === "status_unknown" ||
       state.status === "unsupported_team" ||
       state.status === "undefined_fee" ||
-      state.status === "zero_fee" ? (
+      state.status === "zero_fee" ||
+      state.status === "payment_cancelled" ? (
         <Confirm
           {...props}
           fee={fee}
@@ -166,6 +170,8 @@ function Component(props: Props) {
           warning={
             (state.status === "status_unknown" &&
               "We could not check the status of your payment. If you have already paid, checking again will confirm your payment.") ||
+            (state.status === "payment_cancelled" &&
+              "Your payment wasn't completed. You can try again when you're ready.") ||
             undefined
           }
           error={
@@ -176,7 +182,7 @@ function Component(props: Props) {
             undefined
           }
           showInviteToPay={showPayOptions && isTeamSupported}
-          paymentStatus={govUkPayment?.state?.status}
+          paymentStatus={existingPaymentStatus}
         />
       ) : (
         <DelayedLoadingIndicator text={state.displayText || state.status} />

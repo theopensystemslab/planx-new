@@ -1,7 +1,4 @@
-import type {
-  GovUKPayment,
-  PaymentMetadata,
-} from "@opensystemslab/planx-core/types";
+import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import {
   GOV_PAY_PASSPORT_KEY,
   PaymentStatus,
@@ -14,9 +11,10 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { useErrorBoundary } from "react-error-boundary";
 
 import { makeData } from "../../../shared/utils";
-import { createPayload } from "../../model";
+import { createPayload, getDefaultContent } from "../../model";
 import type { Props } from "../Pay";
 import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "../Pay";
+import type { GovPayAction } from "../types";
 import { Action } from "../types";
 import type { UsePaymentProviderResult } from "./types";
 
@@ -34,10 +32,14 @@ const redirectToGovPay = (payment: GovUKPayment) => {
 
 export function useGovUkPay(
   props: Props,
-  dispatch: React.Dispatch<Action>,
+  dispatch: React.Dispatch<GovPayAction>,
   fee: number,
-  metadata: PaymentMetadata[],
 ): UsePaymentProviderResult {
+  const metadata = [
+    ...(props.govPayMetadata || []),
+    ...getDefaultContent().govPayMetadata,
+  ];
+
   const [
     flowId,
     sessionId,
@@ -91,6 +93,11 @@ export function useGovUkPay(
   };
 
   const refetchPayment = async () => {
+    if (govUkPayment?.state.status === PaymentStatus.success) {
+      handleSuccess();
+      return;
+    }
+
     dispatch(Action.IncompletePaymentFound);
 
     const paymentId = govUkPayment?.payment_id;
@@ -198,5 +205,6 @@ export function useGovUkPay(
     },
     passportKey: GOV_PAY_PASSPORT_KEY,
     hasExistingPayment: Boolean(govUkPayment),
+    existingPaymentStatus: govUkPayment?.state?.status,
   };
 }
