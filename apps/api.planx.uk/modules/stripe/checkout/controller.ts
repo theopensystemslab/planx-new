@@ -1,9 +1,9 @@
 import { ServerError } from "../../../errors/index.js";
-import { stripe } from "../client.js";
+import { createStripeCheckoutSession } from "./service.js";
 import type { CreateCheckoutSessionController } from "./types.js";
 
 /**
- * Create a Stripe Checkout Session and return the URL
+ * Create a Stripe Checkout Session and return the hosted checkout URL
  */
 export const createCheckoutSession: CreateCheckoutSessionController = async (
   _req,
@@ -13,32 +13,16 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
   const { localAuthority } = res.locals.parsedReq.params;
   const { sessionId, flowId, amount, returnURL } = res.locals.parsedReq.body;
 
-  const separator = returnURL.includes("?") ? "&" : "?";
-
   try {
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      // TODO: Configure payment types
-      payment_method_types: ["card"],
-      // TODO: Read values from FeeBreakdown + flow name
-      line_items: [
-        {
-          price_data: {
-            currency: "gbp",
-            product_data: { name: "Planning application fee" },
-            unit_amount: amount,
-          },
-          quantity: 1,
-        },
-      ],
-      success_url: `${returnURL}${separator}stripeSessionId={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${returnURL}${separator}cancelled=true`,
-      // TODO: Metadata population
-      metadata: { sessionId, flowId },
-      payment_intent_data: { metadata: { sessionId, flowId } },
+    const result = await createStripeCheckoutSession({
+      sessionId,
+      flowId,
+      amount,
+      returnURL,
+      teamSlug: localAuthority,
     });
 
-    return res.json({ url: session.url });
+    return res.json(result);
   } catch (error) {
     return next(
       new ServerError({

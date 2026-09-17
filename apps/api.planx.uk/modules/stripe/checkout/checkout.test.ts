@@ -70,6 +70,7 @@ describe("creating a Stripe Checkout Session", () => {
           metadata: {
             sessionId: validBody.sessionId,
             flowId: validBody.flowId,
+            teamSlug: "southwark",
           },
         },
       }),

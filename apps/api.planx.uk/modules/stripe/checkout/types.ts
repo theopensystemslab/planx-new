@@ -15,6 +15,14 @@ export const createCheckoutSessionSchema = z.object({
   }),
 });
 
+export interface CreateCheckoutSessionInput {
+  sessionId: string;
+  flowId: string;
+  amount: number;
+  returnURL: string;
+  teamSlug: string;
+}
+
 export interface CreateCheckoutSessionResponse {
   url: string | null;
 }
