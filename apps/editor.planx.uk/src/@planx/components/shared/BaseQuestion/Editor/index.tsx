@@ -63,6 +63,10 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
 
   const isTemplate = useStore.getState().isTemplate;
 
+  // Workspaces covering multiple councils need to customise the authority check in templates
+  const isLocalAuthorityDistrictNode =
+    formik.values.fn === "property.localAuthorityDistrict";
+
   return (
     <form
       onSubmit={formik.handleSubmit}
@@ -192,6 +196,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                 ),
               }}
               isTemplatedNode={props.node?.data?.isTemplatedNode}
+              isLocalAuthorityDistrictNode={isLocalAuthorityDistrictNode}
               collapsible={true}
               itemName="option"
             />

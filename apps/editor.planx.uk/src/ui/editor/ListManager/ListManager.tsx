@@ -50,6 +50,8 @@ export interface Props<T, EditorExtraProps = {}> {
   maxItems?: number;
   disabled?: boolean;
   isTemplatedNode?: boolean;
+  // Workspaces covering multiple councils need to customise the authority check in templates
+  isLocalAuthorityDistrictNode?: boolean;
   /**
    * Allow list items to be skipped from the list
    * @example Presenting two filtered lists (e.g. GovPayMetadata)
@@ -213,8 +215,14 @@ export default function ListManager<T, EditorExtraProps>(
   const allCollapsed = hasItems && collapsedItems.size === itemKeys.length;
   const allExpanded = hasItems && collapsedItems.size === 0;
 
-  // `isTemplatedNode` disables reordering, adding, and deleting options in the templated flow unless you're a platform admin or in the source template
-  if (props.isTemplatedNode && !isPlatformAdmin && !isTemplate) {
+  // `isTemplatedNode` disables reordering, adding, and deleting options in the templated flow unless it sorts on
+  // property.localAuthorityDistrict, you're a platform admin, or you're in the source template
+  if (
+    props.isTemplatedNode &&
+    !props.isLocalAuthorityDistrictNode &&
+    !isPlatformAdmin &&
+    !isTemplate
+  ) {
     return (
       <>
         {collapsible && hasItems && (
