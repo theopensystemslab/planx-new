@@ -120,7 +120,7 @@ export interface AdminPanelData {
   fmeEnabled: boolean;
   stripeConnected?: string;
   paymentProvider?: string;
-  serviceCharges?: number;
+  serviceCharges?: number; // pg SUM() returns null instead of 0
 }
 
 export interface Operation {

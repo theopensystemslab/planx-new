@@ -38,7 +38,6 @@ export const mockTeams: AdminPanelData[] = [
     isTrial: false,
     fmeEnabled: false,
     paymentProvider: "govpay",
-    serviceCharges: 0,
   },
   {
     id: "2",
@@ -110,7 +109,6 @@ export const mockTeams: AdminPanelData[] = [
     powerAutomateEnabled: true,
     isTrial: false,
     fmeEnabled: true,
-    serviceCharges: 0,
   },
   {
     id: "4",
@@ -140,6 +138,5 @@ export const mockTeams: AdminPanelData[] = [
     fmeEnabled: true,
     stripeConnected: "test-account-id-456",
     paymentProvider: "stripe",
-    serviceCharges: 0,
   },
 ];
