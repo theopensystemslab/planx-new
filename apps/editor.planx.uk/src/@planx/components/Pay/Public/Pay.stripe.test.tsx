@@ -1,8 +1,11 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { useSearch } from "@tanstack/react-router";
 import { act, screen, waitFor } from "@testing-library/react";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
+import { http, HttpResponse } from "msw";
 import type { FullStore, Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
+import server from "test/mockServer";
 import { setup } from "test/utils";
 import type { Breadcrumbs } from "types";
 import { vi } from "vitest";
@@ -27,12 +30,21 @@ vi.mock("@tanstack/react-router", async () => {
       state: {},
     })),
     useMatches: vi.fn(() => [{ routeId: "_customDomain/$flow" }]),
+    useSearch: vi.fn(() => ({})),
   };
 });
 
 const { getState, setState } = useStore;
 
 let initialState: FullStore;
+
+const checkoutSessionUrl = `${
+  import.meta.env.VITE_APP_API_URL
+}/stripe/checkout-session/:localAuthority`;
+
+const checkoutStatusUrl = `${
+  import.meta.env.VITE_APP_API_URL
+}/stripe/checkout-session/:localAuthority/:checkoutSessionId`;
 
 const flowWithFee: Store.Flow = {
   _root: { edges: ["setValue", "pay"] },
@@ -59,6 +71,7 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useSearch).mockReturnValue({});
     act(() => setState(initialState));
   });
 
@@ -94,35 +107,59 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
     );
   });
 
-  it("shows 'Pay now' in standalone (Public) mode", async () => {
+  it("redirects to hosted Checkout in standalone (Public) mode", async () => {
+    const stripeUrl = "https://checkout.stripe.com/c/pay/cs_test_123";
+    server.use(
+      http.post(checkoutSessionUrl, () =>
+        HttpResponse.json({ url: stripeUrl }),
+      ),
+    );
+
+    const assignMock = vi.fn();
+    const originalLocation = Object.getOwnPropertyDescriptor(
+      window,
+      "location",
+    );
+    const mockLocation = Object.assign(
+      new URL("http://localhost/test-team/test-flow"),
+      { assign: assignMock, replace: vi.fn(), reload: vi.fn() },
+    );
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: mockLocation,
+    });
+
     const handleSubmit = vi.fn();
-    const consoleSpy = vi.spyOn(console, "log");
 
     act(() =>
       setState({
         flow: flowWithFee,
         breadcrumbs: feeBreadcrumbs,
         previewEnvironment: "standalone",
+        teamSlug: "test-team",
       }),
     );
 
-    const { user } = await setup(
-      <AppErrorBoundary>
-        <Pay
-          title="Pay"
-          fn="application.fee.payable"
-          handleSubmit={handleSubmit}
-          govPayMetadata={[]}
-        />
-      </AppErrorBoundary>,
-    );
+    try {
+      const { user } = await setup(
+        <AppErrorBoundary>
+          <Pay
+            title="Pay"
+            fn="application.fee.payable"
+            handleSubmit={handleSubmit}
+            govPayMetadata={[]}
+          />
+        </AppErrorBoundary>,
+      );
 
-    expect(await screen.findByText("Pay now")).toBeInTheDocument();
-    expect(handleSubmit).not.toHaveBeenCalled();
+      await user.click(await screen.findByText("Pay now"));
 
-    await user.click(screen.getByText("Pay now"));
-
-    expect(consoleSpy).toHaveBeenCalledWith("Started new Stripe payment");
+      await waitFor(() => expect(assignMock).toHaveBeenCalledWith(stripeUrl));
+      expect(handleSubmit).not.toHaveBeenCalled();
+    } finally {
+      if (originalLocation)
+        Object.defineProperty(window, "location", originalLocation);
+    }
   });
 
   it("auto-succeeds in standalone (Public) when hidePay is true", async () => {
@@ -176,5 +213,112 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
 
     expect(await screen.findByText("Pay now")).toBeInTheDocument();
     expect(screen.queryByText("Retry payment")).not.toBeInTheDocument();
+  });
+
+  describe("return from hosted Checkout", () => {
+    it("confirms with Stripe and submits when the payment is paid", async () => {
+      vi.mocked(useSearch).mockReturnValue({ stripeSessionId: "cs_test_123" });
+      server.use(
+        http.get(checkoutStatusUrl, () =>
+          HttpResponse.json({ status: "complete", paymentStatus: "paid" }),
+        ),
+      );
+
+      const handleSubmit = vi.fn();
+
+      act(() =>
+        setState({
+          flow: flowWithFee,
+          breadcrumbs: feeBreadcrumbs,
+          previewEnvironment: "standalone",
+          teamSlug: "test-team",
+        }),
+      );
+
+      await setup(
+        <AppErrorBoundary>
+          <Pay
+            title="Pay"
+            fn="application.fee.payable"
+            handleSubmit={handleSubmit}
+            govPayMetadata={[]}
+          />
+        </AppErrorBoundary>,
+      );
+
+      await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
+      expect(handleSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: { "application.fee.reference": "cs_test_123" },
+        }),
+      );
+    });
+
+    it("stays in a confirming state and does not submit while unpaid", async () => {
+      vi.mocked(useSearch).mockReturnValue({ stripeSessionId: "cs_test_123" });
+      server.use(
+        http.get(checkoutStatusUrl, () =>
+          HttpResponse.json({ status: "complete", paymentStatus: "unpaid" }),
+        ),
+      );
+
+      const handleSubmit = vi.fn();
+
+      act(() =>
+        setState({
+          flow: flowWithFee,
+          breadcrumbs: feeBreadcrumbs,
+          previewEnvironment: "standalone",
+          teamSlug: "test-team",
+        }),
+      );
+
+      await setup(
+        <AppErrorBoundary>
+          <Pay
+            title="Pay"
+            fn="application.fee.payable"
+            handleSubmit={handleSubmit}
+            govPayMetadata={[]}
+          />
+        </AppErrorBoundary>,
+      );
+
+      expect(
+        await screen.findByText("Confirming your payment"),
+      ).toBeInTheDocument();
+      expect(handleSubmit).not.toHaveBeenCalled();
+    });
+
+    it("lets the applicant retry after cancelling", async () => {
+      vi.mocked(useSearch).mockReturnValue({ cancelled: true });
+
+      const handleSubmit = vi.fn();
+
+      act(() =>
+        setState({
+          flow: flowWithFee,
+          breadcrumbs: feeBreadcrumbs,
+          previewEnvironment: "standalone",
+        }),
+      );
+
+      await setup(
+        <AppErrorBoundary>
+          <Pay
+            title="Pay"
+            fn="application.fee.payable"
+            handleSubmit={handleSubmit}
+            govPayMetadata={[]}
+          />
+        </AppErrorBoundary>,
+      );
+
+      expect(await screen.findByText("Pay now")).toBeInTheDocument();
+      expect(
+        screen.getByText(/your payment wasn't completed/i),
+      ).toBeInTheDocument();
+      expect(handleSubmit).not.toHaveBeenCalled();
+    });
   });
 });

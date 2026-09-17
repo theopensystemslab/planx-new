@@ -1,43 +1,134 @@
-import { logger } from "airbrake";
+import { useQuery } from "@tanstack/react-query";
+import { useSearch } from "@tanstack/react-router";
+import {
+  createStripeCheckoutSession,
+  getStripeCheckoutSessionStatus,
+} from "lib/api/stripe/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { useEffect } from "react";
+import { useErrorBoundary } from "react-error-boundary";
 
 import { makeData } from "../../../shared/utils";
+import { toPence } from "../../model";
 import type { Props } from "../Pay";
+import type { StripeAction } from "../types";
 import { Action } from "../types";
 import {
   PAYMENT_REFERENCE_PASSPORT_KEY,
   type UsePaymentProviderResult,
 } from "./types";
 
+const getStripeReturnURL = (): string => {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("stripeSessionId");
+  url.searchParams.delete("cancelled");
+  return url.toString();
+};
+
 export function useStripePay(
   props: Props,
-  dispatch: React.Dispatch<Action>,
-  _fee: number,
+  dispatch: React.Dispatch<StripeAction>,
+  fee: number,
 ): UsePaymentProviderResult {
-  const environment = useStore((state) => state.previewEnvironment);
+  const [flowId, sessionId, teamSlug, environment] = useStore((state) => [
+    state.id,
+    state.sessionId,
+    state.teamSlug,
+    state.previewEnvironment,
+  ]);
+
+  const { showBoundary } = useErrorBoundary();
+
+  const search = useSearch({ strict: false });
+  const stripeSessionId = search?.stripeSessionId;
+  const wasCancelled = Boolean(search?.cancelled);
+  const hasReturnedFromCheckout = Boolean(stripeSessionId || wasCancelled);
+
+  // On return, confirm the payment against Stripe
+  const { data: checkoutStatus } = useQuery({
+    queryKey: ["stripeCheckoutSessionStatus", teamSlug, stripeSessionId],
+    queryFn: () =>
+      getStripeCheckoutSessionStatus({
+        teamSlug,
+        checkoutSessionId: stripeSessionId!,
+      }),
+    enabled:
+      environment === "standalone" && Boolean(stripeSessionId) && !wasCancelled,
+    refetchInterval: (query) =>
+      query.state.data?.paymentStatus === "paid" ? false : 3000,
+  });
 
   const handleSuccess = () => {
     dispatch(Action.Success);
     props.handleSubmit &&
       props.handleSubmit(
-        makeData(props, "todo-stripe-data", PAYMENT_REFERENCE_PASSPORT_KEY),
+        makeData(
+          props,
+          // TODO: Richer payload, use paymentId not checkoutId
+          stripeSessionId,
+          PAYMENT_REFERENCE_PASSPORT_KEY,
+        ),
       );
   };
 
   const startNewPayment = async () => {
     dispatch(Action.StartNewPayment);
 
+    // Skip the redirect when viewing in the Editor or using Pay in info-only mode
     if (environment !== "standalone" || props.hidePay) {
       handleSuccess();
       return;
     }
 
-    console.log("Started new Stripe payment");
+    try {
+      const { url } = await createStripeCheckoutSession({
+        teamSlug,
+        sessionId,
+        flowId,
+        amount: toPence(fee),
+        returnURL: getStripeReturnURL(),
+      });
+
+      if (!url) {
+        throw new Error("Stripe Checkout Session did not include a URL");
+      }
+
+      // Redirect the browser to hosted Stripe Checkout
+      window.location.assign(url);
+    } catch (error) {
+      showBoundary(error);
+    }
   };
 
+  /**
+   * Called on mount when the applicant returns from hosted Checkout
+   */
   const refetchPayment = async () => {
-    console.log("Refetching Stripe payment details");
+    if (wasCancelled) {
+      dispatch(Action.PaymentCancelled);
+      return;
+    }
+
+    if (stripeSessionId) {
+      dispatch(Action.PaymentPending);
+    }
   };
+
+  // Resolve the pending state once Stripe reports the outcome
+  useEffect(() => {
+    if (!checkoutStatus) return;
+
+    if (checkoutStatus.paymentStatus === "paid") {
+      handleSuccess();
+      return;
+    }
+
+    // A session that expired without payment — let the applicant try again
+    // TODO: Account for "pending" status (e.g. Bacs) once fully migrated from GovPay
+    if (checkoutStatus.status === "expired") {
+      dispatch(Action.PaymentCancelled);
+    }
+  }, [checkoutStatus?.paymentStatus, checkoutStatus?.status]);
 
   const resumeExistingPayment = async () => {
     await startNewPayment();
@@ -51,6 +142,6 @@ export function useStripePay(
       handleSuccess,
     },
     passportKey: PAYMENT_REFERENCE_PASSPORT_KEY,
-    hasExistingPayment: false,
+    hasExistingPayment: hasReturnedFromCheckout,
   };
 }
