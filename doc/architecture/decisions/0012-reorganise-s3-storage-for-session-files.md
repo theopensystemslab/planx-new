@@ -1,10 +1,10 @@
-# 11. Reorganise S3 storage for session files
+# 12. Reorganise S3 storage for session files
 
 Date: 2025-10-17
 
 ## Status
 
-Approved
+Accepted
 
 ## Context
 
