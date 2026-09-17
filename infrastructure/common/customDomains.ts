@@ -12,8 +12,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "southwark",
           domain: "planningservices.southwark.gov.uk",
-          cloudFrontState: "cutover-ongoing",
-          certificateLocation: "pulumiConfig",
+          cloudFrontState: "shared-final",
         },
         {
           name: "lambeth",
