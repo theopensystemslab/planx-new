@@ -48,7 +48,10 @@ const Address: React.FC = () => {
       validationSchema={validationSchema}
       legend="Address information"
       description={
-        <>This is the address that Plan✕ invoices will be made out to.</>
+        <>
+          This address will appear on invoices Plan✕ issues to applicants on
+          your behalf. Use your council's official registered address.
+        </>
       }
     >
       {({ formik }) => (
