@@ -119,7 +119,7 @@ describe("teamLayoutRoutes", () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
 
     const { queryAllByRole, getByRole, user } = await setup(<EditorNavMenu />);
-    expect(queryAllByRole("listitem")).toHaveLength(4);
+    expect(queryAllByRole("listitem")).toHaveLength(5);
     expect(queryAllByRole("listitem")[0]).toHaveTextContent("Dashboard");
 
     await user.click(getByRole("button", { name: "Data" }));
@@ -134,7 +134,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(5);
+    expect(menuItems).toHaveLength(6);
     expect(within(menuItems[0]).getByText("Dashboard")).toBeInTheDocument();
   });
 
@@ -142,7 +142,7 @@ describe("teamLayoutRoutes", () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
     const { getAllByRole, getByRole, user } = await setup(<EditorNavMenu />);
-    expect(getAllByRole("listitem")).toHaveLength(5);
+    expect(getAllByRole("listitem")).toHaveLength(6);
     expect(getAllByRole("listitem")[0]).toHaveTextContent("Dashboard");
 
     await user.click(getByRole("button", { name: "Settings" }));
