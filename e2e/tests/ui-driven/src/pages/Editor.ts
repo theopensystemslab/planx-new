@@ -16,6 +16,7 @@ import {
   createInternalPortal,
   createList,
   createNextSteps,
+  createNote,
   createNotice,
   createNumberInput,
   createPlanningConstraints,
@@ -173,6 +174,14 @@ export class PlaywrightEditor {
 
   getNextNode() {
     return this.page.locator(".hanger > :is(a, button)").last();
+  }
+
+  async createNote() {
+    await createNote(
+      this.page,
+      this.getNextNode(),
+      "This is a standalone note for editors only",
+    );
   }
 
   async createChecklist() {
