@@ -11,7 +11,8 @@ CREATE TEMPORARY TABLE sync_team_settings (
   boundary_url text,
   boundary_bbox jsonb,
   has_article4_schema boolean,
-  is_trial boolean
+  is_trial boolean,
+  payment_provider text
 );
 
 \copy sync_team_settings FROM '/tmp/team_settings.csv' WITH (FORMAT csv, DELIMITER ';');
@@ -29,7 +30,8 @@ INSERT INTO
     boundary_url,
     boundary_bbox,
     has_article4_schema,
-    is_trial
+    is_trial,
+    payment_provider
   )
 SELECT
     id,
@@ -43,7 +45,8 @@ SELECT
     boundary_url,
     boundary_bbox,
     has_article4_schema,
-    is_trial
+    is_trial,
+    payment_provider
 FROM
   sync_team_settings ON CONFLICT (id) DO
 UPDATE
@@ -58,7 +61,8 @@ SET
     boundary_url = EXCLUDED.boundary_url,
     boundary_bbox = EXCLUDED.boundary_bbox,
     has_article4_schema = EXCLUDED.has_article4_schema,
-    is_trial = EXCLUDED.is_trial;
+    is_trial = EXCLUDED.is_trial,
+    payment_provider = EXCLUDED.payment_provider;
 SELECT
   setval('team_settings_id_seq', max(id))
 FROM
