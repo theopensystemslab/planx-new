@@ -63,6 +63,7 @@ const GET_SETTINGS_FOR_PUBLISHED_VIEW = gql`
           helpOpeningHours: help_opening_hours
           emailReplyToId: email_reply_to_id
           boundaryBBox: boundary_bbox
+          paymentProvider: payment_provider
         }
         slug
       }
