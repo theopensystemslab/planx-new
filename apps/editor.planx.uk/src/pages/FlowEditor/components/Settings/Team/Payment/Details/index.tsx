@@ -52,7 +52,10 @@ const Details: React.FC = () => {
       validationSchema={validationSchema}
       legend="Invoice details"
       description={
-        <>These are the details that Plan✕ invoices will be made out to.</>
+        <>
+          These details will appear on invoices Plan✕ issues to applicants on
+          your behalf.
+        </>
       }
       onSuccess={(data, _formikHelpers, values) => {
         const oldEmail = data?.teamInvoiceDetails[0].emailAddress;
@@ -65,7 +68,7 @@ const Details: React.FC = () => {
     >
       {({ formik }) => (
         <>
-          <InputLabel label="Business name" htmlFor="businessName">
+          <InputLabel label="Organisation name" htmlFor="businessName">
             <Input
               name="businessName"
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -90,7 +93,7 @@ const Details: React.FC = () => {
           </InputLabel>
 
           <InputLabel
-            label="Company registration (optional)"
+            label="Company registration number (if applicable)"
             htmlFor="companyRegistration"
           >
             <Input
