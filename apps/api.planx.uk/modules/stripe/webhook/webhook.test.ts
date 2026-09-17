@@ -2,6 +2,7 @@ import supertest from "supertest";
 
 import app from "../../../server.js";
 import { stripe } from "../client.js";
+import { STRIPE_WEBHOOK_ENDPOINT } from "../routes.js";
 
 /** Serialise an event and sign it exactly as Stripe would */
 const sign = (event: Record<string, unknown>) => {
@@ -15,7 +16,7 @@ const sign = (event: Record<string, unknown>) => {
 
 const post = (payload: string, signature?: string) => {
   const req = supertest(app)
-    .post("/stripe/webhook")
+    .post(STRIPE_WEBHOOK_ENDPOINT)
     .set("Content-Type", "application/json");
   if (signature !== undefined) req.set("stripe-signature", signature);
   return req.send(payload);

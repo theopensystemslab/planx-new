@@ -10,6 +10,8 @@ import { connectCallbackSchema, connectSchema } from "./connect/types.js";
 import { handleStripeWebhook } from "./webhook/controller.js";
 import { verifyStripeWebhook } from "./webhook/middleware.js";
 
+export const STRIPE_WEBHOOK_ENDPOINT = "/stripe/webhook" as const;
+
 const router = Router();
 
 // Called by Stripe's redirect - the requester's identity comes from the signed session state set in initiateConnect, not a JWT.
@@ -46,7 +48,7 @@ router.post(
 // the raw request body
 // Docs: https://docs.stripe.com/webhooks/signature
 router.post(
-  "/stripe/webhook",
+  STRIPE_WEBHOOK_ENDPOINT,
   express.raw({ type: "application/json" }),
   verifyStripeWebhook,
   handleStripeWebhook,
