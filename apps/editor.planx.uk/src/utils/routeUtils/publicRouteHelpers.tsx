@@ -39,6 +39,8 @@ const nonSaveAndReturnSearchSchema = z.object({
 export const publicRouteSearchSchemas = {
   published: basePublicSearchSchema.extend({
     analytics: z.boolean().optional(),
+    stripeSessionId: z.string().optional(),
+    cancelled: z.coerce.boolean().optional(),
   }),
   preview: nonSaveAndReturnSearchSchema,
   draft: nonSaveAndReturnSearchSchema,
