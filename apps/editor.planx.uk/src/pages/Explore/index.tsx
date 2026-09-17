@@ -1,4 +1,4 @@
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import Search from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
@@ -33,6 +33,8 @@ const SearchBarButton = styled(ButtonBase)(({ theme }) => ({
 export default function Explore() {
   const [searchOpen, setSearchOpen] = useState(false);
 
+  const isProduction = import.meta.env.VITE_APP_ENV === "production";
+
   return (
     <Box sx={{ bgcolor: "background.paper", flexGrow: 1 }}>
       <Container maxWidth="contentWide">
@@ -53,7 +55,7 @@ export default function Explore() {
             onClick={() => setSearchOpen(true)}
             aria-label="Search Plan✕"
           >
-            <TravelExploreIcon />
+            <Search />
             <Typography
               component="span"
               variant="body1"
@@ -71,9 +73,11 @@ export default function Explore() {
             gridTemplateColumns: "repeat(auto-fit, minmax(470px, 1fr))",
           }}
         >
-          <DashboardWidget title="Plan✕ in numbers" subtitle="last 30 days">
-            <NumbersWidget />
-          </DashboardWidget>
+          {isProduction && (
+            <DashboardWidget title="Plan✕ in numbers" subtitle="last 30 days">
+              <NumbersWidget />
+            </DashboardWidget>
+          )}
           <DashboardWidget title="Templates">
             <TemplatesWidget />
           </DashboardWidget>
