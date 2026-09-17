@@ -117,6 +117,10 @@ export interface AdminPanelData {
   actionColour?: string;
   liveFlows: LiveFlow[] | null;
   isTrial: boolean;
+  fmeEnabled: boolean;
+  stripeConnected?: string;
+  paymentProvider?: string;
+  serviceCharges?: number;
 }
 
 export interface Operation {
