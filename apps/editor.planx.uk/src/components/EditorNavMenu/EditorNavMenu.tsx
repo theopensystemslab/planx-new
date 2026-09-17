@@ -389,9 +389,10 @@ function EditorNavMenu() {
   const visibleGroupedSections = getVisibleSections(groupedSections);
   const visibleUngroupedSections = getVisibleSections(ungroupedSections);
 
-  const utilitySections: MenuSection[] = hasFeatureFlag("EXPLORE")
-    ? [{ routes: [exploreRoute] }, ...teamDocumentationSections]
-    : teamDocumentationSections;
+  const utilitySections: MenuSection[] = [
+    { routes: [exploreRoute] },
+    ...teamDocumentationSections,
+  ];
   const visibleUtilitySections = getVisibleSections(utilitySections);
 
   const toggleAccordion = (subtitle: string) => {
