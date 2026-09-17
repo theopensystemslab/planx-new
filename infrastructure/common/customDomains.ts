@@ -99,7 +99,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "canterbury",
           domain: "planningservices.canterbury.gov.uk",
-          cloudFrontState: "cutover-ongoing",
+          cloudFrontState: "shared-final",
         },
         {
           name: "northumberland",
