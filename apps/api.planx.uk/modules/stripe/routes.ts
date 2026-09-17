@@ -2,8 +2,14 @@ import express, { Router } from "express";
 
 import { validate } from "../../shared/middleware/validate.js";
 import { useTeamEditorAuth } from "../auth/middleware.js";
-import { createCheckoutSession } from "./checkout/controller.js";
-import { createCheckoutSessionSchema } from "./checkout/types.js";
+import {
+  createCheckoutSession,
+  getCheckoutSessionStatus,
+} from "./checkout/controller.js";
+import {
+  createCheckoutSessionSchema,
+  getCheckoutSessionStatusSchema,
+} from "./checkout/types.js";
 import * as Controller from "./connect/controller.js";
 import { requireStripeConnectTeamAuth } from "./connect/middleware.js";
 import { connectCallbackSchema, connectSchema } from "./connect/types.js";
@@ -42,6 +48,12 @@ router.post(
   validate(createCheckoutSessionSchema),
   // TODO: Guard on connected accounts only
   createCheckoutSession,
+);
+
+router.get(
+  "/stripe/checkout-session/:localAuthority/:checkoutSessionId",
+  validate(getCheckoutSessionStatusSchema),
+  getCheckoutSessionStatus,
 );
 
 // Stripe authenticates via the `stripe-signature` header, and signature verification requires

@@ -1,3 +1,4 @@
+import type Stripe from "stripe";
 import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
@@ -30,4 +31,21 @@ export interface CreateCheckoutSessionResponse {
 export type CreateCheckoutSessionController = ValidatedRequestHandler<
   typeof createCheckoutSessionSchema,
   CreateCheckoutSessionResponse
+>;
+
+export const getCheckoutSessionStatusSchema = z.object({
+  params: z.object({
+    localAuthority: z.string(),
+    checkoutSessionId: z.string(),
+  }),
+});
+
+export interface CheckoutSessionStatusResponse {
+  status: Stripe.Checkout.Session.Status | null;
+  paymentStatus: Stripe.Checkout.Session.PaymentStatus;
+}
+
+export type GetCheckoutSessionStatusController = ValidatedRequestHandler<
+  typeof getCheckoutSessionStatusSchema,
+  CheckoutSessionStatusResponse
 >;

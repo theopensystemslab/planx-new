@@ -1,6 +1,7 @@
 import { stripe } from "../client.js";
 import type { StripePaymentMetadata } from "../webhook/paymentStatus/types.js";
 import type {
+  CheckoutSessionStatusResponse,
   CreateCheckoutSessionInput,
   CreateCheckoutSessionResponse,
 } from "./types.js";
@@ -42,4 +43,15 @@ export const createStripeCheckoutSession = async ({
   });
 
   return { url: session.url };
+};
+
+export const getStripeCheckoutSessionStatus = async (
+  checkoutSessionId: string,
+): Promise<CheckoutSessionStatusResponse> => {
+  const session = await stripe.checkout.sessions.retrieve(checkoutSessionId);
+
+  return {
+    status: session.status,
+    paymentStatus: session.payment_status,
+  };
 };
