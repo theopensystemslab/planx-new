@@ -457,17 +457,17 @@ describe("basic layout and behaviour", () => {
       />,
     );
 
-    expect(screen.getByText("You have 250 characters remaining")).toBeVisible();
+    expect(screen.getByText("You have 300 characters remaining")).toBeVisible();
 
     await user.click(screen.getByRole("textbox", { name: /test/i }));
     await user.paste(ORIGINAL + ORIGINAL);
 
-    expect(screen.getByText("You have 182 characters too many")).toBeVisible();
+    expect(screen.getByText("You have 132 characters too many")).toBeVisible();
 
     await user.click(screen.getByTestId("continue-button"));
 
     expect(
-      screen.getByText("Error: Your answer must be 250 characters or fewer"),
+      screen.getByText("Error: Your answer must be 300 characters or fewer"),
     ).toBeVisible();
     expect(handleSubmit).not.toHaveBeenCalled();
   }, 10_000);
