@@ -2,7 +2,7 @@
 
 ## Status
 
-Draft
+Accepted
 
 ## Context
 
@@ -29,9 +29,9 @@ The intent of this document is to provide an overview of our testing terminology
 Here are some rule-of-thumb principles:
 
 1. Linting should run in the CI pipeline on every commit.
-1. UI Component tests should be written for any UI related bug.
-1. Service tests should ensure the full public interface for all exposed API is functional.
-1. End-to-end tests should cover major happy path cases and some other significant cases but need not be exhaustive of all possible interactions.
+2. UI Component tests should be written for any UI related bug.
+3. Service tests should ensure the full public interface for all exposed API is functional.
+4. End-to-end tests should cover major happy path cases and some other significant cases but need not be exhaustive of all possible interactions.
 
 ## Notes
 
