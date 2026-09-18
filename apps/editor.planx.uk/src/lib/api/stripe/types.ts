@@ -20,6 +20,7 @@ export interface StripeCheckoutSession {
 export interface StripeCheckoutSessionStatus {
   status: "complete" | "expired" | "open" | null;
   paymentStatus: "paid" | "unpaid" | "no_payment_required";
+  paymentIntentId: string | null;
 }
 
 /**

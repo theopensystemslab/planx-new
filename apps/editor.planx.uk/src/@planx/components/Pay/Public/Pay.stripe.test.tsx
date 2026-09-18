@@ -8,6 +8,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import type { Breadcrumbs } from "types";
+import { ApplicationPath } from "types";
 import { vi } from "vitest";
 
 import Pay from "./Pay";
@@ -99,12 +100,9 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
 
     await user.click(await screen.findByText("Pay now"));
 
+    // Editor preview has no real payment, so it just advances the flow with no
+    // payment reference
     await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
-    expect(handleSubmit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: { "application.fee.reference": "todo-stripe-data" },
-      }),
-    );
   });
 
   it("redirects to hosted Checkout in standalone (Public) mode", async () => {
@@ -156,6 +154,66 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
 
       await waitFor(() => expect(assignMock).toHaveBeenCalledWith(stripeUrl));
       expect(handleSubmit).not.toHaveBeenCalled();
+    } finally {
+      if (originalLocation)
+        Object.defineProperty(window, "location", originalLocation);
+    }
+  });
+
+  it("carries sessionId and email in the return URL for Save & Return", async () => {
+    let capturedReturnURL: string | undefined;
+    server.use(
+      http.post(checkoutSessionUrl, async ({ request }) => {
+        const body = (await request.json()) as { returnURL: string };
+        capturedReturnURL = body.returnURL;
+        return HttpResponse.json({
+          url: "https://checkout.stripe.com/c/pay/cs_test_123",
+        });
+      }),
+    );
+
+    const originalLocation = Object.getOwnPropertyDescriptor(
+      window,
+      "location",
+    );
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: Object.assign(
+        new URL("http://localhost/test-team/test-flow?foo=bar"),
+        { assign: vi.fn(), replace: vi.fn(), reload: vi.fn() },
+      ),
+    });
+
+    act(() =>
+      setState({
+        flow: flowWithFee,
+        breadcrumbs: feeBreadcrumbs,
+        previewEnvironment: "standalone",
+        teamSlug: "test-team",
+        sessionId: "session-abc",
+        saveToEmail: "applicant@example.com",
+        path: ApplicationPath.SaveAndReturn,
+      }),
+    );
+
+    try {
+      const { user } = await setup(
+        <AppErrorBoundary>
+          <Pay
+            title="Pay"
+            fn="application.fee.payable"
+            handleSubmit={vi.fn()}
+            govPayMetadata={[]}
+          />
+        </AppErrorBoundary>,
+      );
+
+      await user.click(await screen.findByText("Pay now"));
+
+      await waitFor(() => expect(capturedReturnURL).toBeDefined());
+      const params = new URL(capturedReturnURL!).searchParams;
+      expect(params.get("sessionId")).toBe("session-abc");
+      expect(params.get("email")).toBe("applicant@example.com");
     } finally {
       if (originalLocation)
         Object.defineProperty(window, "location", originalLocation);
@@ -220,7 +278,11 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
       vi.mocked(useSearch).mockReturnValue({ stripeSessionId: "cs_test_123" });
       server.use(
         http.get(checkoutStatusUrl, () =>
-          HttpResponse.json({ status: "complete", paymentStatus: "paid" }),
+          HttpResponse.json({
+            status: "complete",
+            paymentStatus: "paid",
+            paymentIntentId: "pi_test_123",
+          }),
         ),
       );
 
@@ -246,10 +308,12 @@ describe("Pay component with Stripe provider (feature flag on)", () => {
         </AppErrorBoundary>,
       );
 
+      // Submits with the PaymentIntent id (not the Checkout Session id) as the
+      // payment reference
       await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
       expect(handleSubmit).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: { "application.fee.reference": "cs_test_123" },
+          data: { "application.fee.reference": "pi_test_123" },
         }),
       );
     });

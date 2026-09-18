@@ -64,7 +64,7 @@ export const EmailRequired: React.FC<{
  * If an email is passed in as a query param, do not prompt a user for this
  *
  * This means there's not an additional step of friction from logging into LPS,
- * or redirecting back from GOV.UK Pay
+ * or redirecting back from GOV.UK Pay / Stripe
  *
  * XXX: Won't work locally as referrer is stripped from the browser when navigating from HTTPS to HTTP (localhost)
  */
@@ -72,6 +72,7 @@ const getInitialEmailValue = (emailQueryParam?: string) => {
   const trustedAddresses = [
     "https://www.payments.service.gov.uk/",
     "https://card.payments.service.gov.uk/",
+    "https://checkout.stripe.com/",
     "https://localplanning.editor.planx.dev/",
     "https://www.localplanning.services/",
   ];

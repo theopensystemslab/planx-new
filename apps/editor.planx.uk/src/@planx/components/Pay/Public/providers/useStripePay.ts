@@ -7,6 +7,7 @@ import {
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 import { useErrorBoundary } from "react-error-boundary";
+import { ApplicationPath } from "types";
 
 import { makeData } from "../../../shared/utils";
 import { toPence } from "../../model";
@@ -20,8 +21,18 @@ import {
 
 const getStripeReturnURL = (): string => {
   const url = new URL(window.location.href);
+
+  // Drop stripe return params from any previous attempt
   url.searchParams.delete("stripeSessionId");
   url.searchParams.delete("cancelled");
+
+  // Ensure that applicant can bypass Resume page on return
+  const { path, sessionId, saveToEmail } = useStore.getState();
+  if (path === ApplicationPath.SaveAndReturn) {
+    url.searchParams.set("sessionId", sessionId);
+    url.searchParams.set("email", saveToEmail ?? "");
+  }
+
   return url.toString();
 };
 
@@ -64,8 +75,7 @@ export function useStripePay(
       props.handleSubmit(
         makeData(
           props,
-          // TODO: Richer payload, use paymentId not checkoutId
-          stripeSessionId,
+          checkoutStatus?.paymentIntentId,
           PAYMENT_REFERENCE_PASSPORT_KEY,
         ),
       );
