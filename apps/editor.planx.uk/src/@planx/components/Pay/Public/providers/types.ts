@@ -1,4 +1,7 @@
-import type { GOV_PAY_PASSPORT_KEY } from "@opensystemslab/planx-core/types";
+import type {
+  GOV_PAY_PASSPORT_KEY,
+  PaymentStatus,
+} from "@opensystemslab/planx-core/types";
 
 export type PaymentProviderName = "govpay" | "stripe";
 
@@ -16,4 +19,5 @@ export interface UsePaymentProviderResult {
   passportKey:
     typeof GOV_PAY_PASSPORT_KEY | typeof PAYMENT_REFERENCE_PASSPORT_KEY;
   hasExistingPayment: boolean;
+  existingPaymentStatus?: PaymentStatus;
 }

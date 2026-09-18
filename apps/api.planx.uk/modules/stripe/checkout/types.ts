@@ -43,6 +43,7 @@ export const getCheckoutSessionStatusSchema = z.object({
 export interface CheckoutSessionStatusResponse {
   status: Stripe.Checkout.Session.Status | null;
   paymentStatus: Stripe.Checkout.Session.PaymentStatus;
+  paymentIntentId: string | null;
 }
 
 export type GetCheckoutSessionStatusController = ValidatedRequestHandler<

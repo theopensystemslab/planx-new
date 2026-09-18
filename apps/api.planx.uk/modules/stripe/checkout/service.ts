@@ -50,8 +50,14 @@ export const getStripeCheckoutSessionStatus = async (
 ): Promise<CheckoutSessionStatusResponse> => {
   const session = await stripe.checkout.sessions.retrieve(checkoutSessionId);
 
+  const paymentIntentId =
+    typeof session.payment_intent === "string"
+      ? session.payment_intent
+      : (session.payment_intent?.id ?? null);
+
   return {
     status: session.status,
     paymentStatus: session.payment_status,
+    paymentIntentId,
   };
 };

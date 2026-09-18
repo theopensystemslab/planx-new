@@ -77,6 +77,11 @@ components:
                 type: string
                 enum: [paid, unpaid, no_payment_required]
                 example: paid
+              paymentIntentId:
+                type: string
+                nullable: true
+                description: PaymentIntent id (the payment reference); null until paid
+                example: pi_test_a1b2c3
 paths:
   /stripe/checkout-session/{localAuthority}:
     post:
