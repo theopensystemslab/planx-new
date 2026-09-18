@@ -12,9 +12,11 @@
     "clean-data": "docker compose -f ./docker-compose.yml -f ./docker-compose.seed.yml run seed-database reset_all",
     "dev": "./scripts/start-containers-for-dev.sh",
     "tests": "./scripts/start-containers-for-tests.sh",
+    "prestart": "./scripts/build-packages.sh",
     "analytics": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services --profile analytics  up -d --quiet-pull",
     "logs": "docker compose logs --tail 30 -f",
     "prepare": "husky",
+    "postinstall": "if [ -f ./scripts/build-packages.sh ]; then ./scripts/build-packages.sh; fi",
     "prebuild": "./scripts/check-containers.sh dev",
     "pretest": "./scripts/check-containers.sh e2e",
     "typecheck": "turbo run typecheck",
@@ -22,7 +24,8 @@
     "lint:fix": "turbo run lint:fix",
     "check": "turbo run typecheck lint",
     "build": "turbo run build",
-    "test": "turbo run test --concurrency=1"
+    "test": "turbo run test --concurrency=1",
+    "watch:packages": "turbo watch build --filter=\"./packages/*\""
   },
   "lint-staged": {
     "apps/editor.planx.uk/src/**/*.{js,jsx,ts,tsx}": "eslint --fix --flag v10_config_lookup_from_file",
