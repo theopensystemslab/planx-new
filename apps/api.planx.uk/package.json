@@ -19,7 +19,7 @@
     "@planx/file-upload": "workspace:*",
     "@types/geojson": "^7946.0.16",
     "@types/isomorphic-fetch": "^0.0.36",
-    "adm-zip": "^0.6.0",
+    "adm-zip": "^0.6.1",
     "ai": "^7.0.79",
     "axios": "catalog:",
     "body-parser": "^2.3.0",
