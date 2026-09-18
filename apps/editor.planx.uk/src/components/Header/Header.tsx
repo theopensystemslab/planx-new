@@ -203,6 +203,9 @@ const PublicToolbar: React.FC<{
           ...prev,
           // Resetting Save & Return
           sessionId: undefined,
+          email: undefined,
+          stripeSessionId: undefined,
+          cancelled: undefined,
         }),
         reloadDocument: true,
       });

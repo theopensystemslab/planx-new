@@ -15,6 +15,8 @@ import type {
   LowCalSessionData,
   Node,
   PublishedFlow,
+  SessionPaymentStatus,
+  StripePaymentStatus,
 } from "../../../types.js";
 import type { ValidationResponse } from "../types.js";
 
@@ -22,6 +24,47 @@ export type ReconciledSession = {
   alteredSectionIds: Array<string>;
   reconciledSessionData: Omit<LowCalSessionData, "passport">;
 };
+
+// GovPay statuses indicating the user has at least redirected away to pay.
+// Docs: https://docs.payments.service.gov.uk/api_reference/#payment-status-meanings
+const GOV_PAY_INITIATED_STATUSES = [
+  "created",
+  "started",
+  "capturable",
+  "submitted",
+  "success",
+];
+
+/**
+ * GovPay writes payment data to lowcal_sessions.data via the frontend
+ */
+function hasInitiatedGovPayPayment(
+  sessionData: Omit<LowCalSessionData, "passport">,
+): boolean {
+  const status = sessionData?.govUkPayment?.state?.status;
+  return Boolean(status && GOV_PAY_INITIATED_STATUSES.includes(status));
+}
+
+const STRIPE_INITIATED_STATUSES: StripePaymentStatus[] = [
+  "created",
+  "processing",
+  "succeeded",
+];
+
+/**
+ * Stripe writes to payment_status via webhook (on payment_intent.created)
+ */
+function hasInitiatedStripePayment(
+  paymentStatus: SessionPaymentStatus[] | undefined,
+): boolean {
+  return Boolean(
+    paymentStatus?.some(
+      (row) =>
+        row.stripeStatus &&
+        STRIPE_INITIATED_STATUSES.includes(row.stripeStatus),
+    ),
+  );
+}
 
 // TODO - Ensure reconciliation handles:
 //  * collected flags
@@ -34,17 +77,12 @@ export async function validateSession(
   const sessionUpdatedAt = fetchedSession.updated_at!;
   const flowId = fetchedSession.flow_id!;
 
-  // If a user has at least redirected away to Gov Pay, skip reconciliation
-  // Docs: https://docs.payments.service.gov.uk/api_reference/#payment-status-meanings
-  const paymentStartedStatuses = [
-    "created",
-    "started",
-    "capturable",
-    "submitted",
-    "success",
-  ];
-  const userStatus = sessionData?.govUkPayment?.state?.status;
-  const userHasPaid = userStatus && paymentStartedStatuses.includes(userStatus);
+  // If a user has at least initiated payment, skip reconciliation.
+  const govPayInitiated = hasInitiatedGovPayPayment(sessionData);
+  const stripeInitiated = hasInitiatedStripePayment(
+    fetchedSession.paymentStatus,
+  );
+  const userHasPaid = govPayInitiated || stripeInitiated;
 
   if (userHasPaid) {
     const responseData: ValidationResponse = {
@@ -226,6 +264,10 @@ export async function findSession({
             id
             payeeName: payee_name
             payeeEmail: payee_email
+          }
+          paymentStatus: payment_status {
+            status
+            stripeStatus: stripe_status
           }
         }
       }

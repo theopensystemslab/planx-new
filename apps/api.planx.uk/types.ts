@@ -65,6 +65,16 @@ export interface LowCalSessionData {
   id: string;
 }
 
+export type StripePaymentStatus =
+  "created" | "processing" | "succeeded" | "payment_failed";
+
+export interface SessionPaymentStatus {
+  /** Populated by GovPay */
+  status: string | null;
+  /** Populated by Stripe */
+  stripeStatus: StripePaymentStatus | null;
+}
+
 export interface LowCalSession {
   data: LowCalSessionData;
   id: string;
@@ -83,6 +93,7 @@ export interface LowCalSession {
   };
   lockedAt?: string;
   paymentRequests?: Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">[];
+  paymentStatus?: SessionPaymentStatus[];
 }
 
 export type IsoDateString = string;

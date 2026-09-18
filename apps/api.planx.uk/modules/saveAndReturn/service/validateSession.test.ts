@@ -1,3 +1,4 @@
+import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import omit from "lodash/omit.js";
 import supertest from "supertest";
 
@@ -112,6 +113,98 @@ describe("Validate Session endpoint", () => {
       .expect(500)
       .then((response) => {
         expect(response.body.error).toMatch(/Failed to validate session/);
+      });
+  });
+
+  const skipReconciliationExpected = {
+    message: "Payment process initiated, skipping reconciliation",
+    changesFound: null,
+    reconciledSessionData: reconciledData,
+  };
+
+  it.each(["succeeded", "processing", "created"] as const)(
+    "skips reconciliation for a Stripe session with a '%s' payment_status row",
+    async (stripeStatus) => {
+      queryMock.mockQuery(
+        mockFindSession(
+          {},
+          { paymentStatus: [{ status: null, stripeStatus }] },
+        ),
+      );
+      queryMock.mockQuery(stubInsertReconciliationRequests);
+
+      const data = {
+        payload: {
+          sessionId: mockLowcalSession.id,
+          email: mockLowcalSession.email,
+        },
+      };
+
+      await supertest(app)
+        .post(validateSessionPath)
+        .send(data)
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual(skipReconciliationExpected);
+        });
+    },
+  );
+
+  it("reconciles a Stripe session whose only payment attempt failed", async () => {
+    // A failed attempt should reconcile/retry, not skip
+    queryMock.mockQuery(
+      mockFindSession(
+        {},
+        { paymentStatus: [{ status: null, stripeStatus: "payment_failed" }] },
+      ),
+    );
+    queryMock.mockQuery(mockGetFlowDiff(null));
+    queryMock.mockQuery(stubInsertReconciliationRequests);
+
+    const data = {
+      payload: {
+        sessionId: mockLowcalSession.id,
+        email: mockLowcalSession.email,
+      },
+    };
+
+    await supertest(app)
+      .post(validateSessionPath)
+      .send(data)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual({
+          message: "No content changes since last save point",
+          changesFound: false,
+          reconciledSessionData: reconciledData,
+        });
+      });
+  });
+
+  it("still skips reconciliation for a GovPay session that has initiated payment", async () => {
+    const govUkPayment = {
+      state: { status: "started", finished: false },
+    } as GovUKPayment;
+
+    queryMock.mockQuery(mockFindSession({}, { govUkPayment }));
+    queryMock.mockQuery(stubInsertReconciliationRequests);
+
+    const data = {
+      payload: {
+        sessionId: mockLowcalSession.id,
+        email: mockLowcalSession.email,
+      },
+    };
+
+    await supertest(app)
+      .post(validateSessionPath)
+      .send(data)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual({
+          ...skipReconciliationExpected,
+          reconciledSessionData: { ...reconciledData, govUkPayment },
+        });
       });
   });
 
