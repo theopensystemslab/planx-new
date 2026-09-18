@@ -20,17 +20,17 @@ Clearly, the MinIO solution has run out of road, so we consider alternatives her
 
 | Option | Verdict | Notes |
 | --- | --- | --- |
-| MinIO | Rejected | We could build from source, but the project is essentially abandoned/deprecated, so no further security fixes should be expected. |
-| LocalStack | Rejected | Free tier is non-commercial only (which we may or may not qualify for) since March 2026, needs an auth token, and the community image is itself unmaintained. |
-| RustFS | Rejected | A promising project in early stage. Governance and commercial model remains unclear, and we'd like to avoid committing to another project with risk of rug-pull. |
-| **SeaweedFS** (Apache 2.0) | **Adopted** | `weed mini` runs as a single zero-config container. Credentials and bucket can be seeded from env vars, it supports every S3 call we make, includes tagging and ACL headers, and ships an admin UI. One risk is that the bus factor is basically 1, i.e. there is one primary maintainer. |
-| **Garage** (AGPL) | **Fallback** | Project by a grant-funded EU non-profit — more structurally resistant to a licence change or rug pull, and credible as self-hosted S3. Bootstraps a single node + key + bucket from env vars, but needs a committed `garage.toml`, a matching `s3_region`, and returns 501 for object tagging and ACLs. |
+| [MinIO](https://github.com/minio/minio) | Rejected | We could build from source, but the project is essentially abandoned/deprecated, so no further security fixes can be expected. |
+| [LocalStack](https://www.localstack.cloud/) | Rejected | Free tier is non-commercial only (which we may or may not qualify for) since March 2026, needs an auth token, and the community image is itself unmaintained. |
+| [RustFS](https://github.com/rustfs/rustfs) | Rejected | A promising project in early stage. Governance and commercial model remains unclear, and we'd like to avoid committing to another project with risk of rug-pull. |
+| [SeaweedFS](https://github.com/seaweedfs/seaweedfs) (Apache 2.0) | **Adopted** | `weed mini` runs as a single zero-config container. Credentials and bucket can be seeded from env vars, it supports every S3 call we make, includes tagging and ACL headers, and ships an admin UI. One risk is that the bus factor is basically 1, i.e. there is one primary maintainer. |
+| [Garage](https://garagehq.deuxfleurs.fr/) (AGPL) | **Fallback** | Project by a grant-funded EU non-profit — more structurally resistant to a licence change or rug pull, and credible as self-hosted S3. Bootstraps a single node + key + bucket from env vars, but needs a committed `garage.toml`, a matching `s3_region`, and returns 501 for object tagging and ACLs. |
 
 ## Decision
 
-Replace MinIO with **SeaweedFS (`weed mini`)** in the local and e2e stacks. It is the lowest-friction drop-in with parity to MinIO: no config file, full coverage of our S3 calls, and a UI for debugging. As is usual practice, we should the SeaweedFS image to an explicit version — `weed mini` defaults can change between releases.
+[Replace MinIO with SeaweedFS](https://github.com/seaweedfs/seaweedfs/wiki/Quick-Start-with-weed-mini) (`weed mini`) in the local and e2e stacks. It is the lowest-friction drop-in with parity to MinIO: no config file, full coverage of our S3 calls, and a UI for debugging. As is usual practice, we should the SeaweedFS image to an explicit version — `weed mini` defaults can change between releases.
 
-Keep **Garage** on hand as a fallback option. If SeaweedFS is abandoned, relicensed, or its community image stops being maintained, we can switch to Garage. Garage is also an interesting candidate if we ever wanted to run our own S3-compatible storage in production or reduce our dependence on AWS.
+Keep Garage on hand as a fallback option. If SeaweedFS is abandoned, relicensed, or its community image stops being maintained, we can switch to Garage. Garage is also an interesting candidate if we ever wanted to run our own S3-compatible storage in production or reduce our dependence on AWS.
 
 To future proof any future switch, application code should be agnostic of the S3 emulator/storage backend we are opting for. For example, we can:
 
