@@ -23,18 +23,22 @@ describe("rendering column headers", () => {
     const headers = [
       "Team",
       "Reference code",
+      "Trial account",
       "Live services",
       "First online at",
       "Article 4s",
       "GOV.UK Pay",
+      "Stripe connected",
+      "Payment provider",
+      "Service charges",
       "GOV.UK Notify",
       "Send to email",
       "BOPS",
       "Power automate",
+      "FME",
       "Subdomain",
       "Logo",
       "Favicon",
-      "Trial account",
     ];
 
     for (const header of headers) {
