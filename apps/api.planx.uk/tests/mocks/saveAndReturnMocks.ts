@@ -1,7 +1,7 @@
-import type { Team } from "@opensystemslab/planx-core/types";
+import type { GovUKPayment, Team } from "@opensystemslab/planx-core/types";
 import { v4 as uuidV4 } from "uuid";
 
-import type { Flow, LowCalSession } from "../../types.js";
+import type { Flow, LowCalSession, SessionPaymentStatus } from "../../types.js";
 
 export const mockTeam = {
   id: 1,
@@ -77,7 +77,16 @@ export const mockLowcalSession: LowCalSession = {
   deleted_at: null,
 };
 
-export const mockFindSession = (breadcrumbs = {}) => ({
+export const mockFindSession = (
+  breadcrumbs = {},
+  {
+    govUkPayment,
+    paymentStatus,
+  }: {
+    govUkPayment?: GovUKPayment;
+    paymentStatus?: SessionPaymentStatus[];
+  } = {},
+) => ({
   name: "FindSession",
   data: {
     sessions: [
@@ -86,7 +95,9 @@ export const mockFindSession = (breadcrumbs = {}) => ({
         data: {
           ...mockLowcalSession.data,
           breadcrumbs,
+          ...(govUkPayment && { govUkPayment }),
         },
+        ...(paymentStatus && { paymentStatus }),
       },
     ],
   },

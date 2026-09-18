@@ -71,6 +71,7 @@ export function useStripePay(
 
   const handleSuccess = () => {
     dispatch(Action.Success);
+    // TODO: Store full payload
     props.handleSubmit &&
       props.handleSubmit(
         makeData(
