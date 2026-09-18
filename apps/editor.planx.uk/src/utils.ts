@@ -81,7 +81,11 @@ export const removeSessionIdSearchParam = async (flowId: string) => {
     await clearLocalFlowIdb(flowId);
   }
 
-  // Still call reload on guidance flows, all `/preview`, and `/draf` links
+  // Clear Stripe payment-return params
+  currentURL.searchParams.delete("stripeSessionId");
+  currentURL.searchParams.delete("cancelled");
+
+  // Still call reload on guidance flows, all `/preview`, and `/draft` links
   window.history.pushState({}, document.title, currentURL);
   window.location.reload();
 };
