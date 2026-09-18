@@ -22,15 +22,27 @@ export interface CreateCheckoutSessionInput {
   amount: number;
   returnURL: string;
   teamSlug: string;
+  connectedAccountId: string;
 }
 
 export interface CreateCheckoutSessionResponse {
   url: string | null;
 }
 
+export type CheckoutSessionLocals = {
+  connectedAccountId: string;
+};
+
+export type ResolveTeamPaymentProviderMiddleware = ValidatedRequestHandler<
+  typeof createCheckoutSessionSchema,
+  CreateCheckoutSessionResponse,
+  CheckoutSessionLocals
+>;
+
 export type CreateCheckoutSessionController = ValidatedRequestHandler<
   typeof createCheckoutSessionSchema,
-  CreateCheckoutSessionResponse
+  CreateCheckoutSessionResponse,
+  CheckoutSessionLocals
 >;
 
 export const getCheckoutSessionStatusSchema = z.object({
