@@ -68,11 +68,10 @@ export const createStripeCheckoutSession = async ({
         },
       ];
 
-  // PlanX's cut (the Stripe application fee). Only computable from a real breakdown;
-  // in the fallback case the whole amount transfers to the council (no fee).
-  const applicationFeeAmount = feeBreakdown
-    ? calculateStripeSplit(feeBreakdown).applicationFeeAmount
-    : 0;
+  // PlanX's cut (the Stripe application fee)
+  const split = feeBreakdown ? calculateStripeSplit(feeBreakdown) : undefined;
+  // 0 is not a valid fee for Stripe, must be undefined if there's no fee amount
+  const applicationFeeAmount = split?.applicationFeeAmount || undefined;
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
