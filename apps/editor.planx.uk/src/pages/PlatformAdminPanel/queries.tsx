@@ -22,6 +22,10 @@ export const STAGING_ADMIN_PANEL_QUERY = gql`
       linkColour: link_colour
       actionColour: action_colour
       isTrial: is_trial
+      fmeEnabled: fme_enabled_staging
+      stripeConnected: stripe_connected_staging
+      paymentProvider: payment_provider
+      serviceCharges: total_service_charges_collected
     }
   }
 `;
@@ -48,6 +52,10 @@ export const PRODUCTION_ADMIN_PANEL_QUERY = gql`
       linkColour: link_colour
       actionColour: action_colour
       isTrial: is_trial
+      fmeEnabled: fme_enabled_production
+      stripeConnected: stripe_connected_production
+      paymentProvider: payment_provider
+      serviceCharges: total_service_charges_collected
     }
   }
 `;

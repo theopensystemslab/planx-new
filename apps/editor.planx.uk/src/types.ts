@@ -117,6 +117,10 @@ export interface AdminPanelData {
   actionColour?: string;
   liveFlows: LiveFlow[] | null;
   isTrial: boolean;
+  fmeEnabled: boolean;
+  stripeConnected?: string;
+  paymentProvider?: string;
+  serviceCharges?: number; // pg SUM() returns null instead of 0
 }
 
 export interface Operation {

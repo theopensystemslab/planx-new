@@ -6,6 +6,8 @@ select_permissions:
     permission:
       columns:
         - article_4s_enabled
+        - fme_enabled_production
+        - fme_enabled_staging
         - govpay_enabled_production
         - govpay_enabled_staging
         - is_trial
@@ -14,6 +16,7 @@ select_permissions:
         - id
         - govnotify_personalisation
         - live_flows
+        - total_service_charges_collected
         - action_colour
         - bops_submission_url_production
         - bops_submission_url_staging
@@ -22,10 +25,13 @@ select_permissions:
         - link_colour
         - logo
         - name
+        - payment_provider
         - primary_colour
         - reference_code
         - send_to_email_address
         - slug
+        - stripe_connected_production
+        - stripe_connected_staging
         - subdomain
       filter: {}
     comment: ""
@@ -33,6 +39,8 @@ select_permissions:
     permission:
       columns:
         - article_4s_enabled
+        - fme_enabled_production
+        - fme_enabled_staging
         - govpay_enabled_production
         - govpay_enabled_staging
         - is_trial
@@ -41,6 +49,7 @@ select_permissions:
         - id
         - govnotify_personalisation
         - live_flows
+        - total_service_charges_collected
         - action_colour
         - bops_submission_url_production
         - bops_submission_url_staging
@@ -49,10 +58,13 @@ select_permissions:
         - link_colour
         - logo
         - name
+        - payment_provider
         - primary_colour
         - reference_code
         - send_to_email_address
         - slug
+        - stripe_connected_production
+        - stripe_connected_staging
         - subdomain
       filter: {}
     comment: ""

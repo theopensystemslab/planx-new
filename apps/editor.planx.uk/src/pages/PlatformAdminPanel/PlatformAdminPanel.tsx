@@ -43,6 +43,11 @@ export const PlatformAdminPanel = () => {
       headerName: "Reference code",
     },
     {
+      field: "isTrial",
+      headerName: "Trial account",
+      type: ColumnFilterType.BOOLEAN,
+    },
+    {
       field: "liveFlowsNames" as keyof AdminPanelData,
       headerName: "Live services",
       width: 450,
@@ -76,6 +81,21 @@ export const PlatformAdminPanel = () => {
       type: ColumnFilterType.BOOLEAN,
     },
     {
+      field: "stripeConnected",
+      headerName: "Stripe connected",
+      type: ColumnFilterType.BOOLEAN,
+    },
+    {
+      field: "paymentProvider",
+      headerName: "Payment provider",
+      type: ColumnFilterType.SINGLE_SELECT,
+    },
+    {
+      field: "serviceCharges",
+      headerName: "Service charges",
+      type: ColumnFilterType.BOOLEAN,
+    },
+    {
       field: "govnotifyPersonalisation",
       headerName: "GOV.UK Notify",
       type: ColumnFilterType.BOOLEAN,
@@ -99,6 +119,11 @@ export const PlatformAdminPanel = () => {
       type: ColumnFilterType.BOOLEAN,
     },
     {
+      field: "fmeEnabled",
+      headerName: "FME",
+      type: ColumnFilterType.BOOLEAN,
+    },
+    {
       field: "subdomain",
       headerName: "Subdomain",
       type: ColumnFilterType.BOOLEAN,
@@ -111,11 +136,6 @@ export const PlatformAdminPanel = () => {
     {
       field: "favicon",
       headerName: "Favicon",
-      type: ColumnFilterType.BOOLEAN,
-    },
-    {
-      field: "isTrial",
-      headerName: "Trial account",
       type: ColumnFilterType.BOOLEAN,
     },
   ];
