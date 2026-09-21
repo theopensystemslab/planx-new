@@ -14,13 +14,6 @@ export interface SessionAuthPayload {
   };
 }
 
-export interface SendResumeEmailPayload {
-  payload: {
-    email: string;
-    teamSlug: string;
-  };
-}
-
 export interface ReconciliationResponse {
   message: string;
   changesFound: boolean | null;
