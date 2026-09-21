@@ -56,6 +56,8 @@ import {
 } from "./styles";
 import type { MenuSection, Route } from "./types";
 
+const IS_PROD = import.meta.env.VITE_APP_ENV === "production";
+
 function EditorNavMenu() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -145,7 +147,7 @@ function EditorNavMenu() {
   const teamGroupedSections: MenuSection[] = [
     {
       routes: [
-        ...(teamSlug && !isSystemTeam(teamSlug)
+        ...(teamSlug && !isSystemTeam(teamSlug) && IS_PROD
           ? [
               {
                 title: "Dashboard",
