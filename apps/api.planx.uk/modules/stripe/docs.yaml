@@ -30,6 +30,7 @@ components:
               - flowId
               - amount
               - returnURL
+              - metadata
             properties:
               sessionId:
                 type: string
@@ -46,6 +47,24 @@ components:
                 type: string
                 format: uri
                 example: "https://editor.planx.uk/team/flow/published"
+              metadata:
+                type: object
+                required:
+                  - flow
+                  - source
+                  - paidViaInviteToPay
+                properties:
+                  flow:
+                    type: string
+                    example: "Apply for planning permission"
+                  source:
+                    type: string
+                    example: "PlanX"
+                  paidViaInviteToPay:
+                    type: string
+                    example: "false"
+                additionalProperties:
+                  type: string
   responses:
     CreateCheckoutSessionResponse:
       content:
