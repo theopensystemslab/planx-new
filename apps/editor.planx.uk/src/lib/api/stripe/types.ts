@@ -11,6 +11,7 @@ export interface CreateStripeCheckoutSession {
   /** Fee in pence */
   amount: number;
   returnURL: string;
+  metadata: Record<string, string>;
 }
 
 export interface StripeCheckoutSession {
