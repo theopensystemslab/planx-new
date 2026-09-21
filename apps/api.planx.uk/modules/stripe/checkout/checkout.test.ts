@@ -32,11 +32,18 @@ const stripeTeam = {
   settings: { paymentProvider: "stripe" },
 };
 
+const defaultMetadata = {
+  flow: "Apply for planning permission",
+  source: "PlanX",
+  paidViaInviteToPay: "false",
+};
+
 const validBody = {
   sessionId: "f2d8ca1d-a43b-43ec-b3d9-a9fec63ff19c",
   flowId: "7cd1c4b4-4229-424f-8d04-c9fdc958ef4e",
   amount: 14500,
   returnURL: "https://editor.planx.uk/team/flow/published",
+  metadata: defaultMetadata,
 };
 
 // A £145 total made up of a £121 application fee + £24 (incl. VAT) service charge
@@ -112,14 +119,17 @@ describe("creating a Stripe Checkout Session", () => {
         cancel_url:
           "https://editor.planx.uk/team/flow/published?cancelled=true",
         metadata: {
+          ...defaultMetadata,
           sessionId: validBody.sessionId,
           flowId: validBody.flowId,
+          teamSlug: "southwark",
         },
         payment_intent_data: {
           on_behalf_of: STRIPE_ACCOUNT_ID,
           transfer_data: { destination: STRIPE_ACCOUNT_ID },
           application_fee_amount: 4800,
           metadata: {
+            ...defaultMetadata,
             sessionId: validBody.sessionId,
             flowId: validBody.flowId,
             teamSlug: "southwark",
@@ -127,6 +137,91 @@ describe("creating a Stripe Checkout Session", () => {
         },
       }),
     );
+  });
+
+  it("passes the default keys plus editor-configured extras into both the Checkout Session and PaymentIntent", async () => {
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send({
+        ...validBody,
+        metadata: { ...defaultMetadata, costCentre: "ABC123" },
+      })
+      .expect(200);
+
+    const { metadata, payment_intent_data } = mockCreate.mock.calls[0][0];
+    const expected = {
+      ...defaultMetadata,
+      costCentre: "ABC123",
+      sessionId: validBody.sessionId,
+      flowId: validBody.flowId,
+      teamSlug: "southwark",
+    };
+    expect(metadata).toEqual(expected);
+    expect(payment_intent_data.metadata).toEqual(expected);
+  });
+
+  it("keeps the internal keys authoritative over client metadata", async () => {
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send({
+        ...validBody,
+        // A colliding `sessionId` must not override the key the webhook relies on
+        // TODO: Maybe we should ban these keys from the frontend (and Zod schema) once list is finalised?
+        metadata: { ...defaultMetadata, sessionId: "spoofed" },
+      })
+      .expect(200);
+
+    const { metadata } = mockCreate.mock.calls[0][0];
+    expect(metadata).toEqual({
+      ...defaultMetadata,
+      sessionId: validBody.sessionId,
+      flowId: validBody.flowId,
+      teamSlug: "southwark",
+    });
+  });
+
+  it("rejects non-string metadata values", async () => {
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send({
+        ...validBody,
+        metadata: { ...defaultMetadata, count: 3 },
+      })
+      .expect(400);
+
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("rejects an empty metadata object", async () => {
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send({ ...validBody, metadata: {} })
+      .expect(400);
+
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("rejects metadata missing a required default key", async () => {
+    const { paidViaInviteToPay: _omit, ...incompleteMetadata } =
+      defaultMetadata;
+
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send({ ...validBody, metadata: incompleteMetadata })
+      .expect(400);
+
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("rejects a request with no metadata", async () => {
+    const { metadata: _metadata, ...bodyWithoutMetadata } = validBody;
+
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(bodyWithoutMetadata)
+      .expect(400);
+
+    expect(mockCreate).not.toHaveBeenCalled();
   });
 
   it("retains the service charge (incl. VAT) as the Stripe application fee", async () => {

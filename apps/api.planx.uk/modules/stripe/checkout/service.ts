@@ -7,7 +7,6 @@ import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
 import { stripe } from "../client.js";
-import type { StripePaymentMetadata } from "../webhook/paymentStatus/types.js";
 import { buildLineItems } from "./lineItems.js";
 import type {
   CheckoutSessionStatusResponse,
@@ -47,6 +46,7 @@ export const createStripeCheckoutSession = async ({
   returnURL,
   teamSlug,
   connectedAccountId,
+  metadata,
 }: CreateCheckoutSessionInput): Promise<CreateCheckoutSessionResponse> => {
   const separator = returnURL.includes("?") ? "&" : "?";
 
@@ -73,6 +73,13 @@ export const createStripeCheckoutSession = async ({
   // 0 is not a valid fee for Stripe, must be undefined if there's no fee amount
   const applicationFeeAmount = split?.applicationFeeAmount || undefined;
 
+  const paymentMetadata = {
+    ...metadata,
+    sessionId,
+    flowId,
+    teamSlug,
+  };
+
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     // TODO: Configure payment types
@@ -80,14 +87,13 @@ export const createStripeCheckoutSession = async ({
     line_items: lineItems,
     success_url: `${returnURL}${separator}stripeSessionId={CHECKOUT_SESSION_ID}`,
     cancel_url: `${returnURL}${separator}cancelled=true`,
-    // TODO: Add metadata
-    metadata: { sessionId, flowId },
+    metadata: paymentMetadata,
     payment_intent_data: {
       on_behalf_of: connectedAccountId,
       transfer_data: { destination: connectedAccountId },
       application_fee_amount: applicationFeeAmount,
       // PaymentIntent metadata is returned when the webhook is hit by Stripe
-      metadata: { sessionId, flowId, teamSlug } satisfies StripePaymentMetadata,
+      metadata: paymentMetadata,
     },
   });
 

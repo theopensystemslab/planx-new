@@ -12,7 +12,14 @@ export const createCheckoutSessionSchema = z.object({
     flowId: z.string().uuid(),
     amount: z.number().int().positive(),
     returnURL: z.string().url(),
-    // TODO: line_item data, metadata?
+    metadata: z
+      .object({
+        flow: z.string(),
+        source: z.string(),
+        paidViaInviteToPay: z.string(),
+      })
+      // All additional metadata must have string() values
+      .catchall(z.string()),
   }),
 });
 
@@ -23,6 +30,7 @@ export interface CreateCheckoutSessionInput {
   returnURL: string;
   teamSlug: string;
   connectedAccountId: string;
+  metadata: Record<string, string>;
 }
 
 export interface CreateCheckoutSessionResponse {
