@@ -88,7 +88,8 @@ const environments: Environment[] = [
   },
   {
     name: "staging",
-    description: "Used for testing new features and content",
+    description:
+      "Used for testing new features and content (all content will be overwritten by production overnight)",
     url: "https://editor.planx.dev",
   },
   // Only show this on Pizzas
