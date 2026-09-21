@@ -1,4 +1,5 @@
 import { reportError } from "../../pay/helpers.js";
+import { propagateMetadataToDestinationPayment } from "./destinationPayment/service.js";
 import { recordStripePaymentIntentStatus } from "./paymentStatus/service.js";
 import type { StripeWebhookController } from "./types.js";
 
@@ -21,6 +22,7 @@ export const handleStripeWebhook: StripeWebhookController = async (
         break;
       case "payment_intent.succeeded":
         await recordStripePaymentIntentStatus(event.data.object, "succeeded");
+        await propagateMetadataToDestinationPayment(event.data.object);
         break;
       case "payment_intent.payment_failed":
         await recordStripePaymentIntentStatus(
