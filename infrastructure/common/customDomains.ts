@@ -143,7 +143,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "maidstone",
           domain: "planningservices.maidstone.gov.uk",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
         {
           name: "adur-worthing",
