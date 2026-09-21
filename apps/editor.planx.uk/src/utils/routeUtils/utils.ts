@@ -49,6 +49,7 @@ const PREVIEW_ONLY_DOMAINS = [
   "planningservices.kingston.gov.uk",
   "planningservices.lambeth.gov.uk",
   "planningservices.lbbd.gov.uk",
+  "planningservices.maidstone.gov.uk",
   "planningservices.medway.gov.uk",
   "planningservices.newcastle.gov.uk",
   "planningservices.northumberland.gov.uk",
