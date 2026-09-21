@@ -22,5 +22,7 @@ type Config = NotifyConfig<
   EmailFooter & {
     teamName: string;
     content: string;
+    serviceName: string;
+    serviceLink: string;
   }
 >;
