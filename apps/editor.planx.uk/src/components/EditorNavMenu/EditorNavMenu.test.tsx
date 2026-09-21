@@ -82,6 +82,7 @@ const setRouteContext = (
 
 afterEach(() => {
   vi.clearAllMocks();
+  vi.unstubAllEnvs();
   mockAnalyticsLink = undefined;
 });
 
@@ -113,6 +114,8 @@ describe("teamLayoutRoutes", () => {
   beforeEach(() => {
     setRouteContext("/test-team", ["app", "app/$team"], { team: "test-team" });
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
+    // Dashboard nav item is only shown in production
+    vi.stubEnv("VITE_APP_ENV", "production");
   });
 
   it("only displays the external link routes for teamViewers", async () => {
@@ -147,6 +150,15 @@ describe("teamLayoutRoutes", () => {
 
     await user.click(getByRole("button", { name: "Settings" }));
     expect(getByRole("button", { name: /Team settings/ })).toBeInTheDocument();
+  });
+
+  it("hides Dashboard outside of production", async () => {
+    mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+    vi.stubEnv("VITE_APP_ENV", "staging");
+
+    const { getAllByRole, queryByText } = await setup(<EditorNavMenu />);
+    expect(getAllByRole("listitem")).toHaveLength(5);
+    expect(queryByText("Dashboard")).not.toBeInTheDocument();
   });
 
   it("displays subtitles for sections", async () => {
@@ -280,6 +292,8 @@ describe("layout", () => {
     setRouteContext("/test-team", ["app", "app/$team"], { team: "test-team" });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
+    // Dashboard nav item is only shown in production
+    vi.stubEnv("VITE_APP_ENV", "production");
 
     const { queryAllByRole, queryByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");

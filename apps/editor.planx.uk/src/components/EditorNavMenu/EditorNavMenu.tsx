@@ -56,12 +56,12 @@ import {
 } from "./styles";
 import type { MenuSection, Route } from "./types";
 
-const IS_PROD = import.meta.env.VITE_APP_ENV === "production";
-
 function EditorNavMenu() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { team: teamSlug, flow: flowSlug } = useParams({ strict: false });
+
+  const isProduction = import.meta.env.VITE_APP_ENV === "production";
 
   // Check route via matches to decide which mode menu items to display
   const matches = useMatches();
@@ -147,7 +147,7 @@ function EditorNavMenu() {
   const teamGroupedSections: MenuSection[] = [
     {
       routes: [
-        ...(teamSlug && !isSystemTeam(teamSlug) && IS_PROD
+        ...(teamSlug && !isSystemTeam(teamSlug) && isProduction
           ? [
               {
                 title: "Dashboard",
