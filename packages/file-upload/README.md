@@ -24,5 +24,5 @@ Consumers read `dist/`, never the TS source, so an edit here is invisible everyw
 
 If you do want edits to reflect live in `dist/` on save, run `pnpm watch:packages` from root in a second shell. Once `dist/` is rebuilt, the two consumers acknowledge it by different methods:
 
-- The **Editor** picks it up picks it up thanks to Vite, which resolves this package to its real path outside `node_modules` and serves it as source, so will be subject to HMR (hot module replacement) without dev-server restart.
+- The **Editor** picks it up thanks to Vite, which resolves this package to its real path outside `node_modules` and serves it as source, so will be subject to HMR (hot module replacement) without dev-server restart.
 - The **API**'s `tsx watch ...` script explicitly includes build files in `./packages/`, so that the container will also restart on any `dist/` rebuilds (as it will for any edit in `api.planx.uk/` proper).
