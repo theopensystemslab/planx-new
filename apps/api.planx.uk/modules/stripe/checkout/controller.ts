@@ -18,6 +18,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
 ) => {
   const { localAuthority } = res.locals.parsedReq.params;
   const { sessionId, flowId, amount, returnURL } = res.locals.parsedReq.body;
+  const { connectedAccountId } = res.locals;
 
   try {
     const result = await createStripeCheckoutSession({
@@ -26,6 +27,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
       amount,
       returnURL,
       teamSlug: localAuthority,
+      connectedAccountId,
     });
 
     return res.json(result);

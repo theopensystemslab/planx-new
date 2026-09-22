@@ -6,6 +6,7 @@ import {
   createCheckoutSession,
   getCheckoutSessionStatus,
 } from "./checkout/controller.js";
+import { resolveTeamPaymentProvider } from "./checkout/middleware.js";
 import {
   createCheckoutSessionSchema,
   getCheckoutSessionStatusSchema,
@@ -46,7 +47,7 @@ router.get(
 router.post(
   "/stripe/checkout-session/:localAuthority",
   validate(createCheckoutSessionSchema),
-  // TODO: Guard on connected accounts only
+  resolveTeamPaymentProvider,
   createCheckoutSession,
 );
 
