@@ -153,7 +153,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "swale",
           domain: "planningservices.swale.gov.uk",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
       ]
     : [
