@@ -1,4 +1,5 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -18,6 +19,7 @@ export interface Environment {
   name: string;
   description: string;
   url: string;
+  pullRequestUrl?: string;
 }
 
 export interface Props {
@@ -80,6 +82,10 @@ const CardContent = styled(Box)(({ theme }) => ({
   alignItems: "flex-start",
 }));
 
+// Pizza environments are hosted at https://<PR number>.planx.pizza
+const getPizzaPullRequestNumber = (): string | undefined =>
+  window.location.hostname.match(/^(\d+)\.planx\.pizza$/)?.[1];
+
 const environments: Environment[] = [
   {
     name: "production",
@@ -100,6 +106,9 @@ const environments: Environment[] = [
           description:
             "Temporary environment used for testing new features and content",
           url: window.location.href,
+          pullRequestUrl: getPizzaPullRequestNumber()
+            ? `https://github.com/theopensystemslab/planx-new/pull/${getPizzaPullRequestNumber()}`
+            : undefined,
         },
       ]
     : []),
@@ -122,6 +131,8 @@ const ENV_DISPLAY_NAMES: Record<string, string> = {
 const EnvironmentSelect: React.FC = () => {
   const [open, setOpen] = useState(false);
   const currentEnv = import.meta.env.VITE_APP_ENV;
+  const pizzaPullRequestNumber =
+    currentEnv === "pizza" ? getPizzaPullRequestNumber() : undefined;
   const displayEnv = ENV_DISPLAY_NAMES[currentEnv] ?? currentEnv;
   const { pathname } = useLocation();
 
@@ -131,7 +142,14 @@ const EnvironmentSelect: React.FC = () => {
   return (
     <Root>
       <StyledButtonBase onClick={handleOpen} selected={false}>
-        {displayEnv}
+        {pizzaPullRequestNumber ? (
+          <>
+            <GitHubIcon fontSize="small" sx={{ mr: 0.5 }} />
+            {pizzaPullRequestNumber}
+          </>
+        ) : (
+          displayEnv
+        )}
         <UnfoldMoreIcon fontSize="small" />
       </StyledButtonBase>
       <StyledDialog
@@ -224,6 +242,26 @@ const EnvironmentSelect: React.FC = () => {
                   )}
                 </CardContent>
               </CardActionArea>
+              {/* Render pull request link outside CardActionArea to prevent nested links */}
+              {env.pullRequestUrl && (
+                <Typography
+                  component="a"
+                  href={env.pullRequestUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="body4"
+                  sx={{
+                    display: "block",
+                    px: 1,
+                    pb: 1.25,
+                    color: "link.main",
+                    overflowWrap: "break-word",
+                    wordBreak: "break-all",
+                  }}
+                >
+                  {env.pullRequestUrl}
+                </Typography>
+              )}
             </StyledCard>
           ))}
         </Stack>
