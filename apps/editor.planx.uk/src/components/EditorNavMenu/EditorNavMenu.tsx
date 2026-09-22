@@ -61,6 +61,8 @@ function EditorNavMenu() {
   const { pathname } = useLocation();
   const { team: teamSlug, flow: flowSlug } = useParams({ strict: false });
 
+  const isProduction = import.meta.env.VITE_APP_ENV === "production";
+
   // Check route via matches to decide which mode menu items to display
   const matches = useMatches();
   const isFlowRoute = matches.some((match) => match.routeId.includes("$flow"));
@@ -145,7 +147,7 @@ function EditorNavMenu() {
   const teamGroupedSections: MenuSection[] = [
     {
       routes: [
-        ...(teamSlug && !isSystemTeam(teamSlug)
+        ...(teamSlug && !isSystemTeam(teamSlug) && isProduction
           ? [
               {
                 title: "Dashboard",
