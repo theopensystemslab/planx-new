@@ -1,4 +1,5 @@
 import { richText } from "lib/yupExtensions";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import type { SchemaOf } from "yup";
 import { object, string } from "yup";
 
@@ -39,11 +40,9 @@ export const contactValidationSchema = (): SchemaOf<Contact> =>
     phone: string()
       .trim()
       .required("Enter a phone number")
-      .test("length", "Phone number must be a valid length", (val) => {
-        if (val == undefined) {
-          return true;
-        }
-        return val.length >= 9 && val.length <= 17;
+      .test("valid-phone", "Enter a valid phone number", (val) => {
+        if (val == undefined) return true;
+        return isValidPhoneNumber(val, "GB");
       }),
     email: string()
       .trim()

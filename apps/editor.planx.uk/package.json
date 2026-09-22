@@ -54,6 +54,7 @@
     "idb": "^8.0.3",
     "immer": "^9.0.21",
     "js-cookie": "^3.0.8",
+    "libphonenumber-js": "^1.13.13",
     "lodash": "catalog:lodash",
     "mathjs": "^11.12.0",
     "msw": "^2.15.0",
