@@ -11,6 +11,11 @@ export const usePaymentFlow = (
   fee: number,
 ): UsePaymentProviderResult => {
   const providerName = usePaymentProvider();
+
+  // Type-narrowing only, should never throw
+  // Kept here as a guardrail during migration process
+  if (!providerName) throw Error("No payment provider found");
+
   const govPay = useGovUkPay(props, dispatch, fee);
   const stripe = useStripePay(props, dispatch, fee);
 

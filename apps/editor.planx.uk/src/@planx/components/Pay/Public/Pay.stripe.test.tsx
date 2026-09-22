@@ -1,3 +1,4 @@
+import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useSearch } from "@tanstack/react-router";
 import { act, screen, waitFor } from "@testing-library/react";
@@ -67,8 +68,16 @@ const feeBreadcrumbs: Breadcrumbs = {
   },
 };
 
-describe("Pay component with Stripe provider (feature flag on)", () => {
+describe("Pay component with Stripe provider (team on Stripe)", () => {
   beforeAll(() => (initialState = getState()));
+
+  beforeEach(() =>
+    act(() =>
+      setState({
+        teamSettings: { paymentProvider: "stripe" } as TeamSettings,
+      }),
+    ),
+  );
 
   afterEach(() => {
     vi.clearAllMocks();

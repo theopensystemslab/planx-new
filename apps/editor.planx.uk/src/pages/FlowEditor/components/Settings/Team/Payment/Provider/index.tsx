@@ -10,6 +10,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import type { TeamSettings } from "@opensystemslab/planx-core/types";
+import { usePaymentProvider } from "@planx/components/Pay/Public/hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -50,9 +51,7 @@ const checkActiveSessions = async (
 const Provider: React.FC = () => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
-  const paymentProvider = useStore(
-    (state) => state.teamSettings?.paymentProvider,
-  );
+  const paymentProvider = usePaymentProvider();
   const [provider, setProvider] =
     useState<TeamSettings["paymentProvider"]>(paymentProvider);
   const [dialogState, setDialogState] = useState<DialogState>({
