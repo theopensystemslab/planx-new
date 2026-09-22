@@ -35,7 +35,7 @@ const Details: React.FC = () => {
       queryVariables={{ teamId }}
       mutation={UPDATE_TEAM_INVOICE_DETAILS}
       getInitialValues={({ teamInvoiceDetails: [teamInvoiceDetails] }) => ({
-        businessName: teamInvoiceDetails?.businessName ?? "",
+        organisationName: teamInvoiceDetails?.organisationName ?? "",
         emailAddress: teamInvoiceDetails?.emailAddress ?? "",
         companyRegistration: teamInvoiceDetails?.companyRegistration ?? "",
         vatNumber: teamInvoiceDetails?.vatNumber ?? "",
@@ -43,7 +43,7 @@ const Details: React.FC = () => {
       getMutationVariables={(values) => ({
         teamId,
         teamInvoiceDetails: {
-          business_name: values.businessName,
+          organisation_name: values.organisationName,
           email_address: values.emailAddress,
           company_registration: values.companyRegistration || undefined,
           vat_number: values.vatNumber,
@@ -68,15 +68,15 @@ const Details: React.FC = () => {
     >
       {({ formik }) => (
         <>
-          <InputLabel label="Organisation name" htmlFor="businessName">
+          <InputLabel label="Organisation name" htmlFor="organisationName">
             <Input
-              name="businessName"
+              name="organisationName"
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                formik.setFieldValue("businessName", e.target.value)
+                formik.setFieldValue("organisationName", e.target.value)
               }
-              value={formik.values.businessName}
-              errorMessage={formik.errors.businessName}
-              id="businessName"
+              value={formik.values.organisationName}
+              errorMessage={formik.errors.organisationName}
+              id="organisationName"
             />
           </InputLabel>
 

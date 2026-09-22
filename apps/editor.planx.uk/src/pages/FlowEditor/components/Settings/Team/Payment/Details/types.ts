@@ -1,5 +1,5 @@
 export interface InvoiceDetailsFormValues {
-  businessName: string;
+  organisationName: string;
   emailAddress: string;
   companyRegistration?: string;
   vatNumber: string;
@@ -12,7 +12,7 @@ export interface GetTeamInvoiceDetailsData {
 export interface UpdateTeamInvoiceDetailsVariables {
   teamId: number;
   teamInvoiceDetails: {
-    business_name: string;
+    organisation_name: string;
     email_address: string;
     company_registration?: string;
     vat_number: string;
