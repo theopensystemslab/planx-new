@@ -78,7 +78,7 @@
     "test:watch": "TZ=Europe/London vitest --ui --coverage",
     "test": "TZ=Europe/London vitest run",
     "typecheck": "tsc --noEmit",
-    "watch": "tsx watch index.ts"
+    "watch": "tsx watch --include '../../packages/*/dist/**' index.ts"
   },
   "prettier": "@planx/prettier-config",
   "devDependencies": {

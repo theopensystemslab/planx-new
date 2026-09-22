@@ -67,7 +67,7 @@ Some slices use the `zustand/persist` middleware (e.g. `editorUIStore` in `edito
 
 **Testing** — Vitest everywhere (`editor.planx.uk`, `api.planx.uk`), Playwright + Gherkin for `e2e`. `api.planx.uk` tests run with `TZ=Europe/London` pinned — don't assume UTC when writing date-sensitive backend tests.
 
-**Task running** — [Turborepo](https://turborepo.com) (`turbo.json`) orchestrates tasks over the workspace. From the repo root, `pnpm typecheck` / `pnpm lint` / `pnpm check` / `pnpm build` fan out across all packages with caching; use `--filter` to scope. `test` is intentionally not a root Turbo task currently (some tests are container dependent).
+**Task running** — [Turborepo](https://turborepo.com) (`turbo.json`) orchestrates tasks over the workspace. From the repo root, `pnpm typecheck` / `pnpm lint` / `pnpm check` / `pnpm build` fan out across all packages with caching; use `--filter` to scope. `test` is intentionally not a root Turbo task currently (some tests are container dependent). Prefer these turbo-routed entry points: compiled workspace packages (`packages/file-upload`) are only guaranteed to be built via Turbo's `^build`, which raw invocations like `pnpm --filter <app> test` or a bare `vite`/`vitest` bypass. `scripts/build-packages.sh` (root `postinstall`/`prestart`, `.husky/post-merge`) is the backstop — see `packages/file-upload/README.md`.
 
 **Linting/formatting** — ESLint (flat config, `eslint.config.*`) + Prettier per-package, wired into `lint-staged`/Husky at the repo root. Run `pnpm lint:fix` (or a package's `check` script, which also runs `tsc --noEmit`) rather than hand-formatting.
 
