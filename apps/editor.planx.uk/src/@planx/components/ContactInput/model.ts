@@ -36,7 +36,15 @@ export const contactValidationSchema = (): SchemaOf<Contact> =>
         return val.length > 1;
       }),
     organisation: string(),
-    phone: string().trim().required("Enter a phone number"),
+    phone: string()
+      .trim()
+      .required("Enter a phone number")
+      .test("length", "Phone number must be a valid length", (val) => {
+        if (val == undefined) {
+          return true;
+        }
+        return val.length >= 9 && val.length <= 17;
+      }),
     email: string()
       .trim()
       .email(
