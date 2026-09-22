@@ -157,7 +157,7 @@ const EnvironmentSelect: React.FC = () => {
         slotProps={{
           paper: {
             sx: {
-              width: 340,
+              width: 400,
               display: "flex",
               flexDirection: "column",
               borderRadius: (theme) => `${theme.shape.borderRadius}px`,
