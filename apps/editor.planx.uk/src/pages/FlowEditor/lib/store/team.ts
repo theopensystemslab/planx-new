@@ -4,6 +4,7 @@ import type {
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
+import { getEnvironmentLogo } from "ui/icons/logos";
 import { setFavicon } from "utils/favicon";
 import type { StateCreator } from "zustand";
 
@@ -25,11 +26,6 @@ export interface TeamStore {
   getTeam: () => Team;
   clearTeamStore: () => void;
 }
-
-const generateCircleFavicon = (color: string): string => {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="${color}"/></svg>`;
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
-};
 
 export const teamStore: StateCreator<
   TeamStore & SharedStore,
@@ -63,8 +59,8 @@ export const teamStore: StateCreator<
     if (options.useCustomFavicon && team.theme?.favicon) {
       setFavicon(team.theme.favicon);
     } else {
-      const color = team.theme?.primaryColour ?? DEFAULT_PRIMARY_COLOR;
-      setFavicon(generateCircleFavicon(color));
+      const colour = team.theme?.primaryColour ?? DEFAULT_PRIMARY_COLOR;
+      setFavicon(getEnvironmentLogo(colour));
     }
   },
 

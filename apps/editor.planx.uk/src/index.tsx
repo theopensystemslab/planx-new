@@ -19,15 +19,19 @@ import React, { Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { Bounce, ToastContainer } from "react-toastify";
 import { router } from "router";
+import { getEnvironmentLogo } from "ui/icons/logos";
+import { setFavicon } from "utils/favicon";
 
 // init airbrake before everything else
 import * as airbrake from "./airbrake";
 import { client } from "./lib/graphql";
-import { defaultTheme } from "./theme";
+import { DEFAULT_PRIMARY_COLOR, defaultTheme } from "./theme";
 
 if (import.meta.env.VITE_APP_ENV !== "production") {
   console.log(`ENV: ${import.meta.env.VITE_APP_ENV}`);
 }
+
+setFavicon(getEnvironmentLogo(DEFAULT_PRIMARY_COLOR));
 
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
