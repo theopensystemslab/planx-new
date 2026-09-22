@@ -17,8 +17,24 @@ export type Contact = {
 export const contactValidationSchema = (): SchemaOf<Contact> =>
   object({
     title: string(),
-    firstName: string().trim().required("Enter a first name"),
-    lastName: string().trim().required("Enter a last name"),
+    firstName: string()
+      .trim()
+      .required("Enter a first name")
+      .test("length", "First name must have more than one character", (val) => {
+        if (val == undefined) {
+          return true;
+        }
+        return val.length > 1;
+      }),
+    lastName: string()
+      .trim()
+      .required("Enter a last name")
+      .test("length", "Last name must have more than one character", (val) => {
+        if (val == undefined) {
+          return true;
+        }
+        return val.length > 1;
+      }),
     organisation: string(),
     phone: string().trim().required("Enter a phone number"),
     email: string()
