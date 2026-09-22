@@ -14,7 +14,7 @@ insert_permissions:
         - team_id
         - address_line1
         - address_line2
-        - business_name
+        - organisation_name
         - company_registration
         - county
         - email_address
@@ -30,7 +30,7 @@ select_permissions:
         - team_id
         - address_line1
         - address_line2
-        - business_name
+        - organisation_name
         - company_registration
         - county
         - email_address
@@ -46,7 +46,7 @@ select_permissions:
         - team_id
         - address_line1
         - address_line2
-        - business_name
+        - organisation_name
         - company_registration
         - county
         - email_address
@@ -68,7 +68,7 @@ update_permissions:
       columns:
         - address_line1
         - address_line2
-        - business_name
+        - organisation_name
         - company_registration
         - county
         - email_address
@@ -84,7 +84,7 @@ update_permissions:
       columns:
         - address_line1
         - address_line2
-        - business_name
+        - organisation_name
         - company_registration
         - county
         - email_address

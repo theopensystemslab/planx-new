@@ -4,7 +4,7 @@ import type { InvoiceDetailsFormValues } from "./types";
 
 export const validationSchema: SchemaOf<InvoiceDetailsFormValues> =
   object().shape({
-    businessName: string().required(
+    organisationName: string().required(
       "Enter an organisation name for the invoice to be addressed to",
     ),
     emailAddress: string()
@@ -17,7 +17,7 @@ export const validationSchema: SchemaOf<InvoiceDetailsFormValues> =
   });
 
 export const defaultValues: InvoiceDetailsFormValues = {
-  businessName: "",
+  organisationName: "",
   emailAddress: "",
   companyRegistration: "",
   vatNumber: "",

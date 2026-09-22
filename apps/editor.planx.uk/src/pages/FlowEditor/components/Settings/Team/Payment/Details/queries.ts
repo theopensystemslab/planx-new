@@ -6,7 +6,7 @@ export const GET_TEAM_INVOICE_DETAILS = gql`
       where: { team_id: { _eq: $teamId } }
     ) {
       id
-      businessName: business_name
+      organisationName: organisation_name
       emailAddress: email_address
       companyRegistration: company_registration
       vatNumber: vat_number
@@ -25,7 +25,7 @@ export const UPDATE_TEAM_INVOICE_DETAILS = gql`
     ) {
       returning {
         id
-        businessName: business_name
+        organisationName: organisation_name
         emailAddress: email_address
         companyRegistration: company_registration
         vatNumber: vat_number
