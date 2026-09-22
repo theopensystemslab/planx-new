@@ -31,8 +31,8 @@ const LogoLink = styled(CustomLink)(({ theme }) => ({
 }));
 
 const LogoIcon = styled("img")({
-  width: 20,
-  height: 20,
+  width: 22,
+  height: 22,
 });
 
 export interface NavMenuHeaderProps {
