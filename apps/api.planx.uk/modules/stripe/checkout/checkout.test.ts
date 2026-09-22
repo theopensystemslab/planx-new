@@ -201,6 +201,18 @@ describe("creating a Stripe Checkout Session", () => {
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
+  it("rejects a source other than the fixed PlanX default", async () => {
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send({
+        ...validBody,
+        metadata: { ...defaultMetadata, source: "SomewhereElse" },
+      })
+      .expect(400);
+
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
   it("rejects metadata missing a required default key", async () => {
     const { paidViaInviteToPay: _omit, ...incompleteMetadata } =
       defaultMetadata;

@@ -15,7 +15,7 @@ export const createCheckoutSessionSchema = z.object({
     metadata: z
       .object({
         flow: z.string(),
-        source: z.string(),
+        source: z.literal("PlanX"),
         paidViaInviteToPay: z.string(),
       })
       // All additional metadata must have string() values

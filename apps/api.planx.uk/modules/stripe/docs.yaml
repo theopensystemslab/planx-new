@@ -59,7 +59,9 @@ components:
                     example: "Apply for planning permission"
                   source:
                     type: string
-                    example: "PlanX"
+                    enum:
+                      - "PlanX"
+                    description: Fixed PlanX default
                   paidViaInviteToPay:
                     type: string
                     example: "false"
