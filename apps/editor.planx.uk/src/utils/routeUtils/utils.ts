@@ -59,6 +59,7 @@ const PREVIEW_ONLY_DOMAINS = [
   "planningservices.stalbans.gov.uk",
   "planningservices.stockport.gov.uk",
   "planningservices.stoke.gov.uk",
+  "planningservices.swale.gov.uk",
   "planningservices.tewkesbury.gov.uk",
   "planningservices.westberks.gov.uk",
   "planx.adur-worthing.gov.uk",
