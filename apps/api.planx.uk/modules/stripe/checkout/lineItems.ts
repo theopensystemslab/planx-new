@@ -28,7 +28,7 @@ export const buildLineItems = (feeBreakdown: FeeBreakdown): LineItem[] => {
   const secondaryLines = [
     { name: "Fast Track fee", total: amount.fastTrack + amount.fastTrackVAT },
     {
-      name: "Service charge",
+      name: "PlanX service charge",
       total: amount.serviceCharge + amount.serviceChargeVAT,
     },
   ]

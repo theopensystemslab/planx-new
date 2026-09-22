@@ -50,8 +50,8 @@ const mockPassportLookup = (passportData: unknown = null) =>
 const feeBreakdownPassport = {
   "application.fee.calculated": 121,
   "application.fee.payable": 145,
-  "application.fee.serviceCharge": 20,
-  "application.fee.serviceCharge.VAT": 4,
+  "application.fee.serviceCharge": 40,
+  "application.fee.serviceCharge.VAT": 8,
 };
 
 describe("creating a Stripe Checkout Session", () => {
@@ -94,15 +94,15 @@ describe("creating a Stripe Checkout Session", () => {
             price_data: {
               currency: "gbp",
               product_data: { name: "Application fee" },
-              unit_amount: 12100,
+              unit_amount: 9700,
             },
             quantity: 1,
           },
           {
             price_data: {
               currency: "gbp",
-              product_data: { name: "Service charge" },
-              unit_amount: 2400,
+              product_data: { name: "PlanX service charge" },
+              unit_amount: 4800,
             },
             quantity: 1,
           },
@@ -118,7 +118,7 @@ describe("creating a Stripe Checkout Session", () => {
         payment_intent_data: {
           on_behalf_of: STRIPE_ACCOUNT_ID,
           transfer_data: { destination: STRIPE_ACCOUNT_ID },
-          application_fee_amount: 2400,
+          application_fee_amount: 4800,
           metadata: {
             sessionId: validBody.sessionId,
             flowId: validBody.flowId,
@@ -136,7 +136,7 @@ describe("creating a Stripe Checkout Session", () => {
       .expect(200);
 
     const { payment_intent_data } = mockCreate.mock.calls[0][0];
-    expect(payment_intent_data.application_fee_amount).toBe(2400);
+    expect(payment_intent_data.application_fee_amount).toBe(4800);
   });
 
   it("omits the application fee when there is no fee breakdown to split", async () => {
@@ -171,8 +171,8 @@ describe("creating a Stripe Checkout Session", () => {
       "application.fee.calculated": 100,
       "application.fee.payable": 165,
       "application.fee.payable.VAT": 11,
-      "application.fee.serviceCharge": 25,
-      "application.fee.serviceCharge.VAT": 5,
+      "application.fee.serviceCharge": 40,
+      "application.fee.serviceCharge.VAT": 8,
       "application.fee.fastTrack": 20,
       "application.fee.fastTrack.VAT": 4,
       "application.fee.paymentProcessing": 5,
@@ -192,9 +192,9 @@ describe("creating a Stripe Checkout Session", () => {
         }) => [item.price_data.product_data.name, item.price_data.unit_amount],
       ),
     ).toEqual([
-      ["Application fee", 11100],
+      ["Application fee", 9300],
       ["Fast Track fee", 2400],
-      ["Service charge", 3000],
+      ["PlanX service charge", 4800],
     ]);
 
     const total = line_items.reduce(

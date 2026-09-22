@@ -21,13 +21,13 @@ describe("buildLineItems", () => {
     const feeBreakdown = getFeeBreakdown({
       "application.fee.calculated": 121,
       "application.fee.payable": 145,
-      "application.fee.serviceCharge": 20,
-      "application.fee.serviceCharge.VAT": 4,
+      "application.fee.serviceCharge": 40,
+      "application.fee.serviceCharge.VAT": 8,
     });
 
     expect(names(buildLineItems(feeBreakdown))).toEqual([
-      ["Application fee", 12100],
-      ["Service charge", 2400],
+      ["Application fee", 9700],
+      ["PlanX service charge", 4800],
     ]);
   });
 
@@ -47,20 +47,18 @@ describe("buildLineItems", () => {
       "application.fee.calculated": 100,
       "application.fee.payable": 165,
       "application.fee.payable.VAT": 11,
-      "application.fee.serviceCharge": 25,
-      "application.fee.serviceCharge.VAT": 5,
+      "application.fee.serviceCharge": 40,
+      "application.fee.serviceCharge.VAT": 8,
       "application.fee.fastTrack": 20,
       "application.fee.fastTrack.VAT": 4,
-      "application.fee.paymentProcessing": 5,
-      "application.fee.paymentProcessing.VAT": 1,
     });
 
     const items = buildLineItems(feeBreakdown);
 
     expect(names(items)).toEqual([
-      ["Application fee", 11100],
+      ["Application fee", 9300],
       ["Fast Track fee", 2400],
-      ["Service charge", 3000],
+      ["PlanX service charge", 4800],
     ]);
     expect(total(items)).toBe(16500);
   });
