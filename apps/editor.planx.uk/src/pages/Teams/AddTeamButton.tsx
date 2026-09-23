@@ -24,6 +24,7 @@ import { useCreateTeam } from "./hooks/useCreateTeam";
 export interface CreateTeam {
   name: string;
   slug: string;
+  isLpa: boolean;
   settings: {
     isTrial: boolean;
   };
@@ -32,6 +33,7 @@ export interface CreateTeam {
 const validationSchema: SchemaOf<CreateTeam> = object({
   name: string().required("Name is required"),
   slug: string().required("Slug is required"),
+  isLpa: boolean().required(),
   settings: object({
     isTrial: boolean().required(),
   }),
@@ -46,6 +48,7 @@ export const AddTeamButton: React.FC = () => {
   const initialValues: CreateTeam = {
     name: "",
     slug: "",
+    isLpa: true,
     settings: {
       isTrial: false,
     },
@@ -59,6 +62,7 @@ export const AddTeamButton: React.FC = () => {
       await createTeam({
         name: values.name,
         slug: values.slug,
+        isLpa: values.isLpa,
         settings: values.settings,
       });
 
@@ -127,6 +131,17 @@ export const AddTeamButton: React.FC = () => {
                       startAdornment={<URLPrefix mode="team" />}
                     />
                   </InputLabel>
+                  <Switch
+                    name="isLpa"
+                    checked={values.isLpa}
+                    onChange={() => setFieldValue("isLpa", !values.isLpa)}
+                    label={"Local planning authority"}
+                  />
+                  <Typography variant="body2" sx={{ mt: -2 }}>
+                    Turn off for internal, testing or template teams. Only local
+                    planning authorities are included in platform-wide
+                    reporting.
+                  </Typography>
                   <Switch
                     name="isTrial"
                     checked={values.settings.isTrial}
