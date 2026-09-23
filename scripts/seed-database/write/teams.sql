@@ -5,8 +5,7 @@ CREATE TEMPORARY TABLE sync_teams (
   slug text,
   created_at timestamptz,
   updated_at timestamptz,
-  domain text,
-  is_lpa boolean
+  domain text
 );
 
 \copy sync_teams FROM '/tmp/teams.csv' WITH (FORMAT csv, DELIMITER ';');
@@ -14,19 +13,16 @@ CREATE TEMPORARY TABLE sync_teams (
 INSERT INTO teams (
   id,
   name,
-  slug,
-  is_lpa
+  slug
 )
 SELECT
   id,
   name,
-  slug,
-  is_lpa
+  slug
 FROM sync_teams
 ON CONFLICT (id) DO UPDATE
 SET
   name = EXCLUDED.name,
-  slug = EXCLUDED.slug,
-  is_lpa = EXCLUDED.is_lpa;
+  slug = EXCLUDED.slug;
 
 SELECT setval('teams_id_seq', max(id)) FROM teams;
