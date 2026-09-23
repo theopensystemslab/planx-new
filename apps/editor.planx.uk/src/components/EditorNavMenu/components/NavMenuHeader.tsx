@@ -11,7 +11,7 @@ const HeaderRoot = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "space-between",
   backgroundColor: theme.palette.background.paper,
-  padding: theme.spacing(1, 0.85),
+  padding: theme.spacing(0.5, 0.8),
   borderRight: `1px solid ${theme.palette.divider}`,
   marginTop: theme.spacing(0.25),
   width: "100%",

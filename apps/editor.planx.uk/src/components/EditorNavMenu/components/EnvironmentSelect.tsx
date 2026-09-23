@@ -50,15 +50,13 @@ const EnvironmentRow = styled(Box)(({ theme }) => ({
   },
 }));
 
-const ROW_PADDING = (theme: Theme) => theme.spacing(1.5);
-
 const rowButtonSx: SxProps<Theme> = {
   width: "100%",
   justifyContent: "flex-start",
   alignItems: "flex-start",
   textAlign: "left",
   gap: 1,
-  padding: ROW_PADDING,
+  padding: (theme) => theme.spacing(1.5),
   "&:hover": {
     backgroundColor: "background.disabled",
   },
@@ -249,7 +247,7 @@ const EnvironmentSelect: React.FC = () => {
                   variant="body4"
                   sx={{
                     display: "block",
-                    padding: ROW_PADDING,
+                    padding: (theme) => theme.spacing(0, 4.5, 1.5, 4.5),
                     backgroundColor: "background.disabled",
                     color: "link.main",
                     overflowWrap: "break-word",
