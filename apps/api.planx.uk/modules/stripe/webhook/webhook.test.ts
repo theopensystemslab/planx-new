@@ -1,3 +1,6 @@
+import { mkdtempSync, rmSync, writeFileSync } from "fs";
+import { tmpdir } from "os";
+import { join } from "path";
 import type Stripe from "stripe";
 import supertest from "supertest";
 
@@ -81,6 +84,54 @@ describe("receiving a Stripe webhook", () => {
         JSON.stringify({ type: "payment_intent.succeeded" }),
         "t=1,v1=placeholder",
       ).expect(500);
+    });
+  });
+
+  describe("reading the signing secret from STRIPE_WEBHOOK_SECRET_FILE", () => {
+    const fileSecret = "whsec_from_sidecar_file";
+    const payload = JSON.stringify({
+      id: "evt_file",
+      type: "customer.created",
+    });
+
+    const signWith = (secret: string) =>
+      stripe.webhooks.generateTestHeaderString({ payload, secret });
+
+    let dir: string;
+
+    beforeEach(() => {
+      dir = mkdtempSync(join(tmpdir(), "stripe-webhook-secret-"));
+    });
+
+    afterEach(() => rmSync(dir, { recursive: true, force: true }));
+
+    it("prefers the file secret over STRIPE_WEBHOOK_SECRET", async () => {
+      const secretFile = join(dir, "webhook-secret");
+      writeFileSync(secretFile, `${fileSecret}\n`);
+      vi.stubEnv("STRIPE_WEBHOOK_SECRET_FILE", secretFile);
+
+      await post(payload, signWith(fileSecret)).expect(200);
+      await post(payload, signWith(process.env.STRIPE_WEBHOOK_SECRET!)).expect(
+        400,
+      );
+    });
+
+    it("falls back to STRIPE_WEBHOOK_SECRET when the file doesn't exist", async () => {
+      vi.stubEnv("STRIPE_WEBHOOK_SECRET_FILE", join(dir, "missing"));
+
+      await post(payload, signWith(process.env.STRIPE_WEBHOOK_SECRET!)).expect(
+        200,
+      );
+    });
+
+    it("falls back to STRIPE_WEBHOOK_SECRET when the file is empty", async () => {
+      const secretFile = join(dir, "webhook-secret");
+      writeFileSync(secretFile, "");
+      vi.stubEnv("STRIPE_WEBHOOK_SECRET_FILE", secretFile);
+
+      await post(payload, signWith(process.env.STRIPE_WEBHOOK_SECRET!)).expect(
+        200,
+      );
     });
   });
 
