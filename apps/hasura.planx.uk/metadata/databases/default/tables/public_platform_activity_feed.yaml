@@ -10,6 +10,7 @@ select_permissions:
         - event_time
         - team_name
         - team_slug
+        - is_trial
         - flow_name
         - flow_slug
       filter: {}
@@ -22,6 +23,7 @@ select_permissions:
         - event_time
         - team_name
         - team_slug
+        - is_trial
         - flow_name
         - flow_slug
       filter: {}
@@ -34,6 +36,7 @@ select_permissions:
         - event_time
         - team_name
         - team_slug
+        - is_trial
         - flow_name
         - flow_slug
       filter: {}
@@ -46,6 +49,7 @@ select_permissions:
         - event_time
         - team_name
         - team_slug
+        - is_trial
         - flow_name
         - flow_slug
       filter: {}

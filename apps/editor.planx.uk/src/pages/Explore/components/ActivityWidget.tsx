@@ -36,17 +36,41 @@ interface ActivityWidgetProps {
 }
 
 interface ActivityMessage {
-  primary: string;
+  primary: React.ReactNode;
   secondary?: string;
 }
+
+const TrialIndicator = ({ event }: { event: ActivityEvent }) =>
+  event.isTrial ? (
+    <Typography
+      component="span"
+      variant="body1"
+      sx={{ color: "text.secondary", fontWeight: "normal" }}
+    >
+      {" "}
+      (trial)
+    </Typography>
+  ) : null;
 
 function getActivityMessage(event: ActivityEvent): ActivityMessage {
   switch (event.type) {
     case ActivityEventType.TeamJoined:
-      return { primary: `${event.teamName} joined Plan✕` };
+      return {
+        primary: (
+          <>
+            {event.teamName} joined Plan✕
+            <TrialIndicator event={event} />
+          </>
+        ),
+      };
     case ActivityEventType.ServiceOnline:
       return {
-        primary: `${event.teamName} set a service online`,
+        primary: (
+          <>
+            {event.teamName} set a service online
+            <TrialIndicator event={event} />
+          </>
+        ),
         secondary: event.flowName ?? undefined,
       };
   }
