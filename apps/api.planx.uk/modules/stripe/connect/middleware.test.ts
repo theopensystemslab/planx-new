@@ -1,8 +1,10 @@
 import type { Request } from "express";
+import z from "zod";
 
 import { ServerError } from "../../../errors/index.js";
 import {
   consumeConnectState,
+  generateNonce,
   requireStripeConnectTeamAuth,
   setConnectState,
   verifyState,
@@ -82,6 +84,18 @@ describe("setConnectState / verifyState", () => {
     const req = { session: null } as unknown as Request;
 
     expect(consumeConnectState(req)).toBeUndefined();
+  });
+});
+
+describe("generateNonce", () => {
+  it("returns a unique UUID on each call", () => {
+    const first = generateNonce();
+    const second = generateNonce();
+
+    expect(z.string().uuid().safeParse(first).success).toBe(true);
+    expect(z.string().uuid().safeParse(second).success).toBe(true);
+
+    expect(first).not.toBe(second);
   });
 });
 
