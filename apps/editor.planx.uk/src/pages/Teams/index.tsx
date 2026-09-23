@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import type { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React, { useEffect, useMemo, useState } from "react";
 import { focusStyle } from "theme";
-import { InfoChip } from "ui/editor/InfoChip";
+import { InfoChip, NonLpaChip } from "ui/editor/InfoChip";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
@@ -81,7 +81,10 @@ const Teams: React.FC<Props> = ({ teams }) => {
                 {team.name}
               </Typography>
             </Box>
-            {team.settings.isTrial && <InfoChip label="Trial account" />}
+            <Box sx={{ display: "flex", gap: 1 }}>
+              {!team.isLpa && <NonLpaChip label="Non-LPA" />}
+              {team.settings.isTrial && <InfoChip label="Trial account" />}
+            </Box>
           </TeamCard>
         </StyledLink>
       );
