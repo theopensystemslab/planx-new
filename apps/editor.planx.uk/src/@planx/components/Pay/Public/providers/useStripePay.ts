@@ -1,3 +1,5 @@
+import { formatStripeMetadata } from "@opensystemslab/planx-core";
+import type { Passport as IPassport } from "@opensystemslab/planx-core/types";
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
 import {
@@ -10,7 +12,7 @@ import { useErrorBoundary } from "react-error-boundary";
 import { ApplicationPath } from "types";
 
 import { makeData } from "../../../shared/utils";
-import { toPence } from "../../model";
+import { getDefaultContent, toPence } from "../../model";
 import type { Props } from "../Pay";
 import type { StripeAction } from "../types";
 import { Action } from "../types";
@@ -41,12 +43,24 @@ export function useStripePay(
   dispatch: React.Dispatch<StripeAction>,
   fee: number,
 ): UsePaymentProviderResult {
-  const [flowId, sessionId, teamSlug, environment] = useStore((state) => [
-    state.id,
-    state.sessionId,
-    state.teamSlug,
-    state.previewEnvironment,
-  ]);
+  const [flowId, sessionId, teamSlug, environment, passport] = useStore(
+    (state) => [
+      state.id,
+      state.sessionId,
+      state.teamSlug,
+      state.previewEnvironment,
+      state.computePassport(),
+    ],
+  );
+
+  const metadata = formatStripeMetadata({
+    metadata: [
+      ...(props.govPayMetadata || []),
+      ...getDefaultContent().govPayMetadata,
+    ],
+    userPassport: passport as IPassport,
+    paidViaInviteToPay: false,
+  });
 
   const { showBoundary } = useErrorBoundary();
 
@@ -98,6 +112,7 @@ export function useStripePay(
         flowId,
         amount: toPence(fee),
         returnURL: getStripeReturnURL(),
+        metadata,
       });
 
       if (!url) {

@@ -17,7 +17,8 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
   next,
 ) => {
   const { localAuthority } = res.locals.parsedReq.params;
-  const { sessionId, flowId, amount, returnURL } = res.locals.parsedReq.body;
+  const { sessionId, flowId, amount, returnURL, metadata } =
+    res.locals.parsedReq.body;
   const { connectedAccountId } = res.locals;
 
   try {
@@ -28,6 +29,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
       returnURL,
       teamSlug: localAuthority,
       connectedAccountId,
+      metadata,
     });
 
     return res.json(result);

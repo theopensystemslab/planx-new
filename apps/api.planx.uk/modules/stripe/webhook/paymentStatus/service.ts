@@ -18,6 +18,7 @@ interface InsertStripePaymentStatusArgs {
   stripeStatus: StripePaymentStatus;
   amount: number;
   feeBreakdown?: FeeBreakdown | null;
+  metadata: Stripe.Metadata;
 }
 
 export async function recordStripePaymentIntentStatus(
@@ -51,6 +52,7 @@ export async function recordStripePaymentIntentStatus(
     stripeStatus,
     amount,
     feeBreakdown,
+    metadata,
   });
 }
 
@@ -92,6 +94,7 @@ async function insertStripePaymentStatus({
   stripeStatus,
   amount,
   feeBreakdown,
+  metadata,
 }: InsertStripePaymentStatusArgs): Promise<void> {
   await $api.client.request(
     gql`
@@ -103,6 +106,7 @@ async function insertStripePaymentStatus({
         $stripeStatus: stripe_payment_status_enum_enum!
         $amount: Int
         $feeBreakdown: jsonb
+        $metadata: jsonb
       ) {
         insert_payment_status(
           objects: {
@@ -113,6 +117,7 @@ async function insertStripePaymentStatus({
             stripe_status: $stripeStatus
             amount: $amount
             fee_breakdown: $feeBreakdown
+            stripe_metadata: $metadata
           }
         ) {
           affected_rows
@@ -127,6 +132,7 @@ async function insertStripePaymentStatus({
       stripeStatus,
       amount,
       feeBreakdown,
+      metadata,
     },
   );
 }

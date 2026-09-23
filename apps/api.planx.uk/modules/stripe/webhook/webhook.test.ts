@@ -1,9 +1,13 @@
+import type Stripe from "stripe";
 import supertest from "supertest";
 
 import app from "../../../server.js";
 import { stripe } from "../client.js";
 import { STRIPE_WEBHOOK_ENDPOINT } from "../routes.js";
 import {
+  CONNECTED_ACCOUNT_ID,
+  DESTINATION_PAYMENT_ID,
+  expandedPaymentIntent,
   getPaymentStatusInsert as insertCall,
   mockPassportLookup,
   mockPassportLookupFailure,
@@ -26,8 +30,23 @@ const post = (payload: string, signature?: string) => {
   return req.send(payload);
 };
 
+const asPaymentIntent = (value: unknown) =>
+  value as unknown as Stripe.Response<Stripe.PaymentIntent>;
+
 describe("receiving a Stripe webhook", () => {
-  afterEach(() => vi.unstubAllEnvs());
+  beforeEach(() => {
+    vi.spyOn(stripe.paymentIntents, "retrieve").mockResolvedValue(
+      asPaymentIntent(expandedPaymentIntent),
+    );
+    vi.spyOn(stripe.charges, "update").mockResolvedValue(
+      {} as unknown as Stripe.Response<Stripe.Charge>,
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+  });
 
   describe("signature verification", () => {
     it("rejects a tampered payload with a 400", async () => {
@@ -116,6 +135,7 @@ describe("receiving a Stripe webhook", () => {
         stripeStatus: "succeeded",
         amount: 14500,
         feeBreakdown: null,
+        metadata: paymentIntent.metadata,
       });
     });
 
@@ -156,6 +176,108 @@ describe("receiving a Stripe webhook", () => {
       expect(insertCall()?.variables).toEqual(
         expect.objectContaining({ feeBreakdown: null }),
       );
+    });
+  });
+
+  describe("Stripe metadata", () => {
+    beforeEach(() => {
+      mockPassportLookup();
+      mockInsert();
+    });
+
+    it("stores the PaymentIntent metadata to our database", async () => {
+      const metadata = {
+        ...paymentIntent.metadata,
+        flow: "Apply for planning permission",
+        source: "PlanX",
+      };
+      const { payload, signature } = succeededEvent({ metadata });
+
+      await post(payload, signature).expect(200);
+
+      expect(insertCall()?.variables?.metadata).toEqual(metadata);
+    });
+  });
+
+  describe("propagating metadata to the destination payment", () => {
+    beforeEach(() => {
+      mockPassportLookup();
+      mockInsert();
+    });
+
+    it("copies the PaymentIntent metadata onto the connected account's destination payment", async () => {
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.charges.update).toHaveBeenCalledWith(
+        DESTINATION_PAYMENT_ID,
+        { metadata: paymentIntent.metadata },
+        { stripeAccount: CONNECTED_ACCOUNT_ID },
+      );
+    });
+
+    it("does not run for a non-succeeded event", async () => {
+      const { payload, signature } = processingEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.charges.update).not.toHaveBeenCalled();
+    });
+
+    it("returns 200 and skips the update when latest_charge is null", async () => {
+      vi.spyOn(stripe.paymentIntents, "retrieve").mockResolvedValue(
+        asPaymentIntent({ ...paymentIntent, latest_charge: null }),
+      );
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.charges.update).not.toHaveBeenCalled();
+    });
+
+    it("returns 200 and skips the update when the charge has no transfer", async () => {
+      vi.spyOn(stripe.paymentIntents, "retrieve").mockResolvedValue(
+        asPaymentIntent({
+          ...paymentIntent,
+          latest_charge: { id: "ch_test_123", transfer: null },
+        }),
+      );
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.charges.update).not.toHaveBeenCalled();
+    });
+
+    it("returns 200 and skips the update when the transfer is missing its destination fields", async () => {
+      vi.spyOn(stripe.paymentIntents, "retrieve").mockResolvedValue(
+        asPaymentIntent({
+          ...paymentIntent,
+          latest_charge: {
+            id: "ch_test_123",
+            transfer: {
+              id: "tr_test_123",
+              destination: null,
+              destination_payment: null,
+            },
+          },
+        }),
+      );
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.charges.update).not.toHaveBeenCalled();
+    });
+
+    it("returns 200 even when the destination-payment update throws", async () => {
+      vi.spyOn(stripe.charges, "update").mockRejectedValue(
+        new Error("Stripe Connect is unreachable"),
+      );
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(200);
     });
   });
 
