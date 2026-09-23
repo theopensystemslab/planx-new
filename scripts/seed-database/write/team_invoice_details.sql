@@ -2,7 +2,7 @@
 CREATE TEMPORARY TABLE sync_team_invoice_details (
   id serial,
   team_id integer,
-  business_name text,
+  organisation_name text,
   address_line1 text,
   address_line2 text,
   town_city text,
@@ -18,7 +18,7 @@ CREATE TEMPORARY TABLE sync_team_invoice_details (
 INSERT INTO team_invoice_details (
   id,
   team_id,
-  business_name,
+  organisation_name,
   address_line1,
   address_line2,
   town_city,
@@ -31,7 +31,7 @@ INSERT INTO team_invoice_details (
 SELECT
   id,
   team_id,
-  business_name,
+  organisation_name,
   address_line1,
   address_line2,
   town_city,
@@ -45,7 +45,7 @@ FROM
 UPDATE
 SET
   team_id = EXCLUDED.team_id,
-  business_name = EXCLUDED.business_name,
+  organisation_name = EXCLUDED.organisation_name,
   address_line1 = EXCLUDED.address_line1,
   address_line2 = EXCLUDED.address_line2,
   town_city = EXCLUDED.town_city,
