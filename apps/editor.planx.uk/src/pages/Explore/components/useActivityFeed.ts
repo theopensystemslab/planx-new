@@ -11,6 +11,7 @@ export interface ActivityEvent {
   eventTime: string;
   teamName: string;
   teamSlug: string;
+  isTrial: boolean;
   flowName: string | null;
   flowSlug: string | null;
 }
@@ -28,6 +29,7 @@ const GET_PLATFORM_ACTIVITY_FEED = gql`
       eventTime: event_time
       teamName: team_name
       teamSlug: team_slug
+      isTrial: is_trial
       flowName: flow_name
       flowSlug: flow_slug
     }
