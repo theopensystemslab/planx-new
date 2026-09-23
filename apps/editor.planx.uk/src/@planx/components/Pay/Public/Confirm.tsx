@@ -177,9 +177,12 @@ const getInitialState = (props: Props): ComponentState => {
 
 export default function Confirm(props: Props) {
   const theme = useTheme();
-  const [componentState, setComponentState] = useState<ComponentState>(
+  const [page, setComponentState] = useState<ComponentState>(
     getInitialState(props),
   );
+
+  // An error can be raised after mount (e.g. no payment provider), so always takes precedence
+  const componentState: ComponentState = props.error ? "error" : page;
 
   const toggleToPayPage = () => setComponentState("pay");
   const toggleToInviteToPayPage = () => setComponentState("inviteToPay");
