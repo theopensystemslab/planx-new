@@ -1,0 +1,32 @@
+table:
+  name: node_content_history
+  schema: public
+select_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - operation_id
+        - actor_id
+        - data
+        - first_name
+        - last_name
+        - node_id
+        - type
+        - created_at
+        - flow_id
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - operation_id
+        - actor_id
+        - data
+        - first_name
+        - last_name
+        - node_id
+        - type
+        - created_at
+        - flow_id
+      filter: {}
+    comment: ""
