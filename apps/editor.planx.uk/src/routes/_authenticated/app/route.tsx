@@ -19,6 +19,7 @@ export const Route = createFileRoute("/_authenticated/app")({
             id
             name
             slug
+            isLpa: is_lpa
             settings: team_settings {
               isTrial: is_trial
             }
