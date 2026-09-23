@@ -50,7 +50,7 @@ done
 
 # Copy subset of team_integrations columns
 # Do not copy production values
-psql --quiet ${REMOTE_PG} --command="\\copy (SELECT id, team_id, staging_bops_submission_url, staging_bops_secret, staging_govpay_secret, staging_file_api_key, staging_power_automate_api_key, staging_stripe_account_id FROM team_integrations) TO '/tmp/team_integrations.csv' (FORMAT csv, DELIMITER ';');"
+psql --quiet ${REMOTE_PG} --command="\\copy (SELECT id, team_id, staging_bops_submission_url, staging_bops_secret, staging_govpay_secret, staging_file_api_key, staging_power_automate_api_key FROM team_integrations) TO '/tmp/team_integrations.csv' (FORMAT csv, DELIMITER ';');"
 echo team_integrations downloaded
 
 # Copy subset of team_settings columns
