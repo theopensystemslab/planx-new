@@ -3,8 +3,6 @@ import type {
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
 
-export type PaymentProviderName = "govpay" | "stripe";
-
 export const PAYMENT_REFERENCE_PASSPORT_KEY = "application.fee.reference";
 
 export interface PaymentActions {

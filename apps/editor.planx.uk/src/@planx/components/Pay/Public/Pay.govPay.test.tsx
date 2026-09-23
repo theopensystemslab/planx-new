@@ -1,4 +1,7 @@
-import type { GovUKPayment } from "@opensystemslab/planx-core/types";
+import type {
+  GovUKPayment,
+  TeamSettings,
+} from "@opensystemslab/planx-core/types";
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen, waitFor } from "@testing-library/react";
@@ -44,6 +47,12 @@ vi.mock("@tanstack/react-router", async () => {
 const { getState, setState } = useStore;
 
 let initialState: FullStore;
+
+beforeEach(() =>
+  act(() =>
+    setState({ teamSettings: { paymentProvider: "govpay" } as TeamSettings }),
+  ),
+);
 
 const resumeButtonText = "Resume a form you have already started";
 const saveButtonText = "Save and return to this form later";
