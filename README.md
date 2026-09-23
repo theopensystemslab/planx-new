@@ -102,15 +102,7 @@ The root of the project has several scripts set up to help you manage your docke
 
 #### Stripe webhooks (local)
 
-Stripe's servers can't reach your dev machine directly, so to exercise the webhook endpoint (`POST /stripe/webhook`) locally you forward test events to the API with the [Stripe CLI](https://docs.stripe.com/cli) - 
-
-```
-stripe listen --forward-to localhost:7002/stripe/webhook
-```
-
-Copy the `whsec_…` it prints into `STRIPE_WEBHOOK_SECRET` in your `.env` and restart the API container (`pnpm start`) to ensure that signature verification matches. The secret will be stable, so this is a one-time setup step. Then fire events with `stripe trigger payment_intent.succeeded` or a real test payment through a Checkout Session - both are delivered to your API via the running `stripe listen` which holds an outbound connection to Stripe.
-
-If you're not working directly on payments you can skip this step. The API will start fine without `STRIPE_WEBHOOK_SECRET` being set, and only return a HTTP 500 if a webhook is triggered locally.
+Stripe can't reach your dev machine directly, so a [Stripe CLI](https://docs.stripe.com/cli) sidecar container forwards test-mode webhooks to the API. It starts with the rest of the stack, connecting to Stripe with the test-mode `STRIPE_SECRET_KEY` from `.env`. The webhook signing secret is created by the sidecar and shared with the API automatically, so there's nothing to configure. See [`apps/stripe-cli`](apps/stripe-cli/README.md) for how it works, triggering test events and troubleshooting.
 
 ### Task running (Turborepo)
 

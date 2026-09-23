@@ -11,6 +11,7 @@ export const handleStripeWebhook: StripeWebhookController = async (
 ) => {
   const { stripeEvent: event } = res.locals;
 
+  // Event types should match those configured in stripe-cli container as STRIPE_EVENTS
   try {
     switch (event.type) {
       case "payment_intent.created":
