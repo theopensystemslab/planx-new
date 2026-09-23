@@ -10,7 +10,7 @@ catalogs:
       specifier: 1.0.0-alpha.15
       version: 1.0.0-alpha.15
     '@opensystemslab/planx-core':
-      specifier: github:theopensystemslab/planx-core#70ce510
+      specifier: github:theopensystemslab/planx-core#94d8888
       version: 1.0.0
     '@types/jsdom':
       specifier: ^30.0.0
@@ -162,7 +162,7 @@ importers:
         version: 3.1120.0
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/70ce51044b936952e6d9873eede11ef074fc07f1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/94d8888617b0053e5ac334d4b737b8cee87c8821(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@planx/file-upload':
         specifier: workspace:*
         version: link:../../packages/file-upload
@@ -460,7 +460,7 @@ importers:
         version: 1.0.0-alpha.15(geotiff@3.0.5)
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/70ce51044b936952e6d9873eede11ef074fc07f1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/94d8888617b0053e5ac334d4b737b8cee87c8821(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@planx/file-upload':
         specifier: workspace:*
         version: link:../../packages/file-upload
@@ -994,7 +994,7 @@ importers:
         version: 13.2.1
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/70ce51044b936952e6d9873eede11ef074fc07f1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/94d8888617b0053e5ac334d4b737b8cee87c8821(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       axios:
         specifier: 'catalog:'
         version: 1.20.0
@@ -1031,7 +1031,7 @@ importers:
     dependencies:
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/70ce51044b936952e6d9873eede11ef074fc07f1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/94d8888617b0053e5ac334d4b737b8cee87c8821(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       axios:
         specifier: 'catalog:'
         version: 1.20.0
@@ -1386,7 +1386,7 @@ importers:
     dependencies:
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/70ce51044b936952e6d9873eede11ef074fc07f1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/94d8888617b0053e5ac334d4b737b8cee87c8821(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       tsx:
         specifier: ^4.23.12
         version: 4.23.12
@@ -3266,8 +3266,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.15':
     resolution: {integrity: sha512-Z0feONs1+P6LIn04wxFdwHaKfJkqSpo3bHe0Nr43g50gq2dqnCT2KKxkXCwY4zUKnV6duFYPqAK1KD/kjzSs/w==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/70ce51044b936952e6d9873eede11ef074fc07f1':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/70ce51044b936952e6d9873eede11ef074fc07f1}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/94d8888617b0053e5ac334d4b737b8cee87c8821':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/94d8888617b0053e5ac334d4b737b8cee87c8821}
     version: 1.0.0
     peerDependencies:
       '@emotion/react': ^11.14.0
@@ -13706,7 +13706,7 @@ snapshots:
       - geotiff
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/70ce51044b936952e6d9873eede11ef074fc07f1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/94d8888617b0053e5ac334d4b737b8cee87c8821(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.18)(react@19.2.8)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8)
