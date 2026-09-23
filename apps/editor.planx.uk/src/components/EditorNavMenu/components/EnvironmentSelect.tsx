@@ -138,7 +138,7 @@ const EnvironmentSelect: React.FC = () => {
       <StyledButtonBase onClick={handleOpen} selected={false}>
         {pizzaPullRequestNumber ? (
           <>
-            <GitHubIcon fontSize="small" sx={{ mr: 0.5 }} />
+            <GitHubIcon fontSize="small" sx={{ mr: 0.5 }} />#
             {pizzaPullRequestNumber}
           </>
         ) : (
