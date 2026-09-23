@@ -53,6 +53,7 @@ insert_permissions:
         - created_at
         - domain
         - id
+        - is_lpa
         - name
         - slug
         - updated_at
@@ -61,6 +62,7 @@ select_permissions:
     permission:
       columns:
         - id
+        - is_lpa
         - domain
         - name
         - slug
@@ -74,6 +76,7 @@ select_permissions:
         - created_at
         - domain
         - id
+        - is_lpa
         - name
         - slug
         - updated_at
@@ -84,6 +87,7 @@ select_permissions:
         - created_at
         - domain
         - id
+        - is_lpa
         - name
         - slug
         - updated_at
@@ -94,6 +98,7 @@ select_permissions:
         - created_at
         - domain
         - id
+        - is_lpa
         - name
         - slug
         - updated_at
@@ -104,6 +109,7 @@ select_permissions:
         - created_at
         - domain
         - id
+        - is_lpa
         - name
         - slug
         - updated_at
@@ -119,6 +125,7 @@ update_permissions:
     permission:
       columns:
         - domain
+        - is_lpa
         - name
         - slug
       filter: {}
