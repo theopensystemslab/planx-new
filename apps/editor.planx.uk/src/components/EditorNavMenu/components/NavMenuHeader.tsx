@@ -2,7 +2,8 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import EnvironmentSelect from "components/EditorNavMenu/components/EnvironmentSelect";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { DEFAULT_PRIMARY_COLOR, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { getEnvironmentLogo } from "ui/icons/logos";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 const HeaderRoot = styled(Box)(({ theme }) => ({
@@ -10,7 +11,7 @@ const HeaderRoot = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "space-between",
   backgroundColor: theme.palette.background.paper,
-  padding: theme.spacing(1, 0.85),
+  padding: theme.spacing(0.5, 0.8),
   borderRight: `1px solid ${theme.palette.divider}`,
   marginTop: theme.spacing(0.25),
   width: "100%",
@@ -23,20 +24,16 @@ const LogoLink = styled(CustomLink)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  gap: theme.spacing(0.75),
-  padding: theme.spacing(0.5, 0.9),
+  gap: theme.spacing(0.5),
+  padding: theme.spacing(0.5),
   lineHeight: 0.5,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
 }));
 
-const LogoIcon = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "teamcolour",
-})<{ teamcolour?: string }>(({ theme, teamcolour }) => ({
-  width: 12,
-  height: 12,
-  backgroundColor: teamcolour ?? theme.palette.primary.main,
-  borderRadius: "50%",
-}));
+const LogoIcon = styled("img")({
+  width: 22,
+  height: 22,
+});
 
 export interface NavMenuHeaderProps {
   compact?: boolean;
@@ -56,7 +53,10 @@ const NavMenuHeader: React.FC<NavMenuHeaderProps> = ({ compact = false }) => {
         {...(isStandalone && { target: "_blank" })}
         variant="subtitle2"
       >
-        <LogoIcon teamcolour={teamColour} />
+        <LogoIcon
+          src={getEnvironmentLogo(teamColour ?? DEFAULT_PRIMARY_COLOR)}
+          alt="PlanX logo"
+        />
         {compact ? "" : "Plan✕"}
       </LogoLink>
 

@@ -2,17 +2,18 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
-import Dialog, { dialogClasses } from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
+import MuiButtonBase from "@mui/material/ButtonBase";
+import Fade from "@mui/material/Fade";
+import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
+import type { SxProps, Theme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { getLogoForEnvironment } from "ui/icons/logos";
 import { CloseButton } from "ui/shared/CloseButton";
 
 export interface Environment {
@@ -20,15 +21,6 @@ export interface Environment {
   description: string;
   url: string;
   pullRequestUrl?: string;
-}
-
-export interface Props {
-  open: boolean;
-  onClose: () => void;
-  environments: Environment[];
-  selectedEnvironmentId: string;
-  onEnvironmentSelect: (environmentId: string) => void;
-  title?: string;
 }
 
 const Root = styled(Box)(() => ({
@@ -51,36 +43,35 @@ const StyledButtonBase = styled(ButtonBase)(({ theme }) => ({
   },
 }));
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  [`&. ${dialogClasses.paper}`]: {
-    backgroundColor: theme.palette.background.dark,
+const EnvironmentRow = styled(Box)(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.border.light}`,
+  "&:last-of-type": {
+    borderBottom: "none",
   },
 }));
 
-const DialogHeader = styled(Box)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: theme.spacing(1),
-  backgroundColor: theme.palette.background.dark,
-  color: theme.palette.common.white,
-}));
-
-const StyledDialogTitle = styled(DialogTitle)(() => ({
-  border: "none",
-  padding: 0,
-}));
-
-const StyledCard = styled(Card)<{ selected?: boolean }>(() => ({
-  borderRadius: "2px",
-}));
-
-const CardContent = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1, 1, 1.25, 1),
-  display: "flex",
-  justifyContent: "space-between",
+const rowButtonSx: SxProps<Theme> = {
+  width: "100%",
+  justifyContent: "flex-start",
   alignItems: "flex-start",
-}));
+  textAlign: "left",
+  gap: 1,
+  padding: (theme) => theme.spacing(1.5),
+  "&:hover": {
+    backgroundColor: "background.disabled",
+  },
+  "&.Mui-disabled": {
+    opacity: 1,
+    backgroundColor: "background.disabled",
+  },
+};
+
+const EnvironmentIcon = styled("img")({
+  width: 20,
+  height: 20,
+  flexShrink: 0,
+  marginTop: 2,
+});
 
 // Pizza environments are hosted at https://<PR number>.planx.pizza
 const getPizzaPullRequestNumber = (): string | undefined =>
@@ -128,6 +119,9 @@ const ENV_DISPLAY_NAMES: Record<string, string> = {
   development: "Dev",
 };
 
+// Matches the inset used by the other nav panel triggers (theme.spacing(0.5))
+const PANEL_INSET = 5;
+
 const EnvironmentSelect: React.FC = () => {
   const [open, setOpen] = useState(false);
   const currentEnv = import.meta.env.VITE_APP_ENV;
@@ -144,7 +138,7 @@ const EnvironmentSelect: React.FC = () => {
       <StyledButtonBase onClick={handleOpen} selected={false}>
         {pizzaPullRequestNumber ? (
           <>
-            <GitHubIcon fontSize="small" sx={{ mr: 0.5 }} />
+            <GitHubIcon fontSize="small" sx={{ mr: 0.5 }} />#
             {pizzaPullRequestNumber}
           </>
         ) : (
@@ -152,69 +146,72 @@ const EnvironmentSelect: React.FC = () => {
         )}
         <UnfoldMoreIcon fontSize="small" />
       </StyledButtonBase>
-      <StyledDialog
+      <Popover
         open={open}
         onClose={handleClose}
-        maxWidth="xs"
+        slots={{ transition: Fade }}
+        marginThreshold={0}
+        anchorReference="anchorPosition"
+        anchorPosition={{ top: PANEL_INSET, left: PANEL_INSET }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
         slotProps={{
           paper: {
             sx: {
-              position: "absolute",
-              top: 0,
-              left: 0,
-              m: 0,
-              width: "300px",
-              maxWidth: "300px",
-              minWidth: "unset",
-              borderTop: "none",
-              borderRadius: "5px",
+              width: 400,
+              display: "flex",
+              flexDirection: "column",
+              borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             },
+          },
+          backdrop: {
+            sx: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
           },
         }}
       >
-        <DialogHeader>
-          <StyledDialogTitle>
-            <Typography
-              variant="subtitle1"
-              component="span"
-              sx={{ mr: 1, color: (theme) => theme.palette.common.white }}
-            >
-              Plan✕
-            </Typography>
-            <Typography variant="body2" component="span">
-              environments
-            </Typography>
-          </StyledDialogTitle>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            px: 1.5,
+            py: 0.5,
+            position: "sticky",
+            top: 0,
+            backgroundColor: "background.paper",
+            zIndex: 1,
+          }}
+        >
+          <Typography variant="h4">Environments</Typography>
           <CloseButton
             size="small"
             onClick={handleClose}
-            title="Close panel"
-            sx={{ padding: 0 }}
+            sx={{ marginRight: -1 }}
           />
-        </DialogHeader>
-        <Stack
-          sx={{
-            p: 1,
-            bgcolor: (theme) => theme.palette.background.dark,
-            gap: 1,
-          }}
-        >
+        </Box>
+        <Stack>
           {environments.map((env) => (
-            <StyledCard key={env.name} selected={env.name === currentEnv}>
-              <CardActionArea
-                LinkComponent={"a"}
+            <EnvironmentRow key={env.name}>
+              <MuiButtonBase
+                component="a"
                 href={env.url + pathname}
                 target="_blank"
                 rel="noopener noreferrer"
                 disabled={env.name === currentEnv}
+                sx={rowButtonSx}
               >
-                <CardContent>
+                <EnvironmentIcon src={getLogoForEnvironment(env.name)} alt="" />
+                <Box sx={{ flex: 1, minWidth: 0 }}>
                   <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 0.5,
+                    }}
                   >
                     <Typography
                       variant="h6"
-                      component="div"
+                      component="span"
                       sx={{
                         fontWeight: FONT_WEIGHT_SEMI_BOLD,
                         textTransform: "capitalize",
@@ -222,27 +219,25 @@ const EnvironmentSelect: React.FC = () => {
                     >
                       {env.name}
                     </Typography>
-                    <Typography
-                      variant="body4"
-                      component="p"
-                      sx={{
-                        color: "text.secondary",
-                      }}
-                    >
-                      {env.description}
-                    </Typography>
+                    {env.name === currentEnv && (
+                      <CheckCircleIcon
+                        sx={(theme) => ({
+                          color: theme.palette.info.main,
+                          fontSize: 18,
+                        })}
+                      />
+                    )}
                   </Box>
-                  {env.name === currentEnv && (
-                    <CheckCircleIcon
-                      sx={(theme) => ({
-                        color: theme.palette.info.main,
-                        fontSize: 20,
-                      })}
-                    />
-                  )}
-                </CardContent>
-              </CardActionArea>
-              {/* Render pull request link outside CardActionArea to prevent nested links */}
+                  <Typography
+                    variant="body4"
+                    component="p"
+                    sx={{ color: "text.secondary" }}
+                  >
+                    {env.description}
+                  </Typography>
+                </Box>
+              </MuiButtonBase>
+              {/* Render pull request link outside the row button to prevent nested links */}
               {env.pullRequestUrl && (
                 <Typography
                   component="a"
@@ -252,8 +247,8 @@ const EnvironmentSelect: React.FC = () => {
                   variant="body4"
                   sx={{
                     display: "block",
-                    px: 1,
-                    pb: 1.25,
+                    padding: (theme) => theme.spacing(0, 4.5, 1.5, 4.5),
+                    backgroundColor: "background.disabled",
                     color: "link.main",
                     overflowWrap: "break-word",
                     wordBreak: "break-all",
@@ -262,10 +257,10 @@ const EnvironmentSelect: React.FC = () => {
                   {env.pullRequestUrl}
                 </Typography>
               )}
-            </StyledCard>
+            </EnvironmentRow>
           ))}
         </Stack>
-      </StyledDialog>
+      </Popover>
     </Root>
   );
 };
