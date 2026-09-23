@@ -100,6 +100,14 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CreateCheckoutSessionResponse"
+        "400":
+          description: Invalid request body or parameters.
+        "409":
+          description: >-
+            This LPA is not set up to take Stripe payments. 
+            Either its payment provider is not Stripe, or it has not connected a Stripe account.
+        "500":
+          description: Failed to create the Stripe Checkout Session.
   /stripe/checkout-session/{localAuthority}/{checkoutSessionId}:
     get:
       summary: Retrieve a Stripe Checkout Session's status

@@ -263,7 +263,7 @@ describe("creating a Stripe Checkout Session", () => {
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
-  it("rejects a team not switched over to Stripe with a 400", async () => {
+  it("rejects a team not switched over to Stripe with a 409", async () => {
     mockGetTeamBySlug.mockResolvedValue({
       ...stripeTeam,
       settings: { paymentProvider: "govpay" },
@@ -272,18 +272,18 @@ describe("creating a Stripe Checkout Session", () => {
     await supertest(app)
       .post("/stripe/checkout-session/southwark")
       .send(validBody)
-      .expect(400);
+      .expect(409);
 
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
-  it("rejects a team without a connected Stripe account with a 400", async () => {
+  it("rejects a team without a connected Stripe account with a 409", async () => {
     mockGetStripeAccountId.mockResolvedValue(null);
 
     await supertest(app)
       .post("/stripe/checkout-session/southwark")
       .send(validBody)
-      .expect(400);
+      .expect(409);
 
     expect(mockCreate).not.toHaveBeenCalled();
   });
