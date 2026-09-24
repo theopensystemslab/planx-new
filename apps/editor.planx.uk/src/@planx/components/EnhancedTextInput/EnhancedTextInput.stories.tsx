@@ -19,6 +19,13 @@ const meta = {
   argTypes: {
     handleSubmit: { action: true },
   },
+  // {inline: false} prevents the MSW from the 'rate limit' story from leaking into other stories
+  // without this all the stories will hit the rate limit MSW - not what we want
+  parameters: {
+    docs: {
+      story: { inline: false },
+    },
+  },
   args: {
     title: "Describe the project",
     description: "Write a brief description of the proposed changes",
