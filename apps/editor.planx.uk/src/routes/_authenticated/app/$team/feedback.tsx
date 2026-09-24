@@ -5,6 +5,7 @@ import { client } from "lib/graphql";
 import { FeedbackLog } from "pages/FlowEditor/components/FeedbackLog/FeedbackLog";
 import type { Feedback } from "pages/FlowEditor/components/FeedbackLog/types";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { editorPageTitle } from "utils/pageTitle";
 
 export const Route = createFileRoute("/_authenticated/app/$team/feedback")({
   loader: async ({ params }) => {
@@ -37,6 +38,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/feedback")({
     };
   },
   component: FeedbackRoute,
+  head: ({ match }) => editorPageTitle("Feedback", match.context.team.name),
 });
 
 function FeedbackRoute() {

@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { TeamMembers } from "pages/FlowEditor/components/Team/TeamMembers";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { editorPageTitle } from "utils/pageTitle";
 
 export const Route = createFileRoute("/_authenticated/app/$team/members")({
   loader: async ({ params }) => {
@@ -10,4 +11,5 @@ export const Route = createFileRoute("/_authenticated/app/$team/members")({
     }
   },
   component: TeamMembers,
+  head: ({ match }) => editorPageTitle("Team members", match.context.team.name),
 });

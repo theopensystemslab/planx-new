@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import { FEEDBACK_SUMMARY_FIELDS } from "lib/feedback";
 import { FeedbackLog } from "pages/FlowEditor/components/FeedbackLog/FeedbackLog";
 import type { Feedback } from "pages/FlowEditor/components/FeedbackLog/types";
+import { editorPageTitle } from "utils/pageTitle";
 
 import { client } from "../../../../../lib/graphql";
 import { useStore } from "../../../../../pages/FlowEditor/lib/store";
@@ -51,6 +52,12 @@ export const Route = createFileRoute(
     }
   },
   component: FeedbackComponent,
+  head: ({ match }) =>
+    editorPageTitle(
+      "Feedback",
+      match.context.flowName,
+      match.context.team.name,
+    ),
 });
 
 function FeedbackComponent() {

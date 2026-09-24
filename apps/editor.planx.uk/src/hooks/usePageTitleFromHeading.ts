@@ -1,31 +1,27 @@
 import { useEffect } from "react";
+import { withEnvironmentTag } from "utils/pageTitle";
 
-const ENVIRONMENT_TITLE_TAGS: Record<string, string> = {
-  staging: "[staging]",
-  pizza: "[pizza]",
-  development: "[local]",
-};
+const isEditorPage = () => window.location.pathname.startsWith("/app");
 
 /**
  * Sets the page title based heirarchy of headings (defaults to PlanX if no headings present)
- * Editor (non-public) pages are tagged with the current environment, eg "[staging]"
+ * Titles are tagged with the current environment, eg "[staging]"
+ *
+ * Editor pages are skipped - their titles are set per route via `head` (see utils/pageTitle.ts)
  */
 const usePageTitleFromHeading = () => {
   useEffect(() => {
     const observer = new MutationObserver(() => {
-      const isEditorPage = window.location.pathname.startsWith("/app");
-      const environmentTag = isEditorPage
-        ? ENVIRONMENT_TITLE_TAGS[import.meta.env.VITE_APP_ENV]
-        : undefined;
+      if (isEditorPage()) return;
 
       const title = [
         document.querySelector("[role=heading],h1,h2,h3")?.textContent,
-        "PlanX",
+        "Plan✕",
       ]
         .filter(Boolean)
         .join(" - ");
 
-      document.title = environmentTag ? `${environmentTag} ${title}` : title;
+      document.title = withEnvironmentTag(title);
     });
 
     observer.observe(document.getElementById("root")!, {

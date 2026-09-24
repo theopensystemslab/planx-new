@@ -1,4 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { editorPageTitle } from "utils/pageTitle";
 
 import { PlatformAdminPanel } from "../../../pages/PlatformAdminPanel/PlatformAdminPanel";
 
@@ -23,4 +24,5 @@ export const Route = createFileRoute("/_authenticated/app/admin-panel")({
     return { user };
   },
   component: AdminPanelRoute,
+  head: () => editorPageTitle("Admin panel"),
 });

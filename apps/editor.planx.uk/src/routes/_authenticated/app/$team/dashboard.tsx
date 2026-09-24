@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { isSystemTeam } from "lib/systemTeams";
 import Dashboard from "pages/Dashboard";
+import { editorPageTitle } from "utils/pageTitle";
 
 export const Route = createFileRoute("/_authenticated/app/$team/dashboard")({
   beforeLoad: ({ params, context }) => {
@@ -9,4 +10,5 @@ export const Route = createFileRoute("/_authenticated/app/$team/dashboard")({
     }
   },
   component: Dashboard,
+  head: ({ match }) => editorPageTitle("Dashboard", match.context.team.name),
 });

@@ -7,6 +7,7 @@ import {
 import { client } from "lib/graphql";
 import GlobalSettingsLayout from "pages/GlobalSettings/Layout";
 import { GET_GLOBAL_SETTINGS } from "pages/GlobalSettings/queries";
+import { editorPageTitle } from "utils/pageTitle";
 
 export const Route = createFileRoute("/_authenticated/app/global-settings")({
   loader: async ({ context }) => {
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/_authenticated/app/global-settings")({
     await client.query({ query: GET_GLOBAL_SETTINGS });
   },
   component: RouteComponent,
+  head: () => editorPageTitle("Global settings"),
 });
 
 function RouteComponent() {

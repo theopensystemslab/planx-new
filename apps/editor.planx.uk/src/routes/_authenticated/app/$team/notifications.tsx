@@ -4,6 +4,7 @@ import { client } from "lib/graphql";
 import { Notifications } from "pages/FlowEditor/components/Notifications/Notifications";
 import type { Notification } from "pages/FlowEditor/components/Notifications/types";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { editorPageTitle } from "utils/pageTitle";
 
 export const Route = createFileRoute("/_authenticated/app/$team/notifications")(
   {
@@ -51,6 +52,8 @@ export const Route = createFileRoute("/_authenticated/app/$team/notifications")(
       };
     },
     component: NotificationsRoute,
+    head: ({ match }) =>
+      editorPageTitle("Notifications", match.context.team.name),
   },
 );
 
