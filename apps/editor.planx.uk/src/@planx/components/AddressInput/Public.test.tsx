@@ -187,3 +187,55 @@ it("should not have any accessibility violations whilst in the error state", asy
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
+
+it("validates no country provided against a UK postcode", async () => {
+  const handleSubmit = vi.fn();
+
+  const { user } = await setup(
+    <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />,
+  );
+
+  await fillInFieldsUsingLabel(user, {
+    "Address line 1": "Flat 1",
+    Town: "London",
+    Postcode: "12345", // not a valid UK postcode format
+  });
+
+  await user.click(screen.getByTestId("continue-button"));
+
+  expect(handleSubmit).not.toHaveBeenCalled();
+  expect(
+    await screen.findByText(
+      /Enter a valid UK postcode or specify a different country below/,
+    ),
+  ).toBeVisible();
+});
+
+const SELECT_UK_VARIANTS = ["u k", "gb", "wales"];
+
+it.each([...SELECT_UK_VARIANTS])(
+  "identifies '%s' as a UK country variant and validates accordingly",
+  async (country) => {
+    const handleSubmit = vi.fn();
+
+    const { user } = await setup(
+      <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />,
+    );
+
+    await fillInFieldsUsingLabel(user, {
+      "Address line 1": "Flat 1",
+      Town: "London",
+      Postcode: "12345",
+      "Country (optional)": country,
+    });
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(handleSubmit).not.toHaveBeenCalled();
+    expect(
+      await screen.findByText(
+        /Enter a valid UK postcode or specify a different country below/,
+      ),
+    ).toBeVisible();
+  },
+);
