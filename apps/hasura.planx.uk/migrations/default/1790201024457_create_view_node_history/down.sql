@@ -1,0 +1,1 @@
+DROP VIEW IF EXISTS "public"."node_content_history" CASCADE;
