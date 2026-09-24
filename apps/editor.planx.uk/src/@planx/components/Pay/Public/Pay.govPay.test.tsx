@@ -1,13 +1,10 @@
-import type {
-  GovUKPayment,
-  TeamSettings,
-} from "@opensystemslab/planx-core/types";
+import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen, waitFor } from "@testing-library/react";
 import { logger } from "airbrake";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
-import { http, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 import type { FullStore, Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
@@ -48,11 +45,15 @@ const { getState, setState } = useStore;
 
 let initialState: FullStore;
 
-beforeEach(() =>
-  act(() =>
-    setState({ teamSettings: { paymentProvider: "govpay" } as TeamSettings }),
-  ),
-);
+beforeEach(() => {
+  server.use(
+    graphql.query("GetPaymentProvider", () =>
+      HttpResponse.json({
+        data: { teamSettings: [{ paymentProvider: "govpay" }] },
+      }),
+    ),
+  );
+});
 
 const resumeButtonText = "Resume a form you have already started";
 const saveButtonText = "Save and return to this form later";
