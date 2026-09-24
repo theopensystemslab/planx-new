@@ -10,7 +10,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import type { TeamSettings } from "@opensystemslab/planx-core/types";
-import { usePaymentProvider } from "@planx/components/Pay/Public/hooks/usePaymentProvider";
+import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -19,7 +19,7 @@ import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
-type PaymentProvider = TeamSettings["paymentProvider"];
+export type PaymentProvider = TeamSettings["paymentProvider"];
 
 type DialogState =
   | { type: "closed" }
@@ -51,9 +51,11 @@ const checkActiveSessions = async (
 const Provider: React.FC = () => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
-  const paymentProvider = usePaymentProvider();
-  const [provider, setProvider] =
-    useState<TeamSettings["paymentProvider"]>(paymentProvider);
+  const { paymentProvider } = usePaymentProvider();
+  const [migratedProvider, setMigratedProvider] =
+    useState<PaymentProvider | null>(null);
+  const provider = migratedProvider ?? paymentProvider ?? null;
+
   const [dialogState, setDialogState] = useState<DialogState>({
     type: "closed",
   });
@@ -76,7 +78,7 @@ const Provider: React.FC = () => {
     console.log(
       `[Provider] Migrating team ${teamId} from ${PROVIDER_LABELS[provider!]} to Stripe`,
     );
-    setProvider("stripe");
+    setMigratedProvider("stripe");
     setDialogState({ type: "closed" });
     toast.success("Migration to Stripe successful");
     console.log("[Provider] Migration complete");
