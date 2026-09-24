@@ -18,10 +18,7 @@ import type {
 } from "./types";
 
 const LPSListingSettings: React.FC = () => {
-  const [flowId, isTrial] = useStore((state) => [
-    state.id,
-    state.getTeam().settings.isTrial,
-  ]);
+  const flowId = useStore((state) => state.id);
   const { url } = useLPS();
   const trialWarningId = useId();
 
@@ -46,7 +43,11 @@ const LPSListingSettings: React.FC = () => {
         </>
       }
       defaultValues={defaultValues}
-      getInitialValues={({ flow }) => flow}
+      getInitialValues={({ flow }) => ({
+        isListedOnLPS: flow.isListedOnLPS,
+        summary: flow.summary,
+        category: flow.category,
+      })}
       queryVariables={{ flowId }}
       getMutationVariables={(values) => ({
         flowId,
@@ -54,20 +55,24 @@ const LPSListingSettings: React.FC = () => {
         category: values.category,
       })}
     >
-      {() => (
-        <>
-          {isTrial && (
-            <WarningContainer aria-labelledby={trialWarningId}>
-              <PendingActionsIcon sx={{ mr: 1 }} />
-              <Typography id={trialWarningId} variant="body2">
-                Trial accounts cannot list services on LPS.
-              </Typography>
-            </WarningContainer>
-          )}
-          <ToggleLPS />
-          <CategorySelection />
-        </>
-      )}
+      {({ data }) => {
+        const isTrial = data?.flow.team.settings.isTrial;
+
+        return (
+          <>
+            {isTrial && (
+              <WarningContainer aria-labelledby={trialWarningId}>
+                <PendingActionsIcon sx={{ mr: 1 }} />
+                <Typography id={trialWarningId} variant="body2">
+                  Trial accounts cannot list services on LPS.
+                </Typography>
+              </WarningContainer>
+            )}
+            <ToggleLPS isTrial={isTrial} />
+            <CategorySelection />
+          </>
+        );
+      }}
     </SettingsFormContainer>
   );
 };

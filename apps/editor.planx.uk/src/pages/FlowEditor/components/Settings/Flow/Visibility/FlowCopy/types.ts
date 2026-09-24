@@ -6,6 +6,11 @@ export interface GetFlowVisibilityData {
   flows: {
     id: string;
     canCreateFromCopy: boolean;
+    team: {
+      settings: {
+        isTrial: boolean;
+      };
+    };
   }[];
 }
 

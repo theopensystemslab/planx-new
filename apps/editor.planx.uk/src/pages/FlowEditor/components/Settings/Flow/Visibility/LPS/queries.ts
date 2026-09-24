@@ -7,6 +7,11 @@ export const GET_LPS_LISTING = gql`
       isListedOnLPS: is_listed_on_lps
       category
       summary
+      team {
+        settings: team_settings {
+          isTrial: is_trial
+        }
+      }
     }
   }
 `;

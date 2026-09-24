@@ -12,6 +12,11 @@ export interface GetLPSListingData {
     isListedOnLPS: boolean;
     summary: string | null;
     category: LPSCategory | null;
+    team: {
+      settings: {
+        isTrial: boolean;
+      };
+    };
   };
 }
 
