@@ -77,7 +77,7 @@ export const teamStore: StateCreator<
     set({
       teamId: 0,
       teamName: "",
-      teamSettings: undefined,
+      teamSettings: {} as TeamSettings,
       teamSlug: "",
       teamTheme: undefined,
     }),

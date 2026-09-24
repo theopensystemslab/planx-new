@@ -22,11 +22,10 @@ const REQUEST_A_REVIEW_URL =
 type Props = { isService: boolean };
 
 const FlowCopySettings: React.FC<Props> = ({ isService }) => {
-  const [flowId, flowSlug, teamSlug, isTrial] = useStore((state) => [
+  const [flowId, flowSlug, teamSlug] = useStore((state) => [
     state.id,
     state.flowSlug,
     state.teamSlug,
-    state.getTeam().settings.isTrial,
   ]);
 
   const { mutate: sendSlackMessage } = useSlackMessage();
@@ -75,35 +74,39 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
         }
       }}
     >
-      {({ formik }) => (
-        <>
-          {isTrial && (
-            <WarningContainer aria-labelledby={trialWarningId}>
-              <PendingActionsIcon sx={{ mr: 1 }} />
-              <Typography id={trialWarningId} variant="body2">
-                Trial accounts cannot set flow copy permissions.
-              </Typography>
-            </WarningContainer>
-          )}
-          <Switch
-            label={
-              formik.values.canCreateFromCopy
-                ? "Can be copied to create new services"
-                : "Cannot be copied to create new services"
-            }
-            name="canCreateFromCopy"
-            variant="editorPage"
-            checked={formik.values.canCreateFromCopy}
-            onChange={() =>
-              formik.setFieldValue(
-                "canCreateFromCopy",
-                !formik.values.canCreateFromCopy,
-              )
-            }
-            disabled={isTrial}
-          />
-        </>
-      )}
+      {({ formik, data }) => {
+        const isTrial = data?.flows[0]?.team.settings.isTrial;
+
+        return (
+          <>
+            {isTrial && (
+              <WarningContainer aria-labelledby={trialWarningId}>
+                <PendingActionsIcon sx={{ mr: 1 }} />
+                <Typography id={trialWarningId} variant="body2">
+                  Trial accounts cannot set flow copy permissions.
+                </Typography>
+              </WarningContainer>
+            )}
+            <Switch
+              label={
+                formik.values.canCreateFromCopy
+                  ? "Can be copied to create new services"
+                  : "Cannot be copied to create new services"
+              }
+              name="canCreateFromCopy"
+              variant="editorPage"
+              checked={formik.values.canCreateFromCopy}
+              onChange={() =>
+                formik.setFieldValue(
+                  "canCreateFromCopy",
+                  !formik.values.canCreateFromCopy,
+                )
+              }
+              disabled={isTrial}
+            />
+          </>
+        );
+      }}
     </SettingsFormContainer>
   );
 };

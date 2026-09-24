@@ -1,14 +1,15 @@
 import Link from "@mui/material/Link";
 import { useFormikContext } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import { Switch } from "ui/shared/Switch";
 
 import type { LPSListingFormValues } from "../types";
 
-const ToggleLPS: React.FC = () => {
-  const isTrial = useStore((state) => state.getTeam().settings.isTrial);
+interface Props {
+  isTrial?: boolean;
+}
 
+const ToggleLPS: React.FC<Props> = ({ isTrial }) => {
   const { values, errors, setFieldValue } =
     useFormikContext<LPSListingFormValues>();
 

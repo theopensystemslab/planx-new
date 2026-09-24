@@ -5,6 +5,11 @@ export const GET_FLOW_VISIBILITY = gql`
     flows(where: { id: { _eq: $flowId } }, limit: 1) {
       id
       canCreateFromCopy: can_create_from_copy
+      team {
+        settings: team_settings {
+          isTrial: is_trial
+        }
+      }
     }
   }
 `;
