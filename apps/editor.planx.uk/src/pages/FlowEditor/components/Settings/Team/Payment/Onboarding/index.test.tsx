@@ -1,4 +1,4 @@
-import { act, screen } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import type { FullStore } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -26,6 +26,7 @@ interface MockStatus {
   connected: boolean;
   accountId: string | null;
   mode: "test" | "live";
+  canConnect: boolean;
 }
 
 const statusHandler = (status: MockStatus) =>
@@ -53,6 +54,7 @@ describe("Onboarding", () => {
           connected: false,
           accountId: null,
           mode: "test",
+          canConnect: true,
         } satisfies MockStatus);
       }),
     );
@@ -66,7 +68,12 @@ describe("Onboarding", () => {
 
   it("prompts to connect when no Stripe account is linked", async () => {
     server.use(
-      statusHandler({ connected: false, accountId: null, mode: "test" }),
+      statusHandler({
+        connected: false,
+        accountId: null,
+        mode: "test",
+        canConnect: true,
+      }),
     );
 
     await setup(<Onboarding />);
@@ -79,10 +86,44 @@ describe("Onboarding", () => {
     ).toBeVisible();
   });
 
+  it("disables connecting a live account until Stripe is enabled on staging", async () => {
+    server.use(
+      statusHandler({
+        connected: false,
+        accountId: null,
+        mode: "live",
+        canConnect: false,
+      }),
+    );
+
+    await setup(<Onboarding />);
+
+    expect(
+      await screen.findByText(
+        /only be connected once Stripe is enabled as the payment provider on staging/,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Connect Stripe account" }),
+    ).toBeDisabled();
+  });
+
   it("redirects to the API's Stripe connect route when clicking Connect", async () => {
     server.use(
-      statusHandler({ connected: false, accountId: null, mode: "test" }),
+      statusHandler({
+        connected: false,
+        accountId: null,
+        mode: "test",
+        canConnect: true,
+      }),
     );
+    const { user } = await setup(<Onboarding />);
+    const button = await screen.findByRole("button", {
+      name: "Connect Stripe account",
+    });
+    await waitFor(() => expect(button).toBeEnabled());
+
+    // Stub location only once the status has loaded, as the request depends on it
     const originalLocation = window.location;
     Object.defineProperty(window, "location", {
       value: { ...originalLocation, href: "" },
@@ -90,11 +131,7 @@ describe("Onboarding", () => {
       configurable: true,
     });
 
-    const { user } = await setup(<Onboarding />);
-
-    await user.click(
-      await screen.findByRole("button", { name: "Connect Stripe account" }),
-    );
+    await user.click(button);
 
     expect(window.location.href).toBe(`${API_URL}/stripe/connect/lambeth`);
 
@@ -111,6 +148,7 @@ describe("Onboarding", () => {
         connected: true,
         accountId: "acct_123",
         mode: "test",
+        canConnect: true,
       }),
     );
 
@@ -127,6 +165,7 @@ describe("Onboarding", () => {
         connected: true,
         accountId: "acct_456",
         mode: "live",
+        canConnect: true,
       }),
     );
 
@@ -141,6 +180,7 @@ describe("Onboarding", () => {
         connected: true,
         accountId: "acct_123",
         mode: "test",
+        canConnect: true,
       }),
     );
 
@@ -156,7 +196,12 @@ describe("Onboarding", () => {
 
   it("shows the toast message when passed a Stripe error", async () => {
     server.use(
-      statusHandler({ connected: false, accountId: null, mode: "test" }),
+      statusHandler({
+        connected: false,
+        accountId: null,
+        mode: "test",
+        canConnect: true,
+      }),
     );
 
     await setup(
@@ -178,7 +223,12 @@ describe("Onboarding", () => {
 
   it("does not toast or clear params when there is no Stripe result", async () => {
     server.use(
-      statusHandler({ connected: false, accountId: null, mode: "test" }),
+      statusHandler({
+        connected: false,
+        accountId: null,
+        mode: "test",
+        canConnect: true,
+      }),
     );
 
     await setup(<Onboarding />);
