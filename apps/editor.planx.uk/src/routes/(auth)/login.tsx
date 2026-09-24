@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import Login from "pages/Login/Login";
+import { editorPageTitle } from "utils/pageTitle";
 import {
   isSecureLocalRedirect,
   REDIRECT_KEY,
@@ -36,4 +37,5 @@ export const Route = createFileRoute("/(auth)/login")({
   },
   component: Login,
   pendingComponent: DelayedLoadingIndicator,
+  head: () => editorPageTitle("Log in"),
 });

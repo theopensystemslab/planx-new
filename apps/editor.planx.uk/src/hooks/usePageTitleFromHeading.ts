@@ -1,18 +1,24 @@
 import { useEffect } from "react";
 import { withEnvironmentTag } from "utils/pageTitle";
 
-const isEditorPage = () => window.location.pathname.startsWith("/app");
+/**
+ * Pages which set their own title per route via `head`
+ */
+const hasRouteTitle = () => {
+  const { pathname } = window.location;
+  return pathname.startsWith("/app") || pathname === "/login";
+};
 
 /**
  * Sets the page title based heirarchy of headings (defaults to PlanX if no headings present)
  * Titles are tagged with the current environment, eg "[staging]"
  *
- * Editor pages are skipped - their titles are set per route via `head` (see utils/pageTitle.ts)
+ * Editor and login pages are skipped - their titles are set per route via `head`
  */
 const usePageTitleFromHeading = () => {
   useEffect(() => {
     const observer = new MutationObserver(() => {
-      if (isEditorPage()) return;
+      if (hasRouteTitle()) return;
 
       const title = [
         document.querySelector("[role=heading],h1,h2,h3")?.textContent,

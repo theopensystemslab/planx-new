@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import type { StripeConnectError } from "lib/api/stripe/types";
 import PaymentSettings from "pages/FlowEditor/components/Settings/Team/Payment";
+import { editorPageTitle } from "utils/pageTitle";
 import { z } from "zod";
 
 import { getStripeConnectResult } from "./-payments.utils";
@@ -25,4 +26,6 @@ export const Route = createFileRoute(
   }),
   loader: ({ deps }) => getStripeConnectResult(deps),
   component: PaymentSettings,
+  head: ({ match }) =>
+    editorPageTitle("Payments", "Team settings", match.context.team.name),
 });
