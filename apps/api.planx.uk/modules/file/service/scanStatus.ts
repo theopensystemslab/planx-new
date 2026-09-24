@@ -59,7 +59,7 @@ export const getScanStatus = async (
   const enforceFrom = getEnforcementDate();
 
   // Unset enforcement date means the guard is off. That is the state in local development
-  // and in e2e/integration tests, which run against Minio - there is no Scanii equivalent
+  // and in e2e/integration tests, which run against the S3 mock - there is no Scanii equivalent
   // behind it, so nothing is ever scanned or tagged. Every environment backed by a real
   // bucket (pizzas, staging, and production) has a scanner attached and enforces!
   if (!enforceFrom) return CLEAN;

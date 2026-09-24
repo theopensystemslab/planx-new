@@ -3,19 +3,20 @@ import { getS3KeyFromURL, s3Factory, safeDecode } from "./utils.js";
 describe("s3 Factory", () => {
   afterEach(() => vi.unstubAllEnvs());
 
-  it("returns Minio config for local development", async () => {
+  it("returns local S3 mock config for local development", async () => {
+    vi.stubEnv("S3_MOCK_PORT", "8333");
     const s3 = s3Factory();
 
-    // Minio should be set up as a custom endpoint
+    // The S3 mock should be set up as a custom endpoint
     expect(s3.config.endpoint).toBeDefined();
 
     const endpoint = await s3.config.endpoint!();
 
-    expect(endpoint.hostname).toBe("minio");
+    expect(endpoint.hostname).toBe("s3-mock");
   });
 
   ["pizza", "staging", "production"].forEach((env) => {
-    it(`does not use Minio config on ${env} environment`, async () => {
+    it(`does not use local S3 mock config on ${env} environment`, async () => {
       vi.stubEnv("NODE_ENV", env);
 
       const s3 = s3Factory();
