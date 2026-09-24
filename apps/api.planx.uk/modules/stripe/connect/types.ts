@@ -37,6 +37,7 @@ export interface ConnectStatusResponse {
   connected: boolean;
   accountId: string | null;
   mode: "test" | "live";
+  canConnect: boolean;
 }
 
 export const connectCallbackSchema = z.object({

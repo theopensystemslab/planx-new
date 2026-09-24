@@ -38,10 +38,16 @@ export const getConnectStatus: ConnectStatusController = async (
   try {
     const { team } = res.locals;
     const accountId = await Service.getStripeAccountId(team.id);
+    const mode = Service.getStripeMode();
+    // Teams must be taking Stripe payments on staging before connecting a live account
+    const canConnect =
+      mode === "test" || (await Service.isStripeEnabledOnStaging(team.slug));
+
     return res.send({
       connected: Boolean(accountId),
       accountId,
-      mode: Service.getStripeMode(),
+      mode,
+      canConnect,
     });
   } catch (error) {
     return next(
