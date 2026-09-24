@@ -7,7 +7,7 @@ import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
-import { useGetFlowDetails } from "./useGetFlowDetails";
+import { useGetFlowDetails } from "../hooks/useGetFlowDetails";
 
 export const BREADCRUMBS_HEIGHT = 3;
 
