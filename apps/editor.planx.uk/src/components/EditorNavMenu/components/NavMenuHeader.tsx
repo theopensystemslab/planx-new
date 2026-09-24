@@ -25,14 +25,15 @@ const LogoLink = styled(CustomLink)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   gap: theme.spacing(0.5),
-  padding: theme.spacing(0.5, 0.6),
+  padding: theme.spacing(0.5, 0.7),
   lineHeight: 0.5,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  fontSize: 19,
 }));
 
 const LogoIcon = styled("img")({
-  width: 20,
-  height: 20,
+  width: 18,
+  height: 18,
 });
 
 export interface NavMenuHeaderProps {
@@ -51,7 +52,6 @@ const NavMenuHeader: React.FC<NavMenuHeaderProps> = ({ compact = false }) => {
         to="/"
         preload={false}
         {...(isStandalone && { target: "_blank" })}
-        variant="subtitle2"
       >
         <LogoIcon
           src={getEnvironmentLogo(teamColour ?? DEFAULT_PRIMARY_COLOR)}
