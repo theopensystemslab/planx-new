@@ -1,6 +1,31 @@
 import type { RequestHandler } from "express";
+import { readFileSync } from "fs";
 
 import { stripe } from "../client.js";
+
+/**
+ * Resolve the webhook signing secret
+ *
+ * `STRIPE_WEBHOOK_SECRET_FILE` is used locally and on pizzas, written at runtime
+ * by the `stripe-cli` container
+ *
+ * `STRIPE_WEBHOOK_SECRET` is used on staging and production, set via Pulumi
+ */
+const getWebhookSecret = (): string | undefined => {
+  const secretFile = process.env.STRIPE_WEBHOOK_SECRET_FILE;
+  if (secretFile) {
+    try {
+      const secret = readFileSync(secretFile, "utf8").trim();
+      if (secret) return secret;
+    } catch {
+      console.debug(
+        "STRIPE_WEBHOOK_SECRET_FILE missing or invalid, falling back to STRIPE_WEBHOOK_SECRET",
+      );
+    }
+  }
+
+  return process.env.STRIPE_WEBHOOK_SECRET;
+};
 
 /**
  * Verify the `stripe-signature` header and construct a Stripe.Event
@@ -8,7 +33,7 @@ import { stripe } from "../client.js";
  * Docs: https://docs.stripe.com/webhooks/signature
  */
 export const verifyStripeWebhook: RequestHandler = (req, res, next) => {
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const webhookSecret = getWebhookSecret();
   if (!webhookSecret) {
     console.error("STRIPE_WEBHOOK_SECRET is not configured");
     return res.status(500).send("Webhook secret not configured");

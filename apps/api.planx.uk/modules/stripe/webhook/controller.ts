@@ -5,6 +5,10 @@ import type { StripeWebhookController } from "./types.js";
 
 /**
  * Handle a verified inbound Stripe webhook event
+ *
+ * Event types must match those configured in Stripe
+ *  - Staging & Production - events configured in Developer tab
+ *  - Local & Pizza - events configured in variable STRIPE_EVENTS for stripe-cli container
  */
 export const handleStripeWebhook: StripeWebhookController = async (
   _req,
