@@ -3,6 +3,7 @@ import {
   exchangeCodeForAccountId,
   getStripeAccountId,
   getStripeMode,
+  getTeamBySlug,
   saveStripeAccountId,
 } from "./service.js";
 
@@ -21,9 +22,36 @@ vi.mock("stripe", () => {
 });
 
 const mockRequest = vi.fn();
+const mockGetBySlug = vi.fn();
 vi.mock("../../../client/index.js", () => ({
-  $api: { client: { request: (...args: unknown[]) => mockRequest(...args) } },
+  $api: {
+    client: { request: (...args: unknown[]) => mockRequest(...args) },
+    team: { getBySlug: (...args: unknown[]) => mockGetBySlug(...args) },
+  },
 }));
+
+describe("getTeamBySlug", () => {
+  afterEach(() => {
+    mockGetBySlug.mockReset();
+  });
+
+  it("returns the team when it exists", async () => {
+    const team = { id: 1, slug: "lambeth" };
+    mockGetBySlug.mockResolvedValue(team);
+
+    await expect(getTeamBySlug("lambeth")).resolves.toBe(team);
+    expect(mockGetBySlug).toHaveBeenCalledWith("lambeth");
+  });
+
+  it("throws a 404 when the team does not exist", async () => {
+    mockGetBySlug.mockResolvedValue(null);
+
+    await expect(getTeamBySlug("unknown")).rejects.toMatchObject({
+      status: 404,
+      message: "Team not found: unknown",
+    });
+  });
+});
 
 describe("buildAuthoriseUrl", () => {
   beforeEach(() => {
@@ -92,6 +120,15 @@ describe("exchangeCodeForAccountId", () => {
     await expect(exchangeCodeForAccountId("used-code")).rejects.toThrow(
       /Authorization code already used/,
     );
+  });
+
+  it("throws a ServerError with a generic message for non-Stripe errors", async () => {
+    mockToken.mockRejectedValue(new Error("socket hang up"));
+
+    await expect(exchangeCodeForAccountId("auth-code")).rejects.toMatchObject({
+      status: 502,
+      message: "Stripe OAuth token exchange failed: Unknown error",
+    });
   });
 
   it("throws a ServerError when no account id is returned", async () => {
