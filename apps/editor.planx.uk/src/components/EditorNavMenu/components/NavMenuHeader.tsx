@@ -25,14 +25,14 @@ const LogoLink = styled(CustomLink)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   gap: theme.spacing(0.5),
-  padding: theme.spacing(0.5),
+  padding: theme.spacing(0.5, 0.6),
   lineHeight: 0.5,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
 }));
 
 const LogoIcon = styled("img")({
-  width: 22,
-  height: 22,
+  width: 20,
+  height: 20,
 });
 
 export interface NavMenuHeaderProps {
