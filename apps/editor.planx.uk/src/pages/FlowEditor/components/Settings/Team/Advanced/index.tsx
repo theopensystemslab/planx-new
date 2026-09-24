@@ -1,9 +1,9 @@
-import LocalPlanningAuthority from "./LocalPlanningAuthority";
+import TeamCategory from "./TeamCategory";
 import TrialAccount from "./TrialAccount";
 
 const AdvancedSettings: React.FC = () => (
   <>
-    <LocalPlanningAuthority />
+    <TeamCategory />
     <TrialAccount />
   </>
 );

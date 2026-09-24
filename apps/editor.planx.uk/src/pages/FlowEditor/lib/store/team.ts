@@ -3,6 +3,7 @@ import type {
   TeamSettings,
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
+import type { TeamCategory } from "lib/teamCategories";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
 import { getEnvironmentLogo } from "ui/icons/logos";
 import { setFavicon } from "utils/favicon";
@@ -11,7 +12,7 @@ import type { StateCreator } from "zustand";
 import type { SharedStore } from "./shared";
 
 export type TeamSummary = Pick<Team, "id" | "name" | "slug"> & {
-  isLpa: boolean;
+  category: TeamCategory;
   settings: Pick<TeamSettings, "isTrial">;
 } & { theme: Pick<TeamTheme, "primaryColour" | "logo"> };
 

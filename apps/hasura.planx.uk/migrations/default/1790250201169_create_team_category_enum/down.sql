@@ -1,22 +1,4 @@
-ALTER TABLE "public"."teams" ADD "is_lpa" boolean NOT NULL DEFAULT true;
-
-comment on column "public"."teams"."is_lpa" is E'Whether this team is a Local Planning Authority. Internal, test and template teams are false and are excluded from LPA-level reporting.';
-
-UPDATE "public"."teams"
-SET is_lpa = false
-WHERE name IN (
-  'Open Digital Planning',
-  'Open Systems Lab',
-  'PlanX',
-  'Templates',
-  'Testing',
-  'WikiHouse',
-  'Council Onboarding',
-  'Strategic and Local Plan',
-  'Plan✕ Academy'
-);
-
-CREATE OR REPLACE VIEW "public"."teams_summary" AS
+CREATE OR REPLACE VIEW "public"."teams_summary" AS 
  SELECT t.id,
     t.name,
     t.slug,
@@ -50,16 +32,16 @@ CREATE OR REPLACE VIEW "public"."teams_summary" AS
      JOIN team_themes tt ON tt.team_id = t.id
      JOIN team_settings ts ON ts.team_id = t.id
      LEFT JOIN LATERAL (
-        SELECT SUM(service_charge_amount) AS total_service_charges_collected
-        FROM service_charges sc
+        SELECT SUM(service_charge_amount) AS total_service_charges_collected 
+        FROM service_charges sc 
         WHERE ((sc.team_slug = t.slug))
      ) service_charge_data ON (true)
-     LEFT JOIN LATERAL (
+     LEFT JOIN LATERAL ( 
         SELECT jsonb_agg(jsonb_build_object('name', f.name, 'firstOnlineAt', flow_first_online_at(f.*)) ORDER BY f.name) AS live_flows
         FROM flows f
         WHERE ((f.team_id = t.id) AND (f.status = 'online'::text) AND (f.archived_at IS NULL))
      ) flow_data ON (true)
-  WHERE t.is_lpa = true
+  WHERE (t.name <> ALL (ARRAY['Open Digital Planning'::text, 'Open Systems Lab'::text, 'PlanX'::text, 'Templates'::text, 'Testing'::text, 'WikiHouse'::text]))
   ORDER BY t.name;
 
 CREATE OR REPLACE VIEW "public"."platform_dashboard_stats" AS
@@ -67,7 +49,7 @@ WITH lpa_teams AS (
   SELECT t.id, t.created_at
   FROM teams t
   JOIN team_settings ts ON ts.team_id = t.id
-  WHERE t.is_lpa = true
+  WHERE t.name NOT IN ('Open Digital Planning', 'Open Systems Lab', 'PlanX', 'Templates', 'Testing', 'WikiHouse', 'Council Onboarding')
     AND COALESCE(ts.is_trial, false) = false
 ),
 filtered_flows AS (
@@ -129,3 +111,9 @@ CROSS JOIN online_flows_current ofc
 CROSS JOIN online_flows_previous ofp
 CROSS JOIN platform_sessions ps
 CROSS JOIN platform_submissions psub;
+
+ALTER TABLE "public"."teams" DROP CONSTRAINT "teams_category_fkey";
+
+ALTER TABLE "public"."teams" DROP COLUMN "category";
+
+DROP TABLE "public"."team_category_enum";

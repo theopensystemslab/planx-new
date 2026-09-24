@@ -1,4 +1,49 @@
-CREATE OR REPLACE VIEW "public"."teams_summary" AS 
+CREATE TABLE "public"."team_category_enum" (
+  "value" TEXT NOT NULL,
+  "comment" TEXT,
+  PRIMARY KEY ("value")
+);
+
+COMMENT ON TABLE "public"."team_category_enum" IS E'An enum for categorising teams, e.g. to exclude non-LPA teams from reporting';
+
+INSERT INTO "public"."team_category_enum" ("value", "comment") VALUES
+  ('lpa', 'Local planning authority'),
+  ('internal', 'Internal PlanX team, e.g. for testing, templates or training'),
+  ('other', 'Other non-LPA organisation');
+
+ALTER TABLE "public"."teams" ADD COLUMN "category" TEXT NOT NULL DEFAULT 'lpa';
+
+ALTER TABLE "public"."teams"
+  ADD CONSTRAINT "teams_category_fkey"
+  FOREIGN KEY ("category")
+  REFERENCES "public"."team_category_enum" ("value")
+  ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+COMMENT ON COLUMN "public"."teams"."category" IS E'Whether this team is a local planning authority, an internal PlanX team, or another organisation. Only LPAs are included in LPA-level reporting.';
+
+UPDATE "public"."teams"
+SET category = 'internal'
+WHERE slug IN (
+  'open-digital-planning',
+  'opensystemslab',
+  'planx',
+  'templates',
+  'testing',
+  'council-onboarding',
+  'planx-academy'
+);
+
+UPDATE "public"."teams"
+SET category = 'other'
+WHERE slug IN (
+  'environment-agency',
+  'historic-england',
+  'planning-advisory-service-pas',
+  'tpx',
+  'wikihouse'
+);
+
+CREATE OR REPLACE VIEW "public"."teams_summary" AS
  SELECT t.id,
     t.name,
     t.slug,
@@ -32,16 +77,16 @@ CREATE OR REPLACE VIEW "public"."teams_summary" AS
      JOIN team_themes tt ON tt.team_id = t.id
      JOIN team_settings ts ON ts.team_id = t.id
      LEFT JOIN LATERAL (
-        SELECT SUM(service_charge_amount) AS total_service_charges_collected 
-        FROM service_charges sc 
+        SELECT SUM(service_charge_amount) AS total_service_charges_collected
+        FROM service_charges sc
         WHERE ((sc.team_slug = t.slug))
      ) service_charge_data ON (true)
-     LEFT JOIN LATERAL ( 
+     LEFT JOIN LATERAL (
         SELECT jsonb_agg(jsonb_build_object('name', f.name, 'firstOnlineAt', flow_first_online_at(f.*)) ORDER BY f.name) AS live_flows
         FROM flows f
         WHERE ((f.team_id = t.id) AND (f.status = 'online'::text) AND (f.archived_at IS NULL))
      ) flow_data ON (true)
-  WHERE (t.name <> ALL (ARRAY['Open Digital Planning'::text, 'Open Systems Lab'::text, 'PlanX'::text, 'Templates'::text, 'Testing'::text, 'WikiHouse'::text]))
+  WHERE t.category = 'lpa'
   ORDER BY t.name;
 
 CREATE OR REPLACE VIEW "public"."platform_dashboard_stats" AS
@@ -49,7 +94,7 @@ WITH lpa_teams AS (
   SELECT t.id, t.created_at
   FROM teams t
   JOIN team_settings ts ON ts.team_id = t.id
-  WHERE t.name NOT IN ('Open Digital Planning', 'Open Systems Lab', 'PlanX', 'Templates', 'Testing', 'WikiHouse', 'Council Onboarding')
+  WHERE t.category = 'lpa'
     AND COALESCE(ts.is_trial, false) = false
 ),
 filtered_flows AS (
@@ -111,5 +156,3 @@ CROSS JOIN online_flows_current ofc
 CROSS JOIN online_flows_previous ofp
 CROSS JOIN platform_sessions ps
 CROSS JOIN platform_submissions psub;
-
-alter table "public"."teams" drop column "is_lpa";

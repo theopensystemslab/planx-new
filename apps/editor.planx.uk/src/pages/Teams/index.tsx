@@ -82,7 +82,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
               </Typography>
             </Box>
             <Box sx={{ display: "flex", gap: 1 }}>
-              {!team.isLpa && <NonLpaChip label="Non-LPA" />}
+              {team.category !== "lpa" && <NonLpaChip label="Non-LPA" />}
               {team.settings.isTrial && <InfoChip label="Trial account" />}
             </Box>
           </TeamCard>
