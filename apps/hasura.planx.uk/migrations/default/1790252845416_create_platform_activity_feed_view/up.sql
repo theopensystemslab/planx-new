@@ -12,7 +12,7 @@ WITH team_joined AS (
         NULL::text AS flow_slug
     FROM teams t
     LEFT JOIN team_settings ts ON ts.team_id = t.id
-    WHERE t.is_lpa IS TRUE
+    WHERE t.category = 'lpa'
 ),
 service_online AS (
     -- "service set online" events, timestamped with when it first went online
@@ -31,11 +31,11 @@ service_online AS (
     WHERE f.is_service IS TRUE
       AND f.archived_at IS NULL
       AND flow_first_online_at(f.*) IS NOT NULL
-      AND t.is_lpa IS TRUE
+      AND t.category = 'lpa'
 )
 SELECT * FROM team_joined
 UNION ALL
 SELECT * FROM service_online
 ORDER BY event_time DESC;
 
-COMMENT ON VIEW "public"."platform_activity_feed" IS E'Chronological feed of platform-wide activity for the Explore page: teams joining PlanX (teams.created_at) and services going online for the first time. Includes trial teams, flagged via is_trial (team_settings.is_trial). Excludes non-LPA teams (teams.is_lpa).';
+COMMENT ON VIEW "public"."platform_activity_feed" IS E'Chronological feed of platform-wide activity for the Explore page: teams joining PlanX (teams.created_at) and services going online for the first time. Includes trial teams, flagged via is_trial (team_settings.is_trial). Only includes LPA teams (teams.category).';
