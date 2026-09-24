@@ -21,7 +21,7 @@ const UK_COUNTRY_VARIANTS = new Set([
 
 export const isUKCountry = (value?: string): boolean =>
   value
-    ? UK_COUNTRY_VARIANTS.has(value.trim().toLowerCase().replace(/[.]/g, ""))
+    ? UK_COUNTRY_VARIANTS.has(value.toLowerCase().replace(/[.]/g, ""))
     : true; // assuming that if the user leaves the optional 'Country' field blank then it's UK
 
 export const addressValidationSchema = (): SchemaOf<Address> =>
@@ -31,9 +31,10 @@ export const addressValidationSchema = (): SchemaOf<Address> =>
     town: string().trim().required("Enter a town"),
     county: string(),
     postcode: string()
+      .trim()
       .required("Enter a postcode")
       .when("country", {
-        is: (value: string) => isUKCountry(value) || null,
+        is: (value: string) => isUKCountry(value),
         then: (schema) =>
           schema
             .required("Enter a postcode")

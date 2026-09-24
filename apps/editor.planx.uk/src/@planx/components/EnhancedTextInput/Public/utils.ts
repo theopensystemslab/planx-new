@@ -60,7 +60,7 @@ export const getValidationSchema = (props: Props, step: Step) =>
       },
       required: true,
     })
-      .test("length", "Description must be of a minimum length.", (val) => {
+      .test("length", "Description must be at least 10 characters.", (val) => {
         if (val == undefined) {
           return true;
         }

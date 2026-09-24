@@ -21,21 +21,11 @@ export const contactValidationSchema = (): SchemaOf<Contact> =>
     firstName: string()
       .trim()
       .required("Enter a first name")
-      .test("length", "First name must have more than one character", (val) => {
-        if (val == undefined) {
-          return true;
-        }
-        return val.length > 1;
-      }),
+      .min(2, "First name must have more than one character"),
     lastName: string()
       .trim()
       .required("Enter a last name")
-      .test("length", "Last name must have more than one character", (val) => {
-        if (val == undefined) {
-          return true;
-        }
-        return val.length > 1;
-      }),
+      .min(2, "Last name must have more than one character"),
     organisation: string(),
     phone: string()
       .trim()
