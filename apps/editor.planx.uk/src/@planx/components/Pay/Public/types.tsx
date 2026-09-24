@@ -22,6 +22,7 @@ export type SharedAction =
   | Action.NoPaymentFound
   | Action.ZeroFee
   | Action.StartNewPayment
+  | Action.StartNewPaymentError
   | Action.Success;
 
 export type GovPayAction =
@@ -29,8 +30,9 @@ export type GovPayAction =
   | Action.IncompletePaymentFound
   | Action.IncompletePaymentConfirmed
   | Action.PaymentStatusUnknown
-  | Action.StartNewPaymentError
   | Action.ResumePayment;
 
 export type StripeAction =
   SharedAction | Action.PaymentPending | Action.PaymentCancelled;
+
+export type NoPaymentAction = SharedAction;

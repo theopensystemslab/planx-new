@@ -229,6 +229,93 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
     }
   });
 
+  it.each([
+    "Stripe payments are not enabled for this local authority (test-team)",
+    "This local authority (test-team) has not connected a Stripe account",
+  ])(
+    "displays an error if the team isn't set up for Stripe: %s",
+    async (error) => {
+      server.use(
+        http.post(checkoutSessionUrl, () =>
+          HttpResponse.json({ error }, { status: 409 }),
+        ),
+      );
+
+      const handleSubmit = vi.fn();
+
+      act(() =>
+        setState({
+          flow: flowWithFee,
+          breadcrumbs: feeBreadcrumbs,
+          previewEnvironment: "standalone",
+          teamSlug: "test-team",
+        }),
+      );
+
+      const { user } = await setup(
+        <AppErrorBoundary>
+          <Pay
+            title="Pay"
+            fn="application.fee.payable"
+            handleSubmit={handleSubmit}
+            govPayMetadata={[]}
+          />
+        </AppErrorBoundary>,
+      );
+
+      await user.click(await screen.findByText("Pay now"));
+
+      expect(await screen.findByTestId("error-summary")).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          "Online payments are not enabled for this local authority",
+        ),
+      ).toBeInTheDocument();
+      expect(handleSubmit).not.toHaveBeenCalled();
+
+      // Matches GOV.UK Pay - applicant can skip payment and continue
+      await user.click(screen.getByText("Continue"));
+      expect(handleSubmit).toHaveBeenCalled();
+    },
+  );
+
+  it("shows the generic error boundary for other Checkout Session errors", async () => {
+    server.use(
+      http.post(checkoutSessionUrl, () =>
+        HttpResponse.json({ error: "Stripe is unavailable" }, { status: 500 }),
+      ),
+    );
+
+    act(() =>
+      setState({
+        flow: flowWithFee,
+        breadcrumbs: feeBreadcrumbs,
+        previewEnvironment: "standalone",
+        teamSlug: "test-team",
+      }),
+    );
+
+    const { user } = await setup(
+      <AppErrorBoundary>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={vi.fn()}
+          govPayMetadata={[]}
+        />
+      </AppErrorBoundary>,
+    );
+
+    await user.click(await screen.findByText("Pay now"));
+
+    expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "Online payments are not enabled for this local authority",
+      ),
+    ).not.toBeInTheDocument();
+  });
+
   it("auto-succeeds in standalone (Public) when hidePay is true", async () => {
     const handleSubmit = vi.fn();
 

@@ -10,6 +10,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 import { useErrorBoundary } from "react-error-boundary";
 import { ApplicationPath } from "types";
+import { z } from "zod";
 
 import { makeData } from "../../../shared/utils";
 import { getDefaultContent, toPence } from "../../model";
@@ -37,6 +38,9 @@ const getStripeReturnURL = (): string => {
 
   return url.toString();
 };
+
+const isStripeNotConfiguredError = (error: unknown) =>
+  z.object({ statusCode: z.literal(409) }).safeParse(error).success;
 
 export function useStripePay(
   props: Props,
@@ -122,6 +126,11 @@ export function useStripePay(
       // Redirect the browser to hosted Stripe Checkout
       window.location.assign(url);
     } catch (error) {
+      if (isStripeNotConfiguredError(error)) {
+        dispatch(Action.StartNewPaymentError);
+        return;
+      }
+
       showBoundary(error);
     }
   };

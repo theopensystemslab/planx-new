@@ -11,7 +11,7 @@ export const resolveTeamPaymentProvider: ResolveTeamPaymentProviderMiddleware =
 
       if (paymentProvider !== "stripe") {
         return next({
-          status: 400,
+          status: 409,
           message: `Stripe payments are not enabled for this local authority (${localAuthority})`,
         });
       }
@@ -19,7 +19,7 @@ export const resolveTeamPaymentProvider: ResolveTeamPaymentProviderMiddleware =
       const stripeAccountId = await getStripeAccountId(team.id);
       if (!stripeAccountId) {
         return next({
-          status: 400,
+          status: 409,
           message: `This local authority (${localAuthority}) has not connected a Stripe account`,
         });
       }
