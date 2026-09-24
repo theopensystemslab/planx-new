@@ -34,7 +34,7 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
   ),
 }));
 
-vi.mock("./useGetFlowDetails", () => ({
+vi.mock("../hooks/useGetFlowDetails", () => ({
   useGetFlowDetails: vi.fn(() => ({
     data: {
       flows: [
