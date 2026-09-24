@@ -13,7 +13,7 @@ services:
     depends_on:
       mock-server:
         condition: service_started
-      minio:
+      s3-mock:
         condition: service_healthy
       sharedb:
         condition: service_started
@@ -29,7 +29,7 @@ services:
       UNIFORM_CLIENT_E2E: e2e:123
       NODE_ENV: test
       APP_ENVIRONMENT: test
-      # Minio has no Scanii equivalent - pinned here rather than left to .env
+      # The S3 mock has no Scanii equivalent - pinned here rather than left to .env
       ENFORCE_SCAN_FROM: ""
       RESEND_BASE_URL: http://mock-server:8080
       RESEND_API_KEY: test
