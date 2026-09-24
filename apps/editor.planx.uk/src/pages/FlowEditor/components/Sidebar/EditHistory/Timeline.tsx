@@ -31,10 +31,14 @@ import {
 
 interface EditHistoryTimelineProps {
   events: HistoryItem[];
+  showRestore?: boolean;
+  showDottedConnector?: boolean;
 }
 
 export const EditHistoryTimeline = ({
   events = [],
+  showRestore = true,
+  showDottedConnector = false,
 }: EditHistoryTimelineProps) => {
   const [focusedOpIndex, setFocusedOpIndex] = useState<number | undefined>(
     undefined,
@@ -83,7 +87,7 @@ export const EditHistoryTimeline = ({
 
   // Show restore only for editable, undoable operations that have something newer to undo
   const showUndoButton = (event: HistoryItem, i: number): boolean => {
-    if (event.type !== "operation") return false;
+    if (!showRestore || event.type !== "operation") return false;
 
     const hasNewerOperation = events
       .slice(0, i)
@@ -127,6 +131,10 @@ export const EditHistoryTimeline = ({
                     inUndoScope(i) && isUndoType(op.type)
                       ? theme.palette.grey[200]
                       : theme.palette.grey[300],
+                  ...(showDottedConnector && {
+                    borderStyle: "dashed",
+                    borderWidth: "1px",
+                  }),
                 }}
               />
             )}

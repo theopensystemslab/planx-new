@@ -2,6 +2,7 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import BuildIcon from "@mui/icons-material/Build";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MenuBook from "@mui/icons-material/MenuBook";
+import Schedule from "@mui/icons-material/Schedule";
 import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -12,10 +13,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
-import {
-  ComponentType,
-  ComponentType as TYPES,
-} from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
@@ -35,6 +33,7 @@ import { getNodeRoute } from "utils/routeUtils/utils";
 import { SLUGS } from "../../../data/types";
 import { useStore } from "../../../lib/store";
 import ChangeComponentHeader from "./ChangeComponentHeader";
+import ComponentHistory from "./ComponentHistory";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
@@ -58,7 +57,7 @@ const TabList = styled(Box)(() => ({
   },
 }));
 
-type ModalTab = "edit" | "preview" | "resources";
+type ModalTab = "edit" | "preview" | "history" | "resources";
 
 const MODAL_TABS: {
   label: string;
@@ -67,6 +66,7 @@ const MODAL_TABS: {
 }[] = [
   { label: "Edit", value: "edit", icon: <BuildIcon /> },
   { label: "Preview", value: "preview", icon: <Visibility /> },
+  { label: "History", value: "history", icon: <Schedule /> },
   {
     label: "How to use this component",
     value: "resources",
@@ -394,6 +394,17 @@ const FormModal: React.FC<FormModalProps> = ({
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 Preview coming soon.
               </Typography>
+            </Box>
+          )}
+          {activeTab === "history" && (
+            <Box sx={{ p: 2.5 }}>
+              {id ? (
+                <ComponentHistory nodeId={id} />
+              ) : (
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  Node ID not found, History is not yet available.
+                </Typography>
+              )}
             </Box>
           )}
           {activeTab === "resources" && (
