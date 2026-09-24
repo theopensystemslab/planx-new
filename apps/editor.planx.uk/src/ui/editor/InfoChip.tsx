@@ -8,7 +8,3 @@ export const InfoChip = styled(Chip)(({ theme }) => ({
   backgroundColor: theme.palette.info.light,
   zIndex: theme.zIndex.appBar,
 }));
-
-export const NonLpaChip = styled(InfoChip)(({ theme }) => ({
-  backgroundColor: theme.palette.action.focus,
-}));
