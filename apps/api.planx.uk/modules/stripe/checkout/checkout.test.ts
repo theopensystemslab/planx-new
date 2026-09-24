@@ -123,6 +123,7 @@ describe("creating a Stripe Checkout Session", () => {
           sessionId: validBody.sessionId,
           flowId: validBody.flowId,
           teamSlug: "southwark",
+          origin: "https://api.example.com",
         },
         payment_intent_data: {
           on_behalf_of: STRIPE_ACCOUNT_ID,
@@ -133,6 +134,7 @@ describe("creating a Stripe Checkout Session", () => {
             sessionId: validBody.sessionId,
             flowId: validBody.flowId,
             teamSlug: "southwark",
+            origin: "https://api.example.com",
           },
         },
       }),
@@ -155,6 +157,7 @@ describe("creating a Stripe Checkout Session", () => {
       sessionId: validBody.sessionId,
       flowId: validBody.flowId,
       teamSlug: "southwark",
+      origin: "https://api.example.com",
     };
     expect(metadata).toEqual(expected);
     expect(payment_intent_data.metadata).toEqual(expected);
@@ -167,7 +170,11 @@ describe("creating a Stripe Checkout Session", () => {
         ...validBody,
         // A colliding `sessionId` must not override the key the webhook relies on
         // TODO: Maybe we should ban these keys from the frontend (and Zod schema) once list is finalised?
-        metadata: { ...defaultMetadata, sessionId: "spoofed" },
+        metadata: {
+          ...defaultMetadata,
+          sessionId: "spoofed",
+          origin: "https://api.spoofed.com",
+        },
       })
       .expect(200);
 
@@ -177,6 +184,7 @@ describe("creating a Stripe Checkout Session", () => {
       sessionId: validBody.sessionId,
       flowId: validBody.flowId,
       teamSlug: "southwark",
+      origin: "https://api.example.com",
     });
   });
 
