@@ -83,7 +83,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "south-gloucestershire",
           domain: "planningservices.southglos.gov.uk",
-          cloudFrontState: "cutover-ongoing",
+          cloudFrontState: "shared-final",
         },
         {
           name: "birmingham",
