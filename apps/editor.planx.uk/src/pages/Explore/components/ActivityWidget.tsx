@@ -134,7 +134,7 @@ export function ActivityWidget({
               sx={{ px: 2, py: 1.5, gap: 1.5 }}
             >
               <Box sx={{ display: "flex", alignItems: "center", height: 24 }}>
-                <Dot sx={{ bgcolor: EVENT_DOT_COLOR[event.type] }} />
+                <Dot size={10} sx={{ bgcolor: EVENT_DOT_COLOR[event.type] }} />
               </Box>
               <Box
                 sx={{
