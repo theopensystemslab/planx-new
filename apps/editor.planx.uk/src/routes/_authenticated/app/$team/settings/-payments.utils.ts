@@ -16,6 +16,8 @@ const STRIPE_CONNECT_ERROR_MESSAGES: Record<
   access_denied: "Stripe connection was cancelled",
   missing_code: DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
   connect_failed: DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
+  staging_required:
+    "A live Stripe account can only be connected once Stripe is enabled as the payment provider on staging",
 };
 
 export const getStripeConnectResult = ({

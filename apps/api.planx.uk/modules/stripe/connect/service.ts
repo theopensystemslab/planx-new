@@ -167,3 +167,9 @@ export const isStripeEnabledOnStaging = async (
 
   return teamSettings[0]?.paymentProvider === "stripe";
 };
+
+// Teams must be taking Stripe payments on staging before connecting a live account
+export const canConnectStripeAccount = async (
+  teamSlug: string,
+): Promise<boolean> =>
+  getStripeMode() === "test" || isStripeEnabledOnStaging(teamSlug);
