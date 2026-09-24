@@ -18,7 +18,6 @@ export const Route = createFileRoute("/_authenticated/app")({
             id
             name
             slug
-            category
             settings: team_settings {
               isTrial: is_trial
             }
