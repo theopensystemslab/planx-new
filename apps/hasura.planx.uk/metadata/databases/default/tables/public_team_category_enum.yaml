@@ -1,0 +1,4 @@
+table:
+  name: team_category_enum
+  schema: public
+is_enum: true

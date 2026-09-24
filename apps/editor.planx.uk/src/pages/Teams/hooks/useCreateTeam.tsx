@@ -1,10 +1,11 @@
 import { gql, useMutation } from "@apollo/client";
+import type { TeamCategory } from "lib/teamCategories";
 
 const CREATE_TEAM_MUTATION = gql`
   mutation CreateTeam(
     $name: String!
     $slug: String!
-    $isLpa: Boolean!
+    $category: team_category_enum_enum!
     $domain: String
     $settings: team_settings_insert_input!
     $theme: team_themes_insert_input!
@@ -14,7 +15,7 @@ const CREATE_TEAM_MUTATION = gql`
       object: {
         name: $name
         slug: $slug
-        is_lpa: $isLpa
+        category: $category
         # Create empty records for associated tables - these can get populated later
         team_settings: { data: $settings }
         theme: { data: $theme }
@@ -30,7 +31,7 @@ const CREATE_TEAM_MUTATION = gql`
 export interface TeamPayload {
   name: string;
   slug: string;
-  isLpa: boolean;
+  category: TeamCategory;
   settings: {
     isTrial: boolean;
   };
@@ -39,12 +40,17 @@ export interface TeamPayload {
 export const useCreateTeam = () => {
   const [mutate, mutationState] = useMutation(CREATE_TEAM_MUTATION);
 
-  const createTeam = async ({ name, slug, isLpa, settings }: TeamPayload) => {
+  const createTeam = async ({
+    name,
+    slug,
+    category,
+    settings,
+  }: TeamPayload) => {
     return mutate({
       variables: {
         name,
         slug,
-        isLpa,
+        category,
         settings: {
           is_trial: settings.isTrial,
         },
