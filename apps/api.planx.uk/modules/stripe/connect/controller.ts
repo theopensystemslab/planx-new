@@ -7,6 +7,9 @@ import type {
   InitiateConnectController,
 } from "./types.js";
 
+const editorPaymentsUrl = (teamSlug: string): string =>
+  `${process.env.EDITOR_URL_EXT}/app/${teamSlug}/settings/payments`;
+
 export const initiateConnect: InitiateConnectController = async (
   req,
   res,
@@ -14,6 +17,13 @@ export const initiateConnect: InitiateConnectController = async (
 ) => {
   try {
     const { team } = res.locals;
+
+    // The editor disables connecting until this passes - also enforce it server side
+    if (!(await Service.canConnectStripeAccount(team.slug))) {
+      return res.redirect(
+        `${editorPaymentsUrl(team.slug)}?stripeError=staging_required`,
+      );
+    }
 
     const nonce = generateNonce();
     setConnectState(req, { teamId: team.id, teamSlug: team.slug, nonce });
@@ -42,6 +52,7 @@ export const getConnectStatus: ConnectStatusController = async (
       connected: Boolean(accountId),
       accountId,
       mode: Service.getStripeMode(),
+      canConnect: await Service.canConnectStripeAccount(team.slug),
     });
   } catch (error) {
     return next(
@@ -52,9 +63,6 @@ export const getConnectStatus: ConnectStatusController = async (
     );
   }
 };
-
-const editorPaymentsUrl = (teamSlug: string): string =>
-  `${process.env.EDITOR_URL_EXT}/app/${teamSlug}/settings/payments`;
 
 // After the user has connected their Stripe account, get their account ID, store it, and redirect them to the team's payments page
 export const handleCallback: ConnectCallbackController = async (req, res) => {

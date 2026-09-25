@@ -1,11 +1,21 @@
+import type * as GraphQLRequest from "graphql-request";
+
 import {
   buildAuthoriseUrl,
+  canConnectStripeAccount,
   exchangeCodeForAccountId,
   getStripeAccountId,
   getStripeMode,
   getTeamBySlug,
+  isStripeEnabledOnStaging,
   saveStripeAccountId,
 } from "./service.js";
+
+const mockStagingRequest = vi.hoisted(() => vi.fn());
+vi.mock("graphql-request", async (importOriginal) => ({
+  ...(await importOriginal<typeof GraphQLRequest>()),
+  request: (...args: unknown[]) => mockStagingRequest(...args),
+}));
 
 const { mockAuthorizeUrl, mockToken, MockStripeError } = vi.hoisted(() => ({
   mockAuthorizeUrl: vi.fn(),
@@ -201,5 +211,96 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
     const accountId = await getStripeAccountId(42);
 
     expect(accountId).toBeNull();
+  });
+});
+
+describe("isStripeEnabledOnStaging", () => {
+  beforeEach(() => {
+    vi.stubEnv(
+      "STAGING_HASURA_GRAPHQL_URL",
+      "https://hasura.staging.example.com/v1/graphql",
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    mockStagingRequest.mockReset();
+  });
+
+  it("queries staging's Hasura for the team's payment provider, without credentials", async () => {
+    mockStagingRequest.mockResolvedValue({
+      teamSettings: [{ paymentProvider: "stripe" }],
+    });
+
+    await expect(isStripeEnabledOnStaging("lambeth")).resolves.toBe(true);
+
+    const [url, query, variables, headers] = mockStagingRequest.mock.calls[0];
+    expect(url).toBe("https://hasura.staging.example.com/v1/graphql");
+    expect(String(query)).toContain("payment_provider");
+    expect(variables).toEqual({ teamSlug: "lambeth" });
+    expect(headers).toBeUndefined();
+  });
+
+  it("returns false when staging uses another payment provider", async () => {
+    mockStagingRequest.mockResolvedValue({
+      teamSettings: [{ paymentProvider: "govpay" }],
+    });
+
+    await expect(isStripeEnabledOnStaging("lambeth")).resolves.toBe(false);
+  });
+
+  it("returns false when the team is not found on staging", async () => {
+    mockStagingRequest.mockResolvedValue({ teamSettings: [] });
+
+    await expect(isStripeEnabledOnStaging("lambeth")).resolves.toBe(false);
+  });
+
+  it("throws if STAGING_HASURA_GRAPHQL_URL is not configured", async () => {
+    vi.stubEnv("STAGING_HASURA_GRAPHQL_URL", undefined);
+
+    await expect(isStripeEnabledOnStaging("lambeth")).rejects.toThrow(
+      /STAGING_HASURA_GRAPHQL_URL/,
+    );
+    expect(mockStagingRequest).not.toHaveBeenCalled();
+  });
+});
+
+describe("canConnectStripeAccount", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    mockStagingRequest.mockReset();
+  });
+
+  it("allows connecting outside of production, without checking staging", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "staging");
+
+    await expect(canConnectStripeAccount("lambeth")).resolves.toBe(true);
+    expect(mockStagingRequest).not.toHaveBeenCalled();
+  });
+
+  it("in production, allows connecting once Stripe is enabled on staging", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+    vi.stubEnv(
+      "STAGING_HASURA_GRAPHQL_URL",
+      "https://hasura.staging.example.com/v1/graphql",
+    );
+    mockStagingRequest.mockResolvedValue({
+      teamSettings: [{ paymentProvider: "stripe" }],
+    });
+
+    await expect(canConnectStripeAccount("lambeth")).resolves.toBe(true);
+  });
+
+  it("in production, blocks connecting until Stripe is enabled on staging", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+    vi.stubEnv(
+      "STAGING_HASURA_GRAPHQL_URL",
+      "https://hasura.staging.example.com/v1/graphql",
+    );
+    mockStagingRequest.mockResolvedValue({
+      teamSettings: [{ paymentProvider: "govpay" }],
+    });
+
+    await expect(canConnectStripeAccount("lambeth")).resolves.toBe(false);
   });
 });
