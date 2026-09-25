@@ -13,16 +13,16 @@ export const paymentIntent = {
 export const CONNECTED_ACCOUNT_ID = "acct_test_southwark";
 export const DESTINATION_PAYMENT_ID = "py_test_destination";
 
-export const expandedPaymentIntent = {
-  ...paymentIntent,
-  latest_charge: {
-    id: "ch_test_123",
-    transfer: {
-      id: "tr_test_123",
-      destination: CONNECTED_ACCOUNT_ID,
-      destination_payment: DESTINATION_PAYMENT_ID,
-    },
-  },
+export const transfer = {
+  id: "tr_test_123",
+  source_transaction: "ch_test_123",
+  destination: CONNECTED_ACCOUNT_ID,
+  destination_payment: DESTINATION_PAYMENT_ID,
+};
+
+export const expandedCharge = {
+  id: "ch_test_123",
+  payment_intent: paymentIntent,
 };
 
 export const mockPassportLookup = (passportData: unknown = null) =>

@@ -7,6 +7,7 @@ import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
 import { stripe } from "../client.js";
+import { getStripeId } from "../helpers.js";
 import { buildLineItems } from "./lineItems.js";
 import type {
   CheckoutSessionStatusResponse,
@@ -105,10 +106,7 @@ export const getStripeCheckoutSessionStatus = async (
 ): Promise<CheckoutSessionStatusResponse> => {
   const session = await stripe.checkout.sessions.retrieve(checkoutSessionId);
 
-  const paymentIntentId =
-    typeof session.payment_intent === "string"
-      ? session.payment_intent
-      : (session.payment_intent?.id ?? null);
+  const paymentIntentId = getStripeId(session.payment_intent) ?? null;
 
   return {
     status: session.status,
