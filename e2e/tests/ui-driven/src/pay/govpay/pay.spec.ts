@@ -9,20 +9,16 @@ import {
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-} from "./helpers/context.js";
+} from "../../helpers/context.js";
 import {
-  cards,
   getSessionId,
   log,
   waitForPaymentResponse,
-} from "./helpers/globalHelpers.js";
-import type { TestContext } from "./helpers/types.js";
-import {
-  fillGovUkCardDetails,
-  fillInEmail,
-  submitCardDetails,
-} from "./helpers/userActions.js";
-import payFlow from "./mocks/flows/pay-flow.json" with { type: "json" };
+} from "../../helpers/globalHelpers.js";
+import type { TestContext } from "../../helpers/types.js";
+import { fillInEmail } from "../../helpers/userActions.js";
+import payFlow from "../../mocks/flows/pay-flow.json" with { type: "json" };
+import { cards, fillGovUkCardDetails, submitCardDetails } from "./helpers.js";
 
 let context: TestContext = {
   ...contextDefaults,

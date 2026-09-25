@@ -2,7 +2,7 @@ import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 
 import { findSessionId, getGraphQLClient } from "./context.js";
-import { log, TEST_EMAIL, waitForDebugLog } from "./globalHelpers.js";
+import { log, waitForDebugLog } from "./globalHelpers.js";
 import type { TestContext } from "./types.js";
 
 export async function saveSession({
@@ -166,32 +166,6 @@ export async function expectSections({
   const pageStatuses = page.locator("ul li span");
   await expect(pageSections).toContainText(sections.map((s) => s.title));
   await expect(pageStatuses).toContainText(sections.map((s) => s.status));
-}
-
-export async function fillGovUkCardDetails({
-  page,
-  cardNumber,
-}: {
-  page: Page;
-  cardNumber: string;
-}) {
-  await page.locator("#card-no").fill(cardNumber);
-  await page.getByLabel("Month").fill("12");
-  await page.getByLabel("Year").fill("2099");
-  await page.getByLabel("Name on card").fill("Test t Test");
-  await page.getByLabel("Card security code", { exact: false }).fill("123");
-
-  await page.locator("#address-line-1").fill("Test");
-  await page.locator("#address-line-2").fill("123");
-
-  await page.getByLabel("Town or city").fill("Test");
-  await page.getByLabel("Postcode").fill("HP111BB");
-  await page.getByLabel("Email").fill(TEST_EMAIL);
-  await page.locator("button#submit-card-details").click();
-}
-
-export async function submitCardDetails(page: Page) {
-  await page.locator("#confirm").click();
 }
 
 export async function answerContactInput(

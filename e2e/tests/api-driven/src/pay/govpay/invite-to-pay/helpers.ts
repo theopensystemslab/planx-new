@@ -9,8 +9,8 @@ import type {
 import axios from "axios";
 import { gql } from "graphql-tag";
 
-import { $admin } from "../client.js";
-import { createTeam, createUser, TEST_EMAIL } from "../globalHelpers.js";
+import { $admin } from "../../../client.js";
+import { createTeam, createUser, TEST_EMAIL } from "../../../globalHelpers.js";
 import {
   inviteToPayFlowGraph,
   mockBreadcrumbs,
