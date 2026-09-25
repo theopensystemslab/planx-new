@@ -48,6 +48,9 @@ catalogs:
     prettier:
       specifier: ^3.9.6
       version: 3.9.6
+    stripe:
+      specifier: ^22.1.1
+      version: 22.6.1
     uuid:
       specifier: ^14.0.2
       version: 14.0.2
@@ -290,7 +293,7 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       stripe:
-        specifier: ^22.1.1
+        specifier: 'catalog:'
         version: 22.6.1(@types/node@24.10.15)
       swagger-jsdoc:
         specifier: ^6.3.0
@@ -983,6 +986,9 @@ importers:
       prettier:
         specifier: 'catalog:'
         version: 3.9.6
+      stripe:
+        specifier: 'catalog:'
+        version: 22.6.1(@types/node@24.10.15)
       typescript:
         specifier: catalog:typescript
         version: 5.9.3
