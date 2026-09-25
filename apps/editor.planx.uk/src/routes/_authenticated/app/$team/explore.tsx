@@ -1,9 +1,9 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import Explore from "pages/Explore";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { editorPageTitle } from "utils/pageTitle";
 
 export const Route = createFileRoute("/_authenticated/app/$team/explore")({
+  staticData: { pageTitle: "Explore" },
   beforeLoad: () => {
     const { getUserRoleForCurrentTeam } = useStore.getState();
     const isAuthorised = Boolean(getUserRoleForCurrentTeam());
@@ -12,5 +12,4 @@ export const Route = createFileRoute("/_authenticated/app/$team/explore")({
     }
   },
   component: Explore,
-  head: ({ match }) => editorPageTitle("Explore", match.context.team.name),
 });

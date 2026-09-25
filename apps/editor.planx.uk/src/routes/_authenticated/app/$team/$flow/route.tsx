@@ -8,12 +8,12 @@ import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 import FlowSkeleton from "pages/FlowEditor/FlowSkeleton";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { editorPageTitle } from "utils/pageTitle";
 
 import { flowsSearchSchema } from "../flows";
 import { connectToFlowRoute } from "./-route.utils";
 
 export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
+  staticData: { pageTitle: (match) => match.context.flowName },
   pendingComponent: FlowSkeleton,
   validateSearch: zodValidator(flowsSearchSchema),
   search: {
@@ -39,8 +39,6 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
   },
   component: RouteComponent,
   notFoundComponent: CatchAllComponent,
-  head: ({ match }) =>
-    editorPageTitle(match.context.flowName, match.context.team.name),
 });
 
 function RouteComponent() {

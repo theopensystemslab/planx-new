@@ -5,11 +5,11 @@ import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 import { useEffect } from "react";
-import { editorPageTitle } from "utils/pageTitle";
 
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/app/$team")({
+  staticData: { pageTitle: (match) => match.context.team?.name },
   pendingComponent: RouteLoadingIndicator,
   beforeLoad: async ({ params }) => {
     const { data } = await client.query<{ teams: Team[] }>({
@@ -72,7 +72,6 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
   loader: ({ context }) => context.team,
   component: FlowsLayout,
   notFoundComponent: CatchAllComponent,
-  head: ({ match }) => editorPageTitle(match.context.team.name),
 });
 
 function FlowsLayout() {

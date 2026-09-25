@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import gql from "graphql-tag";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
-import { editorPageTitle } from "utils/pageTitle";
+import { editorPageTitleFromMatches } from "utils/pageTitle";
 
 import { useStore } from "../../../pages/FlowEditor/lib/store";
 import type { TeamSummary } from "../../../pages/FlowEditor/lib/store/team";
@@ -64,5 +64,5 @@ export const Route = createFileRoute("/_authenticated/app")({
     </AuthenticatedLayout>
   ),
   notFoundComponent: CatchAllComponent,
-  head: () => editorPageTitle(),
+  head: ({ matches }) => editorPageTitleFromMatches(matches),
 });

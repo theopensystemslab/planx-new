@@ -1,3 +1,15 @@
+import type { AnyRouteMatch } from "@tanstack/react-router";
+
+declare module "@tanstack/react-router" {
+  interface StaticDataRouteOption {
+    /**
+     * This route's segment of the page title, eg "Flows"
+     * Combined with parent route segments via `editorPageTitleFromMatches`
+     */
+    pageTitle?: string | ((match: AnyRouteMatch) => string | undefined);
+  }
+}
+
 const ENVIRONMENT_TITLE_TAGS: Record<string, string> = {
   staging: "[staging]",
   pizza: "[pizza]",
@@ -30,8 +42,22 @@ export const formatEditorPageTitle = (
  * Rendered via <HeadContent /> in the root route
  *
  * @example
- * head: ({ match }) => editorPageTitle("Flows", match.context.team.name)
+ * head: () => editorPageTitle("Log in")
  */
 export const editorPageTitle = (...parts: Array<string | undefined>) => ({
   meta: [{ title: formatEditorPageTitle(...parts) }],
 });
+
+/**
+ * Route `head` config which builds the page title from the `staticData.pageTitle`
+ * of each matched route, from most to least specific
+ */
+export const editorPageTitleFromMatches = (matches: AnyRouteMatch[]) =>
+  editorPageTitle(
+    ...matches
+      .map((match) => {
+        const { pageTitle } = match.staticData;
+        return typeof pageTitle === "function" ? pageTitle(match) : pageTitle;
+      })
+      .reverse(),
+  );

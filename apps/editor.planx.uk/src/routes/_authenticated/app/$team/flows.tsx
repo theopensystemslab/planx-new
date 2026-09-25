@@ -5,7 +5,6 @@ import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFl
 import Flows from "pages/Flows";
 import type { GetAnyFlowsQuery, GetAnyFlowsVars } from "pages/Flows/queries";
 import { GET_FLOWS } from "pages/Flows/queries";
-import { editorPageTitle } from "utils/pageTitle";
 import { z } from "zod";
 
 import { client } from "../../../../lib/graphql";
@@ -32,6 +31,7 @@ export const flowsSearchSchema = z.object({
 export type FlowSearch = z.infer<typeof flowsSearchSchema>;
 
 export const Route = createFileRoute("/_authenticated/app/$team/flows")({
+  staticData: { pageTitle: "Flows" },
   beforeLoad: startNewRecentFlowsJourney,
   validateSearch: zodValidator(flowsSearchSchema),
   pendingComponent: RouteLoadingIndicator,
@@ -51,7 +51,6 @@ export const Route = createFileRoute("/_authenticated/app/$team/flows")({
     }
   },
   component: FlowsComponent,
-  head: ({ match }) => editorPageTitle("Flows", match.context.team.name),
 });
 
 function FlowsComponent() {

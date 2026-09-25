@@ -4,10 +4,10 @@ import { client } from "lib/graphql";
 import { Notifications } from "pages/FlowEditor/components/Notifications/Notifications";
 import type { Notification } from "pages/FlowEditor/components/Notifications/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { editorPageTitle } from "utils/pageTitle";
 
 export const Route = createFileRoute("/_authenticated/app/$team/notifications")(
   {
+    staticData: { pageTitle: "Notifications" },
     loader: async ({ params }) => {
       const isAuthorised = useStore.getState().canUserEditTeam(params.team);
       if (!isAuthorised) {
@@ -52,8 +52,6 @@ export const Route = createFileRoute("/_authenticated/app/$team/notifications")(
       };
     },
     component: NotificationsRoute,
-    head: ({ match }) =>
-      editorPageTitle("Notifications", match.context.team.name),
   },
 );
 

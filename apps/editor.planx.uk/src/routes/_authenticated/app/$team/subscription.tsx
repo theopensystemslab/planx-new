@@ -5,9 +5,9 @@ import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { Subscription } from "pages/FlowEditor/components/Subscription/Subscription";
 import type { ServiceCharge } from "pages/FlowEditor/components/Subscription/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { editorPageTitle } from "utils/pageTitle";
 
 export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
+  staticData: { pageTitle: "Subscription" },
   loader: async ({ params, context }) => {
     const role = useStore.getState().getUserRoleForCurrentTeam();
 
@@ -72,7 +72,6 @@ export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
     throw error;
   },
   component: SubscriptionRoute,
-  head: ({ match }) => editorPageTitle("Subscription", match.context.team.name),
 });
 
 function SubscriptionRoute() {
