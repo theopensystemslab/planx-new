@@ -5,10 +5,8 @@ import type Stripe from "stripe";
 
 import { $api } from "../../../../client/index.js";
 import { reportError } from "../../../pay/helpers.js";
-import {
-  hasuraClientErrorSchema,
-  stripePaymentMetadataSchema,
-} from "./types.js";
+import { getOwnedPaymentIntent } from "../ownership/service.js";
+import { hasuraClientErrorSchema } from "./types.js";
 
 type StripePaymentStatus =
   "created" | "processing" | "succeeded" | "payment_failed";
@@ -24,49 +22,23 @@ interface InsertStripePaymentStatusArgs {
   metadata: Stripe.Metadata;
 }
 
-export type RecordStripePaymentStatusResult = "recorded" | "ignored";
-
 export async function recordStripePaymentIntentStatus(
   paymentIntent: Stripe.PaymentIntent,
   stripeStatus: StripePaymentStatus,
-): Promise<RecordStripePaymentStatusResult> {
+): Promise<void> {
   const { id, amount, metadata } = paymentIntent;
 
-  const parsedMetadata = stripePaymentMetadataSchema.safeParse(metadata);
-  if (!parsedMetadata.success) {
-    reportError({
-      error:
-        "Could not record Stripe payment status: PaymentIntent metadata is invalid or missing",
-      context: {
-        paymentIntentId: id,
-        stripeStatus,
-        issues: parsedMetadata.error.issues,
-      },
-    });
-    return "ignored";
-  }
+  const ownedPaymentIntent = await getOwnedPaymentIntent(
+    paymentIntent,
+    stripeStatus,
+  );
+  if (!ownedPaymentIntent) return;
 
-  const { sessionId, flowId, teamSlug, origin } = parsedMetadata.data;
-
-  // Non-prod environments share a Stripe sandbox, so every environment receives every event
-  // A foreign event is expected traffic, not an error
-  if (origin !== process.env.API_URL_EXT) {
-    console.info(
-      `Ignoring Stripe event for PaymentIntent ${id} (${stripeStatus}): created by ${origin}`,
-    );
-    return "ignored";
-  }
-
-  // Local environments share a single origin, so a matching origin alone can't prove the session is ours
-  const { session } = await getSession(sessionId);
-  if (!session) {
-    console.info(
-      `Ignoring Stripe event for PaymentIntent ${id} (${stripeStatus}): session ${sessionId} not found in this environment`,
-    );
-    return "ignored";
-  }
-
-  const feeBreakdown = deriveFeeBreakdown(sessionId, session.passportData);
+  const { sessionId, flowId, teamSlug } = ownedPaymentIntent.metadata;
+  const feeBreakdown = deriveFeeBreakdown(
+    sessionId,
+    ownedPaymentIntent.passportData,
+  );
 
   try {
     await insertStripePaymentStatus({
@@ -84,12 +56,10 @@ export async function recordStripePaymentIntentStatus(
       console.info(
         `Ignoring Stripe event for PaymentIntent ${id} (${stripeStatus}): flow ${flowId} or team ${teamSlug} no longer exists`,
       );
-      return "ignored";
+      return;
     }
     throw error;
   }
-
-  return "recorded";
 }
 
 const isForeignKeyViolation = (error: unknown): boolean => {
@@ -102,25 +72,6 @@ const isForeignKeyViolation = (error: unknown): boolean => {
       message.startsWith("Foreign key violation"),
   );
 };
-
-interface GetSessionResponse {
-  session: Partial<{
-    passportData: Session["data"]["passport"]["data"];
-  }> | null;
-}
-
-async function getSession(sessionId: string): Promise<GetSessionResponse> {
-  return $api.client.request<GetSessionResponse>(
-    gql`
-      query GetStripePaymentSession($id: uuid!) {
-        session: lowcal_sessions_by_pk(id: $id) {
-          passportData: data(path: "passport.data")
-        }
-      }
-    `,
-    { id: sessionId },
-  );
-}
 
 function deriveFeeBreakdown(
   sessionId: string,
