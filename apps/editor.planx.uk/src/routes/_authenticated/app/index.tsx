@@ -3,6 +3,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import Teams from "pages/Teams";
 
 export const Route = createFileRoute("/_authenticated/app/")({
+  staticData: { pageTitle: "Select a team" },
   loader: () => {
     useStore.getState().clearTeamStore();
   },

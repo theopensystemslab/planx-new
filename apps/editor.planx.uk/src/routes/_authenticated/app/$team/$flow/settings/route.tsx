@@ -5,6 +5,7 @@ import FlowSettingsLayout from "pages/FlowEditor/components/Settings/Flow/Layout
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/settings",
 )({
+  staticData: { pageTitle: "Flow settings" },
   pendingComponent: DelayedLoadingIndicator,
   component: RouteComponent,
 });

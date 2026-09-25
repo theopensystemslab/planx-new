@@ -7,6 +7,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/app/$team/notifications")(
   {
+    staticData: { pageTitle: "Notifications" },
     loader: async ({ params }) => {
       const isAuthorised = useStore.getState().canUserEditTeam(params.team);
       if (!isAuthorised) {

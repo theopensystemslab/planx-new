@@ -7,11 +7,13 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 import FlowSkeleton from "pages/FlowEditor/FlowSkeleton";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 import { flowsSearchSchema } from "../flows";
 import { connectToFlowRoute } from "./-route.utils";
 
 export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
+  staticData: { pageTitle: (match) => match.context.flowName },
   pendingComponent: FlowSkeleton,
   validateSearch: zodValidator(flowsSearchSchema),
   search: {
@@ -31,8 +33,10 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
 
     return { rootFlow, folderIds };
   },
-  beforeLoad: async ({ params: { team }, context: { rootFlow } }) =>
-    connectToFlowRoute(team, rootFlow),
+  beforeLoad: async ({ params: { team }, context: { rootFlow } }) => {
+    await connectToFlowRoute(team, rootFlow);
+    return { flowName: useStore.getState().flowName };
+  },
   component: RouteComponent,
   notFoundComponent: CatchAllComponent,
 });

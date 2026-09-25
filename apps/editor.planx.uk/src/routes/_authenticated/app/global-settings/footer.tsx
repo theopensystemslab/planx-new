@@ -4,5 +4,6 @@ import FooterSettings from "pages/GlobalSettings/Footer";
 export const Route = createFileRoute(
   "/_authenticated/app/global-settings/footer",
 )({
+  staticData: { pageTitle: "Footer elements" },
   component: FooterSettings,
 });

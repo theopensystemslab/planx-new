@@ -3,6 +3,7 @@ import { TeamMembers } from "pages/FlowEditor/components/Team/TeamMembers";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/app/$team/members")({
+  staticData: { pageTitle: "Team members" },
   loader: async ({ params }) => {
     const isAuthorised = useStore.getState().canUserEditTeam(params.team);
     if (!isAuthorised) {

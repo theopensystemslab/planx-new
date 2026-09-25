@@ -4,5 +4,6 @@ import AdvancedSettings from "pages/FlowEditor/components/Settings/Team/Advanced
 export const Route = createFileRoute(
   "/_authenticated/app/$team/settings/advanced",
 )({
+  staticData: { pageTitle: "Advanced" },
   component: AdvancedSettings,
 });

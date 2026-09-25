@@ -18,6 +18,7 @@ export type PaymentsSearch = z.infer<typeof paymentsSearchSchema>;
 export const Route = createFileRoute(
   "/_authenticated/app/$team/settings/payments",
 )({
+  staticData: { pageTitle: "Payments" },
   validateSearch: zodValidator(paymentsSearchSchema),
   loaderDeps: ({ search }) => ({
     stripeConnected: search.stripeConnected,

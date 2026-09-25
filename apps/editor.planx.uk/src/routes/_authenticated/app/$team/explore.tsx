@@ -3,6 +3,7 @@ import Explore from "pages/Explore";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/app/$team/explore")({
+  staticData: { pageTitle: "Explore" },
   beforeLoad: () => {
     const { getUserRoleForCurrentTeam } = useStore.getState();
     const isAuthorised = Boolean(getUserRoleForCurrentTeam());

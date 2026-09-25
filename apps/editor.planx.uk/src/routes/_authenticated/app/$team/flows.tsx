@@ -31,6 +31,7 @@ export const flowsSearchSchema = z.object({
 export type FlowSearch = z.infer<typeof flowsSearchSchema>;
 
 export const Route = createFileRoute("/_authenticated/app/$team/flows")({
+  staticData: { pageTitle: "Flows" },
   beforeLoad: startNewRecentFlowsJourney,
   validateSearch: zodValidator(flowsSearchSchema),
   pendingComponent: RouteLoadingIndicator,

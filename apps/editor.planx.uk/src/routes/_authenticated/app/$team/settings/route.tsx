@@ -2,6 +2,7 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import TeamSettingsLayout from "pages/FlowEditor/components/Settings/Team/Layout";
 
 export const Route = createFileRoute("/_authenticated/app/$team/settings")({
+  staticData: { pageTitle: "Team settings" },
   component: RouteComponent,
 });
 
