@@ -539,3 +539,11 @@ export const createExternalPortal = async (
 ) => {
   await createBaseComponent(page, locatingNode, ComponentType.ExternalPortal);
 };
+
+export const createNote = async (
+  page: Page,
+  locatingNode: Locator,
+  title: string,
+) => {
+  await createBaseComponent(page, locatingNode, ComponentType.Note, title);
+};

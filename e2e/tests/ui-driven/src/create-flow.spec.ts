@@ -79,6 +79,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await editor.createQuestion();
     await editor.createNoticeOnEachBranch();
+    await editor.createNote();
     await editor.createChecklist();
     await editor.createTextInput();
     await editor.createNumberInput();
