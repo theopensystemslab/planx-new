@@ -25,7 +25,7 @@ test("submits contact data", async () => {
     "First name": "Jane",
     "Last name": "Doe",
     "Organisation (optional)": "Local planning authority",
-    "Phone number": "0123456789",
+    "Phone number": "07777888999",
     "Email address": "jane@gov.uk",
   });
 
@@ -39,7 +39,7 @@ test("submits contact data", async () => {
           firstName: "Jane",
           lastName: "Doe",
           organisation: "Local planning authority",
-          phone: "0123456789",
+          phone: "07777888999",
           email: "jane@gov.uk",
         },
       },
@@ -48,7 +48,7 @@ test("submits contact data", async () => {
       [`${dataField}.name.first`]: "Jane",
       [`${dataField}.name.last`]: "Doe",
       [`${dataField}.company.name`]: "Local planning authority",
-      [`${dataField}.phone.primary`]: "0123456789",
+      [`${dataField}.phone.primary`]: "07777888999",
       [`${dataField}.email`]: "jane@gov.uk",
     },
   });
@@ -73,14 +73,14 @@ test("recovers previously submitted text when clicking the back button", async (
               firstName: "Jane",
               lastName: "Doe",
               organisation: "",
-              phone: "0123456789",
+              phone: "07777888999",
               email: "jane@gov.uk",
             },
           },
           [`${dataField}.title`]: "Mme",
           [`${dataField}.name.first`]: "Jane",
           [`${dataField}.name.last`]: "Doe",
-          [`${dataField}.phone.primary`]: "0123456789",
+          [`${dataField}.phone.primary`]: "07777888999",
           [`${dataField}.email`]: "jane@gov.uk",
         },
       }}
@@ -101,7 +101,7 @@ test("recovers previously submitted text when clicking the back button", async (
           firstName: "Jane",
           lastName: "Doe",
           organisation: "Local planning authority",
-          phone: "0123456789",
+          phone: "07777888999",
           email: "jane@gov.uk",
         },
       },
@@ -110,7 +110,7 @@ test("recovers previously submitted text when clicking the back button", async (
       [`${dataField}.name.first`]: "Jane",
       [`${dataField}.name.last`]: "Doe",
       [`${dataField}.company.name`]: "Local planning authority",
-      [`${dataField}.phone.primary`]: "0123456789",
+      [`${dataField}.phone.primary`]: "07777888999",
       [`${dataField}.email`]: "jane@gov.uk",
     },
   });
@@ -135,14 +135,14 @@ test("recovers previously submitted text when clicking the back button when a pa
               firstName: "Jane",
               lastName: "Doe",
               organisation: "",
-              phone: "0123456789",
+              phone: "07777888999",
               email: "jane@gov.uk",
             },
           },
           [`${dataField}.title`]: "Mme",
           [`${dataField}.name.first`]: "Jane",
           [`${dataField}.name.last`]: "Doe",
-          [`${dataField}.phone.primary`]: "0123456789",
+          [`${dataField}.phone.primary`]: "07777888999",
           [`${dataField}.email`]: "jane@gov.uk",
         },
       }}
@@ -163,7 +163,7 @@ test("recovers previously submitted text when clicking the back button when a pa
           firstName: "Jane",
           lastName: "Doe",
           organisation: "Local planning authority",
-          phone: "0123456789",
+          phone: "07777888999",
           email: "jane@gov.uk",
         },
       },
@@ -172,7 +172,7 @@ test("recovers previously submitted text when clicking the back button when a pa
       [`${dataField}.name.first`]: "Jane",
       [`${dataField}.name.last`]: "Doe",
       [`${dataField}.company.name`]: "Local planning authority",
-      [`${dataField}.phone.primary`]: "0123456789",
+      [`${dataField}.phone.primary`]: "07777888999",
       [`${dataField}.email`]: "jane@gov.uk",
     },
   });
@@ -185,7 +185,7 @@ it("should not have any accessibility violations on initial load", async () => {
     "First name": "Jane",
     "Last name": "Doe",
     "Organisation (optional)": "DLUHC",
-    "Phone number": "0123456789",
+    "Phone number": "07777888999",
     "Email address": "jane@gov.uk",
   });
   const results = await axe(container);
@@ -233,7 +233,7 @@ test("does not allow the name 'Test Test' to be used", async () => {
   await fillInFieldsUsingLabel(user, {
     "First name": "Test",
     "Last name": "Test",
-    "Phone number": "0123456789",
+    "Phone number": "07777888999",
     "Email address": "test@gov.uk",
   });
 
@@ -261,7 +261,7 @@ test("requires a non-empty string before being able to continue", async () => {
   await fillInFieldsUsingLabel(user, {
     "First name": "Someone",
     "Last name": " ",
-    "Phone number": "0123456789",
+    "Phone number": "07777888999",
     "Email address": "test@gov.uk",
   });
 
