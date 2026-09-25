@@ -4,26 +4,34 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import type { FormikConfig } from "formik";
 import { Form, Formik } from "formik";
+import {
+  TEAM_CATEGORIES,
+  TEAM_CATEGORY_LABELS,
+  type TeamCategory,
+} from "lib/teamCategories";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 import Permission from "ui/editor/Permission";
 import { URLPrefix } from "ui/editor/URLPrefix";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 import { slugify } from "utils";
 import type { SchemaOf } from "yup";
-import { boolean, object, string } from "yup";
+import { boolean, mixed, object, string } from "yup";
 
 import { useCreateTeam } from "./hooks/useCreateTeam";
 
 export interface CreateTeam {
   name: string;
   slug: string;
+  category: TeamCategory;
   settings: {
     isTrial: boolean;
   };
@@ -32,6 +40,9 @@ export interface CreateTeam {
 const validationSchema: SchemaOf<CreateTeam> = object({
   name: string().required("Name is required"),
   slug: string().required("Slug is required"),
+  category: mixed<TeamCategory>()
+    .oneOf([...TEAM_CATEGORIES])
+    .required(),
   settings: object({
     isTrial: boolean().required(),
   }),
@@ -46,6 +57,7 @@ export const AddTeamButton: React.FC = () => {
   const initialValues: CreateTeam = {
     name: "",
     slug: "",
+    category: "lpa",
     settings: {
       isTrial: false,
     },
@@ -59,6 +71,7 @@ export const AddTeamButton: React.FC = () => {
       await createTeam({
         name: values.name,
         slug: values.slug,
+        category: values.category,
         settings: values.settings,
       });
 
@@ -127,6 +140,27 @@ export const AddTeamButton: React.FC = () => {
                       startAdornment={<URLPrefix mode="team" />}
                     />
                   </InputLabel>
+                  <InputLabel label="Team category" htmlFor="category">
+                    <SelectInput
+                      id="category"
+                      name="category"
+                      bordered
+                      value={values.category}
+                      onChange={(e) =>
+                        setFieldValue("category", e.target.value)
+                      }
+                    >
+                      {TEAM_CATEGORIES.map((category) => (
+                        <MenuItem key={category} value={category}>
+                          {TEAM_CATEGORY_LABELS[category]}
+                        </MenuItem>
+                      ))}
+                    </SelectInput>
+                  </InputLabel>
+                  <Typography variant="body2" sx={{ mt: -1 }}>
+                    Only local planning authorities are included in
+                    platform-wide reporting.
+                  </Typography>
                   <Switch
                     name="isTrial"
                     checked={values.settings.isTrial}
