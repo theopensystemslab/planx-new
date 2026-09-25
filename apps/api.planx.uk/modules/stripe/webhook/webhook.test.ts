@@ -10,7 +10,7 @@ import { STRIPE_WEBHOOK_ENDPOINT } from "../routes.js";
 import {
   CONNECTED_ACCOUNT_ID,
   DESTINATION_PAYMENT_ID,
-  expandedPaymentIntent,
+  expandedCharge,
   getPaymentStatusInsert as insertCall,
   mockPassportLookup,
   mockPassportLookupFailure,
@@ -23,6 +23,7 @@ import {
   processingEvent,
   sign,
   succeededEvent,
+  transferCreatedEvent,
 } from "./test/utils.js";
 
 const post = (payload: string, signature?: string) => {
@@ -33,17 +34,15 @@ const post = (payload: string, signature?: string) => {
   return req.send(payload);
 };
 
-const asPaymentIntent = (value: unknown) =>
-  value as unknown as Stripe.Response<Stripe.PaymentIntent>;
+const asCharge = (value: unknown) =>
+  value as unknown as Stripe.Response<Stripe.Charge>;
 
 describe("receiving a Stripe webhook", () => {
   beforeEach(() => {
-    vi.spyOn(stripe.paymentIntents, "retrieve").mockResolvedValue(
-      asPaymentIntent(expandedPaymentIntent),
+    vi.spyOn(stripe.charges, "retrieve").mockResolvedValue(
+      asCharge(expandedCharge),
     );
-    vi.spyOn(stripe.charges, "update").mockResolvedValue(
-      {} as unknown as Stripe.Response<Stripe.Charge>,
-    );
+    vi.spyOn(stripe.charges, "update").mockResolvedValue(asCharge({}));
   });
 
   afterEach(() => {
@@ -251,13 +250,27 @@ describe("receiving a Stripe webhook", () => {
   });
 
   describe("propagating metadata to the destination payment", () => {
-    beforeEach(() => {
-      mockPassportLookup();
-      mockInsert();
+    it("copies the PaymentIntent metadata onto the connected account's destination payment on a transfer.created event", async () => {
+      const { payload, signature } = transferCreatedEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.charges.retrieve).toHaveBeenCalledWith("ch_test_123", {
+        expand: ["payment_intent"],
+      });
+      expect(stripe.charges.update).toHaveBeenCalledWith(
+        DESTINATION_PAYMENT_ID,
+        { metadata: paymentIntent.metadata },
+        { stripeAccount: CONNECTED_ACCOUNT_ID },
+      );
     });
 
-    it("copies the PaymentIntent metadata onto the connected account's destination payment", async () => {
-      const { payload, signature } = succeededEvent();
+    it("accepts expanded references on the transfer", async () => {
+      const { payload, signature } = transferCreatedEvent({
+        source_transaction: { id: "ch_test_123" },
+        destination: { id: CONNECTED_ACCOUNT_ID },
+        destination_payment: { id: DESTINATION_PAYMENT_ID },
+      });
 
       await post(payload, signature).expect(200);
 
@@ -268,18 +281,9 @@ describe("receiving a Stripe webhook", () => {
       );
     });
 
-    it("does not run for a non-succeeded event", async () => {
-      const { payload, signature } = processingEvent();
-
-      await post(payload, signature).expect(200);
-
-      expect(stripe.charges.update).not.toHaveBeenCalled();
-    });
-
-    it("returns 200 and skips the update when latest_charge is null", async () => {
-      vi.spyOn(stripe.paymentIntents, "retrieve").mockResolvedValue(
-        asPaymentIntent({ ...paymentIntent, latest_charge: null }),
-      );
+    it("does not run on a payment_intent.succeeded event", async () => {
+      mockPassportLookup();
+      mockInsert();
       const { payload, signature } = succeededEvent();
 
       await post(payload, signature).expect(200);
@@ -287,48 +291,75 @@ describe("receiving a Stripe webhook", () => {
       expect(stripe.charges.update).not.toHaveBeenCalled();
     });
 
-    it("returns 200 and skips the update when the charge has no transfer", async () => {
-      vi.spyOn(stripe.paymentIntents, "retrieve").mockResolvedValue(
-        asPaymentIntent({
-          ...paymentIntent,
-          latest_charge: { id: "ch_test_123", transfer: null },
-        }),
-      );
-      const { payload, signature } = succeededEvent();
+    it("returns 200 and skips the update when the transfer has no source_transaction", async () => {
+      const { payload, signature } = transferCreatedEvent({
+        source_transaction: null,
+      });
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.charges.retrieve).not.toHaveBeenCalled();
+      expect(stripe.charges.update).not.toHaveBeenCalled();
+    });
+
+    it("returns 200 and skips the update when the transfer is missing its destination", async () => {
+      const { payload, signature } = transferCreatedEvent({
+        destination: null,
+      });
 
       await post(payload, signature).expect(200);
 
       expect(stripe.charges.update).not.toHaveBeenCalled();
     });
 
-    it("returns 200 and skips the update when the transfer is missing its destination fields", async () => {
-      vi.spyOn(stripe.paymentIntents, "retrieve").mockResolvedValue(
-        asPaymentIntent({
-          ...paymentIntent,
-          latest_charge: {
-            id: "ch_test_123",
-            transfer: {
-              id: "tr_test_123",
-              destination: null,
-              destination_payment: null,
-            },
-          },
-        }),
-      );
-      const { payload, signature } = succeededEvent();
+    it("returns 200 and skips the update when the transfer is missing its destination_payment", async () => {
+      const { payload, signature } = transferCreatedEvent({
+        destination_payment: null,
+      });
 
       await post(payload, signature).expect(200);
 
       expect(stripe.charges.update).not.toHaveBeenCalled();
     });
 
-    it("returns 200 even when the destination-payment update throws", async () => {
+    it("returns 200 and skips the update when the charge has no PaymentIntent", async () => {
+      vi.spyOn(stripe.charges, "retrieve").mockResolvedValue(
+        asCharge({ ...expandedCharge, payment_intent: null }),
+      );
+      const { payload, signature } = transferCreatedEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.charges.update).not.toHaveBeenCalled();
+    });
+
+    it("returns 200 and skips the update when the charge's PaymentIntent is not expanded", async () => {
+      vi.spyOn(stripe.charges, "retrieve").mockResolvedValue(
+        asCharge({ ...expandedCharge, payment_intent: "pi_test_123" }),
+      );
+      const { payload, signature } = transferCreatedEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.charges.update).not.toHaveBeenCalled();
+    });
+
+    it("returns 500 when retrieving the charge fails, so Stripe redelivers the event", async () => {
+      vi.spyOn(stripe.charges, "retrieve").mockRejectedValue(
+        new Error("Stripe is unreachable"),
+      );
+      const { payload, signature } = transferCreatedEvent();
+
+      await post(payload, signature).expect(500);
+    });
+
+    it("returns 500 when the destination-payment update fails, so Stripe redelivers the event", async () => {
       vi.spyOn(stripe.charges, "update").mockRejectedValue(
         new Error("Stripe Connect is unreachable"),
       );
-      const { payload, signature } = succeededEvent();
+      const { payload, signature } = transferCreatedEvent();
 
-      await post(payload, signature).expect(200);
+      await post(payload, signature).expect(500);
     });
   });
 

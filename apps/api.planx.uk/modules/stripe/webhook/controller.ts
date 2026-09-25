@@ -26,7 +26,6 @@ export const handleStripeWebhook: StripeWebhookController = async (
         break;
       case "payment_intent.succeeded":
         await recordStripePaymentIntentStatus(event.data.object, "succeeded");
-        await propagateMetadataToDestinationPayment(event.data.object);
         break;
       case "payment_intent.payment_failed":
         await recordStripePaymentIntentStatus(
@@ -34,22 +33,25 @@ export const handleStripeWebhook: StripeWebhookController = async (
           "payment_failed",
         );
         break;
+      case "transfer.created":
+        await propagateMetadataToDestinationPayment(event.data.object);
+        break;
       default:
         console.log(
           `Ignoring unhandled Stripe event ${event.id} ${event.type}`,
         );
     }
   } catch (error) {
-    // Recording failed - return a non-2xx so Stripe redelivers the event
+    // Handling failed - return a non-2xx so Stripe redelivers the event
     reportError({
-      error: `Failed to record Stripe webhook event: ${error}`,
+      error: `Failed to handle Stripe webhook event: ${error}`,
       context: {
         eventId: event.id,
         eventType: event.type,
         ...(error instanceof Error && { cause: error.cause }),
       },
     });
-    return res.status(500).send("Failed to record payment status");
+    return res.status(500).send("Failed to handle Stripe webhook event");
   }
 
   return res.status(200).send();

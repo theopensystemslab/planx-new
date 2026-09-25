@@ -199,7 +199,7 @@ services:
     environment:
       STRIPE_API_KEY: ${STRIPE_SECRET_KEY}
       STRIPE_DEVICE_NAME: ${STRIPE_DEVICE_NAME:-planx-local}
-      STRIPE_EVENTS: payment_intent.created,payment_intent.processing,payment_intent.succeeded,payment_intent.payment_failed
+      STRIPE_EVENTS: payment_intent.created,payment_intent.processing,payment_intent.succeeded,payment_intent.payment_failed,transfer.created
       STRIPE_FORWARD_TO: http://api:${API_PORT}/stripe/webhook
       STRIPE_WEBHOOK_SECRET_FILE: /stripe/webhook-secret
     healthcheck:

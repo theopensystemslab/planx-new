@@ -1,5 +1,5 @@
 import { stripe } from "../../client.js";
-import { paymentIntent } from "./mocks.js";
+import { paymentIntent, transfer } from "./mocks.js";
 
 /** Serialise an event and sign it exactly as Stripe would */
 export const sign = (event: Record<string, unknown>) => {
@@ -41,4 +41,13 @@ export const processingEvent = () =>
     type: "payment_intent.processing",
     // Fired for async methods (Bacs, bank transfer)
     data: { object: { ...paymentIntent, status: "processing" } },
+  });
+
+export const transferCreatedEvent = (
+  objectOverrides: Record<string, unknown> = {},
+) =>
+  sign({
+    id: "evt_transfer_created",
+    type: "transfer.created",
+    data: { object: { ...transfer, ...objectOverrides } },
   });
