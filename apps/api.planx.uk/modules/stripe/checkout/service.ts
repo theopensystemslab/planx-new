@@ -78,6 +78,9 @@ export const createStripeCheckoutSession = async ({
     sessionId,
     flowId,
     teamSlug,
+    // Non-prod environments share a Stripe sandbox
+    // This identifies which environment owns this payment
+    origin: process.env.API_URL_EXT!,
   };
 
   const session = await stripe.checkout.sessions.create({

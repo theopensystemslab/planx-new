@@ -24,10 +24,17 @@ export const handleStripeWebhook: StripeWebhookController = async (
       case "payment_intent.processing":
         await recordStripePaymentIntentStatus(event.data.object, "processing");
         break;
-      case "payment_intent.succeeded":
-        await recordStripePaymentIntentStatus(event.data.object, "succeeded");
-        await propagateMetadataToDestinationPayment(event.data.object);
+      case "payment_intent.succeeded": {
+        const result = await recordStripePaymentIntentStatus(
+          event.data.object,
+          "succeeded",
+        );
+        // Only the environment which owns the payment should update it on Stripe
+        if (result === "recorded") {
+          await propagateMetadataToDestinationPayment(event.data.object);
+        }
         break;
+      }
       case "payment_intent.payment_failed":
         await recordStripePaymentIntentStatus(
           event.data.object,

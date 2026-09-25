@@ -5,7 +5,10 @@ import type Stripe from "stripe";
 
 import { $api } from "../../../../client/index.js";
 import { reportError } from "../../../pay/helpers.js";
-import { stripePaymentMetadataSchema } from "./types.js";
+import {
+  hasuraClientErrorSchema,
+  stripePaymentMetadataSchema,
+} from "./types.js";
 
 type StripePaymentStatus =
   "created" | "processing" | "succeeded" | "payment_failed";
@@ -21,10 +24,12 @@ interface InsertStripePaymentStatusArgs {
   metadata: Stripe.Metadata;
 }
 
+export type RecordStripePaymentStatusResult = "recorded" | "ignored";
+
 export async function recordStripePaymentIntentStatus(
   paymentIntent: Stripe.PaymentIntent,
   stripeStatus: StripePaymentStatus,
-): Promise<void> {
+): Promise<RecordStripePaymentStatusResult> {
   const { id, amount, metadata } = paymentIntent;
 
   const parsedMetadata = stripePaymentMetadataSchema.safeParse(metadata);
@@ -38,45 +43,93 @@ export async function recordStripePaymentIntentStatus(
         issues: parsedMetadata.error.issues,
       },
     });
-    return;
+    return "ignored";
   }
-  const { sessionId, flowId, teamSlug } = parsedMetadata.data;
 
-  const feeBreakdown = await getFeeBreakdownForSession(sessionId);
+  const { sessionId, flowId, teamSlug, origin } = parsedMetadata.data;
 
-  await insertStripePaymentStatus({
-    flowId,
-    sessionId,
-    teamSlug,
-    stripePaymentId: id,
-    stripeStatus,
-    amount,
-    feeBreakdown,
-    metadata,
-  });
+  // Non-prod environments share a Stripe sandbox, so every environment receives every event
+  // A foreign event is expected traffic, not an error
+  if (origin !== process.env.API_URL_EXT) {
+    console.info(
+      `Ignoring Stripe event for PaymentIntent ${id} (${stripeStatus}): created by ${origin}`,
+    );
+    return "ignored";
+  }
+
+  // Local environments share a single origin, so a matching origin alone can't prove the session is ours
+  const { session } = await getSession(sessionId);
+  if (!session) {
+    console.info(
+      `Ignoring Stripe event for PaymentIntent ${id} (${stripeStatus}): session ${sessionId} not found in this environment`,
+    );
+    return "ignored";
+  }
+
+  const feeBreakdown = deriveFeeBreakdown(sessionId, session.passportData);
+
+  try {
+    await insertStripePaymentStatus({
+      flowId,
+      sessionId,
+      teamSlug,
+      stripePaymentId: id,
+      stripeStatus,
+      amount,
+      feeBreakdown,
+      metadata,
+    });
+  } catch (error) {
+    if (isForeignKeyViolation(error)) {
+      console.info(
+        `Ignoring Stripe event for PaymentIntent ${id} (${stripeStatus}): flow ${flowId} or team ${teamSlug} no longer exists`,
+      );
+      return "ignored";
+    }
+    throw error;
+  }
+
+  return "recorded";
 }
 
-async function getFeeBreakdownForSession(
-  sessionId: string,
-): Promise<FeeBreakdown | null> {
-  try {
-    const response = await $api.client.request<{
-      session: Partial<{
-        passportData: Session["data"]["passport"]["data"];
-      }> | null;
-    }>(
-      gql`
-        query GetSessionPassportData($id: uuid!) {
-          session: lowcal_sessions_by_pk(id: $id) {
-            passportData: data(path: "passport.data")
-          }
-        }
-      `,
-      { id: sessionId },
-    );
+const isForeignKeyViolation = (error: unknown): boolean => {
+  const parsed = hasuraClientErrorSchema.safeParse(error);
+  if (!parsed.success) return false;
 
-    const passportData = response?.session?.passportData;
-    return passportData ? getFeeBreakdown(passportData) : null;
+  return parsed.data.response.errors.some(
+    ({ message, extensions }) =>
+      extensions.code === "constraint-violation" &&
+      message.startsWith("Foreign key violation"),
+  );
+};
+
+interface GetSessionResponse {
+  session: Partial<{
+    passportData: Session["data"]["passport"]["data"];
+  }> | null;
+}
+
+async function getSession(sessionId: string): Promise<GetSessionResponse> {
+  return $api.client.request<GetSessionResponse>(
+    gql`
+      query GetStripePaymentSession($id: uuid!) {
+        session: lowcal_sessions_by_pk(id: $id) {
+          passportData: data(path: "passport.data")
+        }
+      }
+    `,
+    { id: sessionId },
+  );
+}
+
+function deriveFeeBreakdown(
+  sessionId: string,
+  passportData: Session["data"]["passport"]["data"] | undefined,
+): FeeBreakdown | null {
+  if (!passportData) return null;
+
+  try {
+    return getFeeBreakdown(passportData);
   } catch (error) {
     reportError({
       error: `Could not derive fee breakdown for Stripe payment status: ${error}`,
