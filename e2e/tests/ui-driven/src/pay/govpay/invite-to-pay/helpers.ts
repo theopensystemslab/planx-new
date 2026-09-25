@@ -3,18 +3,18 @@ import { expect, type Page } from "@playwright/test";
 import type { GraphQLClient } from "graphql-request";
 import { gql } from "graphql-request";
 
-import { answerFindProperty } from "../helpers/geoSpatialUserActions.js";
+import { answerFindProperty } from "../../../helpers/geoSpatialUserActions.js";
 import {
   addSessionToContext,
   log,
   TEST_EMAIL,
-} from "../helpers/globalHelpers.js";
-import type { TestContext } from "../helpers/types.js";
+} from "../../../helpers/globalHelpers.js";
+import type { TestContext } from "../../../helpers/types.js";
 import {
   answerChecklist,
   answerContactInput,
   fillInEmail,
-} from "../helpers/userActions.js";
+} from "../../../helpers/userActions.js";
 
 /**
  * Navigates to pay component whilst completing the minimum requirements for an Invite to Pay flow
