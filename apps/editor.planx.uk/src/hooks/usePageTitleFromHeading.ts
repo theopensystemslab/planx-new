@@ -22,7 +22,7 @@ const usePageTitleFromHeading = () => {
 
       const title = [
         document.querySelector("[role=heading],h1,h2,h3")?.textContent,
-        "Plan✕",
+        "PlanX",
       ]
         .filter(Boolean)
         .join(" - ");

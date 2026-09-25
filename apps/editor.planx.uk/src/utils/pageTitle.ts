@@ -34,7 +34,7 @@ export const formatEditorPageTitle = (
   ...parts: Array<string | undefined>
 ): string => {
   const title = parts.filter(Boolean).join(" - ");
-  return withEnvironmentTag(title ? `${title} | Plan✕` : "Plan✕");
+  return withEnvironmentTag(title ? `${title} | PlanX` : "PlanX");
 };
 
 /**
