@@ -178,12 +178,15 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     const contentEl = document.querySelector('[data-testid="document-start"]');
     if (!contentEl) return;
 
-    if (contentEl instanceof HTMLElement) {
+    if (contentEl instanceof HTMLElement && !isInitialLoad.current) {
+      // Only make focusable whilst focused - a permanent tabindex makes this a mouse-focus target, stealing focus from widgets (i.e. scrollbars)
       contentEl.setAttribute("tabindex", "-1");
-
-      if (!isInitialLoad.current) {
-        contentEl.focus();
-      }
+      contentEl.addEventListener(
+        "blur",
+        () => contentEl.removeAttribute("tabindex"),
+        { once: true },
+      );
+      contentEl.focus();
     }
     isInitialLoad.current = false;
   }, [node?.id]);

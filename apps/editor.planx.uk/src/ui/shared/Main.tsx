@@ -10,10 +10,10 @@ const Root = styled("main")(() => ({
   },
 }));
 
+// tabindex is applied temporarily by SkipLink when focusing this element
+// A permanent tabindex would make <main> a mouse-focus target, stealing focus from widgets (e.g. clicking the address-autocomplete scrollbar)
 const Main: React.FC<PropsWithChildren> = ({ children }) => (
-  <Root id="main-content" tabIndex={-1}>
-    {children}
-  </Root>
+  <Root id="main-content">{children}</Root>
 );
 
 export default Main;
