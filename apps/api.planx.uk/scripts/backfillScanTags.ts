@@ -10,8 +10,8 @@
  *   pnpm tsx scripts/backfillScanTags.ts
  *
  * This routes through s3Factory(), so it follows NODE_ENV like the API does. Without
- * NODE_ENV set to a live value it targets Minio and reports success having tagged nothing
- * of consequence - so set both it and the bucket explicitly, e.g.
+ * NODE_ENV set to a live value it targets the local S3 mock service and reports success having
+ * tagged nothing of consequence - so set both it and the bucket explicitly, e.g.
  *   NODE_ENV=staging AWS_S3_BUCKET=user-data-xxx pnpm tsx scripts/backfillScanTags.ts
  *   NODE_ENV=pizza AWS_S3_BUCKET=pizza-user-uploads pnpm tsx scripts/backfillScanTags.ts
  *

@@ -20,6 +20,7 @@ const ResetToggle = styled(Button)(({ theme }) => ({
   padding: theme.spacing(1, 1, 1, 0),
   textDecorationStyle: "solid",
   color: theme.palette.text.primary,
+  zIndex: theme.zIndex.appBar,
 }));
 
 export const PreviewBrowser: React.FC = () => {
