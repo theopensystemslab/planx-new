@@ -7,6 +7,7 @@ import type { PaymentMetadata } from "@opensystemslab/planx-core/types";
 import type { Pay } from "@planx/components/Pay/model";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { useFormikContext } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { useCallback } from "react";
 import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
 import ListManager from "ui/editor/ListManager/ListManager";
@@ -16,7 +17,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { usePaymentProvider } from "../Public/hooks/usePaymentProvider";
+import { usePaymentProvider } from "../../../../hooks/usePaymentProvider";
 import { isFieldDisabled, parseError, parseTouched } from "./helpers";
 
 const GOVPAY_DOCS_URL =
@@ -144,7 +145,7 @@ const Headers: React.FC<{ title: string }> = ({ title }) => (
 export const PaymentMetadataSection: React.FC<PaymentMetadataSectionProps> = ({
   disabled,
 }) => {
-  const provider = usePaymentProvider();
+  const { paymentProvider } = usePaymentProvider();
   const { errors, setFieldValue, setTouched, touched, values } =
     useFormikContext<Pay>();
 
@@ -169,7 +170,9 @@ export const PaymentMetadataSection: React.FC<PaymentMetadataSectionProps> = ({
           Include metadata alongside payments, such as VAT codes, cost centers,
           or ledger codes. See{" "}
           <Link
-            href={provider === "stripe" ? STRIPE_DOCS_URL : GOVPAY_DOCS_URL}
+            href={
+              paymentProvider === "stripe" ? STRIPE_DOCS_URL : GOVPAY_DOCS_URL
+            }
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -1,9 +1,8 @@
-import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useSearch } from "@tanstack/react-router";
 import { act, screen, waitFor } from "@testing-library/react";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
-import { http, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 import type { FullStore, Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
@@ -71,13 +70,15 @@ const feeBreadcrumbs: Breadcrumbs = {
 describe("Pay component with Stripe provider (team on Stripe)", () => {
   beforeAll(() => (initialState = getState()));
 
-  beforeEach(() =>
-    act(() =>
-      setState({
-        teamSettings: { paymentProvider: "stripe" } as TeamSettings,
-      }),
-    ),
-  );
+  beforeEach(() => {
+    server.use(
+      graphql.query("GetPaymentProvider", () =>
+        HttpResponse.json({
+          data: { teamSettings: [{ paymentProvider: "stripe" }] },
+        }),
+      ),
+    );
+  });
 
   afterEach(() => {
     vi.clearAllMocks();
