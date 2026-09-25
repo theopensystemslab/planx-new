@@ -12,18 +12,18 @@ export function s3Factory() {
       secretAccessKey: process.env.AWS_SECRET_KEY!,
     },
 
-    ...useMinio(),
+    ...useLocalS3(),
   });
 }
 
-function useMinio() {
+function useLocalS3() {
   if (isLiveEnv()) {
     // Points to AWS
     return {};
   } else {
-    // Points to Minio
+    // Points to the local S3 mock service
     return {
-      endpoint: `http://minio:${process.env.MINIO_PORT}`,
+      endpoint: `http://s3-mock:${process.env.S3_MOCK_PORT}`,
       forcePathStyle: true,
       signatureVersion: "v4",
     };

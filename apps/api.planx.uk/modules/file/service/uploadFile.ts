@@ -73,7 +73,7 @@ const buildFileUrl = async (
     new GetObjectCommand({ Key: key, Bucket: process.env.AWS_S3_BUCKET }),
   );
   let s3Pathname = new URL(s3Url).pathname;
-  // Minio returns a pathname with bucket name prepended, remove this
+  // The S3 mock service returns a pathname with bucket name prepended, remove this
   if (!isLiveEnv())
     s3Pathname = s3Pathname.replace(`/${process.env.AWS_S3_BUCKET}`, "");
   return `${process.env.API_URL_EXT}/file/${path}${s3Pathname}`;

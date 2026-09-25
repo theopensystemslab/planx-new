@@ -70,7 +70,7 @@ export async function setUpTestContext(
       hasSendComponent: context.flow.hasSendComponent,
     });
   }
-  await setupGovPaySecret($admin, context);
+  await setupGovPay($admin, context);
 
   return context;
 }
@@ -156,20 +156,20 @@ export async function findSessionId(
   }
 }
 
-async function setupGovPaySecret(
-  $admin: CoreDomainClient,
-  context: TestContext,
-) {
+async function setupGovPay($admin: CoreDomainClient, context: TestContext) {
   try {
     await $admin.client.request(
       gql`
-        mutation SetupGovPaySecret(
-          $team_id: Int
-          $staging_govpay_secret: String
-        ) {
+        mutation SetupGovPay($team_id: Int, $staging_govpay_secret: String) {
           update_team_integrations(
             where: { team_id: { _eq: $team_id } }
             _set: { staging_govpay_secret: $staging_govpay_secret }
+          ) {
+            affected_rows
+          }
+          update_team_settings(
+            where: { team_id: { _eq: $team_id } }
+            _set: { payment_provider: "govpay" }
           ) {
             affected_rows
           }
@@ -181,6 +181,6 @@ async function setupGovPaySecret(
       },
     );
   } catch (error) {
-    throw Error("Failed to setup GovPay secret for E2E team");
+    throw Error("Failed to setup GovPay for E2E team");
   }
 }

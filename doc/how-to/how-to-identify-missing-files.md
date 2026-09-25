@@ -13,7 +13,7 @@ As these images are automatically deleted, this can lead to issues when trying t
 
 ## Scan verification
 
-Once Scanii has scanned an object, a callback Lambda tags it with `ScaniiId` and `ScaniiFindings`. The API will not serve a file from the user-data bucket unless those tags are present, so a file that has not yet been scanned is never handed to a council. This is controlled by the `ENFORCE_SCAN_FROM` env var (an ISO8601 date), which is set in every environment backed by a bucket Scanii watches: staging and production (from Pulumi config) and pizzas (from `.env.staging`). When unset the check is disabled entirely, which is the case in local development and in e2e/integration tests - both run against Minio, which has no Scanii equivalent, so no object is ever tagged.
+Once Scanii has scanned an object, a callback Lambda tags it with `ScaniiId` and `ScaniiFindings`. The API will not serve a file from the user-data bucket unless those tags are present, so a file that has not yet been scanned is never handed to a council. This is controlled by the `ENFORCE_SCAN_FROM` env var (an ISO8601 date), which is set in every environment backed by a bucket Scanii watches: staging and production (from Pulumi config) and pizzas (from `.env.staging`). When unset the check is disabled entirely, which is the case in local development and in e2e/integration tests - both run against the local S3 mock service, which has no Scanii equivalent, so no object is ever tagged.
 
 <!-- TODO: this policy-statement as regards file uploads belongs elsewhere, e.g. in an ADR -->
 ### Where our responsibility ends
