@@ -154,8 +154,10 @@ paths:
     post:
       summary: Receive a Stripe webhook event
       description: |
-        Endpoint which Stripe POSTs events to. Records the payment lifecycle to
-        the `payment_status` table.
+        Endpoint which Stripe POSTs events to. Records the payment lifecycle
+        (`payment_intent.*` events) to the `payment_status` table, and copies
+        PaymentIntent metadata onto the connected account's destination payment
+        (`transfer.created` events).
 
         Docs: [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
       tags:
@@ -173,5 +175,6 @@ paths:
           description: Missing or invalid `stripe-signature` - verification failed.
         "500":
           description: >-
-            Event verified, but recording the payment status failed. Returned deliberately
-            so Stripe redelivers the event and the write is retried.
+            Event verified, but handling it failed (recording the payment status, or
+            updating the destination payment). Returned deliberately so Stripe
+            redelivers the event and the write is retried.
