@@ -4,5 +4,6 @@ import IntegrationSettings from "pages/FlowEditor/components/Settings/Team/Integ
 export const Route = createFileRoute(
   "/_authenticated/app/$team/settings/integrations",
 )({
+  staticData: { pageTitle: "Integrations" },
   component: IntegrationSettings,
 });

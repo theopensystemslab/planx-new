@@ -7,6 +7,7 @@ import type { ServiceCharge } from "pages/FlowEditor/components/Subscription/typ
 import { useStore } from "pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
+  staticData: { pageTitle: "Subscription" },
   loader: async ({ params, context }) => {
     const role = useStore.getState().getUserRoleForCurrentTeam();
 

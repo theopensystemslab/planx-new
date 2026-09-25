@@ -4,5 +4,6 @@ import GISSettings from "pages/FlowEditor/components/Settings/Team/GIS";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/settings/gis-data",
 )({
+  staticData: { pageTitle: "GIS data" },
   component: GISSettings,
 });

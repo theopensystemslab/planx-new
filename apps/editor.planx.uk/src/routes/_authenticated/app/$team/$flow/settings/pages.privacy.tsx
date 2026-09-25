@@ -4,5 +4,6 @@ import Privacy from "pages/FlowEditor/components/Settings/Flow/Privacy";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/settings/pages/privacy",
 )({
+  staticData: { pageTitle: "Privacy page" },
   component: Privacy,
 });

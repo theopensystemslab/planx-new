@@ -4,5 +4,6 @@ import DesignSettings from "pages/FlowEditor/components/Settings/Team/Design";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/settings/design",
 )({
+  staticData: { pageTitle: "Design" },
   component: DesignSettings,
 });

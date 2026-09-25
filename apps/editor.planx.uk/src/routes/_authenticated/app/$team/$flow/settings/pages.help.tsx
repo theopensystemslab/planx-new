@@ -4,5 +4,6 @@ import Help from "pages/FlowEditor/components/Settings/Flow/Help";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/settings/pages/help",
 )({
+  staticData: { pageTitle: "Help page" },
   component: Help,
 });

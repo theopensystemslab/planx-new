@@ -7,6 +7,7 @@ const AdminPanelRoute = () => {
 };
 
 export const Route = createFileRoute("/_authenticated/app/admin-panel")({
+  staticData: { pageTitle: "Admin panel" },
   beforeLoad: async ({ context }) => {
     const { user } = context;
 

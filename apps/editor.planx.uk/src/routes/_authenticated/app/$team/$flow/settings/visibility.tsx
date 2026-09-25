@@ -4,5 +4,6 @@ import VisibilitySettings from "pages/FlowEditor/components/Settings/Flow/Visibi
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/settings/visibility",
 )({
+  staticData: { pageTitle: "Visibility" },
   component: VisibilitySettings,
 });

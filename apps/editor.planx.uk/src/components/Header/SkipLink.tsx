@@ -27,6 +27,13 @@ const SkipLink: React.FC = () => {
     const targetElement = document.getElementById("main-content");
     if (!targetElement) return;
 
+    // Make <main> focusable only whilst it's the skip link target (matches GOV.UK Frontend)
+    targetElement.setAttribute("tabindex", "-1");
+    targetElement.addEventListener(
+      "blur",
+      () => targetElement.removeAttribute("tabindex"),
+      { once: true },
+    );
     targetElement.focus();
     targetElement.scrollIntoView({ behavior: "smooth" });
   };

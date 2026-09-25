@@ -4,5 +4,6 @@ import ContactSettings from "pages/FlowEditor/components/Settings/Team/Contact";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/settings/contact",
 )({
+  staticData: { pageTitle: "Contact information" },
   component: ContactSettings,
 });

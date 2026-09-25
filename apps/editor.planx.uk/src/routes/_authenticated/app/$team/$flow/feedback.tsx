@@ -11,6 +11,7 @@ import { useStore } from "../../../../../pages/FlowEditor/lib/store";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/feedback",
 )({
+  staticData: { pageTitle: "Feedback" },
   pendingComponent: DelayedLoadingIndicator,
   loader: async ({ params }) => {
     const { team: teamSlug, flow: flowSlug } = params;

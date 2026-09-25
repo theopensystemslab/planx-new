@@ -7,6 +7,7 @@ import type { Feedback } from "pages/FlowEditor/components/FeedbackLog/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/app/$team/feedback")({
+  staticData: { pageTitle: "Feedback" },
   loader: async ({ params }) => {
     const isAuthorised = useStore.getState().canUserEditTeam(params.team);
     if (!isAuthorised) {

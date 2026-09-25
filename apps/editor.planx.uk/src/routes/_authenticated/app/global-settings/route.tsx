@@ -9,6 +9,7 @@ import GlobalSettingsLayout from "pages/GlobalSettings/Layout";
 import { GET_GLOBAL_SETTINGS } from "pages/GlobalSettings/queries";
 
 export const Route = createFileRoute("/_authenticated/app/global-settings")({
+  staticData: { pageTitle: "Global settings" },
   loader: async ({ context }) => {
     const isAuthorised = context.user?.isPlatformAdmin;
     if (!isAuthorised) throw notFound({ routeId: rootRouteId });

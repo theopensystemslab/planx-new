@@ -4,6 +4,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/submissions",
 )({
+  staticData: { pageTitle: "Submissions" },
   validateSearch: (search: Record<string, unknown>): { detail?: string } => ({
     detail: search.detail as string | undefined,
   }),

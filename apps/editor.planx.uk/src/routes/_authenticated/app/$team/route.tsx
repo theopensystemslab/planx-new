@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/app/$team")({
+  staticData: { pageTitle: (match) => match.context.team?.name },
   pendingComponent: RouteLoadingIndicator,
   beforeLoad: async ({ params }) => {
     const { data } = await client.query<{ teams: Team[] }>({
