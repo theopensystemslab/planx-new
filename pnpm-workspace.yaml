@@ -23,6 +23,7 @@ catalog:
   jsdom: ^30.0.1
   nanoid: ^3.3.18
   prettier: ^3.9.6
+  stripe: ^22.1.1
   uuid: ^14.0.2
   vite: ^6.4.3
   vitest: ^4.1.11
