@@ -12,6 +12,7 @@ import { EmptyState } from "ui/editor/EmptyState";
 import { EditHistoryTimeline } from "../../Sidebar/EditHistory/Timeline";
 
 type ComponentHistoryItem = HistoryItem & {
+  operationId: number;
   type: "operation";
   data: OT.Op;
 };
@@ -33,6 +34,7 @@ const ComponentHistory = (props: { nodeId: string }) => {
           where: { flow_id: { _eq: $flow_id }, node_id: { _in: $node_ids } }
           order_by: { created_at: desc }
         ) {
+          operationId: operation_id
           type
           data
           createdAt: created_at
@@ -69,12 +71,18 @@ const ComponentHistory = (props: { nodeId: string }) => {
   // Handle missing operations (e.g. non-production data)
   if (!loading && !data?.history) return null;
 
-  // Re-wrap each deconstructed node operation into an array ahead of being passed to `formatOps`
-  // TODO maybe re-group by operation ID too ??
-  const formattedHistory = data?.history.map((item) => ({
-    ...item,
-    data: [item.data],
-  })) as HistoryItem[];
+  // Group each deconstructed node edit by original operation ID so that `data` is an array ahead of being passed to `formatOps`
+  const formattedHistory = Array.from(
+    (data?.history || [])
+      .reduce((map, { operationId, data, ...rest }) => {
+        if (!map.has(operationId)) {
+          map.set(operationId, { operationId, ...rest, data: [] });
+        }
+        map.get(operationId).data.push(data);
+        return map;
+      }, new Map())
+      .values(),
+  );
 
   return (
     <Box sx={{ p: 2, mr: 3 }}>

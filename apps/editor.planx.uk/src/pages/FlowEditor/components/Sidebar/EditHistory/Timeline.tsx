@@ -132,8 +132,8 @@ export const EditHistoryTimeline = ({
                       ? theme.palette.grey[200]
                       : theme.palette.grey[300],
                   ...(showDottedConnector && {
-                    borderStyle: "dashed",
-                    borderWidth: "1px",
+                    borderLeftStyle: "dotted",
+                    borderLeftWidth: "3px",
                   }),
                 }}
               />
