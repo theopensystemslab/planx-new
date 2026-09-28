@@ -6,7 +6,12 @@ import { gql } from "graphql-tag";
 
 import { getCheckoutSessionId } from "../../../../shared/stripe/completeCheckoutSession.js";
 import { $admin } from "../../client.js";
-import { createFlow, createTeam, createUser } from "../../globalHelpers.js";
+import {
+  createFlow,
+  createTeam,
+  createUser,
+  TEST_EMAIL,
+} from "../../globalHelpers.js";
 import type { CustomWorld } from "./steps.js";
 
 const TEAM_SLUG = "e2e-stripe";
@@ -113,6 +118,7 @@ export async function buildSessionWithFees({
   const sessionId = await $admin.session.create({
     flowId,
     data: { breadcrumbs: {}, passport: { data: feePassports[feeCase] } },
+    email: TEST_EMAIL,
   });
   return { flowId, sessionId };
 }
@@ -145,6 +151,25 @@ export async function createCheckoutSession({
   );
 
   return getCheckoutSessionId(data.url);
+}
+
+export interface ValidateSessionResponse {
+  message: string;
+  changesFound: boolean | null;
+  reconciledSessionData: Record<string, unknown>;
+}
+
+/**
+ * Called when an applicant returns to their saved session via a "Resume" link
+ */
+export async function validateSession(
+  sessionId: string,
+): Promise<ValidateSessionResponse> {
+  const { data } = await axios.post<ValidateSessionResponse>(
+    `${process.env.API_URL_EXT}/validate-session`,
+    { payload: { sessionId, email: TEST_EMAIL } },
+  );
+  return data;
 }
 
 export interface StripePaymentStatus {
