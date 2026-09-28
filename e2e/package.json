@@ -1,6 +1,7 @@
 {
   "name": "@planx/e2e",
   "private": true,
+  "type": "module",
   "scripts": {
     "check": "pnpm typecheck && pnpm lint",
     "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
@@ -25,6 +26,7 @@
     "eslint": "catalog:",
     "globals": "catalog:",
     "prettier": "catalog:",
+    "stripe": "catalog:",
     "typescript": "catalog:typescript"
   }
 }
