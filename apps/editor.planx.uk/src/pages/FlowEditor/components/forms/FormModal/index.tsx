@@ -402,7 +402,7 @@ const FormModal: React.FC<FormModalProps> = ({
                 <ComponentHistory nodeId={id} />
               ) : (
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  Node ID not found, History is not yet available.
+                  History is not available yet.
                 </Typography>
               )}
             </Box>

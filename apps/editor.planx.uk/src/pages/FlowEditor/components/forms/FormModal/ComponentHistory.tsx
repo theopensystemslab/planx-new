@@ -5,7 +5,10 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import type { OT } from "@planx/graph/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import type { HistoryItem } from "lib/api/publishFlow/types";
+import type {
+  HistoryItem,
+  OperationHistoryItem,
+} from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { EmptyState } from "ui/editor/EmptyState";
 
@@ -30,7 +33,6 @@ const ComponentHistory = (props: { nodeId: string }) => {
     gql`
       subscription GetNodeHistory($flow_id: uuid = "", $node_ids: [String!]) {
         history: node_content_history(
-          limit: 50
           where: { flow_id: { _eq: $flow_id }, node_id: { _in: $node_ids } }
           order_by: { created_at: desc }
         ) {
@@ -76,22 +78,28 @@ const ComponentHistory = (props: { nodeId: string }) => {
     (data?.history || [])
       .reduce((map, { operationId, data, ...rest }) => {
         if (!map.has(operationId)) {
-          map.set(operationId, { operationId, ...rest, data: [] });
+          map.set(operationId, { ...rest, id: operationId, data: [] });
         }
-        map.get(operationId).data.push(data);
+        map.get(operationId)?.data.push(data);
         return map;
-      }, new Map())
+      }, new Map<number, OperationHistoryItem>())
       .values(),
   );
 
   return (
     <Box sx={{ p: 2, mr: 3 }}>
       {data?.history && (
-        <EditHistoryTimeline
-          events={formattedHistory}
-          showRestore={false}
-          showDottedConnector={true}
-        />
+        <>
+          <EditHistoryTimeline
+            events={formattedHistory}
+            showRestore={false}
+            showDottedConnector={true}
+          />
+          <Divider />
+          <Typography variant="body2" sx={{ mt: 2 }} color="GrayText">
+            {`History shows edits made to this component only within the last year. If you have questions about viewing an earlier point in time, please contact a developer.`}
+          </Typography>
+        </>
       )}
       {data?.history.length === 0 && (
         <>
@@ -100,14 +108,6 @@ const ComponentHistory = (props: { nodeId: string }) => {
             title="No changes have been made in the last year"
             icon={<HistoryIcon />}
           />
-        </>
-      )}
-      {data?.history.length === 50 && (
-        <>
-          <Divider />
-          <Typography variant="body2" sx={{ mt: 2 }} color="GrayText">
-            {`History shows the last 50 edits made to this component within the last year. If you have questions about viewing an earlier point in time, please contact a developer.`}
-          </Typography>
         </>
       )}
     </Box>

@@ -134,6 +134,7 @@ export const EditHistoryTimeline = ({
                   ...(showDottedConnector && {
                     borderLeftStyle: "dotted",
                     borderLeftWidth: "3px",
+                    background: "none",
                   }),
                 }}
               />
