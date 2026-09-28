@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
@@ -119,6 +120,10 @@ function DrawBoundaryComponent(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            If your flow is a submission service, this option must be turned
+            off.
+          </Typography>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
