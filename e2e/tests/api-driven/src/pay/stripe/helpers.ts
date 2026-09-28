@@ -1,13 +1,10 @@
 import assert from "node:assert";
 
+import type { FeeBreakdown } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { gql } from "graphql-tag";
-import type Stripe from "stripe";
 
-import {
-  completeStripeCheckoutSession,
-  getCheckoutSessionId,
-} from "../../../../shared/stripe/completeCheckoutSession.js";
+import { getCheckoutSessionId } from "../../../../shared/stripe/completeCheckoutSession.js";
 import { $admin } from "../../client.js";
 import { createFlow, createTeam, createUser } from "../../globalHelpers.js";
 import type { CustomWorld } from "./steps.js";
@@ -121,9 +118,9 @@ export async function buildSessionWithFees({
 }
 
 /**
- * Create a Checkout Session via the PlanX API, then complete it without a browser
+ * Create a Checkout Session via the PlanX API
  */
-export async function payViaStripeCheckout({
+export async function createCheckoutSession({
   flowId,
   sessionId,
   feeCase,
@@ -131,7 +128,7 @@ export async function payViaStripeCheckout({
   flowId: string;
   sessionId: string;
   feeCase: FeeCase;
-}): Promise<Stripe.PaymentIntent> {
+}): Promise<string> {
   const { data } = await axios.post<{ url: string }>(
     `${process.env.API_URL_EXT}/stripe/checkout-session/${TEAM_SLUG}`,
     {
@@ -147,7 +144,72 @@ export async function payViaStripeCheckout({
     },
   );
 
-  return completeStripeCheckoutSession(getCheckoutSessionId(data.url));
+  return getCheckoutSessionId(data.url);
+}
+
+export interface StripePaymentStatus {
+  stripeStatus: string;
+  stripePaymentId: string;
+  amount: number;
+  feeBreakdown: FeeBreakdown | null;
+  metadata: Record<string, string> | null;
+}
+
+export async function getStripePaymentStatuses(
+  sessionId: string,
+): Promise<StripePaymentStatus[]> {
+  const { paymentStatuses } = await $admin.client.request<{
+    paymentStatuses: StripePaymentStatus[];
+  }>(
+    gql`
+      query GetStripePaymentStatuses($sessionId: uuid!) {
+        paymentStatuses: payment_status(
+          where: {
+            session_id: { _eq: $sessionId }
+            stripe_status: { _is_null: false }
+          }
+        ) {
+          stripeStatus: stripe_status
+          stripePaymentId: stripe_payment_id
+          amount
+          feeBreakdown: fee_breakdown
+          metadata: stripe_metadata
+        }
+      }
+    `,
+    { sessionId },
+  );
+  return paymentStatuses;
+}
+
+/**
+ * Payment statuses are written by Stripe webhooks, so arrive after the payment completes
+ * We have to poll for these, a simple query will not work
+ */
+export async function waitForStripePaymentStatus({
+  sessionId,
+  stripeStatus,
+  retries = 20,
+  delay = 1000,
+}: {
+  sessionId: string;
+  stripeStatus: string;
+  retries?: number;
+  delay?: number;
+}): Promise<StripePaymentStatus> {
+  let found: StripePaymentStatus[] = [];
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    found = await getStripePaymentStatuses(sessionId);
+    const match = found.find((row) => row.stripeStatus === stripeStatus);
+    if (match) return match;
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+
+  const statuses = found.map((row) => row.stripeStatus).join(", ") || "none";
+  throw Error(
+    `No "${stripeStatus}" payment status for session ${sessionId} after ${retries} retries (found: ${statuses})`,
+  );
 }
 
 export async function cleanup({

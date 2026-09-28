@@ -19,6 +19,8 @@ services:
         condition: service_started
       api:
         condition: service_healthy
+      stripe-cli:
+        condition: service_healthy
     entrypoint: sh
     command: -c "echo ready for testing"
 
