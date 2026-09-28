@@ -3,7 +3,7 @@ Feature: Stripe payment status audit trail
 
   Background:
     Given a team on Stripe with a connected account
-    And a session with "a standard fee"
+    And a session with "a statutory fee"
 
   Scenario: A successful payment is recorded
     When the applicant pays via Stripe Checkout
