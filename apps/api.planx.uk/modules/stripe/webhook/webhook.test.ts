@@ -5,6 +5,7 @@ import type Stripe from "stripe";
 import supertest from "supertest";
 
 import app from "../../../server.js";
+import * as payHelpers from "../../pay/helpers.js";
 import { stripe } from "../client.js";
 import { STRIPE_WEBHOOK_ENDPOINT } from "../routes.js";
 import {
@@ -12,9 +13,10 @@ import {
   DESTINATION_PAYMENT_ID,
   expandedPaymentIntent,
   getPaymentStatusInsert as insertCall,
-  mockPassportLookup,
-  mockPassportLookupFailure,
+  getSessionLookup,
   mockPaymentStatusInsert as mockInsert,
+  mockSessionLookup,
+  mockSessionLookupFailure,
   paymentIntent,
 } from "./test/mocks.js";
 import {
@@ -137,7 +139,7 @@ describe("receiving a Stripe webhook", () => {
 
   describe("recording a payment status", () => {
     beforeEach(() => {
-      mockPassportLookup();
+      mockSessionLookup();
       mockInsert();
     });
 
@@ -208,7 +210,7 @@ describe("receiving a Stripe webhook", () => {
     beforeEach(() => mockInsert());
 
     it("is derived from the session passport", async () => {
-      mockPassportLookup({ "application.fee.payable": 100 });
+      mockSessionLookup({ passportData: { "application.fee.payable": 100 } });
       const { payload, signature } = succeededEvent();
 
       await post(payload, signature).expect(200);
@@ -218,8 +220,19 @@ describe("receiving a Stripe webhook", () => {
       });
     });
 
-    it("is null when the passport lookup fails", async () => {
-      mockPassportLookupFailure();
+    it("is null when the passport has no fee data", async () => {
+      mockSessionLookup({ passportData: null });
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(insertCall()?.variables).toEqual(
+        expect.objectContaining({ feeBreakdown: null }),
+      );
+    });
+
+    it("is null when the fee breakdown cannot be derived from the passport", async () => {
+      mockSessionLookup({ passportData: { "application.fee.payable": "£££" } });
       const { payload, signature } = succeededEvent();
 
       await post(payload, signature).expect(200);
@@ -232,7 +245,7 @@ describe("receiving a Stripe webhook", () => {
 
   describe("Stripe metadata", () => {
     beforeEach(() => {
-      mockPassportLookup();
+      mockSessionLookup();
       mockInsert();
     });
 
@@ -252,7 +265,7 @@ describe("receiving a Stripe webhook", () => {
 
   describe("propagating metadata to the destination payment", () => {
     beforeEach(() => {
-      mockPassportLookup();
+      mockSessionLookup();
       mockInsert();
     });
 
@@ -332,9 +345,87 @@ describe("receiving a Stripe webhook", () => {
     });
   });
 
+  describe("a foreign event, from another environment sharing the Stripe sandbox", () => {
+    beforeEach(() => {
+      mockInsert();
+      // A foreign event is expected traffic on a shared sandbox, not an error
+      vi.spyOn(payHelpers, "reportError");
+    });
+
+    const foreignMetadata = {
+      ...paymentIntent.metadata,
+      origin: "https://api.1234.planx.pizza",
+    };
+
+    it("returns 200 without recording, or looking up the session, when the origin is another environment", async () => {
+      mockSessionLookup();
+      const { payload, signature } = succeededEvent({
+        metadata: foreignMetadata,
+      });
+
+      await post(payload, signature).expect(200);
+
+      expect(getSessionLookup()).toBeUndefined();
+      expect(insertCall()).toBeUndefined();
+      expect(payHelpers.reportError).not.toHaveBeenCalled();
+    });
+
+    it("returns 200 without recording when the origin matches but the session is not found (e.g. another local environment)", async () => {
+      mockSessionLookup({ sessionExists: false });
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(getSessionLookup()).toBeDefined();
+      expect(insertCall()).toBeUndefined();
+      expect(payHelpers.reportError).not.toHaveBeenCalled();
+    });
+
+    it("does not propagate metadata to the destination payment", async () => {
+      const { payload, signature } = succeededEvent({
+        metadata: foreignMetadata,
+      });
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.paymentIntents.retrieve).not.toHaveBeenCalled();
+      expect(stripe.charges.update).not.toHaveBeenCalled();
+    });
+  });
+
   describe("when recording is skipped or fails", () => {
+    it("returns 500 when the session lookup fails, so Stripe redelivers the event", async () => {
+      mockSessionLookupFailure();
+      mockInsert();
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(500);
+
+      expect(insertCall()).toBeUndefined();
+    });
+
+    it("returns 200 without propagating when the session's flow or team has since been deleted", async () => {
+      mockSessionLookup();
+      mockInsert("fkViolation");
+      vi.spyOn(payHelpers, "reportError");
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.charges.update).not.toHaveBeenCalled();
+      expect(payHelpers.reportError).not.toHaveBeenCalled();
+    });
+
+    it("returns 500 for a non-FK constraint violation, so Stripe redelivers the event", async () => {
+      mockSessionLookup();
+      mockInsert("uniqueViolation");
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(500);
+    });
+
     it("returns 500 when the insert fails, so Stripe redelivers the event", async () => {
-      mockPassportLookup();
+      mockSessionLookup();
       mockInsert("fail");
       const { payload, signature } = succeededEvent();
 
@@ -349,6 +440,7 @@ describe("receiving a Stripe webhook", () => {
       await post(payload, signature).expect(200);
 
       expect(insertCall()).toBeUndefined();
+      expect(stripe.charges.update).not.toHaveBeenCalled();
     });
 
     it("returns 200 without recording for an unhandled event type", async () => {
