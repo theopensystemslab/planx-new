@@ -3,15 +3,18 @@ import { strict as assert } from "node:assert";
 import { After, Given, Then, When, World } from "@cucumber/cucumber";
 import type Stripe from "stripe";
 
+import { completeStripeCheckoutSession } from "../../../../shared/stripe/completeCheckoutSession.js";
 import {
   buildSessionWithFees,
   cleanup,
   connectStripeAccount,
+  createCheckoutSession,
   type FeeCase,
   getConnectedAccountId,
-  payViaStripeCheckout,
+  getStripePaymentStatuses,
   setupTeam,
   toFeeCase,
+  waitForStripePaymentStatus,
 } from "./helpers.js";
 
 export class CustomWorld extends World {
@@ -20,6 +23,7 @@ export class CustomWorld extends World {
   flowId?: string;
   sessionId?: string;
   feeCase?: FeeCase;
+  checkoutSessionId?: string;
   paymentIntent?: Stripe.PaymentIntent;
 }
 
@@ -56,11 +60,40 @@ When(
   "the applicant pays via Stripe Checkout",
   { timeout: 30 * 1000 },
   async function (this: CustomWorld) {
-    this.paymentIntent = await payViaStripeCheckout({
+    this.checkoutSessionId = await createCheckoutSession({
       flowId: this.flowId!,
       sessionId: this.sessionId!,
       feeCase: this.feeCase!,
     });
+    this.paymentIntent = await completeStripeCheckoutSession(
+      this.checkoutSessionId,
+    );
+  },
+);
+
+When(
+  "the applicant pays via Stripe Checkout with a declined card",
+  { timeout: 30 * 1000 },
+  async function (this: CustomWorld) {
+    this.checkoutSessionId = await createCheckoutSession({
+      flowId: this.flowId!,
+      sessionId: this.sessionId!,
+      feeCase: this.feeCase!,
+    });
+    this.paymentIntent = await completeStripeCheckoutSession(
+      this.checkoutSessionId,
+      "declined",
+    );
+  },
+);
+
+When(
+  "the applicant retries with a valid card",
+  { timeout: 30 * 1000 },
+  async function (this: CustomWorld) {
+    this.paymentIntent = await completeStripeCheckoutSession(
+      this.checkoutSessionId!,
+    );
   },
 );
 
@@ -88,5 +121,47 @@ Then(
   "PlanX keeps {int} pence as the application fee",
   function (this: CustomWorld, applicationFee: number) {
     assert.equal(this.paymentIntent!.application_fee_amount, applicationFee);
+  },
+);
+
+Then(
+  "a {string} payment status is recorded",
+  { timeout: 30 * 1000 },
+  async function (this: CustomWorld, stripeStatus: string) {
+    await waitForStripePaymentStatus({
+      sessionId: this.sessionId!,
+      stripeStatus,
+    });
+  },
+);
+
+Then(
+  "no {string} payment status is recorded",
+  async function (this: CustomWorld, stripeStatus: string) {
+    const statuses = await getStripePaymentStatuses(this.sessionId!);
+    assert.ok(
+      !statuses.some((row) => row.stripeStatus === stripeStatus),
+      `Unexpected "${stripeStatus}" payment status for session ${this.sessionId}`,
+    );
+  },
+);
+
+Then(
+  "the succeeded payment status records the amount, fee breakdown and metadata",
+  { timeout: 30 * 1000 },
+  async function (this: CustomWorld) {
+    const { stripePaymentId, amount, feeBreakdown, metadata } =
+      await waitForStripePaymentStatus({
+        sessionId: this.sessionId!,
+        stripeStatus: "succeeded",
+      });
+
+    assert.equal(stripePaymentId, this.paymentIntent!.id);
+    assert.equal(amount, this.paymentIntent!.amount);
+    assert.equal(
+      feeBreakdown?.amount.payable,
+      this.paymentIntent!.amount / 100,
+    );
+    assert.equal(metadata?.sessionId, this.sessionId);
   },
 );

@@ -1,6 +1,13 @@
-import type Stripe from "stripe";
+import Stripe from "stripe";
 
 import { getStripeTestClient } from "./client.js";
+
+export const stripeTestCards = {
+  success: "tok_visa",
+  declined: "tok_chargeDeclined",
+} as const;
+
+export type StripeTestCard = keyof typeof stripeTestCards;
 
 /**
  * Our API returns the hosted Checkout URL, not the session ID
@@ -27,10 +34,12 @@ export const getCheckoutSessionId = (checkoutURL: string): string => {
  *
  * The stripe-cli container is running and triggers all webhooks, which then hit our API
  *
- * Pays with Stripe's successful test card, and returns the PaymentIntent as Stripe recorded it
+ * Pays with a Stripe test card, and returns the PaymentIntent as Stripe recorded it
+ * A declined card leaves the session open, so it can be retried
  */
 export const completeStripeCheckoutSession = async (
   checkoutSessionId: string,
+  card: StripeTestCard = "success",
 ): Promise<Stripe.PaymentIntent> => {
   const stripe = getStripeTestClient();
 
@@ -41,21 +50,26 @@ export const completeStripeCheckoutSession = async (
 
   const paymentMethod = await stripe.paymentMethods.create({
     type: "card",
-    card: { token: "tok_visa" },
+    card: { token: stripeTestCards[card] },
     billing_details: {
       name: "Test Test",
       email: "simulate-delivered@notifications.service.gov.uk",
     },
   });
 
-  await stripe.rawRequest(
-    "POST",
-    `/v1/payment_pages/${checkoutSessionId}/confirm`,
-    {
-      payment_method: paymentMethod.id,
-      expected_amount: session.amount_total,
-    },
-  );
+  try {
+    await stripe.rawRequest(
+      "POST",
+      `/v1/payment_pages/${checkoutSessionId}/confirm`,
+      {
+        payment_method: paymentMethod.id,
+        expected_amount: session.amount_total,
+      },
+    );
+  } catch (error) {
+    // A declined card throws, but still leaves a PaymentIntent to inspect
+    if (!(error instanceof Stripe.errors.StripeCardError)) throw error;
+  }
 
   const { payment_intent } = await stripe.checkout.sessions.retrieve(
     checkoutSessionId,
