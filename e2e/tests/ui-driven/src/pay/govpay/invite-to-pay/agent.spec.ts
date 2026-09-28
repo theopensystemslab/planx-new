@@ -6,21 +6,24 @@ import {
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-} from "../helpers/context.js";
-import { addSessionToContext, modifyFlow } from "../helpers/globalHelpers.js";
-import type { TestContext } from "../helpers/types.js";
+} from "../../../helpers/context.js";
+import {
+  addSessionToContext,
+  modifyFlow,
+} from "../../../helpers/globalHelpers.js";
+import type { TestContext } from "../../../helpers/types.js";
 import {
   clickContinue,
   returnToSession,
   saveSession,
-} from "../helpers/userActions.js";
-import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow.js";
+} from "../../../helpers/userActions.js";
 import {
   answerInviteToPayForm,
   getPaymentRequestBySessionId,
   makePaymentRequest,
   navigateToPayComponent,
 } from "./helpers.js";
+import inviteToPayFlow from "./invite-to-pay-flow.js";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks.js";
 
 let context: TestContext = {
