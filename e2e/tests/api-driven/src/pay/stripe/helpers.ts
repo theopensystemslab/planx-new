@@ -18,12 +18,22 @@ const TEAM_SLUG = "e2e-stripe";
  * Session passports for each fee shape
  */
 const feePassports = {
-  "a standard fee": {
+  // Statutory fees are never VAT-able, only the service charge is
+  "a statutory fee": {
     "application.fee.calculated": 258,
     "application.fee.serviceCharge": 40,
     "application.fee.serviceCharge.VAT": 8,
     "application.fee.payable": 306,
     "application.fee.payable.VAT": 8,
+  },
+  // Discretionary fees (e.g. pre-application advice) carry VAT on the council's fee too
+  "a discretionary fee": {
+    "application.fee.calculated": 500,
+    "application.fee.calculated.VAT": 100,
+    "application.fee.serviceCharge": 40,
+    "application.fee.serviceCharge.VAT": 8,
+    "application.fee.payable": 648,
+    "application.fee.payable.VAT": 108,
   },
   "a Fast Track fee": {
     "application.fee.calculated": 258,
