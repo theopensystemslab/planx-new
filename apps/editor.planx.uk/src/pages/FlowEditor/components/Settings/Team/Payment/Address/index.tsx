@@ -33,7 +33,7 @@ const Address: React.FC = () => {
         addressLine2: teamInvoiceAddress?.addressLine2 ?? "",
         townCity: teamInvoiceAddress?.townCity ?? "",
         county: teamInvoiceAddress?.county ?? "",
-        postcode: teamInvoiceAddress.postcode ?? "",
+        postcode: teamInvoiceAddress?.postcode ?? "",
       })}
       getMutationVariables={(values) => ({
         teamId,
