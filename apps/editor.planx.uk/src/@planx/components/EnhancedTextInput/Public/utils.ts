@@ -59,12 +59,19 @@ export const getValidationSchema = (props: Props, step: Step) =>
         customLength: PROJECT_DESCRIPTION_LIMIT,
       },
       required: true,
-    }).when("selectedOption", {
-      // initial input is not required if we are coming from the 'enter a new description' option
-      is: (selectedOption: string | null) =>
-        step === "selection" && selectedOption === "new",
-      then: (schema) => schema.notRequired(),
-    }),
+    })
+      .test("length", "Description must be at least 10 characters.", (val) => {
+        if (val == undefined) {
+          return true;
+        }
+        return val.length > 10;
+      })
+      .when("selectedOption", {
+        // initial input is not required if we are coming from the 'enter a new description' option
+        is: (selectedOption: string | null) =>
+          step === "selection" && selectedOption === "new",
+        then: (schema) => schema.notRequired(),
+      }),
     original: string().when("status", {
       is: (status: string) => status === "success" || status === "error",
       then: (schema) => schema.required("Original text is missing"),

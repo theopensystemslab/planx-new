@@ -1,4 +1,5 @@
 import { richText } from "lib/yupExtensions";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import type { SchemaOf } from "yup";
 import { object, string } from "yup";
 
@@ -17,10 +18,22 @@ export type Contact = {
 export const contactValidationSchema = (): SchemaOf<Contact> =>
   object({
     title: string(),
-    firstName: string().trim().required("Enter a first name"),
-    lastName: string().trim().required("Enter a last name"),
+    firstName: string()
+      .trim()
+      .required("Enter a first name")
+      .min(2, "First name must have more than one character"),
+    lastName: string()
+      .trim()
+      .required("Enter a last name")
+      .min(2, "Last name must have more than one character"),
     organisation: string(),
-    phone: string().trim().required("Enter a phone number"),
+    phone: string()
+      .trim()
+      .required("Enter a phone number")
+      .test("valid-phone", "Enter a valid phone number", (val) => {
+        if (val == undefined) return true;
+        return isValidPhoneNumber(val, "GB");
+      }),
     email: string()
       .trim()
       .email(
