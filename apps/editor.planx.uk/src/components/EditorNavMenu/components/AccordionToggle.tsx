@@ -8,13 +8,25 @@ interface Props {
   subtitle: string;
   Icon: Route["Icon"];
   isOpen: boolean;
+  isActive?: boolean;
   onToggle: () => void;
 }
 
-const AccordionToggle = ({ subtitle, Icon, isOpen, onToggle }: Props) => {
+const AccordionToggle = ({
+  subtitle,
+  Icon,
+  isOpen,
+  isActive = false,
+  onToggle,
+}: Props) => {
   const ChevronIcon = isOpen ? ExpandLessIcon : ExpandMoreIcon;
   return (
-    <MenuButton isActive={false} disableRipple onClick={onToggle}>
+    <MenuButton
+      isActive={isActive}
+      aria-expanded={isOpen}
+      disableRipple
+      onClick={onToggle}
+    >
       <Icon fontSize="small" />
       <MenuTitle variant="body3" sx={{ pt: 0.15 }}>
         {subtitle}
