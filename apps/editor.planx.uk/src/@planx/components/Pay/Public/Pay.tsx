@@ -76,6 +76,7 @@ function Component(props: Props) {
     state.sessionId,
     state.computePassport(),
   ]);
+
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
   const [state, dispatch] = useReducer(reducer, {
