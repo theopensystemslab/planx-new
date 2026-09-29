@@ -88,6 +88,7 @@ describe("buildAuthoriseUrl", () => {
       scope: "read_write",
       redirect_uri: "https://api.example.com/stripe/connect/callback",
       state: "some-nonce",
+      stripe_landing: "login",
     });
   });
 

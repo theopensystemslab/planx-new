@@ -8,6 +8,9 @@ vi.mock("./middleware.js", () => ({
   generateNonce: (...args: unknown[]) => mockGenerateNonce(...args),
   setConnectState: (...args: unknown[]) => mockSetConnectState(...args),
   verifyState: (...args: unknown[]) => mockVerifyState(...args),
+  getPendingOnboarding: vi.fn(),
+  setPendingOnboarding: vi.fn(),
+  clearPendingOnboarding: vi.fn(),
 }));
 
 const mockBuildAuthoriseUrl = vi.fn();
@@ -58,6 +61,11 @@ afterEach(() => {
 });
 
 describe("initiateConnect", () => {
+  // Live mode uses OAuth - canConnectStripeAccount passes by default
+  beforeEach(() => {
+    mockGetStripeMode.mockReturnValue("live");
+  });
+
   it("saves connect state for the team, and redirects to the Stripe authorise URL", async () => {
     mockBuildAuthoriseUrl.mockReturnValue(
       "https://connect.stripe.com/oauth/authorize?mock=1",
