@@ -1,12 +1,17 @@
+import type { Team } from "@opensystemslab/planx-core/types";
 import type * as GraphQLRequest from "graphql-request";
 
 import {
   buildAuthoriseUrl,
   canConnectStripeAccount,
+  createOnboardingLink,
+  createPrefilledTestAccount,
   exchangeCodeForAccountId,
   getStripeAccountId,
   getStripeMode,
   getTeamBySlug,
+  isInvalidRequestError,
+  isOnboardingComplete,
   isStripeEnabledOnStaging,
   saveStripeAccountId,
 } from "./service.js";
@@ -17,16 +22,42 @@ vi.mock("graphql-request", async (importOriginal) => ({
   request: (...args: unknown[]) => mockStagingRequest(...args),
 }));
 
-const { mockAuthorizeUrl, mockToken, MockStripeError } = vi.hoisted(() => ({
+const {
+  mockAuthorizeUrl,
+  mockToken,
+  mockAccountsCreate,
+  mockCreatePerson,
+  mockAccountsRetrieve,
+  mockAccountsUpdate,
+  mockAccountLinksCreate,
+  MockStripeError,
+  MockStripeInvalidRequestError,
+} = vi.hoisted(() => ({
   mockAuthorizeUrl: vi.fn(),
   mockToken: vi.fn(),
+  mockAccountsCreate: vi.fn(),
+  mockCreatePerson: vi.fn(),
+  mockAccountsRetrieve: vi.fn(),
+  mockAccountsUpdate: vi.fn(),
+  mockAccountLinksCreate: vi.fn(),
   MockStripeError: class MockStripeError extends Error {},
+  MockStripeInvalidRequestError: class MockStripeInvalidRequestError extends Error {},
 }));
 
 vi.mock("stripe", () => {
   class MockStripe {
     oauth = { authorizeUrl: mockAuthorizeUrl, token: mockToken };
-    static errors = { StripeError: MockStripeError };
+    accounts = {
+      create: mockAccountsCreate,
+      createPerson: mockCreatePerson,
+      retrieve: mockAccountsRetrieve,
+      update: mockAccountsUpdate,
+    };
+    accountLinks = { create: mockAccountLinksCreate };
+    static errors = {
+      StripeError: MockStripeError,
+      StripeInvalidRequestError: MockStripeInvalidRequestError,
+    };
   }
   return { default: MockStripe };
 });
@@ -99,6 +130,189 @@ describe("buildAuthoriseUrl", () => {
       /STRIPE_CONNECT_CLIENT_ID/,
     );
   });
+});
+
+describe("createPrefilledTestAccount", () => {
+  const team = {
+    id: 1,
+    slug: "lambeth",
+    name: "Lambeth",
+    settings: { homepage: "https://www.lambeth.gov.uk" },
+  } as Team;
+
+  const attestation = { ip: "203.0.113.1", userAgent: "Mozilla/5.0 (test)" };
+
+  beforeEach(() => {
+    mockAccountsCreate.mockResolvedValue({ id: "acct_new" });
+  });
+
+  afterEach(() => {
+    mockAccountsCreate.mockReset();
+    mockCreatePerson.mockReset();
+    mockAccountsUpdate.mockReset();
+  });
+
+  it("creates a full dashboard account prefilled with the team and Stripe test data", async () => {
+    const accountId = await createPrefilledTestAccount(team, attestation);
+
+    expect(accountId).toBe("acct_new");
+    expect(mockAccountsCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        controller: expect.objectContaining({
+          stripe_dashboard: { type: "full" },
+          requirement_collection: "stripe",
+        }),
+        country: "GB",
+        capabilities: {
+          card_payments: { requested: true },
+          transfers: { requested: true },
+        },
+        business_profile: expect.objectContaining({
+          name: "Lambeth (test mode)",
+          url: "https://www.lambeth.gov.uk",
+          mcc: "9399",
+          support_phone: "+447400123456",
+          support_url: "https://www.lambeth.gov.uk",
+        }),
+        company: expect.objectContaining({
+          name: "Lambeth (test mode)",
+          structure: "public_corporation",
+          tax_id: "12345678",
+        }),
+        external_account: expect.objectContaining({
+          routing_number: "108800",
+          account_number: "00012345",
+        }),
+      }),
+    );
+  });
+
+  it("falls back to the PlanX website if the team has no homepage", async () => {
+    await createPrefilledTestAccount(
+      { ...team, settings: { ...team.settings, homepage: undefined } },
+      attestation,
+    );
+
+    expect(mockAccountsCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        business_profile: expect.objectContaining({
+          url: "https://www.planx.uk",
+        }),
+      }),
+    );
+  });
+
+  it("signs the directorship and representative declarations from the requesting user, after the director is added", async () => {
+    await createPrefilledTestAccount(team, attestation);
+
+    const declaration = {
+      date: expect.any(Number),
+      ip: "203.0.113.1",
+      user_agent: "Mozilla/5.0 (test)",
+    };
+    expect(mockAccountsUpdate).toHaveBeenCalledWith("acct_new", {
+      company: {
+        directorship_declaration: declaration,
+        representative_declaration: declaration,
+      },
+    });
+
+    expect(mockAccountsCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        company: expect.not.objectContaining({
+          directorship_declaration: expect.anything(),
+        }),
+      }),
+    );
+    expect(mockCreatePerson.mock.invocationCallOrder[0]).toBeLessThan(
+      mockAccountsUpdate.mock.invocationCallOrder[0],
+    );
+  });
+
+  it("adds a verified test representative, who is also the director", async () => {
+    await createPrefilledTestAccount(team, attestation);
+
+    expect(mockCreatePerson).toHaveBeenCalledWith(
+      "acct_new",
+      expect.objectContaining({
+        dob: { day: 1, month: 1, year: 1901 },
+        phone: "+447400123456",
+        email: "stripe-test-representative@planx.uk",
+        relationship: expect.objectContaining({
+          representative: true,
+          director: true,
+        }),
+        verification: {
+          document: { front: "file_identity_document_success" },
+          additional_document: { front: "file_identity_document_success" },
+        },
+      }),
+    );
+  });
+});
+
+describe("createOnboardingLink", () => {
+  beforeEach(() => {
+    vi.stubEnv("API_URL_EXT", "https://api.example.com");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    mockAccountLinksCreate.mockReset();
+  });
+
+  it("refreshes by restarting the connect flow, and returns to the onboarding return route", async () => {
+    mockAccountLinksCreate.mockResolvedValue({
+      url: "https://connect.stripe.com/setup/abc",
+    });
+
+    const url = await createOnboardingLink("acct_new", "lambeth");
+
+    expect(url).toBe("https://connect.stripe.com/setup/abc");
+    expect(mockAccountLinksCreate).toHaveBeenCalledWith({
+      account: "acct_new",
+      type: "account_onboarding",
+      refresh_url: "https://api.example.com/stripe/connect/lambeth",
+      return_url: "https://api.example.com/stripe/connect/lambeth/return",
+    });
+  });
+});
+
+describe("isOnboardingComplete", () => {
+  afterEach(() => {
+    mockAccountsRetrieve.mockReset();
+  });
+
+  it.each([true, false])(
+    "returns the account's details_submitted (%s)",
+    async (detailsSubmitted) => {
+      mockAccountsRetrieve.mockResolvedValue({
+        details_submitted: detailsSubmitted,
+      });
+
+      await expect(isOnboardingComplete("acct_new")).resolves.toBe(
+        detailsSubmitted,
+      );
+      expect(mockAccountsRetrieve).toHaveBeenCalledWith("acct_new");
+    },
+  );
+});
+
+describe("isInvalidRequestError", () => {
+  it("returns true for a Stripe invalid request error", () => {
+    expect(
+      isInvalidRequestError(
+        new MockStripeInvalidRequestError("No such account"),
+      ),
+    ).toBe(true);
+  });
+
+  it.each([new MockStripeError("api error"), new Error("network error")])(
+    "returns false for other errors (%s)",
+    (error) => {
+      expect(isInvalidRequestError(error)).toBe(false);
+    },
+  );
 });
 
 describe("exchangeCodeForAccountId", () => {
