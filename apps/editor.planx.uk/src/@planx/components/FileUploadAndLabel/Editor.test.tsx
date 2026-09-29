@@ -41,7 +41,9 @@ describe("FileUploadAndLabel - Editor Modal", () => {
         <FileUploadAndLabelComponent id="test" />
       </DndProvider>,
     );
-    expect(screen.getAllByPlaceholderText("File type")).toHaveLength(1);
+    expect(screen.getAllByRole("combobox", { name: "File type" })).toHaveLength(
+      1,
+    );
   });
 
   it("allows an Editor to add multiple rules", async () => {
@@ -53,6 +55,8 @@ describe("FileUploadAndLabel - Editor Modal", () => {
     await user.click(screen.getByText("Add file type"));
     await user.click(screen.getByText("Add file type"));
 
-    expect(screen.getAllByPlaceholderText("File type")).toHaveLength(3);
+    expect(screen.getAllByRole("combobox", { name: "File type" })).toHaveLength(
+      3,
+    );
   });
 });
