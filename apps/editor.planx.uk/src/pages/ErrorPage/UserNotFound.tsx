@@ -38,7 +38,7 @@ const UserNotFound: React.FC = () => (
     <Header>
       <Container maxWidth="formWrap" sx={{ position: "relative" }}>
         <Typography variant="h1" component="h1">
-          Accessing your editor
+          Accessing the Plan✕ Editor
         </Typography>
         <Typography variant="h1" component="h2" sx={{ opacity: 0.75 }}>
           You are almost there…
@@ -49,16 +49,19 @@ const UserNotFound: React.FC = () => (
       <Container maxWidth="formWrap">
         <ErrorCard>
           <Stack spacing={1.5}>
-            <Typography variant="h3" component="h3" gutterBottom>
-              We can't find a user account associated with this email address
+            <Typography variant="h3" component="h3">
+              No user account found for this email address
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              It looks like the email address you are using to log in isn't
-              associated with a Plan✕ team yet. Please contact your Plan✕ lead,
-              or your team admin, to request that they add you to your
-              workspace.
+            <Typography>
+              We couldn't find a Plan✕ user account associated with the email
+              address you're using to log in, which means your account hasn't
+              been created yet.
             </Typography>
-            <Typography variant="body1">
+            <Typography>
+              Please contact your Plan✕ lead, or your team admin, to request
+              that they add you to your workspace.
+            </Typography>
+            <Typography>
               Still stuck? Message us on Slack in{" "}
               <Link
                 href="https://opendigitalplanning.slack.com/archives/C0241GWFG4B"
