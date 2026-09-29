@@ -49,7 +49,7 @@ const UserNotFound: React.FC = () => (
       <Container maxWidth="formWrap">
         <ErrorCard>
           <Stack spacing={1.5}>
-            <Typography variant="h3" component="h3">
+            <Typography variant="h3">
               No user account found for this email address
             </Typography>
             <Typography>
