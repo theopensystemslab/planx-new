@@ -43,6 +43,7 @@ export default function AutocompleteInput<T>({
               label={restProps.label}
               required={restProps.required}
               placeholder={placeholder}
+              ariaLabel={ariaLabel}
             />
           )
         }
