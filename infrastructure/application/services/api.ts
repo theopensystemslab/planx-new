@@ -34,6 +34,13 @@ export const createApiService = async ({
   }
   const config = new pulumi.Config();
   const DOMAIN: string = await certificates.requireOutputValue("domain");
+  // Production checks staging's (public) team settings before a live Stripe account can be connected
+  const STAGING_DOMAIN: string | undefined =
+    env === "production"
+      ? await new pulumi.StackReference(
+          "planx/certificates/staging",
+        ).requireOutputValue("domain")
+      : undefined;
 
   const apiBucket = aws.s3.Bucket.get(
     "bucket",
@@ -232,6 +239,14 @@ export const createApiService = async ({
           name: "HASURA_SCHEMA_URL",
           value: pulumi.interpolate`https://hasura.${DOMAIN}/v2/query`,
         },
+        ...(STAGING_DOMAIN
+          ? [
+              {
+                name: "STAGING_HASURA_GRAPHQL_URL",
+                value: `https://hasura.${STAGING_DOMAIN}/v1/graphql`,
+              },
+            ]
+          : []),
         {
           name: "HASURA_PLANX_API_KEY",
           value: config.requireSecret("hasura-planx-api-key"),

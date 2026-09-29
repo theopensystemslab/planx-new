@@ -2,6 +2,7 @@ export interface StripeConnectStatus {
   connected: boolean;
   accountId: string | null;
   mode: "test" | "live";
+  canConnect: boolean;
 }
 
 export interface CreateStripeCheckoutSession {
@@ -33,6 +34,7 @@ export const STRIPE_CONNECT_ERRORS = [
   "access_denied",
   "missing_code",
   "connect_failed",
+  "staging_required",
 ] as const;
 
 export type StripeConnectError =

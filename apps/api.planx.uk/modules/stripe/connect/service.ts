@@ -1,5 +1,5 @@
 import type { Team } from "@opensystemslab/planx-core/types";
-import { gql } from "graphql-request";
+import { gql, request } from "graphql-request";
 import Stripe from "stripe";
 
 import { $api } from "../../../client/index.js";
@@ -133,3 +133,43 @@ export const getStripeAccountId = async (
 
   return teamIntegrations[0]?.accountId ?? null;
 };
+
+/**
+ * Staging and production use separate databases, so production queries staging directly using gql
+ * `team_settings.payment_provider` is readable by the public Hasura role, so no credentials are needed
+ */
+export const isStripeEnabledOnStaging = async (
+  teamSlug: string,
+): Promise<boolean> => {
+  const stagingHasuraUrl = process.env.STAGING_HASURA_GRAPHQL_URL;
+  if (!stagingHasuraUrl) {
+    throw new ServerError({
+      status: 500,
+      message: "STAGING_HASURA_GRAPHQL_URL is not configured",
+    });
+  }
+
+  const { teamSettings } = await request<{
+    teamSettings: { paymentProvider: string | null }[];
+  }>(
+    stagingHasuraUrl,
+    gql`
+      query GetStagingPaymentProvider($teamSlug: String!) {
+        teamSettings: team_settings(
+          where: { team: { slug: { _eq: $teamSlug } } }
+        ) {
+          paymentProvider: payment_provider
+        }
+      }
+    `,
+    { teamSlug },
+  );
+
+  return teamSettings[0]?.paymentProvider === "stripe";
+};
+
+// Teams must be taking Stripe payments on staging before connecting a live account
+export const canConnectStripeAccount = async (
+  teamSlug: string,
+): Promise<boolean> =>
+  getStripeMode() === "test" || isStripeEnabledOnStaging(teamSlug);
