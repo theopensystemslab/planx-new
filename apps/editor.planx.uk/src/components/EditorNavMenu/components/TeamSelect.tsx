@@ -197,7 +197,7 @@ const TeamSelect: React.FC<Props> = ({ currentTeamSlug, onTeamSelect }) => {
           paper: {
             sx: {
               position: "absolute",
-              top: "58px",
+              top: "54px",
               left: "5px",
               bottom: "65px",
               m: 0,
