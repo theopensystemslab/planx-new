@@ -36,6 +36,15 @@ router.get(
   Controller.getConnectStatus,
 );
 
+// Stripe redirects here after staging onboarding (account links) - authenticated by the editor's JWT cookie
+router.get(
+  "/stripe/connect/:teamSlug/return",
+  useTeamEditorAuth,
+  validate(connectSchema),
+  requireStripeConnectTeamAuth,
+  Controller.handleOnboardingReturn,
+);
+
 router.get(
   "/stripe/connect/:teamSlug",
   useTeamEditorAuth,

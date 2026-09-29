@@ -1,4 +1,5 @@
 import type { Team } from "@opensystemslab/planx-core/types";
+import { getUnixTime } from "date-fns";
 import { gql, request } from "graphql-request";
 import Stripe from "stripe";
 
@@ -40,7 +41,157 @@ export const buildAuthoriseUrl = (state: string): string => {
     scope: "read_write",
     redirect_uri: getCallbackUrl(),
     state,
+    stripe_landing: "login",
   });
+};
+
+/**
+ * Who is creating the test account - Stripe requires declarations to record where they were made from
+ */
+export interface TestAccountAttestation {
+  ip: string;
+  userAgent?: string;
+}
+
+/**
+ * Staging (test mode) only - create a Stripe account for the team, prefilled with Stripe's test data,
+ * so the user only needs to confirm the details during onboarding rather than type them all in
+ *
+ * The account belongs to whichever Stripe user signs in or signs up during onboarding (via an account link),
+ * so it appears in their own Stripe dashboard afterwards
+ *
+ * Prefill must happen before the first account link is created, as Stripe then locks identity information
+ * Docs: https://docs.stripe.com/connect/hosted-onboarding
+ * Test values: https://docs.stripe.com/connect/testing
+ */
+export const createPrefilledTestAccount = async (
+  team: Team,
+  attestation: TestAccountAttestation,
+): Promise<string> => {
+  const name = `${team.name} (test mode)`;
+  const url = team.settings?.homepage || "https://www.planx.uk";
+  const phone = "+447400123456";
+  const email = "stripe-test-representative@planx.uk";
+  const address = {
+    line1: "address_full_match",
+    city: "London",
+    postal_code: "SW1A 1AA",
+  };
+
+  const account = await stripe.accounts.create({
+    // Equivalent to a Standard account - full Stripe dashboard access, Stripe collects requirements
+    controller: {
+      stripe_dashboard: { type: "full" },
+      fees: { payer: "account" },
+      losses: { payments: "stripe" },
+      requirement_collection: "stripe",
+    },
+    // Setting country and requesting capabilities up front lets onboarding skip the business location/type step
+    country: "GB",
+    capabilities: {
+      card_payments: { requested: true },
+      bank_transfer_payments: { requested: true },
+      bacs_debit_payments: { requested: true },
+      transfers: { requested: true },
+    },
+    business_type: "company",
+    business_profile: {
+      name,
+      url,
+      product_description: "Planning application and service fees",
+      mcc: "9399", // Government services
+      // Public details shown to customers
+      support_phone: phone,
+      support_email: email,
+      support_url: url,
+    },
+    company: {
+      name,
+      // None of the GB company structures fit a council, this is just the closest for test data
+      structure: "public_corporation",
+      // For GB companies, Stripe stores the Companies House registration number (CRN) as `tax_id`
+      tax_id: "12345678",
+      phone,
+      address,
+      directors_provided: true,
+      executives_provided: true,
+      owners_provided: true,
+    },
+    external_account: {
+      object: "bank_account",
+      country: "GB",
+      currency: "gbp",
+      routing_number: "108800",
+      account_number: "00012345",
+    },
+    metadata: { planxTeamId: String(team.id), planxTeamSlug: team.slug },
+  });
+
+  await stripe.accounts.createPerson(account.id, {
+    first_name: "Test",
+    last_name: "Representative",
+    dob: { day: 1, month: 1, year: 1901 },
+    email,
+    phone,
+    address,
+    relationship: {
+      representative: true,
+      director: true,
+      executive: true,
+      title: "Head of Planning",
+    },
+    // Simulates identity and proof of address checks passing
+    verification: {
+      document: { front: "file_identity_document_success" },
+      additional_document: { front: "file_identity_document_success" },
+    },
+  });
+
+  // Simulates the representative signing the directorship and representative declarations
+  const declaration = {
+    date: getUnixTime(new Date()),
+    ip: attestation.ip,
+    user_agent: attestation.userAgent,
+  };
+
+  // Stripe only accepts declarations on account updates, not creation - and they should follow the director being added
+  await stripe.accounts.update(account.id, {
+    company: {
+      directorship_declaration: declaration,
+      representative_declaration: declaration,
+    },
+  });
+
+  return account.id;
+};
+
+/**
+ * Single-use link to Stripe-hosted onboarding for an account
+ * Link expiry sends the user to `refresh_url`, which starts the connect flow again and resumes the same account
+ * Docs: https://docs.stripe.com/api/account_links/create
+ */
+export const createOnboardingLink = async (
+  accountId: string,
+  teamSlug: string,
+): Promise<string> => {
+  const { url } = await stripe.accountLinks.create({
+    account: accountId,
+    type: "account_onboarding",
+    refresh_url: `${process.env.API_URL_EXT}/stripe/connect/${teamSlug}`,
+    return_url: `${process.env.API_URL_EXT}/stripe/connect/${teamSlug}/return`,
+  });
+  return url;
+};
+
+/**
+ * Stripe redirects to the account link `return_url` whether or not onboarding was finished
+ * `details_submitted` tells us if the user actually completed it
+ */
+export const isOnboardingComplete = async (
+  accountId: string,
+): Promise<boolean> => {
+  const account = await stripe.accounts.retrieve(accountId);
+  return account.details_submitted;
 };
 
 /**

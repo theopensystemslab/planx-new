@@ -35,6 +35,7 @@ export const STRIPE_CONNECT_ERRORS = [
   "missing_code",
   "connect_failed",
   "staging_required",
+  "onboarding_incomplete",
 ] as const;
 
 export type StripeConnectError =
