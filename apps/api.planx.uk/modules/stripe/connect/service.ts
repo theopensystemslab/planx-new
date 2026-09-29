@@ -90,9 +90,9 @@ export const createPrefilledTestAccount = async (
     country: "GB",
     capabilities: {
       card_payments: { requested: true },
-      bank_transfer_payments: { requested: true },
-      bacs_debit_payments: { requested: true },
       transfers: { requested: true },
+      // Don't request bacs_debit_payments or bank_transfer_payments until checkout offers them -
+      // both add a proof of liveness (photo ID + selfie) step to onboarding, and Stripe has no test value to prefill it
     },
     business_type: "company",
     business_profile: {

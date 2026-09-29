@@ -160,8 +160,6 @@ describe("createPrefilledTestAccount", () => {
         capabilities: {
           card_payments: { requested: true },
           transfers: { requested: true },
-          bacs_debit_payments: { requested: true },
-          bank_transfer_payments: { requested: true },
         },
         business_profile: expect.objectContaining({
           name: "Lambeth (test mode)",
