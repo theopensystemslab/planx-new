@@ -25,7 +25,7 @@ const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
     padding: theme.spacing(1, 0.5, 1, 1),
     justifyContent: "space-between",
     "&:hover": {
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: theme.palette.background.disabled,
       color: "inherit",
     },
   }),

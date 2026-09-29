@@ -13,7 +13,6 @@ const HeaderRoot = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   padding: theme.spacing(0.5, 0.8),
   borderRight: `1px solid ${theme.palette.divider}`,
-  marginTop: theme.spacing(0.25),
   width: "100%",
   minHeight: 48,
 }));
@@ -25,7 +24,7 @@ const LogoLink = styled(CustomLink)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   gap: theme.spacing(0.5),
-  padding: theme.spacing(0.5, 0.7),
+  padding: theme.spacing(0.5, 0.65),
   lineHeight: 0.5,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
   fontSize: 19,

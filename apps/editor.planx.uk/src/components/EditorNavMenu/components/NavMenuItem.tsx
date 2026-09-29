@@ -32,7 +32,7 @@ const NavMenuItem = ({
       disabled={disabled}
       disableRipple
       onClick={onClick}
-      sx={{ py: 1.25, px: 0.4, justifyContent: "center", ...sx }}
+      sx={{ py: 1.25, pl: 2, pr: 2.2, justifyContent: "center", ...sx }}
     >
       <Box
         sx={{
