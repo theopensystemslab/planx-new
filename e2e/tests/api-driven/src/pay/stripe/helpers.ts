@@ -1,9 +1,16 @@
 import assert from "node:assert";
 
-import type { FeeBreakdown } from "@opensystemslab/planx-core/types";
+import { formatStripeMetadata } from "@opensystemslab/planx-core";
+import type {
+  FeeBreakdown,
+  PaymentMetadata,
+} from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { gql } from "graphql-tag";
+import type Stripe from "stripe";
 
+import { poll } from "../../../../shared/poll.js";
+import { getStripeTestClient } from "../../../../shared/stripe/client.js";
 import { getCheckoutSessionId } from "../../../../shared/stripe/completeCheckoutSession.js";
 import { $admin } from "../../client.js";
 import {
@@ -15,6 +22,12 @@ import {
 import type { CustomWorld } from "./steps.js";
 
 const TEAM_SLUG = "e2e-stripe";
+
+const DEFAULT_METADATA = {
+  flow: "stripe-split-test",
+  source: "PlanX",
+  paidViaInviteToPay: "false",
+};
 
 /**
  * Session passports for each fee shape
@@ -130,10 +143,12 @@ export async function createCheckoutSession({
   flowId,
   sessionId,
   feeCase,
+  metadata,
 }: {
   flowId: string;
   sessionId: string;
   feeCase: FeeCase;
+  metadata?: Record<string, string>;
 }): Promise<string> {
   const { data } = await axios.post<{ url: string }>(
     `${process.env.API_URL_EXT}/stripe/checkout-session/${TEAM_SLUG}`,
@@ -142,11 +157,7 @@ export async function createCheckoutSession({
       flowId,
       amount: feePassports[feeCase]["application.fee.payable"] * 100,
       returnURL: `${process.env.EDITOR_URL_EXT}/${TEAM_SLUG}/stripe-split-test/published`,
-      metadata: {
-        flow: "stripe-split-test",
-        source: "PlanX",
-        paidViaInviteToPay: "false",
-      },
+      metadata: { ...DEFAULT_METADATA, ...metadata },
     },
   );
 
@@ -170,6 +181,87 @@ export async function validateSession(
     { payload: { sessionId, email: TEST_EMAIL } },
   );
   return data;
+}
+
+export function resolvePayComponentMetadata({
+  metadata,
+  feeCase,
+}: {
+  metadata: PaymentMetadata[];
+  feeCase: FeeCase;
+}): Record<string, string> {
+  return formatStripeMetadata({
+    metadata,
+    userPassport: { data: feePassports[feeCase] },
+    paidViaInviteToPay: false,
+  });
+}
+
+export function getExpectedPaymentMetadata({
+  flowId,
+  sessionId,
+}: {
+  flowId: string;
+  sessionId: string;
+}): Record<string, string> {
+  return {
+    ...DEFAULT_METADATA,
+    sessionId,
+    flowId,
+    teamSlug: TEAM_SLUG,
+    origin: process.env.API_URL_EXT!,
+  };
+}
+
+/**
+ * The payment transferred to the council's connected account
+ * Follow the PaymentIntent -> charge -> transfer -> destination payment thread
+ */
+async function getDestinationPayment(
+  paymentIntentId: string,
+): Promise<Stripe.Charge | undefined> {
+  const stripe = getStripeTestClient();
+
+  const { latest_charge } = await stripe.paymentIntents.retrieve(
+    paymentIntentId,
+    { expand: ["latest_charge.transfer"] },
+  );
+  if (!latest_charge || typeof latest_charge === "string") return;
+
+  const { transfer } = latest_charge;
+  if (!transfer || typeof transfer === "string") return;
+
+  const destinationPaymentId =
+    typeof transfer.destination_payment === "string"
+      ? transfer.destination_payment
+      : transfer.destination_payment?.id;
+  if (!destinationPaymentId) return;
+
+  return stripe.charges.retrieve(
+    destinationPaymentId,
+    {},
+    { stripeAccount: getConnectedAccountId() },
+  );
+}
+
+/**
+ * Metadata is copied onto the destination payment by the transfer.created webhook
+ * We have to poll for this as a simple query will not work here
+ */
+export async function waitForDestinationPaymentMetadata(
+  paymentIntentId: string,
+): Promise<Stripe.Metadata> {
+  const destinationPayment = await poll({
+    fetch: () => getDestinationPayment(paymentIntentId),
+    until: (payment) => Boolean(payment?.metadata.sessionId),
+    describeTimeout: (payment) => {
+      const found = payment
+        ? `destination payment ${payment.id} with metadata ${JSON.stringify(payment.metadata)}`
+        : "no destination payment";
+      return `No metadata on the destination payment for PaymentIntent ${paymentIntentId} (found: ${found})`;
+    },
+  });
+  return destinationPayment!.metadata;
 }
 
 export interface StripePaymentStatus {
@@ -214,27 +306,22 @@ export async function getStripePaymentStatuses(
 export async function waitForStripePaymentStatus({
   sessionId,
   stripeStatus,
-  retries = 20,
-  delay = 1000,
 }: {
   sessionId: string;
   stripeStatus: string;
-  retries?: number;
-  delay?: number;
 }): Promise<StripePaymentStatus> {
-  let found: StripePaymentStatus[] = [];
+  const findMatch = (rows: StripePaymentStatus[]) =>
+    rows.find((row) => row.stripeStatus === stripeStatus);
 
-  for (let attempt = 0; attempt <= retries; attempt++) {
-    found = await getStripePaymentStatuses(sessionId);
-    const match = found.find((row) => row.stripeStatus === stripeStatus);
-    if (match) return match;
-    await new Promise((resolve) => setTimeout(resolve, delay));
-  }
-
-  const statuses = found.map((row) => row.stripeStatus).join(", ") || "none";
-  throw Error(
-    `No "${stripeStatus}" payment status for session ${sessionId} after ${retries} retries (found: ${statuses})`,
-  );
+  const rows = await poll({
+    fetch: () => getStripePaymentStatuses(sessionId),
+    until: (rows) => Boolean(findMatch(rows)),
+    describeTimeout: (rows) => {
+      const found = rows.map((row) => row.stripeStatus).join(", ") || "none";
+      return `No "${stripeStatus}" payment status for session ${sessionId} (found: ${found})`;
+    },
+  });
+  return findMatch(rows)!;
 }
 
 export async function cleanup({

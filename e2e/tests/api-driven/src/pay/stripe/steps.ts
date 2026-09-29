@@ -1,6 +1,14 @@
 import { strict as assert } from "node:assert";
 
-import { After, Given, Then, When, World } from "@cucumber/cucumber";
+import {
+  After,
+  type DataTable,
+  Given,
+  Then,
+  When,
+  World,
+} from "@cucumber/cucumber";
+import type { PaymentMetadata } from "@opensystemslab/planx-core/types";
 import type Stripe from "stripe";
 
 import { completeStripeCheckoutSession } from "../../../../shared/stripe/completeCheckoutSession.js";
@@ -11,11 +19,14 @@ import {
   createCheckoutSession,
   type FeeCase,
   getConnectedAccountId,
+  getExpectedPaymentMetadata,
   getStripePaymentStatuses,
+  resolvePayComponentMetadata,
   setupTeam,
   toFeeCase,
   validateSession,
   type ValidateSessionResponse,
+  waitForDestinationPaymentMetadata,
   waitForStripePaymentStatus,
 } from "./helpers.js";
 
@@ -28,6 +39,7 @@ export class CustomWorld extends World {
   checkoutSessionId?: string;
   paymentIntent?: Stripe.PaymentIntent;
   validateSessionResponse?: ValidateSessionResponse;
+  payComponentMetadata?: PaymentMetadata[];
 }
 
 After("@stripe", async function (this: CustomWorld) {
@@ -59,6 +71,17 @@ Given(
   },
 );
 
+Given(
+  "the Pay component has metadata:",
+  function (this: CustomWorld, table: DataTable) {
+    this.payComponentMetadata = table.hashes().map(({ key, value, type }) => ({
+      key,
+      value,
+      type: type as PaymentMetadata["type"],
+    }));
+  },
+);
+
 When(
   "the applicant pays via Stripe Checkout",
   { timeout: 30 * 1000 },
@@ -67,6 +90,12 @@ When(
       flowId: this.flowId!,
       sessionId: this.sessionId!,
       feeCase: this.feeCase!,
+      metadata:
+        this.payComponentMetadata &&
+        resolvePayComponentMetadata({
+          metadata: this.payComponentMetadata,
+          feeCase: this.feeCase!,
+        }),
     });
     this.paymentIntent = await completeStripeCheckoutSession(
       this.checkoutSessionId,
@@ -198,5 +227,36 @@ Then(
 
     assert.equal(message, "No content changes since last save point");
     assert.equal(changesFound, false);
+  },
+);
+
+Then(
+  "the payment records the Pay component's metadata and the PlanX session",
+  function (this: CustomWorld) {
+    assert.deepEqual(
+      this.paymentIntent!.metadata,
+      getExpectedPaymentMetadata({
+        flowId: this.flowId!,
+        sessionId: this.sessionId!,
+      }),
+    );
+  },
+);
+
+Then(
+  "the payment has {string} metadata of {string}",
+  function (this: CustomWorld, key: string, value: string) {
+    assert.equal(this.paymentIntent!.metadata[key], value);
+  },
+);
+
+Then(
+  "the council's payment has the same metadata",
+  { timeout: 30 * 1000 },
+  async function (this: CustomWorld) {
+    const destinationMetadata = await waitForDestinationPaymentMetadata(
+      this.paymentIntent!.id,
+    );
+    assert.deepEqual(destinationMetadata, this.paymentIntent!.metadata);
   },
 );
