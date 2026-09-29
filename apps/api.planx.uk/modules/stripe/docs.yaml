@@ -15,6 +15,13 @@ components:
       required: true
       schema:
         type: string
+    teamSlug:
+      in: path
+      name: teamSlug
+      required: true
+      schema:
+        type: string
+      example: lambeth
   schemas:
     CreateCheckoutSessionRequest:
       description: |
@@ -103,7 +110,127 @@ components:
                 nullable: true
                 description: PaymentIntent id (the payment reference); null until paid
                 example: pi_test_a1b2c3
+    ConnectStatusResponse:
+      description: The team's Stripe Connect status, for the editor's payments settings page.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - connected
+              - accountId
+              - mode
+              - canConnect
+            properties:
+              connected:
+                type: boolean
+                description: Whether the team has a connected Stripe account
+                example: true
+              accountId:
+                type: string
+                nullable: true
+                description: The team's connected Stripe account id; null if not connected
+                example: acct_1a2b3c
+              mode:
+                type: string
+                enum: [test, live]
+                description: The Stripe mode this environment runs in
+                example: live
+              canConnect:
+                type: boolean
+                description: >-
+                  Whether the team is allowed to connect a Stripe account. Always true
+                  outside of production. In production, false until Stripe has been
+                  connected and enabled as the team's payment provider on staging.
+                example: true
 paths:
+  /stripe/connect/{teamSlug}/status:
+    get:
+      summary: Get a team's Stripe Connect status
+      description: |
+        Returns whether the team has connected a Stripe account, the Stripe mode for
+        this environment, and whether the team is currently allowed to connect.
+      tags:
+        - stripe
+      parameters:
+        - $ref: "#/components/parameters/teamSlug"
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/ConnectStatusResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorised"
+        "403":
+          description: The user is not a teamEditor/teamAdmin of this team, or a platformAdmin.
+        "404":
+          description: Team not found.
+        "500":
+          description: Failed to fetch the Stripe Connect status (including a failed staging check).
+  /stripe/connect/{teamSlug}:
+    get:
+      summary: Start Stripe Connect onboarding for a team
+      description: |
+        Redirects the user to Stripe's Onboarding screen to connect the team's
+        Standard Stripe account. On completion, Stripe redirects back to
+        `/stripe/connect/callback`.
+
+        In production, a team must first have connected and enabled Stripe
+        as its payment provider on staging. Otherwise, the user is redirected
+        back to the editor's payments settings page with `?stripeError=staging_required`.
+      tags:
+        - stripe
+      parameters:
+        - $ref: "#/components/parameters/teamSlug"
+      security:
+        - bearerAuth: []
+      responses:
+        "302":
+          description: >-
+            Redirect to Stripe's Onboarding screen, or back to the editor's payments
+            settings page with `?stripeError=staging_required` if the team cannot connect yet.
+        "401":
+          $ref: "#/components/responses/Unauthorised"
+        "403":
+          description: The user is not a teamEditor/teamAdmin of this team, or a platformAdmin.
+        "404":
+          description: Team not found.
+        "500":
+          description: Failed to start Stripe Connect onboarding (including a failed staging check).
+  /stripe/connect/callback:
+    get:
+      summary: Handle Stripe Connect Onboarding callback
+      description: |
+        Stripe redirects here after the user completes (or declines) the process.
+        The requester is identified by the signed session state set when onboarding
+        started, not a JWT. Saves the connected account id and redirects to the editor.
+      tags:
+        - stripe
+      parameters:
+        - in: query
+          name: code
+          schema:
+            type: string
+          description: OAuth authorisation code, exchanged for the connected account id
+        - in: query
+          name: state
+          schema:
+            type: string
+          description: Nonce matching the one saved in the session when onboarding started
+        - in: query
+          name: error
+          schema:
+            type: string
+          description: OAuth error from Stripe, e.g. `access_denied`
+      responses:
+        "302":
+          description: |
+            Redirect to the editor's payments settings page with either
+            `?stripeConnected=true`, or `?stripeError=<reason>` where reason is one of:
+            - `invalid_state` - missing or mismatched session state (redirects to `/app` instead)
+            - `missing_code` - no authorisation code returned
+            - `connect_failed` - exchanging the code or saving the account id failed
+            - Stripe's OAuth `error` value, e.g. `access_denied`
   /stripe/checkout-session/{localAuthority}:
     post:
       summary: Create a Stripe Checkout Session
