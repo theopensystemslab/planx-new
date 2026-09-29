@@ -14,6 +14,8 @@ import {
   getStripePaymentStatuses,
   setupTeam,
   toFeeCase,
+  validateSession,
+  type ValidateSessionResponse,
   waitForStripePaymentStatus,
 } from "./helpers.js";
 
@@ -25,6 +27,7 @@ export class CustomWorld extends World {
   feeCase?: FeeCase;
   checkoutSessionId?: string;
   paymentIntent?: Stripe.PaymentIntent;
+  validateSessionResponse?: ValidateSessionResponse;
 }
 
 After("@stripe", async function (this: CustomWorld) {
@@ -84,6 +87,13 @@ When(
       this.checkoutSessionId,
       "declined",
     );
+  },
+);
+
+When(
+  "the applicant returns to their saved session",
+  async function (this: CustomWorld) {
+    this.validateSessionResponse = await validateSession(this.sessionId!);
   },
 );
 
@@ -163,5 +173,30 @@ Then(
       this.paymentIntent!.amount / 100,
     );
     assert.equal(metadata?.sessionId, this.sessionId);
+  },
+);
+
+Then(
+  "reconciliation is skipped as a payment has started",
+  function (this: CustomWorld) {
+    const { message, changesFound, reconciledSessionData } =
+      this.validateSessionResponse!;
+
+    assert.equal(message, "Payment process initiated, skipping reconciliation");
+    assert.equal(changesFound, null);
+    assert.deepEqual(reconciledSessionData, {
+      id: this.sessionId,
+      breadcrumbs: {},
+    });
+  },
+);
+
+Then(
+  "the session is reconciled with no content changes",
+  function (this: CustomWorld) {
+    const { message, changesFound } = this.validateSessionResponse!;
+
+    assert.equal(message, "No content changes since last save point");
+    assert.equal(changesFound, false);
   },
 );
