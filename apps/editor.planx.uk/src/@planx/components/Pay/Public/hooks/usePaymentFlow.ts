@@ -10,7 +10,6 @@ export const usePaymentFlow = (
   props: Props,
   dispatch: React.Dispatch<Action>,
   fee: number,
-  teamId: number,
 ): UsePaymentProviderResult => {
   const { paymentProvider } = usePaymentProvider();
 

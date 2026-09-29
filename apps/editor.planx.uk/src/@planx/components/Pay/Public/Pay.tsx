@@ -72,10 +72,9 @@ const reducer = (_state: ComponentState, action: Action): ComponentState => {
 };
 
 function Component(props: Props) {
-  const [sessionId, passport, teamId] = useStore((state) => [
+  const [sessionId, passport] = useStore((state) => [
     state.sessionId,
     state.computePassport(),
-    state.teamId,
   ]);
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
@@ -89,7 +88,6 @@ function Component(props: Props) {
     props,
     dispatch,
     fee,
-    teamId,
   );
 
   const isTeamSupported = state.status !== "unsupported_team";
