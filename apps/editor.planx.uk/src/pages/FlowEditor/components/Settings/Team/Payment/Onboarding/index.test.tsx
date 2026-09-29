@@ -142,6 +142,87 @@ describe("Onboarding", () => {
     });
   });
 
+  it.each([
+    { mode: "test", message: "Setting up your test Stripe account..." },
+    { mode: "live", message: "Redirecting to Stripe..." },
+  ] as const)(
+    "shows a loading state in $mode mode while waiting for the redirect to Stripe",
+    async ({ mode, message }) => {
+      server.use(
+        statusHandler({
+          connected: false,
+          accountId: null,
+          mode,
+          canConnect: true,
+        }),
+      );
+
+      const { user } = await setup(<Onboarding />);
+      const connectButton = await screen.findByRole("button", {
+        name: "Connect Stripe account",
+      });
+
+      // Stub navigation only once the status has loaded
+      const originalLocation = window.location;
+      Object.defineProperty(window, "location", {
+        value: { ...originalLocation, href: "" },
+        writable: true,
+        configurable: true,
+      });
+
+      await user.click(connectButton);
+
+      expect(screen.getByText(message)).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: "Connect Stripe account" }),
+      ).not.toBeInTheDocument();
+
+      Object.defineProperty(window, "location", {
+        value: originalLocation,
+        writable: true,
+        configurable: true,
+      });
+    },
+  );
+
+  it("clears the loading state if the page is restored from the bfcache", async () => {
+    server.use(
+      statusHandler({
+        connected: false,
+        accountId: null,
+        mode: "test",
+        canConnect: true,
+      }),
+    );
+    const originalLocation = window.location;
+    Object.defineProperty(window, "location", {
+      value: { ...originalLocation, href: "" },
+      writable: true,
+      configurable: true,
+    });
+
+    const { user } = await setup(<Onboarding />);
+
+    await user.click(
+      await screen.findByRole("button", { name: "Connect Stripe account" }),
+    );
+    act(() => {
+      window.dispatchEvent(
+        new PageTransitionEvent("pageshow", { persisted: true }),
+      );
+    });
+
+    expect(
+      screen.getByRole("button", { name: "Connect Stripe account" }),
+    ).toBeVisible();
+
+    Object.defineProperty(window, "location", {
+      value: originalLocation,
+      writable: true,
+      configurable: true,
+    });
+  });
+
   it("shows the connected account and a test mode chip when connected in test mode", async () => {
     server.use(
       statusHandler({
