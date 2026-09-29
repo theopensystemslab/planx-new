@@ -171,13 +171,18 @@ paths:
     get:
       summary: Start Stripe Connect onboarding for a team
       description: |
-        Redirects the user to Stripe's Onboarding screen to connect the team's
-        Standard Stripe account. On completion, Stripe redirects back to
-        `/stripe/connect/callback`.
+        **Staging (test mode):** creates a Stripe account for the team prefilled with
+        Stripe's test data (or resumes the team's unfinished account from the session),
+        and redirects to Stripe-hosted onboarding (an account link). The user signs in or
+        signs up to Stripe to take ownership of the account, then Stripe redirects back to
+        `/stripe/connect/{teamSlug}/return`. This route is also the account link's refresh URL,
+        so expired links restart onboarding for the same account.
 
-        In production, a team must first have connected and enabled Stripe
-        as its payment provider on staging. Otherwise, the user is redirected
-        back to the editor's payments settings page with `?stripeError=staging_required`.
+        **Production (live mode):** redirects to Stripe's OAuth screen to connect the
+        council's own Stripe account. On completion, Stripe redirects back to
+        `/stripe/connect/callback`. A team must first have connected and enabled Stripe
+        as its payment provider on staging. Otherwise, the user is redirected back to the
+        editor's payments settings page with `?stripeError=staging_required`.
       tags:
         - stripe
       parameters:
@@ -187,8 +192,9 @@ paths:
       responses:
         "302":
           description: >-
-            Redirect to Stripe's Onboarding screen, or back to the editor's payments
-            settings page with `?stripeError=staging_required` if the team cannot connect yet.
+            Redirect to Stripe-hosted onboarding (staging) or Stripe's OAuth screen (production),
+            or back to the editor's payments settings page with `?stripeError=staging_required`
+            if the team cannot connect yet.
         "401":
           $ref: "#/components/responses/Unauthorised"
         "403":
@@ -196,12 +202,43 @@ paths:
         "404":
           description: Team not found.
         "500":
-          description: Failed to start Stripe Connect onboarding (including a failed staging check).
+          description: >-
+            Failed to start Stripe Connect onboarding (including a failed staging check, or
+            failing to create the staging account or its onboarding link).
+  /stripe/connect/{teamSlug}/return:
+    get:
+      summary: Handle the return from staging Stripe onboarding
+      description: |
+        Staging (test mode) only. Stripe redirects here when the user finishes or leaves
+        Stripe-hosted onboarding. If onboarding is complete, the team's pending account
+        (from the session) is saved as its staging Stripe account. Otherwise it is kept
+        pending, so connecting again resumes it.
+      tags:
+        - stripe
+      parameters:
+        - $ref: "#/components/parameters/teamSlug"
+      security:
+        - bearerAuth: []
+      responses:
+        "302":
+          description: |
+            Redirect to the editor's payments settings page with either
+            `?stripeConnected=true`, or `?stripeError=<reason>` where reason is one of:
+            - `invalid_state` - no pending onboarding account for this team in the session
+            - `onboarding_incomplete` - the user left onboarding before finishing it
+            - `connect_failed` - checking the account or saving the account id failed
+        "401":
+          $ref: "#/components/responses/Unauthorised"
+        "403":
+          description: The user is not a teamEditor/teamAdmin of this team, or a platformAdmin.
+        "404":
+          description: Team not found.
   /stripe/connect/callback:
     get:
-      summary: Handle Stripe Connect Onboarding callback
+      summary: Handle Stripe Connect OAuth callback
       description: |
-        Stripe redirects here after the user completes (or declines) the process.
+        Production (live mode) only - staging returns to `/stripe/connect/{teamSlug}/return`.
+        Stripe redirects here after the user completes (or declines) the OAuth process.
         The requester is identified by the signed session state set when onboarding
         started, not a JWT. Saves the connected account id and redirects to the editor.
       tags:
