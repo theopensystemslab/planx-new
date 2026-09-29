@@ -1,9 +1,5 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import BuildIcon from "@mui/icons-material/Build";
 import DeleteIcon from "@mui/icons-material/Delete";
-import MenuBook from "@mui/icons-material/MenuBook";
-import Schedule from "@mui/icons-material/Schedule";
-import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog, { dialogClasses } from "@mui/material/Dialog";
@@ -62,16 +58,11 @@ type ModalTab = "edit" | "preview" | "history" | "resources";
 const MODAL_TABS: {
   label: string;
   value: ModalTab;
-  icon?: React.ReactElement;
 }[] = [
-  { label: "Edit", value: "edit", icon: <BuildIcon /> },
-  { label: "Preview", value: "preview", icon: <Visibility /> },
-  { label: "History", value: "history", icon: <Schedule /> },
-  {
-    label: "How to use this component",
-    value: "resources",
-    icon: <MenuBook />,
-  },
+  { label: "Edit", value: "edit" },
+  { label: "Preview", value: "preview" },
+  { label: "History", value: "history" },
+  { label: "How to use this component", value: "resources" },
 ];
 
 /**
@@ -319,14 +310,8 @@ const FormModal: React.FC<FormModalProps> = ({
               value={activeTab}
               aria-label="Component editor tabs"
             >
-              {MODAL_TABS.map(({ label, value, icon }) => (
-                <StyledTab
-                  key={value}
-                  value={value}
-                  label={label}
-                  icon={icon}
-                  iconPosition="start"
-                />
+              {MODAL_TABS.map(({ label, value }) => (
+                <StyledTab key={value} value={value} label={label} />
               ))}
             </Tabs>
           </TabList>
