@@ -88,7 +88,7 @@ const ComponentHistory = (props: { nodeId: string }) => {
 
   return (
     <Box sx={{ p: 2, mr: 3 }}>
-      {data?.history && (
+      {data?.history && data.history.length > 0 && (
         <>
           <EditHistoryTimeline
             events={formattedHistory}
@@ -97,7 +97,7 @@ const ComponentHistory = (props: { nodeId: string }) => {
           />
           <Divider />
           <Typography variant="body2" sx={{ mt: 2 }} color="GrayText">
-            {`History shows edits made to this component only within the last year. If you have questions about viewing an earlier point in time, please contact a developer.`}
+            {`History shows edits over the last 12 months. To view an earlier point in time, please contact #help-issues-odp-products.`}
           </Typography>
         </>
       )}
@@ -105,7 +105,7 @@ const ComponentHistory = (props: { nodeId: string }) => {
         <>
           <EmptyState
             size="small"
-            title="No changes have been made in the last year"
+            title="No edits found in the last 12 months"
             icon={<HistoryIcon />}
           />
         </>

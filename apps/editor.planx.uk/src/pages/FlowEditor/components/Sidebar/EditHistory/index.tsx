@@ -72,7 +72,7 @@ const EditHistory = () => {
         <>
           <EmptyState
             size="small"
-            title="No changes have been made in the last six months"
+            title="No edits found in the last six months"
             icon={<HistoryIcon />}
           />
         </>
@@ -81,7 +81,7 @@ const EditHistory = () => {
         <>
           <Divider />
           <Typography variant="body2" sx={{ mt: 2 }} color="GrayText">
-            {`History shows the last 50 edits made to this service within the last six months. If you have questions about restoring to an earlier point in time, please contact a developer.`}
+            {`History shows the last 50 edits made to this service within the last six months. To view or restore to an earlier point in time, please contact #help-issues-odp-products.`}
           </Typography>
         </>
       )}
