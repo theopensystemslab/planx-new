@@ -48,7 +48,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "tewkesbury",
           domain: "planningservices.tewkesbury.gov.uk",
-          cloudFrontState: "cutover-ongoing",
+          cloudFrontState: "shared-final",
         },
         {
           name: "westberks",
