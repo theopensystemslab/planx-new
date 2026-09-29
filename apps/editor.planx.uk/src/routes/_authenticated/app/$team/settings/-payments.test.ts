@@ -16,19 +16,6 @@ describe("getStripeConnectResult", () => {
     ).toEqual({ type: "error", message: "Stripe connection was cancelled" });
   });
 
-  it("maps onboarding_incomplete to a prompt to resume onboarding", () => {
-    expect(
-      getStripeConnectResult({
-        stripeConnected: undefined,
-        stripeError: "onboarding_incomplete",
-      }),
-    ).toEqual({
-      type: "error",
-      message:
-        "Stripe onboarding isn't finished yet. Click connect to pick up where you left off",
-    });
-  });
-
   it("maps other known error codes to the default failure message", () => {
     for (const stripeError of [
       "invalid_state",

@@ -3,13 +3,10 @@ import z from "zod";
 
 import { ServerError } from "../../../errors/index.js";
 import {
-  clearPendingOnboarding,
   consumeConnectState,
   generateNonce,
-  getPendingOnboarding,
   requireStripeConnectTeamAuth,
   setConnectState,
-  setPendingOnboarding,
   verifyState,
 } from "./middleware.js";
 
@@ -154,50 +151,5 @@ describe("requireStripeConnectTeamAuth", () => {
     await requireStripeConnectTeamAuth(req, res, next);
 
     expect(next).toHaveBeenCalledWith(expect.objectContaining({ status: 403 }));
-  });
-});
-
-describe("setPendingOnboarding / getPendingOnboarding / clearPendingOnboarding", () => {
-  it("returns the pending account for the same team", () => {
-    const req = buildRequest();
-    setPendingOnboarding(req, { teamId: 1, accountId: "acct_pending" });
-
-    expect(getPendingOnboarding(req, 1)).toEqual({
-      teamId: 1,
-      accountId: "acct_pending",
-    });
-  });
-
-  it("can be read repeatedly, so onboarding can be resumed", () => {
-    const req = buildRequest();
-    setPendingOnboarding(req, { teamId: 1, accountId: "acct_pending" });
-
-    getPendingOnboarding(req, 1);
-
-    expect(getPendingOnboarding(req, 1)?.accountId).toBe("acct_pending");
-  });
-
-  it("ignores a pending account belonging to a different team", () => {
-    const req = buildRequest();
-    setPendingOnboarding(req, { teamId: 1, accountId: "acct_pending" });
-
-    expect(getPendingOnboarding(req, 2)).toBeUndefined();
-  });
-
-  it("returns undefined once cleared", () => {
-    const req = buildRequest();
-    setPendingOnboarding(req, { teamId: 1, accountId: "acct_pending" });
-
-    clearPendingOnboarding(req);
-
-    expect(getPendingOnboarding(req, 1)).toBeUndefined();
-  });
-
-  it("throws when there is no session to save state into", () => {
-    const req = { session: null } as unknown as Request;
-
-    expect(() =>
-      setPendingOnboarding(req, { teamId: 1, accountId: "acct_pending" }),
-    ).toThrow();
   });
 });
