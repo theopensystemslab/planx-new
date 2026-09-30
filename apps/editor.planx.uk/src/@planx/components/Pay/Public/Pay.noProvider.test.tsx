@@ -2,8 +2,10 @@ import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen, waitFor } from "@testing-library/react";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
+import { graphql, HttpResponse } from "msw";
 import type { FullStore, Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
+import server from "test/mockServer";
 import { setup } from "test/utils";
 import type { Breadcrumbs } from "types";
 import { vi } from "vitest";
@@ -144,5 +146,56 @@ describe("Pay component without a payment provider", () => {
     await user.click(await screen.findByText("Pay now"));
 
     await waitFor(() => expect(handleSubmit).toHaveBeenCalledWith({}));
+  });
+});
+
+describe("Pay component for a Stripe team without the STRIPE_MIGRATION feature flag", () => {
+  beforeAll(() => (initialState = getState()));
+
+  beforeEach(() => {
+    server.use(
+      graphql.query("GetPaymentProvider", () =>
+        HttpResponse.json({
+          data: { teamSettings: [{ paymentProvider: "stripe" }] },
+        }),
+      ),
+    );
+    act(() =>
+      setState({
+        flow: flowWithFee,
+        breadcrumbs: feeBreadcrumbs,
+        previewEnvironment: "standalone",
+      }),
+    );
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+    act(() => setState(initialState));
+  });
+
+  it("does not allow applicants to pay with Stripe", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = await setup(
+      <AppErrorBoundary>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          govPayMetadata={[]}
+        />
+      </AppErrorBoundary>,
+    );
+
+    await user.click(await screen.findByText("Pay now"));
+
+    expect(await screen.findByTestId("error-summary")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Online payments are not enabled for this local authority",
+      ),
+    ).toBeInTheDocument();
+    expect(handleSubmit).not.toHaveBeenCalled();
   });
 });
