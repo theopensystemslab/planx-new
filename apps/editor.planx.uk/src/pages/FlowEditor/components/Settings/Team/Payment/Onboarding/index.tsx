@@ -9,7 +9,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useToast } from "hooks/useToast";
 import type { StripeConnectResult } from "lib/api/stripe/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
@@ -26,6 +26,16 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
   const navigate = useNavigate();
 
   const { data, isLoading, refetch } = useStripeConnectStatus(teamSlug);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  // if browser uses bfcache'd page, clear the isRedirecting boolean
+  useEffect(() => {
+    const resetOnRestore = (event: PageTransitionEvent) => {
+      if (event.persisted) setIsRedirecting(false);
+    };
+    window.addEventListener("pageshow", resetOnRestore);
+    return () => window.removeEventListener("pageshow", resetOnRestore);
+  }, []);
 
   useEffect(() => {
     if (!stripeResult) return;
@@ -51,6 +61,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
   }, []);
 
   const handleConnect = () => {
+    setIsRedirecting(true);
     window.location.href = `${import.meta.env.VITE_APP_API_URL}/stripe/connect/${teamSlug}`;
   };
 
@@ -92,7 +103,18 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
               </Box>
             )}
 
-            {!isLoading && !data?.connected && (
+            {isRedirecting && (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <CircularProgress size={20} />
+                <Typography variant="body2">
+                  {data?.mode === "test"
+                    ? "Setting up your test Stripe account..."
+                    : "Redirecting to Stripe..."}
+                </Typography>
+              </Box>
+            )}
+
+            {!isLoading && !isRedirecting && !data?.connected && (
               <>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   {data?.canConnect

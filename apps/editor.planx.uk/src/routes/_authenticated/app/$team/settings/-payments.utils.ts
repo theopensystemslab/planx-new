@@ -18,6 +18,8 @@ const STRIPE_CONNECT_ERROR_MESSAGES: Record<
   connect_failed: DEFAULT_STRIPE_CONNECT_ERROR_MESSAGE,
   staging_required:
     "A live Stripe account can only be connected once Stripe is enabled as the payment provider on staging",
+  onboarding_incomplete:
+    "Stripe onboarding isn't finished yet. Click connect to pick up where you left off",
 };
 
 export const getStripeConnectResult = ({

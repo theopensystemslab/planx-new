@@ -1,10 +1,18 @@
 import { ServerError } from "../../../errors/index.js";
-import { generateNonce, setConnectState, verifyState } from "./middleware.js";
+import {
+  clearPendingOnboarding,
+  generateNonce,
+  getPendingOnboarding,
+  setConnectState,
+  setPendingOnboarding,
+  verifyState,
+} from "./middleware.js";
 import * as Service from "./service.js";
 import type {
   ConnectCallbackController,
   ConnectStatusController,
   InitiateConnectController,
+  OnboardingReturnController,
 } from "./types.js";
 
 const editorPaymentsUrl = (teamSlug: string): string =>
@@ -25,6 +33,33 @@ export const initiateConnect: InitiateConnectController = async (
       );
     }
 
+    // Staging creates a prefilled test account and sends the user through Stripe-hosted onboarding
+    if (Service.getStripeMode() === "test") {
+      const pending = getPendingOnboarding(req, team.id);
+      const accountId =
+        pending?.accountId ??
+        (await Service.createPrefilledTestAccount(team, {
+          ip: req.ip ?? "0.0.0.0",
+          userAgent: req.get("user-agent"),
+        }));
+      setPendingOnboarding(req, { teamId: team.id, accountId });
+
+      try {
+        const onboardingUrl = await Service.createOnboardingLink(
+          accountId,
+          team.slug,
+        );
+        return res.redirect(onboardingUrl);
+      } catch (error) {
+        // Only discard a resumed account if Stripe rejects it (e.g. it's been deleted) - otherwise keep it for the next attempt
+        if (pending && Service.isInvalidRequestError(error)) {
+          clearPendingOnboarding(req);
+        }
+        throw error;
+      }
+    }
+
+    // Production uses OAuth to connect a new or existing live account
     const nonce = generateNonce();
     setConnectState(req, { teamId: team.id, teamSlug: team.slug, nonce });
 
@@ -36,6 +71,39 @@ export const initiateConnect: InitiateConnectController = async (
         message: "Failed to start Stripe Connect onboarding",
         cause: error,
       }),
+    );
+  }
+};
+
+// Stripe redirects here when the user finishes or leaves staging onboarding - only save the account once it's complete
+export const handleOnboardingReturn: OnboardingReturnController = async (
+  req,
+  res,
+) => {
+  const { team } = res.locals;
+  const pending = getPendingOnboarding(req, team.id);
+
+  if (!pending) {
+    return res.redirect(
+      `${editorPaymentsUrl(team.slug)}?stripeError=invalid_state`,
+    );
+  }
+
+  try {
+    if (!(await Service.isOnboardingComplete(pending.accountId))) {
+      // Keep the pending account so connecting again resumes it
+      return res.redirect(
+        `${editorPaymentsUrl(team.slug)}?stripeError=onboarding_incomplete`,
+      );
+    }
+
+    await Service.saveStripeAccountId(team.id, pending.accountId);
+    clearPendingOnboarding(req);
+    return res.redirect(`${editorPaymentsUrl(team.slug)}?stripeConnected=true`);
+  } catch (err) {
+    console.error("Stripe onboarding return failed", err);
+    return res.redirect(
+      `${editorPaymentsUrl(team.slug)}?stripeError=connect_failed`,
     );
   }
 };
