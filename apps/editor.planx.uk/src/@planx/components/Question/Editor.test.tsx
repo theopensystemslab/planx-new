@@ -104,4 +104,25 @@ describe("validation", () => {
       expect(screen.getByText(/Options must have unique labels/)).toBeVisible(),
     );
   }, 10_000);
+
+  test("both 'always put to user' and 'never put to user' cannot be toggled on together", async () => {
+    await setup(
+      <DndProvider backend={HTML5Backend}>
+        <Question
+          node={{
+            data: { neverAutoAnswer: true, alwaysAutoAnswerBlank: true },
+          }}
+          options={[]}
+        />
+      </DndProvider>,
+    );
+
+    fireEvent.submit(screen.getByTestId("question-component-form"));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/Cannot both always and never put to user/),
+      ).toBeVisible(),
+    );
+  });
 });
