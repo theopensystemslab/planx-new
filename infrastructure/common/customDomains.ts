@@ -43,7 +43,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "barnet",
           domain: "planningservices.barnet.gov.uk",
-          cloudFrontState: "cutover-ongoing",
+          cloudFrontState: "shared-final",
         },
         {
           name: "tewkesbury",
