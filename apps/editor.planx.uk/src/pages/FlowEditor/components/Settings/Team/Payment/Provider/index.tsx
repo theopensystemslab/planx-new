@@ -1,3 +1,4 @@
+import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -10,11 +11,12 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import type { TeamSettings } from "@opensystemslab/planx-core/types";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
@@ -52,6 +54,7 @@ const Provider: React.FC = () => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
   const { paymentProvider } = usePaymentProvider();
+  const stripeWarningId = useId();
   const [migratedProvider, setMigratedProvider] =
     useState<PaymentProvider | null>(null);
   const provider = migratedProvider ?? paymentProvider ?? null;
@@ -92,9 +95,13 @@ const Provider: React.FC = () => {
   const renderProviderAction = () => {
     if (isStripe) {
       return (
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          This team has been migrated to Stripe. No further action is needed.
-        </Typography>
+        <WarningContainer aria-labelledby={stripeWarningId} sx={{ my: 0 }}>
+          <WarningIcon sx={{ mr: 1 }} />
+          <Typography id={stripeWarningId} variant="body2">
+            Stripe payments are not yet available. Applicants will not be able
+            to pay online until this is complete.
+          </Typography>
+        </WarningContainer>
       );
     }
 

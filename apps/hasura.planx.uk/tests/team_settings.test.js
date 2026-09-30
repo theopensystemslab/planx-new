@@ -113,8 +113,10 @@ describe("team_settings", () => {
       expect(i.queries).toContain("team_settings");
     });
 
-    test("cannot create, update, or delete team_settings", () => {
-      expect(i).toHaveNoMutationsFor("team_settings");
+    test("can update (e.g. payment provider), but cannot create or delete team_settings", () => {
+      expect(i.mutations).toContain("update_team_settings");
+      expect(i.mutations).not.toContain("insert_team_settings");
+      expect(i.mutations).not.toContain("delete_team_settings");
     });
   });
 });

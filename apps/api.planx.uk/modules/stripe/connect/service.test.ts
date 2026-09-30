@@ -406,6 +406,18 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
     expect(String(query)).not.toContain("staging_stripe_account_id");
   });
 
+  it("sets the payment provider to Stripe only if the team has none", async () => {
+    mockRequest.mockResolvedValue({});
+
+    await saveStripeAccountId(42, "acct_abc");
+
+    const [query, variables] = mockRequest.mock.calls[0];
+    expect(String(query)).toMatch(
+      /update_team_settings\(\s*where: {\s*team_id: { _eq: \$teamId }\s*payment_provider: { _is_null: true }\s*}\s*_set: { payment_provider: "stripe" }/,
+    );
+    expect(variables).toEqual({ teamId: 42, accountId: "acct_abc" });
+  });
+
   it("reads back the account id for the current environment", async () => {
     vi.stubEnv("APP_ENVIRONMENT", "staging");
     mockRequest.mockResolvedValue({
