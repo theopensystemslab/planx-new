@@ -73,6 +73,8 @@ export const setup = async (
   userEventOptions?: Parameters<typeof userEvent.setup>[0],
 ): Promise<Record<"user", UserEvent> & RenderResult> => {
   testQueryClient.clear();
+  await testApolloClient.clearStore();
+
   const user = userEvent.setup({
     delay: null,
     // jsdom 27 has a severe getComputedStyle/CSS performance regression
