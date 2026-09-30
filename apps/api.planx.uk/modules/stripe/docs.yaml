@@ -120,7 +120,6 @@ components:
               - connected
               - accountId
               - mode
-              - canConnect
             properties:
               connected:
                 type: boolean
@@ -136,20 +135,13 @@ components:
                 enum: [test, live]
                 description: The Stripe mode this environment runs in
                 example: live
-              canConnect:
-                type: boolean
-                description: >-
-                  Whether the team is allowed to connect a Stripe account. Always true
-                  outside of production. In production, false until Stripe has been
-                  connected and enabled as the team's payment provider on staging.
-                example: true
 paths:
   /stripe/connect/{teamSlug}/status:
     get:
       summary: Get a team's Stripe Connect status
       description: |
-        Returns whether the team has connected a Stripe account, the Stripe mode for
-        this environment, and whether the team is currently allowed to connect.
+        Returns whether the team has connected a Stripe account, and the Stripe mode for
+        this environment.
       tags:
         - stripe
       parameters:
@@ -166,7 +158,7 @@ paths:
         "404":
           description: Team not found.
         "500":
-          description: Failed to fetch the Stripe Connect status (including a failed staging check).
+          description: Failed to fetch the Stripe Connect status.
   /stripe/connect/{teamSlug}:
     get:
       summary: Start Stripe Connect onboarding for a team
@@ -180,9 +172,7 @@ paths:
 
         **Production (live mode):** redirects to Stripe's OAuth screen to connect the
         council's own Stripe account. On completion, Stripe redirects back to
-        `/stripe/connect/callback`. A team must first have connected and enabled Stripe
-        as its payment provider on staging. Otherwise, the user is redirected back to the
-        editor's payments settings page with `?stripeError=staging_required`.
+        `/stripe/connect/callback`.
       tags:
         - stripe
       parameters:
@@ -192,9 +182,7 @@ paths:
       responses:
         "302":
           description: >-
-            Redirect to Stripe-hosted onboarding (staging) or Stripe's OAuth screen (production),
-            or back to the editor's payments settings page with `?stripeError=staging_required`
-            if the team cannot connect yet.
+            Redirect to Stripe-hosted onboarding (staging) or Stripe's OAuth screen (production).
         "401":
           $ref: "#/components/responses/Unauthorised"
         "403":
@@ -203,8 +191,8 @@ paths:
           description: Team not found.
         "500":
           description: >-
-            Failed to start Stripe Connect onboarding (including a failed staging check, or
-            failing to create the staging account or its onboarding link).
+            Failed to start Stripe Connect onboarding (including failing to create the
+            staging account or its onboarding link).
   /stripe/connect/{teamSlug}/return:
     get:
       summary: Handle the return from staging Stripe onboarding

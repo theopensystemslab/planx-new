@@ -24,7 +24,6 @@ const mockGetStripeAccountId = vi.fn();
 const mockGetStripeMode = vi.fn();
 const mockExchangeCodeForAccountId = vi.fn();
 const mockSaveStripeAccountId = vi.fn();
-const mockCanConnectStripeAccount = vi.fn();
 const mockCreatePrefilledTestAccount = vi.fn();
 const mockCreateOnboardingLink = vi.fn();
 const mockIsOnboardingComplete = vi.fn();
@@ -41,8 +40,6 @@ vi.mock("./service.js", () => ({
   buildAuthoriseUrl: (...args: unknown[]) => mockBuildAuthoriseUrl(...args),
   getStripeAccountId: (...args: unknown[]) => mockGetStripeAccountId(...args),
   getStripeMode: (...args: unknown[]) => mockGetStripeMode(...args),
-  canConnectStripeAccount: (...args: unknown[]) =>
-    mockCanConnectStripeAccount(...args),
   exchangeCodeForAccountId: (...args: unknown[]) =>
     mockExchangeCodeForAccountId(...args),
   saveStripeAccountId: (...args: unknown[]) => mockSaveStripeAccountId(...args),
@@ -75,7 +72,6 @@ beforeEach(() => {
   mockGetStripeMode.mockReset().mockReturnValue("test");
   mockExchangeCodeForAccountId.mockReset();
   mockSaveStripeAccountId.mockReset();
-  mockCanConnectStripeAccount.mockReset().mockResolvedValue(true);
   mockGetPendingOnboarding.mockReset();
   mockSetPendingOnboarding.mockReset();
   mockClearPendingOnboarding.mockReset();
@@ -90,7 +86,7 @@ afterEach(() => {
 });
 
 describe("initiateConnect", () => {
-  // Live mode uses OAuth - canConnectStripeAccount passes by default
+  // Live mode uses OAuth
   beforeEach(() => {
     mockGetStripeMode.mockReturnValue("live");
   });
@@ -130,40 +126,6 @@ describe("initiateConnect", () => {
     await Controller.initiateConnect(buildReq(), res, next);
 
     expect(res.redirect).not.toHaveBeenCalled();
-    expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({
-        message: "Failed to start Stripe Connect onboarding",
-      }),
-    );
-  });
-
-  it("redirects back with an error if the team cannot connect yet", async () => {
-    mockCanConnectStripeAccount.mockResolvedValue(false);
-
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
-    const next = vi.fn();
-
-    await Controller.initiateConnect(buildReq(), res, next);
-
-    expect(mockCanConnectStripeAccount).toHaveBeenCalledWith("lambeth");
-    expect(res.redirect).toHaveBeenCalledWith(
-      "https://editor.example.com/app/lambeth/settings/payments?stripeError=staging_required",
-    );
-    expect(mockSetConnectState).not.toHaveBeenCalled();
-    expect(mockBuildAuthoriseUrl).not.toHaveBeenCalled();
-    expect(next).not.toHaveBeenCalled();
-  });
-
-  it("forwards a ServerError if the staging check fails", async () => {
-    mockCanConnectStripeAccount.mockRejectedValue(new Error("staging down"));
-
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
-    const next = vi.fn();
-
-    await Controller.initiateConnect(buildReq(), res, next);
-
-    expect(res.redirect).not.toHaveBeenCalled();
-    expect(mockBuildAuthoriseUrl).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         message: "Failed to start Stripe Connect onboarding",
@@ -385,7 +347,6 @@ describe("getConnectStatus", () => {
       connected: true,
       accountId: "acct_123",
       mode: "test",
-      canConnect: true,
     };
 
     expect(res.send).toHaveBeenCalledWith(expected);
@@ -395,7 +356,6 @@ describe("getConnectStatus", () => {
   it("returns 'not connected' when no account id is stored", async () => {
     mockGetStripeAccountId.mockResolvedValue(null);
     mockGetStripeMode.mockReturnValue("live");
-    mockCanConnectStripeAccount.mockResolvedValue(true);
 
     const res = buildRes({ team: { id: 1, slug: "lambeth" } });
     const next = vi.fn();
@@ -406,42 +366,8 @@ describe("getConnectStatus", () => {
       connected: false,
       accountId: null,
       mode: "live",
-      canConnect: true,
     };
     expect(res.send).toHaveBeenCalledWith(expected);
-  });
-
-  it("cannot connect a live account until Stripe is enabled on staging", async () => {
-    mockGetStripeAccountId.mockResolvedValue(null);
-    mockGetStripeMode.mockReturnValue("live");
-    mockCanConnectStripeAccount.mockResolvedValue(false);
-
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
-
-    await Controller.getConnectStatus(buildReq(), res, vi.fn());
-
-    expect(mockCanConnectStripeAccount).toHaveBeenCalledWith("lambeth");
-    expect(res.send).toHaveBeenCalledWith(
-      expect.objectContaining({ canConnect: false }),
-    );
-  });
-
-  it("forwards a ServerError if the staging check fails", async () => {
-    mockGetStripeAccountId.mockResolvedValue(null);
-    mockGetStripeMode.mockReturnValue("live");
-    mockCanConnectStripeAccount.mockRejectedValue(new Error("staging down"));
-
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
-    const next = vi.fn();
-
-    await Controller.getConnectStatus(buildReq(), res, next);
-
-    expect(res.send).not.toHaveBeenCalled();
-    expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({
-        message: "Failed to fetch Stripe Connect status",
-      }),
-    );
   });
 
   it("forwards a ServerError if the lookup fails", async () => {

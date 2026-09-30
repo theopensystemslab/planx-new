@@ -26,13 +26,6 @@ export const initiateConnect: InitiateConnectController = async (
   try {
     const { team } = res.locals;
 
-    // The editor disables connecting until this passes - also enforce it server side
-    if (!(await Service.canConnectStripeAccount(team.slug))) {
-      return res.redirect(
-        `${editorPaymentsUrl(team.slug)}?stripeError=staging_required`,
-      );
-    }
-
     // Staging creates a prefilled test account and sends the user through Stripe-hosted onboarding
     if (Service.getStripeMode() === "test") {
       const pending = getPendingOnboarding(req, team.id);
@@ -120,7 +113,6 @@ export const getConnectStatus: ConnectStatusController = async (
       connected: Boolean(accountId),
       accountId,
       mode: Service.getStripeMode(),
-      canConnect: await Service.canConnectStripeAccount(team.slug),
     });
   } catch (error) {
     return next(
