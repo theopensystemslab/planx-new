@@ -43,7 +43,7 @@ export const MenuWrap = styled("ul", {
 })<{ compact?: boolean }>(({ theme, compact }) => ({
   listStyle: "none",
   margin: 0,
-  padding: compact ? 0 : theme.spacing(1, 0.5, 2, 0.5),
+  padding: compact ? 0 : theme.spacing(0, 0.5, 1, 0.5),
 }));
 
 export const MenuItem = styled("li")(() => ({

@@ -412,14 +412,19 @@ function EditorNavMenu() {
   const renderSection = (section: MenuSection, key: React.Key) => {
     if (section.accordion && section.subtitle) {
       const FirstIcon = section.icon ?? section.routes[0].Icon;
-      const isOpen = openAccordions.has(section.subtitle);
+      const subtitle = section.subtitle;
+      const isOpen = openAccordions.has(subtitle);
+      const hasActiveChild = section.routes.some(({ route }) =>
+        isActive(route),
+      );
       return (
         <MenuItem key={key}>
           <AccordionToggle
-            subtitle={section.subtitle}
+            subtitle={subtitle}
             Icon={FirstIcon}
             isOpen={isOpen}
-            onToggle={() => toggleAccordion(section.subtitle!)}
+            isActive={!isOpen && hasActiveChild}
+            onToggle={() => toggleAccordion(subtitle)}
           />
           <Collapse in={isOpen}>
             <AccordionContent>
@@ -470,7 +475,7 @@ function EditorNavMenu() {
         <NavMenuHeader compact={compact} />
         <NavScrollArea>
           {teamSlug && !compact && (
-            <Box sx={(theme) => ({ padding: theme.spacing(0.5, 0.5, 0, 0.5) })}>
+            <Box sx={(theme) => ({ padding: theme.spacing(0.5, 0.5, 1, 0.5) })}>
               <TeamCard>
                 <TeamSelect
                   currentTeamSlug={teamSlug}
