@@ -26,7 +26,6 @@ interface MockStatus {
   connected: boolean;
   accountId: string | null;
   mode: "test" | "live";
-  canConnect: boolean;
 }
 
 const statusHandler = (status: MockStatus) =>
@@ -54,7 +53,6 @@ describe("Onboarding", () => {
           connected: false,
           accountId: null,
           mode: "test",
-          canConnect: true,
         } satisfies MockStatus);
       }),
     );
@@ -72,7 +70,6 @@ describe("Onboarding", () => {
         connected: false,
         accountId: null,
         mode: "test",
-        canConnect: true,
       }),
     );
 
@@ -86,35 +83,12 @@ describe("Onboarding", () => {
     ).toBeVisible();
   });
 
-  it("disables connecting a live account until Stripe is enabled on staging", async () => {
-    server.use(
-      statusHandler({
-        connected: false,
-        accountId: null,
-        mode: "live",
-        canConnect: false,
-      }),
-    );
-
-    await setup(<Onboarding />);
-
-    expect(
-      await screen.findByText(
-        /only be connected once Stripe is enabled as the payment provider on staging/,
-      ),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Connect Stripe account" }),
-    ).toBeDisabled();
-  });
-
   it("redirects to the API's Stripe connect route when clicking Connect", async () => {
     server.use(
       statusHandler({
         connected: false,
         accountId: null,
         mode: "test",
-        canConnect: true,
       }),
     );
     const { user } = await setup(<Onboarding />);
@@ -153,7 +127,6 @@ describe("Onboarding", () => {
           connected: false,
           accountId: null,
           mode,
-          canConnect: true,
         }),
       );
 
@@ -191,7 +164,6 @@ describe("Onboarding", () => {
         connected: false,
         accountId: null,
         mode: "test",
-        canConnect: true,
       }),
     );
     const originalLocation = window.location;
@@ -229,7 +201,6 @@ describe("Onboarding", () => {
         connected: true,
         accountId: "acct_123",
         mode: "test",
-        canConnect: true,
       }),
     );
 
@@ -246,7 +217,6 @@ describe("Onboarding", () => {
         connected: true,
         accountId: "acct_456",
         mode: "live",
-        canConnect: true,
       }),
     );
 
@@ -261,7 +231,6 @@ describe("Onboarding", () => {
         connected: true,
         accountId: "acct_123",
         mode: "test",
-        canConnect: true,
       }),
     );
 
@@ -281,7 +250,6 @@ describe("Onboarding", () => {
         connected: false,
         accountId: null,
         mode: "test",
-        canConnect: true,
       }),
     );
 
@@ -308,7 +276,6 @@ describe("Onboarding", () => {
         connected: false,
         accountId: null,
         mode: "test",
-        canConnect: true,
       }),
     );
 
