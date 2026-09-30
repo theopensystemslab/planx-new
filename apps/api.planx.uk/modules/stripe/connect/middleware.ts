@@ -7,6 +7,8 @@ import {
   type connectSchema,
   type StripeConnectSessionState,
   stripeConnectSessionStateSchema,
+  type StripeOnboardingSessionState,
+  stripeOnboardingSessionStateSchema,
   type TeamLocals,
 } from "./types.js";
 
@@ -76,4 +78,33 @@ export const verifyState = (
     return undefined;
   }
   return savedState;
+};
+
+// Staging only - remember the team's unfinished account, so repeat visits resume it rather than creating another
+export const setPendingOnboarding = (
+  req: RequestWithSession,
+  state: StripeOnboardingSessionState,
+): void => {
+  if (!req.session) {
+    throw new Error(
+      "Cannot save Stripe onboarding state: request has no session",
+    );
+  }
+  req.session.stripeOnboarding = state;
+};
+
+export const getPendingOnboarding = (
+  req: RequestWithSession,
+  teamId: number,
+): StripeOnboardingSessionState | undefined => {
+  const state = stripeOnboardingSessionStateSchema.safeParse(
+    req.session?.stripeOnboarding,
+  ).data;
+  return state?.teamId === teamId ? state : undefined;
+};
+
+export const clearPendingOnboarding = (req: RequestWithSession): void => {
+  if (req.session) {
+    req.session.stripeOnboarding = undefined;
+  }
 };

@@ -4,10 +4,19 @@ import type { ConnectStatusResponse } from "./types.js";
 const mockGenerateNonce = vi.fn();
 const mockSetConnectState = vi.fn();
 const mockVerifyState = vi.fn();
+const mockGetPendingOnboarding = vi.fn();
+const mockSetPendingOnboarding = vi.fn();
+const mockClearPendingOnboarding = vi.fn();
 vi.mock("./middleware.js", () => ({
   generateNonce: (...args: unknown[]) => mockGenerateNonce(...args),
   setConnectState: (...args: unknown[]) => mockSetConnectState(...args),
   verifyState: (...args: unknown[]) => mockVerifyState(...args),
+  getPendingOnboarding: (...args: unknown[]) =>
+    mockGetPendingOnboarding(...args),
+  setPendingOnboarding: (...args: unknown[]) =>
+    mockSetPendingOnboarding(...args),
+  clearPendingOnboarding: (...args: unknown[]) =>
+    mockClearPendingOnboarding(...args),
 }));
 
 const mockBuildAuthoriseUrl = vi.fn();
@@ -15,21 +24,37 @@ const mockGetStripeAccountId = vi.fn();
 const mockGetStripeMode = vi.fn();
 const mockExchangeCodeForAccountId = vi.fn();
 const mockSaveStripeAccountId = vi.fn();
-const mockCanConnectStripeAccount = vi.fn();
+const mockCreatePrefilledTestAccount = vi.fn();
+const mockCreateOnboardingLink = vi.fn();
+const mockIsOnboardingComplete = vi.fn();
+const mockIsInvalidRequestError = vi.fn();
+const mockPostStripeConnectedToSlack = vi.fn();
 vi.mock("./service.js", () => ({
+  createPrefilledTestAccount: (...args: unknown[]) =>
+    mockCreatePrefilledTestAccount(...args),
+  createOnboardingLink: (...args: unknown[]) =>
+    mockCreateOnboardingLink(...args),
+  isOnboardingComplete: (...args: unknown[]) =>
+    mockIsOnboardingComplete(...args),
+  isInvalidRequestError: (...args: unknown[]) =>
+    mockIsInvalidRequestError(...args),
   buildAuthoriseUrl: (...args: unknown[]) => mockBuildAuthoriseUrl(...args),
   getStripeAccountId: (...args: unknown[]) => mockGetStripeAccountId(...args),
   getStripeMode: (...args: unknown[]) => mockGetStripeMode(...args),
-  canConnectStripeAccount: (...args: unknown[]) =>
-    mockCanConnectStripeAccount(...args),
   exchangeCodeForAccountId: (...args: unknown[]) =>
     mockExchangeCodeForAccountId(...args),
   saveStripeAccountId: (...args: unknown[]) => mockSaveStripeAccountId(...args),
+  postStripeConnectedToSlack: (...args: unknown[]) =>
+    mockPostStripeConnectedToSlack(...args),
 }));
 
 // each controller has its own res.locals shape so we use any here
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const buildReq = (): any => ({});
+const buildReq = (): any => ({
+  ip: "203.0.113.1",
+  get: (header: string) =>
+    header === "user-agent" ? "Mozilla/5.0 (test)" : undefined,
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const buildRes = (locals: Record<string, unknown>): any => ({
@@ -50,7 +75,14 @@ beforeEach(() => {
   mockGetStripeMode.mockReset().mockReturnValue("test");
   mockExchangeCodeForAccountId.mockReset();
   mockSaveStripeAccountId.mockReset();
-  mockCanConnectStripeAccount.mockReset().mockResolvedValue(true);
+  mockGetPendingOnboarding.mockReset();
+  mockSetPendingOnboarding.mockReset();
+  mockClearPendingOnboarding.mockReset();
+  mockCreatePrefilledTestAccount.mockReset();
+  mockCreateOnboardingLink.mockReset();
+  mockIsInvalidRequestError.mockReset().mockReturnValue(false);
+  mockPostStripeConnectedToSlack.mockReset().mockResolvedValue(undefined);
+  mockIsOnboardingComplete.mockReset();
 });
 
 afterEach(() => {
@@ -58,13 +90,19 @@ afterEach(() => {
 });
 
 describe("initiateConnect", () => {
+  // Live mode uses OAuth
+  beforeEach(() => {
+    mockGetStripeMode.mockReturnValue("live");
+  });
+
   it("saves connect state for the team, and redirects to the Stripe authorise URL", async () => {
     mockBuildAuthoriseUrl.mockReturnValue(
       "https://connect.stripe.com/oauth/authorize?mock=1",
     );
 
     const req = buildReq();
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
+    const team = { id: 1, slug: "lambeth" };
+    const res = buildRes({ team });
     const next = vi.fn();
 
     await Controller.initiateConnect(req, res, next);
@@ -98,38 +136,207 @@ describe("initiateConnect", () => {
       }),
     );
   });
+});
 
-  it("redirects back with an error if the team cannot connect yet", async () => {
-    mockCanConnectStripeAccount.mockResolvedValue(false);
+describe("initiateConnect (staging onboarding)", () => {
+  const team = { id: 1, slug: "lambeth" };
 
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
-    const next = vi.fn();
-
-    await Controller.initiateConnect(buildReq(), res, next);
-
-    expect(mockCanConnectStripeAccount).toHaveBeenCalledWith("lambeth");
-    expect(res.redirect).toHaveBeenCalledWith(
-      "https://editor.example.com/app/lambeth/settings/payments?stripeError=staging_required",
+  beforeEach(() => {
+    mockGetStripeMode.mockReturnValue("test");
+    mockCreateOnboardingLink.mockResolvedValue(
+      "https://connect.stripe.com/setup/abc",
     );
-    expect(mockSetConnectState).not.toHaveBeenCalled();
-    expect(mockBuildAuthoriseUrl).not.toHaveBeenCalled();
-    expect(next).not.toHaveBeenCalled();
   });
 
-  it("forwards a ServerError if the staging check fails", async () => {
-    mockCanConnectStripeAccount.mockRejectedValue(new Error("staging down"));
+  it("creates a prefilled test account, remembers it as pending, and redirects to onboarding", async () => {
+    mockGetPendingOnboarding.mockReturnValue(undefined);
+    mockCreatePrefilledTestAccount.mockResolvedValue("acct_new");
 
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
+    const req = buildReq();
+    const res = buildRes({ team });
     const next = vi.fn();
 
-    await Controller.initiateConnect(buildReq(), res, next);
+    await Controller.initiateConnect(req, res, next);
 
-    expect(res.redirect).not.toHaveBeenCalled();
+    expect(mockCreatePrefilledTestAccount).toHaveBeenCalledWith(team, {
+      ip: "203.0.113.1",
+      userAgent: "Mozilla/5.0 (test)",
+    });
+    expect(mockSetPendingOnboarding).toHaveBeenCalledWith(req, {
+      teamId: 1,
+      accountId: "acct_new",
+    });
+    expect(mockCreateOnboardingLink).toHaveBeenCalledWith(
+      "acct_new",
+      "lambeth",
+    );
+    expect(res.redirect).toHaveBeenCalledWith(
+      "https://connect.stripe.com/setup/abc",
+    );
     expect(mockBuildAuthoriseUrl).not.toHaveBeenCalled();
+    expect(mockSaveStripeAccountId).not.toHaveBeenCalled();
+  });
+
+  it("resumes the pending account rather than creating another", async () => {
+    mockGetPendingOnboarding.mockReturnValue({
+      teamId: 1,
+      accountId: "acct_pending",
+    });
+
+    const req = buildReq();
+    const res = buildRes({ team });
+
+    await Controller.initiateConnect(req, res, vi.fn());
+
+    expect(mockGetPendingOnboarding).toHaveBeenCalledWith(req, 1);
+    expect(mockCreatePrefilledTestAccount).not.toHaveBeenCalled();
+    expect(mockCreateOnboardingLink).toHaveBeenCalledWith(
+      "acct_pending",
+      "lambeth",
+    );
+  });
+
+  it("clears the pending account and forwards a ServerError if Stripe rejects it", async () => {
+    mockGetPendingOnboarding.mockReturnValue({
+      teamId: 1,
+      accountId: "acct_pending",
+    });
+    mockCreateOnboardingLink.mockRejectedValue(new Error("account rejected"));
+    mockIsInvalidRequestError.mockReturnValue(true);
+
+    const req = buildReq();
+    const res = buildRes({ team });
+    const next = vi.fn();
+
+    await Controller.initiateConnect(req, res, next);
+
+    expect(mockClearPendingOnboarding).toHaveBeenCalledWith(req);
+    expect(res.redirect).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         message: "Failed to start Stripe Connect onboarding",
       }),
+    );
+  });
+
+  it("keeps the pending account if the onboarding link fails for another reason", async () => {
+    mockGetPendingOnboarding.mockReturnValue({
+      teamId: 1,
+      accountId: "acct_pending",
+    });
+    mockCreateOnboardingLink.mockRejectedValue(new Error("network error"));
+
+    const res = buildRes({ team });
+    const next = vi.fn();
+
+    await Controller.initiateConnect(buildReq(), res, next);
+
+    expect(mockClearPendingOnboarding).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: "Failed to start Stripe Connect onboarding",
+      }),
+    );
+  });
+
+  it("keeps a newly created account pending if the onboarding link fails", async () => {
+    mockGetPendingOnboarding.mockReturnValue(undefined);
+    mockCreatePrefilledTestAccount.mockResolvedValue("acct_new");
+    mockCreateOnboardingLink.mockRejectedValue(new Error("account rejected"));
+    mockIsInvalidRequestError.mockReturnValue(true);
+
+    const res = buildRes({ team });
+    const next = vi.fn();
+
+    const req = buildReq();
+
+    await Controller.initiateConnect(req, res, next);
+
+    expect(mockSetPendingOnboarding).toHaveBeenCalledWith(req, {
+      teamId: 1,
+      accountId: "acct_new",
+    });
+    expect(mockClearPendingOnboarding).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: "Failed to start Stripe Connect onboarding",
+      }),
+    );
+  });
+});
+
+describe("handleOnboardingReturn", () => {
+  const team = { id: 1, slug: "lambeth" };
+
+  it("redirects with an invalid_state error if there is no pending account for the team", async () => {
+    mockGetPendingOnboarding.mockReturnValue(undefined);
+
+    const res = buildRes({ team });
+
+    await Controller.handleOnboardingReturn(buildReq(), res, vi.fn());
+
+    expect(mockIsOnboardingComplete).not.toHaveBeenCalled();
+    expect(res.redirect).toHaveBeenCalledWith(
+      "https://editor.example.com/app/lambeth/settings/payments?stripeError=invalid_state",
+    );
+  });
+
+  it("saves the account, clears the pending state, and redirects with stripeConnected once onboarding is complete", async () => {
+    mockGetPendingOnboarding.mockReturnValue({
+      teamId: 1,
+      accountId: "acct_pending",
+    });
+    mockIsOnboardingComplete.mockResolvedValue(true);
+
+    const req = buildReq();
+    const res = buildRes({ team });
+
+    await Controller.handleOnboardingReturn(req, res, vi.fn());
+
+    expect(mockSaveStripeAccountId).toHaveBeenCalledWith(1, "acct_pending");
+    expect(mockClearPendingOnboarding).toHaveBeenCalledWith(req);
+    expect(mockPostStripeConnectedToSlack).toHaveBeenCalledWith(
+      "lambeth",
+      "acct_pending",
+    );
+    expect(res.redirect).toHaveBeenCalledWith(
+      "https://editor.example.com/app/lambeth/settings/payments?stripeConnected=true",
+    );
+  });
+
+  it("keeps the pending account and doesn't save it if onboarding was left unfinished", async () => {
+    mockGetPendingOnboarding.mockReturnValue({
+      teamId: 1,
+      accountId: "acct_pending",
+    });
+    mockIsOnboardingComplete.mockResolvedValue(false);
+
+    const res = buildRes({ team });
+
+    await Controller.handleOnboardingReturn(buildReq(), res, vi.fn());
+
+    expect(mockSaveStripeAccountId).not.toHaveBeenCalled();
+    expect(mockClearPendingOnboarding).not.toHaveBeenCalled();
+    expect(mockPostStripeConnectedToSlack).not.toHaveBeenCalled();
+    expect(res.redirect).toHaveBeenCalledWith(
+      "https://editor.example.com/app/lambeth/settings/payments?stripeError=onboarding_incomplete",
+    );
+  });
+
+  it("redirects with a connect_failed error if checking or saving the account throws", async () => {
+    mockGetPendingOnboarding.mockReturnValue({
+      teamId: 1,
+      accountId: "acct_pending",
+    });
+    mockIsOnboardingComplete.mockRejectedValue(new Error("stripe down"));
+    vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const res = buildRes({ team });
+
+    await Controller.handleOnboardingReturn(buildReq(), res, vi.fn());
+
+    expect(res.redirect).toHaveBeenCalledWith(
+      "https://editor.example.com/app/lambeth/settings/payments?stripeError=connect_failed",
     );
   });
 });
@@ -149,7 +356,6 @@ describe("getConnectStatus", () => {
       connected: true,
       accountId: "acct_123",
       mode: "test",
-      canConnect: true,
     };
 
     expect(res.send).toHaveBeenCalledWith(expected);
@@ -159,7 +365,6 @@ describe("getConnectStatus", () => {
   it("returns 'not connected' when no account id is stored", async () => {
     mockGetStripeAccountId.mockResolvedValue(null);
     mockGetStripeMode.mockReturnValue("live");
-    mockCanConnectStripeAccount.mockResolvedValue(true);
 
     const res = buildRes({ team: { id: 1, slug: "lambeth" } });
     const next = vi.fn();
@@ -170,42 +375,8 @@ describe("getConnectStatus", () => {
       connected: false,
       accountId: null,
       mode: "live",
-      canConnect: true,
     };
     expect(res.send).toHaveBeenCalledWith(expected);
-  });
-
-  it("cannot connect a live account until Stripe is enabled on staging", async () => {
-    mockGetStripeAccountId.mockResolvedValue(null);
-    mockGetStripeMode.mockReturnValue("live");
-    mockCanConnectStripeAccount.mockResolvedValue(false);
-
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
-
-    await Controller.getConnectStatus(buildReq(), res, vi.fn());
-
-    expect(mockCanConnectStripeAccount).toHaveBeenCalledWith("lambeth");
-    expect(res.send).toHaveBeenCalledWith(
-      expect.objectContaining({ canConnect: false }),
-    );
-  });
-
-  it("forwards a ServerError if the staging check fails", async () => {
-    mockGetStripeAccountId.mockResolvedValue(null);
-    mockGetStripeMode.mockReturnValue("live");
-    mockCanConnectStripeAccount.mockRejectedValue(new Error("staging down"));
-
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
-    const next = vi.fn();
-
-    await Controller.getConnectStatus(buildReq(), res, next);
-
-    expect(res.send).not.toHaveBeenCalled();
-    expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({
-        message: "Failed to fetch Stripe Connect status",
-      }),
-    );
   });
 
   it("forwards a ServerError if the lookup fails", async () => {
@@ -288,6 +459,10 @@ describe("handleCallback", () => {
 
     expect(mockExchangeCodeForAccountId).toHaveBeenCalledWith("auth-code");
     expect(mockSaveStripeAccountId).toHaveBeenCalledWith(1, "acct_123");
+    expect(mockPostStripeConnectedToSlack).toHaveBeenCalledWith(
+      "lambeth",
+      "acct_123",
+    );
     expect(res.redirect).toHaveBeenCalledWith(
       "https://editor.example.com/app/lambeth/settings/payments?stripeConnected=true",
     );
@@ -308,6 +483,7 @@ describe("handleCallback", () => {
     await Controller.handleCallback(req, res, vi.fn());
 
     expect(mockSaveStripeAccountId).not.toHaveBeenCalled();
+    expect(mockPostStripeConnectedToSlack).not.toHaveBeenCalled();
     expect(res.redirect).toHaveBeenCalledWith(
       "https://editor.example.com/app/lambeth/settings/payments?stripeError=connect_failed",
     );

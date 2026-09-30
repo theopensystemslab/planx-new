@@ -26,7 +26,6 @@ interface MockStatus {
   connected: boolean;
   accountId: string | null;
   mode: "test" | "live";
-  canConnect: boolean;
 }
 
 const statusHandler = (status: MockStatus) =>
@@ -54,7 +53,6 @@ describe("Onboarding", () => {
           connected: false,
           accountId: null,
           mode: "test",
-          canConnect: true,
         } satisfies MockStatus);
       }),
     );
@@ -72,7 +70,6 @@ describe("Onboarding", () => {
         connected: false,
         accountId: null,
         mode: "test",
-        canConnect: true,
       }),
     );
 
@@ -86,35 +83,12 @@ describe("Onboarding", () => {
     ).toBeVisible();
   });
 
-  it("disables connecting a live account until Stripe is enabled on staging", async () => {
-    server.use(
-      statusHandler({
-        connected: false,
-        accountId: null,
-        mode: "live",
-        canConnect: false,
-      }),
-    );
-
-    await setup(<Onboarding />);
-
-    expect(
-      await screen.findByText(
-        /only be connected once Stripe is enabled as the payment provider on staging/,
-      ),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Connect Stripe account" }),
-    ).toBeDisabled();
-  });
-
   it("redirects to the API's Stripe connect route when clicking Connect", async () => {
     server.use(
       statusHandler({
         connected: false,
         accountId: null,
         mode: "test",
-        canConnect: true,
       }),
     );
     const { user } = await setup(<Onboarding />);
@@ -142,13 +116,91 @@ describe("Onboarding", () => {
     });
   });
 
+  it.each([
+    { mode: "test", message: "Setting up your test Stripe account..." },
+    { mode: "live", message: "Redirecting to Stripe..." },
+  ] as const)(
+    "shows a loading state in $mode mode while waiting for the redirect to Stripe",
+    async ({ mode, message }) => {
+      server.use(
+        statusHandler({
+          connected: false,
+          accountId: null,
+          mode,
+        }),
+      );
+
+      const { user } = await setup(<Onboarding />);
+      const connectButton = await screen.findByRole("button", {
+        name: "Connect Stripe account",
+      });
+
+      // Stub navigation only once the status has loaded
+      const originalLocation = window.location;
+      Object.defineProperty(window, "location", {
+        value: { ...originalLocation, href: "" },
+        writable: true,
+        configurable: true,
+      });
+
+      await user.click(connectButton);
+
+      expect(screen.getByText(message)).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: "Connect Stripe account" }),
+      ).not.toBeInTheDocument();
+
+      Object.defineProperty(window, "location", {
+        value: originalLocation,
+        writable: true,
+        configurable: true,
+      });
+    },
+  );
+
+  it("clears the loading state if the page is restored from the bfcache", async () => {
+    server.use(
+      statusHandler({
+        connected: false,
+        accountId: null,
+        mode: "test",
+      }),
+    );
+    const originalLocation = window.location;
+    Object.defineProperty(window, "location", {
+      value: { ...originalLocation, href: "" },
+      writable: true,
+      configurable: true,
+    });
+
+    const { user } = await setup(<Onboarding />);
+
+    await user.click(
+      await screen.findByRole("button", { name: "Connect Stripe account" }),
+    );
+    act(() => {
+      window.dispatchEvent(
+        new PageTransitionEvent("pageshow", { persisted: true }),
+      );
+    });
+
+    expect(
+      screen.getByRole("button", { name: "Connect Stripe account" }),
+    ).toBeVisible();
+
+    Object.defineProperty(window, "location", {
+      value: originalLocation,
+      writable: true,
+      configurable: true,
+    });
+  });
+
   it("shows the connected account and a test mode chip when connected in test mode", async () => {
     server.use(
       statusHandler({
         connected: true,
         accountId: "acct_123",
         mode: "test",
-        canConnect: true,
       }),
     );
 
@@ -159,13 +211,70 @@ describe("Onboarding", () => {
     expect(screen.getByText("Test")).toBeInTheDocument();
   });
 
+  it("links to the test mode Stripe dashboard in a new tab when connected in test mode", async () => {
+    server.use(
+      statusHandler({
+        connected: true,
+        accountId: "acct_123",
+        mode: "test",
+      }),
+    );
+
+    await setup(<Onboarding />);
+
+    const link = await screen.findByRole("link", {
+      name: /Open Stripe dashboard/,
+    });
+    expect(link).toHaveAttribute(
+      "href",
+      "https://dashboard.stripe.com/acct_123/test/dashboard",
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+  });
+
+  it("links to the live Stripe dashboard when connected in live mode", async () => {
+    server.use(
+      statusHandler({
+        connected: true,
+        accountId: "acct_456",
+        mode: "live",
+      }),
+    );
+
+    await setup(<Onboarding />);
+
+    const link = await screen.findByRole("link", {
+      name: /Open Stripe dashboard/,
+    });
+    expect(link).toHaveAttribute(
+      "href",
+      "https://dashboard.stripe.com/acct_456/dashboard",
+    );
+  });
+
+  it("does not link to the Stripe dashboard when not connected", async () => {
+    server.use(
+      statusHandler({
+        connected: false,
+        accountId: null,
+        mode: "test",
+      }),
+    );
+
+    await setup(<Onboarding />);
+
+    await screen.findByText("Connect Stripe account");
+    expect(
+      screen.queryByRole("link", { name: /Open Stripe dashboard/ }),
+    ).not.toBeInTheDocument();
+  });
+
   it("shows a live mode chip when connected in live mode", async () => {
     server.use(
       statusHandler({
         connected: true,
         accountId: "acct_456",
         mode: "live",
-        canConnect: true,
       }),
     );
 
@@ -180,7 +289,6 @@ describe("Onboarding", () => {
         connected: true,
         accountId: "acct_123",
         mode: "test",
-        canConnect: true,
       }),
     );
 
@@ -200,7 +308,6 @@ describe("Onboarding", () => {
         connected: false,
         accountId: null,
         mode: "test",
-        canConnect: true,
       }),
     );
 
@@ -227,7 +334,6 @@ describe("Onboarding", () => {
         connected: false,
         accountId: null,
         mode: "test",
-        canConnect: true,
       }),
     );
 

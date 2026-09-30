@@ -7,14 +7,27 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import { useToast } from "hooks/useToast";
-import type { StripeConnectResult } from "lib/api/stripe/types";
+import type {
+  StripeConnectResult,
+  StripeConnectStatus,
+} from "lib/api/stripe/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
 import { useStripeConnectStatus } from "./hooks/useStripeConnectStatus";
+
+const getStripeDashboardUrl = (
+  accountId: string | null,
+  mode: StripeConnectStatus["mode"],
+) => {
+  const base = accountId
+    ? `https://dashboard.stripe.com/${accountId}`
+    : "https://dashboard.stripe.com";
+  return mode === "test" ? `${base}/test/dashboard` : `${base}/dashboard`;
+};
 
 interface OnboardingProps {
   stripeResult?: StripeConnectResult;
@@ -26,6 +39,16 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
   const navigate = useNavigate();
 
   const { data, isLoading, refetch } = useStripeConnectStatus(teamSlug);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  // if browser uses bfcache'd page, clear the isRedirecting boolean
+  useEffect(() => {
+    const resetOnRestore = (event: PageTransitionEvent) => {
+      if (event.persisted) setIsRedirecting(false);
+    };
+    window.addEventListener("pageshow", resetOnRestore);
+    return () => window.removeEventListener("pageshow", resetOnRestore);
+  }, []);
 
   useEffect(() => {
     if (!stripeResult) return;
@@ -51,6 +74,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
   }, []);
 
   const handleConnect = () => {
+    setIsRedirecting(true);
     window.location.href = `${import.meta.env.VITE_APP_API_URL}/stripe/connect/${teamSlug}`;
   };
 
@@ -92,19 +116,25 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
               </Box>
             )}
 
-            {!isLoading && !data?.connected && (
+            {isRedirecting && (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <CircularProgress size={20} />
+                <Typography variant="body2">
+                  {data?.mode === "test"
+                    ? "Setting up your test Stripe account..."
+                    : "Redirecting to Stripe..."}
+                </Typography>
+              </Box>
+            )}
+
+            {!isLoading && !isRedirecting && !data?.connected && (
               <>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {data?.canConnect
-                    ? "No Stripe account connected. Click below to start the onboarding process."
-                    : "A live Stripe account can only be connected once Stripe is enabled as the payment provider on staging."}
+                  No Stripe account connected. Click below to start the
+                  onboarding process.
                 </Typography>
                 <Box>
-                  <Button
-                    onClick={handleConnect}
-                    variant="contained"
-                    disabled={!data?.canConnect}
-                  >
+                  <Button onClick={handleConnect} variant="contained">
                     Connect Stripe account
                   </Button>
                 </Box>
@@ -129,6 +159,15 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
                       size="small"
                     />
                   </Box>
+                </Box>
+                <Box>
+                  <Link
+                    href={getStripeDashboardUrl(data.accountId, data.mode)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open Stripe dashboard (opens in a new tab)
+                  </Link>
                 </Box>
               </Box>
             )}

@@ -125,19 +125,27 @@ const Provider: React.FC = () => {
         <Grid size={{ xs: 12, md: 4 }}>
           <InputLegend gutterBottom>Payment provider</InputLegend>
           <SettingsDescription>
-            <p>
-              Manage your team's payment provider for processing application
-              fees.
-            </p>
-            <p>
-              PlanX is migrating from GOV.UK Pay to Stripe. Once migrated, all
-              new payment sessions will be processed through Stripe.
-            </p>
-            <p>
-              Migration requires that there are no active payment sessions in
-              progress. If sessions are found, please wait for them to complete
-              before trying again.
-            </p>
+            {provider ? (
+              <>
+                <p>
+                  Manage your team's payment provider for processing application
+                  fees.
+                </p>
+                <p>
+                  PlanX is migrating from GOV.UK Pay to Stripe. Once migrated,
+                  all new payment sessions will be processed through Stripe.
+                </p>
+                <p>
+                  Migration requires that there are no active payment sessions
+                  in progress. If sessions are found, please wait for them to
+                  complete before trying again.
+                </p>
+              </>
+            ) : (
+              <p>
+                Your team's payment provider for processing application fees.
+              </p>
+            )}
           </SettingsDescription>
         </Grid>
         <Grid size={{ xs: 12, md: 8 }}>

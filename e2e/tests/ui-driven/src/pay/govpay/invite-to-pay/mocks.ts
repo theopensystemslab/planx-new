@@ -71,7 +71,7 @@ export const mockSessionData: Omit<SessionData, "id"> = {
       "_contact.applicant.agent": {
         "applicant.agent": {
           email: "testAgent@opensystemslab.com",
-          phone: "(0123) 456789",
+          phone: "01234 567890",
           title: "",
           lastName: "agentLast",
           firstName: "agentFirst",
@@ -80,7 +80,7 @@ export const mockSessionData: Omit<SessionData, "id"> = {
       },
       "applicant.agent.name.last": "agentLast",
       "applicant.agent.name.first": "agentFirst",
-      "applicant.agent.phone.primary": "(0123) 456789",
+      "applicant.agent.phone.primary": "01234 567890",
       "property.localAuthorityDistrict": ["South Bucks", "Buckinghamshire"],
     },
   },
@@ -129,7 +129,7 @@ export const mockSessionData: Omit<SessionData, "id"> = {
         "_contact.applicant.agent": {
           "applicant.agent": {
             email: "testAgent@opensystemslab.com",
-            phone: "(0123) 456789",
+            phone: "01234 567890",
             title: "",
             lastName: "agentLast",
             firstName: "agentFirst",
@@ -138,7 +138,7 @@ export const mockSessionData: Omit<SessionData, "id"> = {
         },
         "applicant.agent.name.last": "agentLast",
         "applicant.agent.name.first": "agentFirst",
-        "applicant.agent.phone.primary": "(0123) 456789",
+        "applicant.agent.phone.primary": "01234 567890",
       },
     },
   },

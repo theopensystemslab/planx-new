@@ -26,6 +26,8 @@ export const usePaymentProvider = () => {
     {
       variables: { teamId },
       fetchPolicy: "cache-and-network",
+      // Required for applicants on public routes, who have no JWT
+      context: { role: "public" },
     },
   );
 

@@ -7,7 +7,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "buckinghamshire",
           domain: "planningservices.buckinghamshire.gov.uk",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "shared-final",
         },
         {
           name: "southwark",
@@ -43,7 +43,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "barnet",
           domain: "planningservices.barnet.gov.uk",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "shared-final",
         },
         {
           name: "tewkesbury",

@@ -40,6 +40,7 @@ export const RenderTextFieldInput = ({
   label,
   required,
   placeholder,
+  ariaLabel,
 }: RenderFieldInput) => {
   return (
     <StyledTextField
@@ -47,6 +48,10 @@ export const RenderTextFieldInput = ({
       slotProps={{
         ...params.slotProps,
         input: { ...params.slotProps.input, notched: false },
+        htmlInput: {
+          ...params.slotProps?.htmlInput,
+          ...(ariaLabel && { "aria-label": ariaLabel }),
+        },
       }}
       label={label}
       placeholder={placeholder}
