@@ -43,6 +43,8 @@ import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsPreviousLDCE } from "./schemas/ResidentialUnits/PreviousLDCE";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
+import { RightsOfWayAffected } from "./schemas/RightsOfWayAffected";
+import { RightsOfWayProvided } from "./schemas/RightsOfWayProvided";
 import { TreeDescriptionCA } from "./schemas/TreeDescriptionCA";
 import { TreeDescriptionTPO } from "./schemas/TreeDescriptionTPO";
 
@@ -94,6 +96,8 @@ export const SCHEMAS = [
   { name: "Discharge conditions", schema: DischargeConditions },
   { name: "Tree description - Conservation Area", schema: TreeDescriptionCA },
   { name: "Tree description - TPO", schema: TreeDescriptionTPO },
+  { name: "Rights of way - Affected", schema: RightsOfWayAffected },
+  { name: "Rights of way - Provided", schema: RightsOfWayProvided },
   { name: "Add team members", schema: AddTeamMembers },
 ];
 
