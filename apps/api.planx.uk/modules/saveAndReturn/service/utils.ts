@@ -29,10 +29,10 @@ const getResumeLink = (
   return `${serviceLink}?sessionId=${session.id}`;
 };
 
-/**
- * Construct a link to the service
- */
-export const getServiceLink = (team: Team, flowSlug: string): string => {
+export const getServiceLink = (
+  team: { slug: string; domain?: string | null },
+  flowSlug: string,
+): string => {
   // Link to custom domain
   if (team.domain) return `https://${team.domain}/${flowSlug}`;
   // Fallback to PlanX domain

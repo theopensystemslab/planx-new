@@ -2,15 +2,16 @@ import { formatStripeMetadata } from "@opensystemslab/planx-core";
 import type { Passport as IPassport } from "@opensystemslab/planx-core/types";
 import { useQuery } from "@tanstack/react-query";
 import { useMatches, useSearch } from "@tanstack/react-router";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import {
   createStripeCheckoutSession,
   getStripeCheckoutSessionStatus,
 } from "lib/api/stripe/requests";
+import type { CreateStripeCheckoutSession } from "lib/api/stripe/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 import { useErrorBoundary } from "react-error-boundary";
 import type { FileRouteTypes } from "routeTree.gen";
-import { ApplicationPath } from "types";
 import { z } from "zod";
 
 import { makeData } from "../../../shared/utils";
@@ -23,21 +24,12 @@ import {
   type UsePaymentProviderResult,
 } from "./types";
 
-const getStripeReturnURL = (): string => {
-  const url = new URL(window.location.href);
-
-  // Drop stripe return params from any previous attempt
-  url.searchParams.delete("stripeSessionId");
-  url.searchParams.delete("cancelled");
-
-  // Ensure that applicant can bypass Resume page on return
-  const { path, sessionId, saveToEmail } = useStore.getState();
-  if (path === ApplicationPath.SaveAndReturn) {
-    url.searchParams.set("sessionId", sessionId);
-    url.searchParams.set("email", saveToEmail ?? "");
-  }
-
-  return url.toString();
+const getReturnTo = (
+  route: ReturnType<typeof usePublicRouteContext>,
+): CreateStripeCheckoutSession["returnTo"] => {
+  if (route === "/$team/$flow/preview") return "preview";
+  if (route === "/$team/$flow/draft") return "draft";
+  return "published";
 };
 
 // Only ever redirect applicants to Stripe's hosted Checkout
@@ -77,6 +69,7 @@ export function useStripePay(
   });
 
   const { showBoundary } = useErrorBoundary();
+  const publicRoute = usePublicRouteContext();
 
   const isTestEnvironment = useMatches().some(({ routeId }) =>
     TEST_ENVIRONMENT_ROUTE_IDS.has(routeId),
@@ -138,7 +131,7 @@ export function useStripePay(
         sessionId,
         flowId,
         amount: toPence(fee),
-        returnURL: getStripeReturnURL(),
+        returnTo: getReturnTo(publicRoute),
         metadata,
       });
 

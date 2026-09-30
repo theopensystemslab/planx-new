@@ -2,6 +2,7 @@ import type Stripe from "stripe";
 import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import { RETURN_TO } from "./returnURL.js";
 
 export const createCheckoutSessionSchema = z.object({
   params: z.object({
@@ -11,7 +12,7 @@ export const createCheckoutSessionSchema = z.object({
     sessionId: z.string().uuid(),
     flowId: z.string().uuid(),
     amount: z.number().int().positive(),
-    returnURL: z.string().url(),
+    returnTo: z.enum(RETURN_TO),
     metadata: z
       .object({
         flow: z.string(),
@@ -39,9 +40,16 @@ export interface CreateCheckoutSessionResponse {
 
 export type CheckoutSessionLocals = {
   connectedAccountId: string;
+  returnURL: string;
 };
 
 export type ResolveTeamPaymentProviderMiddleware = ValidatedRequestHandler<
+  typeof createCheckoutSessionSchema,
+  CreateCheckoutSessionResponse,
+  CheckoutSessionLocals
+>;
+
+export type ResolveReturnURLMiddleware = ValidatedRequestHandler<
   typeof createCheckoutSessionSchema,
   CreateCheckoutSessionResponse,
   CheckoutSessionLocals
