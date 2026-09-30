@@ -2,7 +2,7 @@ import type { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
 export const RightsOfWayProvided: Schema = {
-  type: "New paths to be provided",
+  type: "New path to be provided",
   fields: [
     {
       type: "question",

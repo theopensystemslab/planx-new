@@ -2,12 +2,12 @@ import type { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
 export const RightsOfWayAffected: Schema = {
-  type: "Existing paths affected by the proposal",
+  type: "Existing path affected by the proposal",
   fields: [
     {
       type: "text",
       data: {
-        title: "Path reference number (if known)",
+        title: "Path reference number",
         fn: "referenceNo",
         type: TextInputType.Short,
       },
@@ -54,7 +54,7 @@ export const RightsOfWayAffected: Schema = {
     {
       type: "number",
       data: {
-        title: "What is the width of this path (if defined)?",
+        title: "What is the width of this path?",
         units: "m",
         fn: "width",
         allowNegatives: false,
