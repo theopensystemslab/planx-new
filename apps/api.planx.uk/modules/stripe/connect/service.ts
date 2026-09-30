@@ -5,6 +5,7 @@ import Stripe from "stripe";
 
 import { $api } from "../../../client/index.js";
 import { ServerError } from "../../../errors/index.js";
+import { sendSlackMessage } from "../../slack/utils.js";
 import { stripe } from "../client.js";
 
 export const getCallbackUrl = (): string =>
@@ -289,4 +290,23 @@ export const getStripeAccountId = async (
   );
 
   return teamIntegrations[0]?.accountId ?? null;
+};
+
+export const postStripeConnectedToSlack = async (
+  teamSlug: string,
+  accountId: string,
+): Promise<void> => {
+  const environment = process.env.APP_ENVIRONMENT;
+  if (environment !== "production" && environment !== "staging") return;
+
+  try {
+    await sendSlackMessage(
+      `:link: *${teamSlug}* has connected their Stripe account in *${getStripeMode()}* mode and completed onboarding - \`${accountId}\``,
+    );
+  } catch (error) {
+    console.error(
+      "Failed to post Stripe connected notification to Slack",
+      error,
+    );
+  }
 };

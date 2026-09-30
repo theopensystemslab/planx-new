@@ -10,8 +10,14 @@ import {
   getTeamBySlug,
   isInvalidRequestError,
   isOnboardingComplete,
+  postStripeConnectedToSlack,
   saveStripeAccountId,
 } from "./service.js";
+
+const mockSendSlackMessage = vi.hoisted(() => vi.fn());
+vi.mock("../../slack/utils.js", () => ({
+  sendSlackMessage: (...args: unknown[]) => mockSendSlackMessage(...args),
+}));
 
 const {
   mockAuthorizeUrl,
@@ -417,5 +423,56 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
     const accountId = await getStripeAccountId(42);
 
     expect(accountId).toBeNull();
+  });
+});
+
+describe("postStripeConnectedToSlack", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    mockSendSlackMessage.mockReset();
+  });
+
+  it("posts to Slack in production, labelled as live mode", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+    mockSendSlackMessage.mockResolvedValue(undefined);
+
+    await postStripeConnectedToSlack("lambeth", "acct_123");
+
+    expect(mockSendSlackMessage).toHaveBeenCalledWith(
+      ":link: *lambeth* has connected their Stripe account in *live* mode and completed onboarding - `acct_123`",
+    );
+  });
+
+  it("posts to Slack in staging, labelled as test mode", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "staging");
+    mockSendSlackMessage.mockResolvedValue(undefined);
+
+    await postStripeConnectedToSlack("lambeth", "acct_123");
+
+    expect(mockSendSlackMessage).toHaveBeenCalledWith(
+      ":link: *lambeth* has connected their Stripe account in *test* mode and completed onboarding - `acct_123`",
+    );
+  });
+
+  it("skips posting in local development", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "development");
+
+    await postStripeConnectedToSlack("lambeth", "acct_123");
+
+    expect(mockSendSlackMessage).not.toHaveBeenCalled();
+  });
+
+  it("does not throw if Slack fails", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+    mockSendSlackMessage.mockRejectedValue(new Error("Slack is down"));
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    await expect(
+      postStripeConnectedToSlack("lambeth", "acct_123"),
+    ).resolves.toBeUndefined();
+    expect(consoleError).toHaveBeenCalled();
+    consoleError.mockRestore();
   });
 });

@@ -92,6 +92,7 @@ export const handleOnboardingReturn: OnboardingReturnController = async (
 
     await Service.saveStripeAccountId(team.id, pending.accountId);
     clearPendingOnboarding(req);
+    await Service.postStripeConnectedToSlack(team.slug, pending.accountId);
     return res.redirect(`${editorPaymentsUrl(team.slug)}?stripeConnected=true`);
   } catch (err) {
     console.error("Stripe onboarding return failed", err);
@@ -149,6 +150,7 @@ export const handleCallback: ConnectCallbackController = async (req, res) => {
   try {
     const accountId = await Service.exchangeCodeForAccountId(code);
     await Service.saveStripeAccountId(savedState.teamId, accountId);
+    await Service.postStripeConnectedToSlack(savedState.teamSlug, accountId);
     return res.redirect(
       `${editorPaymentsUrl(savedState.teamSlug)}?stripeConnected=true`,
     );
