@@ -21,6 +21,8 @@ import {
 import * as Controller from "./connect/controller.js";
 import { requireStripeConnectTeamAuth } from "./connect/middleware.js";
 import { connectCallbackSchema, connectSchema } from "./connect/types.js";
+import { getMigrationAbility } from "./migration/controller.js";
+import { migrationAbilitySchema } from "./migration/types.js";
 import { handleStripeWebhook } from "./webhook/controller.js";
 import { verifyStripeWebhook } from "./webhook/middleware.js";
 
@@ -80,6 +82,14 @@ router.post(
   fetchPaymentRequest,
   resolvePaymentRequestConnectedAccount,
   createPaymentRequestCheckoutSession,
+);
+
+router.get(
+  "/stripe/migration/:teamSlug/status",
+  useTeamEditorAuth,
+  validate(migrationAbilitySchema),
+  requireStripeConnectTeamAuth,
+  getMigrationAbility,
 );
 
 // Stripe authenticates via the `stripe-signature` header, and signature verification requires
