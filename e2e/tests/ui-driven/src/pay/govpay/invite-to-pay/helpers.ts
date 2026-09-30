@@ -42,7 +42,7 @@ export async function navigateToPayComponent(page: Page, context: TestContext) {
     firstName: "agentFirst",
     lastName: "agentLast",
     email: TEST_EMAIL,
-    phoneNumber: "(0123) 456789",
+    phoneNumber: "01234 567890",
   });
   await page.getByText("Continue").click();
 }
