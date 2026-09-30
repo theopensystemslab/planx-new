@@ -36,6 +36,7 @@ test("adding an external portal", async () => {
       data: {
         flow: { id: "b", name: "flow b", slug: "flow-b", team: "team" },
         flowId: "b",
+        description: "",
         tags: [],
         notes: "",
         isTemplatedNode: false,
@@ -81,6 +82,7 @@ test("changing an external portal", async () => {
       data: {
         flow: { id: "a", name: "flow a", slug: "flow-a", team: "team" },
         flowId: "a",
+        description: "",
         tags: [],
         notes: "",
         isTemplatedNode: false,
