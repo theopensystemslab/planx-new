@@ -31,7 +31,6 @@ export const RightsOfWayProvided: Schema = {
         type: TextInputType.Long,
         description: "Include 8 figure O.S. grid references where known.",
       },
-      required: false,
     },
     {
       type: "text",
