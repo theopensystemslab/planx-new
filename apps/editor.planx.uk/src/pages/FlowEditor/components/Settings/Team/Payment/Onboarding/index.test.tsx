@@ -211,6 +211,67 @@ describe("Onboarding", () => {
     expect(screen.getByText("Test")).toBeInTheDocument();
   });
 
+  it("links to the test mode Stripe dashboard in a new tab when connected in test mode", async () => {
+    server.use(
+      statusHandler({
+        connected: true,
+        accountId: "acct_123",
+        mode: "test",
+        canConnect: true,
+      }),
+    );
+
+    await setup(<Onboarding />);
+
+    const link = await screen.findByRole("link", {
+      name: /Open Stripe dashboard/,
+    });
+    expect(link).toHaveAttribute(
+      "href",
+      "https://dashboard.stripe.com/acct_123/test/dashboard",
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+  });
+
+  it("links to the live Stripe dashboard when connected in live mode", async () => {
+    server.use(
+      statusHandler({
+        connected: true,
+        accountId: "acct_456",
+        mode: "live",
+        canConnect: true,
+      }),
+    );
+
+    await setup(<Onboarding />);
+
+    const link = await screen.findByRole("link", {
+      name: /Open Stripe dashboard/,
+    });
+    expect(link).toHaveAttribute(
+      "href",
+      "https://dashboard.stripe.com/acct_456/dashboard",
+    );
+  });
+
+  it("does not link to the Stripe dashboard when not connected", async () => {
+    server.use(
+      statusHandler({
+        connected: false,
+        accountId: null,
+        mode: "test",
+        canConnect: true,
+      }),
+    );
+
+    await setup(<Onboarding />);
+
+    await screen.findByText("Connect Stripe account");
+    expect(
+      screen.queryByRole("link", { name: /Open Stripe dashboard/ }),
+    ).not.toBeInTheDocument();
+  });
+
   it("shows a live mode chip when connected in live mode", async () => {
     server.use(
       statusHandler({
