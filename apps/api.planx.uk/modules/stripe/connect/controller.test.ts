@@ -273,7 +273,7 @@ describe("initiateConnect (staging onboarding)", () => {
     );
   });
 
-  it("does not clear anything if a newly created account's onboarding link fails", async () => {
+  it("keeps a newly created account pending if the onboarding link fails", async () => {
     mockGetPendingOnboarding.mockReturnValue(undefined);
     mockCreatePrefilledTestAccount.mockResolvedValue("acct_new");
     mockCreateOnboardingLink.mockRejectedValue(new Error("account rejected"));
@@ -282,8 +282,14 @@ describe("initiateConnect (staging onboarding)", () => {
     const res = buildRes({ team });
     const next = vi.fn();
 
-    await Controller.initiateConnect(buildReq(), res, next);
+    const req = buildReq();
 
+    await Controller.initiateConnect(req, res, next);
+
+    expect(mockSetPendingOnboarding).toHaveBeenCalledWith(req, {
+      teamId: 1,
+      accountId: "acct_new",
+    });
     expect(mockClearPendingOnboarding).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
