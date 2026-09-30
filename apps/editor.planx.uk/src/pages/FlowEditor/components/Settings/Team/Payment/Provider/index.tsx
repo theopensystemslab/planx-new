@@ -9,11 +9,18 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
+import { getStripeMigrationAbility } from "lib/api/stripe/requests";
+import type {
+  MigrationBlocker,
+  MigrationBlockerReason,
+} from "lib/api/stripe/types";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useId, useState } from "react";
@@ -28,34 +35,36 @@ export type PaymentProvider = TeamSettings["paymentProvider"];
 type DialogState =
   | { type: "closed" }
   | { type: "checking" }
-  | { type: "blocked"; sessionCount: number }
+  | { type: "blocked"; blockers: MigrationBlocker[] }
   | { type: "confirm" };
+
+const BLOCKER_MESSAGES: Record<
+  MigrationBlockerReason,
+  (props: MigrationBlocker) => string
+> = {
+  stripeNotConnected: () => "Stripe has not been connected for this team",
+  activeGovpaySessions: (props) =>
+    `${props.count} active GOV.UK Pay session${props.count === 1 ? " is" : "s are"} in progress`,
+  checkoutNotConfigured: () => "Stripe Checkout is not yet configured",
+};
 
 const PROVIDER_LABELS: Record<NonNullable<PaymentProvider>, string> = {
   govpay: "GOV.UK Pay",
   stripe: "Stripe",
 };
 
-/**
- * Placeholder - randomly returns a success or failure option
- * @todo Query DB, return real results
- */
-const checkActiveSessions = async (
-  teamId: number,
-): Promise<{ count: number; canMigrate: boolean }> => {
-  console.log(
-    `[Provider] Checking active payment sessions for team ${teamId}...`,
-  );
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  const count = Math.random() > 0.5 ? 3 : 0;
-  console.log(`[Provider] Found ${count} active session(s)`);
-  return { count, canMigrate: count === 0 };
+const formatBlockerList = (blockers: MigrationBlocker[]): string => {
+  const messages = blockers.map((b) => BLOCKER_MESSAGES[b.reason](b));
+  if (messages.length === 1) return messages[0];
+  return `${messages.slice(0, -1).join(", ")} and ${messages[messages.length - 1]}`;
 };
 
 const Provider: React.FC = () => {
   const toast = useToast();
-  const teamId = useStore((state) => state.teamId);
-  const teamSlug = useStore((state) => state.teamSlug);
+  const [teamId, teamSlug] = useStore((state) => [
+    state.teamId,
+    state.teamSlug,
+  ]);
   const { paymentProvider } = usePaymentProvider();
   const stripeWarningId = useId();
   const [migratedProvider, setMigratedProvider] =
@@ -68,11 +77,11 @@ const Provider: React.FC = () => {
 
   const handleMigrateClick = async () => {
     setDialogState({ type: "checking" });
-    const result = await checkActiveSessions(teamId);
+    const result = await getStripeMigrationAbility(teamSlug);
     if (result.canMigrate) {
       setDialogState({ type: "confirm" });
     } else {
-      setDialogState({ type: "blocked", sessionCount: result.count });
+      setDialogState({ type: "blocked", blockers: result.blockers });
     }
   };
 
@@ -218,13 +227,12 @@ const Provider: React.FC = () => {
         {dialogState.type === "blocked" && (
           <>
             <DialogTitle component="h1" variant="h3">
-              Active payment sessions found
+              Unable to migrate to Stripe
             </DialogTitle>
             <DialogContent dividers>
               <DialogContentText>
-                Unable to migrate payment provider to Stripe. Your team
-                currently has {dialogState.sessionCount} open payment
-                session(s). Please wait for these to complete and try again.
+                This team cannot migrate to Stripe yet because{" "}
+                {formatBlockerList(dialogState.blockers)}.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
