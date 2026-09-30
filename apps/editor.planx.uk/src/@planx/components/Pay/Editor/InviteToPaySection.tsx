@@ -32,6 +32,7 @@ export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
             }
             label="Allow applicants to invite someone else to pay"
             disabled={disabled}
+            error={errors.allowInviteToPay}
           />
         </InputRow>
         {values.allowInviteToPay ? (
