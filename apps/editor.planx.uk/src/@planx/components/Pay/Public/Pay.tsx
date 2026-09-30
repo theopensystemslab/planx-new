@@ -1,6 +1,8 @@
 import type { PublicProps } from "@planx/components/shared/types";
 import { logger } from "airbrake";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { usePaymentProvider } from "hooks/usePaymentProvider";
+import type { PaymentProvider } from "pages/FlowEditor/components/Settings/Team/Payment/Provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect, useReducer } from "react";
 
@@ -72,6 +74,17 @@ const reducer = (_state: ComponentState, action: Action): ComponentState => {
 };
 
 function Component(props: Props) {
+  const { paymentProvider, data, loading } = usePaymentProvider();
+
+  if (loading && !data) return <DelayedLoadingIndicator text="Loading..." />;
+
+  return <PayWithProvider {...props} paymentProvider={paymentProvider} />;
+}
+
+function PayWithProvider({
+  paymentProvider,
+  ...props
+}: Props & { paymentProvider?: PaymentProvider }) {
   const [sessionId, passport] = useStore((state) => [
     state.sessionId,
     state.computePassport(),
@@ -88,6 +101,7 @@ function Component(props: Props) {
     props,
     dispatch,
     fee,
+    paymentProvider,
   );
 
   const isTeamSupported = state.status !== "unsupported_team";

@@ -1,4 +1,5 @@
-import { usePaymentProvider } from "../../../../../hooks/usePaymentProvider";
+import type { PaymentProvider } from "pages/FlowEditor/components/Settings/Team/Payment/Provider";
+
 import type { Props } from "../Pay";
 import type { UsePaymentProviderResult } from "../providers/types";
 import { useGovUkPay } from "../providers/useGovUkPay";
@@ -10,9 +11,8 @@ export const usePaymentFlow = (
   props: Props,
   dispatch: React.Dispatch<Action>,
   fee: number,
+  paymentProvider?: PaymentProvider,
 ): UsePaymentProviderResult => {
-  const { paymentProvider } = usePaymentProvider();
-
   const govPay = useGovUkPay(props, dispatch, fee);
   const stripe = useStripePay(props, dispatch, fee);
   // A team without a payment provider can still use Pay with props.hidePay
