@@ -117,16 +117,11 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
             {!isLoading && !isRedirecting && !data?.connected && (
               <>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {data?.canConnect
-                    ? "No Stripe account connected. Click below to start the onboarding process."
-                    : "A live Stripe account can only be connected once Stripe is enabled as the payment provider on staging."}
+                  No Stripe account connected. Click below to start the
+                  onboarding process.
                 </Typography>
                 <Box>
-                  <Button
-                    onClick={handleConnect}
-                    variant="contained"
-                    disabled={!data?.canConnect}
-                  >
+                  <Button onClick={handleConnect} variant="contained">
                     Connect Stripe account
                   </Button>
                 </Box>
