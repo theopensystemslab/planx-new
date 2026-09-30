@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { publicContext } from "lib/graphql/contexts";
 
 const FETCH_DOWNTIME_BANNER_VISIBILITY = gql`
   query FetchDowntimeBannerVisibility {
@@ -16,6 +17,6 @@ export const useDowntimeBanner = () =>
   useQuery<{ downtimeBanner: DowntimeBanner }>(
     FETCH_DOWNTIME_BANNER_VISIBILITY,
     {
-      context: { role: "public" },
+      context: publicContext,
     },
   );

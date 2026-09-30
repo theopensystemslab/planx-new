@@ -2,6 +2,7 @@ import type { DocumentNode } from "@apollo/client";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import Bowser from "bowser";
 import { client } from "lib/graphql";
+import { publicContext } from "lib/graphql/contexts";
 import React, { createContext, useContext, useEffect } from "react";
 import { usePrevious } from "react-use";
 
@@ -254,7 +255,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         node_title: nodeTitle,
         node_id: nodeId,
       },
-      context: { role: "public" },
+      context: publicContext,
     });
     return result;
   }
@@ -269,7 +270,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         id: lastVisibleNodeAnalyticsLogId,
         next_log_created_at: newLogCreatedAt,
       },
-      context: { role: "public" },
+      context: publicContext,
     });
   }
 
@@ -284,7 +285,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         id: lastVisibleNodeAnalyticsLogId,
         metadata,
       },
-      context: { role: "public" },
+      context: publicContext,
     });
   }
 
@@ -334,7 +335,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         id: lastVisibleNodeAnalyticsLogId,
         flow_direction: flowDirection,
       },
-      context: { role: "public" },
+      context: publicContext,
     });
   }
 
@@ -351,7 +352,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         user_agent: userAgent,
         referrer,
       },
-      context: { role: "public" },
+      context: publicContext,
     });
     const id = response.data.insert_analytics_one.id;
     setAnalyticsId(id);
@@ -380,7 +381,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         allow_list_answers: allowListAnswers,
         node_id: nodeId,
       },
-      context: { role: "public" },
+      context: publicContext,
     });
   }
 
@@ -415,7 +416,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         allow_list_answers: allowListAnswers,
         node_id: nodeId,
       },
-      context: { role: "public" },
+      context: publicContext,
     });
   }
 
@@ -431,7 +432,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         id: lastVisibleNodeAnalyticsLogId,
         error,
       },
-      context: { role: "public" },
+      context: publicContext,
     });
   }
 

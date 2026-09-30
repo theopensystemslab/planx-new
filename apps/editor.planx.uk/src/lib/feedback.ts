@@ -3,6 +3,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import Bowser from "bowser";
 import type { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
 import type { FeedbackView } from "components/Feedback/types";
+import { publicContext } from "lib/graphql/contexts";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
 
@@ -100,7 +101,7 @@ export async function insertFeedbackMutation(data: {
       feedbackScore: data.feedbackScore || null,
       userComment: data.userComment || null,
     },
-    context: { role: "public" },
+    context: publicContext,
   });
 
   return result.data.insert_feedback.affected_rows;

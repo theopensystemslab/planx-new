@@ -37,10 +37,3 @@ export const handleExpiredJWTErrors = () => {
     },
   );
 };
-
-/**
- * Public Context helper
- */
-export const publicContext = {
-  role: "public",
-};
