@@ -28,6 +28,7 @@ const mockCreatePrefilledTestAccount = vi.fn();
 const mockCreateOnboardingLink = vi.fn();
 const mockIsOnboardingComplete = vi.fn();
 const mockIsInvalidRequestError = vi.fn();
+const mockPostStripeConnectedToSlack = vi.fn();
 vi.mock("./service.js", () => ({
   createPrefilledTestAccount: (...args: unknown[]) =>
     mockCreatePrefilledTestAccount(...args),
@@ -43,6 +44,8 @@ vi.mock("./service.js", () => ({
   exchangeCodeForAccountId: (...args: unknown[]) =>
     mockExchangeCodeForAccountId(...args),
   saveStripeAccountId: (...args: unknown[]) => mockSaveStripeAccountId(...args),
+  postStripeConnectedToSlack: (...args: unknown[]) =>
+    mockPostStripeConnectedToSlack(...args),
 }));
 
 // each controller has its own res.locals shape so we use any here
@@ -78,6 +81,7 @@ beforeEach(() => {
   mockCreatePrefilledTestAccount.mockReset();
   mockCreateOnboardingLink.mockReset();
   mockIsInvalidRequestError.mockReset().mockReturnValue(false);
+  mockPostStripeConnectedToSlack.mockReset().mockResolvedValue(undefined);
   mockIsOnboardingComplete.mockReset();
 });
 
@@ -291,6 +295,10 @@ describe("handleOnboardingReturn", () => {
 
     expect(mockSaveStripeAccountId).toHaveBeenCalledWith(1, "acct_pending");
     expect(mockClearPendingOnboarding).toHaveBeenCalledWith(req);
+    expect(mockPostStripeConnectedToSlack).toHaveBeenCalledWith(
+      "lambeth",
+      "acct_pending",
+    );
     expect(res.redirect).toHaveBeenCalledWith(
       "https://editor.example.com/app/lambeth/settings/payments?stripeConnected=true",
     );
@@ -309,6 +317,7 @@ describe("handleOnboardingReturn", () => {
 
     expect(mockSaveStripeAccountId).not.toHaveBeenCalled();
     expect(mockClearPendingOnboarding).not.toHaveBeenCalled();
+    expect(mockPostStripeConnectedToSlack).not.toHaveBeenCalled();
     expect(res.redirect).toHaveBeenCalledWith(
       "https://editor.example.com/app/lambeth/settings/payments?stripeError=onboarding_incomplete",
     );
@@ -450,6 +459,10 @@ describe("handleCallback", () => {
 
     expect(mockExchangeCodeForAccountId).toHaveBeenCalledWith("auth-code");
     expect(mockSaveStripeAccountId).toHaveBeenCalledWith(1, "acct_123");
+    expect(mockPostStripeConnectedToSlack).toHaveBeenCalledWith(
+      "lambeth",
+      "acct_123",
+    );
     expect(res.redirect).toHaveBeenCalledWith(
       "https://editor.example.com/app/lambeth/settings/payments?stripeConnected=true",
     );
@@ -470,6 +483,7 @@ describe("handleCallback", () => {
     await Controller.handleCallback(req, res, vi.fn());
 
     expect(mockSaveStripeAccountId).not.toHaveBeenCalled();
+    expect(mockPostStripeConnectedToSlack).not.toHaveBeenCalled();
     expect(res.redirect).toHaveBeenCalledWith(
       "https://editor.example.com/app/lambeth/settings/payments?stripeError=connect_failed",
     );
