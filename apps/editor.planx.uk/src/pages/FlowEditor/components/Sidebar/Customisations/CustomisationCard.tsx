@@ -20,7 +20,10 @@ export const CustomisationCard: React.FC<Props> = ({
   nodeEdits,
   flowEdits,
 }) => {
-  const [flow] = useStore((state) => [state.flow]);
+  const [flow, orderedFlow] = useStore((state) => [
+    state.flow,
+    state.orderedFlow,
+  ]);
   const node = flow[nodeId];
 
   // Keep this logic in sync with `haveAllRequiredTemplatedNodesBeenUpdated` in the API flows/validate module !
@@ -28,22 +31,33 @@ export const CustomisationCard: React.FC<Props> = ({
     // This node has been directly edited
     if (nodeEdits) return true;
 
-    const isNodeWithChildren =
+    const isNodeWithOptions =
       node.type &&
       [
         ComponentType.Question,
         ComponentType.Checklist,
         ComponentType.ResponsiveQuestion,
         ComponentType.ResponsiveChecklist,
-        ComponentType.InternalPortal,
+        ComponentType.Filter,
       ].includes(node.type);
 
-    // The "children" of this node have been updated
-    if (isNodeWithChildren) {
-      const isChildEdited = node.edges?.some((edgeId) =>
+    // The direct "options" of this node have been edited
+    if (isNodeWithOptions) {
+      const isOptionEdited = node.edges?.some((edgeId) =>
         Boolean(flowEdits?.[edgeId]),
       );
-      return isChildEdited;
+      return isOptionEdited;
+    }
+
+    // This node is a folder and any of its children have been edited
+    const isFolder = node.type === ComponentType.InternalPortal;
+    if (isFolder) {
+      const isChildOfFolderEdited = Object.entries(flowEdits).some(
+        ([editedNodeId, _data]) =>
+          orderedFlow?.find(({ id }) => id === editedNodeId)
+            ?.internalPortalId === nodeId,
+      );
+      return isChildOfFolderEdited;
     }
 
     // Node has not been edited

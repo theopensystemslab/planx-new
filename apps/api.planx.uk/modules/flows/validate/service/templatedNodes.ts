@@ -59,22 +59,32 @@ const validateTemplatedNodes = async (
       if (allEditedTemplatedNodeIds.includes(nodeId)) return true;
 
       const node = flowGraph[nodeId];
-      const isNodeWithChildren =
+      const isNodeWithOptions =
         node.type &&
         [
           ComponentType.Question,
           ComponentType.Checklist,
           ComponentType.ResponsiveQuestion,
           ComponentType.ResponsiveChecklist,
-          ComponentType.InternalPortal,
+          ComponentType.Filter,
         ].includes(node.type);
 
-      // The "children" of the required node have been updated
-      if (isNodeWithChildren) {
-        const isChildEdited = node.edges?.some((edgeId) =>
+      // The direct "options" of the required node have been edited
+      if (isNodeWithOptions) {
+        const isOptionEdited = node.edges?.some((edgeId) =>
           allEditedTemplatedNodeIds.includes(edgeId),
         );
-        return isChildEdited;
+        return isOptionEdited;
+      }
+
+      // The required node is a folder and any of its children have been edited
+      const isFolder = node.type === ComponentType.InternalPortal;
+      if (isFolder) {
+        // TODO access `orderedFlow` here ??
+        const isChildOfFolderEdited = allEditedTemplatedNodeIds.some(
+          (editedNodeId) => false,
+        );
+        return isChildOfFolderEdited;
       }
 
       // Required node has not been edited
