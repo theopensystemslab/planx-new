@@ -249,6 +249,8 @@ select_permissions:
         - email_template
         - id
         - is_listed_on_lps
+        - is_pattern
+        - is_service
         - is_template
         - limitations
         - name
