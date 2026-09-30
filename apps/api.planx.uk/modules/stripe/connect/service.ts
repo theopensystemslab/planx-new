@@ -264,6 +264,17 @@ export const saveStripeAccountId = async (
         ) {
           affected_rows
         }
+        # Automatically populate team_settings.provider if currently empty
+        # Migrations from GovPay are not automatic, and must be triggered by and Editor
+        update_team_settings(
+          where: {
+            team_id: { _eq: $teamId }
+            payment_provider: { _is_null: true }
+          }
+          _set: { payment_provider: "stripe" }
+        ) {
+          affected_rows
+        }
       }
     `,
     { teamId, accountId },
