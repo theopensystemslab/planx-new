@@ -191,6 +191,31 @@ export const isInvalidRequestError = (error: unknown): boolean =>
   error instanceof Stripe.errors.StripeInvalidRequestError;
 
 /**
+ * Confirm a stored account is still connected to our platform, and able to take payments
+ *
+ * This serves as an extra step to ensure that a payment can proceed, and we're not paying out to an unknown account
+ *
+ * Stripe refuses to retrieve an account which isn't connected to the platform (e.g. access was revoked)
+ * Docs: https://docs.stripe.com/api/accounts/retrieve
+ */
+export const isAccountReadyForPayments = async (
+  accountId: string,
+): Promise<boolean> => {
+  try {
+    const account = await stripe.accounts.retrieve(accountId);
+    return account.charges_enabled;
+  } catch (error) {
+    if (
+      isInvalidRequestError(error) ||
+      error instanceof Stripe.errors.StripePermissionError
+    ) {
+      return false;
+    }
+    throw error;
+  }
+};
+
+/**
  * Stripe redirects to the account link `return_url` whether or not onboarding was finished
  * `details_submitted` tells us if the user actually completed it
  */
