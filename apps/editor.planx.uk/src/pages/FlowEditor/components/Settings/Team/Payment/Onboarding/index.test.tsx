@@ -217,7 +217,6 @@ describe("Onboarding", () => {
         connected: true,
         accountId: "acct_123",
         mode: "test",
-        canConnect: true,
       }),
     );
 
@@ -239,7 +238,6 @@ describe("Onboarding", () => {
         connected: true,
         accountId: "acct_456",
         mode: "live",
-        canConnect: true,
       }),
     );
 
@@ -260,7 +258,6 @@ describe("Onboarding", () => {
         connected: false,
         accountId: null,
         mode: "test",
-        canConnect: true,
       }),
     );
 
