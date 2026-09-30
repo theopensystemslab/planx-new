@@ -6,6 +6,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import { CustomisationCard } from "./CustomisationCard";
+import { CustomisationCounter } from "./CustomisationCounter";
 import type { FlowEdits } from "./types";
 
 const Customisations = () => {
@@ -71,6 +72,10 @@ const Customisations = () => {
             When editing a templated flow, this tab tracks your progress
             updating nodes that can be customised
           </Typography>
+          <CustomisationCounter
+            flowEdits={flowEdits}
+            customisableNodeIds={sortedCustomisableNodeIds}
+          />
         </>
       )}
       {isTemplate && (

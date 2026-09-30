@@ -19,7 +19,6 @@ import { validateInviteToPay } from "./inviteToPay.js";
 import { validatePlanningConstraints } from "./planningConstraints.js";
 import { validateSections } from "./sections.js";
 import { validateSend } from "./send.js";
-import { validateTemplatedNodes } from "./templatedNodes.js";
 
 type AlteredNode = {
   id: string;
@@ -75,7 +74,6 @@ const validateAndDiffFlow = async (
   const fees = validateFees(flattenedFlow);
   const inviteToPay = validateInviteToPay(flattenedFlow);
   const planningConstraints = validatePlanningConstraints(flattenedFlow);
-  const templatedNodes = await validateTemplatedNodes(flowId, flattenedFlow);
   const send = validateSend(flattenedFlow);
   const drawBoundary = validateDrawBoundary(flattenedFlow);
   validationChecks.push(
@@ -83,7 +81,6 @@ const validateAndDiffFlow = async (
     fees,
     inviteToPay,
     planningConstraints,
-    templatedNodes,
     send,
     drawBoundary,
   );

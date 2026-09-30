@@ -96,6 +96,7 @@ export interface EditorUIStore {
   contextMenuSource: ContextMenuSource | null;
   lastAddedNodeIds?: NodeId[];
   clearLastAddedNodeIds: () => void;
+  disableTemplatedFlowPublishing: boolean;
 }
 
 export const editorUIStore: StateCreator<
@@ -219,6 +220,8 @@ export const editorUIStore: StateCreator<
     lastAddedNodeIds: undefined,
 
     clearLastAddedNodeIds: () => set({ lastAddedNodeIds: undefined }),
+
+    disableTemplatedFlowPublishing: false,
   }),
   {
     name: "editorUIStore",

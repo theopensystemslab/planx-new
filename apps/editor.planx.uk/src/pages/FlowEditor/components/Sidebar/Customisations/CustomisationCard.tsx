@@ -1,12 +1,12 @@
 import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
-import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback } from "react";
 import BlockQuote from "ui/editor/BlockQuote";
 import { NodeCard } from "ui/editor/NodeCard";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
+import { hasNodeBeenUpdated } from "./helpers";
 import type { FlowEdits, NodeEdits } from "./types";
 
 interface Props {
@@ -27,46 +27,13 @@ export const CustomisationCard: React.FC<Props> = ({
   const node = flow[nodeId];
 
   // Keep this logic in sync with `haveAllRequiredTemplatedNodesBeenUpdated` in the API flows/validate module !
-  const hasNodeBeenUpdated = useCallback(() => {
-    // This node has been directly edited
-    if (nodeEdits) return true;
-
-    const isNodeWithOptions =
-      node.type &&
-      [
-        ComponentType.Question,
-        ComponentType.Checklist,
-        ComponentType.ResponsiveQuestion,
-        ComponentType.ResponsiveChecklist,
-        ComponentType.Filter,
-      ].includes(node.type);
-
-    // The direct "options" of this node have been edited
-    if (isNodeWithOptions) {
-      const isOptionEdited = node.edges?.some((edgeId) =>
-        Boolean(flowEdits?.[edgeId]),
-      );
-      return isOptionEdited;
-    }
-
-    // This node is a folder and any of its children have been edited
-    const isFolder = node.type === ComponentType.InternalPortal;
-    if (isFolder) {
-      const isChildOfFolderEdited = Object.entries(flowEdits).some(
-        ([editedNodeId, _data]) =>
-          orderedFlow?.find(({ id }) => id === editedNodeId)
-            ?.internalPortalId === nodeId,
-      );
-      return isChildOfFolderEdited;
-    }
-
-    // Node has not been edited
-    return false;
-  }, [nodeEdits, node, flowEdits]);
+  const hasNodeBeenUpdatedCallback = useCallback(() => {
+    return hasNodeBeenUpdated(nodeId, flow, flowEdits, orderedFlow);
+  }, [nodeEdits, node, flowEdits, nodeId, flow, orderedFlow]);
 
   const theme = useTheme();
 
-  const isComplete = Boolean(hasNodeBeenUpdated());
+  const isComplete = Boolean(hasNodeBeenUpdatedCallback());
 
   return (
     <ListItem

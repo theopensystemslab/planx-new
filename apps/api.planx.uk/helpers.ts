@@ -370,36 +370,6 @@ export const getTemplatedFlows = async (flowId: string) => {
   return response.flow;
 };
 
-interface GetTemplatedFlowEditsResponse {
-  templatedFrom: string | null;
-  edits: {
-    data: Flow["data"] | null; // not FlowGraph because no `_root`
-  } | null;
-}
-
-export const getTemplatedFlowEdits = async (flowId: string) => {
-  const { client: $client } = getClient();
-  const response = await $client.request<{
-    flow: GetTemplatedFlowEditsResponse;
-  }>(
-    gql`
-      query GetTemplatedFlowEdits($flow_id: uuid!) {
-        flow: flows_by_pk(id: $flow_id) {
-          templatedFrom: templated_from
-          edits: templated_flow_edit {
-            data
-          }
-        }
-      }
-    `,
-    {
-      flow_id: flowId,
-    },
-  );
-
-  return response.flow;
-};
-
 /**
  * For any node with edges, recursively find all of its' children nodes and return them as their own flow-like data structure
  */
