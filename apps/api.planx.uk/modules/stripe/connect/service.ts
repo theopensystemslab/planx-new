@@ -184,6 +184,12 @@ export const createOnboardingLink = async (
 };
 
 /**
+ * Check if Stripe rejected the request (e.g. the account was deleted)
+ */
+export const isInvalidRequestError = (error: unknown): boolean =>
+  error instanceof Stripe.errors.StripeInvalidRequestError;
+
+/**
  * Stripe redirects to the account link `return_url` whether or not onboarding was finished
  * `details_submitted` tells us if the user actually completed it
  */

@@ -44,11 +44,19 @@ export const initiateConnect: InitiateConnectController = async (
         }));
       setPendingOnboarding(req, { teamId: team.id, accountId });
 
-      const onboardingUrl = await Service.createOnboardingLink(
-        accountId,
-        team.slug,
-      );
-      return res.redirect(onboardingUrl);
+      try {
+        const onboardingUrl = await Service.createOnboardingLink(
+          accountId,
+          team.slug,
+        );
+        return res.redirect(onboardingUrl);
+      } catch (error) {
+        // Only discard a resumed account if Stripe rejects it (e.g. it's been deleted) - otherwise keep it for the next attempt
+        if (pending && Service.isInvalidRequestError(error)) {
+          clearPendingOnboarding(req);
+        }
+        throw error;
+      }
     }
 
     // Production uses OAuth to connect a new or existing live account
@@ -58,7 +66,6 @@ export const initiateConnect: InitiateConnectController = async (
     const authoriseUrl = Service.buildAuthoriseUrl(nonce);
     return res.redirect(authoriseUrl);
   } catch (error) {
-    clearPendingOnboarding(req);
     return next(
       new ServerError({
         message: "Failed to start Stripe Connect onboarding",
