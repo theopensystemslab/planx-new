@@ -7,7 +7,10 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import { useToast } from "hooks/useToast";
-import type { StripeConnectResult } from "lib/api/stripe/types";
+import type {
+  StripeConnectResult,
+  StripeConnectStatus,
+} from "lib/api/stripe/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
@@ -15,6 +18,16 @@ import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
 import { useStripeConnectStatus } from "./hooks/useStripeConnectStatus";
+
+const getStripeDashboardUrl = (
+  accountId: string | null,
+  mode: StripeConnectStatus["mode"],
+) => {
+  const base = accountId
+    ? `https://dashboard.stripe.com/${accountId}`
+    : "https://dashboard.stripe.com";
+  return mode === "test" ? `${base}/test/dashboard` : `${base}/dashboard`;
+};
 
 interface OnboardingProps {
   stripeResult?: StripeConnectResult;
@@ -146,6 +159,15 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
                       size="small"
                     />
                   </Box>
+                </Box>
+                <Box>
+                  <Link
+                    href={getStripeDashboardUrl(data.accountId, data.mode)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open Stripe dashboard (opens in a new tab)
+                  </Link>
                 </Box>
               </Box>
             )}
