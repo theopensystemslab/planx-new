@@ -1,7 +1,10 @@
 import RuleIcon from "@mui/icons-material/Rule";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
-import { getValidSchemaValues } from "@opensystemslab/planx-core";
+import {
+  getValidSchemaDictionary,
+  getValidSchemaValues,
+} from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
@@ -23,6 +26,7 @@ import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { RuleBuilder } from "../shared/RuleBuilder";
+import { TitleAutocomplete } from "../shared/TitleAutocomplete";
 import type { FileType, FileUploadAndLabel } from "./model";
 import { newFileType, parseContent } from "./model";
 import { fileUploadAndLabelSchema } from "./schema";
@@ -134,20 +138,29 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
   if (props.value.fn && !schema?.includes(props.value.fn))
     schema.push(props.value.fn);
 
+  // Suggest ODP schema dictionary file type names
+  const fileTypeDictionary = getValidSchemaDictionary("FileType") || {};
+  const fileTypeNames = Object.values(fileTypeDictionary).sort((a, b) =>
+    a.localeCompare(b),
+  );
+
   return (
     <Box sx={{ flex: 1 }} data-testid="rule-list-manager">
-      <InputRow>
-        <Input
-          errorMessage={getIn(props.errors, "title")}
-          name="name"
-          value={props.value.name}
-          onChange={(e) =>
-            props.onChange(merge(props.value, { name: e.target.value }))
-          }
-          placeholder="File type"
-          disabled={props.disabled}
-        />
-      </InputRow>
+      <TitleAutocomplete
+        options={fileTypeNames}
+        value={props.value.name}
+        onChange={(name) => props.onChange({ ...props.value, name })}
+        // Selecting a suggested name also sets its respective data value
+        onSelect={(name) => {
+          const fn = Object.keys(fileTypeDictionary).find(
+            (key) => fileTypeDictionary[key] === name,
+          );
+          if (fn) props.onChange({ ...props.value, name, fn });
+        }}
+        placeholder="File type"
+        disabled={props.disabled}
+        errorMessage={getIn(props.errors, "name")}
+      />
       <Collapse in={!props.isCollapsed} timeout="auto">
         <DataFieldAutocomplete
           errorMessage={getIn(props.errors, "fn")}
