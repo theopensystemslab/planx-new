@@ -9,7 +9,7 @@ packages:
   - scripts/*
 
 catalog:
-  '@opensystemslab/map': 1.0.0-alpha.15
+  '@opensystemslab/map': 1.0.0-alpha.17
   '@opensystemslab/planx-core': github:theopensystemslab/planx-core#0117bbfc9cd5c2d25c62855cddcdda1e70f9d437
   '@types/jsdom': ^30.0.0
   '@types/node': ~24.10.15
@@ -54,4 +54,4 @@ catalogs:
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
-  - '@opensystemslab/map@1.0.0-alpha.15'
+  - '@opensystemslab/map@1.0.0-alpha.17'
