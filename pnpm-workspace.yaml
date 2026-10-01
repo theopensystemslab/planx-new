@@ -30,7 +30,7 @@ catalog:
 
 catalogs:
   graphql:
-    graphql: ^16.14.2
+    graphql: ^17.0.2
     graphql-request: 4.3.0
     graphql-tag: ^2.12.7
   infrastructure:
