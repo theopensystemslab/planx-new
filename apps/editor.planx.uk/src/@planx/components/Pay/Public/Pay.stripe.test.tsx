@@ -233,6 +233,7 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
   it.each([
     "Stripe payments are not enabled for this local authority (test-team)",
     "This local authority (test-team) has not connected a Stripe account",
+    "The Stripe account for this local authority (test-team) is not connected or cannot take payments",
   ])(
     "displays an error if the team isn't set up for Stripe: %s",
     async (error) => {

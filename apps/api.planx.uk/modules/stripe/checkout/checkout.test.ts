@@ -3,13 +3,19 @@ import supertest from "supertest";
 import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 
-const { mockCreate, mockRetrieve, mockGetTeamBySlug, mockGetStripeAccountId } =
-  vi.hoisted(() => ({
-    mockCreate: vi.fn(),
-    mockRetrieve: vi.fn(),
-    mockGetTeamBySlug: vi.fn(),
-    mockGetStripeAccountId: vi.fn(),
-  }));
+const {
+  mockCreate,
+  mockRetrieve,
+  mockGetTeamBySlug,
+  mockGetStripeAccountId,
+  mockIsAccountReadyForPayments,
+} = vi.hoisted(() => ({
+  mockCreate: vi.fn(),
+  mockRetrieve: vi.fn(),
+  mockGetTeamBySlug: vi.fn(),
+  mockGetStripeAccountId: vi.fn(),
+  mockIsAccountReadyForPayments: vi.fn(),
+}));
 
 vi.mock("stripe", () => ({
   default: class MockStripe {
@@ -22,6 +28,8 @@ vi.mock("stripe", () => ({
 vi.mock("../connect/service.js", () => ({
   getTeamBySlug: (...args: unknown[]) => mockGetTeamBySlug(...args),
   getStripeAccountId: (...args: unknown[]) => mockGetStripeAccountId(...args),
+  isAccountReadyForPayments: (...args: unknown[]) =>
+    mockIsAccountReadyForPayments(...args),
 }));
 
 const STRIPE_ACCOUNT_ID = "acct_test_southwark";
@@ -70,6 +78,7 @@ describe("creating a Stripe Checkout Session", () => {
     });
     mockGetTeamBySlug.mockReset().mockResolvedValue(stripeTeam);
     mockGetStripeAccountId.mockReset().mockResolvedValue(STRIPE_ACCOUNT_ID);
+    mockIsAccountReadyForPayments.mockReset().mockResolvedValue(true);
     mockPassportLookup(feeBreakdownPassport);
   });
 
@@ -399,6 +408,41 @@ describe("creating a Stripe Checkout Session", () => {
       .post("/stripe/checkout-session/southwark")
       .send(validBody)
       .expect(409);
+
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("checks the connected account before creating the session", async () => {
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(validBody)
+      .expect(200);
+
+    expect(mockIsAccountReadyForPayments).toHaveBeenCalledWith(
+      STRIPE_ACCOUNT_ID,
+    );
+  });
+
+  it("rejects a team whose Stripe account is not connected to the platform, or cannot take payments, with a 409", async () => {
+    mockIsAccountReadyForPayments.mockResolvedValue(false);
+
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(validBody)
+      .expect(409);
+
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("surfaces an error when the connected account check fails", async () => {
+    mockIsAccountReadyForPayments.mockRejectedValue(
+      new Error("Stripe is down"),
+    );
+
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(validBody)
+      .expect(500);
 
     expect(mockCreate).not.toHaveBeenCalled();
   });
