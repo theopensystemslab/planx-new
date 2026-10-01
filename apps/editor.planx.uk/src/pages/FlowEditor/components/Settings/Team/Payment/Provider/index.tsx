@@ -111,14 +111,8 @@ const Provider: React.FC = () => {
     }
 
     if (canMigrateToStripe) {
-      if (isStripeStatusLoading) return null;
-
-      if (!stripeConnectStatus?.connected) {
-        return (
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            Connect a Stripe account before migrating to Stripe.
-          </Typography>
-        );
+      if (isStripeStatusLoading || !stripeConnectStatus?.connected) {
+        return null;
       }
 
       return (

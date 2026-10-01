@@ -17,7 +17,6 @@ const { getState, setState } = useStore;
 let initialState: FullStore;
 
 const STRIPE_WARNING = /Stripe payments are not yet available/;
-const CONNECT_STRIPE_MESSAGE = /Connect a Stripe account before migrating/;
 
 const providerHandler = (paymentProvider: PaymentProvider) =>
   graphql.query("GetPaymentProvider", () =>
@@ -69,7 +68,6 @@ describe("Provider", () => {
     expect(
       await screen.findByRole("button", { name: "Migrate to Stripe" }),
     ).toBeInTheDocument();
-    expect(screen.queryByText(CONNECT_STRIPE_MESSAGE)).not.toBeInTheDocument();
   });
 
   it("hides the migrate button for a GOV.UK Pay team without a connected Stripe account", async () => {
@@ -77,7 +75,7 @@ describe("Provider", () => {
 
     await setup(<Provider />);
 
-    expect(await screen.findByText(CONNECT_STRIPE_MESSAGE)).toBeInTheDocument();
+    expect(await screen.findByText("GOV.UK Pay")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Migrate to Stripe" }),
     ).not.toBeInTheDocument();
