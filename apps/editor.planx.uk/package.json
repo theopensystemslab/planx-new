@@ -56,7 +56,7 @@
     "js-cookie": "^3.0.8",
     "libphonenumber-js": "^1.13.13",
     "lodash": "catalog:lodash",
-    "mathjs": "^14.9.1",
+    "mathjs": "^15.2.0",
     "msw": "^2.15.0",
     "nanoid": "catalog:",
     "nanoid-good": "^3.1.0",
