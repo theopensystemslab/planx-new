@@ -1,7 +1,8 @@
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
-import { getStripeAccountId } from "../connect/service.js";
+import * as connectionService from "../connect/service.js";
+import * as migrationService from "./service.js";
 import type { CanMigrateResponse, MigrationBlocker } from "./types.js";
 
 const FINISHED_STATUSES = new Set(["success", "failed", "cancelled"]);
@@ -54,9 +55,9 @@ export const getMigrationBlockers = async (
   const blockers: MigrationBlocker[] = [];
 
   const [accountId, activeSessions, checkoutConfigured] = await Promise.all([
-    getStripeAccountId(teamId),
-    getActiveGovPaySessions(teamSlug),
-    isCheckoutConfigured(teamSlug),
+    connectionService.getStripeAccountId(teamId),
+    migrationService.getActiveGovPaySessions(teamSlug),
+    migrationService.isCheckoutConfigured(teamSlug),
   ]);
 
   if (!accountId) blockers.push({ reason: "stripeNotConnected" });
