@@ -188,11 +188,6 @@ describe("sections validation on diff", () => {
               message: "Your flow is not using Planning Constraints",
             },
             {
-              title: "Templated nodes",
-              status: "Not applicable",
-              message: "This is not a templated flow",
-            },
-            {
               title: "Send",
               status: "Pass",
               message: "Flow correctly has exactly one Send component",
@@ -259,11 +254,6 @@ describe("sections validation on diff", () => {
               message: "Your flow is not using Planning Constraints",
             },
             {
-              title: "Templated nodes",
-              status: "Not applicable",
-              message: "This is not a templated flow",
-            },
-            {
               title: "Send",
               status: "Not applicable",
               message: "Your flow is not a submission service",
@@ -318,11 +308,6 @@ describe("invite to pay validation on diff", () => {
               title: "Planning Constraints",
               status: "Not applicable",
               message: "Your flow is not using Planning Constraints",
-            },
-            {
-              title: "Templated nodes",
-              status: "Not applicable",
-              message: "This is not a templated flow",
             },
             {
               title: "Send",
@@ -391,11 +376,6 @@ describe("invite to pay validation on diff", () => {
               message: "Your flow is not using Planning Constraints",
             },
             {
-              title: "Templated nodes",
-              status: "Not applicable",
-              message: "This is not a templated flow",
-            },
-            {
               title: "Send",
               status: "Fail",
               message: `Flows cannot have more than one Send component`,
@@ -456,11 +436,6 @@ describe("invite to pay validation on diff", () => {
               title: "Planning Constraints",
               status: "Not applicable",
               message: "Your flow is not using Planning Constraints",
-            },
-            {
-              title: "Templated nodes",
-              status: "Not applicable",
-              message: "This is not a templated flow",
             },
             {
               title: "Send",
@@ -534,11 +509,6 @@ describe("invite to pay validation on diff", () => {
               message: "Your flow is not using Planning Constraints",
             },
             {
-              title: "Templated nodes",
-              status: "Not applicable",
-              message: "This is not a templated flow",
-            },
-            {
               title: "Send",
               status: "Pass",
               message: "Flow correctly has exactly one Send component",
@@ -595,11 +565,6 @@ describe("set fees validation on diff", () => {
               title: "Planning Constraints",
               status: "Not applicable",
               message: "Your flow is not using Planning Constraints",
-            },
-            {
-              title: "Templated nodes",
-              status: "Not applicable",
-              message: "This is not a templated flow",
             },
             {
               title: "Send",
@@ -668,11 +633,6 @@ describe("planning constraints validation on diff", () => {
               title: "Invite to Pay",
               status: "Not applicable",
               message: "Your flow is not using Invite to Pay",
-            },
-            {
-              title: "Templated nodes",
-              status: "Not applicable",
-              message: "This is not a templated flow",
             },
             {
               title: "Send",
@@ -753,11 +713,6 @@ describe("planning constraints validation on diff", () => {
               status: "Pass",
               message: "Flow correctly has exactly one Send component",
             },
-            {
-              title: "Templated nodes",
-              status: "Not applicable",
-              message: "This is not a templated flow",
-            },
           ]),
         );
       });
@@ -824,11 +779,6 @@ describe("templated node requirements validation on diff", () => {
         expect(res.body.message).toEqual("Changes queued to publish");
         expect(res.body.validationChecks).toEqual(
           expect.arrayContaining([
-            {
-              title: "Templated nodes",
-              status: "Fail",
-              message: `Customise each "Required" node before publishing your templated flow`,
-            },
             {
               title: "Sections",
               status: "Pass",
@@ -927,11 +877,6 @@ describe("templated node requirements validation on diff", () => {
               title: "Planning Constraints",
               status: "Pass",
               message: "Your flow has valid Planning Constraints",
-            },
-            {
-              title: "Templated nodes",
-              status: "Pass",
-              message: `All "Required" nodes in your templated flow have been customised`,
             },
             {
               title: "Fees",
