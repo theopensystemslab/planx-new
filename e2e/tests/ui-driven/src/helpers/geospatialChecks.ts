@@ -34,16 +34,16 @@ export const alterDrawGeoJson = async (page: Page) => {
   });
 };
 
-export const resetMapBoundary = async (page: Page) => {
-  const resetButton = page.getByLabel("Reset map view");
-  await resetButton.click();
+export const deleteMapBoundary = async (page: Page) => {
+  const deleteButton = page.getByLabel("Delete all points");
+  await deleteButton.click();
 
   // Wait for the underlying attribute to update, not just the click action to complete
   await page.waitForFunction(() => {
     const mapComponent = document.querySelector("my-map");
     if (!mapComponent) return false;
-    const resetGeoJson = mapComponent.getAttribute("drawgeojsondata");
-    return resetGeoJson === null;
+    const drawGeoJson = mapComponent.getAttribute("drawgeojsondata");
+    return drawGeoJson === null;
   });
 };
 
