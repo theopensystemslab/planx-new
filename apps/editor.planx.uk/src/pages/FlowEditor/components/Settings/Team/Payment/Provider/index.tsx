@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
-import { getStripeMigrationAbility } from "lib/api/stripe/requests";
+import { getStripeCanMigrate } from "lib/api/stripe/requests";
 import type {
   MigrationBlocker,
   MigrationBlockerReason,
@@ -76,7 +76,7 @@ const Provider: React.FC = () => {
 
   const handleMigrateClick = async () => {
     setDialogState({ type: "checking" });
-    const result = await getStripeMigrationAbility(teamSlug);
+    const result = await getStripeCanMigrate(teamSlug);
     if (result.canMigrate) {
       setDialogState({ type: "confirm" });
     } else {

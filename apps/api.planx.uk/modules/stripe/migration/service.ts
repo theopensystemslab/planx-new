@@ -2,7 +2,7 @@ import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
 import { getStripeAccountId } from "../connect/service.js";
-import type { MigrationAbilityResponse, MigrationBlocker } from "./types.js";
+import type { CanMigrateResponse, MigrationBlocker } from "./types.js";
 
 const FINISHED_STATUSES = new Set(["success", "failed", "cancelled"]);
 
@@ -47,10 +47,10 @@ export const isCheckoutConfigured = async (
   _teamSlug: string,
 ): Promise<boolean> => true;
 
-export const getMigrationAbilityReasons = async (
+export const getMigrationBlockers = async (
   teamId: number,
   teamSlug: string,
-): Promise<MigrationAbilityResponse> => {
+): Promise<CanMigrateResponse> => {
   const blockers: MigrationBlocker[] = [];
 
   const [accountId, activeSessions, checkoutConfigured] = await Promise.all([
