@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
-export const migrationAbilitySchema = z.object({
+export const canMigrateSchema = z.object({
   params: z.object({ teamSlug: z.string() }),
 });
 
@@ -18,13 +18,13 @@ export interface MigrationBlocker {
   count?: number;
 }
 
-export interface MigrationAbilityResponse {
+export interface CanMigrateResponse {
   canMigrate: boolean;
   blockers: MigrationBlocker[];
 }
 
-export type GetMigrationAbilityController = ValidatedRequestHandler<
-  typeof migrationAbilitySchema,
-  MigrationAbilityResponse,
+export type GetCanMigrateController = ValidatedRequestHandler<
+  typeof canMigrateSchema,
+  CanMigrateResponse,
   TeamLocals
 >;

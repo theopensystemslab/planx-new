@@ -1,10 +1,10 @@
 import apiClient from "../client";
 import type {
   CreateStripeCheckoutSession,
+  StripeCanMigrate,
   StripeCheckoutSession,
   StripeCheckoutSessionStatus,
   StripeConnectStatus,
-  StripeMigrationAbility,
 } from "./types";
 
 export const getStripeConnectStatus = async (
@@ -43,10 +43,10 @@ export const getStripeCheckoutSessionStatus = async ({
   return data;
 };
 
-export const getStripeMigrationAbility = async (
+export const getStripeCanMigrate = async (
   teamSlug: string,
-): Promise<StripeMigrationAbility> => {
-  const { data } = await apiClient.get<StripeMigrationAbility>(
+): Promise<StripeCanMigrate> => {
+  const { data } = await apiClient.get<StripeCanMigrate>(
     `/stripe/migration/${teamSlug}/status`,
   );
   return data;

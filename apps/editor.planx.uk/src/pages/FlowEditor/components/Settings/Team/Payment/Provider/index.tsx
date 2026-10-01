@@ -16,7 +16,7 @@ import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
-import { getStripeMigrationAbility } from "lib/api/stripe/requests";
+import { getStripeCanMigrate } from "lib/api/stripe/requests";
 import type {
   MigrationBlocker,
   MigrationBlockerReason,
@@ -77,7 +77,7 @@ const Provider: React.FC = () => {
 
   const handleMigrateClick = async () => {
     setDialogState({ type: "checking" });
-    const result = await getStripeMigrationAbility(teamSlug);
+    const result = await getStripeCanMigrate(teamSlug);
     if (result.canMigrate) {
       setDialogState({ type: "confirm" });
     } else {

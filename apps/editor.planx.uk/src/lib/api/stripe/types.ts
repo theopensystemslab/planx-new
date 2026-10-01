@@ -62,7 +62,7 @@ export interface MigrationBlocker {
   count?: number;
 }
 
-export interface StripeMigrationAbility {
+export interface StripeCanMigrate {
   canMigrate: boolean;
   blockers: MigrationBlocker[];
 }

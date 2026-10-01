@@ -145,7 +145,7 @@ components:
                 enum: [test, live]
                 description: The Stripe mode this environment runs in
                 example: live
-    MigrationAbilityResponse:
+    CanMigrateResponse:
       description: >-
         Check if a team is able to migrate to Stripe
       content:
@@ -220,7 +220,7 @@ paths:
         - bearerAuth: []
       responses:
         "200":
-          $ref: "#/components/responses/MigrationAbilityResponse"
+          $ref: "#/components/responses/CanMigrateResponse"
         "401":
           $ref: "#/components/responses/Unauthorised"
         "403":
