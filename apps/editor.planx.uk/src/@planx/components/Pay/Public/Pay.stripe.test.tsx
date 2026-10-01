@@ -280,6 +280,67 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
     },
   );
 
+  it.each([
+    ["a non-Stripe domain", "https://evil.example.com/c/pay/cs_test_123"],
+    ["a lookalike domain", "https://checkout.stripe.com.evil.com/c/pay"],
+    ["http", "http://checkout.stripe.com/c/pay/cs_test_123"],
+  ])(
+    "does not redirect to a Checkout URL on %s",
+    async (_label, checkoutUrl) => {
+      server.use(
+        http.post(checkoutSessionUrl, () =>
+          HttpResponse.json({ url: checkoutUrl }),
+        ),
+      );
+
+      const assignMock = vi.fn();
+      const originalLocation = Object.getOwnPropertyDescriptor(
+        window,
+        "location",
+      );
+      Object.defineProperty(window, "location", {
+        configurable: true,
+        value: Object.assign(new URL("http://localhost/test-team/test-flow"), {
+          assign: assignMock,
+          replace: vi.fn(),
+          reload: vi.fn(),
+        }),
+      });
+
+      act(() =>
+        setState({
+          flow: flowWithFee,
+          breadcrumbs: feeBreadcrumbs,
+          previewEnvironment: "standalone",
+          teamSlug: "test-team",
+        }),
+      );
+
+      try {
+        const { user } = await setup(
+          <AppErrorBoundary>
+            <Pay
+              title="Pay"
+              fn="application.fee.payable"
+              handleSubmit={vi.fn()}
+              govPayMetadata={[]}
+            />
+          </AppErrorBoundary>,
+        );
+
+        await user.click(await screen.findByText("Pay now"));
+
+        expect(
+          await screen.findByText("Something went wrong"),
+        ).toBeInTheDocument();
+        expect(assignMock).not.toHaveBeenCalled();
+      } finally {
+        if (originalLocation)
+          Object.defineProperty(window, "location", originalLocation);
+      }
+    },
+  );
+
   it("shows the generic error boundary for other Checkout Session errors", async () => {
     server.use(
       http.post(checkoutSessionUrl, () =>
