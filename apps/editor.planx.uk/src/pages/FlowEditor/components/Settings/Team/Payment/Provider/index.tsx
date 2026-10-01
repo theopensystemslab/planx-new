@@ -21,6 +21,8 @@ import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
+import { useStripeConnectStatus } from "../Onboarding/hooks/useStripeConnectStatus";
+
 export type PaymentProvider = TeamSettings["paymentProvider"];
 
 type DialogState =
@@ -53,6 +55,7 @@ const checkActiveSessions = async (
 const Provider: React.FC = () => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
+  const teamSlug = useStore((state) => state.teamSlug);
   const { paymentProvider } = usePaymentProvider();
   const stripeWarningId = useId();
   const [migratedProvider, setMigratedProvider] =
@@ -91,6 +94,8 @@ const Provider: React.FC = () => {
 
   const isStripe = provider === "stripe";
   const canMigrateToStripe = hasFeatureFlag("STRIPE_MIGRATION");
+  const { data: stripeConnectStatus, isLoading: isStripeStatusLoading } =
+    useStripeConnectStatus(teamSlug);
 
   const renderProviderAction = () => {
     if (isStripe) {
@@ -106,6 +111,16 @@ const Provider: React.FC = () => {
     }
 
     if (canMigrateToStripe) {
+      if (isStripeStatusLoading) return null;
+
+      if (!stripeConnectStatus?.connected) {
+        return (
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            Connect a Stripe account before migrating to Stripe.
+          </Typography>
+        );
+      }
+
       return (
         <Box>
           <Button
