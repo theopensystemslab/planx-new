@@ -8,6 +8,7 @@ import { formatLastEditDate } from "pages/FlowEditor/utils";
 import { FlowCardLink } from "pages/Flows/components/FlowCard/styles";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import CheckCircleIcon from "ui/icons/CheckCircle";
+import { Dot } from "ui/shared/Dot";
 
 import type { Notification } from "./types";
 
@@ -36,13 +37,6 @@ const StatusIndicator = styled(Box)(() => ({
   alignItems: "center",
   justifyContent: "center",
   flexShrink: 0,
-}));
-
-const ActiveDot = styled(Box)(({ theme }) => ({
-  width: 12,
-  height: 12,
-  borderRadius: "50%",
-  backgroundColor: theme.palette.primary.main,
 }));
 
 const TemplateChip = styled(Box)(({ theme }) => ({
@@ -78,7 +72,7 @@ const NotificationCardItem = ({
             sx={{ color: "success.main", width: 20, height: 20 }}
           />
         ) : (
-          <ActiveDot sx={compact ? { width: 10, height: 10 } : undefined} />
+          <Dot size={compact ? 10 : 12} sx={{ bgcolor: "primary.main" }} />
         )}
       </StatusIndicator>
       <Box
