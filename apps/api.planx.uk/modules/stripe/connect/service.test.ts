@@ -559,9 +559,14 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
 });
 
 describe("postStripeConnectedToSlack", () => {
+  beforeEach(() => {
+    mockAccountsRetrieve.mockResolvedValue({ charges_enabled: true });
+  });
+
   afterEach(() => {
     vi.unstubAllEnvs();
     mockSendSlackMessage.mockReset();
+    mockAccountsRetrieve.mockReset();
   });
 
   it("posts to Slack in production, labelled as live mode", async () => {
@@ -584,6 +589,37 @@ describe("postStripeConnectedToSlack", () => {
     expect(mockSendSlackMessage).toHaveBeenCalledWith(
       ":link: *lambeth* has connected their Stripe account in *test* mode and completed onboarding - `acct_123`",
     );
+  });
+
+  it("says onboarding was started but not finished if the account is incomplete", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+    mockAccountsRetrieve.mockResolvedValue({
+      charges_enabled: false,
+      details_submitted: false,
+    });
+    mockSendSlackMessage.mockResolvedValue(undefined);
+
+    await postStripeConnectedToSlack("lambeth", "acct_123");
+
+    expect(mockAccountsRetrieve).toHaveBeenCalledWith("acct_123");
+    expect(mockSendSlackMessage).toHaveBeenCalledWith(
+      ":link: *lambeth* has connected their Stripe account in *live* mode and started but not finished onboarding - `acct_123`",
+    );
+  });
+
+  it("does not throw or post if the account status can't be fetched", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+    mockAccountsRetrieve.mockRejectedValue(new Error("Stripe is down"));
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    await expect(
+      postStripeConnectedToSlack("lambeth", "acct_123"),
+    ).resolves.toBeUndefined();
+    expect(mockSendSlackMessage).not.toHaveBeenCalled();
+    expect(consoleError).toHaveBeenCalled();
+    consoleError.mockRestore();
   });
 
   it("skips posting in local development", async () => {

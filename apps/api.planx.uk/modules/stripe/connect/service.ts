@@ -367,8 +367,15 @@ export const postStripeConnectedToSlack = async (
   if (environment !== "production" && environment !== "staging") return;
 
   try {
+    // OAuth can connect a newly created account before the council has given Stripe their details
+    const accountStatus = await getAccountStatus(accountId);
+    const progress =
+      accountStatus === "incomplete"
+        ? "started but not finished onboarding"
+        : "completed onboarding";
+
     await sendSlackMessage(
-      `:link: *${teamSlug}* has connected their Stripe account in *${getStripeMode()}* mode and completed onboarding - \`${accountId}\``,
+      `:link: *${teamSlug}* has connected their Stripe account in *${getStripeMode()}* mode and ${progress} - \`${accountId}\``,
     );
   } catch (error) {
     console.error(
