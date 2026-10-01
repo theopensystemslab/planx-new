@@ -17,6 +17,7 @@ import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
+import { ACCOUNT_STATUS_DISPLAY } from "./constants";
 import { useStripeConnectStatus } from "./hooks/useStripeConnectStatus";
 
 const getStripeDashboardUrl = (
@@ -40,6 +41,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
 
   const { data, isLoading, refetch } = useStripeConnectStatus(teamSlug);
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const accountStatus =
+    data?.accountStatus && ACCOUNT_STATUS_DISPLAY[data.accountStatus];
 
   // if browser uses bfcache'd page, clear the isRedirecting boolean
   useEffect(() => {
@@ -141,12 +144,21 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
               </>
             )}
 
-            {!isLoading && data?.connected && (
+            {!isLoading && data?.connected && accountStatus && (
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                   <Typography variant="body1">Status:</Typography>
-                  <Chip label="Connected" color="success" size="small" />
+                  <Chip
+                    label={accountStatus.label}
+                    color={accountStatus.color}
+                    size="small"
+                  />
                 </Box>
+                {accountStatus.description && (
+                  <Typography variant="body2">
+                    {accountStatus.description}
+                  </Typography>
+                )}
                 <Box>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
                     Account ID
@@ -160,15 +172,27 @@ export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
                     />
                   </Box>
                 </Box>
-                <Box>
-                  <Link
-                    href={getStripeDashboardUrl(data.accountId, data.mode)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Open Stripe dashboard (opens in a new tab)
-                  </Link>
-                </Box>
+                {data.accountStatus === "unavailable" ? (
+                  !isRedirecting && (
+                    <Box>
+                      <Button onClick={handleConnect} variant="contained">
+                        Connect Stripe account
+                      </Button>
+                    </Box>
+                  )
+                ) : (
+                  <Box>
+                    <Link
+                      href={getStripeDashboardUrl(data.accountId, data.mode)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {data.accountStatus === "incomplete"
+                        ? "Finish setup in the Stripe dashboard (opens in a new tab)"
+                        : "Open Stripe dashboard (opens in a new tab)"}
+                    </Link>
+                  </Box>
+                )}
               </Box>
             )}
           </Box>

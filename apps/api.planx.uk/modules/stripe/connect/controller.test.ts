@@ -28,6 +28,7 @@ const mockCreatePrefilledTestAccount = vi.fn();
 const mockCreateOnboardingLink = vi.fn();
 const mockIsOnboardingComplete = vi.fn();
 const mockIsInvalidRequestError = vi.fn();
+const mockGetAccountStatus = vi.fn();
 const mockPostStripeConnectedToSlack = vi.fn();
 vi.mock("./service.js", () => ({
   createPrefilledTestAccount: (...args: unknown[]) =>
@@ -38,6 +39,7 @@ vi.mock("./service.js", () => ({
     mockIsOnboardingComplete(...args),
   isInvalidRequestError: (...args: unknown[]) =>
     mockIsInvalidRequestError(...args),
+  getAccountStatus: (...args: unknown[]) => mockGetAccountStatus(...args),
   buildAuthoriseUrl: (...args: unknown[]) => mockBuildAuthoriseUrl(...args),
   getStripeAccountId: (...args: unknown[]) => mockGetStripeAccountId(...args),
   getStripeMode: (...args: unknown[]) => mockGetStripeMode(...args),
@@ -83,6 +85,7 @@ beforeEach(() => {
   mockIsInvalidRequestError.mockReset().mockReturnValue(false);
   mockPostStripeConnectedToSlack.mockReset().mockResolvedValue(undefined);
   mockIsOnboardingComplete.mockReset();
+  mockGetAccountStatus.mockReset();
 });
 
 afterEach(() => {
@@ -342,25 +345,31 @@ describe("handleOnboardingReturn", () => {
 });
 
 describe("getConnectStatus", () => {
-  it("returns connected status, account id, and mode", async () => {
-    mockGetStripeAccountId.mockResolvedValue("acct_123");
-    mockGetStripeMode.mockReturnValue("test");
+  it.each(["active", "incomplete", "pending", "unavailable"] as const)(
+    "returns connected status, account id, %s account status, and mode",
+    async (accountStatus) => {
+      mockGetStripeAccountId.mockResolvedValue("acct_123");
+      mockGetAccountStatus.mockResolvedValue(accountStatus);
+      mockGetStripeMode.mockReturnValue("test");
 
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
-    const next = vi.fn();
+      const res = buildRes({ team: { id: 1, slug: "lambeth" } });
+      const next = vi.fn();
 
-    await Controller.getConnectStatus(buildReq(), res, next);
+      await Controller.getConnectStatus(buildReq(), res, next);
 
-    expect(mockGetStripeAccountId).toHaveBeenCalledWith(1);
-    const expected: ConnectStatusResponse = {
-      connected: true,
-      accountId: "acct_123",
-      mode: "test",
-    };
+      expect(mockGetStripeAccountId).toHaveBeenCalledWith(1);
+      expect(mockGetAccountStatus).toHaveBeenCalledWith("acct_123");
+      const expected: ConnectStatusResponse = {
+        connected: true,
+        accountId: "acct_123",
+        accountStatus,
+        mode: "test",
+      };
 
-    expect(res.send).toHaveBeenCalledWith(expected);
-    expect(next).not.toHaveBeenCalled();
-  });
+      expect(res.send).toHaveBeenCalledWith(expected);
+      expect(next).not.toHaveBeenCalled();
+    },
+  );
 
   it("returns 'not connected' when no account id is stored", async () => {
     mockGetStripeAccountId.mockResolvedValue(null);
@@ -374,13 +383,32 @@ describe("getConnectStatus", () => {
     const expected: ConnectStatusResponse = {
       connected: false,
       accountId: null,
+      accountStatus: null,
       mode: "live",
     };
     expect(res.send).toHaveBeenCalledWith(expected);
+    expect(mockGetAccountStatus).not.toHaveBeenCalled();
   });
 
   it("forwards a ServerError if the lookup fails", async () => {
     mockGetStripeAccountId.mockRejectedValue(new Error("db down"));
+
+    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
+    const next = vi.fn();
+
+    await Controller.getConnectStatus(buildReq(), res, next);
+
+    expect(res.send).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: "Failed to fetch Stripe Connect status",
+      }),
+    );
+  });
+
+  it("forwards a ServerError if Stripe can't be reached", async () => {
+    mockGetStripeAccountId.mockResolvedValue("acct_123");
+    mockGetAccountStatus.mockRejectedValue(new Error("Stripe is down"));
 
     const res = buildRes({ team: { id: 1, slug: "lambeth" } });
     const next = vi.fn();

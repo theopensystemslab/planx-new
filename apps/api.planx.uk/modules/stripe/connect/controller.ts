@@ -110,9 +110,14 @@ export const getConnectStatus: ConnectStatusController = async (
   try {
     const { team } = res.locals;
     const accountId = await Service.getStripeAccountId(team.id);
+    const accountStatus = accountId
+      ? await Service.getAccountStatus(accountId)
+      : null;
+
     return res.send({
       connected: Boolean(accountId),
       accountId,
+      accountStatus,
       mode: Service.getStripeMode(),
     });
   } catch (error) {

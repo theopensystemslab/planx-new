@@ -119,6 +119,7 @@ components:
             required:
               - connected
               - accountId
+              - accountStatus
               - mode
             properties:
               connected:
@@ -130,6 +131,15 @@ components:
                 nullable: true
                 description: The team's connected Stripe account id; null if not connected
                 example: acct_1a2b3c
+              accountStatus:
+                type: string
+                nullable: true
+                enum: [active, incomplete, pending, unavailable]
+                description: |
+                  How far the connected account is through Stripe onboarding; null if not connected.
+                  `active` can take payments, `incomplete` still needs details from the council,
+                  `pending` is being verified by Stripe, and `unavailable` has been deleted or had its access revoked.
+                example: active
               mode:
                 type: string
                 enum: [test, live]

@@ -1,6 +1,17 @@
+/**
+ * - `active` - can take payments
+ * - `incomplete` - the council still needs to give Stripe some details
+ * - `pending` - details submitted, Stripe is verifying them
+ * - `unavailable` - the account was deleted, or its access to PlanX revoked
+ */
+export type StripeAccountStatus =
+  "active" | "incomplete" | "pending" | "unavailable";
+
 export interface StripeConnectStatus {
   connected: boolean;
   accountId: string | null;
+  /** null if no account is connected */
+  accountStatus: StripeAccountStatus | null;
   mode: "test" | "live";
 }
 

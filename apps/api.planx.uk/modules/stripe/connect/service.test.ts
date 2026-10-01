@@ -5,6 +5,7 @@ import {
   createOnboardingLink,
   createPrefilledTestAccount,
   exchangeCodeForAccountId,
+  getAccountStatus,
   getStripeAccountId,
   getStripeMode,
   getTeamBySlug,
@@ -297,6 +298,76 @@ describe("isOnboardingComplete", () => {
       expect(mockAccountsRetrieve).toHaveBeenCalledWith("acct_new");
     },
   );
+});
+
+describe("getAccountStatus", () => {
+  afterEach(() => {
+    mockAccountsRetrieve.mockReset();
+  });
+
+  it.each([
+    {
+      expected: "active",
+      account: { charges_enabled: true, details_submitted: true },
+    },
+    {
+      expected: "incomplete",
+      account: {
+        charges_enabled: false,
+        details_submitted: false,
+        requirements: { currently_due: [], past_due: [] },
+      },
+    },
+    {
+      expected: "incomplete",
+      account: {
+        charges_enabled: false,
+        details_submitted: true,
+        requirements: { currently_due: ["external_account"], past_due: [] },
+      },
+    },
+    {
+      expected: "incomplete",
+      account: {
+        charges_enabled: false,
+        details_submitted: true,
+        requirements: { currently_due: [], past_due: ["company.tax_id"] },
+      },
+    },
+    {
+      expected: "pending",
+      account: {
+        charges_enabled: false,
+        details_submitted: true,
+        requirements: { currently_due: [], past_due: [] },
+      },
+    },
+  ])("returns $expected for the account %#", async ({ expected, account }) => {
+    mockAccountsRetrieve.mockResolvedValue(account);
+
+    await expect(getAccountStatus("acct_abc")).resolves.toBe(expected);
+    expect(mockAccountsRetrieve).toHaveBeenCalledWith("acct_abc");
+  });
+
+  it.each([
+    new MockStripePermissionError("does not have access to account"),
+    new MockStripeInvalidRequestError("No such account"),
+  ])(
+    "returns unavailable if the account is deleted or disconnected (%s)",
+    async (error) => {
+      mockAccountsRetrieve.mockRejectedValue(error);
+
+      await expect(getAccountStatus("acct_abc")).resolves.toBe("unavailable");
+    },
+  );
+
+  it("rethrows other errors (e.g. Stripe being unreachable)", async () => {
+    mockAccountsRetrieve.mockRejectedValue(new Error("Stripe is down"));
+
+    await expect(getAccountStatus("acct_abc")).rejects.toThrow(
+      "Stripe is down",
+    );
+  });
 });
 
 describe("isAccountReadyForPayments", () => {

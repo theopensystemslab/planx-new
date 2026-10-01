@@ -7,6 +7,7 @@ import { $api } from "../../../client/index.js";
 import { ServerError } from "../../../errors/index.js";
 import { sendSlackMessage } from "../../slack/utils.js";
 import { stripe } from "../client.js";
+import type { StripeAccountStatus } from "./types.js";
 
 export const getCallbackUrl = (): string =>
   `${process.env.API_URL_EXT}/stripe/connect/callback`;
@@ -210,6 +211,36 @@ export const isAccountReadyForPayments = async (
       error instanceof Stripe.errors.StripePermissionError
     ) {
       return false;
+    }
+    throw error;
+  }
+};
+
+/**
+ * How far a connected account is through Stripe onboarding and verification
+ * An account can be connected (e.g. created during OAuth) before the council has given Stripe their details
+ */
+export const getAccountStatus = async (
+  accountId: string,
+): Promise<StripeAccountStatus> => {
+  try {
+    const account = await stripe.accounts.retrieve(accountId);
+    if (account.charges_enabled) return "active";
+
+    const outstanding = [
+      ...(account.requirements?.currently_due ?? []),
+      ...(account.requirements?.past_due ?? []),
+    ];
+    if (!account.details_submitted || outstanding.length) return "incomplete";
+
+    // Details are submitted and nothing is due - Stripe is still verifying them
+    return "pending";
+  } catch (error) {
+    if (
+      isInvalidRequestError(error) ||
+      error instanceof Stripe.errors.StripePermissionError
+    ) {
+      return "unavailable";
     }
     throw error;
   }
