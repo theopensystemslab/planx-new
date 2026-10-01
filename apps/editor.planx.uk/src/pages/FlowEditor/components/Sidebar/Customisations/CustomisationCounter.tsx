@@ -64,10 +64,11 @@ export const CustomisationCounter: React.FC<Props> = ({
     countCompletedRequiredNodes === countRequiredNodes;
 
   useEffect(() => {
-    // Disable the "Publish" button if there are outstanding required customisations
-    //  ** this allows us to skip re-checking requirements via API's publish validation checks
+    // Set basic EditorUIStore state so other components (publish button, templated status)
+    //   can reference it without re-calculating
     useStore.setState({
-      disableTemplatedFlowPublishing: !hasEveryRequiredNodeBeenUpdated,
+      outstandingTemplatedFlowCustomisations:
+        countRequiredNodes - countCompletedRequiredNodes,
     });
   }, [flowEdits, customisableNodeIds]);
 

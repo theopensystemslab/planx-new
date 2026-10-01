@@ -26,7 +26,6 @@ export const CustomisationCard: React.FC<Props> = ({
   ]);
   const node = flow[nodeId];
 
-  // Keep this logic in sync with `haveAllRequiredTemplatedNodesBeenUpdated` in the API flows/validate module !
   const hasNodeBeenUpdatedCallback = useCallback(() => {
     return hasNodeBeenUpdated(nodeId, flow, flowEdits, orderedFlow);
   }, [nodeEdits, node, flowEdits, nodeId, flow, orderedFlow]);
