@@ -34,7 +34,7 @@ export const alterDrawGeoJson = async (page: Page) => {
   });
 };
 
-export const deleteMapBoundary = async (page: Page) => {
+export const deleteAllPoints = async (page: Page) => {
   const deleteButton = page.getByLabel("Delete all points");
   await deleteButton.click();
 
