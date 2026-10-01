@@ -44,7 +44,7 @@
   "devDependencies": {
     "eslint": "catalog:",
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.2",
+    "lint-staged": "^17.5.1",
     "prettier": "catalog:",
     "turbo": "^2.10.12",
     "typescript": "catalog:typescript"
