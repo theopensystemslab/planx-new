@@ -297,7 +297,6 @@ export default function Component(props: Props) {
                   showCentreMarker
                   markerLatitude={Number(passport?.data?._address?.latitude)}
                   markerLongitude={Number(passport?.data?._address?.longitude)}
-                  resetControlImage="trash"
                   osProxyEndpoint={`${
                     import.meta.env.VITE_APP_API_URL
                   }/proxy/ordnance-survey`}
