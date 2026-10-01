@@ -9,6 +9,7 @@ import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
+import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import type { EditorProps } from "../shared/types";
@@ -83,6 +84,19 @@ const InternalPortalForm: React.FC<Props> = (props) => {
               id="portalFlowId"
             />
           </ErrorWrapper>
+        </ModalSectionContent>
+        <ModalSectionContent title="Internal description">
+          <InputRow>
+            <Input
+              name="description"
+              onChange={formik.handleChange}
+              placeholder="Describe the content of this folder"
+              multiline
+              rows={3}
+              value={formik.values.description}
+              disabled={props.disabled || !!formik.values.flowId}
+            />
+          </InputRow>
         </ModalSectionContent>
         {props.flows && props.flows?.length > 0 && (
           <ModalSectionContent subtitle="Select an existing folder">
