@@ -1,4 +1,5 @@
 import { act, screen, waitFor } from "@testing-library/react";
+import type { StripeConnectStatus as MockStatus } from "lib/api/stripe/types";
 import { http, HttpResponse } from "msw";
 import type { FullStore } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -21,12 +22,6 @@ vi.mock("@tanstack/react-router", async () => {
     useNavigate: () => mockNavigate,
   };
 });
-
-interface MockStatus {
-  connected: boolean;
-  accountId: string | null;
-  mode: "test" | "live";
-}
 
 const statusHandler = (status: MockStatus) =>
   http.get(`${API_URL}/stripe/connect/:teamSlug/status`, () =>
@@ -52,6 +47,7 @@ describe("Onboarding", () => {
         return HttpResponse.json({
           connected: false,
           accountId: null,
+          accountStatus: null,
           mode: "test",
         } satisfies MockStatus);
       }),
@@ -69,6 +65,7 @@ describe("Onboarding", () => {
       statusHandler({
         connected: false,
         accountId: null,
+        accountStatus: null,
         mode: "test",
       }),
     );
@@ -88,6 +85,7 @@ describe("Onboarding", () => {
       statusHandler({
         connected: false,
         accountId: null,
+        accountStatus: null,
         mode: "test",
       }),
     );
@@ -126,6 +124,7 @@ describe("Onboarding", () => {
         statusHandler({
           connected: false,
           accountId: null,
+          accountStatus: null,
           mode,
         }),
       );
@@ -163,6 +162,7 @@ describe("Onboarding", () => {
       statusHandler({
         connected: false,
         accountId: null,
+        accountStatus: null,
         mode: "test",
       }),
     );
@@ -200,6 +200,7 @@ describe("Onboarding", () => {
       statusHandler({
         connected: true,
         accountId: "acct_123",
+        accountStatus: "active",
         mode: "test",
       }),
     );
@@ -216,6 +217,7 @@ describe("Onboarding", () => {
       statusHandler({
         connected: true,
         accountId: "acct_123",
+        accountStatus: "active",
         mode: "test",
       }),
     );
@@ -237,6 +239,7 @@ describe("Onboarding", () => {
       statusHandler({
         connected: true,
         accountId: "acct_456",
+        accountStatus: "active",
         mode: "live",
       }),
     );
@@ -257,6 +260,7 @@ describe("Onboarding", () => {
       statusHandler({
         connected: false,
         accountId: null,
+        accountStatus: null,
         mode: "test",
       }),
     );
@@ -274,6 +278,7 @@ describe("Onboarding", () => {
       statusHandler({
         connected: true,
         accountId: "acct_456",
+        accountStatus: "active",
         mode: "live",
       }),
     );
@@ -283,11 +288,90 @@ describe("Onboarding", () => {
     expect(await screen.findByText("Live")).toBeInTheDocument();
   });
 
+  it.each([
+    {
+      accountStatus: "incomplete",
+      label: "Setup incomplete",
+      description: /Stripe needs more information before it can take payments/,
+    },
+    {
+      accountStatus: "pending",
+      label: "Pending verification",
+      description: /Stripe is checking the details you provided/,
+    },
+  ] as const)(
+    "shows a $accountStatus account as not yet able to take payments",
+    async ({ accountStatus, label, description }) => {
+      server.use(
+        statusHandler({
+          connected: true,
+          accountId: "acct_789",
+          accountStatus,
+          mode: "live",
+        }),
+      );
+
+      await setup(<Onboarding />);
+
+      expect(await screen.findByText(label)).toBeInTheDocument();
+      expect(screen.getByText(description)).toBeInTheDocument();
+      expect(screen.queryByText("Connected")).not.toBeInTheDocument();
+      expect(screen.getByText("acct_789")).toBeInTheDocument();
+      expect(
+        screen.getByRole("link", { name: /Stripe dashboard/ }),
+      ).toHaveAttribute(
+        "href",
+        "https://dashboard.stripe.com/acct_789/dashboard",
+      );
+    },
+  );
+
+  it("prompts to finish setup in the Stripe dashboard when the account is incomplete", async () => {
+    server.use(
+      statusHandler({
+        connected: true,
+        accountId: "acct_789",
+        accountStatus: "incomplete",
+        mode: "live",
+      }),
+    );
+
+    await setup(<Onboarding />);
+
+    expect(
+      await screen.findByRole("link", {
+        name: /Finish setup in the Stripe dashboard/,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("prompts to reconnect, without a dashboard link, when the account is unavailable", async () => {
+    server.use(
+      statusHandler({
+        connected: true,
+        accountId: "acct_789",
+        accountStatus: "unavailable",
+        mode: "live",
+      }),
+    );
+
+    await setup(<Onboarding />);
+
+    expect(await screen.findByText("Disconnected")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Connect Stripe account" }),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole("link", { name: /Stripe dashboard/ }),
+    ).not.toBeInTheDocument();
+  });
+
   it("shows a success toast and clears the redirect params after a successful connect", async () => {
     server.use(
       statusHandler({
         connected: true,
         accountId: "acct_123",
+        accountStatus: "active",
         mode: "test",
       }),
     );
@@ -307,6 +391,7 @@ describe("Onboarding", () => {
       statusHandler({
         connected: false,
         accountId: null,
+        accountStatus: null,
         mode: "test",
       }),
     );
@@ -333,6 +418,7 @@ describe("Onboarding", () => {
       statusHandler({
         connected: false,
         accountId: null,
+        accountStatus: null,
         mode: "test",
       }),
     );

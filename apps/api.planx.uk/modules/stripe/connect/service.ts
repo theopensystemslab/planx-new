@@ -7,6 +7,7 @@ import { $api } from "../../../client/index.js";
 import { ServerError } from "../../../errors/index.js";
 import { sendSlackMessage } from "../../slack/utils.js";
 import { stripe } from "../client.js";
+import type { StripeAccountStatus } from "./types.js";
 
 export const getCallbackUrl = (): string =>
   `${process.env.API_URL_EXT}/stripe/connect/callback`;
@@ -216,6 +217,36 @@ export const isAccountReadyForPayments = async (
 };
 
 /**
+ * How far a connected account is through Stripe onboarding and verification
+ * An account can be connected (e.g. created during OAuth) before the council has given Stripe their details
+ */
+export const getAccountStatus = async (
+  accountId: string,
+): Promise<StripeAccountStatus> => {
+  try {
+    const account = await stripe.accounts.retrieve(accountId);
+    if (account.charges_enabled) return "active";
+
+    const outstanding = [
+      ...(account.requirements?.currently_due ?? []),
+      ...(account.requirements?.past_due ?? []),
+    ];
+    if (!account.details_submitted || outstanding.length) return "incomplete";
+
+    // Details are submitted and nothing is due - Stripe is still verifying them
+    return "pending";
+  } catch (error) {
+    if (
+      isInvalidRequestError(error) ||
+      error instanceof Stripe.errors.StripePermissionError
+    ) {
+      return "unavailable";
+    }
+    throw error;
+  }
+};
+
+/**
  * Stripe redirects to the account link `return_url` whether or not onboarding was finished
  * `details_submitted` tells us if the user actually completed it
  */
@@ -336,8 +367,15 @@ export const postStripeConnectedToSlack = async (
   if (environment !== "production" && environment !== "staging") return;
 
   try {
+    // OAuth can connect a newly created account before the council has given Stripe their details
+    const accountStatus = await getAccountStatus(accountId);
+    const progress =
+      accountStatus === "incomplete"
+        ? "started but not finished onboarding"
+        : "completed onboarding";
+
     await sendSlackMessage(
-      `:link: *${teamSlug}* has connected their Stripe account in *${getStripeMode()}* mode and completed onboarding - \`${accountId}\``,
+      `:link: *${teamSlug}* has connected their Stripe account in *${getStripeMode()}* mode and ${progress} - \`${accountId}\``,
     );
   } catch (error) {
     console.error(
