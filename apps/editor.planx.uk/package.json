@@ -113,7 +113,7 @@
     "@types/react-color": "^3.0.13",
     "@types/react-dom": "^19.2.5",
     "@types/sharedb": "catalog:sharedb",
-    "@vitejs/plugin-react": "^4.7.0",
+    "@vitejs/plugin-react": "^6.1.1",
     "@vitest/coverage-v8": "^4.1.11",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "catalog:",
