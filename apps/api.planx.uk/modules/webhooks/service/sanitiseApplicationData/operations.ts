@@ -319,17 +319,20 @@ export const deleteHasuraEventLogs: Operation = async () => {
 
 export const deleteHasuraScheduledEventsForSubmittedSessions: Operation =
   async () => {
+    // There's no FK between scheduled events and sessions - extract the session id from the comment
+    // so we can join on lowcal_sessions.id rather than running LIKE against every session
     const response = await runSQL(`
-    DELETE FROM hdb_catalog.hdb_scheduled_events hse
-    WHERE EXISTS (
-        SELECT id
-        FROM public.lowcal_sessions
-        WHERE submitted_at IS NOT NULL
-          AND (hse.comment LIKE 'reminder_' || id || '%' OR hse.comment = 'expiry_' || id)
-          AND hse.status = 'scheduled'
-    )
-    RETURNING hse.id;
-  `);
+      DELETE FROM hdb_catalog.hdb_scheduled_events hse
+      USING public.lowcal_sessions ls
+      WHERE hse.status = 'scheduled'
+        AND ls.id = substring(
+          hse.comment
+          from '^(?:reminder|expiry)_([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'
+        )::uuid
+        AND ls.submitted_at IS NOT NULL
+        AND (hse.comment LIKE 'reminder_' || ls.id || '%' OR hse.comment = 'expiry_' || ls.id)
+      RETURNING hse.id;
+    `);
     const [_column_name, ...ids] = response?.result?.flat() || [];
     return ids;
   };

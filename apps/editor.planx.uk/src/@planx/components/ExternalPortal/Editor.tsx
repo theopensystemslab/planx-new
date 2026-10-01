@@ -11,6 +11,8 @@ import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
 import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import Input from "ui/shared/Input/Input";
+import InputRow from "ui/shared/InputRow";
 import { PopupIcon } from "ui/shared/PopUpIcon";
 
 import { validationSchema } from "./model";
@@ -47,6 +49,7 @@ const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => {
 interface ExternalPortalFormData {
   flow: Flow | null;
   flowId: string | null;
+  description: string;
   tags: NodeTag[];
   notes: string;
   isTemplatedNode: boolean;
@@ -56,6 +59,7 @@ interface ExternalPortalFormData {
 
 const ExternalPortalForm: React.FC<{
   flowId?: string;
+  description?: string;
   notes?: string;
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
@@ -71,6 +75,7 @@ const ExternalPortalForm: React.FC<{
 }> = ({
   handleSubmit,
   flowId,
+  description = "",
   flows = [],
   tags = [],
   notes = "",
@@ -85,6 +90,7 @@ const ExternalPortalForm: React.FC<{
       initialValues: {
         flow: flows.find((flow) => flow.id === flowId) || null,
         flowId: flowId || null,
+        description,
         tags,
         notes,
         isTemplatedNode,
@@ -166,6 +172,19 @@ const ExternalPortalForm: React.FC<{
               disabled={disabled}
             />
           </ErrorWrapper>
+        </ModalSectionContent>
+        <ModalSectionContent title="Internal description">
+          <InputRow>
+            <Input
+              name="description"
+              onChange={formik.handleChange}
+              placeholder="Describe the content of this flow"
+              multiline
+              rows={3}
+              value={formik.values.description}
+              disabled={disabled}
+            />
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter

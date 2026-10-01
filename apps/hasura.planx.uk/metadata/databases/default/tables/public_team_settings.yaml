@@ -116,6 +116,15 @@ select_permissions:
       filter: {}
     comment: ""
 update_permissions:
+  - role: api
+    permission:
+      columns:
+        - payment_provider
+      filter:
+        payment_provider:
+          _is_null: true
+      check: null
+    comment: Allow Stripe to be set as a provider automatically, when a team sets up their Connect account
   - role: platformAdmin
     permission:
       columns:

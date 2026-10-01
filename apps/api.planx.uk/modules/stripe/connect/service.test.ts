@@ -5,9 +5,11 @@ import {
   createOnboardingLink,
   createPrefilledTestAccount,
   exchangeCodeForAccountId,
+  getAccountStatus,
   getStripeAccountId,
   getStripeMode,
   getTeamBySlug,
+  isAccountReadyForPayments,
   isInvalidRequestError,
   isOnboardingComplete,
   postStripeConnectedToSlack,
@@ -29,6 +31,7 @@ const {
   mockAccountLinksCreate,
   MockStripeError,
   MockStripeInvalidRequestError,
+  MockStripePermissionError,
 } = vi.hoisted(() => ({
   mockAuthorizeUrl: vi.fn(),
   mockToken: vi.fn(),
@@ -39,6 +42,7 @@ const {
   mockAccountLinksCreate: vi.fn(),
   MockStripeError: class MockStripeError extends Error {},
   MockStripeInvalidRequestError: class MockStripeInvalidRequestError extends Error {},
+  MockStripePermissionError: class MockStripePermissionError extends Error {},
 }));
 
 vi.mock("stripe", () => {
@@ -54,6 +58,7 @@ vi.mock("stripe", () => {
     static errors = {
       StripeError: MockStripeError,
       StripeInvalidRequestError: MockStripeInvalidRequestError,
+      StripePermissionError: MockStripePermissionError,
     };
   }
   return { default: MockStripe };
@@ -295,6 +300,121 @@ describe("isOnboardingComplete", () => {
   );
 });
 
+describe("getAccountStatus", () => {
+  afterEach(() => {
+    mockAccountsRetrieve.mockReset();
+  });
+
+  it.each([
+    {
+      expected: "active",
+      account: { charges_enabled: true, details_submitted: true },
+    },
+    {
+      expected: "incomplete",
+      account: {
+        charges_enabled: false,
+        details_submitted: false,
+        requirements: { currently_due: [], past_due: [] },
+      },
+    },
+    {
+      expected: "incomplete",
+      account: {
+        charges_enabled: false,
+        details_submitted: true,
+        requirements: { currently_due: ["external_account"], past_due: [] },
+      },
+    },
+    {
+      expected: "incomplete",
+      account: {
+        charges_enabled: false,
+        details_submitted: true,
+        requirements: { currently_due: [], past_due: ["company.tax_id"] },
+      },
+    },
+    {
+      expected: "pending",
+      account: {
+        charges_enabled: false,
+        details_submitted: true,
+        requirements: { currently_due: [], past_due: [] },
+      },
+    },
+  ])("returns $expected for the account %#", async ({ expected, account }) => {
+    mockAccountsRetrieve.mockResolvedValue(account);
+
+    await expect(getAccountStatus("acct_abc")).resolves.toBe(expected);
+    expect(mockAccountsRetrieve).toHaveBeenCalledWith("acct_abc");
+  });
+
+  it.each([
+    new MockStripePermissionError("does not have access to account"),
+    new MockStripeInvalidRequestError("No such account"),
+  ])(
+    "returns unavailable if the account is deleted or disconnected (%s)",
+    async (error) => {
+      mockAccountsRetrieve.mockRejectedValue(error);
+
+      await expect(getAccountStatus("acct_abc")).resolves.toBe("unavailable");
+    },
+  );
+
+  it("rethrows other errors (e.g. Stripe being unreachable)", async () => {
+    mockAccountsRetrieve.mockRejectedValue(new Error("Stripe is down"));
+
+    await expect(getAccountStatus("acct_abc")).rejects.toThrow(
+      "Stripe is down",
+    );
+  });
+});
+
+describe("isAccountReadyForPayments", () => {
+  afterEach(() => {
+    mockAccountsRetrieve.mockReset();
+  });
+
+  it("returns true for a connected account which can take payments", async () => {
+    mockAccountsRetrieve.mockResolvedValue({ charges_enabled: true });
+
+    await expect(isAccountReadyForPayments("acct_abc")).resolves.toBe(true);
+    expect(mockAccountsRetrieve).toHaveBeenCalledWith("acct_abc");
+  });
+
+  it("returns false for a connected account which cannot take payments", async () => {
+    mockAccountsRetrieve.mockResolvedValue({ charges_enabled: false });
+
+    await expect(isAccountReadyForPayments("acct_abc")).resolves.toBe(false);
+  });
+
+  it("returns false when the account is not connected to the platform", async () => {
+    mockAccountsRetrieve.mockRejectedValue(
+      new MockStripePermissionError("does not have access to account"),
+    );
+
+    await expect(isAccountReadyForPayments("acct_other")).resolves.toBe(false);
+  });
+
+  it("returns false when the account does not exist", async () => {
+    mockAccountsRetrieve.mockRejectedValue(
+      new MockStripeInvalidRequestError("No such account"),
+    );
+
+    await expect(isAccountReadyForPayments("acct_missing")).resolves.toBe(
+      false,
+    );
+  });
+
+  it("rethrows other errors (e.g. Stripe being unreachable)", async () => {
+    mockAccountsRetrieve.mockRejectedValue(new Error("Stripe is down"));
+
+    await expect(isAccountReadyForPayments("acct_abc")).rejects.toThrow(
+      "Stripe is down",
+    );
+  });
+});
+
 describe("isInvalidRequestError", () => {
   it("returns true for a Stripe invalid request error", () => {
     expect(
@@ -406,6 +526,18 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
     expect(String(query)).not.toContain("staging_stripe_account_id");
   });
 
+  it("sets the payment provider to Stripe only if the team has none", async () => {
+    mockRequest.mockResolvedValue({});
+
+    await saveStripeAccountId(42, "acct_abc");
+
+    const [query, variables] = mockRequest.mock.calls[0];
+    expect(String(query)).toMatch(
+      /update_team_settings\(\s*where: {\s*team_id: { _eq: \$teamId }\s*payment_provider: { _is_null: true }\s*}\s*_set: { payment_provider: "stripe" }/,
+    );
+    expect(variables).toEqual({ teamId: 42, accountId: "acct_abc" });
+  });
+
   it("reads back the account id for the current environment", async () => {
     vi.stubEnv("APP_ENVIRONMENT", "staging");
     mockRequest.mockResolvedValue({
@@ -427,9 +559,14 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
 });
 
 describe("postStripeConnectedToSlack", () => {
+  beforeEach(() => {
+    mockAccountsRetrieve.mockResolvedValue({ charges_enabled: true });
+  });
+
   afterEach(() => {
     vi.unstubAllEnvs();
     mockSendSlackMessage.mockReset();
+    mockAccountsRetrieve.mockReset();
   });
 
   it("posts to Slack in production, labelled as live mode", async () => {
@@ -452,6 +589,37 @@ describe("postStripeConnectedToSlack", () => {
     expect(mockSendSlackMessage).toHaveBeenCalledWith(
       ":link: *lambeth* has connected their Stripe account in *test* mode and completed onboarding - `acct_123`",
     );
+  });
+
+  it("says onboarding was started but not finished if the account is incomplete", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+    mockAccountsRetrieve.mockResolvedValue({
+      charges_enabled: false,
+      details_submitted: false,
+    });
+    mockSendSlackMessage.mockResolvedValue(undefined);
+
+    await postStripeConnectedToSlack("lambeth", "acct_123");
+
+    expect(mockAccountsRetrieve).toHaveBeenCalledWith("acct_123");
+    expect(mockSendSlackMessage).toHaveBeenCalledWith(
+      ":link: *lambeth* has connected their Stripe account in *live* mode and started but not finished onboarding - `acct_123`",
+    );
+  });
+
+  it("does not throw or post if the account status can't be fetched", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+    mockAccountsRetrieve.mockRejectedValue(new Error("Stripe is down"));
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    await expect(
+      postStripeConnectedToSlack("lambeth", "acct_123"),
+    ).resolves.toBeUndefined();
+    expect(mockSendSlackMessage).not.toHaveBeenCalled();
+    expect(consoleError).toHaveBeenCalled();
+    consoleError.mockRestore();
   });
 
   it("skips posting in local development", async () => {

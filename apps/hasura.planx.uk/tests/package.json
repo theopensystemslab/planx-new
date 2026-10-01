@@ -13,7 +13,7 @@
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "catalog:jwt",
     "uuid": "catalog:",
-    "vite": "^8.2.2",
+    "vite": "^8.3.0",
     "vitest": "catalog:"
   },
   "devDependencies": {

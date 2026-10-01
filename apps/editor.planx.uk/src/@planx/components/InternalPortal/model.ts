@@ -12,6 +12,7 @@ export interface Flow {
 export interface InternalPortal extends BaseNodeData {
   text?: string;
   flowId?: string;
+  description?: string;
 }
 
 export const parseInternalPortal = (
@@ -19,6 +20,7 @@ export const parseInternalPortal = (
 ): InternalPortal => ({
   text: data?.text || "",
   flowId: data?.flowId || "",
+  description: data?.description || "",
   ...parseBaseNodeData(data),
 });
 
@@ -27,6 +29,7 @@ export const validationSchema: SchemaOf<InternalPortal> =
     object({
       text: string(),
       flowId: string(),
+      description: string(),
       flows: array()
         .of(
           object({

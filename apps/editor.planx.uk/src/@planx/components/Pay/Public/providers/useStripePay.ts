@@ -39,6 +39,9 @@ const getStripeReturnURL = (): string => {
   return url.toString();
 };
 
+// Only ever redirect applicants to Stripe's hosted Checkout
+const STRIPE_CHECKOUT_ORIGIN = "https://checkout.stripe.com" as const;
+
 const isStripeNotConfiguredError = (error: unknown) =>
   z.object({ statusCode: z.literal(409) }).safeParse(error).success;
 
@@ -121,6 +124,12 @@ export function useStripePay(
 
       if (!url) {
         throw new Error("Stripe Checkout Session did not include a URL");
+      }
+
+      if (new URL(url).origin !== STRIPE_CHECKOUT_ORIGIN) {
+        throw new Error(
+          `Stripe Checkout Session URL is not on ${STRIPE_CHECKOUT_ORIGIN}`,
+        );
       }
 
       // Redirect the browser to hosted Stripe Checkout

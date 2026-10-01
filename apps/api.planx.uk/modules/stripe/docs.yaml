@@ -119,6 +119,7 @@ components:
             required:
               - connected
               - accountId
+              - accountStatus
               - mode
             properties:
               connected:
@@ -130,6 +131,15 @@ components:
                 nullable: true
                 description: The team's connected Stripe account id; null if not connected
                 example: acct_1a2b3c
+              accountStatus:
+                type: string
+                nullable: true
+                enum: [active, incomplete, pending, unavailable]
+                description: |
+                  How far the connected account is through Stripe onboarding; null if not connected.
+                  `active` can take payments, `incomplete` still needs details from the council,
+                  `pending` is being verified by Stripe, and `unavailable` has been deleted or had its access revoked.
+                example: active
               mode:
                 type: string
                 enum: [test, live]
@@ -276,9 +286,12 @@ paths:
         "400":
           description: Invalid request body or parameters.
         "409":
-          description: >-
-            This LPA is not set up to take Stripe payments. 
-            Either its payment provider is not Stripe, or it has not connected a Stripe account.
+          description: |
+            This LPA is not set up to take Stripe payments, because either:
+            - its payment provider is not Stripe
+            - it has not connected a Stripe account
+            - its connected account is no longer connected to our platform
+            - its connected account cannot take payments
         "500":
           description: Failed to create the Stripe Checkout Session.
   /stripe/checkout-session/{localAuthority}/{checkoutSessionId}:

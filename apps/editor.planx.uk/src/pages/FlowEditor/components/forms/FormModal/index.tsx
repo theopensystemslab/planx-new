@@ -55,7 +55,16 @@ const TabList = styled(Box)(() => ({
 
 type ModalTab = "edit" | "preview" | "history" | "resources";
 
+// TODO simplify to single list of tabs when no longer feature-flagged
 const MODAL_TABS: {
+  label: string;
+  value: ModalTab;
+}[] = [
+  { label: "Edit", value: "edit" },
+  { label: "History", value: "history" },
+];
+
+const FEATURE_FLAGGED_MODAL_TABS: {
   label: string;
   value: ModalTab;
 }[] = [
@@ -150,7 +159,6 @@ const FormModal: React.FC<FormModalProps> = ({
     onDirtyChange: (dirty: boolean) => void;
   }>(() => ({ current: null, onDirtyChange: setIsFormDirty }), []);
 
-  const modalTabsEnabled = hasFeatureFlag("MODAL_TABS");
   const [activeTab, setActiveTab] = useState<ModalTab>("edit");
   const { team: teamSlug, flow: flowSlug } = useParams({
     from: "/_authenticated/app/$team/$flow",
@@ -303,19 +311,20 @@ const FormModal: React.FC<FormModalProps> = ({
 
           <CloseButton onClick={handleClose} sx={{ marginRight: -1 }} />
         </DialogTitle>
-        {modalTabsEnabled && (
-          <TabList sx={{ px: 2.5 }}>
-            <Tabs
-              onChange={(_event, newValue: ModalTab) => setActiveTab(newValue)}
-              value={activeTab}
-              aria-label="Component editor tabs"
-            >
-              {MODAL_TABS.map(({ label, value }) => (
-                <StyledTab key={value} value={value} label={label} />
-              ))}
-            </Tabs>
-          </TabList>
-        )}
+        <TabList sx={{ px: 2.5 }}>
+          <Tabs
+            onChange={(_event, newValue: ModalTab) => setActiveTab(newValue)}
+            value={activeTab}
+            aria-label="Component editor tabs"
+          >
+            {(hasFeatureFlag("MODAL_TABS")
+              ? FEATURE_FLAGGED_MODAL_TABS
+              : MODAL_TABS
+            ).map(({ label, value }) => (
+              <StyledTab key={value} value={value} label={label} />
+            ))}
+          </Tabs>
+        </TabList>
         <DialogContent
           dividers
           sx={{ p: 0, position: "relative", flexGrow: 1, overflowY: "auto" }}

@@ -133,6 +133,7 @@ test("updating an internal portal", async () => {
       data: {
         flowId: "", // will be removed when saving the data
         text: "new val",
+        description: "",
         tags: [],
       },
     });

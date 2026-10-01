@@ -1,4 +1,8 @@
-import { getStripeAccountId, getTeamBySlug } from "../connect/service.js";
+import {
+  getStripeAccountId,
+  getTeamBySlug,
+  isAccountReadyForPayments,
+} from "../connect/service.js";
 import type { ResolveTeamPaymentProviderMiddleware } from "./types.js";
 
 export const resolveTeamPaymentProvider: ResolveTeamPaymentProviderMiddleware =
@@ -21,6 +25,14 @@ export const resolveTeamPaymentProvider: ResolveTeamPaymentProviderMiddleware =
         return next({
           status: 409,
           message: `This local authority (${localAuthority}) has not connected a Stripe account`,
+        });
+      }
+
+      // Only pay out to an account which is connected to our platform - never to an unknown account id
+      if (!(await isAccountReadyForPayments(stripeAccountId))) {
+        return next({
+          status: 409,
+          message: `The Stripe account for this local authority (${localAuthority}) is not connected or cannot take payments`,
         });
       }
 

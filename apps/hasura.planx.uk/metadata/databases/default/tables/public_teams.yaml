@@ -50,6 +50,7 @@ insert_permissions:
     permission:
       check: {}
       columns:
+        - category
         - created_at
         - domain
         - id
@@ -60,6 +61,7 @@ select_permissions:
   - role: analyst
     permission:
       columns:
+        - category
         - id
         - domain
         - name
@@ -71,6 +73,7 @@ select_permissions:
   - role: api
     permission:
       columns:
+        - category
         - created_at
         - domain
         - id
@@ -81,6 +84,7 @@ select_permissions:
   - role: platformAdmin
     permission:
       columns:
+        - category
         - created_at
         - domain
         - id
@@ -91,6 +95,7 @@ select_permissions:
   - role: public
     permission:
       columns:
+        - category
         - created_at
         - domain
         - id
@@ -101,6 +106,7 @@ select_permissions:
   - role: teamEditor
     permission:
       columns:
+        - category
         - created_at
         - domain
         - id
@@ -118,6 +124,7 @@ update_permissions:
   - role: platformAdmin
     permission:
       columns:
+        - category
         - domain
         - name
         - slug
