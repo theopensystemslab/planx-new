@@ -22,7 +22,7 @@ const BASE_PARAMS: Record<string, string> = {
 
 const VIEW_PARAMS: Record<CalendarView, Record<string, string>> = {
   grid: { mode: "MONTH", wkst: "2" },
-  list: { mode: "AGENDA" },
+  list: { mode: "AGENDA", showNav: "0" },
 };
 
 const embedUrl = (view: CalendarView) => {
