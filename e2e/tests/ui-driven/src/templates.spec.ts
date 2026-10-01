@@ -530,7 +530,7 @@ test.describe("Templates", () => {
       );
     });
 
-    test("cannot proceed past the Review step when required customisations are incomplete", async ({
+    test("publish button is disabled when required customisations are incomplete", async ({
       browser,
     }) => {
       const page = await getFlowsPage({
@@ -540,29 +540,17 @@ test.describe("Templates", () => {
       });
       await navigateToService(page, TEMPLATED_FLOW_SLUG);
 
-      // Make a change to the flow by editing the optional template node.
-      // this is required to get past the 'has any changes' step on publish
+      // Make a change to the flow by editing the optional template node, the required node is still outstanding
       await page.getByRole("link", { name: OPTIONAL_NODE_TITLE }).click();
       await page.getByRole("dialog").waitFor();
       await page.getByPlaceholder("Text").fill(UPDATED_OPTIONAL_NODE_TITLE);
       await page.locator('button[form="modal"][type="submit"]').click();
       await page.getByRole("dialog").waitFor({ state: "detached" });
 
-      // Open the publish dialog
-      await page.getByTestId("check-for-changes-to-publish-button").click();
-      await expect(page.getByRole("heading", { name: "Review" })).toBeVisible();
-
-      // Validation should report a failure for the uncustomised required node
-      await expect(page.getByText("Fail")).toBeVisible();
-
-      // Clicking "Next" should be blocked and show an error
-      await page.getByTestId("next-step-test-button").click();
+      // The publish button is disabled
       await expect(
-        page.getByText("Fix errors before continuing"),
-      ).toBeVisible();
-
-      // Close dialog and return to editor
-      await page.getByRole("button", { name: "Keep editing" }).click();
+        page.getByTestId("check-for-changes-to-publish-button"),
+      ).toBeDisabled();
     });
 
     test("can complete a required customisation task and then publish successfully", async ({
@@ -575,7 +563,7 @@ test.describe("Templates", () => {
       });
       await navigateToService(page, TEMPLATED_FLOW_SLUG);
 
-      // Edit the required templated node to satisfy the customisation requirement.
+      // Edit the required templated node to satisfy all customisation requirements
       await page.getByRole("link", { name: REQUIRED_NODE_TITLE }).click();
       await page.getByRole("dialog").waitFor();
       await page.getByPlaceholder("Text").fill(UPDATED_REQUIRED_NODE_TITLE);

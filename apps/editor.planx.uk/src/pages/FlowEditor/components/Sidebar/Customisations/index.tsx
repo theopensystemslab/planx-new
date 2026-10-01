@@ -64,19 +64,10 @@ const Customisations = () => {
   return (
     <Box sx={{ p: 2, backgroundColor: "background.paper", minHeight: "100%" }}>
       {isTemplatedFrom && (
-        <>
-          <Typography variant="h4" sx={{ mb: 1 }}>
-            Customise
-          </Typography>
-          <Typography variant="body2">
-            When editing a templated flow, this tab tracks your progress
-            updating nodes that can be customised
-          </Typography>
-          <CustomisationCounter
-            flowEdits={flowEdits}
-            customisableNodeIds={sortedCustomisableNodeIds}
-          />
-        </>
+        <CustomisationCounter
+          flowEdits={flowEdits}
+          customisableNodeIds={sortedCustomisableNodeIds}
+        />
       )}
       {isTemplate && (
         <>
