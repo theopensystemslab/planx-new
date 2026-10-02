@@ -1,7 +1,8 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
+import { IconAlertCircleFilled } from "@tabler/icons-react";
 import { useId } from "react";
+import { Icon } from "ui/icons/Icon";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 export const Disclaimer = ({ text }: { text: string }) => {
@@ -9,7 +10,7 @@ export const Disclaimer = ({ text }: { text: string }) => {
 
   return (
     <WarningContainer aria-labelledby={disclaimerId}>
-      <ErrorOutline />
+      <Icon icon={IconAlertCircleFilled} />
       <Typography
         id={disclaimerId}
         variant="body2"

@@ -1,9 +1,10 @@
-import CancelIcon from "@mui/icons-material/Cancel";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { IconCircleXFilled } from "@tabler/icons-react";
 import { capitalize, get } from "lodash";
+import { Icon } from "ui/icons/Icon";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import type { Filters } from "./Filter";
@@ -40,7 +41,7 @@ export const FiltersColumn = <T extends object>(
           onClick={() =>
             props.handleChange(props.optionKey, selectedValue as FilterValues)
           }
-          icon={<CancelIcon fontSize="small" />}
+          icon={<Icon icon={IconCircleXFilled} fontSize="small" />}
         />
       ) : (
         <SelectInput

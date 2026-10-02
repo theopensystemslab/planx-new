@@ -1,4 +1,3 @@
-import Close from "@mui/icons-material/CloseOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -10,8 +9,10 @@ import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import type { Constraint, Metadata } from "@opensystemslab/planx-core/types";
+import { IconXFilled } from "@tabler/icons-react";
 import omit from "lodash/omit";
 import React, { useState } from "react";
+import { Icon } from "ui/icons/Icon";
 import InputLabel from "ui/public/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -163,7 +164,7 @@ export const OverrideEntitiesModal = ({
           data-testid="override-modal-close-button"
           sx={{ color: "grey.600", marginTop: 1, marginRight: 2 }}
         >
-          <Close />
+          <Icon icon={IconXFilled} />
         </IconButton>
       </Box>
       <DialogContent dividers>

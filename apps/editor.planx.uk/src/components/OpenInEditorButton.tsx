@@ -1,8 +1,9 @@
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Fab from "@mui/material/Fab";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
+import { IconExternalLinkFilled } from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { Icon } from "ui/icons/Icon";
 
 const StyledFab = styled(Fab)(() => ({
   position: "fixed",
@@ -47,7 +48,7 @@ const OpenInEditorButton: React.FC = () => {
         onClick={handleClick}
         data-testid="open-in-editor-button"
       >
-        <OpenInNewIcon fontSize="small" />
+        <Icon icon={IconExternalLinkFilled} fontSize="small" />
         Open in Editor
       </StyledFab>
     </Tooltip>

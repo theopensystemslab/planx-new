@@ -1,5 +1,5 @@
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import Stack from "@mui/material/Stack";
+import { IconBell } from "@tabler/icons-react";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useRecentNotifications } from "hooks/data/useRecentNotifications";
 import NotificationCardItem from "pages/FlowEditor/components/Notifications/NotificationCard";
@@ -8,6 +8,7 @@ import { partitionBySuperseded } from "pages/FlowEditor/components/Notifications
 import { useStore } from "pages/FlowEditor/lib/store";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 import { EmptyState } from "ui/editor/EmptyState";
+import { Icon } from "ui/icons/Icon";
 
 interface NotificationsWidgetProps {
   notifications: Notification[];
@@ -51,7 +52,7 @@ export function NotificationsWidget({
       >
         <EmptyState
           size="small"
-          icon={<NotificationsNoneIcon />}
+          icon={<Icon icon={IconBell} />}
           title="No notifications found"
           description="You're all up to date"
           sx={{ mx: 1.5 }}

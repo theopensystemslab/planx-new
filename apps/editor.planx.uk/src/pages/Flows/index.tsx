@@ -1,12 +1,13 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { IconSitemapFilled } from "@tabler/icons-react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { isEmpty } from "lodash";
 import React, { useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import { InfoChip } from "ui/editor/InfoChip";
-import EditorIcon from "ui/icons/Editor";
+import { Icon } from "ui/icons/Icon";
 import { DebouncedSearchInput } from "ui/shared/SearchBox/DebouncedSearchInput";
 
 import { useStore } from "../FlowEditor/lib/store";
@@ -31,7 +32,7 @@ export const NoFlowsGetStarted: React.FC<NoFlowsGetStartedProps> = ({
 }) => (
   <EmptyState
     size={size}
-    icon={<EditorIcon />}
+    icon={<Icon icon={IconSitemapFilled} />}
     title="No flows found"
     description="Get started by creating your first flow"
     action={<AddFlow />}

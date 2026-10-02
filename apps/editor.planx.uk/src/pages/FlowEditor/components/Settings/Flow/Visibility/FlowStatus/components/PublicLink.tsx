@@ -1,11 +1,12 @@
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import type { FlowStatus } from "@opensystemslab/planx-core/types";
+import { IconCopyFilled } from "@tabler/icons-react";
 import React, { useState } from "react";
 import SettingsDescription from "ui/editor/SettingsDescription";
+import { Icon } from "ui/icons/Icon";
 
 export const CopyButton = (props: { link: string; isActive: boolean }) => {
   const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
@@ -24,7 +25,7 @@ export const CopyButton = (props: { link: string; isActive: boolean }) => {
       }}
       sx={{ marginLeft: 0.5 }}
     >
-      <ContentCopyIcon style={{ width: "18px", height: "18px" }} />
+      <Icon icon={IconCopyFilled} style={{ width: "18px", height: "18px" }} />
       <Typography sx={{ ml: 0.5 }} variant="body3">
         {copyMessage}
       </Typography>

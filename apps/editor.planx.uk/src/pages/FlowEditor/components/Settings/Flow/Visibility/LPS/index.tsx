@@ -1,10 +1,11 @@
-import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
+import { IconHourglassFilled } from "@tabler/icons-react";
 import { useLPS } from "hooks/useLPS";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useId } from "react";
+import { Icon } from "ui/icons/Icon";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import CategorySelection from "./components/CategorySelection";
@@ -62,7 +63,7 @@ const LPSListingSettings: React.FC = () => {
           <>
             {isTrial && (
               <WarningContainer aria-labelledby={trialWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
+                <Icon icon={IconHourglassFilled} sx={{ mr: 1 }} />
                 <Typography id={trialWarningId} variant="body2">
                   Trial accounts cannot list services on LPS.
                 </Typography>

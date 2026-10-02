@@ -1,10 +1,11 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { IconCircleCheckFilled } from "@tabler/icons-react";
 import classNames from "classnames";
 import type { PropsWithChildren, Ref } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import CheckCircleIcon from "ui/icons/CheckCircle";
+import { Icon } from "ui/icons/Icon";
 
 interface TemplatedNodeContainerProps extends PropsWithChildren {
   isTemplatedNode: boolean;
@@ -129,7 +130,8 @@ export const TemplatedNodeContainer = ({
             {getTemplatedNodeStatus(areTemplatedNodeInstructionsRequired)}
           </Typography>
           {isComplete && (
-            <CheckCircleIcon
+            <Icon
+              icon={IconCircleCheckFilled}
               data-testid="customisation-complete"
               fontSize="small"
               sx={(theme) => ({ color: theme.palette.success.main })}

@@ -1,10 +1,13 @@
-import FormatBold from "@mui/icons-material/FormatBold";
-import FormatItalic from "@mui/icons-material/FormatItalic";
-import FormatListBulleted from "@mui/icons-material/FormatListBulleted";
-import FormatListNumbered from "@mui/icons-material/FormatListNumbered";
 import IconButton from "@mui/material/IconButton";
+import {
+  IconBold,
+  IconItalic,
+  IconListFilled,
+  IconListNumbers,
+} from "@tabler/icons-react";
 import { type Editor } from "@tiptap/core";
 import type { ReactElement } from "react";
+import { Icon } from "ui/icons/Icon";
 
 const RichTextInputButton = ({
   editor,
@@ -32,7 +35,7 @@ export const BoldButton = ({ editor }: { editor: Editor }) => (
   <RichTextInputButton
     editor={editor}
     type="bold"
-    icon={<FormatBold />}
+    icon={<Icon icon={IconBold} />}
     onClick={() => {
       editor.chain().focus().toggleBold().run();
     }}
@@ -43,7 +46,7 @@ export const ItalicButton = ({ editor }: { editor: Editor }) => (
   <RichTextInputButton
     editor={editor}
     type="italic"
-    icon={<FormatItalic />}
+    icon={<Icon icon={IconItalic} />}
     onClick={() => {
       editor.chain().focus().toggleItalic().run();
     }}
@@ -54,7 +57,7 @@ export const BulletListButton = ({ editor }: { editor: Editor }) => (
   <RichTextInputButton
     editor={editor}
     type="bulletList"
-    icon={<FormatListBulleted />}
+    icon={<Icon icon={IconListFilled} />}
     onClick={() => {
       editor.chain().focus().toggleBulletList().run();
     }}
@@ -65,7 +68,7 @@ export const OrderedListButton = ({ editor }: { editor: Editor }) => (
   <RichTextInputButton
     editor={editor}
     type="orderedList"
-    icon={<FormatListNumbered />}
+    icon={<Icon icon={IconListNumbers} />}
     onClick={() => {
       editor.chain().focus().toggleOrderedList().run();
     }}

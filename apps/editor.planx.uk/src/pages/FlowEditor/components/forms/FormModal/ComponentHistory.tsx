@@ -1,9 +1,9 @@
 import { gql, useSubscription } from "@apollo/client";
-import HistoryIcon from "@mui/icons-material/History";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import type { OT } from "@planx/graph/types";
+import { IconHistory } from "@tabler/icons-react";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import type {
   HistoryItem,
@@ -11,6 +11,7 @@ import type {
 } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { EmptyState } from "ui/editor/EmptyState";
+import { Icon } from "ui/icons/Icon";
 
 import { EditHistoryTimeline } from "../../Sidebar/EditHistory/Timeline";
 
@@ -106,7 +107,7 @@ const ComponentHistory = (props: { nodeId: string }) => {
           <EmptyState
             size="small"
             title="No edits found in the last 12 months"
-            icon={<HistoryIcon />}
+            icon={<Icon icon={IconHistory} />}
           />
         </>
       )}

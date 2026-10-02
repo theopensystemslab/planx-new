@@ -1,7 +1,8 @@
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Box, { type BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { IconSparklesFilled } from "@tabler/icons-react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 
 export const AiChip = ({ sx }: Pick<BoxProps, "sx">) => (
   <Box
@@ -20,7 +21,7 @@ export const AiChip = ({ sx }: Pick<BoxProps, "sx">) => (
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}
   >
-    <AutoAwesomeIcon sx={{ fontSize: 12 }} />
+    <Icon icon={IconSparklesFilled} sx={{ fontSize: 12 }} />
     <Typography
       variant="body3"
       sx={{ lineHeight: 1, fontWeight: FONT_WEIGHT_SEMI_BOLD }}

@@ -6,6 +6,7 @@ import { useContextMenu } from "hooks/useContextMenu";
 import useFlashOnNodeAdded from "hooks/useFlashOnNodeAdded";
 import { memo } from "react";
 import { useDrag } from "react-dnd";
+import { Icon } from "ui/icons/Icon";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -48,7 +49,7 @@ const Filter: React.FC<Props> = memo((props) => {
     },
   });
 
-  const Icon = ICONS[props.type];
+  const componentIcon = ICONS[props.type];
 
   const ref = useFlashOnNodeAdded<HTMLLIElement>(props.id);
 
@@ -83,7 +84,7 @@ const Filter: React.FC<Props> = memo((props) => {
               drag(el);
             }}
           >
-            {Icon && <Icon />}
+            {componentIcon && <Icon icon={componentIcon} />}
             <span>{props.text}</span>
           </Link>
         </div>

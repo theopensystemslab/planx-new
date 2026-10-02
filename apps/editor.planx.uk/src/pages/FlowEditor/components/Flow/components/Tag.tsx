@@ -1,11 +1,12 @@
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import Box from "@mui/material/Box";
 import type { Palette } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
 import type { NodeTag, Role } from "@opensystemslab/planx-core/types";
+import { IconWand } from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 
 export const TAG_DISPLAY_VALUES: Record<
   NodeTag,
@@ -56,7 +57,7 @@ export const Tag: React.FC<{ tag: NodeTag }> = ({ tag }) => {
       }}
     >
       {tag === "automation" && (
-        <AutoFixHighIcon sx={{ fontSize: "13px", color: "inherit" }} />
+        <Icon icon={IconWand} sx={{ fontSize: "13px", color: "inherit" }} />
       )}
       {TAG_DISPLAY_VALUES[tag].displayName}
     </Box>

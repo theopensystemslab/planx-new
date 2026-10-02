@@ -1,6 +1,6 @@
-import StarIcon from "@mui/icons-material/Star";
 import { useTheme } from "@mui/material/styles";
 import type { BaseNodeData } from "@planx/components/shared";
+import { IconStarFilled } from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import BlockQuote from "ui/editor/BlockQuote";
 
@@ -21,7 +21,7 @@ export const TemplatedNodeInstructions = ({
     <ModalSection sectionBackgroundColor={theme.palette.template.main}>
       <ModalSectionContent
         title={`Customise ${areTemplatedNodeInstructionsRequired ? `(required)` : `(optional)`}`}
-        Icon={StarIcon}
+        Icon={IconStarFilled}
       >
         <BlockQuote>{templatedNodeInstructions}</BlockQuote>
       </ModalSectionContent>

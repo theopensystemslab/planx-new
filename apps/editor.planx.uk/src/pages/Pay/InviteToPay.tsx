@@ -1,4 +1,3 @@
-import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
@@ -7,6 +6,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
+import { IconCheckFilled } from "@tabler/icons-react";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import Banner from "ui/public/Banner";
@@ -33,7 +33,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
   return (
     <>
       <Banner
-        Icon={Check}
+        Icon={IconCheckFilled}
         iconTitle={"Success"}
         heading="Payment invitation sent"
         color={{

@@ -1,10 +1,10 @@
-import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
+import { IconHourglassFilled } from "@tabler/icons-react";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { format } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -12,6 +12,7 @@ import React, { useId, useState } from "react";
 import { useLocation } from "react-use";
 import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
+import { Icon } from "ui/icons/Icon";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -97,7 +98,7 @@ const FlowStatus: React.FC = () => {
           <>
             {isTrial && (
               <WarningContainer aria-labelledby={trialWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
+                <Icon icon={IconHourglassFilled} sx={{ mr: 1 }} />
                 <Typography id={trialWarningId} variant="body2">
                   Trial accounts cannot set flows online.
                 </Typography>
@@ -105,7 +106,7 @@ const FlowStatus: React.FC = () => {
             )}
             {isTemplate && (
               <WarningContainer aria-labelledby={templateWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
+                <Icon icon={IconHourglassFilled} sx={{ mr: 1 }} />
                 <Typography id={templateWarningId} variant="body2">
                   Source templates are discoverable from the "Add a new flow"
                   modal when they are online.

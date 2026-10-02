@@ -1,4 +1,3 @@
-import MoreTimeIcon from "@mui/icons-material/MoreTime";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -6,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { IconClockPlus } from "@tabler/icons-react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -102,7 +102,7 @@ function SectionComponent(props: Props) {
             />
           </InputRow>
         </ModalSectionContent>
-        <ModalSectionContent title="Section length" Icon={MoreTimeIcon}>
+        <ModalSectionContent title="Section length" Icon={IconClockPlus}>
           <Typography variant="subtitle2" sx={{ mb: 2 }}>
             Please estimate the relative length of this section. This will be
             used to calculate a user's progress through your service.

@@ -1,6 +1,3 @@
-import LanguageIcon from "@mui/icons-material/Language";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -9,6 +6,12 @@ import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import {
+  IconPlayerPlay,
+  IconPlayerPlayFilled,
+  IconSelector,
+  IconWorldFilled,
+} from "@tabler/icons-react";
 import { useParams, useRouteContext, useRouter } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
@@ -16,7 +19,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { Root as FlowTagRoot } from "ui/editor/FlowTag/styles";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import Permission from "ui/editor/Permission";
-import PlayOutlineIcon from "ui/icons/PlayOutline";
+import { Icon } from "ui/icons/Icon";
 
 const OpenServiceButton = styled(Button)(({ theme }) => ({
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
@@ -145,7 +148,7 @@ export const OpenServiceMenu: React.FC = () => {
         onClick={handleClick}
         aria-haspopup="true"
         aria-expanded={open}
-        endIcon={<UnfoldMoreIcon />}
+        endIcon={<Icon icon={IconSelector} />}
         data-testid="open-service-menu-button"
       >
         View
@@ -174,7 +177,13 @@ export const OpenServiceMenu: React.FC = () => {
         <Stack>
           <Permission.IsPlatformAdmin>
             <MenuItemCard
-              icon={<PlayOutlineIcon fontSize="small" sx={{ mt: 0.25 }} />}
+              icon={
+                <Icon
+                  icon={IconPlayerPlay}
+                  fontSize="small"
+                  sx={{ mt: 0.25 }}
+                />
+              }
               title="Draft"
               description="Preview with unpublished nested flows"
               href={draftURL}
@@ -184,7 +193,13 @@ export const OpenServiceMenu: React.FC = () => {
           </Permission.IsPlatformAdmin>
 
           <MenuItemCard
-            icon={<PlayArrowIcon fontSize="small" sx={{ mt: 0.25 }} />}
+            icon={
+              <Icon
+                icon={IconPlayerPlayFilled}
+                fontSize="small"
+                sx={{ mt: 0.25 }}
+              />
+            }
             title="Preview"
             description="Preview changes before publishing"
             href={previewURL}
@@ -193,7 +208,9 @@ export const OpenServiceMenu: React.FC = () => {
           />
 
           <MenuItemCard
-            icon={<LanguageIcon fontSize="small" sx={{ mt: 0.25 }} />}
+            icon={
+              <Icon icon={IconWorldFilled} fontSize="small" sx={{ mt: 0.25 }} />
+            }
             title="Published"
             data-testid="published-link"
             description={

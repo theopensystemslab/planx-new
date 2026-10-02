@@ -1,18 +1,15 @@
 import Grid from "@mui/material/Grid";
-import type { OverridableComponent } from "@mui/material/OverridableComponent";
 import { styled } from "@mui/material/styles";
-import type { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon, type TablerIcon } from "ui/icons/Icon";
 
 interface Props {
   title?: string;
   subtitle?: string;
   children?: React.JSX.Element[] | React.JSX.Element;
   author?: string;
-  Icon?:
-    | React.ComponentType<SvgIconProps>
-    | (OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string });
+  Icon?: TablerIcon;
 }
 
 const SectionContentGrid = styled(Grid)(({ theme }) => ({
@@ -66,11 +63,11 @@ export default function ModalSectionContent({
   subtitle,
   children,
   author,
-  Icon,
+  Icon: icon,
 }: Props): FCReturn {
   return (
     <SectionContentGrid container>
-      <LeftGutter>{Icon && <Icon />}</LeftGutter>
+      <LeftGutter>{icon && <Icon icon={icon} />}</LeftGutter>
       <SectionContent>
         {title && (
           <Title variant="h3">

@@ -1,12 +1,13 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { notFound, useLocation, useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { BackButton } from "pages/Preview/Questions";
 import { FOOTER_ITEMS } from "types";
+import { Icon } from "ui/icons/Icon";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 const Root = styled(Box)(({ theme }) => ({
@@ -27,7 +28,7 @@ function Layout(props: {
     <Root>
       <Container maxWidth="contentWrap" sx={{ position: "relative" }}>
         <BackButton onClick={props.onClose} variant="link">
-          <ArrowBackIcon fontSize="small" />
+          <Icon icon={IconArrowLeft} fontSize="small" />
           Back
         </BackButton>
         <Container

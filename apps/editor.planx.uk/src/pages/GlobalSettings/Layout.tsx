@@ -1,4 +1,4 @@
-import ArticleIcon from "@mui/icons-material/Article";
+import { IconArticleFilled } from "@tabler/icons-react";
 import type { PropsWithChildren } from "react";
 
 import SettingsLayout, {
@@ -7,7 +7,7 @@ import SettingsLayout, {
 
 const GlobalSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const settingsLinks: SettingsLink[] = [
-    { label: "Footer elements", path: "/footer", icon: ArticleIcon },
+    { label: "Footer elements", path: "/footer", icon: IconArticleFilled },
   ];
 
   return (

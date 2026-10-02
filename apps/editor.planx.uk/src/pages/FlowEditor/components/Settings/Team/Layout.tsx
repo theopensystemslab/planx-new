@@ -1,9 +1,11 @@
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
-import ExtensionIcon from "@mui/icons-material/Extension";
-import LockIcon from "@mui/icons-material/Lock";
-import MapIcon from "@mui/icons-material/Map";
-import PaletteIcon from "@mui/icons-material/Palette";
+import {
+  IconAt,
+  IconBuildingBank,
+  IconLock,
+  IconMap,
+  IconPalette,
+  IconPuzzle,
+} from "@tabler/icons-react";
 import { useParams } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
@@ -20,26 +22,26 @@ const TeamSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
     {
       label: "Contact information",
       path: "/contact",
-      icon: AlternateEmailIcon,
+      icon: IconAt,
     },
     {
       label: "GIS data",
       path: "/gis-data",
-      icon: MapIcon,
+      icon: IconMap,
     },
-    { label: "Payments", path: "/payments", icon: AccountBalanceIcon },
+    { label: "Payments", path: "/payments", icon: IconBuildingBank },
     {
       label: "Integrations",
       path: "/integrations",
-      icon: ExtensionIcon,
+      icon: IconPuzzle,
     },
     {
       label: "Design",
       path: "/design",
-      icon: PaletteIcon,
+      icon: IconPalette,
     },
     ...(isPlatformAdmin
-      ? [{ label: "Advanced", path: "/advanced", icon: LockIcon }]
+      ? [{ label: "Advanced", path: "/advanced", icon: IconLock }]
       : []),
   ];
 

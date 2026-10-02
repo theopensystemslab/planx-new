@@ -1,4 +1,3 @@
-import RestoreOutlined from "@mui/icons-material/RestoreOutlined";
 import Timeline from "@mui/lab/Timeline";
 import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
@@ -11,6 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import type { OT } from "@planx/graph/types";
+import { IconRestore } from "@tabler/icons-react";
 import type {
   CommentHistoryItem,
   HistoryItem,
@@ -21,6 +21,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Permission from "ui/editor/Permission";
+import { Icon } from "ui/icons/Icon";
 import { RelativeTime } from "ui/shared/RelativeTime";
 
 import {
@@ -202,7 +203,8 @@ export const EditHistoryTimeline = ({
                       onMouseEnter={() => setFocusedOpIndex(i)}
                       onMouseLeave={() => setFocusedOpIndex(undefined)}
                     >
-                      <RestoreOutlined
+                      <Icon
+                        icon={IconRestore}
                         fontSize="medium"
                         color={
                           inUndoScope(i) && isUndoType(op.type)

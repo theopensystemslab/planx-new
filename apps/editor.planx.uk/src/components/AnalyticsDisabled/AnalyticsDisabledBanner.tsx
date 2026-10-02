@@ -5,8 +5,9 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { IconChartBar } from "@tabler/icons-react";
 import React, { useState } from "react";
-import AnalyticsChart from "ui/icons/AnalyticsChart";
+import { Icon } from "ui/icons/Icon";
 
 const AnalyticsWarning = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -50,7 +51,7 @@ const AnalyticsDisabledBanner: React.FC = () => {
                 justifyContent: "space-between",
               }}
             >
-              <AnalyticsChart />
+              <Icon icon={IconChartBar} />
               <Typography variant="body2" sx={{ ml: 1 }}>
                 <strong>Analytics off</strong> This is a preview link for
                 testing. No usage data is being recorded.{"  "}

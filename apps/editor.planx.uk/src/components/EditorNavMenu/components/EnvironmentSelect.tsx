@@ -1,6 +1,3 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
 import MuiButtonBase from "@mui/material/ButtonBase";
 import Fade from "@mui/material/Fade";
@@ -10,9 +7,15 @@ import type { SxProps, Theme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
+import {
+  IconBrandGithub,
+  IconCircleCheckFilled,
+  IconSelector,
+} from "@tabler/icons-react";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 import { getLogoForEnvironment } from "ui/icons/logos";
 import { CloseButton } from "ui/shared/CloseButton";
 
@@ -138,13 +141,13 @@ const EnvironmentSelect: React.FC = () => {
       <StyledButtonBase onClick={handleOpen} selected={false}>
         {pizzaPullRequestNumber ? (
           <>
-            <GitHubIcon fontSize="small" sx={{ mr: 0.5 }} />#
-            {pizzaPullRequestNumber}
+            <Icon icon={IconBrandGithub} fontSize="small" sx={{ mr: 0.5 }} />
+            {`#${pizzaPullRequestNumber}`}
           </>
         ) : (
           displayEnv
         )}
-        <UnfoldMoreIcon fontSize="small" />
+        <Icon icon={IconSelector} fontSize="small" />
       </StyledButtonBase>
       <Popover
         open={open}
@@ -220,7 +223,8 @@ const EnvironmentSelect: React.FC = () => {
                       {env.name}
                     </Typography>
                     {env.name === currentEnv && (
-                      <CheckCircleIcon
+                      <Icon
+                        icon={IconCircleCheckFilled}
                         sx={(theme) => ({
                           color: theme.palette.info.main,
                           fontSize: 18,

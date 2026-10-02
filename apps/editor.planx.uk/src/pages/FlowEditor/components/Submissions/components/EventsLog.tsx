@@ -1,11 +1,12 @@
-import BarChartIcon from "@mui/icons-material/BarChart";
 import type { GridRowParams } from "@mui/x-data-grid";
+import { IconChartBar } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { EmptyState } from "ui/editor/EmptyState";
+import { Icon } from "ui/icons/Icon";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import type { ColumnConfig } from "ui/shared/DataTable/types";
 import { ColumnFilterType } from "ui/shared/DataTable/types";
@@ -68,7 +69,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       <EmptyState
         title={`No payment or send events found for this ${filterByFlow ? "service" : "team"}`}
         description="If you're looking for events before 1st January 2024, please contact a PlanX developer"
-        icon={<BarChartIcon />}
+        icon={<Icon icon={IconChartBar} />}
       />
     );
 

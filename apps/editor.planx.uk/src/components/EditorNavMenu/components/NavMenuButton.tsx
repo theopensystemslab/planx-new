@@ -1,6 +1,7 @@
-import NorthEastIcon from "@mui/icons-material/NorthEast";
 import type { ChipProps } from "@mui/material/Chip";
 import type { SxProps, Theme } from "@mui/material/styles";
+import { IconArrowUpRight } from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
 import { BadgeChip, MenuButton, MenuTitle, StyledChip } from "../styles";
 import type { Route } from "../types";
@@ -20,7 +21,7 @@ export interface NavMenuButtonProps {
 
 const NavMenuButton = ({
   title,
-  Icon,
+  Icon: icon,
   disabled,
   isNew,
   badgeCount,
@@ -39,7 +40,7 @@ const NavMenuButton = ({
       onClick={onClick}
       sx={sx}
     >
-      <Icon fontSize="small" />
+      <Icon icon={icon} fontSize="small" />
       <MenuTitle variant="body3" sx={{ pt: 0.15 }}>
         {title}
       </MenuTitle>
@@ -48,7 +49,10 @@ const NavMenuButton = ({
         <BadgeChip label={badgeCount} color={badgeColor} />
       ) : null}
       {showExternalIcon && (
-        <NorthEastIcon sx={{ fontSize: "0.875rem", ml: "auto", mt: 0.2 }} />
+        <Icon
+          icon={IconArrowUpRight}
+          sx={{ fontSize: "0.875rem", ml: "auto", mt: 0.2 }}
+        />
       )}
     </MenuButton>
   );

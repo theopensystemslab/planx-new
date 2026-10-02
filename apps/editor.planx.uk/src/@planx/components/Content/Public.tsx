@@ -1,5 +1,4 @@
 import { mostReadable } from "@ctrl/tinycolor";
-import HelpIcon from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -9,10 +8,12 @@ import Card, {
   contentFlowSpacing,
 } from "@planx/components/shared/Preview/Card";
 import type { PublicProps } from "@planx/components/shared/types";
+import { IconHelpCircleFilled } from "@tabler/icons-react";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useState } from "react";
 import { getContrastTextColor } from "styleUtils";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
+import { Icon } from "ui/icons/Icon";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { HelpButton, Image } from "../shared/Preview/CardHeader/styled";
@@ -93,7 +94,7 @@ const ContentComponent: React.FC<Props> = (props) => {
             aria-haspopup="dialog"
             data-testid="more-info-button"
           >
-            <HelpIcon /> More information
+            <Icon icon={IconHelpCircleFilled} /> More information
           </HelpButton>
         </Typography>
       )}

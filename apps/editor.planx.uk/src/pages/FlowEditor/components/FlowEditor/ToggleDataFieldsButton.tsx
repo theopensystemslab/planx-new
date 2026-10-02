@@ -1,6 +1,7 @@
-import DataFieldIcon from "@mui/icons-material/Code";
+import { IconCode } from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import ToggleIconButton from "ui/editor/ToggleIconButton";
+import { Icon } from "ui/icons/Icon";
 
 export const ToggleDataFieldsButton: React.FC = () => {
   const [showDataFields, toggleShowDataFields] = useStore((state) => [
@@ -12,7 +13,7 @@ export const ToggleDataFieldsButton: React.FC = () => {
     <ToggleIconButton
       isToggled={showDataFields}
       onToggle={toggleShowDataFields}
-      icon={<DataFieldIcon />}
+      icon={<Icon icon={IconCode} />}
       tooltip="Toggle data fields"
       ariaLabel="Toggle data fields"
     />

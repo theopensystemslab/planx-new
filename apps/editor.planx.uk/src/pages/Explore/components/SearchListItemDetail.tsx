@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { IconCircleCheckFilled } from "@tabler/icons-react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import CheckCircleIcon from "ui/icons/CheckCircle";
+import { Icon } from "ui/icons/Icon";
 
 import { RelatedItemsSection } from "./RelatedItemsSection";
 import type { SearchResult } from "./SearchResult";
@@ -37,7 +38,11 @@ export const SearchListItemDetail: React.FC<SearchListItemDetailProps> = ({
       </Box>
       {statusLabel && (
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.33, mb: 0.5 }}>
-          <CheckCircleIcon color="success" sx={{ fontSize: 20 }} />
+          <Icon
+            icon={IconCircleCheckFilled}
+            color="success"
+            sx={{ fontSize: 20 }}
+          />
           <Typography
             variant="body2"
             sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}

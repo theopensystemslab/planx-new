@@ -1,4 +1,3 @@
-import RuleIcon from "@mui/icons-material/Rule";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import {
@@ -8,6 +7,7 @@ import {
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { IconListCheckFilled } from "@tabler/icons-react";
 import { getIn } from "formik";
 import { merge } from "lodash";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -110,7 +110,7 @@ function FileUploadAndLabelComponent(props: Props) {
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
-        <ModalSectionContent title="File types" Icon={RuleIcon}>
+        <ModalSectionContent title="File types" Icon={IconListCheckFilled}>
           <ListManager
             values={formik.values.fileTypes}
             onChange={(fileTypes) => {

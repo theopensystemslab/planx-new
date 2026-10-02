@@ -1,6 +1,4 @@
 import { mostReadable } from "@ctrl/tinycolor";
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
-import HelpIcon from "@mui/icons-material/Help";
 import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,11 +9,16 @@ import Card, {
   contentFlowSpacing,
 } from "@planx/components/shared/Preview/Card";
 import type { PublicProps } from "@planx/components/shared/types";
+import {
+  IconAlertCircleFilled,
+  IconHelpCircleFilled,
+} from "@tabler/icons-react";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useId, useState } from "react";
 import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
+import { Icon } from "ui/icons/Icon";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { HelpButton, Image } from "../shared/Preview/CardHeader/styled";
@@ -118,7 +121,10 @@ const NoticeComponent: React.FC<Props> = (props) => {
         >
           <Content>
             <TitleWrap>
-              <ErrorOutline sx={{ width: 34, height: 34 }} />
+              <Icon
+                icon={IconAlertCircleFilled}
+                sx={{ width: 34, height: 34 }}
+              />
               <Title variant="h3" component="h1" id={titleId}>
                 {props.title}
               </Title>
@@ -142,7 +148,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
               aria-haspopup="dialog"
               data-testid="more-info-button"
             >
-              <HelpIcon /> More information
+              <Icon icon={IconHelpCircleFilled} /> More information
             </HelpButton>
           </Typography>
         )}

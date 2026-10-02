@@ -1,4 +1,3 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -6,6 +5,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import type { PublicProps } from "@planx/components/shared/types";
+import { IconAlertCircleFilled } from "@tabler/icons-react";
 import { logger } from "airbrake";
 import type { FeedbackView } from "components/Feedback/types";
 import { useFormik } from "formik";
@@ -17,6 +17,7 @@ import {
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useId } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 import TerribleFace from "ui/images/feedback_filled-01.svg";
 import PoorFace from "ui/images/feedback_filled-02.svg";
 import NeutralFace from "ui/images/feedback_filled-03.svg";
@@ -184,7 +185,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         />
       </Box>
       <WarningContainer aria-labelledby={warningId}>
-        <ErrorOutline />
+        <Icon icon={IconAlertCircleFilled} />
         <Typography
           id={warningId}
           variant="body2"

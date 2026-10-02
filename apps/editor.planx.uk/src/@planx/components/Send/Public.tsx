@@ -1,5 +1,5 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Typography from "@mui/material/Typography";
+import { IconAlertCircleFilled } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { logger } from "airbrake";
 import Bowser from "bowser";
@@ -7,6 +7,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import { createSendEvents } from "lib/api/send/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useId } from "react";
+import { Icon } from "ui/icons/Icon";
 
 import Card from "../shared/Preview/Card";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
@@ -42,7 +43,7 @@ const SkipSendWarning: React.FC<Props> = (props) => {
   return (
     <Card handleSubmit={props.handleSubmit}>
       <WarningContainer aria-labelledby={warningId}>
-        <ErrorOutline />
+        <Icon icon={IconAlertCircleFilled} />
         <Typography id={warningId} variant="body1" sx={{ ml: 2 }}>
           You can only test submissions on published routes where Save & Return
           is enabled. Select <strong>Continue</strong> to finish reviewing

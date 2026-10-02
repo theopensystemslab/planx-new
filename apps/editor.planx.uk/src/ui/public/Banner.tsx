@@ -2,14 +2,14 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import type { Theme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
-import type SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import { getContrastTextColor } from "styleUtils";
+import { Icon, type TablerIcon } from "ui/icons/Icon";
 
 interface BannerProps {
   heading?: string;
   headingId?: string;
-  Icon?: typeof SvgIcon;
+  Icon?: TablerIcon;
   iconTitle?: string;
   color?: { background: string; text: string };
   children?: React.ReactNode;
@@ -52,7 +52,8 @@ function Banner(props: BannerProps) {
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         {props.Icon && (
-          <props.Icon
+          <Icon
+            icon={props.Icon}
             sx={{
               marginBottom: (theme: Theme) => theme.spacing(1),
               height: (theme: Theme) => theme.spacing(5),

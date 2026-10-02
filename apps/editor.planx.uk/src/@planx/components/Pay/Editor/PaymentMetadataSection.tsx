@@ -1,4 +1,3 @@
-import DataObjectIcon from "@mui/icons-material/DataObject";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -6,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import type { PaymentMetadata } from "@opensystemslab/planx-core/types";
 import type { Pay } from "@planx/components/Pay/model";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
+import { IconBraces } from "@tabler/icons-react";
 import { useFormikContext } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useCallback } from "react";
@@ -165,7 +165,7 @@ export const PaymentMetadataSection: React.FC<PaymentMetadataSectionProps> = ({
 
   return (
     <ModalSection>
-      <ModalSectionContent title="Payment metadata" Icon={DataObjectIcon}>
+      <ModalSectionContent title="Payment metadata" Icon={IconBraces}>
         <Typography variant="subtitle2" sx={{ mb: 2 }}>
           Include metadata alongside payments, such as VAT codes, cost centers,
           or ledger codes. See{" "}

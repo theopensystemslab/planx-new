@@ -1,14 +1,14 @@
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import { IconBell, IconBellFilled } from "@tabler/icons-react";
 import { useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import StyledTab from "ui/editor/StyledTab";
+import { Icon } from "ui/icons/Icon";
 
 import NotificationCard from "./NotificationCard";
 import type { NotificationProps } from "./types";
@@ -72,7 +72,13 @@ export const Notifications = ({ notifications }: NotificationProps) => {
               tab === 0 ? "No notifications found" : "No resolved notifications"
             }
             description={tab === 0 ? "You're all up to date" : ""}
-            icon={tab === 0 ? <NotificationsNoneIcon /> : <NotificationsIcon />}
+            icon={
+              tab === 0 ? (
+                <Icon icon={IconBell} />
+              ) : (
+                <Icon icon={IconBellFilled} />
+              )
+            }
             sx={{ mt: -1 }}
           />
         )}

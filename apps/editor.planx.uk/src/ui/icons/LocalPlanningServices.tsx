@@ -1,13 +1,44 @@
-import type { SvgIconProps } from "@mui/material/SvgIcon";
-import SvgIcon from "@mui/material/SvgIcon";
+import { createReactComponent } from "@tabler/icons-react";
 
-export default function LocalPlanningServicesIcon(props: SvgIconProps) {
-  return (
-    <SvgIcon {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-      <polygon points="2.06 17.67 5.51 16.63 5.51 2.33 2.06 3.37 2.06 17.67" />
-      <polygon points="6.2 16.63 9.65 17.67 9.65 3.37 6.2 2.33 6.2 16.63" />
-      <polygon points="10.35 17.67 13.8 16.63 13.8 2.33 10.35 3.37 10.35 17.67" />
-      <polygon points="14.49 16.63 17.94 17.67 17.94 3.37 14.49 2.33 14.49 16.63" />
-    </SvgIcon>
-  );
-}
+// Brand mark, built as a Tabler icon so it can be used anywhere a Tabler icon is
+// (originally drawn on a 20x20 grid, scaled to Tabler's 24x24)
+const LocalPlanningServicesIcon = createReactComponent(
+  "filled",
+  "local-planning-services",
+  "LocalPlanningServices",
+  [
+    [
+      "polygon",
+      {
+        points:
+          "2.472 21.204 6.612 19.956 6.612 2.796 2.472 4.044 2.472 21.204",
+        key: "svg-0",
+      },
+    ],
+    [
+      "polygon",
+      {
+        points: "7.44 19.956 11.58 21.204 11.58 4.044 7.44 2.796 7.44 19.956",
+        key: "svg-1",
+      },
+    ],
+    [
+      "polygon",
+      {
+        points:
+          "12.42 21.204 16.56 19.956 16.56 2.796 12.42 4.044 12.42 21.204",
+        key: "svg-2",
+      },
+    ],
+    [
+      "polygon",
+      {
+        points:
+          "17.388 19.956 21.528 21.204 21.528 4.044 17.388 2.796 17.388 19.956",
+        key: "svg-3",
+      },
+    ],
+  ],
+);
+
+export default LocalPlanningServicesIcon;

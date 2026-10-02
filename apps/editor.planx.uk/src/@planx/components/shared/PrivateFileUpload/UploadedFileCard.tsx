@@ -1,5 +1,3 @@
-import FileIcon from "@mui/icons-material/AttachFile";
-import DeleteIcon from "@mui/icons-material/Delete";
 import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -8,7 +6,9 @@ import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import type { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { PREVIEWABLE_MIME_TYPES } from "@planx/file-upload";
+import { IconPaperclip, IconTrashFilled } from "@tabler/icons-react";
 import ImagePreview from "components/ImagePreview";
+import { Icon } from "ui/icons/Icon";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
@@ -136,7 +136,7 @@ export const UploadedFileCard: React.FC<Props> = ({
                 PREVIEWABLE_MIME_TYPES.has(file.type) ? (
                   <ImagePreview file={file} />
                 ) : (
-                  <FileIcon />
+                  <Icon icon={IconPaperclip} />
                 )}
               </FilePreview>
               <Box sx={{ mr: 2 }}>
@@ -193,7 +193,7 @@ export const UploadedFileCard: React.FC<Props> = ({
                 variant="contained"
                 color="secondary"
               >
-                <DeleteIcon color="warning" fontSize="small" />
+                <Icon icon={IconTrashFilled} color="warning" fontSize="small" />
                 Remove{" "}
                 <span style={visuallyHidden}>{getFileDisplayName(file)}</span>
               </Button>

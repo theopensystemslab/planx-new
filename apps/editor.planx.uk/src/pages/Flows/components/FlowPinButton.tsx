@@ -1,11 +1,11 @@
-import PushPinIcon from "@mui/icons-material/PushPin";
-import PushPinOutlineIcon from "@mui/icons-material/PushPinOutlined";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import { IconPin, IconPinFilled } from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useState } from "react";
+import { Icon } from "ui/icons/Icon";
 
 import { usePinFlow, useUnpinFlow } from "./FlowCard/queries";
 
@@ -81,7 +81,10 @@ export const FlowPinButton = ({
             aria-label="Unpin flow"
             sx={{ borderRadius: "50%" }}
           >
-            <PushPinIcon sx={{ fontSize: 24, transform: "translateY(2px)" }} />
+            <Icon
+              icon={IconPinFilled}
+              sx={{ fontSize: 24, transform: "translateY(2px)" }}
+            />
           </IconButton>
         </Tooltip>
       ) : (
@@ -97,7 +100,8 @@ export const FlowPinButton = ({
             aria-label="Pin flow"
             sx={{ borderRadius: "50%" }}
           >
-            <PushPinOutlineIcon
+            <Icon
+              icon={IconPin}
               sx={{ fontSize: 24, transform: "translateY(2px)" }}
             />
           </IconButton>

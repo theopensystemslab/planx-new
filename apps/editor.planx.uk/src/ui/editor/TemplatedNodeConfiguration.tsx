@@ -1,7 +1,7 @@
-import StarIcon from "@mui/icons-material/Star";
 import Typography from "@mui/material/Typography";
 import type { TemplatedNodeData } from "@opensystemslab/planx-core/types";
 import type { BaseNodeData } from "@planx/components/shared";
+import { IconStarFilled } from "@tabler/icons-react";
 import type { FormikProps, useFormik } from "formik";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -26,7 +26,7 @@ export const TemplatedNodeConfiguration = <T extends BaseNodeData>({
 }: TemplatedNodeConfigurationProps<T>) => {
   return (
     <ModalSection>
-      <ModalSectionContent title="Templates" Icon={StarIcon}>
+      <ModalSectionContent title="Templates" Icon={IconStarFilled}>
         <Typography variant="body2" sx={{ mb: 2 }}>
           This node is in a source template. Configure how it should behave in
           templated flows.

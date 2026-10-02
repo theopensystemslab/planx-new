@@ -1,10 +1,11 @@
-import BarChartIcon from "@mui/icons-material/BarChart";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { IconChartBar } from "@tabler/icons-react";
 import type { ActivityItem } from "hooks/data/useActivityData";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { EmptyState } from "ui/editor/EmptyState";
+import { Icon } from "ui/icons/Icon";
 
 const ServiceList = styled(Box)(({ theme }) => ({
   overflowY: "auto",
@@ -53,7 +54,7 @@ export default function ServiceListWithCount({
         <EmptyState
           size="small"
           title="No activity to show"
-          icon={<BarChartIcon />}
+          icon={<Icon icon={IconChartBar} />}
         />
       </ServiceList>
     );

@@ -1,30 +1,21 @@
 import { styled } from "@mui/material/styles";
 import type { SvgIconProps } from "@mui/material/SvgIcon";
-import SvgIcon from "@mui/material/SvgIcon";
+import { IconChevronDownFilled } from "@tabler/icons-react";
+
+import { Icon } from "./Icon";
 
 interface Props extends SvgIconProps {
   expanded?: boolean;
 }
 
-const Root = styled(SvgIcon, {
+const Root = styled(Icon, {
   shouldForwardProp: (prop) => prop !== "expanded",
 })<Props>(({ expanded }) => ({
-  height: 11,
-  width: 22,
   ...(expanded && {
     transform: "rotate(180deg)",
   }),
 }));
 
 export default function Caret(props: Props) {
-  return (
-    <Root {...props} viewBox="0 0 14 8">
-      <path
-        d="M1 1L7 7L13 1"
-        stroke="currentColor"
-        strokeWidth="1.333px"
-        fill="none"
-      />
-    </Root>
-  );
+  return <Root icon={IconChevronDownFilled} {...props} />;
 }

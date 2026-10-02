@@ -1,4 +1,3 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -7,6 +6,7 @@ import type {
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
+import { IconAlertCircleFilled } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { notFound, useMatches, useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -17,6 +17,7 @@ import type { CreatePaymentRequest } from "lib/api/inviteToPay/requests";
 import { generateInviteToPayRequest } from "lib/api/inviteToPay/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useId } from "react";
+import { Icon } from "ui/icons/Icon";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
@@ -233,7 +234,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
           />
         </InputLabel>
         <WarningContainer aria-labelledby={warningId}>
-          <ErrorOutline />
+          <Icon icon={IconAlertCircleFilled} />
           <Typography
             id={warningId}
             variant="body2"

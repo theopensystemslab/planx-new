@@ -1,7 +1,8 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { BackButton } from "pages/Preview/Questions";
+import { Icon } from "ui/icons/Icon";
 
 /**
  * A presentation-only back button for in-component navigation
@@ -23,7 +24,7 @@ const InternalBackButton: React.FC<{ handleBack: () => void }> = ({
   >
     <Container maxWidth="contentWrap">
       <BackButton onClick={handleBack} hidden={false} variant="link">
-        <ArrowBackIcon fontSize="small" />
+        <Icon icon={IconArrowLeft} fontSize="small" />
         Back
       </BackButton>
     </Container>

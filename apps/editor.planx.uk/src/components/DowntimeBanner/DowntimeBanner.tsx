@@ -1,8 +1,9 @@
-import BrokenImageIcon from "@mui/icons-material/BrokenImage";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { IconPhotoOff } from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
 const DowntimeBannerWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -34,7 +35,7 @@ const DowntimeBanner: React.FC = () => (
           justifyContent: "space-between",
         }}
       >
-        <BrokenImageIcon />
+        <Icon icon={IconPhotoOff} />
         <Typography variant="body2" sx={{ ml: 1 }}>
           <strong>Partial degradation</strong> of some services and features. We
           are actively working on a fix. Please try again soon.

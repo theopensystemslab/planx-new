@@ -1,9 +1,11 @@
-import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
 import type { SelectProps } from "@mui/material/Select";
 import Select, { selectClasses } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
+import type { SvgIconProps } from "@mui/material/SvgIcon";
 import { visuallyHidden } from "@mui/utils";
+import { IconChevronDownFilled } from "@tabler/icons-react";
 import type { ReactNode } from "react";
+import { Icon } from "ui/icons/Icon";
 
 import Input from "../../shared/Input/Input";
 
@@ -42,6 +44,10 @@ const Root = styled(Select)<{ size?: "small" | "default" }>(
       fontSize: size === "small" ? "2rem" : "2.5rem",
     },
   }),
+);
+
+const ArrowIcon = (props: SvgIconProps) => (
+  <Icon icon={IconChevronDownFilled} {...props} />
 );
 
 export default function SelectInput({

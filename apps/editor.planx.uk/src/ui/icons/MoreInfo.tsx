@@ -1,6 +1,8 @@
-import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
+import { IconQuestionMark } from "@tabler/icons-react";
+
+import { Icon } from "./Icon";
 
 export default function MoreInfoIcon() {
   const Root = styled(Box)(({ theme }) => ({
@@ -20,7 +22,8 @@ export default function MoreInfoIcon() {
 
   return (
     <Root data-testid="more-info-icon">
-      <QuestionMarkIcon
+      <Icon
+        icon={IconQuestionMark}
         sx={{
           position: "absolute",
           left: 3,

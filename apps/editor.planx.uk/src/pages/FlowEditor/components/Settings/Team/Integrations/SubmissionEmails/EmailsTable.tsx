@@ -1,5 +1,4 @@
 import { useQuery } from "@apollo/client";
-import CheckIcon from "@mui/icons-material/Check";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -8,10 +7,12 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { IconCheckFilled } from "@tabler/icons-react";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
+import { Icon } from "ui/icons/Icon";
 
 import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
@@ -143,7 +144,9 @@ const EmailsTableContent = () => {
                     {submissionEmail.address}
                   </TableCell>
                   <TableCell align="center">
-                    {submissionEmail.isDefault && <CheckIcon color="primary" />}
+                    {submissionEmail.isDefault && (
+                      <Icon icon={IconCheckFilled} color="primary" />
+                    )}
                   </TableCell>
                   <TableCell>
                     <EditEmailButton

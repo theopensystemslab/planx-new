@@ -1,4 +1,3 @@
-import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
@@ -13,6 +12,7 @@ import {
   usePlanningDataEntityNames,
 } from "@planx/components/shared/hooks";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
+import { IconTrashFilled } from "@tabler/icons-react";
 import type { FormikValues } from "formik";
 import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -22,6 +22,7 @@ import remove from "ramda/src/remove";
 import type { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import { StyledAddButton } from "ui/editor/ListManager/ListManager";
+import { Icon } from "ui/icons/Icon";
 import Input from "ui/shared/Input/Input";
 
 import { partitionGroupedOptions } from "../../../Public/helpers";
@@ -107,7 +108,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
                     size="large"
                     disabled={disabled}
                   >
-                    <Delete />
+                    <Icon icon={IconTrashFilled} />
                   </IconButton>
                 </Tooltip>
               </Box>

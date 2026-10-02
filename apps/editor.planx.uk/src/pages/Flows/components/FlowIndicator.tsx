@@ -1,7 +1,8 @@
-import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { IconStarFilled } from "@tabler/icons-react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 
 interface Props {
   isSourceTemplate: boolean;
@@ -26,7 +27,8 @@ export const FlowIndicator: React.FC<Props> = ({
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>
       {isTemplatedFlow && (
-        <StarIcon
+        <Icon
+          icon={IconStarFilled}
           data-testid="templated-flow-star"
           sx={{ color: "template.icon", fontSize: "1rem" }}
         />

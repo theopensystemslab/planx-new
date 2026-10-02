@@ -1,13 +1,16 @@
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import Chip, { chipClasses } from "@mui/material/Chip";
 import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
+import {
+  IconCircleCheckFilled,
+  IconPencilFilled,
+  IconPlusFilled,
+} from "@tabler/icons-react";
 import React, { useRef } from "react";
-import CheckCircleIcon from "ui/icons/CheckCircle";
+import { Icon } from "ui/icons/Icon";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCard";
@@ -77,8 +80,8 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
   };
 
   const getChangeIcon = () => {
-    if (hasLabels) return <EditIcon />;
-    return <AddIcon />;
+    if (hasLabels) return <Icon icon={IconPencilFilled} />;
+    return <Icon icon={IconPlusFilled} />;
   };
 
   return (
@@ -121,7 +124,7 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
                       label={tag}
                       variant="uploadedFileTag"
                       data-testid="uploaded-file-chip"
-                      icon={<CheckCircleIcon />}
+                      icon={<Icon icon={IconCircleCheckFilled} />}
                       sx={{
                         backgroundColor: "#E6F3E6",
                         color: "text.primary",

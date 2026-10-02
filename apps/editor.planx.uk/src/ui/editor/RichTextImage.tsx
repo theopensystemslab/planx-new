@@ -1,13 +1,13 @@
-import Check from "@mui/icons-material/Check";
-import Error from "@mui/icons-material/Error";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { IconAlertCircleFilled, IconCheckFilled } from "@tabler/icons-react";
 import { Image } from "@tiptap/extension-image";
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
+import { Icon } from "ui/icons/Icon";
 
 const StyledNodeViewWrapper = styled(NodeViewWrapper, {
   shouldForwardProp: (prop) => prop !== "selected",
@@ -68,7 +68,11 @@ const ImageNode: React.FC<NodeViewProps> = ({
       <StyledImg src={src} alt={alt} />
       <AltTextIndicator>
         <IconButton size="small" sx={{ flex: "0 0 auto" }}>
-          {alt ? <Check /> : <Error />}
+          {alt ? (
+            <Icon icon={IconCheckFilled} />
+          ) : (
+            <Icon icon={IconAlertCircleFilled} />
+          )}
         </IconButton>
         <StyledTypography variant="body2">
           {alt ? `Alt text: ${alt}` : "Alt text missing"}

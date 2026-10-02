@@ -1,6 +1,7 @@
-import LabelIcon from "@mui/icons-material/Label";
+import { IconTagFilled } from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import ToggleIconButton from "ui/editor/ToggleIconButton";
+import { Icon } from "ui/icons/Icon";
 
 export const ToggleTagsButton: React.FC = () => {
   const [showTags, toggleShowTags] = useStore((state) => [
@@ -12,7 +13,7 @@ export const ToggleTagsButton: React.FC = () => {
     <ToggleIconButton
       isToggled={showTags}
       onToggle={toggleShowTags}
-      icon={<LabelIcon />}
+      icon={<Icon icon={IconTagFilled} />}
       tooltip="Toggle tags"
       ariaLabel="Toggle tags"
     />

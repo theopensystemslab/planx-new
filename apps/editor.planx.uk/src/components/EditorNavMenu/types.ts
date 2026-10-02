@@ -1,11 +1,12 @@
 import type { Role } from "@opensystemslab/planx-core/types";
 import type React from "react";
+import type { TablerIcon } from "ui/icons/Icon";
 
 type AllUsers = "*";
 
 export interface Route {
   title: string;
-  Icon: React.ElementType;
+  Icon: TablerIcon;
   route: string;
   accessibleBy: Role[] | AllUsers;
   disabled?: boolean;

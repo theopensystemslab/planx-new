@@ -1,4 +1,3 @@
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -9,6 +8,11 @@ import { styled } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import {
+  IconPlayerPlay,
+  IconPlayerPlayFilled,
+  IconRotate,
+} from "@tabler/icons-react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { useDowntimeBanner } from "hooks/data/useDowntimeBanner";
 import { clearLocalFlowIdb } from "lib/local.idb";
@@ -21,8 +25,7 @@ import {
   LINE_HEIGHT_BASE,
 } from "theme";
 import { ApplicationPath } from "types";
-import PlayOutlineIcon from "ui/icons/PlayOutline";
-import Reset from "ui/icons/Reset";
+import { Icon } from "ui/icons/Icon";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
@@ -232,7 +235,7 @@ const PublicToolbar: React.FC<{
                   aria-describedby="restart-application-description"
                   sx={{ "@media print": { color: "black" } }}
                 >
-                  <Reset color="inherit" />
+                  <Icon icon={IconRotate} color="inherit" />
                   <Typography
                     id="restart-application-description"
                     variant="body2"
@@ -286,8 +289,8 @@ const ServiceTitle: React.FC = () => {
           size="medium"
           icon={
             {
-              preview: <PlayArrowIcon fontSize="small" />,
-              draft: <PlayOutlineIcon fontSize="small" />,
+              preview: <Icon icon={IconPlayerPlayFilled} fontSize="small" />,
+              draft: <Icon icon={IconPlayerPlay} fontSize="small" />,
             }[path]
           }
         />

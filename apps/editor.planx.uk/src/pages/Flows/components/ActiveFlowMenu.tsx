@@ -1,9 +1,10 @@
-import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { IconDotsFilled } from "@tabler/icons-react";
 import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
 import SimpleMenu from "ui/editor/SimpleMenu";
+import { Icon } from "ui/icons/Icon";
 
 import { ArchiveDialog } from "./ArchiveDialog";
 import { CopyDialog } from "./CopyDialog";
@@ -116,7 +117,7 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
       {variant === "card" ? (
         <StyledSimpleMenu items={menuItems}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.2 }}>
-            <MoreHoriz sx={{ fontSize: "1.4em" }} />
+            <Icon icon={IconDotsFilled} sx={{ fontSize: "1.4em" }} />
             <Typography variant="body2" sx={{ fontSize: "small" }}>
               <strong>Menu</strong>
             </Typography>

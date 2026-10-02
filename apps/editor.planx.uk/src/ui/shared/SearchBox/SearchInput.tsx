@@ -1,10 +1,10 @@
-import ClearIcon from "@mui/icons-material/Clear";
-import Search from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import type { SxProps, Theme } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
+import { IconSearch, IconXFilled } from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
 import Input from "../Input/Input";
 import InputRow from "../InputRow";
@@ -81,7 +81,8 @@ export const SearchInput = ({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             startAdornment={
-              <Search
+              <Icon
+                icon={IconSearch}
                 sx={{ ml: -0.5, mr: 0.5 }}
                 fontSize={compact ? "small" : "medium"}
               />
@@ -95,7 +96,7 @@ export const SearchInput = ({
               size="small"
               sx={adornmentButtonSx}
             >
-              <ClearIcon fontSize="small" />
+              <Icon icon={IconXFilled} fontSize="small" />
             </IconButton>
           )}
           {isSearching && (

@@ -1,5 +1,3 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Chip, { chipClasses } from "@mui/material/Chip";
@@ -9,11 +7,13 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
+import { IconCircleCheckFilled, IconSelector } from "@tabler/icons-react";
 import { useLoaderData } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { cardBoxShadow, focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 import { CloseButton } from "ui/shared/CloseButton";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
@@ -183,7 +183,10 @@ const TeamSelect: React.FC<Props> = ({ currentTeamSlug, onTeamSelect }) => {
             {currentTeam?.name || "Current team"}
           </Typography>
         </Box>
-        <UnfoldMoreIcon sx={{ color: "text.secondary", fontSize: "1.25rem" }} />
+        <Icon
+          icon={IconSelector}
+          sx={{ color: "text.secondary", fontSize: "1.25rem" }}
+        />
       </StyledButtonBase>
       <Dialog
         open={open}
@@ -254,7 +257,8 @@ const TeamSelect: React.FC<Props> = ({ currentTeamSlug, onTeamSelect }) => {
                         {team.name}
                       </Typography>
                       {team.slug === currentTeamSlug && (
-                        <CheckCircleIcon
+                        <Icon
+                          icon={IconCircleCheckFilled}
                           sx={(theme) => ({
                             color: theme.palette.info.main,
                             fontSize: "1em",
@@ -289,7 +293,8 @@ const TeamSelect: React.FC<Props> = ({ currentTeamSlug, onTeamSelect }) => {
                         {team.name}
                       </Typography>
                       {team.slug === currentTeamSlug && (
-                        <CheckCircleIcon
+                        <Icon
+                          icon={IconCircleCheckFilled}
                           sx={(theme) => ({
                             color: theme.palette.info.main,
                             fontSize: "1em",

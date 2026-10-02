@@ -1,10 +1,10 @@
-import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import type {
   ComponentType as TYPES,
   NodeTag,
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
+import { IconHelpCircleFilled } from "@tabler/icons-react";
 import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
@@ -13,6 +13,7 @@ import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
+import { Icon } from "ui/icons/Icon";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -86,7 +87,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
     },
   });
 
-  const Icon = ICONS[props.type];
+  const componentIcon = ICONS[props.type];
 
   const hasHelpText =
     props.data?.policyRef || props.data?.info || props.data?.howMeasured;
@@ -142,10 +143,14 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               />
             )}
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
-              {Icon && <Icon />}
+              {componentIcon && <Icon icon={componentIcon} />}
               <span>{props.text}</span>
               {showHelpText && hasHelpText && (
-                <Help fontSize="small" sx={{ marginLeft: "auto" }} />
+                <Icon
+                  icon={IconHelpCircleFilled}
+                  fontSize="small"
+                  sx={{ marginLeft: "auto" }}
+                />
               )}
             </Box>
           </Link>

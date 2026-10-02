@@ -1,6 +1,7 @@
-import TurnSharpLeftIcon from "@mui/icons-material/TurnSharpLeft";
 import Box from "@mui/material/Box";
+import { IconArrowSharpTurnLeft } from "@tabler/icons-react";
 import { useExternalPortal } from "hooks/data/useExternalPortal";
+import { Icon } from "ui/icons/Icon";
 
 import { useRecentFlowsContext } from "./RecentFlowsContext";
 import { RecentFlowLinkRoot } from "./styles";
@@ -36,7 +37,11 @@ export const RecentFlowLink: React.FC<Props> = ({
           back to
         </Box>
       ) : (
-        <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
+        <Icon
+          icon={IconArrowSharpTurnLeft}
+          sx={{ mr: 0.25 }}
+          fontSize="small"
+        />
       )}
       <Box
         component="span"

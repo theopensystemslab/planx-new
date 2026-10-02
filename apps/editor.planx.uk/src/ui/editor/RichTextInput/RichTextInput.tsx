@@ -1,9 +1,11 @@
-import Check from "@mui/icons-material/Check";
-import Close from "@mui/icons-material/Close";
-import Delete from "@mui/icons-material/Delete";
-import LinkIcon from "@mui/icons-material/Link";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import {
+  IconCheckFilled,
+  IconLinkFilled,
+  IconTrashFilled,
+  IconXFilled,
+} from "@tabler/icons-react";
 import type { EditorOptions } from "@tiptap/core";
 import { type Editor } from "@tiptap/core";
 import Mention from "@tiptap/extension-mention";
@@ -11,6 +13,7 @@ import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
 import type { ChangeEvent } from "react";
 import { type FC, useCallback, useEffect, useRef, useState } from "react";
+import { Icon } from "ui/icons/Icon";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Input from "../../shared/Input/Input";
@@ -230,7 +233,7 @@ const RichTextInput: FC<Props> = (props) => {
                   setAddingLink(null);
                 }}
               >
-                <Check />
+                <Icon icon={IconCheckFilled} />
               </IconButton>
               <IconButton
                 size="small"
@@ -240,7 +243,7 @@ const RichTextInput: FC<Props> = (props) => {
                   setAddingLink(null);
                 }}
               >
-                <Delete />
+                <Icon icon={IconTrashFilled} />
               </IconButton>
               <IconButton
                 size="small"
@@ -248,7 +251,7 @@ const RichTextInput: FC<Props> = (props) => {
                   setAddingLink(null);
                 }}
               >
-                <Close />
+                <Icon icon={IconXFilled} />
               </IconButton>
             </Box>
             <Box
@@ -299,7 +302,7 @@ const RichTextInput: FC<Props> = (props) => {
                   }
                 }}
               >
-                <LinkIcon />
+                <Icon icon={IconLinkFilled} />
               </IconButton>
             </Box>
           </StyledBubbleMenu>

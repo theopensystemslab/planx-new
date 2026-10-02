@@ -1,8 +1,3 @@
-import Cancel from "@mui/icons-material/Cancel";
-import Close from "@mui/icons-material/Close";
-import Done from "@mui/icons-material/Done";
-import NotInterested from "@mui/icons-material/NotInterested";
-import WarningAmber from "@mui/icons-material/WarningAmber";
 import Accordion, { accordionClasses } from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -13,11 +8,19 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import {
+  IconAlertTriangleFilled,
+  IconBan,
+  IconCheckFilled,
+  IconCircleCheckFilled,
+  IconCircleXFilled,
+  IconXFilled,
+} from "@tabler/icons-react";
 import type { ValidationCheck } from "lib/api/publishFlow/types";
 import countBy from "lodash/countBy";
 import { useState } from "react";
 import Caret from "ui/icons/Caret";
-import CheckCircleIcon from "ui/icons/CheckCircle";
+import { Icon } from "ui/icons/Icon";
 
 export const PublishModalAccordion = styled(Accordion)(({ theme }) => ({
   width: "100%",
@@ -56,11 +59,11 @@ export const ValidationChecks = (props: {
   const { validationChecks, expandedByDefault } = props;
   const [expanded, setExpanded] = useState(expandedByDefault);
 
-  const Icon: Record<ValidationCheck["status"], React.ReactElement> = {
-    Pass: <Done color="success" />,
-    Fail: <Close color="error" />,
-    Warn: <WarningAmber color="warning" />,
-    "Not applicable": <NotInterested color="disabled" />,
+  const statusIcons: Record<ValidationCheck["status"], React.ReactElement> = {
+    Pass: <Icon icon={IconCheckFilled} color="success" />,
+    Fail: <Icon icon={IconXFilled} color="error" />,
+    Warn: <Icon icon={IconAlertTriangleFilled} color="warning" />,
+    "Not applicable": <Icon icon={IconBan} color="disabled" />,
   };
 
   return (
@@ -88,7 +91,7 @@ export const ValidationChecks = (props: {
                 }}
               >
                 <ListItemIcon sx={{ minWidth: (theme) => theme.spacing(4) }}>
-                  {Icon[check.status]}
+                  {statusIcons[check.status]}
                 </ListItemIcon>
                 <ListItemText
                   primary={
@@ -169,9 +172,9 @@ const ValidationSummary = (props: { validationChecks: ValidationCheck[] }) => {
       }}
     >
       {atLeastOneFail ? (
-        <Cancel color="error" fontSize="large" />
+        <Icon icon={IconCircleXFilled} color="error" fontSize="large" />
       ) : (
-        <CheckCircleIcon color="success" fontSize="large" />
+        <Icon icon={IconCircleCheckFilled} color="success" fontSize="large" />
       )}
       <Typography
         variant="body1"

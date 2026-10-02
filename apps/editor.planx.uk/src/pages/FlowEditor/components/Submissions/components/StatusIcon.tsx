@@ -1,6 +1,9 @@
-import CancelIcon from "@mui/icons-material/Cancel";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import PendingIcon from "@mui/icons-material/Pending";
+import {
+  IconCircleCheckFilled,
+  IconCircleXFilled,
+  IconDotsCircleHorizontal,
+} from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
 import type { Submission } from "../types";
 
@@ -12,20 +15,42 @@ const StatusIconMap: Record<
   NonNullable<Submission["status"]>,
   React.ReactElement
 > = {
-  Success: <CheckCircleIcon color="success" fontSize="medium" />,
-  Submitted: <CheckCircleIcon color="success" fontSize="medium" />,
-  Failed: <CancelIcon color="error" fontSize="medium" />,
-  "Failed (500)": <CancelIcon color="error" fontSize="medium" />,
-  "Failed (502)": <CancelIcon color="error" fontSize="medium" />,
-  "Failed (503)": <CancelIcon color="error" fontSize="medium" />,
-  "Failed (504)": <CancelIcon color="error" fontSize="medium" />,
-  "Failed (400)": <CancelIcon color="error" fontSize="medium" />,
-  "Failed (401)": <CancelIcon color="error" fontSize="medium" />,
-  Started: <PendingIcon color="info" fontSize="medium" />,
-  Capturable: <PendingIcon color="warning" fontSize="medium" />,
-  Cancelled: <CancelIcon color="disabled" fontSize="medium" />,
-  Error: <CancelIcon color="error" fontSize="medium" />,
-  Unknown: <CancelIcon color="error" fontSize="medium" />,
+  Success: (
+    <Icon icon={IconCircleCheckFilled} color="success" fontSize="medium" />
+  ),
+  Submitted: (
+    <Icon icon={IconCircleCheckFilled} color="success" fontSize="medium" />
+  ),
+  Failed: <Icon icon={IconCircleXFilled} color="error" fontSize="medium" />,
+  "Failed (500)": (
+    <Icon icon={IconCircleXFilled} color="error" fontSize="medium" />
+  ),
+  "Failed (502)": (
+    <Icon icon={IconCircleXFilled} color="error" fontSize="medium" />
+  ),
+  "Failed (503)": (
+    <Icon icon={IconCircleXFilled} color="error" fontSize="medium" />
+  ),
+  "Failed (504)": (
+    <Icon icon={IconCircleXFilled} color="error" fontSize="medium" />
+  ),
+  "Failed (400)": (
+    <Icon icon={IconCircleXFilled} color="error" fontSize="medium" />
+  ),
+  "Failed (401)": (
+    <Icon icon={IconCircleXFilled} color="error" fontSize="medium" />
+  ),
+  Started: (
+    <Icon icon={IconDotsCircleHorizontal} color="info" fontSize="medium" />
+  ),
+  Capturable: (
+    <Icon icon={IconDotsCircleHorizontal} color="warning" fontSize="medium" />
+  ),
+  Cancelled: (
+    <Icon icon={IconCircleXFilled} color="disabled" fontSize="medium" />
+  ),
+  Error: <Icon icon={IconCircleXFilled} color="error" fontSize="medium" />,
+  Unknown: <Icon icon={IconCircleXFilled} color="error" fontSize="medium" />,
 };
 
 export const StatusIcon: React.FC<Props> = ({ status }) => {

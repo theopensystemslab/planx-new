@@ -1,4 +1,3 @@
-import Warning from "@mui/icons-material/WarningOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
@@ -7,9 +6,11 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
+import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import type { ReconciliationResponse } from "lib/api/saveAndReturn/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
+import { Icon } from "ui/icons/Icon";
 import Banner from "ui/public/Banner";
 
 interface Props {
@@ -74,7 +75,8 @@ const ReconciliationPage: React.FC<Props> = ({
         {/* Only show a warning if the content change has affected the user's path */}
         {reconciliationResponse.changesFound && (
           <Box sx={{ display: "flex", mb: 4 }}>
-            <Warning
+            <Icon
+              icon={IconAlertTriangleFilled}
               titleAccess="Warning"
               color="primary"
               fontSize="large"

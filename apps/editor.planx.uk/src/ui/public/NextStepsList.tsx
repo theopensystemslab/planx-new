@@ -1,4 +1,3 @@
-import EastIcon from "@mui/icons-material/East";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Link from "@mui/material/Link";
@@ -6,9 +5,11 @@ import type { Theme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Step as StyledListItem } from "@planx/components/NextSteps/model";
+import { IconArrowRight } from "@tabler/icons-react";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import type { HandleSubmit } from "pages/Preview/Node";
 import { useState } from "react";
+import { Icon } from "ui/icons/Icon";
 
 interface NextStepsListProps {
   steps: StyledListItem[];
@@ -129,7 +130,7 @@ const Step = ({ title, description, url }: ListItemProps) => (
       </Typography>
     </Box>
     <ArrowButton className="arrowButton">
-      <EastIcon />
+      <Icon icon={IconArrowRight} />
     </ArrowButton>
   </>
 );
