@@ -46,6 +46,7 @@ function hasInitiatedGovPayPayment(
 }
 
 const STRIPE_INITIATED_STATUSES: StripePaymentStatus[] = [
+  "initiated",
   "created",
   "processing",
   "succeeded",

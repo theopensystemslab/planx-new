@@ -6,8 +6,10 @@ import type { FeeBreakdown, Session } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
+import { reportError } from "../../pay/helpers.js";
 import { stripe } from "../client.js";
 import { getStripeId } from "../helpers.js";
+import { insertStripePaymentStatus } from "../webhook/paymentStatus/service.js";
 import { buildLineItems } from "./lineItems.js";
 import type {
   CheckoutSessionStatusResponse,
@@ -101,7 +103,51 @@ export const createStripeCheckoutSession = async ({
     },
   });
 
+  await recordInitiatedPayment({
+    checkoutSessionId: session.id,
+    flowId,
+    sessionId,
+    teamSlug,
+    amount: session.amount_total ?? amount,
+    feeBreakdown,
+    metadata: paymentMetadata,
+  });
+
   return { url: session.url };
+};
+
+/**
+ * Record that the applicant has been sent to Stripe, so that returning to their session skips reconciliation
+ *
+ * Stripe only creates a PaymentIntent (and fires payment_intent.* webhooks) once Checkout is confirmed,
+ * so without this an applicant who cancels or abandons Checkout has no payment_status row at all
+ *
+ * Failing to record this must not block payment - the applicant would just see reconciliation on return
+ */
+const recordInitiatedPayment = async ({
+  checkoutSessionId,
+  ...args
+}: {
+  checkoutSessionId: string;
+  flowId: string;
+  sessionId: string;
+  teamSlug: string;
+  amount: number;
+  feeBreakdown: FeeBreakdown | null;
+  metadata: Record<string, string>;
+}): Promise<void> => {
+  try {
+    await insertStripePaymentStatus({
+      ...args,
+      stripePaymentId: checkoutSessionId,
+      stripeStatus: "initiated",
+    });
+  } catch (error) {
+    reportError({
+      error: `Could not record initiated Stripe payment for Checkout Session ${checkoutSessionId}: ${error}`,
+      context: { sessionId: args.sessionId },
+    });
+  }
 };
 
 export const getStripeCheckoutSessionStatus = async (
