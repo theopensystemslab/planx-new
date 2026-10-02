@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
+import { roleContext } from "lib/graphql/contexts";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { Subscription } from "pages/FlowEditor/components/Subscription/Subscription";
 import type { ServiceCharge } from "pages/FlowEditor/components/Subscription/types";
@@ -46,11 +47,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
       `,
       variables: { teamSlug: params.team },
       fetchPolicy: "no-cache",
-      context: {
-        headers: {
-          "x-hasura-role": role,
-        },
-      },
+      context: roleContext(role),
     });
 
     return {

@@ -1,5 +1,6 @@
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
+import { publicContext } from "lib/graphql/contexts";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { Flow, GlobalSettings } from "types";
 
@@ -59,7 +60,7 @@ export const fetchDataForStandaloneView = async (
         flowSlug,
         teamSlug,
       },
-      context: { role: "public" },
+      context: publicContext,
     });
 
     if (!result.data.flows.length) {

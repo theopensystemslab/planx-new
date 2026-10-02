@@ -1,6 +1,7 @@
 import { notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
+import { publicContext } from "lib/graphql/contexts";
 import type { Flow, GlobalSettings } from "types";
 
 export interface PublishedFlow extends Flow {
@@ -27,7 +28,7 @@ export const fetchSettingsForPublishedView = async (
         flowSlug,
         teamSlug,
       },
-      context: { role: "public" },
+      context: publicContext,
     });
     return result.data;
   } catch (error) {

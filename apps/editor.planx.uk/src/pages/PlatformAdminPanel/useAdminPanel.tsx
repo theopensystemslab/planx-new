@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { roleContext } from "lib/graphql/contexts";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { AdminPanelData } from "types";
 
@@ -16,10 +17,6 @@ export const useAdminPanel = () => {
       : STAGING_ADMIN_PANEL_QUERY;
 
   return useQuery<{ adminPanel: AdminPanelData[] }>(query, {
-    context: {
-      headers: {
-        "x-hasura-role": isPlatformAdmin ? "platformAdmin" : "analyst",
-      },
-    },
+    context: roleContext(isPlatformAdmin ? "platformAdmin" : "analyst"),
   });
 };

@@ -1,6 +1,7 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import type { Role, User } from "@opensystemslab/planx-core/types";
 import { useToast } from "hooks/useToast";
+import { roleContext } from "lib/graphql/contexts";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect, useState } from "react";
 
@@ -38,12 +39,6 @@ export const useAddUserModal = ({
     state.teamId,
     state.teamSlug,
   ]);
-
-  const roleContext = {
-    headers: {
-      "x-hasura-role": userRole,
-    },
-  };
 
   const toast = useToast();
 
@@ -97,7 +92,7 @@ export const useAddUserModal = ({
     refetchQueries: [
       { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
     ],
-    context: roleContext,
+    context: roleContext(userRole),
   });
 
   const [assignAdmin, { loading: assignLoadingAdmin }] = useMutation<
@@ -114,7 +109,7 @@ export const useAddUserModal = ({
     refetchQueries: [
       { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
     ],
-    context: roleContext,
+    context: roleContext(userRole),
   });
 
   const [createTeamEditor, { loading: createEditorLoading }] = useMutation(
@@ -125,7 +120,7 @@ export const useAddUserModal = ({
       refetchQueries: [
         { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
       ],
-      context: roleContext,
+      context: roleContext(userRole),
     },
   );
 
@@ -138,7 +133,7 @@ export const useAddUserModal = ({
       refetchQueries: [
         { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
       ],
-      context: roleContext,
+      context: roleContext(userRole),
     },
   );
 
@@ -152,7 +147,7 @@ export const useAddUserModal = ({
     if (step.stage === "confirm-existing" && values.role === "teamEditor") {
       assignEditor({
         variables: { userId: step.existingUser.id, teamId },
-        context: roleContext,
+        context: roleContext(userRole),
       });
       return;
     }
@@ -160,7 +155,7 @@ export const useAddUserModal = ({
     if (step.stage === "confirm-existing" && values.role === "teamAdmin") {
       assignAdmin({
         variables: { userId: step.existingUser.id, teamId },
-        context: roleContext,
+        context: roleContext(userRole),
       });
       return;
     }
@@ -168,14 +163,14 @@ export const useAddUserModal = ({
     if (step.stage === "create-new" && values.role === "teamEditor") {
       createTeamEditor({
         variables: { ...values, email, teamId },
-        context: roleContext,
+        context: roleContext(userRole),
       });
     }
 
     if (step.stage === "create-new" && values.role === "teamAdmin") {
       createTeamAdmin({
         variables: { ...values, email, teamId },
-        context: roleContext,
+        context: roleContext(userRole),
       });
     }
   };
