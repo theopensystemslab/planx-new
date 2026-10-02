@@ -8,7 +8,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import {
-  IconBrandGithubFilled,
+  IconBrandGithub,
   IconCircleCheckFilled,
   IconSelector,
 } from "@tabler/icons-react";
@@ -142,7 +142,7 @@ const EnvironmentSelect: React.FC = () => {
         {pizzaPullRequestNumber ? (
           <>
             <Icon
-              icon={IconBrandGithubFilled}
+              icon={IconBrandGithub}
               fontSize="small"
               sx={{ mr: 0.5 }}
             />
