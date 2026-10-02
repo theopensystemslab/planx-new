@@ -1,9 +1,9 @@
-import type { DefaultContext } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { Session } from "types";
 
 import { client } from "./graphql";
+import { sessionContext } from "./graphql/contexts";
 
 let current: string | null;
 
@@ -149,19 +149,8 @@ export const stringifyWithRootKeysSortedAlphabetically = (
       ),
   );
 
-/**
- * Generate context for GraphQL client Save & Return requests
- * Hasura "Public" role users need the sessionId and email for lowcal_sessions access
- */
-const getSessionContext = (sessionId: string): DefaultContext => ({
-  role: "public",
-  headers: {
-    "x-hasura-lowcal-session-id": sessionId,
-    "x-hasura-lowcal-email":
-      // email may be absent for non save and return journeys
-      useStore.getState().saveToEmail?.toLowerCase() || "",
-  },
-});
+const getSessionContext = (sessionId: string) =>
+  sessionContext({ sessionId, email: useStore.getState().saveToEmail });
 
 /**
  * Get sessionId from the key used for lowcalStorage

@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { publicContext } from "lib/graphql/contexts";
 
 const FETCH_BLPU_CODES = gql`
   query FetchBLPUCodes {
@@ -18,5 +19,5 @@ export interface BLPUCode {
 
 export const useBLPUCodes = () =>
   useQuery<{ blpuCodes: BLPUCode[] }>(FETCH_BLPU_CODES, {
-    context: { role: "public" },
+    context: publicContext,
   });

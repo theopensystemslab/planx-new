@@ -1,5 +1,6 @@
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
+import { paymentRequestContext } from "lib/graphql/contexts";
 import { getRetentionPeriod } from "lib/pay";
 
 export const getPaymentRequest = async (
@@ -37,12 +38,7 @@ export const getPaymentRequest = async (
         id: paymentRequestId,
         retentionPeriod: getRetentionPeriod(),
       },
-      context: {
-        role: "public",
-        headers: {
-          "x-hasura-payment-request-id": paymentRequestId,
-        },
-      },
+      context: paymentRequestContext(paymentRequestId),
     });
     return paymentRequest;
   } catch (error) {

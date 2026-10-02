@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { publicContext } from "lib/graphql/contexts";
 import type { PaymentProvider } from "pages/FlowEditor/components/Settings/Team/Payment/Provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 
@@ -27,7 +28,7 @@ export const usePaymentProvider = () => {
       variables: { teamId },
       fetchPolicy: "cache-and-network",
       // Required for applicants on public routes, who have no JWT
-      context: { role: "public" },
+      context: publicContext,
     },
   );
 

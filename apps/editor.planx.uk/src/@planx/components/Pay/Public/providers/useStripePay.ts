@@ -1,7 +1,7 @@
 import { formatStripeMetadata } from "@opensystemslab/planx-core";
 import type { Passport as IPassport } from "@opensystemslab/planx-core/types";
 import { useQuery } from "@tanstack/react-query";
-import { useSearch } from "@tanstack/react-router";
+import { useMatches, useSearch } from "@tanstack/react-router";
 import {
   createStripeCheckoutSession,
   getStripeCheckoutSessionStatus,
@@ -9,6 +9,7 @@ import {
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 import { useErrorBoundary } from "react-error-boundary";
+import type { FileRouteTypes } from "routeTree.gen";
 import { ApplicationPath } from "types";
 import { z } from "zod";
 
@@ -42,6 +43,12 @@ const getStripeReturnURL = (): string => {
 // Only ever redirect applicants to Stripe's hosted Checkout
 const STRIPE_CHECKOUT_ORIGIN = "https://checkout.stripe.com" as const;
 
+// Payments are only taken on published services - never on /draft or /preview test links
+const TEST_ENVIRONMENT_ROUTE_IDS = new Set<string>([
+  "/_public/_planXDomain/$team/$flow/draft",
+  "/_public/_planXDomain/$team/$flow/preview",
+] satisfies FileRouteTypes["id"][]);
+
 const isStripeNotConfiguredError = (error: unknown) =>
   z.object({ statusCode: z.literal(409) }).safeParse(error).success;
 
@@ -71,6 +78,10 @@ export function useStripePay(
 
   const { showBoundary } = useErrorBoundary();
 
+  const isTestEnvironment = useMatches().some(({ routeId }) =>
+    TEST_ENVIRONMENT_ROUTE_IDS.has(routeId),
+  );
+
   const search = useSearch({ strict: false });
   const stripeSessionId = search?.stripeSessionId;
   const wasCancelled = Boolean(search?.cancelled);
@@ -85,7 +96,10 @@ export function useStripePay(
         checkoutSessionId: stripeSessionId!,
       }),
     enabled:
-      environment === "standalone" && Boolean(stripeSessionId) && !wasCancelled,
+      environment === "standalone" &&
+      !isTestEnvironment &&
+      Boolean(stripeSessionId) &&
+      !wasCancelled,
     refetchInterval: (query) =>
       query.state.data?.paymentStatus === "paid" ? false : 3000,
   });
@@ -109,6 +123,12 @@ export function useStripePay(
     // Skip the redirect when viewing in the Editor or using Pay in info-only mode
     if (environment !== "standalone" || props.hidePay) {
       handleSuccess();
+      return;
+    }
+
+    // Show the "skip payment and continue testing" error on test links
+    if (isTestEnvironment) {
+      dispatch(Action.StartNewPaymentError);
       return;
     }
 

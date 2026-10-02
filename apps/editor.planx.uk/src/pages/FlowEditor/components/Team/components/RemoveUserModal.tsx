@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
+import { roleContext } from "lib/graphql/contexts";
 
 import { REMOVE_TEAM_MEMBER } from "../queries";
 import type { RemoveUserModalProps } from "../types";
@@ -17,11 +18,7 @@ export const RemoveUserModal: React.FC<RemoveUserModalProps> = ({
   const toast = useToast();
 
   const [removeUser, { loading }] = useMutation(REMOVE_TEAM_MEMBER, {
-    context: {
-      headers: {
-        "x-hasura-role": userRole,
-      },
-    },
+    context: roleContext(userRole),
     onCompleted: () => {
       onClose();
       toast.success(

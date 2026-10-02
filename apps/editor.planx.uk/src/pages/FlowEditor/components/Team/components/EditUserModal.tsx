@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import type { TeamRole } from "@opensystemslab/planx-core/types";
 import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
+import { roleContext } from "lib/graphql/contexts";
 import { useStore } from "pages/FlowEditor/lib/store";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
@@ -48,11 +49,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
           variables: { teamSlug: useStore.getState().teamSlug },
         },
       ],
-      context: {
-        headers: {
-          "x-hasura-role": userRole,
-        },
-      },
+      context: roleContext(userRole),
       onCompleted: () => handleCompleted("Successfully updated a user"),
       onError: () => toast.error("Failed to update the user, please try again"),
     },
@@ -67,11 +64,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
           variables: { teamSlug: useStore.getState().teamSlug },
         },
       ],
-      context: {
-        headers: {
-          "x-hasura-role": userRole,
-        },
-      },
+      context: roleContext(userRole),
       onCompleted: () => handleCompleted("Successfully updated a user"),
       onError: () => toast.error("Failed to update the user, please try again"),
     },
@@ -86,11 +79,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
           variables: { teamSlug: useStore.getState().teamSlug },
         },
       ],
-      context: {
-        headers: {
-          "x-hasura-role": userRole,
-        },
-      },
+      context: roleContext(userRole),
       onCompleted: (data) => {
         if (data.deleteTeamMembers.affected_rows > 0) {
           handleCompleted("Successfully updated a user");

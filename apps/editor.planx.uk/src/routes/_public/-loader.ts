@@ -1,6 +1,7 @@
 import { notFound, redirect } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
+import { publicContext } from "lib/graphql/contexts";
 
 type LoaderArgs = {
   params: {
@@ -52,7 +53,7 @@ export const getTeamFromDomain = async (
     variables: {
       domain,
     },
-    context: { role: "public" },
+    context: publicContext,
   });
 
   return teams?.[0]?.slug;

@@ -1,4 +1,5 @@
 import { client } from "lib/graphql";
+import { publicContext } from "lib/graphql/contexts";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { type Store, useStore } from "pages/FlowEditor/lib/store";
 import type { PublicContext } from "routes/_public/-loader";
@@ -206,7 +207,7 @@ export const prefetchPublishedFlowData = ({
     .query({
       query: GET_PUBLISHED_FLOW_DATA,
       variables: { flowId: context.flow.id },
-      context: { role: "public" },
+      context: publicContext,
     })
     .then(({ data }) => {
       updateStoreWithFlowData(data.publishedFlows[0].data);

@@ -9,8 +9,8 @@ import {
   alterDrawGeoJson,
   checkGeoJsonContent,
   checkUploadFileAltRoute,
+  deleteAllPoints,
   getMapProperties,
-  resetMapBoundary,
   waitForMapComponent,
 } from "./helpers/geospatialChecks.js";
 import {
@@ -218,7 +218,7 @@ test.describe("Flow creation, publish and preview", () => {
     // ensure map has loaded correctly
     await waitForMapComponent(page);
 
-    await resetMapBoundary(page);
+    await deleteAllPoints(page);
 
     await alterDrawGeoJson(page);
 

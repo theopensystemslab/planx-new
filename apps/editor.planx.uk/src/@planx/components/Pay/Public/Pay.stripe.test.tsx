@@ -1,5 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { useSearch } from "@tanstack/react-router";
+import { useMatches, useSearch } from "@tanstack/react-router";
 import { act, screen, waitFor } from "@testing-library/react";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { graphql, http, HttpResponse } from "msw";
@@ -83,6 +83,9 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
   afterEach(() => {
     vi.clearAllMocks();
     vi.mocked(useSearch).mockReturnValue({});
+    vi.mocked(useMatches).mockReturnValue([
+      { routeId: "_customDomain/$flow" },
+    ] as never);
     act(() => setState(initialState));
   });
 
@@ -339,6 +342,56 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
         if (originalLocation)
           Object.defineProperty(window, "location", originalLocation);
       }
+    },
+  );
+
+  it.each([
+    "/_public/_planXDomain/$team/$flow/draft",
+    "/_public/_planXDomain/$team/$flow/preview",
+  ])(
+    "does not create a Checkout Session on a test link (%s)",
+    async (routeId) => {
+      vi.mocked(useMatches).mockReturnValue([{ routeId }] as never);
+
+      const createCheckoutSession = vi.fn(() =>
+        HttpResponse.json({ url: "https://checkout.stripe.com/c/pay/cs_test" }),
+      );
+      server.use(http.post(checkoutSessionUrl, createCheckoutSession));
+
+      const handleSubmit = vi.fn();
+
+      act(() =>
+        setState({
+          flow: flowWithFee,
+          breadcrumbs: feeBreadcrumbs,
+          previewEnvironment: "standalone",
+          teamSlug: "test-team",
+        }),
+      );
+
+      const { user } = await setup(
+        <AppErrorBoundary>
+          <Pay
+            title="Pay"
+            fn="application.fee.payable"
+            handleSubmit={handleSubmit}
+            govPayMetadata={[]}
+          />
+        </AppErrorBoundary>,
+      );
+
+      await user.click(await screen.findByText("Pay now"));
+
+      expect(
+        await screen.findByText(
+          "Click continue to skip payment and continue testing.",
+        ),
+      ).toBeInTheDocument();
+      expect(createCheckoutSession).not.toHaveBeenCalled();
+
+      // Testers can skip payment and carry on through the flow
+      await user.click(screen.getByText("Continue"));
+      expect(handleSubmit).toHaveBeenCalled();
     },
   );
 
