@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@opensystemslab/map':
-      specifier: 1.0.0-alpha.15
-      version: 1.0.0-alpha.15
+      specifier: 1.0.0-alpha.17
+      version: 1.0.0-alpha.17
     '@opensystemslab/planx-core':
       specifier: github:theopensystemslab/planx-core#0117bbfc9cd5c2d25c62855cddcdda1e70f9d437
       version: 1.0.0
@@ -460,7 +460,7 @@ importers:
         version: 9.12.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@mui/system@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@opensystemslab/map':
         specifier: 'catalog:'
-        version: 1.0.0-alpha.15(geotiff@3.0.5)
+        version: 1.0.0-alpha.17(geotiff@3.0.5)
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0117bbfc9cd5c2d25c62855cddcdda1e70f9d437(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -846,7 +846,7 @@ importers:
         version: 2.0.1(nanostores@1.5.2)(react@19.2.8)
       '@opensystemslab/map':
         specifier: 'catalog:'
-        version: 1.0.0-alpha.15(geotiff@3.0.5)
+        version: 1.0.0-alpha.17(geotiff@3.0.5)
       '@planx/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -3272,8 +3272,8 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
-  '@opensystemslab/map@1.0.0-alpha.15':
-    resolution: {integrity: sha512-Z0feONs1+P6LIn04wxFdwHaKfJkqSpo3bHe0Nr43g50gq2dqnCT2KKxkXCwY4zUKnV6duFYPqAK1KD/kjzSs/w==}
+  '@opensystemslab/map@1.0.0-alpha.17':
+    resolution: {integrity: sha512-4XKq8pGwSi1GLqybaQXwlLGPciYbcV2lnRpAkxZnuD8V++2l6Nge9E+50fJdv6MN2HfLNveFZDlFadflhMwQPg==}
 
   '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0117bbfc9cd5c2d25c62855cddcdda1e70f9d437':
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0117bbfc9cd5c2d25c62855cddcdda1e70f9d437}
@@ -9495,8 +9495,8 @@ packages:
   raf@3.4.1:
     resolution: {integrity: sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==}
 
-  rambda@11.2.0:
-    resolution: {integrity: sha512-Shzc8LTC+rhgDYddMEaTYhAo/U6kdp25/6dOymrCRyK3R9vVmt4a0Rl6zFtGEzh0dWYxTgrH3uff53RTzn1Rwg==}
+  rambda@11.3.0:
+    resolution: {integrity: sha512-hNG+ey9JWshT258tCGY7F/uMHzxHkg5hqCnh0FPTLLr8hdfrQjccKPPR4D5xmw84b243KlJHb1n6jl4+M/VvjQ==}
 
   ramda@0.29.1:
     resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
@@ -13607,7 +13607,7 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@opensystemslab/map@1.0.0-alpha.15(geotiff@3.0.5)':
+  '@opensystemslab/map@1.0.0-alpha.17(geotiff@3.0.5)':
     dependencies:
       '@turf/helpers': 7.4.0
       '@turf/union': 7.4.0
@@ -13622,7 +13622,7 @@ snapshots:
       ol-mapbox-style: 13.4.3(ol@10.10.0)
       postcode: 5.1.0
       proj4: 2.21.0(geotiff@3.0.5)
-      rambda: 11.2.0
+      rambda: 11.3.0
     transitivePeerDependencies:
       - geotiff
       - preact
@@ -20614,7 +20614,7 @@ snapshots:
       performance-now: 2.1.0
     optional: true
 
-  rambda@11.2.0: {}
+  rambda@11.3.0: {}
 
   ramda@0.29.1: {}
 

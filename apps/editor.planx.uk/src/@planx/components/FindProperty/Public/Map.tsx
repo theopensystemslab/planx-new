@@ -169,7 +169,6 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
                   properties: {},
                 }
               }
-              resetControlImage="trash"
               showScale
               showNorthArrow
               showOSSearch
