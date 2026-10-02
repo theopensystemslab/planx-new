@@ -21,8 +21,6 @@ export interface CreateStripeCheckoutSession {
   flowId: string;
   /** Fee in pence */
   amount: number;
-  /** The public route the applicant is paying from - the API builds the return URL from this */
-  returnTo: "published" | "preview" | "draft";
   metadata: Record<string, string>;
 }
 

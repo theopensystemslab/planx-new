@@ -2,12 +2,10 @@ import { formatStripeMetadata } from "@opensystemslab/planx-core";
 import type { Passport as IPassport } from "@opensystemslab/planx-core/types";
 import { useQuery } from "@tanstack/react-query";
 import { useMatches, useSearch } from "@tanstack/react-router";
-import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import {
   createStripeCheckoutSession,
   getStripeCheckoutSessionStatus,
 } from "lib/api/stripe/requests";
-import type { CreateStripeCheckoutSession } from "lib/api/stripe/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 import { useErrorBoundary } from "react-error-boundary";
@@ -23,14 +21,6 @@ import {
   PAYMENT_REFERENCE_PASSPORT_KEY,
   type UsePaymentProviderResult,
 } from "./types";
-
-const getReturnTo = (
-  route: ReturnType<typeof usePublicRouteContext>,
-): CreateStripeCheckoutSession["returnTo"] => {
-  if (route === "/$team/$flow/preview") return "preview";
-  if (route === "/$team/$flow/draft") return "draft";
-  return "published";
-};
 
 // Only ever redirect applicants to Stripe's hosted Checkout
 const STRIPE_CHECKOUT_ORIGIN = "https://checkout.stripe.com" as const;
@@ -69,7 +59,6 @@ export function useStripePay(
   });
 
   const { showBoundary } = useErrorBoundary();
-  const publicRoute = usePublicRouteContext();
 
   const isTestEnvironment = useMatches().some(({ routeId }) =>
     TEST_ENVIRONMENT_ROUTE_IDS.has(routeId),
@@ -131,7 +120,6 @@ export function useStripePay(
         sessionId,
         flowId,
         amount: toPence(fee),
-        returnTo: getReturnTo(publicRoute),
         metadata,
       });
 

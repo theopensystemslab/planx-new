@@ -3,11 +3,7 @@ import {
   getTeamBySlug,
   isAccountReadyForPayments,
 } from "../connect/service.js";
-import {
-  buildReturnURL,
-  getFlowURL,
-  getReturnURLContext,
-} from "./returnURL.js";
+import { buildReturnURL, getReturnURLContext } from "./returnURL.js";
 import type {
   ResolveReturnURLMiddleware,
   ResolveTeamPaymentProviderMiddleware,
@@ -64,7 +60,7 @@ export const resolveReturnURL: ResolveReturnURLMiddleware = async (
   next,
 ) => {
   const { localAuthority } = res.locals.parsedReq.params;
-  const { flowId, sessionId, returnTo } = res.locals.parsedReq.body;
+  const { flowId, sessionId } = res.locals.parsedReq.body;
 
   try {
     const { flow, session } = await getReturnURLContext(flowId, sessionId);
@@ -83,11 +79,7 @@ export const resolveReturnURL: ResolveReturnURLMiddleware = async (
       });
     }
 
-    res.locals.returnURL = buildReturnURL(
-      getFlowURL(returnTo, flow),
-      sessionId,
-      session?.email,
-    );
+    res.locals.returnURL = buildReturnURL(flow, sessionId, session?.email);
 
     return next();
   } catch (error) {

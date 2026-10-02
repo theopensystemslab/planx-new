@@ -50,7 +50,6 @@ const validBody = {
   sessionId: "f2d8ca1d-a43b-43ec-b3d9-a9fec63ff19c",
   flowId: "7cd1c4b4-4229-424f-8d04-c9fdc958ef4e",
   amount: 14500,
-  returnTo: "published",
   metadata: defaultMetadata,
 };
 
@@ -464,22 +463,6 @@ describe("creating a Stripe Checkout Session", () => {
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
-  it.each([
-    ["preview", "https://www.example.com/southwark/apply/preview"],
-    ["draft", "https://www.example.com/southwark/apply/draft"],
-  ])("returns to the %s route", async (returnTo, expectedURL) => {
-    await supertest(app)
-      .post("/stripe/checkout-session/southwark")
-      .send({ ...validBody, returnTo })
-      .expect(200);
-
-    const { success_url, cancel_url } = mockCreate.mock.calls[0][0];
-    expect(success_url).toBe(
-      `${expectedURL}?stripeSessionId={CHECKOUT_SESSION_ID}`,
-    );
-    expect(cancel_url).toBe(`${expectedURL}?cancelled=true`);
-  });
-
   it("returns published services to the team's custom domain", async () => {
     mockReturnURLContext({
       flow: {
@@ -502,28 +485,6 @@ describe("creating a Stripe Checkout Session", () => {
     );
   });
 
-  it("returns preview and draft to the PlanX domain, even for a team with a custom domain", async () => {
-    mockReturnURLContext({
-      flow: {
-        slug: "apply",
-        team: {
-          slug: "southwark",
-          domain: "planningservices.southwark.gov.uk",
-        },
-      },
-    });
-
-    await supertest(app)
-      .post("/stripe/checkout-session/southwark")
-      .send({ ...validBody, returnTo: "draft" })
-      .expect(200);
-
-    const { success_url } = mockCreate.mock.calls[0][0];
-    expect(success_url).toBe(
-      "https://www.example.com/southwark/apply/draft?stripeSessionId={CHECKOUT_SESSION_ID}",
-    );
-  });
-
   it("carries sessionId and email for Save & Return sessions, so the applicant can resume", async () => {
     mockReturnURLContext({
       session: { flowId: validBody.flowId, email: "applicant@example.com" },
@@ -542,7 +503,7 @@ describe("creating a Stripe Checkout Session", () => {
     expect(cancel_url).toBe(`${RETURN_URL}?${resumeParams}&cancelled=true`);
   });
 
-  it("omits resume params when the session hasn't been saved (/draft links)", async () => {
+  it("omits resume params when the session hasn't been saved", async () => {
     mockReturnURLContext({ session: null });
 
     await supertest(app)
@@ -556,27 +517,17 @@ describe("creating a Stripe Checkout Session", () => {
     );
   });
 
-  it("rejects a client-supplied returnURL", async () => {
-    const { returnTo: _returnTo, ...bodyWithoutReturnTo } = validBody;
-
+  it("ignores a client-supplied returnURL", async () => {
     await supertest(app)
       .post("/stripe/checkout-session/southwark")
-      .send({
-        ...bodyWithoutReturnTo,
-        returnURL: "https://evil.example.org/phishing",
-      })
-      .expect(400);
+      .send({ ...validBody, returnURL: "https://evil.example.org/phishing" })
+      .expect(200);
 
-    expect(mockCreate).not.toHaveBeenCalled();
-  });
-
-  it("rejects an unknown returnTo with a 400", async () => {
-    await supertest(app)
-      .post("/stripe/checkout-session/southwark")
-      .send({ ...validBody, returnTo: "https://evil.example.org" })
-      .expect(400);
-
-    expect(mockCreate).not.toHaveBeenCalled();
+    const { success_url, cancel_url } = mockCreate.mock.calls[0][0];
+    expect(success_url).toBe(
+      `${RETURN_URL}?stripeSessionId={CHECKOUT_SESSION_ID}`,
+    );
+    expect(cancel_url).toBe(`${RETURN_URL}?cancelled=true`);
   });
 
   it("rejects a flow which doesn't exist with a 400", async () => {

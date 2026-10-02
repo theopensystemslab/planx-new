@@ -36,7 +36,6 @@ components:
               - sessionId
               - flowId
               - amount
-              - returnTo
               - metadata
             properties:
               sessionId:
@@ -50,14 +49,6 @@ components:
                 format: int32
                 description: Amount to charge, in pence
                 example: 14500
-              returnTo:
-                type: string
-                enum: [published, preview, draft]
-                description: >-
-                  The public route the applicant is paying from. The API builds the URL Stripe returns the
-                  applicant to (the team's custom domain for published services, where there is one) - a URL
-                  is never accepted from the client.
-                example: published
               metadata:
                 type: object
                 required:

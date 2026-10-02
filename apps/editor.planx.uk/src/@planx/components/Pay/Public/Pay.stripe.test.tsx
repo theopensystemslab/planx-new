@@ -172,76 +172,60 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
     }
   });
 
-  it.each([
-    ["_customDomain/$flow", "published"],
-    ["/_public/_planXDomain/$team/$flow/published/", "published"],
-    ["/_public/_planXDomain/$team/$flow/preview/", "preview"],
-    ["/_public/_planXDomain/$team/$flow/draft/", "draft"],
-  ])(
-    "tells the API which route it's paying from (%s), never a return URL",
-    async (routeId, expectedReturnTo) => {
-      vi.mocked(useMatches).mockReturnValue([
-        { routeId },
-      ] as unknown as ReturnType<typeof useMatches>);
+  it("never sends a return URL to the API", async () => {
+    let capturedBody: Record<string, unknown> | undefined;
+    server.use(
+      http.post(checkoutSessionUrl, async ({ request }) => {
+        capturedBody = (await request.json()) as Record<string, unknown>;
+        return HttpResponse.json({
+          url: "https://checkout.stripe.com/c/pay/cs_test_123",
+        });
+      }),
+    );
 
-      let capturedBody: Record<string, unknown> | undefined;
-      server.use(
-        http.post(checkoutSessionUrl, async ({ request }) => {
-          capturedBody = (await request.json()) as Record<string, unknown>;
-          return HttpResponse.json({
-            url: "https://checkout.stripe.com/c/pay/cs_test_123",
-          });
-        }),
+    const originalLocation = Object.getOwnPropertyDescriptor(
+      window,
+      "location",
+    );
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: Object.assign(new URL("http://localhost/test-team/test-flow"), {
+        assign: vi.fn(),
+        replace: vi.fn(),
+        reload: vi.fn(),
+      }),
+    });
+
+    act(() =>
+      setState({
+        flow: flowWithFee,
+        breadcrumbs: feeBreadcrumbs,
+        previewEnvironment: "standalone",
+        teamSlug: "test-team",
+      }),
+    );
+
+    try {
+      const { user } = await setup(
+        <AppErrorBoundary>
+          <Pay
+            title="Pay"
+            fn="application.fee.payable"
+            handleSubmit={vi.fn()}
+            govPayMetadata={[]}
+          />
+        </AppErrorBoundary>,
       );
 
-      const originalLocation = Object.getOwnPropertyDescriptor(
-        window,
-        "location",
-      );
-      Object.defineProperty(window, "location", {
-        configurable: true,
-        value: Object.assign(new URL("http://localhost/test-team/test-flow"), {
-          assign: vi.fn(),
-          replace: vi.fn(),
-          reload: vi.fn(),
-        }),
-      });
+      await user.click(await screen.findByText("Pay now"));
 
-      act(() =>
-        setState({
-          flow: flowWithFee,
-          breadcrumbs: feeBreadcrumbs,
-          previewEnvironment: "standalone",
-          teamSlug: "test-team",
-        }),
-      );
-
-      try {
-        const { user } = await setup(
-          <AppErrorBoundary>
-            <Pay
-              title="Pay"
-              fn="application.fee.payable"
-              handleSubmit={vi.fn()}
-              govPayMetadata={[]}
-            />
-          </AppErrorBoundary>,
-        );
-
-        await user.click(await screen.findByText("Pay now"));
-
-        await waitFor(() => expect(capturedBody).toBeDefined());
-        expect(capturedBody?.returnTo).toBe(expectedReturnTo);
-        expect(capturedBody).not.toHaveProperty("returnURL");
-      } finally {
-        vi.mocked(useMatches).mockReturnValue([
-          { routeId: "_customDomain/$flow" },
-        ] as unknown as ReturnType<typeof useMatches>);
-        if (originalLocation)
-          Object.defineProperty(window, "location", originalLocation);
-      }
-    },
-  );
+      await waitFor(() => expect(capturedBody).toBeDefined());
+      expect(capturedBody).not.toHaveProperty("returnURL");
+    } finally {
+      if (originalLocation)
+        Object.defineProperty(window, "location", originalLocation);
+    }
+  });
 
   it.each([
     "Stripe payments are not enabled for this local authority (test-team)",

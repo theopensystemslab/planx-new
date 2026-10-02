@@ -3,15 +3,6 @@ import { gql } from "graphql-request";
 import { $api } from "../../../client/index.js";
 import { getServiceLink } from "../../saveAndReturn/service/utils.js";
 
-/**
- * Which public route the applicant is paying from
- * The client picks one of these, and the API constructs the URL
- * The client never supplies a URL, in order to prevent spoofing / phishing via the API
- */
-export const RETURN_TO = ["published", "preview", "draft"] as const;
-
-export type ReturnTo = (typeof RETURN_TO)[number];
-
 export interface ReturnURLContext {
   flow: {
     slug: string;
@@ -44,25 +35,17 @@ export const getReturnURLContext = async (
   );
 
 /**
- * Published services return to the team's custom domain where there is one
+ * Payments are only taken on published services (never /draft or /preview), so applicants
+ * return to the published service (either plan.uk or custom subdomain)
  *
- * /preview and /draft are only served on the PlanX domain
+ * The client never supplies a URL, in order to prevent spoofing / phishing via the API
  */
-export const getFlowURL = (
-  returnTo: ReturnTo,
-  flow: NonNullable<ReturnURLContext["flow"]>,
-): string => {
-  if (returnTo === "published") return getServiceLink(flow.team, flow.slug);
-
-  return `${process.env.EDITOR_URL_EXT}/${flow.team.slug}/${flow.slug}/${returnTo}`;
-};
-
 export const buildReturnURL = (
-  flowURL: string,
+  flow: NonNullable<ReturnURLContext["flow"]>,
   sessionId: string,
   email: string | null | undefined,
 ): string => {
-  const url = new URL(flowURL);
+  const url = new URL(getServiceLink(flow.team, flow.slug));
 
   if (email) {
     url.searchParams.set("sessionId", sessionId);

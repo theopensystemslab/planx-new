@@ -156,7 +156,6 @@ export async function createCheckoutSession({
       sessionId,
       flowId,
       amount: feePassports[feeCase]["application.fee.payable"] * 100,
-      returnTo: "published",
       metadata: { ...DEFAULT_METADATA, ...metadata },
     },
   );
