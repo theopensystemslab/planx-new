@@ -1,4 +1,4 @@
-import { IconCircleCheckFilled, IconForbidFilled } from "@tabler/icons-react";
+import { IconCircleCheckFilled, IconCircleDashed } from "@tabler/icons-react";
 
 import SemanticIcon from "./SemanticIcon";
 
@@ -12,7 +12,7 @@ interface Props {
 
 export const StatusIcon: React.FC<Props> = ({ isCompleted, title }) => (
   <SemanticIcon
-    Icon={isCompleted ? IconCircleCheckFilled : IconForbidFilled}
+    Icon={isCompleted ? IconCircleCheckFilled : IconCircleDashed}
     titleAccess={isCompleted ? title.complete : title.incomplete}
     data-testid={isCompleted ? "complete-icon" : "incomplete-icon"}
     color={isCompleted ? "success" : "disabled"}
