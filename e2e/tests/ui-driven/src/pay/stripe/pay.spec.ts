@@ -8,6 +8,7 @@ import {
   setUpTestContext,
   tearDownTestContext,
 } from "../../helpers/context.js";
+import { setFeatureFlag } from "../../helpers/globalHelpers.js";
 import type { TestContext } from "../../helpers/types.js";
 import payFlow from "../../mocks/flows/pay-flow.json" with { type: "json" };
 import {
@@ -63,6 +64,11 @@ test.describe("Stripe integration @regression", () => {
       await tearDownTestContext();
       throw e;
     }
+  });
+
+  // TODO: Drop when Stripe payments are no longer behind a feature flag
+  test.beforeEach(async ({ page }) => {
+    await setFeatureFlag(page, "STRIPE_MIGRATION");
   });
 
   test.afterAll(async () => {
