@@ -106,10 +106,7 @@ test.describe("Stripe integration @regression", () => {
     await expectPaymentReference({ sessionId, paymentIntent });
   });
 
-  // FIXME: needs an "initiated" Stripe payment status so reconciliation is skipped on return, matching GovPay
-  test.fixme("a retry attempt for a cancelled Stripe payment", async ({
-    page,
-  }) => {
+  test("a retry attempt for a cancelled Stripe payment", async ({ page }) => {
     const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
@@ -128,8 +125,7 @@ test.describe("Stripe integration @regression", () => {
     await expectPaymentReference({ sessionId, paymentIntent });
   });
 
-  // FIXME: needs an "initiated" Stripe payment status so reconciliation is skipped on return, matching GovPay
-  test.fixme("a retry attempt for an abandoned and then cancelled Stripe payment", async ({
+  test("a retry attempt for an abandoned and then cancelled Stripe payment", async ({
     page,
   }) => {
     const sessionId = await navigateToPayComponent(page, context);
