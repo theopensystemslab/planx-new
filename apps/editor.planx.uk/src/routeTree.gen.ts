@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as ErrorUserNotFoundRouteImport } from './routes/error-user-not-found'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as AuthenticatedAppRouteRouteImport } from './routes/_authenticated/app/route'
@@ -118,6 +119,11 @@ const SplatRoute = SplatRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ErrorUserNotFoundRoute = ErrorUserNotFoundRouteImport.update({
+  id: '/error-user-not-found',
+  path: '/error-user-not-found',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authLoginRoute = authLoginRouteImport.update({
@@ -679,6 +685,7 @@ const AuthenticatedAppTeamFlowFlowEditorNodesParentNodesIdEditBeforeRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/error-user-not-found': typeof ErrorUserNotFoundRoute
   '/app': typeof AuthenticatedAppRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
@@ -774,6 +781,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/error-user-not-found': typeof ErrorUserNotFoundRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/app/admin-panel': typeof AuthenticatedAppAdminPanelRoute
@@ -856,6 +864,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/$': typeof SplatRoute
+  '/error-user-not-found': typeof ErrorUserNotFoundRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteRouteWithChildren
   '/_public/_customDomain': typeof PublicCustomDomainRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
@@ -955,6 +964,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
+    | '/error-user-not-found'
     | '/app'
     | '/login'
     | '/logout'
@@ -1050,6 +1060,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
+    | '/error-user-not-found'
     | '/login'
     | '/logout'
     | '/app/admin-panel'
@@ -1131,6 +1142,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/$'
+    | '/error-user-not-found'
     | '/_authenticated/app'
     | '/_public/_customDomain'
     | '/(auth)/login'
@@ -1230,6 +1242,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
+  ErrorUserNotFoundRoute: typeof ErrorUserNotFoundRoute
   PublicCustomDomainRouteRoute: typeof PublicCustomDomainRouteRouteWithChildren
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
@@ -1258,6 +1271,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/error-user-not-found': {
+      id: '/error-user-not-found'
+      path: '/error-user-not-found'
+      fullPath: '/error-user-not-found'
+      preLoaderRoute: typeof ErrorUserNotFoundRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/login': {
@@ -2412,6 +2432,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SplatRoute: SplatRoute,
+  ErrorUserNotFoundRoute: ErrorUserNotFoundRoute,
   PublicCustomDomainRouteRoute: PublicCustomDomainRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,

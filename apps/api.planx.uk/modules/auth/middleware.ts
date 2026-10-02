@@ -175,6 +175,36 @@ export const useJWT = expressjwt({
   isRevoked,
 });
 
+const getCallbackAuthHandler =
+  (
+    passport: Authenticator,
+    strategy: "google" | "microsoft-oidc",
+  ): RequestHandler =>
+  (req, res, next) =>
+    passport.authenticate(
+      strategy,
+      (
+        err: unknown,
+        user: Express.User | false | null,
+        info?: { reason?: string; email?: string },
+      ) => {
+        if (err) return next(err);
+
+        if (!user) {
+          const url = new URL(
+            `${process.env.EDITOR_URL_EXT!}/error-user-not-found`,
+          );
+          if (info?.email) url.searchParams.set("email", info.email);
+          return res.redirect(303, url.toString());
+        }
+
+        req.logIn(user, (loginErr) => {
+          if (loginErr) return next(loginErr);
+          next();
+        });
+      },
+    )(req, res, next);
+
 export const getGoogleAuthHandler = (
   passport: Authenticator,
 ): RequestHandler => {
@@ -197,13 +227,7 @@ export const getGoogleAuthHandler = (
 
 export const getGoogleCallbackAuthHandler = (
   passport: Authenticator,
-): RequestHandler => {
-  return (req, res, next) => {
-    return passport.authenticate("google", {
-      failureRedirect: "/auth/login/failed",
-    })(req, res, next);
-  };
-};
+): RequestHandler => getCallbackAuthHandler(passport, "google");
 
 export const getMicrosoftAuthHandler = (
   passport: Authenticator,
@@ -246,13 +270,7 @@ export const getMicrosoftAuthHandler = (
 
 export const getMicrosoftCallbackAuthHandler = (
   passport: Authenticator,
-): RequestHandler => {
-  return (req, res, next) => {
-    return passport.authenticate("microsoft-oidc", {
-      failureRedirect: "/auth/login/failed",
-    })(req, res, next);
-  };
-};
+): RequestHandler => getCallbackAuthHandler(passport, "microsoft-oidc");
 
 type UseRoleAuth = (authRoles: Role[]) => RequestHandler;
 

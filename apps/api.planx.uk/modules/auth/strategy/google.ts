@@ -26,12 +26,7 @@ export const googleStrategy = new GoogleStrategy(
 
     const jwt = await buildUserJWT(email);
 
-    if (!jwt) {
-      return done({
-        status: 404,
-        message: `User (${email}) not found. Do you need to log in to a different Google Account?`,
-      } as any);
-    }
+    if (!jwt) return done(null, false, { reason: "user-not-found", email });
 
     done(null, { jwt });
   },
