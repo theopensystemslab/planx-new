@@ -53,7 +53,10 @@ const STRIPE_INITIATED_STATUSES: StripePaymentStatus[] = [
 ];
 
 /**
- * Stripe writes to payment_status via webhook (on payment_intent.created)
+ * Stripe payments are recorded in payment_status
+ *
+ *  - "initiated" is a synthetic event written by when the Checkout Session is created, before the applicant is redirected
+ *  - all other statuses are written via webhook, once Checkout is confirmed and a PaymentIntent exists
  */
 function hasInitiatedStripePayment(
   paymentStatus: SessionPaymentStatus[] | undefined,
