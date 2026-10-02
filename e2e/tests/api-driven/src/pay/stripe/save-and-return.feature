@@ -14,3 +14,9 @@ Feature: Stripe save and return
     And a "created" payment status is recorded
     And the applicant returns to their saved session
     Then reconciliation is skipped as a payment has started
+
+  Scenario: Returning after leaving Stripe Checkout without paying skips reconciliation
+    When the applicant leaves Stripe Checkout without paying
+    Then an "initiated" payment status is recorded
+    When the applicant returns to their saved session
+    Then reconciliation is skipped as a payment has started

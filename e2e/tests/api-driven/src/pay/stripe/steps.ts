@@ -120,6 +120,17 @@ When(
 );
 
 When(
+  "the applicant leaves Stripe Checkout without paying",
+  async function (this: CustomWorld) {
+    this.checkoutSessionId = await createCheckoutSession({
+      flowId: this.flowId!,
+      sessionId: this.sessionId!,
+      feeCase: this.feeCase!,
+    });
+  },
+);
+
+When(
   "the applicant returns to their saved session",
   async function (this: CustomWorld) {
     this.validateSessionResponse = await validateSession(this.sessionId!);
@@ -164,13 +175,26 @@ Then(
 );
 
 Then(
-  "a {string} payment status is recorded",
+  "a(n) {string} payment status is recorded",
   { timeout: 30 * 1000 },
   async function (this: CustomWorld, stripeStatus: string) {
     await waitForStripePaymentStatus({
       sessionId: this.sessionId!,
       stripeStatus,
     });
+  },
+);
+
+Then(
+  "an {string} payment status is recorded against the Checkout Session",
+  { timeout: 30 * 1000 },
+  async function (this: CustomWorld, stripeStatus: string) {
+    const { stripePaymentId } = await waitForStripePaymentStatus({
+      sessionId: this.sessionId!,
+      stripeStatus,
+    });
+
+    assert.equal(stripePaymentId, this.checkoutSessionId);
   },
 );
 
