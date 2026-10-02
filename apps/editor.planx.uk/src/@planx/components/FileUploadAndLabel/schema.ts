@@ -51,7 +51,12 @@ export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> =
       fn: string(),
       fileTypes: array().of(fileTypeSchema).required().min(1),
       hideDropZone: boolean(),
-      showDrawingNumber: boolean(),
+      showDrawingNumber: boolean().test({
+        name: "notDrawingNumberAndHideDropZone",
+        message:
+          "Cannot both show a drawing number input and hide the drop zone",
+        test: (value, { parent }) => !(value && parent.hideDropZone),
+      }),
     }),
   );
 

@@ -47,6 +47,21 @@ describe("Editor validation", () => {
     );
   });
 
+  test("both 'neverAutoAnswer' and 'alwaysAutoAnswerBlank' cannot be toggled on together", async () => {
+    await expect(() =>
+      validationSchema.validate({
+        text: "Test",
+        fn: "topLevelFn",
+        neverAutoAnswer: true,
+        alwaysAutoAnswerBlank: true,
+        options: [
+          { id: "a", data: { text: "Option A", val: "a" } },
+          { id: "b", data: { text: "Option B" } },
+        ],
+      }),
+    ).rejects.toThrow("Cannot both always and never put to user");
+  });
+
   test("only one exclusive option is permitted", async () => {
     await expect(() =>
       validationSchema.validate({

@@ -1,4 +1,9 @@
-import { parsePay, paymentMetadataSchema } from "./model";
+import {
+  getDefaultContent,
+  parsePay,
+  paymentMetadataSchema,
+  validationSchema,
+} from "./model";
 
 describe("Payment Metadata Schema", () => {
   const validate = async (payload: unknown) =>
@@ -170,6 +175,20 @@ describe("Payment Metadata Schema", () => {
 
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatch(/A maximum of 15 fields can be set as metadata/);
+  });
+});
+
+describe("Editor validation", () => {
+  test("both 'allowInviteToPay' and 'hidePay' cannot be toggled on together", async () => {
+    await expect(() =>
+      validationSchema.validate({
+        ...getDefaultContent(),
+        hidePay: true,
+        allowInviteToPay: true,
+      }),
+    ).rejects.toThrow(
+      "Cannot both allow invite to pay and hide the pay buttons",
+    );
   });
 });
 

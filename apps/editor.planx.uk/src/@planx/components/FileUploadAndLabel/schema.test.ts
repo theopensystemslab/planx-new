@@ -157,6 +157,19 @@ describe("fileUploadAndLabelSchema", () => {
 
     expect(result).toBe(true);
   });
+
+  it("both 'showDrawingNumber' and 'hideDropZone' cannot be toggled on together", async () => {
+    await expect(() =>
+      fileUploadAndLabelSchema.validate({
+        title: "Test Title",
+        fileTypes: [mockFileTypes.AlwaysRecommended],
+        hideDropZone: true,
+        showDrawingNumber: true,
+      }),
+    ).rejects.toThrow(
+      "Cannot both show a drawing number input and hide the drop zone",
+    );
+  });
 });
 
 describe("slotsSchema", () => {

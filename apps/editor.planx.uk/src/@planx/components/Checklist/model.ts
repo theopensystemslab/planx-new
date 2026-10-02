@@ -94,6 +94,17 @@ export const validationSchema = baseChecklistValidationSchema.concat(
       },
     })
     .test({
+      name: "notAlwaysAndNeverPutToUser",
+      test: function ({ neverAutoAnswer, alwaysAutoAnswerBlank }) {
+        if (!neverAutoAnswer || !alwaysAutoAnswerBlank) return true;
+
+        return this.createError({
+          path: "alwaysAutoAnswerBlank",
+          message: "Cannot both always and never put to user",
+        });
+      },
+    })
+    .test({
       name: "",
       test: function (value) {
         const { alwaysAutoAnswerBlank, fn } = value as ChecklistWithOptions;

@@ -105,6 +105,7 @@ function FileUploadAndLabelComponent(props: Props) {
               }
               label="Show an optional drawing number input for each uploaded file"
               disabled={props.disabled}
+              error={formik.errors.showDrawingNumber}
             />
           </InputRow>
         </ModalSectionContent>

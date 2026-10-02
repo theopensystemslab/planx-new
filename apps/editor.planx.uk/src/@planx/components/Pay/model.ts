@@ -166,7 +166,11 @@ export const validationSchema = object({
   instructionsTitle: string().trim().required(),
   instructionsDescription: richText().required(),
   hidePay: boolean(),
-  allowInviteToPay: boolean(),
+  allowInviteToPay: boolean().test({
+    name: "notInviteToPayAndHidePay",
+    message: "Cannot both allow invite to pay and hide the pay buttons",
+    test: (value, { parent }) => !(value && parent.hidePay),
+  }),
   nomineeTitle: string().trim().when("allowInviteToPay", {
     is: true,
     then: string().required(),
