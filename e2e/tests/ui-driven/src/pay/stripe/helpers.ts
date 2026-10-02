@@ -25,40 +25,76 @@ export async function payViaStripe(page: Page): Promise<{
   checkoutSessionId: string;
   paymentIntent: Stripe.PaymentIntent;
 }> {
+  const checkoutSessionId = await startStripeCheckout(page);
+  const paymentIntent = await completeStripeCheckoutSession(checkoutSessionId);
+  await returnFromStripe({ page, checkoutSessionId, outcome: "success" });
+
+  return { checkoutSessionId, paymentIntent };
+}
+
+/**
+ * Click "Pay now" and capture the Checkout Session PlanX creates
+ * The redirect to hosted Checkout is blocked, leaving the session open
+ */
+export async function startStripeCheckout(page: Page): Promise<string> {
   await page.route("https://checkout.stripe.com/**", (route) => route.abort());
   const checkoutRequest = page.waitForRequest("https://checkout.stripe.com/**");
 
   await page.getByText("Pay now").click();
 
-  const checkoutSessionId = getCheckoutSessionId((await checkoutRequest).url());
-  const paymentIntent = await completeStripeCheckoutSession(checkoutSessionId);
+  return getCheckoutSessionId((await checkoutRequest).url());
+}
 
-  const { success_url } =
+/**
+ * Navigate to the Checkout Session's success_url or cancel_url
+ */
+export async function returnFromStripe({
+  page,
+  checkoutSessionId,
+  outcome,
+}: {
+  page: Page;
+  checkoutSessionId: string;
+  outcome: "success" | "cancel";
+}) {
+  const { success_url, cancel_url } =
     await getStripeTestClient().checkout.sessions.retrieve(checkoutSessionId);
-  if (!success_url) {
-    throw Error(`No success_url on Checkout Session ${checkoutSessionId}`);
+  const returnURL =
+    outcome === "success"
+      ? success_url?.replace("{CHECKOUT_SESSION_ID}", checkoutSessionId)
+      : cancel_url;
+  if (!returnURL) {
+    throw Error(`No ${outcome} URL on Checkout Session ${checkoutSessionId}`);
   }
 
   await setStripeReferrer(page);
-  await page.goto(
-    success_url.replace("{CHECKOUT_SESSION_ID}", checkoutSessionId),
-  );
-
-  return { checkoutSessionId, paymentIntent };
+  await page.goto(returnURL);
 }
 
 export async function navigateToPayComponent(
   page: Page,
   context: TestContext,
 ): Promise<string> {
-  await page.goto(
-    `/${context.team.slug}/${context.flow!.slug}/published?analytics=false`,
-  );
+  await page.goto(getPreviewURL(context));
   await fillInEmail({ page, context });
   await page.getByTestId("continue-button").click();
   await page.getByLabel("Pay test").fill("Test");
   await page.getByTestId("continue-button").click();
   return getSessionId(page);
+}
+
+export async function resumeSessionViaMagicLink({
+  page,
+  context,
+  sessionId,
+}: {
+  page: Page;
+  context: TestContext;
+  sessionId: string;
+}) {
+  await page.goto(`${getPreviewURL(context)}&sessionId=${sessionId}`);
+  await page.locator("#email").fill(context.user.email);
+  await page.getByTestId("continue-button").click();
 }
 
 export async function findSession({
@@ -97,3 +133,6 @@ async function setStripeReferrer(page: Page) {
     });
   });
 }
+
+const getPreviewURL = (context: TestContext) =>
+  `/${context.team.slug}/${context.flow!.slug}/published?analytics=false`;
