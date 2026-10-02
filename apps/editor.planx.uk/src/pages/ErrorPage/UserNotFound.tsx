@@ -32,7 +32,11 @@ const ErrorCard = styled(Box)(({ theme }) => ({
   },
 }));
 
-const UserNotFound: React.FC = () => (
+type Props = {
+  emailAddress?: string;
+};
+
+const UserNotFound: React.FC<Props> = ({ emailAddress }) => (
   <Root>
     <WatermarkBackground variant="dark" opacity={0.05} />
     <Header>
@@ -50,7 +54,8 @@ const UserNotFound: React.FC = () => (
         <ErrorCard>
           <Stack spacing={1.5}>
             <Typography variant="h3">
-              No user account found for this email address
+              No user account found for{" "}
+              {emailAddress ? emailAddress : "this email address"}
             </Typography>
             <Typography>
               We couldn't find a Plan✕ user account associated with the email

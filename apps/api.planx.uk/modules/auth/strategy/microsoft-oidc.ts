@@ -73,10 +73,13 @@ const verifyCallback: StrategyVerifyCallbackReq<Express.User> = async (
 
   const jwt = await buildUserJWT(email);
   if (!jwt) {
-    return done({
-      status: 404,
-      message: `User (${email}) not found. Do you need to log in to a different Microsoft Account?`,
-    });
+    return (
+      done as unknown as (
+        err: Error | null,
+        user: false,
+        info: { reason: string; email: string },
+      ) => void
+    )(null, false, { reason: "user-not-found", email });
   }
 
   return done(null, { jwt });
