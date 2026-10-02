@@ -1,12 +1,12 @@
 import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
-import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useCallback } from "react";
+import React from "react";
 import BlockQuote from "ui/editor/BlockQuote";
 import { NodeCard } from "ui/editor/NodeCard";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
+import { hasNodeBeenUpdated } from "./helpers";
 import type { FlowEdits, NodeEdits } from "./types";
 
 interface Props {
@@ -20,39 +20,17 @@ export const CustomisationCard: React.FC<Props> = ({
   nodeEdits,
   flowEdits,
 }) => {
-  const [flow] = useStore((state) => [state.flow]);
+  const [flow, orderedFlow] = useStore((state) => [
+    state.flow,
+    state.orderedFlow,
+  ]);
   const node = flow[nodeId];
-
-  // Keep this logic in sync with `haveAllRequiredTemplatedNodesBeenUpdated` in the API flows/validate module !
-  const hasNodeBeenUpdated = useCallback(() => {
-    // This node has been directly edited
-    if (nodeEdits) return true;
-
-    const isNodeWithChildren =
-      node.type &&
-      [
-        ComponentType.Question,
-        ComponentType.Checklist,
-        ComponentType.ResponsiveQuestion,
-        ComponentType.ResponsiveChecklist,
-        ComponentType.InternalPortal,
-      ].includes(node.type);
-
-    // The "children" of this node have been updated
-    if (isNodeWithChildren) {
-      const isChildEdited = node.edges?.some((edgeId) =>
-        Boolean(flowEdits?.[edgeId]),
-      );
-      return isChildEdited;
-    }
-
-    // Node has not been edited
-    return false;
-  }, [nodeEdits, node, flowEdits]);
 
   const theme = useTheme();
 
-  const isComplete = Boolean(hasNodeBeenUpdated());
+  const isComplete = Boolean(
+    hasNodeBeenUpdated(nodeId, flow, flowEdits, orderedFlow),
+  );
 
   return (
     <ListItem

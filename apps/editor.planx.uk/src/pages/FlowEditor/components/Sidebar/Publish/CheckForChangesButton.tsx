@@ -94,13 +94,16 @@ export const CheckForChangesToPublishButton: React.FC<{
     lastPublishedQuery.data,
   );
 
-  const [isPattern, flowStatus] = useStore((state) => [
-    state.isPattern,
-    state.flowStatus,
-  ]);
+  const [isPattern, flowStatus, outstandingTemplatedFlowCustomisations] =
+    useStore((state) => [
+      state.isPattern,
+      state.flowStatus,
+      state.outstandingTemplatedFlowCustomisations,
+    ]);
 
   const isDisabled =
     !useStore.getState().canUserEditTeam(teamSlug) ||
+    outstandingTemplatedFlowCustomisations > 0 ||
     isPattern ||
     checkForChangesMutation.isPending ||
     publishMutation.isPending;

@@ -6,6 +6,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import { CustomisationCard } from "./CustomisationCard";
+import { CustomisationCounter } from "./CustomisationCounter";
 import type { FlowEdits } from "./types";
 
 const Customisations = () => {
@@ -63,15 +64,10 @@ const Customisations = () => {
   return (
     <Box sx={{ p: 2, backgroundColor: "background.paper", minHeight: "100%" }}>
       {isTemplatedFrom && (
-        <>
-          <Typography variant="h4" sx={{ mb: 1 }}>
-            Customise
-          </Typography>
-          <Typography variant="body2">
-            When editing a templated flow, this tab tracks your progress
-            updating nodes that can be customised
-          </Typography>
-        </>
+        <CustomisationCounter
+          flowEdits={flowEdits}
+          customisableNodeIds={sortedCustomisableNodeIds}
+        />
       )}
       {isTemplate && (
         <>
