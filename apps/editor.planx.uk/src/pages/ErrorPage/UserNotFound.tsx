@@ -90,8 +90,9 @@ const UserNotFound: React.FC<Props> = ({ emailAddress }) => {
                 color="primary"
                 type="reset"
                 onClick={handleClick}
+                sx={{ alignSelf: "flex-start" }}
               >
-                Try again
+                Back to log in
               </Button>
             </Stack>
           </ErrorCard>
