@@ -8,7 +8,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import type { Breadcrumbs } from "types";
-import { ApplicationPath } from "types";
 import { vi } from "vitest";
 
 import Pay from "./Pay";
@@ -173,12 +172,11 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
     }
   });
 
-  it("carries sessionId and email in the return URL for Save & Return", async () => {
-    let capturedReturnURL: string | undefined;
+  it("never sends a return URL to the API", async () => {
+    let capturedBody: Record<string, unknown> | undefined;
     server.use(
       http.post(checkoutSessionUrl, async ({ request }) => {
-        const body = (await request.json()) as { returnURL: string };
-        capturedReturnURL = body.returnURL;
+        capturedBody = (await request.json()) as Record<string, unknown>;
         return HttpResponse.json({
           url: "https://checkout.stripe.com/c/pay/cs_test_123",
         });
@@ -191,10 +189,11 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
     );
     Object.defineProperty(window, "location", {
       configurable: true,
-      value: Object.assign(
-        new URL("http://localhost/test-team/test-flow?foo=bar"),
-        { assign: vi.fn(), replace: vi.fn(), reload: vi.fn() },
-      ),
+      value: Object.assign(new URL("http://localhost/test-team/test-flow"), {
+        assign: vi.fn(),
+        replace: vi.fn(),
+        reload: vi.fn(),
+      }),
     });
 
     act(() =>
@@ -203,9 +202,6 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
         breadcrumbs: feeBreadcrumbs,
         previewEnvironment: "standalone",
         teamSlug: "test-team",
-        sessionId: "session-abc",
-        saveToEmail: "applicant@example.com",
-        path: ApplicationPath.SaveAndReturn,
       }),
     );
 
@@ -223,10 +219,8 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
 
       await user.click(await screen.findByText("Pay now"));
 
-      await waitFor(() => expect(capturedReturnURL).toBeDefined());
-      const params = new URL(capturedReturnURL!).searchParams;
-      expect(params.get("sessionId")).toBe("session-abc");
-      expect(params.get("email")).toBe("applicant@example.com");
+      await waitFor(() => expect(capturedBody).toBeDefined());
+      expect(capturedBody).not.toHaveProperty("returnURL");
     } finally {
       if (originalLocation)
         Object.defineProperty(window, "location", originalLocation);

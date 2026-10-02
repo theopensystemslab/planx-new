@@ -3,7 +3,11 @@ import {
   getTeamBySlug,
   isAccountReadyForPayments,
 } from "../connect/service.js";
-import type { ResolveTeamPaymentProviderMiddleware } from "./types.js";
+import { buildReturnURL, getReturnURLContext } from "./returnURL.js";
+import type {
+  ResolveReturnURLMiddleware,
+  ResolveTeamPaymentProviderMiddleware,
+} from "./types.js";
 
 export const resolveTeamPaymentProvider: ResolveTeamPaymentProviderMiddleware =
   async (_req, res, next) => {
@@ -43,3 +47,42 @@ export const resolveTeamPaymentProvider: ResolveTeamPaymentProviderMiddleware =
       return next(error);
     }
   };
+
+/**
+ * Build the URL Stripe sends the applicant back to after checkout
+ *
+ * Derived server-side from the flow and session so a Checkout Session can never send applicants
+ * on to a third-party site
+ */
+export const resolveReturnURL: ResolveReturnURLMiddleware = async (
+  _req,
+  res,
+  next,
+) => {
+  const { localAuthority } = res.locals.parsedReq.params;
+  const { flowId, sessionId } = res.locals.parsedReq.body;
+
+  try {
+    const { flow, session } = await getReturnURLContext(flowId, sessionId);
+
+    if (!flow || flow.team.slug !== localAuthority) {
+      return next({
+        status: 400,
+        message: `Flow ${flowId} not found for this local authority (${localAuthority})`,
+      });
+    }
+
+    if (session && session.flowId !== flowId) {
+      return next({
+        status: 400,
+        message: `Session ${sessionId} does not belong to flow ${flowId}`,
+      });
+    }
+
+    res.locals.returnURL = buildReturnURL(flow, sessionId, session?.email);
+
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+};

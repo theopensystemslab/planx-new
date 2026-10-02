@@ -6,7 +6,10 @@ import {
   createCheckoutSession,
   getCheckoutSessionStatus,
 } from "./checkout/controller.js";
-import { resolveTeamPaymentProvider } from "./checkout/middleware.js";
+import {
+  resolveReturnURL,
+  resolveTeamPaymentProvider,
+} from "./checkout/middleware.js";
 import {
   createCheckoutSessionSchema,
   getCheckoutSessionStatusSchema,
@@ -57,6 +60,7 @@ router.post(
   "/stripe/checkout-session/:localAuthority",
   validate(createCheckoutSessionSchema),
   resolveTeamPaymentProvider,
+  resolveReturnURL,
   createCheckoutSession,
 );
 

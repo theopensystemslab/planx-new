@@ -10,7 +10,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 import { useErrorBoundary } from "react-error-boundary";
 import type { FileRouteTypes } from "routeTree.gen";
-import { ApplicationPath } from "types";
 import { z } from "zod";
 
 import { makeData } from "../../../shared/utils";
@@ -22,23 +21,6 @@ import {
   PAYMENT_REFERENCE_PASSPORT_KEY,
   type UsePaymentProviderResult,
 } from "./types";
-
-const getStripeReturnURL = (): string => {
-  const url = new URL(window.location.href);
-
-  // Drop stripe return params from any previous attempt
-  url.searchParams.delete("stripeSessionId");
-  url.searchParams.delete("cancelled");
-
-  // Ensure that applicant can bypass Resume page on return
-  const { path, sessionId, saveToEmail } = useStore.getState();
-  if (path === ApplicationPath.SaveAndReturn) {
-    url.searchParams.set("sessionId", sessionId);
-    url.searchParams.set("email", saveToEmail ?? "");
-  }
-
-  return url.toString();
-};
 
 // Only ever redirect applicants to Stripe's hosted Checkout
 const STRIPE_CHECKOUT_ORIGIN = "https://checkout.stripe.com" as const;
@@ -138,7 +120,6 @@ export function useStripePay(
         sessionId,
         flowId,
         amount: toPence(fee),
-        returnURL: getStripeReturnURL(),
         metadata,
       });
 

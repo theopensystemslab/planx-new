@@ -11,7 +11,6 @@ export const createCheckoutSessionSchema = z.object({
     sessionId: z.string().uuid(),
     flowId: z.string().uuid(),
     amount: z.number().int().positive(),
-    returnURL: z.string().url(),
     metadata: z
       .object({
         flow: z.string(),
@@ -39,9 +38,16 @@ export interface CreateCheckoutSessionResponse {
 
 export type CheckoutSessionLocals = {
   connectedAccountId: string;
+  returnURL: string;
 };
 
 export type ResolveTeamPaymentProviderMiddleware = ValidatedRequestHandler<
+  typeof createCheckoutSessionSchema,
+  CreateCheckoutSessionResponse,
+  CheckoutSessionLocals
+>;
+
+export type ResolveReturnURLMiddleware = ValidatedRequestHandler<
   typeof createCheckoutSessionSchema,
   CreateCheckoutSessionResponse,
   CheckoutSessionLocals

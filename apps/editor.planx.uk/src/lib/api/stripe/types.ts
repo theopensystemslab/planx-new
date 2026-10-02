@@ -21,7 +21,6 @@ export interface CreateStripeCheckoutSession {
   flowId: string;
   /** Fee in pence */
   amount: number;
-  returnURL: string;
   metadata: Record<string, string>;
 }
 

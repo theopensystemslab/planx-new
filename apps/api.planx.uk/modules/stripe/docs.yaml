@@ -36,7 +36,6 @@ components:
               - sessionId
               - flowId
               - amount
-              - returnURL
               - metadata
             properties:
               sessionId:
@@ -50,10 +49,6 @@ components:
                 format: int32
                 description: Amount to charge, in pence
                 example: 14500
-              returnURL:
-                type: string
-                format: uri
-                example: "https://editor.planx.uk/team/flow/published"
               metadata:
                 type: object
                 required:
@@ -284,7 +279,8 @@ paths:
         "200":
           $ref: "#/components/responses/CreateCheckoutSessionResponse"
         "400":
-          description: Invalid request body or parameters.
+          description: >-
+            Invalid request body or parameters, or a flow or session which doesn't belong to this LPA.
         "409":
           description: |
             This LPA is not set up to take Stripe payments, because either:

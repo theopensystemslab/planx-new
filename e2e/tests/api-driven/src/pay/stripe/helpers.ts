@@ -156,7 +156,6 @@ export async function createCheckoutSession({
       sessionId,
       flowId,
       amount: feePassports[feeCase]["application.fee.payable"] * 100,
-      returnURL: `${process.env.EDITOR_URL_EXT}/${TEAM_SLUG}/stripe-split-test/published`,
       metadata: { ...DEFAULT_METADATA, ...metadata },
     },
   );
