@@ -2,10 +2,10 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 import CheckCircleIcon from "ui/icons/CheckCircle";
-import SlashCircleIcon from "ui/icons/SlashCircle";
+import DashedCircleIcon from "ui/icons/DashedCircle";
 
 import { hasNodeBeenUpdated } from "./helpers";
 import type { FlowEdits } from "./types";
@@ -43,22 +43,11 @@ export const CustomisationCounter: React.FC<Props> = ({
     (id) => flow[id]?.data?.areTemplatedNodeInstructionsRequired === true,
   );
 
-  const countCompletedRequiredNodesCallback = useCallback(() => {
-    let counter = 0;
-    requiredCustomisableNodeIds.forEach((requiredNodeId) => {
-      const isComplete = hasNodeBeenUpdated(
-        requiredNodeId,
-        flow,
-        flowEdits,
-        orderedFlow,
-      );
-      if (isComplete) counter += 1;
-    });
-    return counter;
-  }, [flowEdits, customisableNodeIds]);
-
   const countRequiredNodes = requiredCustomisableNodeIds.length;
-  const countCompletedRequiredNodes = countCompletedRequiredNodesCallback();
+  const countCompletedRequiredNodes = requiredCustomisableNodeIds.filter(
+    (requiredNodeId) =>
+      hasNodeBeenUpdated(requiredNodeId, flow, flowEdits, orderedFlow),
+  ).length;
 
   const hasEveryRequiredNodeBeenUpdated =
     countCompletedRequiredNodes === countRequiredNodes;
@@ -98,7 +87,7 @@ export const CustomisationCounter: React.FC<Props> = ({
     <Container
       hasEveryRequiredNodeBeenUpdated={hasEveryRequiredNodeBeenUpdated}
     >
-      <SlashCircleIcon
+      <DashedCircleIcon
         data-testid="outstanding-required-customisations"
         fontSize="medium"
         sx={(theme) => ({

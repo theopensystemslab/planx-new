@@ -1,7 +1,7 @@
 import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useCallback } from "react";
+import React from "react";
 import BlockQuote from "ui/editor/BlockQuote";
 import { NodeCard } from "ui/editor/NodeCard";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
@@ -26,13 +26,11 @@ export const CustomisationCard: React.FC<Props> = ({
   ]);
   const node = flow[nodeId];
 
-  const hasNodeBeenUpdatedCallback = useCallback(() => {
-    return hasNodeBeenUpdated(nodeId, flow, flowEdits, orderedFlow);
-  }, [nodeEdits, node, flowEdits, nodeId, flow, orderedFlow]);
-
   const theme = useTheme();
 
-  const isComplete = Boolean(hasNodeBeenUpdatedCallback());
+  const isComplete = Boolean(
+    hasNodeBeenUpdated(nodeId, flow, flowEdits, orderedFlow),
+  );
 
   return (
     <ListItem
