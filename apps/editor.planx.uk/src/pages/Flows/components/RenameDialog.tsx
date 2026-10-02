@@ -1,5 +1,4 @@
 import { isApolloError } from "@apollo/client";
-import WarningAmber from "@mui/icons-material/WarningAmber";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -9,12 +8,16 @@ import DialogTitle from "@mui/material/DialogTitle";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
+import {
+  IconAlertTriangleFilled,
+  IconCircleCheckFilled,
+} from "@tabler/icons-react";
 import type { FormikConfig } from "formik";
 import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
 import { URLPrefix } from "ui/editor/URLPrefix";
-import CheckCircleIcon from "ui/icons/CheckCircle";
+import { Icon } from "ui/icons/Icon";
 import InputLabel from "ui/public/InputLabel";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import Input from "ui/shared/Input/Input";
@@ -54,21 +57,41 @@ const RenameWarning: React.FC = () => (
     </Typography>
     <List>
       <ListItem>
-        <CheckCircleIcon color="success" fontSize="small" sx={{ mr: 1 }} />
+        <Icon
+          icon={IconCircleCheckFilled}
+          color="success"
+          fontSize="small"
+          sx={{ mr: 1 }}
+        />
         Local Planning Services (LPS) listing will update automatically
       </ListItem>
       <ListItem>
-        <WarningAmber color="warning" fontSize="small" sx={{ mr: 1 }} />
+        <Icon
+          icon={IconAlertTriangleFilled}
+          color="warning"
+          fontSize="small"
+          sx={{ mr: 1 }}
+        />
         Any links to this service on your council website will need to be
         updated by your IT team
       </ListItem>
       <ListItem>
-        <WarningAmber color="warning" fontSize="small" sx={{ mr: 1 }} />
+        <Icon
+          icon={IconAlertTriangleFilled}
+          color="warning"
+          fontSize="small"
+          sx={{ mr: 1 }}
+        />
         Any Next Steps components pointing to this service will need to be
         updated and published
       </ListItem>
       <ListItem>
-        <WarningAmber color="warning" fontSize="small" sx={{ mr: 1 }} />
+        <Icon
+          icon={IconAlertTriangleFilled}
+          color="warning"
+          fontSize="small"
+          sx={{ mr: 1 }}
+        />
         Any users with active magic links or bookmarks will get an error if this
         is a public-facing service and need to be manually redirected.
       </ListItem>

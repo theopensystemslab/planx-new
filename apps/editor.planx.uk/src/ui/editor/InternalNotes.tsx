@@ -1,4 +1,4 @@
-import StickyNote2Icon from "@mui/icons-material/StickyNote2";
+import { IconNote } from "@tabler/icons-react";
 import type { ChangeEvent } from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -20,7 +20,7 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
 }) => {
   return (
     <ModalSection>
-      <ModalSectionContent title="Note" Icon={StickyNote2Icon}>
+      <ModalSectionContent title="Note" Icon={IconNote}>
         <InputRow>
           <Input
             // required

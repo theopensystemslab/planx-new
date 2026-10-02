@@ -1,8 +1,8 @@
-import Close from "@mui/icons-material/Close";
-import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { IconChevronDownFilled, IconXFilled } from "@tabler/icons-react";
 import { useState } from "react";
+import { Icon } from "ui/icons/Icon";
 
 import { RecentFlowLink } from "./RecentFlowLink";
 import { useRecentFlowsContext } from "./RecentFlowsContext";
@@ -62,13 +62,13 @@ const RecentFlows = () => {
               }
             >
               {isExpanded ? (
-                <Close sx={{ pt: 0.25 }} />
+                <Icon icon={IconXFilled} sx={{ pt: 0.25 }} />
               ) : (
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Typography variant="body3">
                     +{recentFlows.length - 1}
                   </Typography>
-                  <KeyboardArrowDown />
+                  <Icon icon={IconChevronDownFilled} />
                 </Box>
               )}
             </ToggleButton>

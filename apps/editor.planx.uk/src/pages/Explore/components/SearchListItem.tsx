@@ -1,12 +1,15 @@
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton, {
   listItemButtonClasses,
 } from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
+import {
+  IconChevronRightFilled,
+  IconCircleCheckFilled,
+} from "@tabler/icons-react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import CheckCircleIcon from "ui/icons/CheckCircle";
+import { Icon } from "ui/icons/Icon";
 
 import type { SearchResult } from "./SearchResult";
 
@@ -36,7 +39,11 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
       >
         {statusLabel && (
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.33 }}>
-            <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
+            <Icon
+              icon={IconCircleCheckFilled}
+              color="success"
+              sx={{ fontSize: 18 }}
+            />
             <Typography
               variant="body3"
               sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
@@ -74,7 +81,10 @@ export const SearchListItem: React.FC<SearchListItemProps> = ({
         }}
       >
         {content}
-        <ChevronRightIcon sx={{ ml: "auto", color: "text.secondary" }} />
+        <Icon
+          icon={IconChevronRightFilled}
+          sx={{ ml: "auto", color: "text.secondary" }}
+        />
       </ListItemButton>
     );
   }

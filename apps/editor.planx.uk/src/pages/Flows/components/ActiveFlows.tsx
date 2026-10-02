@@ -1,15 +1,18 @@
-import TableRowsIcon from "@mui/icons-material/TableRows";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import {
+  IconLayoutGridFilled,
+  IconLayoutListFilled,
+} from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import Filters from "ui/editor/Filter/Filter";
 import type { SortableFields } from "ui/editor/SortControl/SortControl";
 import { SortControl } from "ui/editor/SortControl/SortControl";
+import { Icon } from "ui/icons/Icon";
 
 import type { FlowSummary } from "../../FlowEditor/lib/store/editor";
 import type { FlowCardView } from "../../FlowEditor/lib/store/editor";
@@ -133,12 +136,12 @@ const ActiveFlows: React.FC<Props> = ({
           >
             <Tooltip title="Card view" placement="bottom">
               <StyledToggleButton value="grid" disableRipple>
-                <ViewModuleIcon />
+                <Icon icon={IconLayoutGridFilled} />
               </StyledToggleButton>
             </Tooltip>
             <Tooltip title="Table view" placement="bottom">
               <StyledToggleButton value="row" disableRipple>
-                <TableRowsIcon />
+                <Icon icon={IconLayoutListFilled} />
               </StyledToggleButton>
             </Tooltip>
           </ToggleButtonGroup>

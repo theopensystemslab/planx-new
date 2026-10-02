@@ -1,7 +1,8 @@
-import PrintIcon from "@mui/icons-material/Print";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { IconPrinter } from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
 const StyledPrintButton = styled(Button)(() => ({
   "@media print": {
@@ -40,7 +41,7 @@ export const PrintButton = ({
       <StyledPrintButton
         variant="contained"
         color="secondary"
-        startIcon={<PrintIcon />}
+        startIcon={<Icon icon={IconPrinter} />}
         size="large"
         onClick={() => window.print()}
       >

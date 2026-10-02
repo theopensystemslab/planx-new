@@ -4,11 +4,6 @@ import type {
   DropResult,
 } from "@hello-pangea/dnd";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlined";
-import Delete from "@mui/icons-material/Delete";
-import DragHandle from "@mui/icons-material/DragHandle";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
@@ -17,12 +12,20 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
+import {
+  IconChevronDownFilled,
+  IconChevronUp,
+  IconCirclePlusFilled,
+  IconGripHorizontal,
+  IconTrashFilled,
+} from "@tabler/icons-react";
 import { arrayMoveImmutable } from "array-move";
 import type { FormikErrors } from "formik";
 import { nanoid } from "nanoid";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
 import { TransitionGroup } from "react-transition-group";
+import { Icon } from "ui/icons/Icon";
 
 import { insertAt, removeAt, setAt } from "../../../utils";
 import { ListManagerHeader } from "./ListManagerHeader";
@@ -141,7 +144,7 @@ const InsertButton: React.FC<{
             justifyContent: "center",
           })}
         >
-          <AddCircleOutlineIcon />
+          <Icon icon={IconCirclePlusFilled} />
         </Box>
       </InsertButtonRoot>
     </Tooltip>
@@ -254,9 +257,9 @@ export default function ListManager<T, EditorExtraProps>(
                           disabled={disabled}
                         >
                           {collapsedItems.has(itemKeys[index]) ? (
-                            <ExpandMore />
+                            <Icon icon={IconChevronDownFilled} />
                           ) : (
-                            <ExpandLess />
+                            <Icon icon={IconChevronUp} />
                           )}
                         </IconButton>
                       </Box>
@@ -321,9 +324,9 @@ export default function ListManager<T, EditorExtraProps>(
                           disabled={disabled}
                         >
                           {collapsedItems.has(itemKeys[index]) ? (
-                            <ExpandMore />
+                            <Icon icon={IconChevronDownFilled} />
                           ) : (
-                            <ExpandLess />
+                            <Icon icon={IconChevronUp} />
                           )}
                         </IconButton>
                       </Box>
@@ -360,7 +363,7 @@ export default function ListManager<T, EditorExtraProps>(
                             disabled || props?.isFieldDisabled?.(item, index)
                           }
                         >
-                          <Delete />
+                          <Icon icon={IconTrashFilled} />
                         </IconButton>
                       </Tooltip>
                     </Box>
@@ -485,7 +488,7 @@ export default function ListManager<T, EditorExtraProps>(
                                       pointerEvents: "none",
                                     }}
                                   >
-                                    <DragHandle />
+                                    <Icon icon={IconGripHorizontal} />
                                   </IconButton>
                                 </Box>
                               </Tooltip>
@@ -519,9 +522,9 @@ export default function ListManager<T, EditorExtraProps>(
                                         disabled={disabled}
                                       >
                                         {collapsedItems.has(itemKeys[index]) ? (
-                                          <ExpandMore />
+                                          <Icon icon={IconChevronDownFilled} />
                                         ) : (
-                                          <ExpandLess />
+                                          <Icon icon={IconChevronUp} />
                                         )}
                                       </IconButton>
                                     </Tooltip>
@@ -567,7 +570,7 @@ export default function ListManager<T, EditorExtraProps>(
                                         props?.isFieldDisabled?.(item, index)
                                       }
                                     >
-                                      <Delete />
+                                      <Icon icon={IconTrashFilled} />
                                     </IconButton>
                                   </Tooltip>
                                 </Box>

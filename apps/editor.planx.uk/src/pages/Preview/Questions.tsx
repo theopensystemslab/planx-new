@@ -1,9 +1,9 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import { getLocalFlowIdb, setLocalFlowIdb } from "lib/local.idb";
 import * as NEW from "lib/local.new";
@@ -12,6 +12,7 @@ import type { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Session } from "types";
 import { ApplicationPath } from "types";
+import { Icon } from "ui/icons/Icon";
 
 import { AppErrorBoundary } from "../../components/Error/AppErrorBoundary";
 import OpenInEditorButton from "../../components/OpenInEditorButton";
@@ -243,7 +244,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
             data-testid="backButton"
             onClick={() => goBack()}
           >
-            <ArrowBackIcon fontSize="small" />
+            <Icon icon={IconArrowLeft} fontSize="small" />
             Back
           </BackButton>
         </Container>

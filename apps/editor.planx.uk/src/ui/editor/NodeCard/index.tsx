@@ -7,6 +7,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 
 import { getDisplayDetailsForNodeCard } from "./getDisplayDetailsForNodeCard";
 
@@ -83,7 +84,7 @@ export const NodeCard: React.FC<Props> = ({
   if (!node) return;
 
   const { iconKey, componentType, title } = getDisplayDetailsForNodeCard(node);
-  const Icon = ICONS[iconKey];
+  const componentIcon = ICONS[iconKey];
 
   const portalId = node.internalPortalId;
 
@@ -107,7 +108,7 @@ export const NodeCard: React.FC<Props> = ({
             alignItems: "center",
           }}
         >
-          {Icon && <Icon />}
+          {componentIcon && <Icon icon={componentIcon} />}
           <Typography
             variant="body2"
             sx={{ ml: 1, fontSize: 14, fontWeight: FONT_WEIGHT_SEMI_BOLD }}

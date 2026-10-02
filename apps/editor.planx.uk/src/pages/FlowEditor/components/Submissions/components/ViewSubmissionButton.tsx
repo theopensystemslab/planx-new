@@ -1,8 +1,9 @@
-import PreviewIcon from "@mui/icons-material/Preview";
 import Button from "@mui/material/Button";
+import { IconEyeFilled } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { Icon } from "ui/icons/Icon";
 
 type Props = {
   sessionId: string;
@@ -44,7 +45,7 @@ export const ViewSubmissionButton = (props: Props) => {
       variant="contained"
       onClick={handleClick}
       disabled={!props.submittedAt}
-      startIcon={<PreviewIcon />}
+      startIcon={<Icon icon={IconEyeFilled} />}
     >
       View submission
     </Button>

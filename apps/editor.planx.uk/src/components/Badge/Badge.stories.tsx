@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
-import EditorIcon from "ui/icons/Editor";
+import { IconSitemapFilled } from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
 import { Badge } from "./Badge";
 import { BadgeVariant } from "./types";
@@ -52,7 +53,7 @@ export const Custom: Story = {
     variant: BadgeVariant.Custom,
     backgroundColour: "#D6FFD7",
     iconColour: "#2E5F2F",
-    icon: <EditorIcon />,
+    icon: <Icon icon={IconSitemapFilled} />,
   },
 };
 
@@ -89,7 +90,7 @@ export const AllStates: Story = {
         variant={BadgeVariant.Custom}
         backgroundColour="#D6FFD7"
         iconColour="#2E5F2F"
-        icon={<EditorIcon />}
+        icon={<Icon icon={IconSitemapFilled} />}
       />
     </Box>
   ),

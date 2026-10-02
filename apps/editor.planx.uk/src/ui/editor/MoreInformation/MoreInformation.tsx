@@ -1,6 +1,6 @@
-import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import type { BaseNodeData } from "@planx/components/shared";
+import { IconHelpCircleFilled } from "@tabler/icons-react";
 import { getIn } from "formik";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
@@ -17,7 +17,7 @@ export const MoreInformation = <T extends BaseNodeData>({
 }: MoreInformationProps<T>) => {
   return (
     <ModalSection>
-      <ModalSectionContent title="More information" Icon={Help}>
+      <ModalSectionContent title="More information" Icon={IconHelpCircleFilled}>
         <InputGroup flowSpacing>
           <InputLabel label="Why it matters" htmlFor="info" id="info-label">
             <RichTextInput

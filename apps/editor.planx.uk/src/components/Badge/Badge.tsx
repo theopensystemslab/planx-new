@@ -1,8 +1,9 @@
-import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
+import { IconStarFilled } from "@tabler/icons-react";
 import { getContrastTextColor } from "styleUtils";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
+import { Icon } from "ui/icons/Icon";
 
 import type { BadgeProps, BadgeSize } from "./types";
 import { BadgeVariant } from "./types";
@@ -51,7 +52,7 @@ export const Badge: React.FC<BadgeProps> = (props) => {
         aria-label="Source template"
         data-testid="badge-source-template"
       >
-        <StarIcon sx={{ color: "template.icon" }} />
+        <Icon icon={IconStarFilled} sx={{ color: "template.icon" }} />
       </Root>
     );
   }

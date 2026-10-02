@@ -1,4 +1,3 @@
-import CloudUpload from "@mui/icons-material/CloudUpload";
 import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
@@ -12,12 +11,14 @@ import {
   MAX_UPLOAD_SIZE_BYTES,
   MAX_UPLOAD_SIZE_MB,
 } from "@planx/file-upload";
+import { IconCloudUpload } from "@tabler/icons-react";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { nanoid } from "nanoid";
 import React, { useCallback } from "react";
 import type { FileWithPath } from "react-dropzone";
 import { useDropzone } from "react-dropzone";
 import { borderedFocusStyle } from "theme";
+import { Icon } from "ui/icons/Icon";
 
 interface Props<T extends FileUploadSlot = FileUploadSlot> {
   setSlots: React.Dispatch<React.SetStateAction<T[]>>;
@@ -206,7 +207,7 @@ export function Dropzone<T extends FileUploadSlot>({
         }}
       />
       <Box sx={{ pl: 2, pr: 3, color: "text.secondary" }}>
-        <CloudUpload />
+        <Icon icon={IconCloudUpload} />
       </Box>
       <Box sx={{ textAlign: "left" }} id="dropzone-label">
         <Typography variant="body1">

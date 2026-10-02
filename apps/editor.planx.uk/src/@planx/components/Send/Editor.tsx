@@ -1,10 +1,10 @@
-import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import type { SendIntegration } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { IconClipboardCheckFilled } from "@tabler/icons-react";
 import { FormikProvider, getIn } from "formik";
 import type { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -13,6 +13,7 @@ import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
+import { Icon } from "ui/icons/Icon";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -270,7 +271,7 @@ const SendComponent: React.FC<Props> = (props) => {
           </ErrorWrapper>
           <ModalSectionContent>
             <WarningContainer aria-labelledby={submissionsWarningId}>
-              <FactCheckIcon />
+              <Icon icon={IconClipboardCheckFilled} />
               <Typography
                 id={submissionsWarningId}
                 variant="body2"

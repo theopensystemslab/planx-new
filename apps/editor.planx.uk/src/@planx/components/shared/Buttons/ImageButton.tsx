@@ -1,9 +1,10 @@
-import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { IconPhotoFilled } from "@tabler/icons-react";
 import React, { useLayoutEffect, useRef, useState } from "react";
+import { Icon } from "ui/icons/Icon";
 import Checkbox from "ui/shared/Checkbox/Checkbox";
 
 import type { Props as ButtonBaseProps } from "./ButtonBase";
@@ -116,7 +117,7 @@ const ImageLabel = (props: ImageLabelProps): FCReturn => {
     >
       {imgError ? (
         <ImageError>
-          <ImageIcon />
+          <Icon icon={IconPhotoFilled} />
         </ImageError>
       ) : (
         <Image

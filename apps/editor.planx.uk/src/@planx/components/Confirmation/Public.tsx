@@ -1,9 +1,9 @@
-import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import type { PublicProps } from "@planx/components/shared/types";
+import { IconCheckFilled } from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import ApplicationSummary from "ui/public/ApplicationSummary";
 import Banner from "ui/public/Banner";
@@ -28,7 +28,7 @@ export default function ConfirmationComponent(props: Props) {
           background: theme.palette.success.light,
           text: theme.palette.text.primary,
         }}
-        Icon={Check}
+        Icon={IconCheckFilled}
         iconTitle={"Success"}
       >
         {props.description && (

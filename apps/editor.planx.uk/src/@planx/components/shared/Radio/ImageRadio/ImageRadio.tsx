@@ -1,4 +1,3 @@
-import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
 import type { RadioProps } from "@mui/material/Radio";
@@ -7,7 +6,9 @@ import { useRadioGroup } from "@mui/material/RadioGroup";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Option } from "@planx/components/Option/model";
+import { IconPhotoFilled } from "@tabler/icons-react";
 import React, { useId, useLayoutEffect, useRef, useState } from "react";
+import { Icon } from "ui/icons/Icon";
 
 export interface Props extends Option {
   onChange: RadioProps["onChange"];
@@ -136,7 +137,7 @@ const ImageLabel = (props: Props): FCReturn => {
     <ImageLabelRoot>
       {imgError ? (
         <FallbackImage>
-          <ImageIcon />
+          <Icon icon={IconPhotoFilled} />
         </FallbackImage>
       ) : (
         <Image

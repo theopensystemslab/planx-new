@@ -1,4 +1,3 @@
-import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
@@ -7,6 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import { IconPin } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
@@ -15,6 +15,7 @@ import { EmptyState } from "ui/editor/EmptyState";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import StyledTab from "ui/editor/StyledTab";
+import { Icon } from "ui/icons/Icon";
 
 import { useStore } from "../../FlowEditor/lib/store";
 import { useGetFlows } from "../../Flows/components/hooks/useGetFlows";
@@ -181,7 +182,7 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
               {tab === "pinned" ? (
                 <EmptyState
                   size="small"
-                  icon={<PushPinOutlinedIcon />}
+                  icon={<Icon icon={IconPin} />}
                   title="No pinned flows"
                   description="Use the pin icon on a flow to add it here"
                 />

@@ -1,4 +1,3 @@
-import GroupIcon from "@mui/icons-material/Group";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -10,9 +9,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import type { Role } from "@opensystemslab/planx-core/types";
+import { IconUsers } from "@tabler/icons-react";
 import { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 import { EmptyState } from "ui/editor/EmptyState";
+import { Icon } from "ui/icons/Icon";
 
 import { StyledAvatar, StyledTableRow } from "../styles";
 import type { MembersTableProps, TeamMember } from "../types";
@@ -74,7 +75,7 @@ export const MembersTable = ({
         <EmptyState
           size="small"
           title="No team members found"
-          icon={<GroupIcon />}
+          icon={<Icon icon={IconUsers} />}
         />
         {showAddMemberButton && (
           <Box sx={{ mt: 2 }}>

@@ -1,12 +1,13 @@
-import Search from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
+import { Icon } from "ui/icons/Icon";
 
 import ActivityWidget from "./components/ActivityWidget";
 import CalendarWidget, {
@@ -56,7 +57,7 @@ export default function Explore() {
             onClick={() => setSearchOpen(true)}
             aria-label="Search Plan✕"
           >
-            <Search />
+            <Icon icon={IconSearch} />
             <Typography
               component="span"
               variant="body1"

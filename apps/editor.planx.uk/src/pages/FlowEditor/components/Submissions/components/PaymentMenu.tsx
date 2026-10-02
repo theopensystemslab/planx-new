@@ -1,9 +1,12 @@
-import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import PaymentIcon from "@mui/icons-material/Payment";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import {
+  IconChevronDownFilled,
+  IconCreditCardFilled,
+} from "@tabler/icons-react";
 import { useState } from "react";
+import { Icon } from "ui/icons/Icon";
 
 import type { Submission } from "../types";
 import { InitiateRefundDialog } from "./InitiateRefundDialog";
@@ -46,8 +49,8 @@ export const PaymentMenu = ({ sessionId, paymentEvent }: Props) => {
         color="primary"
         variant="contained"
         onClick={(event) => setAnchorEl(event.currentTarget)}
-        startIcon={<PaymentIcon />}
-        endIcon={<KeyboardArrowDown />}
+        startIcon={<Icon icon={IconCreditCardFilled} />}
+        endIcon={<Icon icon={IconChevronDownFilled} />}
         aria-haspopup="menu"
         aria-controls={isMenuOpen ? "payment-menu" : undefined}
         aria-expanded={isMenuOpen ? "true" : undefined}

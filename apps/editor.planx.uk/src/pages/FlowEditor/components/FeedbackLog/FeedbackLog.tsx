@@ -1,11 +1,12 @@
-import BarChartIcon from "@mui/icons-material/BarChart";
 import Typography from "@mui/material/Typography";
+import { IconChartBar } from "@tabler/icons-react";
 import { BREADCRUMBS_HEIGHT } from "components/Breadcrumbs";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
 import { EmptyState } from "ui/editor/EmptyState";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
+import { Icon } from "ui/icons/Icon";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import type { ColumnConfig } from "ui/shared/DataTable/types";
 import { ColumnFilterType } from "ui/shared/DataTable/types";
@@ -158,7 +159,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({
         <EmptyState
           title={`No feedback found for this ${isFlowLevel ? "service" : "team"}`}
           description="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
-          icon={<BarChartIcon />}
+          icon={<Icon icon={IconChartBar} />}
         />
       ) : (
         <DataTable

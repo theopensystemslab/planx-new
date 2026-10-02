@@ -1,5 +1,6 @@
-import CloudDownload from "@mui/icons-material/CloudDownload";
 import Button from "@mui/material/Button";
+import { IconCloudDownload } from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
 type Props = {
   sessionId: string;
@@ -15,7 +16,7 @@ export const DownloadSubmissionButton = (props: Props) => {
       variant="contained"
       onClick={() => window.open(zipUrl, "_blank")}
       disabled={!props.submittedAt}
-      startIcon={<CloudDownload />}
+      startIcon={<Icon icon={IconCloudDownload} />}
     >
       Download
     </Button>

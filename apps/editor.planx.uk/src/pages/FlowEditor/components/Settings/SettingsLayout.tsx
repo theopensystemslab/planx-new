@@ -1,18 +1,18 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled, useTheme } from "@mui/material/styles";
-import type { SvgIconProps } from "@mui/material/SvgIcon";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "@tanstack/react-router";
 import { useLocation } from "react-use";
 import StyledTab from "ui/editor/StyledTab";
+import { Icon, type TablerIcon } from "ui/icons/Icon";
 
 export interface SettingsLink {
   label: string;
   path: string;
-  icon: React.ComponentType<SvgIconProps>;
+  icon: TablerIcon;
   condition?: boolean;
 }
 
@@ -88,13 +88,13 @@ const SettingsLayout: React.FC<Props> = ({
                 aria-label={title}
               >
                 {filteredLinks ? (
-                  filteredLinks.map(({ label, path, icon: Icon }) => (
+                  filteredLinks.map(({ label, path, icon }) => (
                     <StyledTab
                       size="large"
                       key={path}
                       value={path}
                       label={label}
-                      icon={Icon ? <Icon /> : undefined}
+                      icon={icon ? <Icon icon={icon} /> : undefined}
                       iconPosition="start"
                     />
                   ))

@@ -1,6 +1,7 @@
-import NorthEastIcon from "@mui/icons-material/NorthEast";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
+import { IconArrowUpRight } from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
 import { MenuButton, MenuTitle, StyledChip } from "../styles";
 
@@ -34,7 +35,10 @@ const AccordionItemButton = ({
       <MenuTitle variant="body3">{title}</MenuTitle>
       {isNew && <StyledChip label="new" size="small" color="success" />}
       {showExternalIcon && (
-        <NorthEastIcon sx={{ fontSize: "0.8rem", ml: "auto", mt: 0.2 }} />
+        <Icon
+          icon={IconArrowUpRight}
+          sx={{ fontSize: "0.8rem", ml: "auto", mt: 0.2 }}
+        />
       )}
     </MenuButton>
   );

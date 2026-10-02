@@ -1,5 +1,3 @@
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
@@ -9,6 +7,7 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import { IconBell, IconBellFilled } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import NotificationCard from "pages/FlowEditor/components/Notifications/NotificationCard";
 import type { Notification } from "pages/FlowEditor/components/Notifications/types";
@@ -16,6 +15,7 @@ import { partitionBySuperseded } from "pages/FlowEditor/components/Notifications
 import { useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import StyledTab from "ui/editor/StyledTab";
+import { Icon } from "ui/icons/Icon";
 import { CloseButton } from "ui/shared/CloseButton";
 
 interface Props {
@@ -129,7 +129,13 @@ const NotificationsPanel = ({
             }
             description={tab === 0 ? "You're all up to date" : ""}
             sx={{ mx: 2 }}
-            icon={tab === 0 ? <NotificationsNoneIcon /> : <NotificationsIcon />}
+            icon={
+              tab === 0 ? (
+                <Icon icon={IconBell} />
+              ) : (
+                <Icon icon={IconBellFilled} />
+              )
+            }
           />
         )}
         <Stack>

@@ -39,11 +39,6 @@ export default [
                 "See https://github.com/theopensystemslab/planx-new/pull/140",
             },
             {
-              name: "@mui/icons-material",
-              message:
-                "See https://github.com/theopensystemslab/planx-new/pull/140",
-            },
-            {
               name: "@mui/x-data-grid",
               importNames: ["DataGrid"],
               message:
@@ -82,7 +77,14 @@ export default [
                 "Please use AppErrorBoundary from 'components/Error/AppErrorBoundary' instead — it reports caught errors to Airbrake with a component stack.",
             },
           ],
-          patterns: ["@mui/*/*/*"],
+          patterns: [
+            { group: ["@mui/*/*/*"] },
+            {
+              group: ["@mui/icons-material", "@mui/icons-material/*"],
+              message:
+                "We use Tabler icons - import from '@tabler/icons-react' and render with <Icon icon={...} /> from 'ui/icons/Icon'",
+            },
+          ],
         },
       ],
       "no-restricted-syntax": [

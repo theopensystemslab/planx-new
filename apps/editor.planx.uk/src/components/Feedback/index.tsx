@@ -1,12 +1,14 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import LightbulbIcon from "@mui/icons-material/Lightbulb";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import RuleIcon from "@mui/icons-material/Rule";
-import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Drawer from "@mui/material/Drawer";
 import Typography from "@mui/material/Typography";
+import {
+  IconAlertTriangleFilled,
+  IconArrowLeft,
+  IconBulbFilled,
+  IconDotsFilled,
+  IconListCheckFilled,
+} from "@tabler/icons-react";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
@@ -14,6 +16,7 @@ import {
 import { BackButton } from "pages/Preview/Questions";
 import React, { useState } from "react";
 import { usePrevious } from "react-use";
+import { Icon } from "ui/icons/Icon";
 import FeedbackOption from "ui/public/FeedbackOption";
 import { CloseButton } from "ui/shared/CloseButton";
 
@@ -91,7 +94,7 @@ const Feedback: React.FC = () => {
           onClick={() => handleFeedbackViewClick("back")}
           variant="link"
         >
-          <ArrowBackIcon fontSize="small" />
+          <Icon icon={IconArrowLeft} fontSize="small" />
           Back
         </BackButton>
         <CloseButton
@@ -106,7 +109,7 @@ const Feedback: React.FC = () => {
     return (
       <FeedbackHeader>
         <FeedbackTitle>
-          {props.Icon && <props.Icon />}
+          {props.Icon && <Icon icon={props.Icon} />}
           <Typography variant="h3" component="h2">
             {props.title}
           </Typography>
@@ -125,7 +128,7 @@ const Feedback: React.FC = () => {
         <>
           <BackAndCloseFeedbackHeader />
           <FeedbackTitle>
-            <WarningIcon />
+            <Icon icon={IconAlertTriangleFilled} />
             <Typography variant="h3" component="h2">
               Report an issue with this service
             </Typography>
@@ -136,7 +139,7 @@ const Feedback: React.FC = () => {
 
     return (
       <TitleAndCloseFeedbackHeader
-        Icon={WarningIcon}
+        Icon={IconAlertTriangleFilled}
         title="Report an issue with this service"
       />
     );
@@ -151,25 +154,25 @@ const Feedback: React.FC = () => {
             <FeedbackBody>
               <FeedbackOption
                 onClick={() => handleFeedbackViewClick("issue")}
-                Icon={WarningIcon}
+                Icon={IconAlertTriangleFilled}
                 label="Issue"
                 showArrow
               />
               <FeedbackOption
                 onClick={() => handleFeedbackViewClick("idea")}
-                Icon={LightbulbIcon}
+                Icon={IconBulbFilled}
                 label="Idea"
                 showArrow
               />
               <FeedbackOption
                 onClick={() => handleFeedbackViewClick("comment")}
-                Icon={MoreHorizIcon}
+                Icon={IconDotsFilled}
                 label="Comment"
                 showArrow
               />
               <FeedbackOption
                 onClick={() => handleFeedbackViewClick("inaccuracy")}
-                Icon={RuleIcon}
+                Icon={IconListCheckFilled}
                 label="Inaccuracy"
                 showArrow
               />
@@ -226,7 +229,7 @@ const Feedback: React.FC = () => {
           <FeedbackRow>
             <BackAndCloseFeedbackHeader />
             <FeedbackTitle>
-              <RuleIcon />
+              <Icon icon={IconListCheckFilled} />
               <Typography variant="h3" component="h2" id="idea-title">
                 Report an inaccuracy
               </Typography>
@@ -258,7 +261,7 @@ const Feedback: React.FC = () => {
           <FeedbackRow>
             <BackAndCloseFeedbackHeader />
             <FeedbackTitle>
-              <LightbulbIcon />
+              <Icon icon={IconBulbFilled} />
               <Typography variant="h3" component="h2" id="idea-title">
                 Share an idea
               </Typography>
@@ -290,7 +293,7 @@ const Feedback: React.FC = () => {
           <FeedbackRow>
             <BackAndCloseFeedbackHeader />
             <FeedbackTitle>
-              <MoreHorizIcon />
+              <Icon icon={IconDotsFilled} />
               <Typography variant="h3" component="h2" id="comment-title">
                 Share a comment
               </Typography>

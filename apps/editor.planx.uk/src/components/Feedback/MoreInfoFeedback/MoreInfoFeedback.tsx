@@ -1,15 +1,14 @@
-import CancelIcon from "@mui/icons-material/Cancel";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { IconCircleCheckFilled, IconCircleXFilled } from "@tabler/icons-react";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { useEffect, useRef, useState } from "react";
-import CheckCircleIcon from "ui/icons/CheckCircle";
 import FeedbackOption from "ui/public/FeedbackOption";
 
 import FeedbackForm from "../FeedbackForm/FeedbackForm";
@@ -89,13 +88,13 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           <Box>
             <FeedbackOption
               onClick={() => handleFeedbackOptionClick("helpful")}
-              Icon={CheckCircleIcon}
+              Icon={IconCircleCheckFilled}
               label="Yes"
               format="positive"
             />
             <FeedbackOption
               onClick={() => handleFeedbackOptionClick("unhelpful")}
-              Icon={CancelIcon}
+              Icon={IconCircleXFilled}
               label="No"
               format="negative"
             />

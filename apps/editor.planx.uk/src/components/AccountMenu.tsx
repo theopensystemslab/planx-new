@@ -1,4 +1,3 @@
-import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -10,10 +9,12 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { IconSelector } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 import { CloseButton } from "ui/shared/CloseButton";
 
 const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
@@ -100,7 +101,11 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ compact = false }) => {
                 <Typography variant="body4">{userRole}</Typography>
               </Stack>
 
-              <UnfoldMoreIcon fontSize="small" sx={{ marginLeft: "auto" }} />
+              <Icon
+                icon={IconSelector}
+                fontSize="small"
+                sx={{ marginLeft: "auto" }}
+              />
             </>
           )}
         </IconButton>

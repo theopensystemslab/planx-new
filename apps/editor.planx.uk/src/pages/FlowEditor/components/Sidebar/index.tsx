@@ -1,14 +1,14 @@
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
+import { IconChevronLeft, IconChevronRightFilled } from "@tabler/icons-react";
 import { useParams, useRouteContext, useRouter } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
 import StyledTab from "ui/editor/StyledTab";
+import { Icon } from "ui/icons/Icon";
 
 import { useStore } from "../../lib/store";
 import Customisations from "./Customisations";
@@ -145,7 +145,11 @@ const Sidebar: React.FC = React.memo(() => {
       >
         <SidebarWrapper>
           <StyledToggleButton onClick={toggleSidebar} value="toggleSidebar">
-            {showSidebar ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {showSidebar ? (
+              <Icon icon={IconChevronRightFilled} />
+            ) : (
+              <Icon icon={IconChevronLeft} />
+            )}
           </StyledToggleButton>
           <Header>
             <CheckForChangesToPublishButton previewURL={previewURL} />

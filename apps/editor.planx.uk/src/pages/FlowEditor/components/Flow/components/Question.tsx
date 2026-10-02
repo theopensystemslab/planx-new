@@ -1,9 +1,11 @@
-import ErrorIcon from "@mui/icons-material/Error";
-import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import type { NodeTag } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
+import {
+  IconAlertCircleFilled,
+  IconHelpCircleFilled,
+} from "@tabler/icons-react";
 import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
@@ -11,6 +13,7 @@ import useFlashOnNodeAdded from "hooks/useFlashOnNodeAdded";
 import { memo } from "react";
 import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
+import { Icon } from "ui/icons/Icon";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -63,7 +66,8 @@ const Question: React.FC<Props> = memo((props) => {
     },
   });
 
-  const Icon = props.type === "Error" ? ErrorIcon : ICONS[props.type];
+  const componentIcon =
+    props.type === "Error" ? IconAlertCircleFilled : ICONS[props.type];
   // If there is an error, the icon has a semantic meaning and needs a title
   const iconTitleAccess = props.type === "Error" ? "Error" : undefined;
 
@@ -123,10 +127,16 @@ const Question: React.FC<Props> = memo((props) => {
               />
             )}
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
-              {Icon && <Icon titleAccess={iconTitleAccess} />}
+              {componentIcon && (
+                <Icon icon={componentIcon} titleAccess={iconTitleAccess} />
+              )}
               <span>{props.text}</span>
               {showHelpText && hasHelpText && (
-                <Help fontSize="small" sx={{ marginLeft: "auto" }} />
+                <Icon
+                  icon={IconHelpCircleFilled}
+                  fontSize="small"
+                  sx={{ marginLeft: "auto" }}
+                />
               )}
             </Box>
           </Link>

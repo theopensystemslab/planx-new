@@ -1,22 +1,25 @@
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import FactCheckIcon from "@mui/icons-material/FactCheck";
-import FlagIcon from "@mui/icons-material/Flag";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import GroupIcon from "@mui/icons-material/Group";
-import LayersIcon from "@mui/icons-material/Layers";
-import LeaderboardIcon from "@mui/icons-material/Leaderboard";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import SchoolIcon from "@mui/icons-material/School";
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
-import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Divider from "@mui/material/Divider";
+import {
+  IconAdjustmentsFilled,
+  IconBellRingingFilled,
+  IconBookFilled,
+  IconChartDotsFilled,
+  IconClipboardCheckFilled,
+  IconCurrencyPound,
+  IconDatabaseFilled,
+  IconFlagFilled,
+  IconLayoutDashboardFilled,
+  IconListFilled,
+  IconMessageFilled,
+  IconSchoolFilled,
+  IconShieldLockFilled,
+  IconSitemapFilled,
+  IconStack2Filled,
+  IconUsers,
+  IconWorldSearch,
+} from "@tabler/icons-react";
 import {
   useLocation,
   useMatches,
@@ -30,7 +33,6 @@ import { AVAILABLE_FEATURE_FLAGS, hasFeatureFlag } from "lib/featureFlags";
 import { isSystemTeam } from "lib/systemTeams";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useRef, useState } from "react";
-import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
 import { useNotificationsCount } from "../../hooks/data/useNotificationsCount";
@@ -118,25 +120,25 @@ function EditorNavMenu() {
       routes: [
         {
           title: "Select a team",
-          Icon: FormatListBulletedIcon,
+          Icon: IconListFilled,
           route: "/app",
           accessibleBy: "*",
         },
         {
           title: "Global settings",
-          Icon: TuneIcon,
+          Icon: IconAdjustmentsFilled,
           route: "/app/global-settings",
           accessibleBy: ["platformAdmin"],
         },
         {
           title: "Admin panel",
-          Icon: AdminPanelSettingsIcon,
+          Icon: IconShieldLockFilled,
           route: "/app/admin-panel",
           accessibleBy: ["platformAdmin", "analyst"],
         },
         {
           title: "User management",
-          Icon: GroupIcon,
+          Icon: IconUsers,
           route: `/app/users`,
           accessibleBy: ["platformAdmin"],
         },
@@ -151,7 +153,7 @@ function EditorNavMenu() {
           ? [
               {
                 title: "Dashboard",
-                Icon: DashboardIcon,
+                Icon: IconLayoutDashboardFilled,
                 route: `/app/${teamSlug}/dashboard`,
                 accessibleBy: "*" as const,
               },
@@ -159,7 +161,7 @@ function EditorNavMenu() {
           : []),
         {
           title: "Flows",
-          Icon: EditorIcon,
+          Icon: IconSitemapFilled,
           route: `/app/${teamSlug}/flows`,
           accessibleBy: "*" as const,
         },
@@ -171,19 +173,19 @@ function EditorNavMenu() {
       routes: [
         {
           title: "Team settings",
-          Icon: TuneIcon,
+          Icon: IconAdjustmentsFilled,
           route: `/app/${teamSlug}/settings`,
           accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
         },
         {
           title: "Team members",
-          Icon: GroupIcon,
+          Icon: IconUsers,
           route: `/app/${teamSlug}/members`,
           accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
         },
         {
           title: "Subscription",
-          Icon: CurrencyPoundIcon,
+          Icon: IconCurrencyPound,
           route: `/app/${teamSlug}/subscription`,
           accessibleBy: ["platformAdmin", "teamAdmin"],
         },
@@ -192,30 +194,30 @@ function EditorNavMenu() {
     {
       subtitle: "Data",
       accordion: true,
-      icon: LeaderboardIcon,
+      icon: IconDatabaseFilled,
       routes: [
         {
           title: "Submissions",
-          Icon: FactCheckIcon,
+          Icon: IconClipboardCheckFilled,
           route: `/app/${teamSlug}/submissions`,
           accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
         },
         {
           title: "Feedback",
-          Icon: RateReviewIcon,
+          Icon: IconMessageFilled,
           route: `/app/${teamSlug}/feedback`,
           accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
         },
         {
           title: "Analytics",
-          Icon: LeaderboardIcon,
+          Icon: IconChartDotsFilled,
           route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
           accessibleBy: "*",
           disabled: !teamAnalyticsLink,
         },
         {
           title: "Planning Data",
-          Icon: LayersIcon,
+          Icon: IconStack2Filled,
           route: referenceCode
             ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
             : `#`,
@@ -240,19 +242,19 @@ function EditorNavMenu() {
       routes: [
         {
           title: "Resources",
-          Icon: MenuBookIcon,
+          Icon: IconBookFilled,
           route: `/app/${teamSlug}/resources`,
           accessibleBy: "*",
         },
         {
           title: "Onboarding",
-          Icon: AssignmentTurnedInIcon,
+          Icon: IconClipboardCheckFilled,
           route: `/app/${teamSlug}/onboarding`,
           accessibleBy: "*",
         },
         {
           title: "Tutorials",
-          Icon: SchoolIcon,
+          Icon: IconSchoolFilled,
           route: `/app/${teamSlug}/tutorials`,
           accessibleBy: "*",
         },
@@ -266,31 +268,31 @@ function EditorNavMenu() {
         routes: [
           {
             title: "Editor",
-            Icon: EditorIcon,
+            Icon: IconSitemapFilled,
             route: `/app/${teamSlug}/${flowSlug}`,
             accessibleBy: "*",
           },
           {
             title: "Flow settings",
-            Icon: TuneIcon,
+            Icon: IconAdjustmentsFilled,
             route: `/app/${teamSlug}/${flowSlug}/settings`,
             accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
           },
           {
             title: "Feedback",
-            Icon: RateReviewIcon,
+            Icon: IconMessageFilled,
             route: `/app/${teamSlug}/${flowSlug}/feedback`,
             accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
           },
           {
             title: "Submissions",
-            Icon: FactCheckIcon,
+            Icon: IconClipboardCheckFilled,
             route: `/app/${teamSlug}/${flowSlug}/submissions`,
             accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
           },
           {
             title: "Analytics",
-            Icon: LeaderboardIcon,
+            Icon: IconChartDotsFilled,
             route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
             accessibleBy: "*",
             disabled: !flowAnalyticsLink,
@@ -307,13 +309,13 @@ function EditorNavMenu() {
         routes: [
           {
             title: "Editor",
-            Icon: EditorIcon,
+            Icon: IconSitemapFilled,
             route: `/app/${teamSlug}/${flowSlug}`,
             accessibleBy: ["platformAdmin"],
           },
           {
             title: "Flow settings",
-            Icon: TuneIcon,
+            Icon: IconAdjustmentsFilled,
             route: `/app/${teamSlug}/${flowSlug}/settings`,
             accessibleBy: ["platformAdmin"],
           },
@@ -373,7 +375,7 @@ function EditorNavMenu() {
 
   const exploreRoute: Route = {
     title: "Explore Plan✕",
-    Icon: TravelExploreIcon,
+    Icon: IconWorldSearch,
     route: `/app/${teamSlug}/explore`,
     accessibleBy: "*",
     isNew: true,
@@ -520,7 +522,7 @@ function EditorNavMenu() {
               <Box ref={featureFlagsRef}>
                 <NavMenuItem
                   title="Feature flags"
-                  Icon={FlagIcon}
+                  Icon={IconFlagFilled}
                   {...featureFlagBadge}
                   isActive={featureFlagsPanelOpen}
                   isExternal={false}
@@ -543,7 +545,7 @@ function EditorNavMenu() {
                 <Box ref={notificationsRef}>
                   <NavMenuItem
                     title="Notifications"
-                    Icon={NotificationsActiveIcon}
+                    Icon={IconBellRingingFilled}
                     badgeCount={notificationsCount || undefined}
                     isActive={notificationsPanelOpen}
                     isExternal={false}

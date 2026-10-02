@@ -1,6 +1,3 @@
-import ContentCutIcon from "@mui/icons-material/ContentCut";
-import ContentPaste from "@mui/icons-material/ContentPaste";
-import HelpTextIcon from "@mui/icons-material/Help";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
@@ -9,14 +6,20 @@ import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
+import {
+  IconClipboardFilled,
+  IconCopyFilled,
+  IconCopyPlusFilled,
+  IconCut,
+  IconHelpCircleFilled,
+} from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
 import type { ReactNode } from "react";
-import CloneIcon from "ui/icons/Clone";
-import CopyIcon from "ui/icons/Copy";
+import { Icon } from "ui/icons/Icon";
 
 export type ContextMenuSource = "node" | "hanger" | "positioned-note" | null;
 
@@ -193,7 +196,7 @@ export const ContextMenu: React.FC = () => {
         {
           id: "copy",
           label: "Copy",
-          icon: <CopyIcon fontSize="small" />,
+          icon: <Icon icon={IconCopyFilled} fontSize="small" />,
           disabled: isTemplatedFrom
             ? !isTemplatedNodeContextMenuEnabled
             : false,
@@ -202,7 +205,7 @@ export const ContextMenu: React.FC = () => {
         {
           id: "clone",
           label: "Clone",
-          icon: <CloneIcon fontSize="small" />,
+          icon: <Icon icon={IconCopyPlusFilled} fontSize="small" />,
           disabled: isTemplatedFrom
             ? !isTemplatedNodeContextMenuEnabled
             : false,
@@ -211,7 +214,7 @@ export const ContextMenu: React.FC = () => {
         {
           id: "cut",
           label: "Cut",
-          icon: <ContentCutIcon fontSize="small" />,
+          icon: <Icon icon={IconCut} fontSize="small" />,
           disabled: isTemplatedFrom
             ? !isTemplatedNodeContextMenuEnabled
             : false,
@@ -223,7 +226,7 @@ export const ContextMenu: React.FC = () => {
         actions.push({
           id: "copy-help",
           label: "Copy help text",
-          icon: <HelpTextIcon fontSize="small" />,
+          icon: <Icon icon={IconHelpCircleFilled} fontSize="small" />,
           disabled: false,
           onClick: handleCopyHelp,
         });
@@ -231,7 +234,7 @@ export const ContextMenu: React.FC = () => {
         actions.push({
           id: "paste-help",
           label: "Paste help text",
-          icon: <HelpTextIcon fontSize="small" />,
+          icon: <Icon icon={IconHelpCircleFilled} fontSize="small" />,
           disabled: !hasCopiedHelper,
           onClick: handlePasteHelp,
         });
@@ -245,7 +248,7 @@ export const ContextMenu: React.FC = () => {
         {
           id: "paste",
           label: "Paste",
-          icon: <ContentPaste fontSize="small" />,
+          icon: <Icon icon={IconClipboardFilled} fontSize="small" />,
           disabled: !isPasteEnabled,
           onClick: handlePaste,
         },

@@ -1,4 +1,3 @@
-import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Dialog from "@mui/material/Dialog";
@@ -7,10 +6,12 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
+import { IconXFilled } from "@tabler/icons-react";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
 import { cardBoxShadow } from "theme";
+import { Icon } from "ui/icons/Icon";
 import { DebouncedSearchInput } from "ui/shared/SearchBox/DebouncedSearchInput";
 
 import { Badge } from "../../../components/Badge/Badge";
@@ -112,7 +113,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ open, onClose }) => {
             Search Plan✕
           </Typography>
           <IconButton aria-label="close search" onClick={onClose}>
-            <CloseIcon />
+            <Icon icon={IconXFilled} />
           </IconButton>
         </Box>
         <Box sx={{ px: 3, pb: 2 }}>

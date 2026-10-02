@@ -5,11 +5,12 @@ import {
   ThemeProvider,
   useTheme,
 } from "@mui/material/styles";
+import { IconRotate } from "@tabler/icons-react";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { isEmpty } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo } from "react";
-import Reset from "ui/icons/Reset";
+import { Icon } from "ui/icons/Icon";
 
 import Questions from "../../../../Preview/Questions";
 
@@ -56,7 +57,7 @@ export const PreviewBrowser: React.FC = () => {
   return (
     <ThemeProvider theme={mobileTheme}>
       <ResetToggle variant="link" onClick={() => resetPreview()}>
-        <Reset fontSize="small" />
+        <Icon icon={IconRotate} fontSize="small" />
         Restart
       </ResetToggle>
       {isLoading ? (

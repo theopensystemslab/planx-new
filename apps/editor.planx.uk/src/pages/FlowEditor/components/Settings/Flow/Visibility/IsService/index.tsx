@@ -1,13 +1,14 @@
-import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
+import { IconHourglassFilled } from "@tabler/icons-react";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useId, useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_IS_SERVICE, UPDATE_IS_SERVICE, useGetIsService } from "./queries";
@@ -53,7 +54,7 @@ const IsService: React.FC = () => {
           <>
             {isTrial && (
               <WarningContainer aria-labelledby={trialWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
+                <Icon icon={IconHourglassFilled} sx={{ mr: 1 }} />
                 <Typography id={trialWarningId} variant="body2">
                   Trial accounts cannot create publicly-accessible services.
                 </Typography>

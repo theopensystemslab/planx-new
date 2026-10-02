@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
-import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import type { NodeTag } from "@opensystemslab/planx-core/types";
+import { IconDotsVerticalFilled, IconSitemapFilled } from "@tabler/icons-react";
 import { Link, useParams, useRouteContext } from "@tanstack/react-router";
 import classNames from "classnames";
 import gql from "graphql-tag";
@@ -12,7 +12,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
-import EditorIcon from "ui/icons/Editor";
+import { Icon } from "ui/icons/Icon";
 
 import { getParentId } from "../lib/utils";
 import { AttachedNote } from "./AttachedNote";
@@ -132,7 +132,7 @@ const ExternalPortal: React.FC<any> = (props) => {
                     drag(el);
                   }}
                 >
-                  <EditorIcon />
+                  <Icon icon={IconSitemapFilled} />
                   <span>{href}</span>
                 </Link>
               ) : (
@@ -141,7 +141,7 @@ const ExternalPortal: React.FC<any> = (props) => {
                     drag(el);
                   }}
                 >
-                  <EditorIcon />
+                  <Icon icon={IconSitemapFilled} />
                   <span>{href}</span>
                 </span>
               )}
@@ -160,7 +160,7 @@ const ExternalPortal: React.FC<any> = (props) => {
                 preload={false}
                 className="portalMenu"
               >
-                <MoreVert titleAccess="Edit Portal" />
+                <Icon icon={IconDotsVerticalFilled} titleAccess="Edit Portal" />
               </Link>
             </Box>
           </TemplatedNodeContainer>
@@ -263,7 +263,7 @@ const InternalPortal: React.FC<any> = (props) => {
                 preload={false}
                 className="portalMenu"
               >
-                <MoreVert titleAccess="Edit Portal" />
+                <Icon icon={IconDotsVerticalFilled} titleAccess="Edit Portal" />
               </Link>
             </Box>
             {showTags && props.data?.tags?.length > 0 && (

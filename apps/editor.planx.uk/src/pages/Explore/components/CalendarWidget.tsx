@@ -1,11 +1,14 @@
-import TableRowsIcon from "@mui/icons-material/TableRows";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import Box from "@mui/material/Box";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
+import {
+  IconLayoutGridFilled,
+  IconLayoutListFilled,
+} from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { CalendarView } from "pages/FlowEditor/lib/store/editor";
 import { StyledToggleButton } from "pages/Flows/components/StyledToggleButton";
+import { Icon } from "ui/icons/Icon";
 
 const CALENDAR_SRC =
   "c_539668a746760a3dae793103004f774c5fa21e5cfd5f6974a9f36e9ec5a2962e@group.calendar.google.com";
@@ -60,12 +63,12 @@ export function CalendarViewToggle() {
     >
       <Tooltip title="List view" placement="bottom">
         <StyledToggleButton value="list" disableRipple>
-          <TableRowsIcon />
+          <Icon icon={IconLayoutListFilled} />
         </StyledToggleButton>
       </Tooltip>
       <Tooltip title="Month view" placement="bottom">
         <StyledToggleButton value="grid" disableRipple>
-          <ViewModuleIcon />
+          <Icon icon={IconLayoutGridFilled} />
         </StyledToggleButton>
       </Tooltip>
     </ToggleButtonGroup>

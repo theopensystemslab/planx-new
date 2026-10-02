@@ -1,6 +1,7 @@
-import ImageIcon from "@mui/icons-material/Image";
+import { IconPhotoFilled } from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import ToggleIconButton from "ui/editor/ToggleIconButton";
+import { Icon } from "ui/icons/Icon";
 
 export const ToggleImagesButton: React.FC = () => {
   const [showImages, toggleShowImages] = useStore((state) => [
@@ -12,7 +13,7 @@ export const ToggleImagesButton: React.FC = () => {
     <ToggleIconButton
       isToggled={showImages}
       onToggle={toggleShowImages}
-      icon={<ImageIcon />}
+      icon={<Icon icon={IconPhotoFilled} />}
       tooltip="Toggle images"
       ariaLabel="Toggle images"
     />

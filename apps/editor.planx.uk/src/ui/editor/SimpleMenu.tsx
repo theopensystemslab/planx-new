@@ -1,9 +1,10 @@
-import MoreVert from "@mui/icons-material/MoreVert";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { IconDotsVerticalFilled } from "@tabler/icons-react";
 import type { PropsWithChildren } from "react";
 import React, { useState } from "react";
+import { Icon } from "ui/icons/Icon";
 
 interface Props {
   className?: string;
@@ -33,7 +34,7 @@ export default function SimpleMenu({
         size="large"
         disableRipple
       >
-        <MoreVert />
+        <Icon icon={IconDotsVerticalFilled} />
         {children}
       </IconButton>
       <Menu

@@ -1,6 +1,6 @@
-import Check from "@mui/icons-material/Check";
 import Typography from "@mui/material/Typography";
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
+import { IconCheckFilled } from "@tabler/icons-react";
 
 import Banner from "./Banner";
 
@@ -16,7 +16,7 @@ export default meta;
 export const Basic = {
   args: {
     heading: "Application completed",
-    Icon: Check,
+    Icon: IconCheckFilled,
     iconTitle: "Success",
     color: {
       background: "#ffdd00",

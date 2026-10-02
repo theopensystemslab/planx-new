@@ -83,13 +83,13 @@ describe("rendering boolean columns", () => {
     // Newcastle (row 3): govpayEnabled = false
     const firstRow = govPayCells[3];
     expect(
-      await within(firstRow as HTMLElement).findByTestId("CloseIcon"),
+      await within(firstRow as HTMLElement).findByTestId("IconXFilled"),
     ).toBeVisible();
 
     // Tewkesbury (row 4): govpayEnabled = true
     const secondRow = govPayCells[4];
     expect(
-      within(secondRow as HTMLElement).getByTestId("DoneIcon"),
+      within(secondRow as HTMLElement).getByTestId("IconCheckFilled"),
     ).toBeVisible();
   });
 });
@@ -107,7 +107,7 @@ describe("GOV.UK Notify column", () => {
     // Barking (row 1) has govnotifyPersonalisation.helpEmail set
     const barkingCell = govnotifyCells[1];
     expect(
-      within(barkingCell as HTMLElement).getByTestId("DoneIcon"),
+      within(barkingCell as HTMLElement).getByTestId("IconCheckFilled"),
     ).toBeVisible();
   });
 
@@ -123,7 +123,7 @@ describe("GOV.UK Notify column", () => {
     // Doncaster (row 2) has no govnotifyPersonalisation
     const doncasterCell = govnotifyCells[2];
     expect(
-      within(doncasterCell as HTMLElement).getByTestId("CloseIcon"),
+      within(doncasterCell as HTMLElement).getByTestId("IconXFilled"),
     ).toBeVisible();
   });
 });

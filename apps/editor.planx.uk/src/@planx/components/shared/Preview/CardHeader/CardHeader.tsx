@@ -1,8 +1,9 @@
-import HelpIcon from "@mui/icons-material/Help";
 import Typography from "@mui/material/Typography";
+import { IconHelpCircleFilled } from "@tabler/icons-react";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useState } from "react";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
+import { Icon } from "ui/icons/Icon";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { DESCRIPTION_TEXT } from "../../constants";
@@ -72,7 +73,7 @@ export const CardHeader: React.FC<ICardHeader> = ({
             aria-haspopup="dialog"
             data-testid="more-info-button"
           >
-            <HelpIcon /> More information
+            <Icon icon={IconHelpCircleFilled} /> More information
           </HelpButton>
         </Typography>
       )}

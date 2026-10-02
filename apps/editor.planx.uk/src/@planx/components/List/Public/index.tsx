@@ -1,5 +1,3 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -8,7 +6,9 @@ import { formatTitle } from "@planx/components/shared/Schema/InputFields";
 import { isMapFieldResponse } from "@planx/components/shared/Schema/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import type { PublicProps } from "@planx/components/shared/types";
+import { IconPencilFilled, IconTrashFilled } from "@tabler/icons-react";
 import React, { useEffect, useRef } from "react";
+import { Icon } from "ui/icons/Icon";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -181,7 +181,7 @@ const InactiveListCard: React.FC<{
           variant="contained"
           color="secondary"
         >
-          <DeleteIcon color="warning" fontSize="medium" />
+          <Icon icon={IconTrashFilled} color="warning" fontSize="medium" />
           Remove
         </CardButton>
         <CardButton
@@ -190,7 +190,7 @@ const InactiveListCard: React.FC<{
           variant="contained"
           color="secondary"
         >
-          <EditIcon fontSize="medium" />
+          <Icon icon={IconPencilFilled} fontSize="medium" />
           Edit
         </CardButton>
       </Box>

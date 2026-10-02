@@ -1,5 +1,3 @@
-import ErrorIcon from "@mui/icons-material/Error";
-import Image from "@mui/icons-material/Image";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
@@ -9,6 +7,7 @@ import {
   getAllowedExtensions,
   MAX_UPLOAD_SIZE_BYTES,
 } from "@planx/file-upload";
+import { IconAlertCircleFilled, IconPhotoFilled } from "@tabler/icons-react";
 import {
   uploadPublicFile,
   waitForPublicFile,
@@ -16,6 +15,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import type { FileRejection, FileWithPath } from "react-dropzone";
 import { useDropzone } from "react-dropzone";
+import { Icon } from "ui/icons/Icon";
 
 export type AcceptedFileTypes = Record<string, ImageFileExtensions[]>;
 
@@ -183,7 +183,7 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
     return (
       <Tooltip open title={status.msg}>
         <UploadButton type="button" disabled aria-label={status.msg}>
-          <ErrorIcon titleAccess="Error" />
+          <Icon icon={IconAlertCircleFilled} titleAccess="Error" />
         </UploadButton>
       </Tooltip>
     );
@@ -219,7 +219,11 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
           onClick={openFilePicker}
           onKeyDown={handleKeyDown}
         >
-          <Image color={disabled ? "disabled" : "inherit"} aria-hidden />
+          <Icon
+            icon={IconPhotoFilled}
+            color={disabled ? "disabled" : "inherit"}
+            aria-hidden
+          />
         </UploadButton>
       </Tooltip>
     </DropContainer>

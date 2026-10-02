@@ -1,12 +1,12 @@
-import EastIcon from "@mui/icons-material/East";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import type SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
+import { IconArrowRight } from "@tabler/icons-react";
+import { Icon, type TablerIcon } from "ui/icons/Icon";
 
 interface Props {
   label: string;
-  Icon?: typeof SvgIcon;
+  Icon?: TablerIcon;
   showArrow?: boolean;
   format?: "positive" | "negative";
   onClick: () => void;
@@ -36,7 +36,7 @@ const Root = styled(Button, {
   }),
 }));
 
-const Icon = styled("span")(({ theme }) => ({
+const IconWrapper = styled("span")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   color: theme.palette.primary.main,
@@ -62,16 +62,16 @@ export default function FeedbackOption(props: Props): FCReturn {
   return (
     <Root {...props}>
       {props.Icon && (
-        <Icon className="buttonIcon">
-          <props.Icon />
-        </Icon>
+        <IconWrapper className="buttonIcon">
+          <Icon icon={props.Icon} />
+        </IconWrapper>
       )}
       <Label variant="h4" component="span">
         {props.label}
       </Label>
       {props.showArrow && (
         <ArrowButton>
-          <EastIcon />
+          <Icon icon={IconArrowRight} />
         </ArrowButton>
       )}
     </Root>

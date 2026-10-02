@@ -1,4 +1,4 @@
-import type SvgIcon from "@mui/material/SvgIcon";
+import type { TablerIcon } from "ui/icons/Icon";
 
 export type UserFeedback = {
   userContext?: string;
@@ -23,5 +23,5 @@ export type ClickEvents = "close" | "back" | "triage" | FeedbackCategory;
 
 export interface TitleAndCloseProps {
   title: string;
-  Icon?: typeof SvgIcon;
+  Icon?: TablerIcon;
 }

@@ -1,88 +1,83 @@
-import AltRoute from "@mui/icons-material/AltRoute";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import Article from "@mui/icons-material/Article";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import CallSplit from "@mui/icons-material/CallSplit";
-import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
-import CloudUpload from "@mui/icons-material/CloudUpload";
-import ContactPage from "@mui/icons-material/ContactPage";
-import Create from "@mui/icons-material/Create";
-import CurrencyPound from "@mui/icons-material/CurrencyPound";
-import Event from "@mui/icons-material/Event";
-import FilterAltOutlined from "@mui/icons-material/FilterAltOutlined";
-import Folder from "@mui/icons-material/Folder";
-import FunctionsIcon from "@mui/icons-material/Functions";
-import Home from "@mui/icons-material/Home";
-import List from "@mui/icons-material/List";
-import ListAlt from "@mui/icons-material/ListAlt";
-import LocationOnOutlined from "@mui/icons-material/LocationOnOutlined";
-import Map from "@mui/icons-material/Map";
-import PaymentOutlined from "@mui/icons-material/PaymentOutlined";
-import Pin from "@mui/icons-material/Pin";
-import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
-import PlaylistAddCheck from "@mui/icons-material/PlaylistAddCheck";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
-import ReportProblemOutlined from "@mui/icons-material/ReportProblemOutlined";
-import SearchOutlined from "@mui/icons-material/SearchOutlined";
-import Send from "@mui/icons-material/Send";
-import ShapeLine from "@mui/icons-material/ShapeLine";
-import SquareFoot from "@mui/icons-material/SquareFoot";
-import StickyNote2Icon from "@mui/icons-material/StickyNote2";
-import TextFields from "@mui/icons-material/TextFields";
-import type { OverridableComponent } from "@mui/material/OverridableComponent";
-import type { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import type * as React from "react";
-import EditorIcon from "ui/icons/Editor";
-
-// XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves
-type MuiIcon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
-  muiName: string;
-};
-type CustomIcon = React.ComponentType<SvgIconProps>;
-type Icon = MuiIcon | CustomIcon;
+import {
+  IconAlertTriangle,
+  IconArrowRight,
+  IconArrowsSplit,
+  IconArrowsSplit2,
+  IconArticle,
+  IconBrowserCheck,
+  IconCalendarEvent,
+  IconCheckupList,
+  IconCloudUpload,
+  IconCreditCard,
+  IconCurrencyPound,
+  IconFilter,
+  IconFolder,
+  IconHome,
+  IconId,
+  IconLayoutList,
+  IconList,
+  IconListCheck,
+  IconListDetails,
+  IconMap,
+  IconMapPin,
+  IconMathFunction,
+  IconMessage,
+  IconNote,
+  IconNumber123,
+  IconPencil,
+  IconPlaylistAdd,
+  IconRulerMeasure,
+  IconSearch,
+  IconSend,
+  IconShape,
+  IconSitemap,
+  IconSparkles,
+  IconSquareCheck,
+  IconTypography,
+} from "@tabler/icons-react";
+import type { TablerIcon } from "ui/icons/Icon";
 
 export const ICONS: {
-  [key in TYPES]: Icon | undefined;
+  [key in TYPES]: TablerIcon | undefined;
 } = {
-  [TYPES.AddressInput]: Home,
+  [TYPES.AddressInput]: IconHome,
   [TYPES.Answer]: undefined,
-  [TYPES.Calculate]: FunctionsIcon,
-  [TYPES.Checklist]: CheckBoxOutlined,
-  [TYPES.Confirmation]: TextFields,
-  [TYPES.ContactInput]: ContactPage,
-  [TYPES.Content]: TextFields,
-  [TYPES.DateInput]: Event,
-  [TYPES.DrawBoundary]: SquareFoot,
-  [TYPES.EnhancedTextInput]: AutoAwesomeIcon,
-  [TYPES.ExternalPortal]: EditorIcon,
-  [TYPES.Feedback]: RateReviewIcon,
-  [TYPES.FileUpload]: CloudUpload,
-  [TYPES.FileUploadAndLabel]: CloudUpload,
-  [TYPES.Filter]: FilterAltOutlined,
-  [TYPES.FindProperty]: SearchOutlined,
+  [TYPES.Calculate]: IconMathFunction,
+  [TYPES.Checklist]: IconSquareCheck,
+  [TYPES.Confirmation]: IconBrowserCheck,
+  [TYPES.ContactInput]: IconId,
+  [TYPES.Content]: IconTypography,
+  [TYPES.DateInput]: IconCalendarEvent,
+  [TYPES.DrawBoundary]: IconRulerMeasure,
+  [TYPES.EnhancedTextInput]: IconSparkles,
+  [TYPES.ExternalPortal]: IconSitemap,
+  [TYPES.Feedback]: IconMessage,
+  [TYPES.FileUpload]: IconCloudUpload,
+  [TYPES.FileUploadAndLabel]: IconCloudUpload,
+  [TYPES.Filter]: IconFilter,
+  [TYPES.FindProperty]: IconSearch,
   [TYPES.Flow]: undefined,
-  [TYPES.InternalPortal]: Folder,
-  [TYPES.List]: ListAlt,
-  [TYPES.MapAndLabel]: ShapeLine,
-  [TYPES.NextSteps]: ArrowForwardIcon,
-  [TYPES.Note]: StickyNote2Icon,
-  [TYPES.Notice]: ReportProblemOutlined,
-  [TYPES.NumberInput]: Pin,
-  [TYPES.Page]: Article,
-  [TYPES.Pay]: PaymentOutlined,
-  [TYPES.PlanningConstraints]: Map,
-  [TYPES.PropertyInformation]: LocationOnOutlined,
-  [TYPES.Question]: CallSplit,
-  [TYPES.ResponsiveChecklist]: CheckBoxOutlined,
-  [TYPES.ResponsiveQuestion]: AltRoute,
-  [TYPES.Result]: PlaylistAddCheck,
-  [TYPES.Review]: RateReviewOutlined,
-  [TYPES.Section]: List,
-  [TYPES.Send]: Send,
-  [TYPES.SetFee]: CurrencyPound,
-  [TYPES.SetValue]: PlaylistAdd,
-  [TYPES.TaskList]: List,
-  [TYPES.TextInput]: Create,
+  [TYPES.InternalPortal]: IconFolder,
+  [TYPES.List]: IconLayoutList,
+  [TYPES.MapAndLabel]: IconShape,
+  [TYPES.NextSteps]: IconArrowRight,
+  [TYPES.Note]: IconNote,
+  [TYPES.Notice]: IconAlertTriangle,
+  [TYPES.NumberInput]: IconNumber123,
+  [TYPES.Page]: IconArticle,
+  [TYPES.Pay]: IconCreditCard,
+  [TYPES.PlanningConstraints]: IconMap,
+  [TYPES.PropertyInformation]: IconMapPin,
+  [TYPES.Question]: IconArrowsSplit2,
+  [TYPES.ResponsiveChecklist]: IconSquareCheck,
+  [TYPES.ResponsiveQuestion]: IconArrowsSplit,
+  [TYPES.Result]: IconListCheck,
+  [TYPES.Review]: IconCheckupList,
+  [TYPES.Section]: IconList,
+  [TYPES.Send]: IconSend,
+  [TYPES.SetFee]: IconCurrencyPound,
+  [TYPES.SetValue]: IconPlaylistAdd,
+  [TYPES.TaskList]: IconListDetails,
+  [TYPES.TextInput]: IconPencil,
 } as const;

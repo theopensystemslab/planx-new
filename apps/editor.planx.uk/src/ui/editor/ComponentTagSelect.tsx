@@ -1,8 +1,8 @@
-import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import type { AutocompleteProps } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import type { NodeTag, Role } from "@opensystemslab/planx-core/types";
 import { NODE_TAGS } from "@opensystemslab/planx-core/types";
+import { IconBookmarksFilled } from "@tabler/icons-react";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { getContrastTextColor } from "styleUtils";
@@ -81,7 +81,7 @@ export const ComponentTagSelect: React.FC<Props> = ({
 }) => {
   return (
     <ModalSection>
-      <ModalSectionContent title="Tags" Icon={BookmarksIcon}>
+      <ModalSectionContent title="Tags" Icon={IconBookmarksFilled}>
         <InputRow>
           <SelectMultiple
             label="Tag this component"

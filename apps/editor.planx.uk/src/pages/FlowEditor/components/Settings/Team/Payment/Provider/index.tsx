@@ -1,4 +1,3 @@
-import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -12,6 +11,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
+import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
@@ -20,6 +20,7 @@ import React, { useId, useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
+import { Icon } from "ui/icons/Icon";
 
 import { useStripeConnectStatus } from "../Onboarding/hooks/useStripeConnectStatus";
 
@@ -101,7 +102,7 @@ const Provider: React.FC = () => {
     if (isStripe) {
       return (
         <WarningContainer aria-labelledby={stripeWarningId} sx={{ my: 0 }}>
-          <WarningIcon sx={{ mr: 1 }} />
+          <Icon icon={IconAlertTriangleFilled} sx={{ mr: 1 }} />
           <Typography id={stripeWarningId} variant="body2">
             Stripe payments are not yet available. Applicants will not be able
             to pay online until this is complete.

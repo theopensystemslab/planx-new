@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
+import { Icon } from "ui/icons/Icon";
 
 import { BadgeChip, MenuButton } from "../styles";
 import type { NavMenuButtonProps } from "./NavMenuButton";
@@ -11,7 +12,7 @@ interface Props extends NavMenuButtonProps {
 
 const NavMenuItem = ({
   title,
-  Icon,
+  Icon: icon,
   disabled,
   isNew,
   badgeCount,
@@ -42,7 +43,7 @@ const NavMenuItem = ({
           gap: 0.25,
         }}
       >
-        <Icon sx={{ fontSize: "1.4rem" }} />
+        <Icon icon={icon} sx={{ fontSize: "1.4rem" }} />
         {badgeCount !== undefined ? (
           <BadgeChip
             label={badgeCount}
@@ -58,7 +59,7 @@ const NavMenuItem = ({
   ) : (
     <NavMenuButton
       title={title}
-      Icon={Icon}
+      Icon={icon}
       isActive={isActive}
       isExternal={isExternal}
       disabled={disabled}

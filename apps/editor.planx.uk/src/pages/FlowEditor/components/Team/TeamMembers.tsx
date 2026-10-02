@@ -1,13 +1,13 @@
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import { IconChevronDownFilled, IconChevronUp } from "@tabler/icons-react";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
+import { Icon } from "ui/icons/Icon";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { MembersTable } from "./components/MembersTable";
@@ -20,14 +20,14 @@ interface AccordionProps {
 }
 
 const Accordion = ({ isOpen, onToggle }: AccordionProps) => {
-  const ChevronIcon = isOpen ? ExpandLessIcon : ExpandMoreIcon;
+  const ChevronIcon = isOpen ? IconChevronUp : IconChevronDownFilled;
   return (
     <IconButton
       onClick={onToggle}
       sx={{ border: "none" }}
       data-testid={"platform-admins-toggle"}
     >
-      <ChevronIcon sx={{ fontSize: "2rem" }} />
+      <Icon icon={ChevronIcon} sx={{ fontSize: "2rem" }} />
     </IconButton>
   );
 };

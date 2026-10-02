@@ -1,8 +1,8 @@
-import Code from "@mui/icons-material/Code";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { IconCode } from "@tabler/icons-react";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
 import type { Store } from "pages/FlowEditor/lib/store";
@@ -179,7 +179,7 @@ function SetFeeComponent(props: Props) {
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
-        <ModalSectionContent title="Example" Icon={Code}>
+        <ModalSectionContent title="Example" Icon={IconCode}>
           <Typography variant="body2" sx={{ mb: 2 }}>
             This example output is based on an incoming{" "}
             <strong>application.fee.calculated</strong> of £

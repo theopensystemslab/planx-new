@@ -1,4 +1,3 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -10,11 +9,13 @@ import Card, {
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import type { PublicProps } from "@planx/components/shared/types";
+import { IconAlertCircleFilled } from "@tabler/icons-react";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { Response } from "pages/FlowEditor/lib/store/preview";
 import { useId } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import type { PresentationalProps, Result } from "../model";
@@ -154,7 +155,10 @@ export const Presentational: React.FC<PresentationalProps> = ({
           <WarningContainer aria-labelledby={disclaimerId}>
             <Box sx={{ flex: 1 }}>
               <TitleWrap>
-                <ErrorOutline sx={{ width: 34, height: 34 }} />
+                <Icon
+                  icon={IconAlertCircleFilled}
+                  sx={{ width: 34, height: 34 }}
+                />
                 <Title id={disclaimerId} variant="h3">
                   {" "}
                   {disclaimer.heading}

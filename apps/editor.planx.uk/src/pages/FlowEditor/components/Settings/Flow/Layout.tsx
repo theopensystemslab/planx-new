@@ -1,11 +1,13 @@
 import { useQuery } from "@apollo/client";
-import EmailIcon from "@mui/icons-material/Email";
-import GavelIcon from "@mui/icons-material/Gavel";
-import HelpIcon from "@mui/icons-material/Help";
-import InfoIcon from "@mui/icons-material/Info";
-import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
-import StarIcon from "@mui/icons-material/Star";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import {
+  IconAward,
+  IconEye,
+  IconHelpCircle,
+  IconInfoCircle,
+  IconMail,
+  IconShieldCheck,
+  IconStar,
+} from "@tabler/icons-react";
 import { useParams } from "@tanstack/react-router";
 import { BREADCRUMBS_HEIGHT } from "components/Breadcrumbs";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -41,36 +43,44 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
 
   // TODO: Make type-safe!
   const serviceSettingsLinks = [
-    { label: "Visibility", path: "/visibility", icon: VisibilityIcon },
-    { label: "About", path: "/about", icon: InfoIcon },
-    { label: "Legal disclaimer", path: "/legal-disclaimer", icon: GavelIcon },
-    { label: "Help page", path: "/pages/help", icon: HelpIcon },
-    { label: "Privacy page", path: "/pages/privacy", icon: PrivacyTipIcon },
+    { label: "Visibility", path: "/visibility", icon: IconEye },
+    { label: "About", path: "/about", icon: IconInfoCircle },
+    {
+      label: "Legal disclaimer",
+      path: "/legal-disclaimer",
+      icon: IconAward,
+    },
+    { label: "Help page", path: "/pages/help", icon: IconHelpCircle },
+    {
+      label: "Privacy page",
+      path: "/pages/privacy",
+      icon: IconShieldCheck,
+    },
     {
       label: "Templates",
       path: "/templates",
-      icon: StarIcon,
+      icon: IconStar,
       condition: Boolean(templateData?.flow.templatedFrom),
     },
-    { label: "Emails", path: "/emails", icon: EmailIcon },
+    { label: "Emails", path: "/emails", icon: IconMail },
   ];
 
   const flowSettingsLinks =
     isTemplated === false
       ? []
       : [
-          { label: "Visibility", path: "/visibility", icon: VisibilityIcon },
+          { label: "Visibility", path: "/visibility", icon: IconEye },
           {
             label: "Templates",
             path: "/templates",
-            icon: StarIcon,
+            icon: IconStar,
             condition: Boolean(templateData?.flow.templatedFrom),
           },
         ];
 
   const patternsSettingsLinks = [
-    { label: "Visibility", path: "/visibility", icon: VisibilityIcon },
-    { label: "About", path: "/about", icon: InfoIcon },
+    { label: "Visibility", path: "/visibility", icon: IconEye },
+    { label: "About", path: "/about", icon: IconInfoCircle },
   ];
 
   const getSettingsLinks = (isPattern: boolean, isService?: boolean) => {

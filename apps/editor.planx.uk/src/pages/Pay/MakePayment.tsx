@@ -1,4 +1,3 @@
-import Check from "@mui/icons-material/Check";
 import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -9,6 +8,7 @@ import {
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
 import { FeeBreakdown } from "@planx/components/Pay/Public/FeeBreakdown/FeeBreakdown";
+import { IconCheckFilled } from "@tabler/icons-react";
 import axios from "axios";
 import { format } from "date-fns";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
@@ -148,7 +148,7 @@ export default function MakePayment({
   const Header = () =>
     currentState === States.Finished ? (
       <Banner
-        Icon={Check}
+        Icon={IconCheckFilled}
         iconTitle={"Success"}
         heading="Payment received"
         color={{

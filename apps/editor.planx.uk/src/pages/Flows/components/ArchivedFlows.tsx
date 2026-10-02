@@ -1,13 +1,16 @@
 import type { ApolloError } from "@apollo/client";
-import DeleteIcon from "@mui/icons-material/Delete";
-import TableRowsIcon from "@mui/icons-material/TableRows";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import {
+  IconLayoutGridFilled,
+  IconLayoutListFilled,
+  IconTrashFilled,
+} from "@tabler/icons-react";
 import { EmptyState } from "ui/editor/EmptyState";
+import { Icon } from "ui/icons/Icon";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import type {
@@ -77,7 +80,12 @@ const ArchivedFlows: React.FC<Props> = ({
   }
 
   if (!isFiltered && archivedFlows !== null && archivedFlows.length === 0) {
-    return <EmptyState title="No archived flows found" icon={<DeleteIcon />} />;
+    return (
+      <EmptyState
+        title="No archived flows found"
+        icon={<Icon icon={IconTrashFilled} />}
+      />
+    );
   }
 
   return (
@@ -119,12 +127,12 @@ const ArchivedFlows: React.FC<Props> = ({
         >
           <Tooltip title="Card view" placement="bottom">
             <StyledToggleButton value="grid" disableRipple>
-              <ViewModuleIcon />
+              <Icon icon={IconLayoutGridFilled} />
             </StyledToggleButton>
           </Tooltip>
           <Tooltip title="Table view" placement="bottom">
             <StyledToggleButton value="row" disableRipple>
-              <TableRowsIcon />
+              <Icon icon={IconLayoutListFilled} />
             </StyledToggleButton>
           </Tooltip>
         </ToggleButtonGroup>

@@ -5,6 +5,7 @@ import { ICONS } from "@planx/components/shared/icons";
 import React, { useEffect, useState } from "react";
 import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { AiChip } from "ui/editor/AiChip";
+import { Icon } from "ui/icons/Icon";
 
 import type { ComponentItem } from "./componentData";
 
@@ -19,7 +20,7 @@ export const ComponentRow: React.FC<Props> = ({
   onClick,
   scrollContainerRef,
 }) => {
-  const Icon = ICONS[item.type];
+  const componentIcon = ICONS[item.type];
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
   useEffect(() => {
@@ -65,9 +66,9 @@ export const ComponentRow: React.FC<Props> = ({
           "&:focus-visible": focusStyle,
         }}
       >
-        {Icon && (
+        {componentIcon && (
           <Box sx={{ flexShrink: 0, lineHeight: 0, color: "text.primary" }}>
-            <Icon sx={{ fontSize: 20 }} />
+            <Icon icon={componentIcon} sx={{ fontSize: 20 }} />
           </Box>
         )}
         <Typography variant="body2" className="component-title">

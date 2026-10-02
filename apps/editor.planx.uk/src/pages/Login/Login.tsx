@@ -1,10 +1,13 @@
-import GoogleIcon from "@mui/icons-material/Google";
-import MicrosoftIcon from "@mui/icons-material/Microsoft";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import {
+  IconBrandGoogleFilled,
+  IconBrandWindowsFilled,
+} from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 const Wrapper = styled(Box)(({ theme }) => ({
@@ -64,7 +67,7 @@ const Login: React.FC = () => {
           }/auth/google`}
         >
           <Box component="span">
-            <GoogleIcon />
+            <Icon icon={IconBrandGoogleFilled} />
             Continue with Google
           </Box>
         </LoginButton>
@@ -77,7 +80,7 @@ const Login: React.FC = () => {
           }/auth/microsoft`}
         >
           <Box component="span">
-            <MicrosoftIcon />
+            <Icon icon={IconBrandWindowsFilled} />
             Continue with Microsoft
           </Box>
         </LoginButton>

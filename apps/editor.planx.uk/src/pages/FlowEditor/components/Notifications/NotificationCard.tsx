@@ -1,13 +1,16 @@
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import type { SxProps, Theme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import {
+  IconArrowRight,
+  IconCircleCheckFilled,
+  IconStarFilled,
+} from "@tabler/icons-react";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import { FlowCardLink } from "pages/Flows/components/FlowCard/styles";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import CheckCircleIcon from "ui/icons/CheckCircle";
+import { Icon } from "ui/icons/Icon";
 import { Dot } from "ui/shared/Dot";
 
 import type { Notification } from "./types";
@@ -68,7 +71,8 @@ const NotificationCardItem = ({
     >
       <StatusIndicator>
         {statusLabel === "Resolved" ? (
-          <CheckCircleIcon
+          <Icon
+            icon={IconCircleCheckFilled}
             sx={{ color: "success.main", width: 20, height: 20 }}
           />
         ) : (
@@ -91,7 +95,10 @@ const NotificationCardItem = ({
           }}
         >
           <TemplateChip>
-            <StarIcon sx={{ color: "template.icon", fontSize: "1rem" }} />
+            <Icon
+              icon={IconStarFilled}
+              sx={{ color: "template.icon", fontSize: "1rem" }}
+            />
             <Typography
               variant="body3"
               sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
@@ -144,7 +151,7 @@ const NotificationCardItem = ({
             >
               Review and publish
             </Typography>
-            <ArrowForwardIcon fontSize="small" />
+            <Icon icon={IconArrowRight} fontSize="small" />
           </Box>
         )}
       </Box>

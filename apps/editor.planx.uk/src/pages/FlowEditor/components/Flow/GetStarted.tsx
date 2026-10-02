@@ -1,9 +1,10 @@
-import SchoolIcon from "@mui/icons-material/School";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { IconSchoolFilled } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
+import { Icon } from "ui/icons/Icon";
 
 const Root = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -31,7 +32,7 @@ export const GetStarted: React.FC = () => {
 
   return (
     <Root>
-      <SchoolIcon />
+      <Icon icon={IconSchoolFilled} />
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
         <Typography variant="body1">
           <strong>Starting a new flow?</strong>

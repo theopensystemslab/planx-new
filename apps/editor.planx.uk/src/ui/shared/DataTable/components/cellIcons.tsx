@@ -1,6 +1,10 @@
-import Close from "@mui/icons-material/Close";
-import Done from "@mui/icons-material/Done";
+import { IconCheckFilled, IconXFilled } from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
-export const True: React.FC = () => <Done color="success" fontSize="medium" />;
+export const True: React.FC = () => (
+  <Icon icon={IconCheckFilled} color="success" fontSize="medium" />
+);
 
-export const False: React.FC = () => <Close color="error" fontSize="medium" />;
+export const False: React.FC = () => (
+  <Icon icon={IconXFilled} color="error" fontSize="medium" />
+);

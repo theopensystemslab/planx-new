@@ -114,8 +114,8 @@ function SetValueComponent(props: Props) {
 1. `src/@planx/components/shared/icons.tsx`
 
 ```typescript
-import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
-[TYPES.SetValue]: PlaylistAdd,
+import { IconPlaylistAdd } from "@tabler/icons-react";
+[TYPES.SetValue]: IconPlaylistAdd,
 ```
 
 2. `src/pages/FlowEditor/data/types.ts`

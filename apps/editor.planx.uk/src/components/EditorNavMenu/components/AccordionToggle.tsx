@@ -1,5 +1,5 @@
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { IconChevronDownFilled, IconChevronUp } from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
 import { MenuButton, MenuTitle } from "../styles";
 import type { Route } from "../types";
@@ -14,12 +14,12 @@ interface Props {
 
 const AccordionToggle = ({
   subtitle,
-  Icon,
+  Icon: icon,
   isOpen,
   isActive = false,
   onToggle,
 }: Props) => {
-  const ChevronIcon = isOpen ? ExpandLessIcon : ExpandMoreIcon;
+  const ChevronIcon = isOpen ? IconChevronUp : IconChevronDownFilled;
   return (
     <MenuButton
       isActive={isActive}
@@ -27,11 +27,11 @@ const AccordionToggle = ({
       disableRipple
       onClick={onToggle}
     >
-      <Icon fontSize="small" />
+      <Icon icon={icon} fontSize="small" />
       <MenuTitle variant="body3" sx={{ pt: 0.15 }}>
         {subtitle}
       </MenuTitle>
-      <ChevronIcon sx={{ fontSize: "1rem", ml: "auto", mt: 0.2 }} />
+      <Icon icon={ChevronIcon} sx={{ fontSize: "1rem", ml: "auto", mt: 0.2 }} />
     </MenuButton>
   );
 };

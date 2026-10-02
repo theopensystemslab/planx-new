@@ -1,8 +1,9 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import type { Meta } from "@storybook/tanstack-react";
+import { IconAlertCircleFilled } from "@tabler/icons-react";
 import { useId } from "react";
+import { Icon } from "ui/icons/Icon";
 
 import Wrapper from "../fixtures/Wrapper";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
@@ -25,7 +26,7 @@ export const WithEditor = () => {
         componentType={ComponentType.SetFee}
       />
       <WarningContainer aria-labelledby={warningId}>
-        <ErrorOutline />
+        <Icon icon={IconAlertCircleFilled} />
         <Typography id={warningId} variant="body2" sx={{ ml: 2 }}>
           This component is only available in the Editor when designing
           services, it does <strong>not</strong> display in the Public form.

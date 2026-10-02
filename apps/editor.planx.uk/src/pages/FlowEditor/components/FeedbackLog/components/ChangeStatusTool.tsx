@@ -1,4 +1,3 @@
-import RateReview from "@mui/icons-material/RateReview";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -8,7 +7,9 @@ import {
   useGridApiContext,
   useGridSelector,
 } from "@mui/x-data-grid";
+import { IconMessageFilled } from "@tabler/icons-react";
 import { useState } from "react";
+import { Icon } from "ui/icons/Icon";
 
 import { statusOptions } from "../feedbackFilterOptions";
 import { updateFeedbackStatus } from "../queries/updateFeedbackStatus";
@@ -70,7 +71,7 @@ export const ChangeStatusTool: React.FC = () => {
   return (
     <div>
       <Button
-        startIcon={<RateReview />}
+        startIcon={<Icon icon={IconMessageFilled} />}
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"

@@ -1,4 +1,3 @@
-import HelpIcon from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import Radio from "@mui/material/Radio";
 import RadioGroup, { useRadioGroup } from "@mui/material/RadioGroup";
@@ -6,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { HelpButton } from "@planx/components/shared/Preview/CardHeader/styled";
 import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
 import MoreInfoSection from "@planx/components/shared/Preview/MoreInfoSection";
+import { IconHelpCircleFilled } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { useFormikContext } from "formik";
 import { enhanceProjectDescription } from "lib/api/ai/requests";
@@ -14,6 +14,7 @@ import type { APIError } from "lib/api/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { type ComponentProps, useEffect, useRef, useState } from "react";
 import { ApplicationPath } from "types";
+import { Icon } from "ui/icons/Icon";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import ProgressiveLoading from "ui/shared/ProgressiveLoading";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
@@ -261,7 +262,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
             aria-haspopup="dialog"
             data-testid="more-info-button"
           >
-            <HelpIcon />
+            <Icon icon={IconHelpCircleFilled} />
             How does this work?
           </HelpButton>
         </Typography>

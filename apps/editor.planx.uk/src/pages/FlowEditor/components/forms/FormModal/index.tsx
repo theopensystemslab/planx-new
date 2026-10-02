@@ -1,5 +1,3 @@
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog, { dialogClasses } from "@mui/material/Dialog";
@@ -11,6 +9,7 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
+import { IconSparklesFilled, IconTrashFilled } from "@tabler/icons-react";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import type { FormikProps } from "formik";
@@ -22,6 +21,7 @@ import {
 import React, { useMemo, useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import StyledTab from "ui/editor/StyledTab";
+import { Icon } from "ui/icons/Icon";
 import { CloseButton } from "ui/shared/CloseButton";
 import { Switch } from "ui/shared/Switch";
 import { getNodeRoute } from "utils/routeUtils/utils";
@@ -118,7 +118,7 @@ const TextInputToggle: React.FC<{
       <Switch
         label={
           <>
-            <AutoAwesomeIcon sx={{ mr: 1 }} />
+            <Icon icon={IconSparklesFilled} sx={{ mr: 1 }} />
             AI enhanced
           </>
         }
@@ -430,7 +430,7 @@ const FormModal: React.FC<FormModalProps> = ({
               disabled={disabled}
               sx={{ backgroundColor: "background.default", gap: 1 }}
             >
-              <DeleteIcon color="warning" fontSize="medium" />
+              <Icon icon={IconTrashFilled} color="warning" fontSize="medium" />
               Delete
             </Button>
           )}

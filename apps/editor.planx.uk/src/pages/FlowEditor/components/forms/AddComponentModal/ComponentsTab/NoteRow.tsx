@@ -1,9 +1,10 @@
-import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { IconNote } from "@tabler/icons-react";
 import React, { useEffect, useState } from "react";
 import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 
 interface Props {
   onClick: () => void;
@@ -57,7 +58,7 @@ export const NoteRow: React.FC<Props> = ({ onClick, scrollContainerRef }) => {
         }}
       >
         <Box sx={{ flexShrink: 0, lineHeight: 0, color: "text.primary" }}>
-          <StickyNote2Icon sx={{ fontSize: 20 }} />
+          <Icon icon={IconNote} sx={{ fontSize: 20 }} />
         </Box>
         <Typography variant="body2" className="component-title">
           Note

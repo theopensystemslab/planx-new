@@ -1,9 +1,10 @@
-import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
+import { IconHourglassFilled } from "@tabler/icons-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useId } from "react";
+import { Icon } from "ui/icons/Icon";
 import { Switch } from "ui/shared/Switch";
 
 import { useSlackMessage } from "../../../hooks/useSlackMessage";
@@ -81,7 +82,7 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
           <>
             {isTrial && (
               <WarningContainer aria-labelledby={trialWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
+                <Icon icon={IconHourglassFilled} sx={{ mr: 1 }} />
                 <Typography id={trialWarningId} variant="body2">
                   Trial accounts cannot set flow copy permissions.
                 </Typography>

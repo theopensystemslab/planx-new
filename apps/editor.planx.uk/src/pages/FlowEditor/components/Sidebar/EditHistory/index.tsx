@@ -1,13 +1,14 @@
 import { gql, useSubscription } from "@apollo/client";
-import HistoryIcon from "@mui/icons-material/History";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import { IconHistory } from "@tabler/icons-react";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import type { HistoryItem } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { EmptyState } from "ui/editor/EmptyState";
 import Permission from "ui/editor/Permission";
+import { Icon } from "ui/icons/Icon";
 
 import { AddCommentDialog } from "./AddCommentDialog";
 import { EditHistoryTimeline } from "./Timeline";
@@ -73,7 +74,7 @@ const EditHistory = () => {
           <EmptyState
             size="small"
             title="No edits found in the last six months"
-            icon={<HistoryIcon />}
+            icon={<Icon icon={IconHistory} />}
           />
         </>
       )}

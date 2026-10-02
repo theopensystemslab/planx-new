@@ -1,10 +1,11 @@
-import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
+import { IconDotsVerticalFilled } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
+import { Icon } from "ui/icons/Icon";
 
 import type { AcceptedFileTypes } from "../../shared/PublicFileUploadButton";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
@@ -68,7 +69,7 @@ export default function ImgInput({
           setAnchorEl(ev.currentTarget);
         }}
       >
-        <MoreVert />
+        <Icon icon={IconDotsVerticalFilled} />
       </StyledIconButton>
       <Menu
         id={`${menuId}`}

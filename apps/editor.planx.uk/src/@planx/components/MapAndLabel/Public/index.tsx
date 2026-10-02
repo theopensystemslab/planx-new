@@ -1,4 +1,3 @@
-import DeleteIcon from "@mui/icons-material/Delete";
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
@@ -12,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import type { SiteAddress } from "@planx/components/FindProperty/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
+import { IconTrashFilled } from "@tabler/icons-react";
 import { GraphError } from "components/Error/GraphError";
 import type { GeoJsonObject } from "geojson";
 import { useFormErrorFocus } from "hooks/useFormErrorFocus";
@@ -19,6 +19,7 @@ import sortBy from "lodash/sortBy";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback, useEffect } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Icon } from "ui/icons/Icon";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -216,7 +217,7 @@ const FeatureTabs: React.FC = () => {
                 marginTop: 2,
               }}
             >
-              <DeleteIcon color="warning" fontSize="medium" />
+              <Icon icon={IconTrashFilled} color="warning" fontSize="medium" />
               Remove
             </Button>
           </TabPanel>

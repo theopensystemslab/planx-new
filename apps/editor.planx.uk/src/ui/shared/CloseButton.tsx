@@ -1,6 +1,7 @@
-import CloseIcon from "@mui/icons-material/Close";
 import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import { IconXFilled } from "@tabler/icons-react";
+import { Icon } from "ui/icons/Icon";
 
 const StyledIconButton = styled(IconButton)(({ theme, size }) => ({
   margin: "0 0 0 auto",
@@ -23,7 +24,8 @@ export const CloseButton: React.FC<CloseButtonProps> = ({
   ...props
 }) => (
   <StyledIconButton title={title} aria-label={title} size={size} {...props}>
-    <CloseIcon
+    <Icon
+      icon={IconXFilled}
       sx={{ opacity: 0.8, fontSize: size === "small" ? "1.5rem" : "1.75rem" }}
     />
   </StyledIconButton>

@@ -1,13 +1,14 @@
-import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
+import { IconStarFilled } from "@tabler/icons-react";
 import { useToast } from "hooks/useToast";
 import type { PublishFlowArgs } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { Template } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
+import { Icon } from "ui/icons/Icon";
 
 import { OpenServiceMenu } from "../OpenServiceMenu";
 import { usePublishFlow } from "./hooks/usePublishFlow";
@@ -120,7 +121,8 @@ export const CheckForChangesToPublishButton: React.FC<{
               alignItems: "flex-start",
             }}
           >
-            <StarIcon
+            <Icon
+              icon={IconStarFilled}
               sx={{ color: "template.icon", mr: 0.5 }}
               fontSize="small"
             />
