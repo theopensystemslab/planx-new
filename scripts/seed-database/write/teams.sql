@@ -5,7 +5,8 @@ CREATE TEMPORARY TABLE sync_teams (
   slug text,
   created_at timestamptz,
   updated_at timestamptz,
-  domain text
+  domain text,
+  category text
 );
 
 \copy sync_teams FROM '/tmp/teams.csv' WITH (FORMAT csv, DELIMITER ';');
@@ -13,16 +14,19 @@ CREATE TEMPORARY TABLE sync_teams (
 INSERT INTO teams (
   id,
   name,
-  slug
+  slug,
+  category
 )
 SELECT
   id,
   name,
-  slug
+  slug,
+  category
 FROM sync_teams
 ON CONFLICT (id) DO UPDATE
 SET
   name = EXCLUDED.name,
-  slug = EXCLUDED.slug;
+  slug = EXCLUDED.slug,
+  category = EXCLUDED.category;
 
 SELECT setval('teams_id_seq', max(id)) FROM teams;
