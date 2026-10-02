@@ -57,7 +57,11 @@ const getCandidates = async (): Promise<PaymentCandidate[]> => {
           where: {
             submitted_at: { _is_null: true }
             deleted_at: { _is_null: true }
-            payment_status: { created_at: { _gt: $since } }
+            # GOV.UK Pay rows only - Stripe rows have no payment_id
+            payment_status: {
+              created_at: { _gt: $since }
+              payment_id: { _is_null: false }
+            }
           }
         ) {
           sessionId: id
@@ -70,6 +74,7 @@ const getCandidates = async (): Promise<PaymentCandidate[]> => {
             }
           }
           paymentStatus: payment_status(
+            where: { payment_id: { _is_null: false } }
             order_by: { created_at: desc }
             limit: 1
           ) {
