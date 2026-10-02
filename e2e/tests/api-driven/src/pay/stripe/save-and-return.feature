@@ -9,14 +9,12 @@ Feature: Stripe save and return
     When the applicant returns to their saved session
     Then the session is reconciled with no content changes
 
-  Scenario: Returning after starting a payment skips reconciliation
-    When the applicant pays via Stripe Checkout with a declined card
-    And a "created" payment status is recorded
+  Scenario: Returning after leaving Stripe Checkout without paying skips reconciliation
+    When the applicant leaves Stripe Checkout without paying
     And the applicant returns to their saved session
     Then reconciliation is skipped as a payment has started
 
-  Scenario: Returning after leaving Stripe Checkout without paying skips reconciliation
-    When the applicant leaves Stripe Checkout without paying
-    Then an "initiated" payment status is recorded
-    When the applicant returns to their saved session
+  Scenario: Returning after a declined payment skips reconciliation
+    When the applicant pays via Stripe Checkout with a declined card
+    And the applicant returns to their saved session
     Then reconciliation is skipped as a payment has started

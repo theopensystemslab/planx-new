@@ -1,4 +1,5 @@
 import assert from "node:assert";
+import { isDeepStrictEqual } from "node:util";
 
 import { formatStripeMetadata } from "@opensystemslab/planx-core";
 import type {
@@ -321,6 +322,40 @@ export async function waitForStripePaymentStatus({
     },
   });
   return findMatch(rows)!;
+}
+
+const toAuditTrail = (rows: StripePaymentStatus[]): Record<string, string> =>
+  Object.fromEntries(
+    rows.map(({ stripeStatus, stripePaymentId }) => [
+      stripeStatus,
+      stripePaymentId,
+    ]),
+  );
+
+/**
+ * Wait until a session's Stripe payment statuses exactly match the expected audit trail
+ *
+ * Order is ignored, as Stripe does not guarantee webhook delivery order
+ * Docs: https://docs.stripe.com/webhooks#event-ordering
+ */
+export async function waitForStripeAuditTrail({
+  sessionId,
+  expected,
+}: {
+  sessionId: string;
+  expected: Record<string, string>;
+}): Promise<void> {
+  await poll({
+    fetch: () => getStripePaymentStatuses(sessionId),
+    until: (rows) =>
+      // Checking the length catches duplicate rows
+      rows.length === Object.keys(expected).length &&
+      isDeepStrictEqual(toAuditTrail(rows), expected),
+    describeTimeout: (rows) =>
+      `Payment status audit trail for session ${sessionId} did not match.\n` +
+      `Expected: ${JSON.stringify(expected)}\n` +
+      `Found (${rows.length} rows): ${JSON.stringify(toAuditTrail(rows))}`,
+  });
 }
 
 export async function cleanup({
