@@ -52,3 +52,17 @@ export type StripeConnectError =
 
 export type StripeConnectResult =
   { type: "success" } | { type: "error"; message: StripeConnectError };
+
+export type MigrationBlockerReason =
+  "stripeNotConnected" | "activeGovpaySessions" | "checkoutNotConfigured";
+
+export interface MigrationBlocker {
+  reason: MigrationBlockerReason;
+  /** conditional because it will only show for activeGovpaySessions */
+  count?: number;
+}
+
+export interface StripeCanMigrate {
+  canMigrate: boolean;
+  blockers: MigrationBlocker[];
+}

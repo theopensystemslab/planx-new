@@ -145,6 +145,42 @@ components:
                 enum: [test, live]
                 description: The Stripe mode this environment runs in
                 example: live
+    CanMigrateResponse:
+      description: >-
+        Check if a team is able to migrate to Stripe
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - canMigrate
+              - blockers
+            properties:
+              canMigrate:
+                type: boolean
+                description: Whether the team can migrate to Stripe right now
+                example: false
+              blockers:
+                type: array
+                description: Reasons preventing migration; empty when canMigrate is true
+                items:
+                  type: object
+                  required:
+                    - reason
+                  properties:
+                    reason:
+                      type: string
+                      enum:
+                        - stripeNotConnected
+                        - activeGovpaySessions
+                        - checkoutNotConfigured
+                      example: activeGovpaySessions
+                    count:
+                      type: integer
+                      description: >-
+                        Number of active GOV.UK Pay sessions blocking migration.
+                        Only present when reason is activeGovpaySessions.
+                      example: 3
 paths:
   /stripe/connect/{teamSlug}/status:
     get:
@@ -169,6 +205,30 @@ paths:
           description: Team not found.
         "500":
           description: Failed to fetch the Stripe Connect status.
+  /stripe/migration/{teamSlug}/status:
+    get:
+      summary: Check whether a team can migrate its payment provider to Stripe
+      description: |
+        Checks whether the team has connected a Stripe account, has no GOV.UK Pay
+        payment sessions currently in progress, and has Stripe Checkout configured.
+        Used by the editor's payments settings page before allowing a migration.
+      tags:
+        - stripe
+      parameters:
+        - $ref: "#/components/parameters/teamSlug"
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/CanMigrateResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorised"
+        "403":
+          description: The user is not a teamEditor/teamAdmin of this team, or a platformAdmin.
+        "404":
+          description: Team not found.
+        "500":
+          description: Failed to check the team's Stripe migration ability.
   /stripe/connect/{teamSlug}:
     get:
       summary: Start Stripe Connect onboarding for a team
