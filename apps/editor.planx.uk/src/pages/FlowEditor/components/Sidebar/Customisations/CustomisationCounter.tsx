@@ -53,7 +53,7 @@ export const CustomisationCounter: React.FC<Props> = ({
     countCompletedRequiredNodes === countRequiredNodes;
 
   useEffect(() => {
-    // Set basic EditorUIStore state so other components (publish button, templated status)
+    // Set basic EditorStore state so other components (publish button, templated status)
     //   can reference it without re-calculating
     useStore.setState({
       outstandingTemplatedFlowCustomisations:

@@ -96,7 +96,6 @@ export interface EditorUIStore {
   contextMenuSource: ContextMenuSource | null;
   lastAddedNodeIds?: NodeId[];
   clearLastAddedNodeIds: () => void;
-  outstandingTemplatedFlowCustomisations: number;
 }
 
 export const editorUIStore: StateCreator<
@@ -220,8 +219,6 @@ export const editorUIStore: StateCreator<
     lastAddedNodeIds: undefined,
 
     clearLastAddedNodeIds: () => set({ lastAddedNodeIds: undefined }),
-
-    outstandingTemplatedFlowCustomisations: 0,
   }),
   {
     name: "editorUIStore",
@@ -363,6 +360,7 @@ export interface EditorStore extends Store.Store {
     comment: string,
   ) => Promise<object>;
   deleteFlowComment: (commentId: number) => Promise<object>;
+  outstandingTemplatedFlowCustomisations: number;
 }
 
 export const editorStore: StateCreator<
@@ -425,6 +423,9 @@ export const editorStore: StateCreator<
     // Set this once upstream as it's an expensive operation
     const { isTemplatedFrom, setOrderedFlow } = get();
     if (isTemplatedFrom) setOrderedFlow();
+
+    // Reset outstanding flow customisations to ensure 'publish' button is enabled
+    set({ outstandingTemplatedFlowCustomisations: 0 });
 
     // local operation so we can assume that multiple ops will arrive
     // almost instantaneously so wait for 100ms of 'silence' before running
@@ -895,4 +896,6 @@ export const editorStore: StateCreator<
     });
     return response;
   },
+
+  outstandingTemplatedFlowCustomisations: 0,
 });
