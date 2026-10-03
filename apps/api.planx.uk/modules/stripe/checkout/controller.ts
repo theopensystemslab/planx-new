@@ -36,7 +36,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
     return next(
       new ServerError({
         message: `Failed to create Stripe Checkout Session for ${localAuthority}`,
-        status: 500,
+        status: error instanceof ServerError ? error.status : 500,
         cause: error,
       }),
     );
