@@ -1,3 +1,5 @@
+import type { PassportFeeFields } from "@opensystemslab/planx-core/types";
+
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import { mockPaymentStatusInsert } from "../../webhook/test/mocks.js";
 
@@ -93,7 +95,8 @@ export const feeBreakdownPassport = {
   "application.fee.payable": 145,
   "application.fee.serviceCharge": 40,
   "application.fee.serviceCharge.VAT": 8,
-};
+  "application.fee.payable.VAT": 8,
+} satisfies Partial<PassportFeeFields>;
 
 /**
  * A team ready to take Stripe payments, for a session with no previous Checkout Sessions
