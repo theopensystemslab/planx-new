@@ -6,6 +6,7 @@ import { gql } from "graphql-request";
 import jwt from "jsonwebtoken";
 
 import { setupGovPay } from "../pay/govpay/setup.js";
+import { setupStripe } from "../pay/stripe/setup.js";
 import type { TestContext } from "./types.js";
 
 export const contextDefaults: TestContext = {
@@ -71,7 +72,11 @@ export async function setUpTestContext(
       hasSendComponent: context.flow.hasSendComponent,
     });
   }
-  await setupGovPay($admin, context);
+  if (context.paymentProvider === "stripe") {
+    await setupStripe($admin, context);
+  } else {
+    await setupGovPay($admin, context);
+  }
 
   return context;
 }

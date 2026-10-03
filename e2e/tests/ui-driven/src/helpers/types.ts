@@ -21,6 +21,7 @@ export interface TestContext {
   flow?: Flow;
   externalPortalFlow?: Flow;
   sessionIds?: string[];
+  paymentProvider?: "govpay" | "stripe";
 }
 
 export type OptionWithDataValues = { optionText: string; dataValue: string };
