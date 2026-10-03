@@ -66,7 +66,14 @@ export interface LowCalSessionData {
 }
 
 export type StripePaymentStatus =
-  "created" | "processing" | "succeeded" | "payment_failed";
+  // Synthetic event - recorded when applicant navigates to Checkout page
+  // Required to stop them hitting reconciliation process unnecessarily on return to PlanX
+  | "initiated"
+  // Stripe events
+  | "created"
+  | "processing"
+  | "succeeded"
+  | "payment_failed";
 
 export interface SessionPaymentStatus {
   /** Populated by GovPay */

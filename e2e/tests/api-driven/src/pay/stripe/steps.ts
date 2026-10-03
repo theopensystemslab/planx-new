@@ -20,13 +20,13 @@ import {
   type FeeCase,
   getConnectedAccountId,
   getExpectedPaymentMetadata,
-  getStripePaymentStatuses,
   resolvePayComponentMetadata,
   setupTeam,
   toFeeCase,
   validateSession,
   type ValidateSessionResponse,
   waitForDestinationPaymentMetadata,
+  waitForStripeAuditTrail,
   waitForStripePaymentStatus,
 } from "./helpers.js";
 
@@ -120,6 +120,17 @@ When(
 );
 
 When(
+  "the applicant leaves Stripe Checkout without paying",
+  async function (this: CustomWorld) {
+    this.checkoutSessionId = await createCheckoutSession({
+      flowId: this.flowId!,
+      sessionId: this.sessionId!,
+      feeCase: this.feeCase!,
+    });
+  },
+);
+
+When(
   "the applicant returns to their saved session",
   async function (this: CustomWorld) {
     this.validateSessionResponse = await validateSession(this.sessionId!);
@@ -164,24 +175,26 @@ Then(
 );
 
 Then(
-  "a {string} payment status is recorded",
+  "the payment status audit trail is:",
   { timeout: 30 * 1000 },
-  async function (this: CustomWorld, stripeStatus: string) {
-    await waitForStripePaymentStatus({
-      sessionId: this.sessionId!,
-      stripeStatus,
-    });
-  },
-);
+  async function (this: CustomWorld, table: DataTable) {
+    const stripeIds: Record<string, string | undefined> = {
+      "Checkout Session": this.checkoutSessionId,
+      PaymentIntent: this.paymentIntent?.id,
+    };
 
-Then(
-  "no {string} payment status is recorded",
-  async function (this: CustomWorld, stripeStatus: string) {
-    const statuses = await getStripePaymentStatuses(this.sessionId!);
-    assert.ok(
-      !statuses.some((row) => row.stripeStatus === stripeStatus),
-      `Unexpected "${stripeStatus}" payment status for session ${this.sessionId}`,
+    const expected = Object.fromEntries(
+      table.hashes().map(({ status, keyedBy }) => {
+        const stripeId = stripeIds[keyedBy];
+        assert.ok(stripeId, `No ${keyedBy} id for this scenario`);
+        return [status, stripeId];
+      }),
     );
+
+    await waitForStripeAuditTrail({
+      sessionId: this.sessionId!,
+      expected,
+    });
   },
 );
 

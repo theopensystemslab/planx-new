@@ -4,12 +4,10 @@ import { gql } from "graphql-request";
 import type Stripe from "stripe";
 
 import { $api } from "../../../../client/index.js";
+import type { StripePaymentStatus } from "../../../../types.js";
 import { reportError } from "../../../pay/helpers.js";
 import { getOwnedPaymentIntent } from "../ownership/service.js";
 import { hasuraClientErrorSchema } from "./types.js";
-
-type StripePaymentStatus =
-  "created" | "processing" | "succeeded" | "payment_failed";
 
 interface InsertStripePaymentStatusArgs {
   flowId: string;
@@ -24,7 +22,7 @@ interface InsertStripePaymentStatusArgs {
 
 export async function recordStripePaymentIntentStatus(
   paymentIntent: Stripe.PaymentIntent,
-  stripeStatus: StripePaymentStatus,
+  stripeStatus: Exclude<StripePaymentStatus, "initiated">,
 ): Promise<void> {
   const { id, amount, metadata } = paymentIntent;
 
@@ -90,7 +88,13 @@ function deriveFeeBreakdown(
   }
 }
 
-async function insertStripePaymentStatus({
+/**
+ * Rows are keyed by Stripe object id
+ *
+ * For the synthetic "initiated" records, this will be the Checkout Session ID (cs_)
+ * For all other webhook-driven events, this will be the PaymentIntent ID (pi_)
+ */
+export async function insertStripePaymentStatus({
   flowId,
   sessionId,
   teamSlug,

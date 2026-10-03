@@ -2,6 +2,10 @@ import supertest from "supertest";
 
 import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
+import {
+  getPaymentStatusInsert,
+  mockPaymentStatusInsert,
+} from "../webhook/test/mocks.js";
 
 const {
   mockCreate,
@@ -98,6 +102,7 @@ describe("creating a Stripe Checkout Session", () => {
     mockIsAccountReadyForPayments.mockReset().mockResolvedValue(true);
     mockPassportLookup(feeBreakdownPassport);
     mockReturnURLContext();
+    mockPaymentStatusInsert();
   });
 
   it("returns the hosted Checkout Session URL", async () => {
@@ -602,6 +607,84 @@ describe("creating a Stripe Checkout Session", () => {
       .post("/stripe/checkout-session/southwark")
       .send(validBody)
       .expect(500);
+
+    expect(getPaymentStatusInsert()).toBeUndefined();
+  });
+
+  describe("recording the payment as initiated", () => {
+    it("records an 'initiated' payment status against the Checkout Session", async () => {
+      mockCreate.mockResolvedValue({
+        id: "cs_test_a1b2c3",
+        url: "https://checkout.stripe.com/c/pay/cs_test_a1b2c3",
+        amount_total: 14500,
+      });
+
+      await supertest(app)
+        .post("/stripe/checkout-session/southwark")
+        .send(validBody)
+        .expect(200);
+
+      expect(getPaymentStatusInsert()?.variables).toEqual({
+        sessionId: validBody.sessionId,
+        flowId: validBody.flowId,
+        teamSlug: "southwark",
+        stripePaymentId: "cs_test_a1b2c3",
+        stripeStatus: "initiated",
+        amount: 14500,
+        feeBreakdown: expect.objectContaining({
+          amount: expect.objectContaining({ payable: 145 }),
+        }),
+        metadata: {
+          ...defaultMetadata,
+          sessionId: validBody.sessionId,
+          flowId: validBody.flowId,
+          teamSlug: "southwark",
+          origin: "https://api.example.com",
+        },
+      });
+    });
+
+    it("records the total Stripe will charge, not the client amount", async () => {
+      mockCreate.mockResolvedValue({
+        id: "cs_test_a1b2c3",
+        url: "https://checkout.stripe.com/c/pay/cs_test_a1b2c3",
+        amount_total: 16500,
+      });
+
+      await supertest(app)
+        .post("/stripe/checkout-session/southwark")
+        .send(validBody)
+        .expect(200);
+
+      expect(getPaymentStatusInsert()?.variables?.amount).toBe(16500);
+    });
+
+    it("falls back to the client amount when Stripe returns no total", async () => {
+      mockPassportLookup(null);
+
+      await supertest(app)
+        .post("/stripe/checkout-session/southwark")
+        .send(validBody)
+        .expect(200);
+
+      expect(getPaymentStatusInsert()?.variables).toEqual(
+        expect.objectContaining({ amount: 14500, feeBreakdown: null }),
+      );
+    });
+
+    it("still returns the Checkout Session URL if the payment status cannot be recorded", async () => {
+      mockPaymentStatusInsert("fail");
+
+      await supertest(app)
+        .post("/stripe/checkout-session/southwark")
+        .send(validBody)
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toEqual({
+            url: "https://checkout.stripe.com/c/pay/cs_test_a1b2c3",
+          });
+        });
+    });
   });
 });
 

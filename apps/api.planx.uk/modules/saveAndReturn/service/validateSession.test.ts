@@ -122,7 +122,7 @@ describe("Validate Session endpoint", () => {
     reconciledSessionData: reconciledData,
   };
 
-  it.each(["succeeded", "processing", "created"] as const)(
+  it.each(["succeeded", "processing", "created", "initiated"] as const)(
     "skips reconciliation for a Stripe session with a '%s' payment_status row",
     async (stripeStatus) => {
       queryMock.mockQuery(
