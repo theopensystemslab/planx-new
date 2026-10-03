@@ -55,10 +55,12 @@ export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
     };
   },
   errorComponent: ({ error }) => {
-    if (
-      error?.message?.includes("permission") ||
-      error?.message?.includes("access")
-    ) {
+    if (!(error instanceof Error)) throw error;
+
+    const isAccessDeniedError =
+      error.message.includes("permission") || error.message.includes("access");
+
+    if (isAccessDeniedError) {
       return (
         <ErrorPage title="Access denied">
           You don't have permission to access this page. Please contact your
@@ -66,6 +68,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
         </ErrorPage>
       );
     }
+
     throw error;
   },
   component: SubscriptionRoute,

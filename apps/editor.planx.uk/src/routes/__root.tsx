@@ -21,10 +21,14 @@ export const Route = createRootRouteWithContext()({
   validateSearch: zodValidator(rootSearchSchema),
   pendingComponent: DelayedLoadingIndicator,
   errorComponent: ({ error }) => {
-    if (
-      error?.message?.includes("not found") ||
-      error?.message?.includes("404")
-    ) {
+    if (!(error instanceof Error)) throw error;
+
+    const isNotFoundError =
+      error.message.includes("not found") || error.message.includes("404");
+    const isAccessDeniedError =
+      error.message.includes("permission") || error.message.includes("access");
+
+    if (isNotFoundError) {
       return (
         <ErrorPage title="Page not found">
           The page you're looking for doesn't exist or you don't have permission
@@ -33,10 +37,7 @@ export const Route = createRootRouteWithContext()({
       );
     }
 
-    if (
-      error?.message?.includes("permission") ||
-      error?.message?.includes("access")
-    ) {
+    if (isAccessDeniedError) {
       return (
         <ErrorPage title="Access denied">
           You don't have permission to access this page. Please contact your

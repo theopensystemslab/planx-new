@@ -1,3 +1,4 @@
+import type { ErrorComponentProps } from "@tanstack/react-router";
 import { client } from "lib/graphql";
 import { publicContext } from "lib/graphql/contexts";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
@@ -136,8 +137,13 @@ export const createPublicRouteErrorComponent = (mode: PublicRouteMode) => {
 
   const modeDisplayName: string = modeDisplayNames[mode];
 
-  return ({ error }: { error: Error }) => {
-    if (error?.message?.includes("not found")) {
+  return ({ error }: ErrorComponentProps) => {
+    const isNotFoundError =
+      error instanceof Error && error.message.includes("not found");
+    const isNotPublishedError =
+      error instanceof Error && error.message.includes("not published");
+
+    if (isNotFoundError) {
       return (
         <ErrorPage title={`${modeDisplayName} not found`}>
           The {modeDisplayName} you're looking for doesn't exist or you don't
@@ -146,7 +152,7 @@ export const createPublicRouteErrorComponent = (mode: PublicRouteMode) => {
       );
     }
 
-    if (error?.message?.includes("not published")) {
+    if (isNotPublishedError) {
       return (
         <ErrorPage title={`${modeDisplayName} not available`}>
           This {modeDisplayName} is not available. The service may not be

@@ -90,7 +90,7 @@ describe("File upload", () => {
           .expect(400)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
-            expect(res.body.error).toMatch(/Unexpected field/);
+            expect(res.body.error).toMatch(/Unexpected file field/);
           });
       });
     },
