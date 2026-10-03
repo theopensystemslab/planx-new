@@ -6,6 +6,7 @@ import type { FeeBreakdown, Session } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
+import { ServerError } from "../../../errors/index.js";
 import { reportError } from "../../pay/helpers.js";
 import { stripe } from "../client.js";
 import { getStripeId } from "../helpers.js";
@@ -39,6 +40,63 @@ const getFeeBreakdownForSession = async (
   return passportData ? getFeeBreakdown(passportData) : null;
 };
 
+const getInitiatedCheckoutSessionIds = async (
+  sessionId: string,
+): Promise<string[]> => {
+  const { paymentStatus } = await $api.client.request<{
+    paymentStatus: { stripePaymentId: string }[];
+  }>(
+    gql`
+      query GetInitiatedCheckoutSessions($sessionId: uuid!) {
+        paymentStatus: payment_status(
+          where: {
+            session_id: { _eq: $sessionId }
+            stripe_status: { _eq: initiated }
+          }
+        ) {
+          stripePaymentId: stripe_payment_id
+        }
+      }
+    `,
+    { sessionId },
+  );
+
+  return paymentStatus.map(({ stripePaymentId }) => stripePaymentId);
+};
+
+/**
+ * Ensure a PlanX session only ever has one payable Checkout Session
+ *
+ * Cancelling or abandoning the Stripe Checkout leaves the session open (for 24h)
+ * Without this check an applicant could pay for an earlier session in another tab
+ */
+const expirePreviousCheckoutSessions = async (
+  sessionId: string,
+): Promise<void> => {
+  const checkoutSessionIds = await getInitiatedCheckoutSessionIds(sessionId);
+
+  const checkoutSessions = await Promise.all(
+    checkoutSessionIds.map((id) => stripe.checkout.sessions.retrieve(id)),
+  );
+
+  await Promise.all(
+    checkoutSessions
+      .filter(({ status }) => status === "open")
+      .map(({ id }) => stripe.checkout.sessions.expire(id)),
+  );
+
+  const completedSession = checkoutSessions.find(
+    ({ status }) => status === "complete",
+  );
+
+  if (completedSession) {
+    throw new ServerError({
+      status: 422,
+      message: `Session ${sessionId} has already been paid for via Checkout Session ${completedSession.id}`,
+    });
+  }
+};
+
 /**
  * Create a Stripe Checkout Session and return the hosted checkout URL
  */
@@ -51,6 +109,8 @@ export const createStripeCheckoutSession = async ({
   connectedAccountId,
   metadata,
 }: CreateCheckoutSessionInput): Promise<CreateCheckoutSessionResponse> => {
+  await expirePreviousCheckoutSessions(sessionId);
+
   const separator = returnURL.includes("?") ? "&" : "?";
 
   const feeBreakdown = await getFeeBreakdownForSession(sessionId).catch(
@@ -121,8 +181,6 @@ export const createStripeCheckoutSession = async ({
  *
  * Stripe only creates a PaymentIntent (and fires payment_intent.* webhooks) once Checkout is confirmed,
  * so without this an applicant who cancels or abandons Checkout has no payment_status row at all
- *
- * Failing to record this must not block payment - the applicant would just see reconciliation on return
  */
 const recordInitiatedPayment = async ({
   checkoutSessionId,
@@ -143,9 +201,20 @@ const recordInitiatedPayment = async ({
       stripeStatus: "initiated",
     });
   } catch (error) {
-    reportError({
-      error: `Could not record initiated Stripe payment for Checkout Session ${checkoutSessionId}: ${error}`,
-      context: { sessionId: args.sessionId },
+    // Expire session if we failed to mark it as "initiated"
+    // Otherwise two sessions could remain open at any given time
+    await stripe.checkout.sessions
+      .expire(checkoutSessionId)
+      .catch((expireError) =>
+        reportError({
+          error: `Could not expire unrecorded Checkout Session ${checkoutSessionId}: ${expireError}`,
+          context: { sessionId: args.sessionId },
+        }),
+      );
+
+    throw new ServerError({
+      message: `Could not record initiated Stripe payment for Checkout Session ${checkoutSessionId}`,
+      cause: error,
     });
   }
 };
