@@ -1,5 +1,6 @@
 import type { SessionData } from "@opensystemslab/planx-core/types";
 import type { Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import type { GraphQLClient } from "graphql-request";
 import { gql } from "graphql-request";
 import type Stripe from "stripe";
@@ -34,15 +35,25 @@ export async function payViaStripe(page: Page): Promise<{
 
 /**
  * Click "Pay now" and capture the Checkout Session PlanX creates
- * The redirect to hosted Checkout is blocked, leaving the session open
+ *
+ * We replace the Checkout page with a placeholder page, with a real browser
+ * history entry. This mean an applicant can navigate "back" from Stripe
  */
 export async function startStripeCheckout(page: Page): Promise<string> {
-  await page.route("https://checkout.stripe.com/**", (route) => route.abort());
+  await page.route("https://checkout.stripe.com/**", (route) =>
+    route.fulfill({
+      contentType: "text/html",
+      body: "<h1>Stripe Checkout placeholder</h1>",
+    }),
+  );
   const checkoutRequest = page.waitForRequest("https://checkout.stripe.com/**");
 
   await page.getByText("Pay now").click();
 
-  return getCheckoutSessionId((await checkoutRequest).url());
+  const checkoutSessionId = getCheckoutSessionId((await checkoutRequest).url());
+  await page.waitForURL("https://checkout.stripe.com/**");
+
+  return checkoutSessionId;
 }
 
 /**
@@ -71,6 +82,14 @@ export async function returnFromStripe({
   await page.goto(returnURL);
 }
 
+export async function getCheckoutSessionStatus(
+  checkoutSessionId: string,
+): Promise<Stripe.Checkout.Session.Status | null> {
+  const { status } =
+    await getStripeTestClient().checkout.sessions.retrieve(checkoutSessionId);
+  return status;
+}
+
 export async function navigateToPayComponent(
   page: Page,
   context: TestContext,
@@ -83,7 +102,7 @@ export async function navigateToPayComponent(
   return getSessionId(page);
 }
 
-export async function resumeSessionViaMagicLink({
+export async function navigateToResumeURL({
   page,
   context,
   sessionId,
@@ -93,8 +112,47 @@ export async function resumeSessionViaMagicLink({
   sessionId: string;
 }) {
   await page.goto(`${getPreviewURL(context)}&sessionId=${sessionId}`);
+}
+
+export async function resumeSessionViaMagicLink({
+  page,
+  context,
+  sessionId,
+}: {
+  page: Page;
+  context: TestContext;
+  sessionId: string;
+}) {
+  await navigateToResumeURL({ page, context, sessionId });
   await page.locator("#email").fill(context.user.email);
   await page.getByTestId("continue-button").click();
+}
+
+/**
+ * An applicant who returns mid-payment confirms their email and lands back on the Pay component,
+ * on their original session, without reviewing their answers (reconciliation is skipped)
+ */
+export async function expectSessionResumedAtPay({
+  page,
+  context,
+  sessionId,
+}: {
+  page: Page;
+  context: TestContext;
+  sessionId: string;
+}) {
+  await page.locator("#email").fill(context.user.email);
+  const validateResponse = page.waitForResponse((response) =>
+    response.url().includes("/validate-session"),
+  );
+  await page.getByTestId("continue-button").click();
+  await validateResponse;
+
+  await expect(page.getByText("Pay now")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Review your answers so far" }),
+  ).toBeHidden();
+  expect(await getSessionId(page)).toEqual(sessionId);
 }
 
 export async function findSession({
