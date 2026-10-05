@@ -8,12 +8,7 @@ import { handleSetFees } from "./utils";
 export type Props = PublicProps<SetFee>;
 
 export default function Component(props: Props) {
-  const {
-    applyCalculatedVAT,
-    fastTrackFeeAmount,
-    applyServiceCharge,
-    applyPaymentProcessingFee,
-  } = props;
+  const { applyCalculatedVAT, fastTrackFeeAmount, applyServiceCharge } = props;
   const passport = useStore().computePassport();
 
   useEffect(() => {
@@ -22,7 +17,6 @@ export default function Component(props: Props) {
       applyCalculatedVAT,
       fastTrackFeeAmount,
       applyServiceCharge,
-      applyPaymentProcessingFee,
     });
 
     props.handleSubmit?.({

@@ -5,7 +5,6 @@ import type { ConditionalPick } from "type-fest";
 
 import { PAY_FN } from "../Pay/model";
 import {
-  DEFAULT_PAYMENT_PROCESSING_PERCENTAGE,
   DEFAULT_SERVICE_CHARGE_AMOUNT,
   DEFAULT_SERVICE_CHARGE_THRESHOLD,
   VAT_PERCENTAGE,
@@ -16,7 +15,6 @@ type HandleSetFees = (params: {
   applyCalculatedVAT: boolean;
   fastTrackFeeAmount: number;
   applyServiceCharge: boolean;
-  applyPaymentProcessingFee: boolean;
 }) => Store.Passport["data"];
 
 // SetFee outputs a partial subset of any `number` type PassportFeeFields, never `boolean` ones
@@ -27,7 +25,6 @@ export const handleSetFees: HandleSetFees = ({
   applyCalculatedVAT,
   fastTrackFeeAmount,
   applyServiceCharge,
-  applyPaymentProcessingFee,
 }): OutputFees => {
   // Calculated is base application fee exclusive of VAT
   //   Any exemptions or reductions will have already set `application.fee.payable`
@@ -124,18 +121,6 @@ export const handleSetFees: HandleSetFees = ({
       fees["application.fee.serviceCharge"] = 0;
       fees["application.fee.serviceCharge.VAT"] = 0;
     }
-  }
-
-  if (applyPaymentProcessingFee) {
-    const paymentProcessingAmount =
-      fees[payable] * DEFAULT_PAYMENT_PROCESSING_PERCENTAGE;
-    const paymentProcessingVAT = paymentProcessingAmount * VAT_PERCENTAGE;
-
-    fees["application.fee.paymentProcessing"] = paymentProcessingAmount;
-    fees["application.fee.paymentProcessing.VAT"] = paymentProcessingVAT;
-    fees[payable] =
-      fees[payable] + paymentProcessingAmount + paymentProcessingVAT;
-    fees[payableVAT] = fees[payableVAT] + paymentProcessingVAT;
   }
 
   return fees;
