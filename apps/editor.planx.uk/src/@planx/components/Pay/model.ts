@@ -85,6 +85,11 @@ export const REQUIRED_PAYMENT_METADATA = [
 ];
 
 /**
+ * Keys set by PlanX on every Stripe payment, which the API relies on to link a payment back to its session
+ */
+export const RESERVED_PAYMENT_METADATA = ["sessionId", "origin"];
+
+/**
  * Validation rules for both GovPay and Stripe metadata
  *
  * Rules set out here -
@@ -155,6 +160,23 @@ export const paymentMetadataSchema = array(
         (requiredKey) => keys.includes(requiredKey),
       );
       return allRequiredKeysPresent;
+    },
+  })
+  .test({
+    name: "reserved-keys",
+    message: `Keys ${new Intl.ListFormat("en-GB", {
+      style: "long",
+      type: "conjunction",
+    }).format(
+      RESERVED_PAYMENT_METADATA,
+    )} are reserved by PlanX and cannot be used`,
+    test: (metadata) => {
+      if (!metadata) return false;
+
+      const keys = metadata.map((item) => item.key);
+      return !RESERVED_PAYMENT_METADATA.some((reservedKey) =>
+        keys.includes(reservedKey),
+      );
     },
   });
 
