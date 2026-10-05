@@ -22,7 +22,7 @@ catalog:
   globals: ^16.5.0
   # Pinned to 30.0.x: jsdom 30.1 breaks Blob/FormData in Vitest 4 (vitest-dev/vitest#11336), fixed in Vitest 5.0.3
   jsdom: ~30.0.1
-  nanoid: ^3.3.18
+  nanoid: ^6.0.1
   prettier: ^3.9.6
   stripe: ^22.1.1
   uuid: ^14.0.2
