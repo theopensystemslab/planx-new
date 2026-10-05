@@ -50,6 +50,7 @@ jobs:
       - uses: dorny/paths-filter@v4
         id: filter
         with:
+          predicate-quantifier: 'every'
           filters: |
             api:
               - 'apps/api.planx.uk/**'
@@ -59,6 +60,7 @@ jobs:
               - 'apps/hasura.planx.uk/**'
             infrastructure:
               - 'infrastructure/**'
+              - '!infrastructure/performance/**'
             editor:
               - 'apps/editor.planx.uk/**'
             sharedb:
