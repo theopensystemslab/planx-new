@@ -108,7 +108,7 @@
     "eslint": "catalog:",
     "globals": "catalog:",
     "graphql-query-test-mock": "^0.12.1",
-    "json-stringify-pretty-compact": "^3.0.0",
+    "json-stringify-pretty-compact": "^4.0.0",
     "nock": "^13.5.6",
     "prettier": "catalog:",
     "rimraf": "^6.1.3",
