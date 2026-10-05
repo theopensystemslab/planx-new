@@ -139,8 +139,6 @@ export const createStripeCheckoutSession = async ({
   const paymentMetadata = {
     ...metadata,
     sessionId,
-    flowId,
-    teamSlug,
     // Non-prod environments share a Stripe sandbox
     // This identifies which environment owns this payment
     origin: process.env.API_URL_EXT!,

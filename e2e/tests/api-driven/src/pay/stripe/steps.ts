@@ -248,10 +248,7 @@ Then(
   function (this: CustomWorld) {
     assert.deepEqual(
       this.paymentIntent!.metadata,
-      getExpectedPaymentMetadata({
-        flowId: this.flowId!,
-        sessionId: this.sessionId!,
-      }),
+      getExpectedPaymentMetadata({ sessionId: this.sessionId! }),
     );
   },
 );

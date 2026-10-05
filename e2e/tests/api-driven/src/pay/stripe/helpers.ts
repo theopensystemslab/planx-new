@@ -198,17 +198,13 @@ export function resolvePayComponentMetadata({
 }
 
 export function getExpectedPaymentMetadata({
-  flowId,
   sessionId,
 }: {
-  flowId: string;
   sessionId: string;
 }): Record<string, string> {
   return {
     ...DEFAULT_METADATA,
     sessionId,
-    flowId,
-    teamSlug: TEAM_SLUG,
     origin: process.env.API_URL_EXT!,
   };
 }

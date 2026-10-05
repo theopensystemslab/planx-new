@@ -57,8 +57,6 @@ describe("tracking Checkout Sessions for a PlanX session", () => {
         metadata: {
           ...defaultMetadata,
           sessionId: validBody.sessionId,
-          flowId: validBody.flowId,
-          teamSlug: "southwark",
           origin: "https://api.example.com",
         },
       });
