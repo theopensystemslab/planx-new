@@ -52,7 +52,7 @@
     "graphql": "catalog:graphql",
     "graphql-tag": "catalog:graphql",
     "idb": "^8.0.3",
-    "immer": "^9.0.21",
+    "immer": "^11.1.18",
     "js-cookie": "^3.0.8",
     "libphonenumber-js": "^1.13.13",
     "lodash": "catalog:lodash",
