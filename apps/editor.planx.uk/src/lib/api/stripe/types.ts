@@ -19,8 +19,6 @@ export interface CreateStripeCheckoutSession {
   teamSlug: string;
   sessionId: string;
   flowId: string;
-  /** Fee in pence */
-  amount: number;
   metadata: Record<string, string>;
 }
 
