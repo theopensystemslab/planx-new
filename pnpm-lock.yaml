@@ -43,8 +43,8 @@ catalogs:
       specifier: ~30.0.1
       version: 30.0.1
     nanoid:
-      specifier: ^3.3.18
-      version: 3.3.19
+      specifier: ^6.0.1
+      version: 6.0.1
     prettier:
       specifier: ^3.9.6
       version: 3.9.9
@@ -264,7 +264,7 @@ importers:
         version: 2.4.0
       nanoid:
         specifier: 'catalog:'
-        version: 3.3.19
+        version: 6.0.1
       notifications-node-client:
         specifier: ^8.4.0
         version: 8.5.0
@@ -583,7 +583,7 @@ importers:
         version: 2.15.0(@types/node@24.10.15)(typescript@5.9.3)
       nanoid:
         specifier: 'catalog:'
-        version: 3.3.19
+        version: 6.0.1
       nanoid-good:
         specifier: ^3.1.0
         version: 3.1.0
@@ -8620,6 +8620,11 @@ packages:
   nanoid@3.3.19:
     resolution: {integrity: sha512-Y2tUNy4ouw6tq5oDSKeQYGOyhkUBhNOcGV/02KC+6kd9eDGqdZd++mjMiIDilrBYvjEnCYvVtsuHCuP+okSfug==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
+  nanoid@6.0.1:
+    resolution: {integrity: sha512-3wVS3i51pE2pi1k5FFL/95BGfVS0kSsvDVuGXHOtxox/TywUmtgq+3qiTOTbs9J7KfHaXPiN171k/A6dBnaXFw==}
+    engines: {node: ^22 || ^24 || >=26}
     hasBin: true
 
   nanostores@1.5.4:
@@ -19499,6 +19504,8 @@ snapshots:
       naughty-words: 1.2.0
 
   nanoid@3.3.19: {}
+
+  nanoid@6.0.1: {}
 
   nanostores@1.5.4: {}
 
