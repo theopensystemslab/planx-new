@@ -56,3 +56,13 @@ minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
   - '@opensystemslab/map@1.0.0-alpha.17'
+  # Storybook bump needed to fix issues with new Tanstack Router dependency
+  - 'storybook@10.6.1'
+  - '@storybook/addon-a11y@10.6.1'
+  - '@storybook/addon-docs@10.6.1'
+  - '@storybook/addon-links@10.6.1'
+  - '@storybook/tanstack-react@10.6.1'
+  - '@storybook/react-dom-shim@10.6.1'
+  - '@storybook/react-vite@10.6.1'
+  - '@storybook/builder-vite@10.6.1'
+  - '@storybook/react@10.6.1'
