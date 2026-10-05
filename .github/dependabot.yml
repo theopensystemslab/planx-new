@@ -103,3 +103,13 @@ updates:
     labels: ["ci", "github-actions"]
     commit-message:
       prefix: "[skip pizza] "
+
+  # Security updates only (no monthly version-update PRs)
+  - package-ecosystem: "uv"
+    directory: "/infrastructure/performance"
+    schedule:
+      interval: "monthly"
+    labels: ["performance", "python"]
+    commit-message:
+      prefix: "[skip pizza] "
+    open-pull-requests-limit: 0
