@@ -73,8 +73,6 @@ describe("creating a Stripe Checkout Session", () => {
         metadata: {
           ...defaultMetadata,
           sessionId: validBody.sessionId,
-          flowId: validBody.flowId,
-          teamSlug: "southwark",
           origin: "https://api.example.com",
         },
         payment_intent_data: {
@@ -84,8 +82,6 @@ describe("creating a Stripe Checkout Session", () => {
           metadata: {
             ...defaultMetadata,
             sessionId: validBody.sessionId,
-            flowId: validBody.flowId,
-            teamSlug: "southwark",
             origin: "https://api.example.com",
           },
         },
@@ -107,21 +103,18 @@ describe("creating a Stripe Checkout Session", () => {
       ...defaultMetadata,
       costCentre: "ABC123",
       sessionId: validBody.sessionId,
-      flowId: validBody.flowId,
-      teamSlug: "southwark",
       origin: "https://api.example.com",
     };
     expect(metadata).toEqual(expected);
     expect(payment_intent_data.metadata).toEqual(expected);
   });
 
-  it("keeps the internal keys authoritative over client metadata", async () => {
+  it("keeps the reserved keys authoritative over client metadata", async () => {
     await supertest(app)
       .post("/stripe/checkout-session/southwark")
       .send({
         ...validBody,
-        // A colliding `sessionId` must not override the key the webhook relies on
-        // TODO: Maybe we should ban these keys from the frontend (and Zod schema) once list is finalised?
+        // The editor blocks these keys, but they must never override the keys the webhook relies on
         metadata: {
           ...defaultMetadata,
           sessionId: "spoofed",
@@ -134,8 +127,6 @@ describe("creating a Stripe Checkout Session", () => {
     expect(metadata).toEqual({
       ...defaultMetadata,
       sessionId: validBody.sessionId,
-      flowId: validBody.flowId,
-      teamSlug: "southwark",
       origin: "https://api.example.com",
     });
   });

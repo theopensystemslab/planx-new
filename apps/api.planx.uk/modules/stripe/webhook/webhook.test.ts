@@ -12,12 +12,14 @@ import {
   CONNECTED_ACCOUNT_ID,
   DESTINATION_PAYMENT_ID,
   expandedCharge,
+  FLOW_ID,
   getPaymentStatusInsert as insertCall,
   getSessionLookup,
   mockPaymentStatusInsert as mockInsert,
   mockSessionLookup,
   mockSessionLookupFailure,
   paymentIntent,
+  TEAM_SLUG,
 } from "./test/mocks.js";
 import {
   createdEvent,
@@ -181,14 +183,31 @@ describe("receiving a Stripe webhook", () => {
 
       expect(insertCall()?.variables).toEqual({
         sessionId: paymentIntent.metadata.sessionId,
-        flowId: paymentIntent.metadata.flowId,
-        teamSlug: "southwark",
+        flowId: FLOW_ID,
+        teamSlug: TEAM_SLUG,
         stripePaymentId: "pi_test_123",
         stripeStatus: "succeeded",
         amount: 14500,
         feeBreakdown: null,
         metadata: paymentIntent.metadata,
       });
+    });
+
+    it("derives the flow and team from the session, not the PaymentIntent metadata", async () => {
+      const { payload, signature } = succeededEvent({
+        metadata: {
+          ...paymentIntent.metadata,
+          // Editor-configured keys which happen to share a name with session properties
+          flowId: "00000000-0000-4000-8000-000000000000",
+          teamSlug: "another-team",
+        },
+      });
+
+      await post(payload, signature).expect(200);
+
+      expect(insertCall()?.variables).toEqual(
+        expect.objectContaining({ flowId: FLOW_ID, teamSlug: TEAM_SLUG }),
+      );
     });
 
     it("records a 'payment_failed' status on a payment_intent.payment_failed event", async () => {
@@ -459,6 +478,16 @@ describe("receiving a Stripe webhook", () => {
   describe("when recording is skipped or fails", () => {
     it("returns 500 when the session lookup fails, so Stripe redelivers the event", async () => {
       mockSessionLookupFailure();
+      mockInsert();
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(500);
+
+      expect(insertCall()).toBeUndefined();
+    });
+
+    it("returns 500 when the session's flow cannot be found, so Stripe redelivers the event", async () => {
+      mockSessionLookup({ flowExists: false });
       mockInsert();
       const { payload, signature } = succeededEvent();
 
