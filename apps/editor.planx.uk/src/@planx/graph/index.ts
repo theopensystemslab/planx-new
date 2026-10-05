@@ -125,6 +125,15 @@ const wrap = (
   fn: (draft: Graph) => void,
 ): [Graph, Array<OT.Op>] => {
   const [result, patches, inversePatches] = produceWithPatches(graph, fn);
+
+  // TEMPORARY DEBUGGING OF ROGUE OPTIONS EDITS
+  console.log({
+    nextStateGraph: result,
+    patches: patches,
+    inversePatches: inversePatches,
+    convertedToOps: convertPatchesToOps(patches, inversePatches),
+  });
+
   return [result, convertPatchesToOps(patches, inversePatches)];
 };
 
