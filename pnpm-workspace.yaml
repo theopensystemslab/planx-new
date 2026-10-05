@@ -17,7 +17,7 @@ catalog:
   csv-stringify: ^6.8.3
   date-fns: ^4.4.0
   dompurify: ^3.4.16
-  dotenv: ^17.4.2
+  dotenv: ^18.0.1
   eslint: ^9.39.5
   globals: ^16.5.0
   # Pinned to 30.0.x: jsdom 30.1 breaks Blob/FormData in Vitest 4 (vitest-dev/vitest#11336), fixed in Vitest 5.0.3
