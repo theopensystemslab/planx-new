@@ -98,5 +98,18 @@ test("cookies are cleared on logout regardless of token state", async () => {
     });
 });
 
+test("cookie domain excludes the port when the origin has one", async () => {
+  await supertest(app)
+    .post(ENDPOINT)
+    .set("Origin", "http://localhost:3000")
+    .expect(200)
+    .then((res) => {
+      const cookies = res.headers["set-cookie"] as unknown as string[];
+      const authCookies = cookies.filter((c) => /^(jwt|auth)=/.test(c));
+      expect(authCookies).toHaveLength(2);
+      authCookies.forEach((c) => expect(c).toContain("Domain=.localhost;"));
+    });
+});
+
 test.todo("revoked tokens cannot access the REST API");
 test.todo("revoked tokens cannot access the GraphQL API");
