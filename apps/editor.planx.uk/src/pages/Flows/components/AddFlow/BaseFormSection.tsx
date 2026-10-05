@@ -29,6 +29,7 @@ export const BaseFormSection: React.FC = () => {
   const { values, setFieldValue, getFieldProps, errors } =
     useFormikContext<CreateFlow>();
   const warningId = useId();
+  const isStaging = import.meta.env.VITE_APP_ENV === "staging";
 
   let flowType: FlowTypeOption = "flow";
   if (values.flow.isPattern) flowType = "pattern";
@@ -50,19 +51,22 @@ export const BaseFormSection: React.FC = () => {
 
   return (
     <>
-      <WarningContainer
-        aria-labelledby={warningId}
-        sx={{
-          margin: 0,
-          borderColor: "warning.main",
-          backgroundColor: (theme) => lighten(theme.palette.warning.main, 0.9),
-        }}
-      >
-        <Typography id={warningId} variant="body1">
-          All content created or edited on staging will be overwritten by
-          production overnight
-        </Typography>
-      </WarningContainer>
+      {isStaging && (
+        <WarningContainer
+          aria-labelledby={warningId}
+          sx={{
+            margin: 0,
+            borderColor: "warning.main",
+            backgroundColor: (theme) =>
+              lighten(theme.palette.warning.main, 0.9),
+          }}
+        >
+          <Typography id={warningId} variant="body1">
+            Content created or edited on staging will be overwritten by
+            production overnight
+          </Typography>
+        </WarningContainer>
+      )}
       <InputLabel label="How do you want to start?" id="create-flow-mode">
         <SelectInput
           value={values.mode}
