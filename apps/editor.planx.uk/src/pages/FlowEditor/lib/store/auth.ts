@@ -52,7 +52,7 @@ export const authStore: StateCreator<AuthStore, [], [], AuthStore> = (
 
     // Clean up client connections
     disconnectShareDB();
-    await client.resetStore();
+    await client.clearStore();
 
     // Clear all client-side auth tokens
     clearCookie("auth");
