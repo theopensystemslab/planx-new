@@ -10,7 +10,6 @@ export const createCheckoutSessionSchema = z.object({
   body: z.object({
     sessionId: z.string().uuid(),
     flowId: z.string().uuid(),
-    amount: z.number().int().positive(),
     metadata: z
       .object({
         flow: z.string(),
@@ -25,7 +24,6 @@ export const createCheckoutSessionSchema = z.object({
 export interface CreateCheckoutSessionInput {
   sessionId: string;
   flowId: string;
-  amount: number;
   returnURL: string;
   teamSlug: string;
   connectedAccountId: string;
