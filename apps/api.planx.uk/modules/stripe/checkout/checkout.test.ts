@@ -206,18 +206,6 @@ describe("creating a Stripe Checkout Session", () => {
     expect(payment_intent_data.application_fee_amount).toBe(4800);
   });
 
-  it("omits the application fee when there is no fee breakdown to split", async () => {
-    mockPassportLookup(null);
-
-    await supertest(app)
-      .post("/stripe/checkout-session/southwark")
-      .send(validBody)
-      .expect(200);
-
-    const { payment_intent_data } = mockCreate.mock.calls[0][0];
-    expect(payment_intent_data.application_fee_amount).toBeUndefined();
-  });
-
   it("omits the application fee for an exempt service charge, even with a breakdown", async () => {
     mockPassportLookup({
       "application.fee.calculated": 145,
@@ -272,57 +260,59 @@ describe("creating a Stripe Checkout Session", () => {
     expect(total).toBe(16500);
   });
 
-  it("falls back to a single line for the client amount when no fee breakdown is found", async () => {
-    mockPassportLookup(null);
-
-    await supertest(app)
-      .post("/stripe/checkout-session/southwark")
-      .send(validBody)
-      .expect(200);
-
-    const { line_items } = mockCreate.mock.calls[0][0];
-    expect(line_items).toEqual([
+  describe("failing without a fee breakdown", () => {
+    it.each([
+      { case: "the session has no passport data", passportData: null },
       {
-        price_data: {
-          currency: "gbp",
-          product_data: { name: "Planning application fee" },
-          unit_amount: 14500,
-        },
-        quantity: 1,
+        case: "the passport has no payable fee",
+        passportData: { "application.fee.calculated": 100 },
       },
-    ]);
-  });
+      {
+        case: "the passport fee is invalid",
+        passportData: { "application.fee.payable": -1 },
+      },
+    ])(
+      "returns a 422 and creates no Checkout Session when $case",
+      async ({ passportData }) => {
+        mockPassportLookup(passportData);
 
-  it("falls back to a single line when the fee breakdown lookup fails", async () => {
-    queryMock.mockQuery({
-      name: "GetCheckoutSessionPassportData",
-      matchOnVariables: false,
-      status: 500,
-      data: {},
+        await supertest(app)
+          .post("/stripe/checkout-session/southwark")
+          .send(validBody)
+          .expect(422)
+          .then((res) => {
+            expect(res.body.error).toMatch(
+              /Failed to create Stripe Checkout Session for southwark/,
+            );
+          });
+
+        expect(mockCreate).not.toHaveBeenCalled();
+        expect(getPaymentStatusInsert()).toBeUndefined();
+      },
+    );
+
+    it("returns a 500 and creates no Checkout Session when the fee breakdown lookup fails", async () => {
+      queryMock.mockQuery({
+        name: "GetCheckoutSessionPassportData",
+        matchOnVariables: false,
+        status: 500,
+        data: {},
+      });
+
+      await supertest(app)
+        .post("/stripe/checkout-session/southwark")
+        .send(validBody)
+        .expect(500);
+
+      expect(mockCreate).not.toHaveBeenCalled();
+      expect(getPaymentStatusInsert()).toBeUndefined();
     });
-
-    await supertest(app)
-      .post("/stripe/checkout-session/southwark")
-      .send(validBody)
-      .expect(200);
-
-    const { line_items } = mockCreate.mock.calls[0][0];
-    expect(line_items).toEqual([
-      {
-        price_data: {
-          currency: "gbp",
-          product_data: { name: "Planning application fee" },
-          unit_amount: 14500,
-        },
-        quantity: 1,
-      },
-    ]);
   });
 
   it("rejects an invalid request body with a 400", async () => {
     await supertest(app)
       .post("/stripe/checkout-session/southwark")
-      .send({ ...validBody, amount: -1, sessionId: "not-a-uuid" })
+      .send({ ...validBody, sessionId: "not-a-uuid" })
       .expect(400);
 
     expect(mockCreate).not.toHaveBeenCalled();

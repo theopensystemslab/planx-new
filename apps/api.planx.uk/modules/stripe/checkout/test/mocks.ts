@@ -47,7 +47,6 @@ export const defaultMetadata = {
 export const validBody = {
   sessionId: "f2d8ca1d-a43b-43ec-b3d9-a9fec63ff19c",
   flowId: "7cd1c4b4-4229-424f-8d04-c9fdc958ef4e",
-  amount: 14500,
   metadata: defaultMetadata,
 };
 
