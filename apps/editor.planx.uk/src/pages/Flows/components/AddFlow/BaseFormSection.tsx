@@ -1,7 +1,11 @@
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
+import { lighten } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import useId from "@mui/utils/useId";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikContext } from "formik";
 import Permission from "ui/editor/Permission";
@@ -24,6 +28,7 @@ import {
 export const BaseFormSection: React.FC = () => {
   const { values, setFieldValue, getFieldProps, errors } =
     useFormikContext<CreateFlow>();
+  const warningId = useId();
 
   let flowType: FlowTypeOption = "flow";
   if (values.flow.isPattern) flowType = "pattern";
@@ -45,6 +50,19 @@ export const BaseFormSection: React.FC = () => {
 
   return (
     <>
+      <WarningContainer
+        aria-labelledby={warningId}
+        sx={{
+          margin: 0,
+          borderColor: "warning.main",
+          backgroundColor: (theme) => lighten(theme.palette.warning.main, 0.9),
+        }}
+      >
+        <Typography id={warningId} variant="body1">
+          All content created or edited on staging will be overwritten by
+          production overnight
+        </Typography>
+      </WarningContainer>
       <InputLabel label="How do you want to start?" id="create-flow-mode">
         <SelectInput
           value={values.mode}
