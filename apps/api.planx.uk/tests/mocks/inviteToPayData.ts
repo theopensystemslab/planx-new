@@ -34,6 +34,8 @@ export const sessionPreviewData = {
 
 export const validSession: Session = {
   id: "e62fc9fd-4acb-4bdd-9dbb-01fb996c656c",
+  createdAt: "01-01-2026",
+  updatedAt: "01-01-2026",
   data: {
     id: "741a2372-b0b4-4f30-98a8-7c98c6464954",
     passport: {
@@ -53,6 +55,13 @@ export const validSession: Session = {
     id: "741a2372-b0b4-4f30-98a8-7c98c6464954",
     slug: "apply-for-a-lawful-development-certificate",
     name: "Apply for a Lawful Development Certificate",
+    team: {
+      slug: "lambeth",
+      name: "Lambeth",
+      settings: {
+        referenceCode: "LBL",
+      },
+    },
     email_template: "application",
   },
 };
