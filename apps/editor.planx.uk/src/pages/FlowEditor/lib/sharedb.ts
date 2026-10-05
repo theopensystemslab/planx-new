@@ -42,7 +42,7 @@ export function initializeShareDB() {
   });
 }
 
-export function disconnectShareDB() {
+function disconnectShareDB() {
   if (socket) {
     console.log("[ShareDB] Closing websocket connection");
     socket.close();
