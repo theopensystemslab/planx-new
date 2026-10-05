@@ -53,6 +53,10 @@ const QuestionComponent: React.FC<Props> = (props) => {
           errors.alwaysAutoAnswerBlank =
             "Exactly one option should have a blank data field when never putting to user";
         }
+        if (values.neverAutoAnswer && values.alwaysAutoAnswerBlank) {
+          errors.alwaysAutoAnswerBlank =
+            "Cannot both always and never put to user";
+        }
         return errors;
       },
       validationSchema,
