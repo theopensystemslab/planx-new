@@ -55,7 +55,7 @@ echo team_integrations downloaded
 
 # Copy subset of team_settings columns
 # Exclude payment_provider - kept independent between prod and staging whilst migrating to Stripe
-psql --quiet ${REMOTE_PG} --command="\\copy (SELECT id, team_id, reference_code, homepage, help_email, help_phone, help_opening_hours, email_reply_to_id, boundary_url, boundary_bbox, has_article4_schema, is_trial FROM team_settings) TO '/tmp/team_settings.csv' (FORMAT csv, DELIMITER ';');"
+psql --quiet ${REMOTE_PG} --command="\\copy (SELECT id, team_id, reference_code, homepage, help_email, help_phone, help_opening_hours, email_reply_to_id, boundary_url, boundary_bbox, has_article4_schema, is_trial, is_guidance_only FROM team_settings) TO '/tmp/team_settings.csv' (FORMAT csv, DELIMITER ';');"
 echo team_settings downloaded
 
 psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id, created_at, has_send_component, has_sections, has_pay_component, service_charge_enabled FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"

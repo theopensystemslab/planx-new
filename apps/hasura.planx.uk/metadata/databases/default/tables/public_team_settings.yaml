@@ -19,6 +19,7 @@ insert_permissions:
         - help_phone
         - homepage
         - id
+        - is_guidance_only
         - is_trial
         - payment_provider
         - reference_code
@@ -37,6 +38,7 @@ select_permissions:
         - help_phone
         - homepage
         - id
+        - is_guidance_only
         - is_trial
         - payment_provider
         - reference_code
@@ -55,6 +57,7 @@ select_permissions:
         - help_phone
         - homepage
         - id
+        - is_guidance_only
         - is_trial
         - payment_provider
         - reference_code
@@ -73,6 +76,7 @@ select_permissions:
         - help_phone
         - homepage
         - id
+        - is_guidance_only
         - is_trial
         - payment_provider
         - reference_code
@@ -91,6 +95,7 @@ select_permissions:
         - help_phone
         - homepage
         - id
+        - is_guidance_only
         - is_trial
         - payment_provider
         - reference_code
@@ -109,6 +114,7 @@ select_permissions:
         - help_phone
         - homepage
         - id
+        - is_guidance_only
         - is_trial
         - payment_provider
         - reference_code
@@ -137,6 +143,7 @@ update_permissions:
         - help_phone
         - homepage
         - id
+        - is_guidance_only
         - is_trial
         - payment_provider
         - reference_code
