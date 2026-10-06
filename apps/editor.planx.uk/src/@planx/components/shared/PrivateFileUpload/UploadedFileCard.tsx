@@ -188,12 +188,12 @@ export const UploadedFileCard: React.FC<Props> = ({
                 size="small"
                 title={`Delete ${getFileDisplayName(file)}`}
                 onClick={removeFile}
-                sx={{ gap: 1, backgroundColor: "white" }}
+                sx={{ gap: 1 }}
                 data-testid={`delete-${file.name}`}
                 variant="contained"
                 color="secondary"
               >
-                <DeleteIcon color="warning" fontSize="small" />
+                <DeleteIcon sx={{ color: "warning.dark" }} fontSize="small" />
                 Remove{" "}
                 <span style={visuallyHidden}>{getFileDisplayName(file)}</span>
               </Button>

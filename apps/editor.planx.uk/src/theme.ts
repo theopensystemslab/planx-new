@@ -74,6 +74,11 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     dark: "#265A26",
     light: "#EFF7EE",
   },
+  warning: {
+    main: "#FF9800",
+    dark: "#C77700",
+    light: "#FBF0E6",
+  },
   info: {
     main: "#0B78D0",
     contrastText: "#FFFFFF",
@@ -274,6 +279,7 @@ const getThemeOptions = ({
     },
     shape: {
       borderRadius: 3,
+      borderRadiusLg: 5,
       borderRadiusSm: 2,
     },
     components: {

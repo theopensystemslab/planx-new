@@ -428,9 +428,9 @@ const FormModal: React.FC<FormModalProps> = ({
                 });
               }}
               disabled={disabled}
-              sx={{ backgroundColor: "background.default", gap: 1 }}
+              sx={{ gap: 1 }}
             >
-              <DeleteIcon color="warning" fontSize="medium" />
+              <DeleteIcon sx={{ color: "warning.dark" }} fontSize="medium" />
               Delete
             </Button>
           )}

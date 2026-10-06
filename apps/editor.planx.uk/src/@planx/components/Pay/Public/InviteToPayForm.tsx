@@ -16,7 +16,7 @@ import type { APIError } from "lib/api/client";
 import type { CreatePaymentRequest } from "lib/api/inviteToPay/requests";
 import { generateInviteToPayRequest } from "lib/api/inviteToPay/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useId } from "react";
+import React, { useEffect } from "react";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
@@ -89,7 +89,6 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   const matches = useMatches();
   const defaults = getDefaultContent();
   const from = usePublicRouteContext();
-  const warningId = useId();
 
   /**
    * Handle differing routes for the confirmation page based on isCustomDomain
@@ -232,16 +231,11 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
-        <WarningContainer aria-labelledby={warningId}>
-          <ErrorOutline />
-          <Typography
-            id={warningId}
-            variant="body2"
-            sx={{ ml: 2, fontWeight: "bold" }}
-          >
+        <WarningContainer icon={ErrorOutline}>
+          <strong>
             Selecting "Send invitation to pay" locks your answers and you'll no
             longer be able to make changes.
-          </Typography>
+          </strong>
         </WarningContainer>
         {isError ? (
           <ErrorWrapper

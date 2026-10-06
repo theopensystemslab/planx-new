@@ -1,38 +1,55 @@
 import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
+import type SvgIcon from "@mui/material/SvgIcon";
+import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import { useId } from "react";
+import { type ReactNode, useId } from "react";
 
-const StyledWarningContainer = styled(Box)<BoxProps>(({ theme }) => ({
-  border: `solid 2px ${theme.palette.border.main}`,
-  backgroundColor: theme.palette.background.paper,
-  padding: theme.spacing(2),
+export const WarningContainerRoot = styled(Box)<BoxProps>(({ theme }) => ({
+  border: `solid 2px ${theme.palette.warning.dark}`,
+  backgroundColor: theme.palette.warning.light,
+  padding: theme.spacing(2, 2.5, 2, 2),
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(2),
   display: "flex",
   flexDirection: "row",
-  alignItems: "center",
+  alignItems: "flex-start",
+  gap: theme.spacing(1.5),
+  borderRadius: theme.shape.borderRadiusLg,
 }));
 
+interface WarningContainerProps extends Pick<BoxProps, "sx"> {
+  children: ReactNode;
+  icon?: typeof SvgIcon;
+}
+
 export const WarningContainer = ({
-  "aria-labelledby": ariaLabelledBy,
   children,
-  ...props
-}: BoxProps) => {
+  icon: Icon,
+  sx,
+}: WarningContainerProps) => {
   const warningLabelId = useId();
-  const labelledBy = [warningLabelId, ariaLabelledBy].filter(Boolean).join(" ");
+  const textId = useId();
 
   return (
-    <StyledWarningContainer
+    <WarningContainerRoot
       component="section"
-      aria-labelledby={labelledBy}
-      {...props}
+      aria-labelledby={`${warningLabelId} ${textId}`}
+      sx={sx}
     >
       <span id={warningLabelId} style={visuallyHidden}>
         Warning:
       </span>
-      {children}
-    </StyledWarningContainer>
+      {Icon && <Icon aria-hidden="true" />}
+      <Typography
+        id={textId}
+        variant="body2"
+        component="div"
+        sx={{ "& p:first-of-type": { mt: 0 }, "& p:last-of-type": { mb: 0 } }}
+      >
+        {children}
+      </Typography>
+    </WarningContainerRoot>
   );
 };

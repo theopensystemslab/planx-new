@@ -16,7 +16,7 @@ import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useId, useState } from "react";
+import React, { useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
@@ -57,7 +57,6 @@ const Provider: React.FC = () => {
   const teamId = useStore((state) => state.teamId);
   const teamSlug = useStore((state) => state.teamSlug);
   const { paymentProvider } = usePaymentProvider();
-  const stripeWarningId = useId();
   const [migratedProvider, setMigratedProvider] =
     useState<PaymentProvider | null>(null);
   const provider = migratedProvider ?? paymentProvider ?? null;
@@ -100,12 +99,9 @@ const Provider: React.FC = () => {
   const renderProviderAction = () => {
     if (isStripe) {
       return (
-        <WarningContainer aria-labelledby={stripeWarningId} sx={{ my: 0 }}>
-          <WarningIcon sx={{ mr: 1 }} />
-          <Typography id={stripeWarningId} variant="body2">
-            Stripe payments are not yet available. Applicants will not be able
-            to pay online until this is complete.
-          </Typography>
+        <WarningContainer icon={WarningIcon} sx={{ my: 0 }}>
+          Stripe payments are not yet available. Applicants will not be able to
+          pay online until this is complete.
         </WarningContainer>
       );
     }

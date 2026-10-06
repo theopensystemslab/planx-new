@@ -1,10 +1,8 @@
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Link from "@mui/material/Link";
-import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useLPS } from "hooks/useLPS";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { useId } from "react";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import CategorySelection from "./components/CategorySelection";
@@ -20,7 +18,6 @@ import type {
 const LPSListingSettings: React.FC = () => {
   const flowId = useStore((state) => state.id);
   const { url } = useLPS();
-  const trialWarningId = useId();
 
   return (
     <SettingsFormContainer<
@@ -61,11 +58,8 @@ const LPSListingSettings: React.FC = () => {
         return (
           <>
             {isTrial && (
-              <WarningContainer aria-labelledby={trialWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
-                <Typography id={trialWarningId} variant="body2">
-                  Trial accounts cannot list services on LPS.
-                </Typography>
+              <WarningContainer icon={PendingActionsIcon}>
+                Trial accounts cannot list services on LPS.
               </WarningContainer>
             )}
             <ToggleLPS isTrial={isTrial} />
