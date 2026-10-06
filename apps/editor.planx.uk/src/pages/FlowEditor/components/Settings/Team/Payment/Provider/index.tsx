@@ -2,7 +2,6 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -13,7 +12,6 @@ import Typography from "@mui/material/Typography";
 import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
-import { getStripeCanMigrate } from "lib/api/stripe/requests";
 import type {
   MigrationBlocker,
   MigrationBlockerReason,
@@ -27,14 +25,12 @@ import SettingsDescription from "ui/editor/SettingsDescription";
 import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { useStripeConnectStatus } from "../Onboarding/hooks/useStripeConnectStatus";
+import { useMigrateToStripe } from "./hooks/useMigrateToStripe";
 
 export type PaymentProvider = TeamSettings["paymentProvider"];
 
 type DialogState =
-  | { type: "closed" }
-  | { type: "checking" }
-  | { type: "blocked"; blockers: MigrationBlocker[] }
-  | { type: "confirm" };
+  { type: "closed" } | { type: "blocked"; blockers: MigrationBlocker[] };
 
 const BLOCKER_MESSAGES: Record<
   MigrationBlockerReason,
@@ -57,6 +53,20 @@ const formatBlockerList = (blockers: MigrationBlocker[]): string => {
   return `${messages.slice(0, -1).join(", ")} and ${messages[messages.length - 1]}`;
 };
 
+const formatActionsList = (blockers: MigrationBlocker[]): string => {
+  const reasons = new Set(blockers.map((b) => b.reason));
+  const hasActiveSessions = reasons.has("activeGovpaySessions");
+  const hasCheckoutNotConfigured = reasons.has("checkoutNotConfigured");
+
+  if (hasActiveSessions && hasCheckoutNotConfigured) {
+    return "Please configure checkout and try again later.";
+  }
+  if (hasCheckoutNotConfigured) {
+    return "Please configure checkout and then try again."; // TODO: check if we will configure checkout for them
+  }
+  return "Please try again later.";
+};
+
 const Provider: React.FC = () => {
   const toast = useToast();
   const [teamId, teamSlug] = useStore((state) => [
@@ -72,28 +82,26 @@ const Provider: React.FC = () => {
     type: "closed",
   });
 
-  const handleMigrateClick = async () => {
-    setDialogState({ type: "checking" });
-    const result = await getStripeCanMigrate(teamSlug);
-    if (result.canMigrate) {
-      setDialogState({ type: "confirm" });
-    } else {
-      setDialogState({ type: "blocked", blockers: result.blockers });
-    }
-  };
+  const { mutate: migrate, isPending: isMigrating } = useMigrateToStripe();
 
   /**
-   * Placeholder - updates local state only, no DB tables updated
-   * @todo Write to Hasura
+   * @todo when we hook up the actual migration logic, write to Hasura
    */
-  const handleConfirmMigration = () => {
-    console.log(
-      `[Provider] Migrating team ${teamId} from ${PROVIDER_LABELS[provider!]} to Stripe`,
-    );
-    setMigratedProvider("stripe");
-    setDialogState({ type: "closed" });
-    toast.success("Migration to Stripe successful");
-    console.log("[Provider] Migration complete");
+  const handleMigration = () => {
+    migrate(teamSlug, {
+      onSuccess: (result) => {
+        if (!result.canMigrate) {
+          setDialogState({ type: "blocked", blockers: result.blockers });
+          return;
+        }
+        setMigratedProvider("stripe");
+        setDialogState({ type: "closed" });
+        toast.success("Migration to Stripe successful");
+      },
+      onError: () => {
+        toast.error("Something went wrong migrating to Stripe");
+      },
+    });
   };
 
   const handleClose = () => setDialogState({ type: "closed" });
@@ -114,16 +122,22 @@ const Provider: React.FC = () => {
     }
 
     if (canMigrateToStripe) {
-      if (isStripeStatusLoading || !stripeConnectStatus?.connected) {
-        return null;
-      }
-
       return (
         <Box>
+          {(isStripeStatusLoading || !stripeConnectStatus?.connected) && (
+            <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+              Please connect a Stripe account above before trying to migrate
+              payment providers.
+            </Typography>
+          )}
           <Button
-            onClick={handleMigrateClick}
+            onClick={handleMigration}
             variant="contained"
-            disabled={dialogState.type === "checking"}
+            disabled={
+              isStripeStatusLoading ||
+              !stripeConnectStatus?.connected ||
+              isMigrating
+            }
           >
             Migrate to Stripe
           </Button>
@@ -197,27 +211,7 @@ const Provider: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Dialog
-        open={dialogState.type !== "closed"}
-        onClose={dialogState.type === "checking" ? undefined : handleClose}
-      >
-        {dialogState.type === "checking" && (
-          <>
-            <DialogTitle component="h1" variant="h3">
-              Checking active sessions
-            </DialogTitle>
-            <DialogContent
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                py: 4,
-              }}
-            >
-              <CircularProgress />
-            </DialogContent>
-          </>
-        )}
-
+      <Dialog open={dialogState.type !== "closed"} onClose={handleClose}>
         {dialogState.type === "blocked" && (
           <>
             <DialogTitle component="h1" variant="h3">
@@ -228,6 +222,9 @@ const Provider: React.FC = () => {
                 This team cannot migrate to Stripe yet because{" "}
                 {formatBlockerList(dialogState.blockers)}.
               </DialogContentText>
+              <DialogContentText sx={{ mt: 1 }}>
+                {formatActionsList(dialogState.blockers)}
+              </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button
@@ -236,36 +233,6 @@ const Provider: React.FC = () => {
                 variant="contained"
               >
                 Close
-              </Button>
-            </DialogActions>
-          </>
-        )}
-
-        {dialogState.type === "confirm" && (
-          <>
-            <DialogTitle component="h1" variant="h3">
-              Confirm migration to Stripe
-            </DialogTitle>
-            <DialogContent dividers>
-              <DialogContentText>
-                No active payment sessions found. You can proceed with migrating
-                this team's payment provider from GOV.UK Pay to Stripe.
-              </DialogContentText>
-              <DialogContentText sx={{ mt: 1 }}>
-                This action cannot be undone. All future payment sessions will
-                be processed through Stripe.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={handleClose}
-                color="secondary"
-                variant="contained"
-              >
-                Cancel
-              </Button>
-              <Button onClick={handleConfirmMigration} variant="contained">
-                Migrate to Stripe
               </Button>
             </DialogActions>
           </>

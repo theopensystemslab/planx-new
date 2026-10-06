@@ -1,3 +1,4 @@
+import type { APIError } from "../client";
 import apiClient from "../client";
 import type {
   CreateStripeCheckoutSession,
@@ -43,11 +44,19 @@ export const getStripeCheckoutSessionStatus = async ({
   return data;
 };
 
-export const getStripeCanMigrate = async (
+export const migrateToStripe = async (
   teamSlug: string,
 ): Promise<StripeCanMigrate> => {
-  const { data } = await apiClient.get<StripeCanMigrate>(
-    `/stripe/migration/${teamSlug}/status`,
-  );
-  return data;
+  try {
+    const { data } = await apiClient.post<StripeCanMigrate>(
+      `/stripe/migrate/${teamSlug}`,
+    );
+    return data;
+  } catch (err) {
+    const apiError = err as APIError<StripeCanMigrate>;
+    if (apiError.statusCode === 409 && apiError.data) {
+      return apiError.data;
+    }
+    throw err;
+  }
 };
