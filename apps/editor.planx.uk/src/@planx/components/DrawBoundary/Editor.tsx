@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
@@ -105,6 +106,10 @@ function DrawBoundaryComponent(props: Props) {
               inputProps={{ "aria-label": "Description for uploading" }}
             />
           </InputRow>
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            In submission services, users have the option to upload a location
+            plan instead of drawing a boundary.
+          </Typography>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
