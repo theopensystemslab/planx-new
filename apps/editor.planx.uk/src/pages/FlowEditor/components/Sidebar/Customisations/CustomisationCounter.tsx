@@ -77,6 +77,9 @@ export const CustomisationCounter: React.FC<Props> = ({
     });
   }, [flowEdits, customisableNodeIds]);
 
+  // Nothing to track if the template has no required customisations
+  if (!countRequiredNodes) return null;
+
   const countOutstanding = countRequiredNodes - countCompletedRequiredNodes;
   const progress = countRequiredNodes
     ? (countCompletedRequiredNodes / countRequiredNodes) * 100
