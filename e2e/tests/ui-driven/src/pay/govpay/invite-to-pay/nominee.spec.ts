@@ -143,7 +143,11 @@ async function setupPaymentRequest(
   const sessionId = uuidV4();
   context.sessionIds?.push(sessionId);
   await createSession({ client: adminGQLClient, context, sessionId });
-  const paymentRequest = await createPaymentRequest(request, sessionId);
+  const paymentRequest = await createPaymentRequest(
+    request,
+    sessionId,
+    context.user.email,
+  );
   return { paymentRequest, sessionId };
 }
 
@@ -189,11 +193,12 @@ async function createSession({
 async function createPaymentRequest(
   request: APIRequestContext,
   sessionId: string,
+  email: string,
 ) {
   const response = await request.post(
     `http://localhost:${process.env.API_PORT}/invite-to-pay/${sessionId}`,
     {
-      data: mockPaymentRequestDetails,
+      data: { ...mockPaymentRequestDetails, email },
     },
   );
   return response.json();
