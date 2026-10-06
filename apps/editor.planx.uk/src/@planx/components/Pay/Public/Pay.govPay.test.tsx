@@ -622,6 +622,50 @@ describe("Confirm component with inviteToPay", () => {
     ).toBeInTheDocument();
   });
 
+  it("sends the applicant's email with the invite request", async () => {
+    const sessionId = "3a1d7c8e-1f2b-4c5d-9e6f-7a8b9c0d1e2f";
+    const applicantEmail = "applicant@opensystemslab.io";
+    act(() =>
+      setState({
+        sessionId,
+        path: ApplicationPath.SaveAndReturn,
+        saveToEmail: applicantEmail,
+      }),
+    );
+
+    let requestBody: unknown;
+    server.use(
+      http.post(`*/invite-to-pay/${sessionId}`, async ({ request }) => {
+        requestBody = await request.json();
+        return HttpResponse.json({ id: "payment-request-id" });
+      }),
+    );
+
+    const { user } = await setup(<Confirm {...inviteProps} />);
+
+    // Switch to "InviteToPay" page
+    await user.click(screen.getByText(invitePrompt));
+
+    await user.click(await screen.findByLabelText("Full name"));
+    await user.paste("Mr Nominee");
+    await user.click(await screen.findByLabelText("Email"));
+    await user.paste("nominee@opensystemslab.io");
+    await user.click(
+      await screen.findByLabelText("Your name or organisation name"),
+    );
+    await user.paste("Ms Applicant");
+    await user.keyboard("{Enter}");
+
+    await waitFor(() =>
+      expect(requestBody).toMatchObject({
+        email: applicantEmail,
+        payeeName: "Mr Nominee",
+        payeeEmail: "nominee@opensystemslab.io",
+        applicantName: "Ms Applicant",
+      }),
+    );
+  });
+
   it("disables the invite link if you already have an in-progress payment", async () => {
     await setup(
       <Confirm
