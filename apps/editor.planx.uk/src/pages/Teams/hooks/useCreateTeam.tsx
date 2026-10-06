@@ -34,6 +34,7 @@ export interface TeamPayload {
   category: TeamCategory;
   settings: {
     isTrial: boolean;
+    isGuidanceOnly: boolean;
   };
 }
 
@@ -53,6 +54,7 @@ export const useCreateTeam = () => {
         category,
         settings: {
           is_trial: settings.isTrial,
+          is_guidance_only: settings.isGuidanceOnly,
         },
         theme: {},
         invoice_details: {},
