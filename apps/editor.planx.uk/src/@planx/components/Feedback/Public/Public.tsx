@@ -1,4 +1,4 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Card from "@planx/components/shared/Preview/Card";
@@ -180,7 +180,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           sx={{ mt: 1 }}
         />
       </Box>
-      <WarningContainer icon={ErrorOutline}>
+      <WarningContainer icon={ErrorOutlineOutlined}>
         Please do not include any personal data such as your name, email or
         address. All feedback is processed according to our{" "}
         <CustomLink

@@ -15,7 +15,7 @@ export const WarningContainerRoot = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   alignItems: "flex-start",
-  gap: theme.spacing(1.5),
+  gap: theme.spacing(1.25),
   borderRadius: theme.shape.borderRadiusLg,
 }));
 
@@ -41,7 +41,7 @@ export const WarningContainer = ({
       <span id={warningLabelId} style={visuallyHidden}>
         Warning:
       </span>
-      {Icon && <Icon aria-hidden="true" />}
+      {Icon && <Icon sx={{ color: "warning.dark" }} aria-hidden="true" />}
       <Typography
         id={textId}
         variant="body2"

@@ -76,7 +76,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   warning: {
     main: "#FF9800",
-    dark: "#C77700",
+    dark: "#A86500",
     light: "#FBF0E6",
   },
   info: {

@@ -1,4 +1,4 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import Typography from "@mui/material/Typography";
 import type { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
@@ -82,7 +82,7 @@ export function Presentational(props: PresentationalProps) {
               />
             </SimpleExpand>
           )}
-          <WarningContainer icon={ErrorOutline}>
+          <WarningContainer icon={ErrorOutlineOutlined}>
             <ReactMarkdownOrHtml
               source={disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
               openLinksOnNewTab
@@ -114,7 +114,7 @@ export function Presentational(props: PresentationalProps) {
               setInaccurateConstraints={setInaccurateConstraints}
             />
           </SimpleExpand>
-          <WarningContainer icon={ErrorOutline}>
+          <WarningContainer icon={ErrorOutlineOutlined}>
             <ReactMarkdownOrHtml
               source={disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
               openLinksOnNewTab

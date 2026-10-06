@@ -1,4 +1,4 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -231,7 +231,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
-        <WarningContainer icon={ErrorOutline}>
+        <WarningContainer icon={ErrorOutlineOutlined}>
           <strong>
             Selecting "Send invitation to pay" locks your answers and you'll no
             longer be able to make changes.

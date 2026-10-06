@@ -1,3 +1,4 @@
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
@@ -48,7 +49,7 @@ export const BaseFormSection: React.FC = () => {
   return (
     <>
       {isStaging && (
-        <WarningContainer sx={{ m: 0 }}>
+        <WarningContainer sx={{ m: 0 }} icon={ErrorOutlineOutlined}>
           Content created or edited on staging will be overwritten by production
           overnight
         </WarningContainer>
