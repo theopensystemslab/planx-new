@@ -171,7 +171,6 @@ export const mockFlow: FlowGraph = {
     data: {
       title: ".",
       description: "<p>.</p>",
-      hideFileUpload: false,
       fn: "proposal.site",
       titleForUploading: "Elephant",
       descriptionForUploading: "<p>Panda</p>",
@@ -644,7 +643,6 @@ export const mockDrawBoundaryResult: SearchResult<IndexedNode> = {
     data: {
       title: ".",
       description: "<p>.</p>",
-      hideFileUpload: false,
       fn: "proposal.site",
       titleForUploading: "Elephant",
       descriptionForUploading: "<p>Panda</p>",
