@@ -5,6 +5,12 @@ import { calculateExtraProps } from "utils/routeUtils/queryUtils";
 
 import type { NodeSearchParams } from "./route";
 
+/**
+ * Reads the node (and its options) from the live state of the graph in the store
+ *
+ * @warning Routes using this loader to edit the graph must set `gcTime: 0`
+ * Using cached data here means that forms in the Editor modal are seeded with stale data on mount
+ */
 export async function loader({
   team,
   flow,

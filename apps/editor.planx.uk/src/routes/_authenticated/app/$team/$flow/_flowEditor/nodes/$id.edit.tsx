@@ -7,6 +7,8 @@ import { loader } from "./-loader";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/_flowEditor/nodes/$id/edit",
 )({
+  // loader() snapshots the live graph, never serve it from the TSR cache
+  gcTime: 0,
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
     const { team, flow, id } = params;
