@@ -32,7 +32,7 @@ export const parseDrawBoundary = (
   descriptionForUploading:
     data?.descriptionForUploading ||
     defaultContent?.["descriptionForUploading"],
-  hideFileUpload: data?.hideFileUpload || defaultContent?.["hideFileUpload"],
+  hideFileUpload: data?.hideFileUpload ?? defaultContent?.["hideFileUpload"],
   fn: defaultContent?.["fn"], // input is disabled, no need to account for data?.fn
   info: data?.info || defaultContent?.["info"],
   policyRef: data?.policyRef || defaultContent?.["policyRef"],
