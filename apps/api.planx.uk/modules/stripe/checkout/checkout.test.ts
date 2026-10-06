@@ -8,6 +8,7 @@ import {
   mockCreate,
   mockCreateCheckoutSessionDefaults,
   mockPassportLookup,
+  mockReturnURLContext,
   RETURN_URL,
   STRIPE_ACCOUNT_ID,
   validBody,
@@ -129,6 +130,29 @@ describe("creating a Stripe Checkout Session", () => {
       sessionId: validBody.sessionId,
       origin: "https://api.example.com",
     });
+  });
+
+  it("rejects a session locked for invite to pay", async () => {
+    mockReturnURLContext({
+      session: {
+        flowId: validBody.flowId,
+        email: "applicant@example.com",
+        lockedAt: "2026-10-06T12:00:00.000Z",
+      },
+    });
+
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(validBody)
+      .expect(409)
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Cannot initialise a new payment for locked session/,
+        );
+      });
+
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(getPaymentStatusInsert()).toBeUndefined();
   });
 
   it("rejects non-string metadata values", async () => {
