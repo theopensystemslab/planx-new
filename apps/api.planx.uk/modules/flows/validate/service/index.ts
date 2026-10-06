@@ -13,7 +13,6 @@ import {
   getTemplatedFlows,
 } from "../../../../helpers.js";
 import { dataMerged } from "../../../../shared/dataMerged.js";
-import { validateDrawBoundary } from "./drawBoundary.js";
 import { validateFees } from "./fees.js";
 import { validateInviteToPay } from "./inviteToPay.js";
 import { validatePlanningConstraints } from "./planningConstraints.js";
@@ -75,15 +74,7 @@ const validateAndDiffFlow = async (
   const inviteToPay = validateInviteToPay(flattenedFlow);
   const planningConstraints = validatePlanningConstraints(flattenedFlow);
   const send = validateSend(flattenedFlow);
-  const drawBoundary = validateDrawBoundary(flattenedFlow);
-  validationChecks.push(
-    sections,
-    fees,
-    inviteToPay,
-    planningConstraints,
-    send,
-    drawBoundary,
-  );
+  validationChecks.push(sections, fees, inviteToPay, planningConstraints, send);
 
   // Arrange list of validation checks in order of status: Fail, Warn, Pass, Not applicable
   const failingChecks = validationChecks.filter((v) => v.status == "Fail");
