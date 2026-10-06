@@ -13,7 +13,7 @@ import type { FileRouteTypes } from "routeTree.gen";
 import { z } from "zod";
 
 import { makeData } from "../../../shared/utils";
-import { getDefaultContent, toPence } from "../../model";
+import { getDefaultContent } from "../../model";
 import type { Props } from "../Pay";
 import type { StripeAction } from "../types";
 import { Action } from "../types";
@@ -37,7 +37,6 @@ const isStripeNotConfiguredError = (error: unknown) =>
 export function useStripePay(
   props: Props,
   dispatch: React.Dispatch<StripeAction>,
-  fee: number,
 ): UsePaymentProviderResult {
   const [flowId, sessionId, teamSlug, environment, passport] = useStore(
     (state) => [
@@ -119,7 +118,6 @@ export function useStripePay(
         teamSlug,
         sessionId,
         flowId,
-        amount: toPence(fee),
         metadata,
       });
 

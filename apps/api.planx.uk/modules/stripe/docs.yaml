@@ -35,7 +35,6 @@ components:
             required:
               - sessionId
               - flowId
-              - amount
               - metadata
             properties:
               sessionId:
@@ -44,11 +43,6 @@ components:
               flowId:
                 type: string
                 format: uuid
-              amount:
-                type: integer
-                format: int32
-                description: Amount to charge, in pence
-                example: 14500
               metadata:
                 type: object
                 required:
@@ -288,6 +282,11 @@ paths:
             - it has not connected a Stripe account
             - its connected account is no longer connected to our platform
             - its connected account cannot take payments
+        "422":
+          description: |
+            A Checkout Session cannot be created for this session, because either:
+            - it has no valid fee breakdown
+            - it has already been paid for
         "500":
           description: Failed to create the Stripe Checkout Session.
   /stripe/checkout-session/{localAuthority}/{checkoutSessionId}:

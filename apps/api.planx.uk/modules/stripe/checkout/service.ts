@@ -20,7 +20,7 @@ import type {
 
 const getFeeBreakdownForSession = async (
   sessionId: string,
-): Promise<FeeBreakdown | null> => {
+): Promise<FeeBreakdown> => {
   const response = await $api.client.request<{
     session: Partial<{
       passportData: Session["data"]["passport"]["data"];
@@ -37,7 +37,23 @@ const getFeeBreakdownForSession = async (
   );
 
   const passportData = response?.session?.passportData;
-  return passportData ? getFeeBreakdown(passportData) : null;
+
+  if (!passportData) {
+    throw new ServerError({
+      status: 422,
+      message: `Session ${sessionId} has no passport data to build a fee breakdown from`,
+    });
+  }
+
+  try {
+    return getFeeBreakdown(passportData);
+  } catch (error) {
+    throw new ServerError({
+      status: 422,
+      message: `Session ${sessionId} has an invalid fee breakdown`,
+      cause: error,
+    });
+  }
 };
 
 const getInitiatedCheckoutSessionIds = async (
@@ -103,38 +119,23 @@ const expirePreviousCheckoutSessions = async (
 export const createStripeCheckoutSession = async ({
   sessionId,
   flowId,
-  amount,
   returnURL,
   teamSlug,
   connectedAccountId,
   metadata,
 }: CreateCheckoutSessionInput): Promise<CreateCheckoutSessionResponse> => {
+  const feeBreakdown = await getFeeBreakdownForSession(sessionId);
+
   await expirePreviousCheckoutSessions(sessionId);
 
   const separator = returnURL.includes("?") ? "&" : "?";
 
-  const feeBreakdown = await getFeeBreakdownForSession(sessionId).catch(
-    () => null,
-  );
-
-  const lineItems = feeBreakdown
-    ? buildLineItems(feeBreakdown)
-    : // Fallback values to ensure checkout is not blocked
-      [
-        {
-          price_data: {
-            currency: "gbp",
-            product_data: { name: "Planning application fee" },
-            unit_amount: amount,
-          },
-          quantity: 1,
-        },
-      ];
+  const lineItems = buildLineItems(feeBreakdown);
 
   // PlanX's cut (the Stripe application fee)
-  const split = feeBreakdown ? calculateStripeSplit(feeBreakdown) : undefined;
+  const split = calculateStripeSplit(feeBreakdown);
   // 0 is not a valid fee for Stripe, must be undefined if there's no fee amount
-  const applicationFeeAmount = split?.applicationFeeAmount || undefined;
+  const applicationFeeAmount = split.applicationFeeAmount || undefined;
 
   const paymentMetadata = {
     ...metadata,
@@ -166,7 +167,7 @@ export const createStripeCheckoutSession = async ({
     flowId,
     sessionId,
     teamSlug,
-    amount: session.amount_total ?? amount,
+    amount: session.amount_total ?? split.amount,
     feeBreakdown,
     metadata: paymentMetadata,
   });
@@ -189,7 +190,7 @@ const recordInitiatedPayment = async ({
   sessionId: string;
   teamSlug: string;
   amount: number;
-  feeBreakdown: FeeBreakdown | null;
+  feeBreakdown: FeeBreakdown;
   metadata: Record<string, string>;
 }): Promise<void> => {
   try {

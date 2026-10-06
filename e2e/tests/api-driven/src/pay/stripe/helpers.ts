@@ -143,12 +143,10 @@ export async function buildSessionWithFees({
 export async function createCheckoutSession({
   flowId,
   sessionId,
-  feeCase,
   metadata,
 }: {
   flowId: string;
   sessionId: string;
-  feeCase: FeeCase;
   metadata?: Record<string, string>;
 }): Promise<string> {
   const { data } = await axios.post<{ url: string }>(
@@ -156,7 +154,6 @@ export async function createCheckoutSession({
     {
       sessionId,
       flowId,
-      amount: feePassports[feeCase]["application.fee.payable"] * 100,
       metadata: { ...DEFAULT_METADATA, ...metadata },
     },
   );
