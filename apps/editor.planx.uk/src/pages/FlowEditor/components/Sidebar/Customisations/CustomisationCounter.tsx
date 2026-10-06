@@ -107,7 +107,7 @@ export const CustomisationCounter: React.FC<Props> = ({
         </Typography>
         {!hasEveryRequiredNodeBeenUpdated && (
           <Typography variant="body3">
-            Customise every required node before publishing
+            Customise all required nodes before publishing
           </Typography>
         )}
         <Stack>
