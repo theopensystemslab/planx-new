@@ -74,6 +74,7 @@ export const CustomisationCounter: React.FC<Props> = ({
     useStore.setState({
       outstandingTemplatedFlowCustomisations:
         countRequiredNodes - countCompletedRequiredNodes,
+      requiredTemplatedFlowCustomisations: countRequiredNodes,
     });
   }, [flowEdits, customisableNodeIds]);
 

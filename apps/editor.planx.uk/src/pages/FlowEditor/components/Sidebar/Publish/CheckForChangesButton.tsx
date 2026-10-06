@@ -2,12 +2,16 @@ import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
 import type { PublishFlowArgs } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { Template } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { StatusMarker } from "ui/editor/StatusMarker";
 
 import { OpenServiceMenu } from "../OpenServiceMenu";
 import { usePublishFlow } from "./hooks/usePublishFlow";
@@ -15,7 +19,9 @@ import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;
-}> = ({ previewURL }) => {
+  isCustomiseTabOpen: boolean;
+  onViewCustomisations: () => void;
+}> = ({ previewURL, isCustomiseTabOpen, onViewCustomisations }) => {
   const [
     isTemplatedFrom,
     template,
@@ -94,12 +100,17 @@ export const CheckForChangesToPublishButton: React.FC<{
     lastPublishedQuery.data,
   );
 
-  const [isPattern, flowStatus, outstandingTemplatedFlowCustomisations] =
-    useStore((state) => [
-      state.isPattern,
-      state.flowStatus,
-      state.outstandingTemplatedFlowCustomisations,
-    ]);
+  const [
+    isPattern,
+    flowStatus,
+    outstandingTemplatedFlowCustomisations,
+    requiredTemplatedFlowCustomisations,
+  ] = useStore((state) => [
+    state.isPattern,
+    state.flowStatus,
+    state.outstandingTemplatedFlowCustomisations,
+    state.requiredTemplatedFlowCustomisations,
+  ]);
 
   const isDisabled =
     !useStore.getState().canUserEditTeam(teamSlug) ||
@@ -128,16 +139,60 @@ export const CheckForChangesToPublishButton: React.FC<{
               fontSize="small"
             />
             <Box>
-              <Typography variant="body2">
-                {`Templated from ${template.team.name}`}
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+              >
+                {template.team.name}
               </Typography>
-              <Typography variant="body2">
-                <strong>
-                  {isTemplatedFlowDueToPublish
-                    ? "Due to review and publish"
-                    : "Up to date"}
-                </strong>
-              </Typography>
+              <Stack spacing={0.25} sx={{ mt: 0.5 }}>
+                <Box sx={{ display: "flex", gap: 0.5 }}>
+                  <Typography variant="body2" sx={{ minWidth: 80 }}>
+                    Template
+                  </Typography>
+                  <StatusMarker isComplete={!isTemplatedFlowDueToPublish} />
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                  >
+                    {isTemplatedFlowDueToPublish
+                      ? "Due to review and publish"
+                      : "Up to date"}
+                  </Typography>
+                </Box>
+                {requiredTemplatedFlowCustomisations > 0 && (
+                  <Box sx={{ display: "flex", gap: 0.5 }}>
+                    <Typography variant="body2" sx={{ minWidth: 80 }}>
+                      Customise
+                    </Typography>
+                    <StatusMarker
+                      isComplete={outstandingTemplatedFlowCustomisations === 0}
+                    />
+                    <Typography
+                      variant="body2"
+                      sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                    >
+                      {outstandingTemplatedFlowCustomisations === 0
+                        ? "All required nodes customised"
+                        : `${outstandingTemplatedFlowCustomisations} ${outstandingTemplatedFlowCustomisations === 1 ? "node" : "nodes"} to customise`}
+                      {outstandingTemplatedFlowCustomisations > 0 &&
+                        !isCustomiseTabOpen && (
+                          <>
+                            {" "}
+                            <Link
+                              component="button"
+                              variant="body2"
+                              onClick={onViewCustomisations}
+                              sx={{ verticalAlign: "baseline" }}
+                            >
+                              view
+                            </Link>
+                          </>
+                        )}
+                    </Typography>
+                  </Box>
+                )}
+              </Stack>
             </Box>
           </Box>
         )}

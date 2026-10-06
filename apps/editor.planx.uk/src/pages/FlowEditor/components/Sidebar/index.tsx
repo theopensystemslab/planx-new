@@ -148,7 +148,11 @@ const Sidebar: React.FC = React.memo(() => {
             {showSidebar ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </StyledToggleButton>
           <Header>
-            <CheckForChangesToPublishButton previewURL={previewURL} />
+            <CheckForChangesToPublishButton
+              previewURL={previewURL}
+              isCustomiseTabOpen={activeTab === "Customise"}
+              onViewCustomisations={() => setActiveTab("Customise")}
+            />
           </Header>
 
           <TabList>
