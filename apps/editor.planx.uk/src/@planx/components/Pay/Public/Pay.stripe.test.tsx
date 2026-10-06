@@ -479,6 +479,34 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
     expect(screen.queryByText("Retry payment")).not.toBeInTheDocument();
   });
 
+  it("hides the invite to pay link", async () => {
+    act(() =>
+      setState({
+        flow: flowWithFee,
+        breadcrumbs: feeBreadcrumbs,
+        previewEnvironment: "standalone",
+        teamSlug: "test-team",
+      }),
+    );
+
+    await setup(
+      <AppErrorBoundary>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={vi.fn()}
+          allowInviteToPay={true}
+          govPayMetadata={[]}
+        />
+      </AppErrorBoundary>,
+    );
+
+    expect(await screen.findByText("Pay now")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Invite someone else to pay"),
+    ).not.toBeInTheDocument();
+  });
+
   describe("return from hosted Checkout", () => {
     it("confirms with Stripe and submits when the payment is paid", async () => {
       vi.mocked(useSearch).mockReturnValue({ stripeSessionId: "cs_test_123" });
