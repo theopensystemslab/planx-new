@@ -8,6 +8,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
 import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import LockIcon from "@mui/icons-material/Lock";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import RateReviewIcon from "@mui/icons-material/RateReview";
@@ -139,6 +140,12 @@ function EditorNavMenu() {
           Icon: GroupIcon,
           route: `/app/users`,
           accessibleBy: ["platformAdmin"],
+        },
+        {
+          title: "Permissions",
+          Icon: LockIcon,
+          route: "/app/permissions",
+          accessibleBy: "*",
         },
       ],
     },

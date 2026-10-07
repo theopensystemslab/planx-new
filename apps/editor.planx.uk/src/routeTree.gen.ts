@@ -21,6 +21,7 @@ import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAppTeamRouteRouteImport } from './routes/_authenticated/app/$team/route'
 import { Route as AuthenticatedAppAdminPanelRouteImport } from './routes/_authenticated/app/admin-panel'
 import { Route as AuthenticatedAppGlobalSettingsRouteRouteImport } from './routes/_authenticated/app/global-settings/route'
+import { Route as AuthenticatedAppPermissionsRouteImport } from './routes/_authenticated/app/permissions'
 import { Route as AuthenticatedAppUsersRouteImport } from './routes/_authenticated/app/users'
 import { Route as PublicCustomDomainFlowRouteRouteImport } from './routes/_public/_customDomain/$flow/route'
 import { Route as AuthenticatedAppTeamIndexRouteImport } from './routes/_authenticated/app/$team/index'
@@ -166,6 +167,12 @@ const AuthenticatedAppGlobalSettingsRouteRoute =
   AuthenticatedAppGlobalSettingsRouteRouteImport.update({
     id: '/global-settings',
     path: '/global-settings',
+    getParentRoute: () => AuthenticatedAppRouteRoute,
+  } as any)
+const AuthenticatedAppPermissionsRoute =
+  AuthenticatedAppPermissionsRouteImport.update({
+    id: '/permissions',
+    path: '/permissions',
     getParentRoute: () => AuthenticatedAppRouteRoute,
   } as any)
 const AuthenticatedAppUsersRoute = AuthenticatedAppUsersRouteImport.update({
@@ -693,6 +700,7 @@ export interface FileRoutesByFullPath {
   '/app/global-settings': typeof AuthenticatedAppGlobalSettingsRouteRouteWithChildren
   '/$flow': typeof PublicCustomDomainFlowRouteRouteWithChildren
   '/app/admin-panel': typeof AuthenticatedAppAdminPanelRoute
+  '/app/permissions': typeof AuthenticatedAppPermissionsRoute
   '/app/users': typeof AuthenticatedAppUsersRoute
   '/app/': typeof AuthenticatedAppIndexRoute
   '/app/$team/$flow': typeof AuthenticatedAppTeamFlowRouteRouteWithChildren
@@ -785,6 +793,7 @@ export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/app/admin-panel': typeof AuthenticatedAppAdminPanelRoute
+  '/app/permissions': typeof AuthenticatedAppPermissionsRoute
   '/app/users': typeof AuthenticatedAppUsersRoute
   '/app': typeof AuthenticatedAppIndexRoute
   '/app/$team/$flow': typeof AuthenticatedAppTeamFlowFlowEditorIndexRoute
@@ -873,6 +882,7 @@ export interface FileRoutesById {
   '/_authenticated/app/global-settings': typeof AuthenticatedAppGlobalSettingsRouteRouteWithChildren
   '/_public/_customDomain/$flow': typeof PublicCustomDomainFlowRouteRouteWithChildren
   '/_authenticated/app/admin-panel': typeof AuthenticatedAppAdminPanelRoute
+  '/_authenticated/app/permissions': typeof AuthenticatedAppPermissionsRoute
   '/_authenticated/app/users': typeof AuthenticatedAppUsersRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
   '/_authenticated/app/$team/$flow': typeof AuthenticatedAppTeamFlowRouteRouteWithChildren
@@ -972,6 +982,7 @@ export interface FileRouteTypes {
     | '/app/global-settings'
     | '/$flow'
     | '/app/admin-panel'
+    | '/app/permissions'
     | '/app/users'
     | '/app/'
     | '/app/$team/$flow'
@@ -1064,6 +1075,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/app/admin-panel'
+    | '/app/permissions'
     | '/app/users'
     | '/app'
     | '/app/$team/$flow'
@@ -1151,6 +1163,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/global-settings'
     | '/_public/_customDomain/$flow'
     | '/_authenticated/app/admin-panel'
+    | '/_authenticated/app/permissions'
     | '/_authenticated/app/users'
     | '/_authenticated/app/'
     | '/_authenticated/app/$team/$flow'
@@ -1334,6 +1347,13 @@ declare module '@tanstack/react-router' {
       path: '/global-settings'
       fullPath: '/app/global-settings'
       preLoaderRoute: typeof AuthenticatedAppGlobalSettingsRouteRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/permissions': {
+      id: '/_authenticated/app/permissions'
+      path: '/permissions'
+      fullPath: '/app/permissions'
+      preLoaderRoute: typeof AuthenticatedAppPermissionsRouteImport
       parentRoute: typeof AuthenticatedAppRouteRoute
     }
     '/_authenticated/app/users': {
@@ -2208,6 +2228,7 @@ interface AuthenticatedAppRouteRouteChildren {
   AuthenticatedAppTeamRouteRoute: typeof AuthenticatedAppTeamRouteRouteWithChildren
   AuthenticatedAppGlobalSettingsRouteRoute: typeof AuthenticatedAppGlobalSettingsRouteRouteWithChildren
   AuthenticatedAppAdminPanelRoute: typeof AuthenticatedAppAdminPanelRoute
+  AuthenticatedAppPermissionsRoute: typeof AuthenticatedAppPermissionsRoute
   AuthenticatedAppUsersRoute: typeof AuthenticatedAppUsersRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
@@ -2217,6 +2238,7 @@ const AuthenticatedAppRouteRouteChildren: AuthenticatedAppRouteRouteChildren = {
   AuthenticatedAppGlobalSettingsRouteRoute:
     AuthenticatedAppGlobalSettingsRouteRouteWithChildren,
   AuthenticatedAppAdminPanelRoute: AuthenticatedAppAdminPanelRoute,
+  AuthenticatedAppPermissionsRoute: AuthenticatedAppPermissionsRoute,
   AuthenticatedAppUsersRoute: AuthenticatedAppUsersRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
