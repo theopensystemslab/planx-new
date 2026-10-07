@@ -2,7 +2,6 @@ import apiClient from "lib/api/client";
 
 import type {
   ReconciliationResponse,
-  SendResumeEmailPayload,
   SendSaveEmailResponse,
   SessionAuthPayload,
 } from "./types";
@@ -13,14 +12,6 @@ export const sendSaveEmail = async (body: SessionAuthPayload) => {
     body,
   );
   return data;
-};
-
-/**
- * Send magic link to user, based on submitted email
- * Sets page status based on validation of request by API
- */
-export const sendResumeEmail = async (body: SendResumeEmailPayload) => {
-  await apiClient.post("/resume-application", body);
 };
 
 /**
