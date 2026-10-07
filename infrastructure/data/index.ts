@@ -96,4 +96,17 @@ new aws.s3.BucketCorsConfiguration("user-data-cors", {
   ],
 });
 
+/**
+ * The flags below do the following:
+ * - blockPublicAcls: bucket rejects any PUT including a public ACL
+ * - blockPublicPolicy: bucket rejects any policy that grants public access
+ * Neither existing public ACLs, nor access by the principal `api-user` (see application/services/api.ts), are affected.
+ * See: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html
+ */
+new aws.s3.BucketPublicAccessBlock("user-data-public-access-block", {
+  bucket: apiBucket.id,
+  blockPublicAcls: true,
+  blockPublicPolicy: true,
+});
+
 export const apiBucketId = apiBucket.id;
