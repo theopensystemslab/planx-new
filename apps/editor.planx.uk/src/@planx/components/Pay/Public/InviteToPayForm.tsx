@@ -38,7 +38,7 @@ export interface InviteToPayFormProps {
   paymentStatus?: PaymentStatus;
 }
 
-type FormValues = Omit<CreatePaymentRequest, "sessionPreviewKeys">;
+type FormValues = Omit<CreatePaymentRequest, "sessionPreviewKeys" | "email">;
 
 const validationSchema = object({
   payeeName: string()
@@ -81,8 +81,9 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   yourDetailsLabel,
   paymentStatus,
 }) => {
-  const [sessionId, isTestEnvironment] = useStore((state) => [
+  const [sessionId, saveToEmail, isTestEnvironment] = useStore((state) => [
     state.sessionId,
+    state.saveToEmail,
     state.hasAcknowledgedWarning,
   ]);
   const navigate = useNavigate();
@@ -134,6 +135,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     onSubmit: (values) =>
       sendITP({
         ...values,
+        email: saveToEmail || "",
         sessionPreviewKeys: SESSION_PREVIEW_KEYS,
       }),
     validateOnChange: false,

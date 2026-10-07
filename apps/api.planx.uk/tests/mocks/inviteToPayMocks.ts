@@ -1,7 +1,6 @@
 import {
   applicant,
   flowGraph,
-  notFoundSession,
   payee,
   paymentAmountPence,
   paymentRequestResponse,
@@ -47,25 +46,13 @@ export const detailedValidSessionQueryMock = {
   },
 };
 
-export const notFoundQueryMock = {
-  name: "GetSessionDetails",
+export const findSessionForInviteQueryMock = {
+  name: "FindSessionForInvite",
   data: {
-    lowcal_sessions_by_pk: null,
+    sessions: [{ id: validSession.id }],
   },
   variables: {
-    id: notFoundSession.id,
-  },
-};
-
-export const notFoundLockSessionQueryMock = {
-  name: "LockSession",
-  data: {
-    update_lowcal_sessions: {
-      returning: [],
-    },
-  },
-  variables: {
-    id: notFoundSession.id,
+    sessionId: validSession.id,
   },
 };
 

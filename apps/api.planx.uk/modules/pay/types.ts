@@ -20,6 +20,7 @@ export type PaymentProxyController = ValidatedRequestHandler<
 
 export const inviteToPaySchema = z.object({
   body: z.object({
+    email: z.string().email(),
     payeeEmail: z.string().email(),
     payeeName: z.string(),
     applicantName: z.string(),
