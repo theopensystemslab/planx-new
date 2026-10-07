@@ -93,7 +93,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "horsham",
           domain: "planningservices.horsham.gov.uk",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "cutover-ongoing",
         },
         {
           name: "canterbury",
