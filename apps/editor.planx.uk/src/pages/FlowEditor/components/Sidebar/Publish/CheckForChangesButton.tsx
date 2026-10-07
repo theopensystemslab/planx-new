@@ -104,13 +104,22 @@ export const CheckForChangesToPublishButton: React.FC<{
     isPattern,
     flowStatus,
     outstandingTemplatedFlowCustomisations,
-    requiredTemplatedFlowCustomisations,
+    orderedFlow,
   ] = useStore((state) => [
     state.isPattern,
     state.flowStatus,
     state.outstandingTemplatedFlowCustomisations,
-    state.requiredTemplatedFlowCustomisations,
+    state.orderedFlow,
   ]);
+
+  // Derived from the flow itself (not flow edits), so never stale and needs no reset
+  const hasRequiredCustomisations = Boolean(
+    orderedFlow?.some(
+      (node) =>
+        node.data?.isTemplatedNode &&
+        node.data?.areTemplatedNodeInstructionsRequired === true,
+    ),
+  );
 
   const isDisabled =
     !useStore.getState().canUserEditTeam(teamSlug) ||
@@ -160,7 +169,7 @@ export const CheckForChangesToPublishButton: React.FC<{
                       : "Up to date"}
                   </Typography>
                 </Box>
-                {requiredTemplatedFlowCustomisations > 0 && (
+                {hasRequiredCustomisations && (
                   <Box sx={{ display: "flex", gap: 0.5 }}>
                     <Typography variant="body2" sx={{ minWidth: 80 }}>
                       Customise

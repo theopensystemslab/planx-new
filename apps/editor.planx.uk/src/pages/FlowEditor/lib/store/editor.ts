@@ -361,7 +361,6 @@ export interface EditorStore extends Store.Store {
   ) => Promise<object>;
   deleteFlowComment: (commentId: number) => Promise<object>;
   outstandingTemplatedFlowCustomisations: number;
-  requiredTemplatedFlowCustomisations: number;
 }
 
 export const editorStore: StateCreator<
@@ -426,10 +425,7 @@ export const editorStore: StateCreator<
     if (isTemplatedFrom) setOrderedFlow();
 
     // Reset outstanding flow customisations to ensure 'publish' button is enabled
-    set({
-      outstandingTemplatedFlowCustomisations: 0,
-      requiredTemplatedFlowCustomisations: 0,
-    });
+    set({ outstandingTemplatedFlowCustomisations: 0 });
 
     // local operation so we can assume that multiple ops will arrive
     // almost instantaneously so wait for 100ms of 'silence' before running
@@ -902,5 +898,4 @@ export const editorStore: StateCreator<
   },
 
   outstandingTemplatedFlowCustomisations: 0,
-  requiredTemplatedFlowCustomisations: 0,
 });
