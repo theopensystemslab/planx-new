@@ -4,25 +4,6 @@ import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 import type { LowCalSessionData } from "../../types.js";
 
-interface ResumeApplicationResponse {
-  message: string;
-  expiryDate?: string | undefined;
-}
-
-export const resumeApplicationSchema = z.object({
-  body: z.object({
-    payload: z.object({
-      teamSlug: z.string(),
-      email: z.string().email(),
-    }),
-  }),
-});
-
-export type ResumeApplication = ValidatedRequestHandler<
-  typeof resumeApplicationSchema,
-  ResumeApplicationResponse
->;
-
 export interface ValidationResponse {
   message: string;
   changesFound: boolean | null;

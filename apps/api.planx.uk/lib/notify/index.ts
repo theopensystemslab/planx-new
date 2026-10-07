@@ -14,7 +14,6 @@ const GENERAL_TEMPLATE_MAP: Partial<Record<Template, Template>> = {
   reminder: "general-reminder",
   expiry: "general-expiry",
   confirmation: "general-confirmation",
-  resume: "general-resume",
   "invite-to-pay": "general-invite-to-pay",
   "invite-to-pay-agent": "general-invite-to-pay-agent",
   "payment-reminder": "general-payment-reminder",

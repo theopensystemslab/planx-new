@@ -42,10 +42,6 @@ import {
   reminderTemplate,
 } from "./saveAndReturn/reminder.js";
 import {
-  generalResumeTemplate,
-  resumeTemplate,
-} from "./saveAndReturn/resume-application.js";
-import {
   generalSaveTemplate,
   saveTemplate,
 } from "./saveAndReturn/save-application.js";
@@ -115,13 +111,11 @@ export const templateRegistry = {
   // Save & Return — application
   expiry: expiryTemplate,
   reminder: reminderTemplate,
-  resume: resumeTemplate,
   save: saveTemplate,
   confirmation: userConfirmationTemplate,
   // Save & Return — general
   "general-expiry": generalExpiryTemplate,
   "general-reminder": generalReminderTemplate,
-  "general-resume": generalResumeTemplate,
   "general-save": generalSaveTemplate,
   "general-confirmation": generalUserConfirmationTemplate,
   // localplanning.services

@@ -25,12 +25,10 @@ const mockConfig: TemplateRegistry["save"]["config"] = {
 describe("resolveNotifyTemplate", () => {
   it("returns the base template for 'application'", () => {
     expect(resolveNotifyTemplate("save", "application")).toBe("save");
-    expect(resolveNotifyTemplate("resume", "application")).toBe("resume");
   });
 
   it("returns the general template for 'general'", () => {
     expect(resolveNotifyTemplate("save", "general")).toBe("general-save");
-    expect(resolveNotifyTemplate("resume", "general")).toBe("general-resume");
     expect(resolveNotifyTemplate("reminder", "general")).toBe(
       "general-reminder",
     );
