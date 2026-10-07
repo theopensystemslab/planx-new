@@ -8,7 +8,11 @@ export interface ReturnURLContext {
     slug: string;
     team: { slug: string; domain: string | null };
   } | null;
-  session: { flowId: string; email: string | null } | null;
+  session: {
+    flowId: string;
+    email: string | null;
+    lockedAt: string | null;
+  } | null;
 }
 
 export const getReturnURLContext = async (
@@ -28,6 +32,7 @@ export const getReturnURLContext = async (
         session: lowcal_sessions_by_pk(id: $sessionId) {
           flowId: flow_id
           email
+          lockedAt: locked_at
         }
       }
     `,

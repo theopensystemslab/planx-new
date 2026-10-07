@@ -79,6 +79,13 @@ export const resolveReturnURL: ResolveReturnURLMiddleware = async (
       });
     }
 
+    if (session?.lockedAt) {
+      return next({
+        status: 409,
+        message: `Cannot initialise a new payment for locked session ${sessionId}`,
+      });
+    }
+
     res.locals.returnURL = buildReturnURL(flow, sessionId, session?.email);
 
     return next();

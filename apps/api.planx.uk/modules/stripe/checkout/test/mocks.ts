@@ -60,12 +60,16 @@ export const mockReturnURLContext = ({
     slug: string;
     team: { slug: string; domain: string | null };
   } | null;
-  session?: { flowId: string; email: string | null } | null;
+  session?: {
+    flowId: string;
+    email: string | null;
+    lockedAt?: string | null;
+  } | null;
 } = {}) =>
   queryMock.mockQuery({
     name: "GetCheckoutReturnURLContext",
     matchOnVariables: false,
-    data: { flow, session },
+    data: { flow, session: session && { lockedAt: null, ...session } },
   });
 
 export const mockPassportLookup = (passportData: unknown) =>
