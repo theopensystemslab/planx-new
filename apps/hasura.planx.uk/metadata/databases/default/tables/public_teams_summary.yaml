@@ -10,6 +10,7 @@ select_permissions:
         - fme_enabled_staging
         - govpay_enabled_production
         - govpay_enabled_staging
+        - is_guidance_only
         - is_trial
         - power_automate_enabled_production
         - power_automate_enabled_staging
@@ -43,6 +44,7 @@ select_permissions:
         - fme_enabled_staging
         - govpay_enabled_production
         - govpay_enabled_staging
+        - is_guidance_only
         - is_trial
         - power_automate_enabled_production
         - power_automate_enabled_staging
