@@ -1,4 +1,4 @@
-import type { ErrorResponse } from "resend";
+import type { Attachment, ErrorResponse } from "resend";
 import { Resend } from "resend";
 
 import type { ResendTemplate, TemplateRegistry } from "./templates/index.js";
@@ -21,7 +21,10 @@ export const sendEmail = async <T extends ResendTemplate>(
   templateName: T,
   to: string,
   variables: TemplateRegistry[T]["variables"],
-  { idempotencyKey }: { idempotencyKey?: string } = {},
+  {
+    idempotencyKey,
+    attachments,
+  }: { idempotencyKey?: string; attachments?: Attachment[] } = {},
 ): Promise<{ message: string }> => {
   const { error } = await resend.emails.send(
     {
@@ -31,6 +34,7 @@ export const sendEmail = async <T extends ResendTemplate>(
         id: templateName,
         variables,
       },
+      attachments,
     },
     { idempotencyKey },
   );
