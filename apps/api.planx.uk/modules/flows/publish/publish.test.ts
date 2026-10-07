@@ -126,6 +126,38 @@ describe("publish", () => {
       .expect(200);
   });
 
+  it("blocks publishing a Send component to an online flow for a guidance only team in production", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+
+    queryMock.mockQuery({
+      name: "GetMostRecentPublishedFlow",
+      matchOnVariables: false,
+      data: { flow: { publishedFlows: [] } },
+    });
+
+    queryMock.mockQuery({
+      name: "GetGuidanceOnlyFlowStatus",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          status: "online",
+          team: { settings: { isGuidanceOnly: true } },
+        },
+      },
+    });
+
+    await supertest(app)
+      .post(mockEndpoint)
+      .send(mockMinBody)
+      .set(auth)
+      .expect(403)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Guidance only teams cannot publish/);
+      });
+
+    vi.unstubAllEnvs();
+  });
+
   it("does not update if there are no new changes", async () => {
     await supertest(app)
       .post(mockEndpoint)
