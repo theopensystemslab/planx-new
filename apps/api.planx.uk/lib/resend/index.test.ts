@@ -56,6 +56,25 @@ describe("sendEmail (Resend wrapper)", () => {
     });
   });
 
+  it("forwards attachments to Resend", async () => {
+    mockSend.mockResolvedValue({ data: { id: "resend-id" }, error: null });
+    const attachments = [
+      { filename: "invoice.pdf", content: Buffer.from("%PDF-") },
+    ];
+
+    await sendEmail(
+      "submit",
+      "planning.office@council.gov.uk",
+      submitVariables,
+      { attachments },
+    );
+
+    expect(mockSend).toHaveBeenCalledWith(
+      expect.objectContaining({ attachments }),
+      expect.any(Object),
+    );
+  });
+
   it("throws a classified error and logs a transient failure", async () => {
     const consoleError = vi
       .spyOn(console, "error")
