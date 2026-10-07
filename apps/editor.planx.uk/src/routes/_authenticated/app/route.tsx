@@ -21,6 +21,7 @@ export const Route = createFileRoute("/_authenticated/app")({
             slug
             settings: team_settings {
               isTrial: is_trial
+              isGuidanceOnly: is_guidance_only
             }
             theme {
               id

@@ -34,6 +34,7 @@ export interface CreateTeam {
   category: TeamCategory;
   settings: {
     isTrial: boolean;
+    isGuidanceOnly: boolean;
   };
 }
 
@@ -45,6 +46,7 @@ const validationSchema: SchemaOf<CreateTeam> = object({
     .required(),
   settings: object({
     isTrial: boolean().required(),
+    isGuidanceOnly: boolean().required(),
   }),
 });
 
@@ -60,6 +62,7 @@ export const AddTeamButton: React.FC = () => {
     category: "lpa",
     settings: {
       isTrial: false,
+      isGuidanceOnly: false,
     },
   };
 
@@ -176,6 +179,23 @@ export const AddTeamButton: React.FC = () => {
                     A trial account has limited access to PlanX functionality
                     (e.g. turning services online). Trial accounts can be
                     promoted to having full access via the settings panel.
+                  </Typography>
+                  <Switch
+                    name="isGuidanceOnly"
+                    checked={values.settings.isGuidanceOnly}
+                    onChange={() =>
+                      setFieldValue(
+                        "settings.isGuidanceOnly",
+                        !values.settings.isGuidanceOnly,
+                      )
+                    }
+                    label={"Guidance only"}
+                  />
+                  <Typography variant="body2" sx={{ mt: -2 }}>
+                    A guidance only team is not contracted for submission
+                    services and cannot set submission services online in
+                    production. This can be changed later via the settings
+                    panel.
                   </Typography>
                 </DialogContent>
                 <DialogActions>

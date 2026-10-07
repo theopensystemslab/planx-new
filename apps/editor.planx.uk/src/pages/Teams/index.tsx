@@ -5,6 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { usePermission } from "hooks/usePermission";
 import type { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React, { useEffect, useMemo, useState } from "react";
 import { focusStyle } from "theme";
@@ -45,6 +46,7 @@ const TeamColourBand = styled(Box)(({ theme }) => ({
 
 const Teams: React.FC<Props> = ({ teams }) => {
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
+  const isPlatformAdmin = usePermission(["platformAdmin"]);
 
   const [searchedTeams, setSearchedTeams] = useState<TeamSummary[] | null>(
     null,
@@ -81,7 +83,12 @@ const Teams: React.FC<Props> = ({ teams }) => {
                 {team.name}
               </Typography>
             </Box>
-            {team.settings.isTrial && <InfoChip label="Trial account" />}
+            <Box sx={{ display: "flex", gap: 1 }}>
+              {team.settings.isTrial && <InfoChip label="Trial account" />}
+              {isPlatformAdmin && team.settings.isGuidanceOnly && (
+                <InfoChip label="Guidance only" />
+              )}
+            </Box>
           </TeamCard>
         </StyledLink>
       );
