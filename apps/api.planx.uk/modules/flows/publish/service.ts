@@ -7,12 +7,17 @@ import { gql } from "graphql-request";
 import * as jsondiffpatch from "jsondiffpatch";
 
 import { getClient } from "../../../client/index.js";
+import { ServerError } from "../../../errors/index.js";
 import { getMostRecentPublishedFlow } from "../../../helpers.js";
 import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
 import type { CreateScheduledEventResponse } from "../../../lib/hasura/metadata/types.js";
 import { dataMerged } from "../../../shared/dataMerged.js";
 import { userContext } from "../../auth/middleware.js";
 import { buildNodeTypeSet, createFlowTypeMap } from "../validate/helpers.js";
+import {
+  GUIDANCE_ONLY_SEND_MESSAGE,
+  isGuidanceOnlySendBlocked,
+} from "../validate/service/guidanceOnly.js";
 
 interface PublishFlow {
   publishedFlow: {
@@ -45,6 +50,10 @@ export const publishFlow = async (
 
   // If no changes, then nothing to publish nor events to queue up
   if (!delta) return null;
+
+  if (await isGuidanceOnlySendBlocked(flowId, flattenedFlow)) {
+    throw new ServerError({ status: 403, message: GUIDANCE_ONLY_SEND_MESSAGE });
+  }
 
   const nodeTypeSet = buildNodeTypeSet(flattenedFlow);
   const hasSendComponent = nodeTypeSet.has(ComponentType.Send);

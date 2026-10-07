@@ -46,6 +46,7 @@ const FlowStatus: React.FC = () => {
 
   const { mutate: sendSlackMessage } = useSlackMessage();
   const trialWarningId = useId();
+  const guidanceOnlyWarningId = useId();
   const templateWarningId = useId();
 
   const { origin } = useLocation();
@@ -90,8 +91,19 @@ const FlowStatus: React.FC = () => {
     >
       {({ formik, data }) => {
         const isTrial = data?.flow.team.settings.isTrial;
+        const isGuidanceOnly = data?.flow.team.settings.isGuidanceOnly;
         const isTemplate = Boolean(data?.flow.templatedFrom);
         const isPublished = Boolean(data?.flow.publishedFlows.length);
+        const isSubmissionService = Boolean(
+          data?.flow.publishedFlows[0]?.hasSendComponent,
+        );
+        const isBlockedAsGuidanceOnly = isGuidanceOnly && isSubmissionService;
+
+        // TEMP: enforce locally for manual testing - revert to `isProduction` before merging
+        const enforceGuidanceOnly =
+          isProduction || import.meta.env.VITE_APP_ENV === "development";
+        const hideOnlineStatusToggle =
+          enforceGuidanceOnly && isBlockedAsGuidanceOnly;
 
         return (
           <>
@@ -100,6 +112,15 @@ const FlowStatus: React.FC = () => {
                 <PendingActionsIcon sx={{ mr: 1 }} />
                 <Typography id={trialWarningId} variant="body2">
                   Trial accounts cannot set flows online.
+                </Typography>
+              </WarningContainer>
+            )}
+            {isBlockedAsGuidanceOnly && (
+              <WarningContainer aria-labelledby={guidanceOnlyWarningId}>
+                <PendingActionsIcon sx={{ mr: 1 }} />
+                <Typography id={guidanceOnlyWarningId} variant="body2">
+                  Guidance only teams cannot set submission services online in
+                  production.
                 </Typography>
               </WarningContainer>
             )}
@@ -128,7 +149,7 @@ const FlowStatus: React.FC = () => {
                 {formik.values.status}
               </FlowTag>
             </Box>
-            {isProduction && (
+            {isProduction && !hideOnlineStatusToggle && (
               <ErrorWrapper
                 error={
                   privacyError
@@ -141,7 +162,7 @@ const FlowStatus: React.FC = () => {
                     id="set-status-button"
                     data-testid="set-status-button"
                     sx={{ mb: 2 }}
-                    disabled={data?.flow.team.settings.isTrial}
+                    disabled={isTrial}
                     variant="contained"
                     onClick={() => {
                       if (
@@ -163,13 +184,13 @@ const FlowStatus: React.FC = () => {
                 </Box>
               </ErrorWrapper>
             )}
-            {!isProduction && (
+            {!isProduction && !hideOnlineStatusToggle && (
               <Box sx={{ display: "flex" }}>
                 <Button
                   id="set-status-button"
                   data-testid="set-status-button"
                   sx={{ mb: 2 }}
-                  disabled={data?.flow.team.settings.isTrial}
+                  disabled={isTrial}
                   variant="contained"
                   onClick={async () => {
                     await formik.setFieldValue(
