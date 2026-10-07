@@ -148,17 +148,11 @@ export const CheckForChangesToPublishButton: React.FC<{
               fontSize="small"
             />
             <Box>
-              <Typography
-                variant="body2"
-                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-              >
-                {template.team.name}
+              <Typography variant="body2">
+                Templated from {template.team.name}
               </Typography>
-              <Stack spacing={0.25} sx={{ mt: 0.5 }}>
+              <Stack spacing={0.25} sx={{ mt: 0.5, ml: -0.25 }}>
                 <Box sx={{ display: "flex", gap: 0.5 }}>
-                  <Typography variant="body2" sx={{ minWidth: 80 }}>
-                    Template
-                  </Typography>
                   <StatusMarker isComplete={!isTemplatedFlowDueToPublish} />
                   <Typography
                     variant="body2"
@@ -171,9 +165,6 @@ export const CheckForChangesToPublishButton: React.FC<{
                 </Box>
                 {hasRequiredCustomisations && (
                   <Box sx={{ display: "flex", gap: 0.5 }}>
-                    <Typography variant="body2" sx={{ minWidth: 80 }}>
-                      Customise
-                    </Typography>
                     <StatusMarker
                       isComplete={outstandingTemplatedFlowCustomisations === 0}
                     />
