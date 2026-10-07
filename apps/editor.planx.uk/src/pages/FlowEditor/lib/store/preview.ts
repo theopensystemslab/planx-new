@@ -77,6 +77,7 @@ export interface PreviewStore extends Store.Store {
   setCurrentCard: () => void;
   getCurrentCard: () => ({ id: NodeId } & Store.Node) | null;
   hasPaid: () => boolean;
+  isSubmissionService: () => boolean;
   previousCard: (
     node: Store.Node | null,
     upcomingCardIds?: NodeId[],
@@ -182,6 +183,9 @@ export const previewStore: StateCreator<
       ([id, userData]) => flow[id]?.type === TYPES.Pay && !userData.auto,
     );
   },
+
+  isSubmissionService: () =>
+    Object.values(get().flow).some((node) => node.type === TYPES.Send),
 
   previousCard: (node: Store.Node | null) => {
     const { breadcrumbs, _nodesPendingEdit, changedNode } = get();

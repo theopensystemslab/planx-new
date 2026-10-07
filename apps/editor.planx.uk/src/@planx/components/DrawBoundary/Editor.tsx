@@ -10,7 +10,6 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 import type { DrawBoundary } from "./model";
@@ -107,22 +106,9 @@ function DrawBoundaryComponent(props: Props) {
               inputProps={{ "aria-label": "Description for uploading" }}
             />
           </InputRow>
-          <InputRow>
-            <Switch
-              checked={formik.values.hideFileUpload}
-              onChange={() =>
-                formik.setFieldValue(
-                  "hideFileUpload",
-                  !formik.values.hideFileUpload,
-                )
-              }
-              label="Hide file upload and allow user to continue without data"
-              disabled={props.disabled}
-            />
-          </InputRow>
           <Typography variant="body2" sx={{ mt: 1 }}>
-            If your flow is a submission service, this option must be turned
-            off.
+            In submission services, users have the option to upload a location
+            plan instead of drawing a boundary.
           </Typography>
         </ModalSectionContent>
       </ModalSection>
