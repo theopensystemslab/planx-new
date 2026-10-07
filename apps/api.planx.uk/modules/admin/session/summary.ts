@@ -1,9 +1,4 @@
-import type {
-  GovUKPayment,
-  PaymentRequest,
-  Session,
-  Team,
-} from "@opensystemslab/planx-core/types";
+import type { Session, Team } from "@opensystemslab/planx-core/types";
 import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
@@ -53,14 +48,22 @@ interface SessionSummary {
     passport: Passport["data"];
     breadcrumbs: Breadcrumb;
     cachedBreadcrumbs?: Breadcrumb;
-    payments?: Pick<
-      GovUKPayment,
-      "created_date" | "payment_id" | "amount" | "state"
-    >[];
-    invitations_to_pay?: Pick<
-      PaymentRequest,
-      "id" | "createdAt" | "govPayPaymentId" | "paymentAmount" | "paidAt"
-    >[];
+    payments?: {
+      created_date: string;
+      payment_id?: string;
+      stripe_payment_id?: string;
+      amount: number;
+      status?: string;
+      stripe_status?: string;
+    }[];
+    invitations_to_pay?: {
+      id: string;
+      created_at: string;
+      govpay_payment_id?: string;
+      stripe_payment_id?: string;
+      payment_amount: number;
+      paid_at?: string;
+    }[];
   };
 }
 
@@ -92,13 +95,16 @@ const getSessionSummaryById = async (
           payments: payment_status(order_by: { created_at: desc }) {
             created_at
             payment_id
+            stripe_payment_id
             amount
             status
+            stripe_status
           }
           invitations_to_pay: payment_requests(order_by: { created_at: desc }) {
             id
             created_at
             govpay_payment_id
+            stripe_payment_id
             payment_amount
             paid_at
           }
