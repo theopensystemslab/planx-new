@@ -1,4 +1,3 @@
-import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import MakePayment from "pages/Pay/MakePayment";
@@ -36,7 +35,7 @@ export const Route = createFileRoute("/_public/_planXDomain/$team/$flow/pay/")({
 });
 
 function PayIndexComponent() {
-  const data = Route.useLoaderData() as { paymentRequest: PaymentRequest };
+  const data = Route.useLoaderData();
 
   return <MakePayment {...data.paymentRequest} />;
 }
