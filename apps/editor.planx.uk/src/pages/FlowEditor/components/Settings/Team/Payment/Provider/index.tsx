@@ -30,7 +30,9 @@ import { useMigrateToStripe } from "./hooks/useMigrateToStripe";
 export type PaymentProvider = TeamSettings["paymentProvider"];
 
 type DialogState =
-  { type: "closed" } | { type: "blocked"; blockers: MigrationBlocker[] };
+  | { type: "closed" }
+  | { type: "blocked"; blockers: MigrationBlocker[] }
+  | { type: "confirm" };
 
 const BLOCKER_MESSAGES: Record<
   MigrationBlockerReason,
@@ -84,9 +86,10 @@ const Provider: React.FC = () => {
 
   const { mutate: migrate, isPending: isMigrating } = useMigrateToStripe();
 
-  /**
-   * @todo when we hook up the actual migration logic, write to Hasura
-   */
+  const handleMigrateClick = async () => {
+    setDialogState({ type: "confirm" });
+  };
+
   const handleMigration = () => {
     migrate(teamSlug, {
       onSuccess: (result) => {
@@ -131,7 +134,7 @@ const Provider: React.FC = () => {
             </Typography>
           )}
           <Button
-            onClick={handleMigration}
+            onClick={handleMigrateClick}
             variant="contained"
             disabled={
               isStripeStatusLoading ||
@@ -233,6 +236,36 @@ const Provider: React.FC = () => {
                 variant="contained"
               >
                 Close
+              </Button>
+            </DialogActions>
+          </>
+        )}
+
+        {dialogState.type === "confirm" && (
+          <>
+            <DialogTitle component="h1" variant="h3">
+              Confirm migration to Stripe
+            </DialogTitle>
+            <DialogContent dividers>
+              <DialogContentText>
+                After checking that no active GOV.UK Pay sessions are underway,
+                the migration will start immediately.
+              </DialogContentText>
+              <DialogContentText sx={{ mt: 1 }}>
+                This action cannot be undone. All future payment sessions will
+                be processed through Stripe.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={handleClose}
+                color="secondary"
+                variant="contained"
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleMigration} variant="contained">
+                Migrate to Stripe
               </Button>
             </DialogActions>
           </>
