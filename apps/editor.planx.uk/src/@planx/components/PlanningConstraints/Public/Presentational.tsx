@@ -6,10 +6,10 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import capitalize from "lodash/capitalize";
 import type { HandleSubmit } from "pages/Preview/Node";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../../shared/Preview/SimpleExpand";
-import { WarningContainer } from "../../shared/Preview/WarningContainer";
 import { DEFAULT_PLANNING_CONDITIONS_DISCLAIMER } from "../model";
 import type { InaccurateConstraints } from ".";
 import ConstraintsList from "./List";

@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { format } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -14,6 +13,7 @@ import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { useSlackMessage } from "../../../hooks/useSlackMessage";
 import SettingsFormContainer from "../../../shared/SettingsForm";

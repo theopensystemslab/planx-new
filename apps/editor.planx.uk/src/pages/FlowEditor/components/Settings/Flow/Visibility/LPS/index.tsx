@@ -1,8 +1,8 @@
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Link from "@mui/material/Link";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useLPS } from "hooks/useLPS";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import CategorySelection from "./components/CategorySelection";

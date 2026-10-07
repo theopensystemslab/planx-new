@@ -11,7 +11,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import type { TeamSettings } from "@opensystemslab/planx-core/types";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
@@ -20,6 +19,7 @@ import React, { useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { useStripeConnectStatus } from "../Onboarding/hooks/useStripeConnectStatus";
 

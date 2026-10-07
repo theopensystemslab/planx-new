@@ -1,8 +1,8 @@
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Link from "@mui/material/Link";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Switch } from "ui/shared/Switch";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { useSlackMessage } from "../../../hooks/useSlackMessage";
 import SettingsFormContainer from "../../../shared/SettingsForm";

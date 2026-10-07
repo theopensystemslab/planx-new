@@ -3,7 +3,6 @@ import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikContext } from "formik";
 import Permission from "ui/editor/Permission";
@@ -12,6 +11,7 @@ import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 import { slugify } from "utils";
 
 import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";

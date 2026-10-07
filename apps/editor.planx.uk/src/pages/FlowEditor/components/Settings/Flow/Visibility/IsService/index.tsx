@@ -3,11 +3,11 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_IS_SERVICE, UPDATE_IS_SERVICE, useGetIsService } from "./queries";

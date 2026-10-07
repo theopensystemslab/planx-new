@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import type { PublicProps } from "@planx/components/shared/types";
 import { logger } from "airbrake";
 import type { FeedbackView } from "components/Feedback/types";
@@ -24,6 +23,7 @@ import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { makeData } from "../../shared/utils";
 import { FaceBox } from "../components/FaceBox";

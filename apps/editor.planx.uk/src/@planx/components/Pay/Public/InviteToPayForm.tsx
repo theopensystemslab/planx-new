@@ -6,7 +6,6 @@ import type {
   PaymentRequest,
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useMutation } from "@tanstack/react-query";
 import { notFound, useMatches, useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -21,6 +20,7 @@ import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 import { object, string } from "yup";
 
 import { getDefaultContent } from "../model";

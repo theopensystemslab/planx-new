@@ -17,8 +17,8 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
-import { WarningContainer } from "../shared/Preview/WarningContainer";
 import type { EditorProps } from "../shared/types";
 import EmailSection from "./EmailSection";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";

@@ -8,7 +8,6 @@ import Card, {
   contentFlowSpacing,
 } from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
-import { WarningContainerRoot } from "@planx/components/shared/Preview/WarningContainer";
 import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -16,6 +15,7 @@ import type { Response } from "pages/FlowEditor/lib/store/preview";
 import { useId } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
+import { WarningContainerRoot } from "ui/shared/WarningContainer/WarningContainer";
 
 import type { PresentationalProps, Result } from "../model";
 import ResultReason from "./ResultReason";
