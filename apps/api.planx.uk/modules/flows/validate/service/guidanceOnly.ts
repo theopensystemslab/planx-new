@@ -31,9 +31,7 @@ export const isGuidanceOnlySendBlocked = async (
   flowId: string,
   flowGraph: FlowGraph,
 ): Promise<boolean> => {
-  // TEMP: enforce locally for manual testing - revert to production only before merging
-  if (!["production", "development"].includes(process.env.APP_ENVIRONMENT!))
-    return false;
+  if (process.env.APP_ENVIRONMENT !== "production") return false;
   if (!numberOfComponentType(flowGraph, ComponentType.Send)) return false;
 
   const { flow } = await $public.client.request<GetGuidanceOnlyFlowStatus>(

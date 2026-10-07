@@ -96,11 +96,7 @@ const FlowStatus: React.FC = () => {
         );
         const isBlockedAsGuidanceOnly = isGuidanceOnly && isSubmissionService;
 
-        // TEMP: enforce locally for manual testing - revert to `isProduction` before merging
-        const enforceGuidanceOnly =
-          isProduction || import.meta.env.VITE_APP_ENV === "development";
-        const hideOnlineStatusToggle =
-          enforceGuidanceOnly && isBlockedAsGuidanceOnly;
+        const hideOnlineStatusToggle = isProduction && isBlockedAsGuidanceOnly;
 
         return (
           <>
