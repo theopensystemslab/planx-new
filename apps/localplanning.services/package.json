@@ -34,7 +34,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "rehype-external-links": "^3.0.0",
-    "sharp": "^0.35.4",
+    "sharp": "^0.35.5",
     "tailwind-clamp": "^4.5.1",
     "tailwindcss": "^4.3.3",
     "typescript": "catalog:typescript"
