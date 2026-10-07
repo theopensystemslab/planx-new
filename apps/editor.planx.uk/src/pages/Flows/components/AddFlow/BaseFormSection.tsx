@@ -1,10 +1,8 @@
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
-import { lighten } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import useId from "@mui/utils/useId";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikContext } from "formik";
 import Permission from "ui/editor/Permission";
@@ -13,6 +11,7 @@ import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 import { slugify } from "utils";
 
 import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";
@@ -27,7 +26,6 @@ import {
 export const BaseFormSection: React.FC = () => {
   const { values, setFieldValue, getFieldProps, errors } =
     useFormikContext<CreateFlow>();
-  const warningId = useId();
   const isStaging = import.meta.env.VITE_APP_ENV === "staging";
 
   let flowType: FlowTypeOption = "flow";
@@ -51,19 +49,9 @@ export const BaseFormSection: React.FC = () => {
   return (
     <>
       {isStaging && (
-        <WarningContainer
-          aria-labelledby={warningId}
-          sx={{
-            margin: 0,
-            borderColor: "warning.main",
-            backgroundColor: (theme) =>
-              lighten(theme.palette.warning.main, 0.9),
-          }}
-        >
-          <Typography id={warningId} variant="body1">
-            Content created or edited on staging will be overwritten by
-            production overnight
-          </Typography>
+        <WarningContainer sx={{ m: 0 }} icon={ErrorOutlineOutlined}>
+          Content created or edited on staging will be overwritten by production
+          overnight
         </WarningContainer>
       )}
       <InputLabel label="How do you want to start?" id="create-flow-mode">

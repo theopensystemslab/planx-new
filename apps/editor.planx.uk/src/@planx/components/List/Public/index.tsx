@@ -181,7 +181,7 @@ const InactiveListCard: React.FC<{
           variant="contained"
           color="secondary"
         >
-          <DeleteIcon color="warning" fontSize="medium" />
+          <DeleteIcon sx={{ color: "warning.dark" }} fontSize="medium" />
           Remove
         </CardButton>
         <CardButton

@@ -4,16 +4,16 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { format } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useId, useState } from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-use";
 import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { useSlackMessage } from "../../../hooks/useSlackMessage";
 import SettingsFormContainer from "../../../shared/SettingsForm";
@@ -45,8 +45,6 @@ const FlowStatus: React.FC = () => {
   const [privacyError, setPrivacyError] = useState(false);
 
   const { mutate: sendSlackMessage } = useSlackMessage();
-  const trialWarningId = useId();
-  const templateWarningId = useId();
 
   const { origin } = useLocation();
 
@@ -96,20 +94,14 @@ const FlowStatus: React.FC = () => {
         return (
           <>
             {isTrial && (
-              <WarningContainer aria-labelledby={trialWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
-                <Typography id={trialWarningId} variant="body2">
-                  Trial accounts cannot set flows online.
-                </Typography>
+              <WarningContainer icon={PendingActionsIcon}>
+                Trial accounts cannot set flows online.
               </WarningContainer>
             )}
             {isTemplate && (
-              <WarningContainer aria-labelledby={templateWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
-                <Typography id={templateWarningId} variant="body2">
-                  Source templates are discoverable from the "Add a new flow"
-                  modal when they are online.
-                </Typography>
+              <WarningContainer icon={PendingActionsIcon}>
+                Source templates are discoverable from the "Add a new flow"
+                modal when they are online.
               </WarningContainer>
             )}
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>

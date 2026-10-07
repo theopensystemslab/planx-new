@@ -1,15 +1,14 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
-import Typography from "@mui/material/Typography";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import { useMutation } from "@tanstack/react-query";
 import { logger } from "airbrake";
 import Bowser from "bowser";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { createSendEvents } from "lib/api/send/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useId } from "react";
+import React, { useEffect } from "react";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import Card from "../shared/Preview/Card";
-import { WarningContainer } from "../shared/Preview/WarningContainer";
 import type { PublicProps } from "../shared/types";
 import type { Send } from "./model";
 import { DEFAULT_DESTINATION, getCombinedEventsPayload } from "./model";
@@ -37,17 +36,12 @@ const SendComponent: React.FC<Props> = ({
  * Skip queuing up Send events on non-Save&Return layout routes because they don't record lowcal_session data
  */
 const SkipSendWarning: React.FC<Props> = (props) => {
-  const warningId = useId();
-
   return (
     <Card handleSubmit={props.handleSubmit}>
-      <WarningContainer aria-labelledby={warningId}>
-        <ErrorOutline />
-        <Typography id={warningId} variant="body1" sx={{ ml: 2 }}>
-          You can only test submissions on published routes where Save & Return
-          is enabled. Select <strong>Continue</strong> to finish reviewing
-          content and skip submission.
-        </Typography>
+      <WarningContainer icon={ErrorOutlineOutlined}>
+        You can only test submissions on published routes where Save & Return is
+        enabled. Select <strong>Continue</strong> to finish reviewing content
+        and skip submission.
       </WarningContainer>
     </Card>
   );

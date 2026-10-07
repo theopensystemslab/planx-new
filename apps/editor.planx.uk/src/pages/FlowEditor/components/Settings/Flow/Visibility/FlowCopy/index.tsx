@@ -1,10 +1,8 @@
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Link from "@mui/material/Link";
-import Typography from "@mui/material/Typography";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { useId } from "react";
 import { Switch } from "ui/shared/Switch";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { useSlackMessage } from "../../../hooks/useSlackMessage";
 import SettingsFormContainer from "../../../shared/SettingsForm";
@@ -29,7 +27,6 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
   ]);
 
   const { mutate: sendSlackMessage } = useSlackMessage();
-  const trialWarningId = useId();
 
   return (
     <SettingsFormContainer<
@@ -80,11 +77,8 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
         return (
           <>
             {isTrial && (
-              <WarningContainer aria-labelledby={trialWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
-                <Typography id={trialWarningId} variant="body2">
-                  Trial accounts cannot set flow copy permissions.
-                </Typography>
+              <WarningContainer icon={PendingActionsIcon}>
+                Trial accounts cannot set flow copy permissions.
               </WarningContainer>
             )}
             <Switch

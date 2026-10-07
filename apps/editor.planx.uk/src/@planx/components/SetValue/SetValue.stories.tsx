@@ -1,10 +1,9 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
-import Typography from "@mui/material/Typography";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import type { Meta } from "@storybook/tanstack-react";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import Wrapper from "../fixtures/Wrapper";
-import { WarningContainer } from "../shared/Preview/WarningContainer";
 import Editor from "./Editor";
 import Public from "./Public";
 
@@ -21,12 +20,9 @@ export const WithEditor = () => {
         Public={Public}
         componentType={ComponentType.SetValue}
       />
-      <WarningContainer>
-        <ErrorOutline />
-        <Typography variant="body2" sx={{ ml: 2 }}>
-          This component is only available in the Editor when designing
-          services, it does <strong>not</strong> display in the Public form.
-        </Typography>
+      <WarningContainer icon={ErrorOutlineOutlined}>
+        This component is only available in the Editor when designing services,
+        it does <strong>not</strong> display in the Public form.
       </WarningContainer>
     </>
   );
