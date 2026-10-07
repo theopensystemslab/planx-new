@@ -9,12 +9,14 @@ export const offlinePublished: GetFlowStatus = {
     team: {
       settings: {
         isTrial: false,
+        isGuidanceOnly: false,
       },
     },
     templatedFrom: null,
     publishedFlows: [
       {
         id: "4",
+        hasSendComponent: false,
       },
     ],
     firstOnlineAt: null,
@@ -30,6 +32,7 @@ export const onlineUnpublished: GetFlowStatus = {
     team: {
       settings: {
         isTrial: false,
+        isGuidanceOnly: false,
       },
     },
     templatedFrom: null,
@@ -47,6 +50,7 @@ export const offlineUnpublished: GetFlowStatus = {
     team: {
       settings: {
         isTrial: false,
+        isGuidanceOnly: false,
       },
     },
     templatedFrom: null,
@@ -64,12 +68,14 @@ export const onlinePublished: GetFlowStatus = {
     team: {
       settings: {
         isTrial: false,
+        isGuidanceOnly: false,
       },
     },
     templatedFrom: null,
     publishedFlows: [
       {
         id: "4",
+        hasSendComponent: false,
       },
     ],
     firstOnlineAt: null,
@@ -85,12 +91,14 @@ export const justFlow: GetFlowStatus = {
     team: {
       settings: {
         isTrial: false,
+        isGuidanceOnly: false,
       },
     },
     templatedFrom: null,
     publishedFlows: [
       {
         id: "4",
+        hasSendComponent: false,
       },
     ],
     firstOnlineAt: null,
