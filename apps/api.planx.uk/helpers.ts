@@ -434,9 +434,6 @@ const makeUniqueFlow = (
   return flowData;
 };
 
-const isLiveEnv = () =>
-  ["production", "staging", "pizza"].includes(process.env.NODE_ENV || "");
-
 /**
  * Get current environment, formatted for display
  */
@@ -460,7 +457,9 @@ export {
   getFormattedEnvironment,
   getMostRecentPublishedFlow,
   getMostRecentPublishedFlowVersion,
-  isLiveEnv,
   makeUniqueFlow,
   renameNodeId,
 };
+
+// re-export isLiveEnv to avoid loading all imports from this helper on all invocations
+export { isLiveEnv } from "./lib/env.js";
