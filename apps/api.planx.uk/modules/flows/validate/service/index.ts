@@ -14,6 +14,7 @@ import {
 } from "../../../../helpers.js";
 import { dataMerged } from "../../../../shared/dataMerged.js";
 import { validateFees } from "./fees.js";
+import { validateGuidanceOnly } from "./guidanceOnly.js";
 import { validateInviteToPay } from "./inviteToPay.js";
 import { validatePlanningConstraints } from "./planningConstraints.js";
 import { validateSections } from "./sections.js";
@@ -68,7 +69,9 @@ const validateAndDiffFlow = async (
 
   const history = await getHistory(flowId);
 
-  const validationChecks = [];
+  const validationChecks: FlowValidationResponse[] = [];
+  const guidanceOnly = await validateGuidanceOnly(flowId, flattenedFlow);
+  if (guidanceOnly) validationChecks.push(guidanceOnly);
   const sections = validateSections(flattenedFlow);
   const fees = validateFees(flattenedFlow);
   const inviteToPay = validateInviteToPay(flattenedFlow);

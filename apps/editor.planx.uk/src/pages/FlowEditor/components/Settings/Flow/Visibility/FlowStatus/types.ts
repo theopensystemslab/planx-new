@@ -9,11 +9,13 @@ export interface GetFlowStatus {
     team: {
       settings: {
         isTrial: boolean;
+        isGuidanceOnly: boolean;
       };
     };
     templatedFrom: string | null;
     publishedFlows: {
       id: string;
+      hasSendComponent: boolean;
     }[];
     firstOnlineAt: string | null;
   };
