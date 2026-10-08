@@ -96,8 +96,6 @@ const FlowStatus: React.FC = () => {
         );
         const isBlockedAsGuidanceOnly = isGuidanceOnly && isSubmissionService;
 
-        const hideOnlineStatusToggle = isProduction && isBlockedAsGuidanceOnly;
-
         return (
           <>
             {isTrial && (
@@ -107,8 +105,7 @@ const FlowStatus: React.FC = () => {
             )}
             {isBlockedAsGuidanceOnly && (
               <WarningContainer icon={PendingActionsIcon}>
-                Guidance only teams cannot set submission services online in
-                production.
+                Guidance only teams cannot set submission services online.
               </WarningContainer>
             )}
             {isTemplate && (
@@ -133,7 +130,7 @@ const FlowStatus: React.FC = () => {
                 {formik.values.status}
               </FlowTag>
             </Box>
-            {isProduction && !hideOnlineStatusToggle && (
+            {isProduction && !isBlockedAsGuidanceOnly && (
               <ErrorWrapper
                 error={
                   privacyError
@@ -168,7 +165,7 @@ const FlowStatus: React.FC = () => {
                 </Box>
               </ErrorWrapper>
             )}
-            {!isProduction && !hideOnlineStatusToggle && (
+            {!isProduction && !isBlockedAsGuidanceOnly && (
               <Box sx={{ display: "flex" }}>
                 <Button
                   id="set-status-button"

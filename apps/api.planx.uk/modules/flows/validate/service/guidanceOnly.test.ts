@@ -32,10 +32,7 @@ const mockFlowStatus = (
   });
 
 describe("isGuidanceOnlySendBlocked", () => {
-  beforeEach(() => vi.stubEnv("APP_ENVIRONMENT", "production"));
-  afterEach(() => vi.unstubAllEnvs());
-
-  it("blocks an online flow with a Send component for a guidance only team in production", async () => {
+  it("blocks an online flow with a Send component for a guidance only team", async () => {
     mockFlowStatus("online", true);
     expect(await isGuidanceOnlySendBlocked("flow-id", flowWithSend)).toBe(true);
   });
@@ -67,20 +64,9 @@ describe("isGuidanceOnlySendBlocked", () => {
       false,
     );
   });
-
-  it("does not block outside of production", async () => {
-    vi.stubEnv("APP_ENVIRONMENT", "staging");
-    mockFlowStatus("online", true);
-    expect(await isGuidanceOnlySendBlocked("flow-id", flowWithSend)).toBe(
-      false,
-    );
-  });
 });
 
 describe("validateGuidanceOnly", () => {
-  beforeEach(() => vi.stubEnv("APP_ENVIRONMENT", "production"));
-  afterEach(() => vi.unstubAllEnvs());
-
   it("returns a failing check when blocked", async () => {
     mockFlowStatus("online", true);
     const result = await validateGuidanceOnly("flow-id", flowWithSend);

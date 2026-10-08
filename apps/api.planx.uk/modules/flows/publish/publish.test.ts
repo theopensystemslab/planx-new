@@ -25,6 +25,17 @@ beforeAll(() => {
 
 beforeEach(() => {
   queryMock.mockQuery({
+    name: "GetGuidanceOnlyFlowStatus",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        status: "online",
+        team: { settings: { isGuidanceOnly: false } },
+      },
+    },
+  });
+
+  queryMock.mockQuery({
     name: "GetFlowData",
     matchOnVariables: false,
     data: {
@@ -126,9 +137,7 @@ describe("publish", () => {
       .expect(200);
   });
 
-  it("blocks publishing a Send component to an online flow for a guidance only team in production", async () => {
-    vi.stubEnv("APP_ENVIRONMENT", "production");
-
+  it("blocks publishing a Send component to an online flow for a guidance only team", async () => {
     queryMock.mockQuery({
       name: "GetMostRecentPublishedFlow",
       matchOnVariables: false,
@@ -154,8 +163,6 @@ describe("publish", () => {
       .then((res) => {
         expect(res.body.error).toMatch(/Guidance only teams cannot publish/);
       });
-
-    vi.unstubAllEnvs();
   });
 
   it("does not update if there are no new changes", async () => {

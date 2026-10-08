@@ -21,17 +21,16 @@ interface GetGuidanceOnlyFlowStatus {
 }
 
 export const GUIDANCE_ONLY_SEND_MESSAGE =
-  "Guidance only teams cannot publish a Send component to a service that is online in production";
+  "Guidance only teams cannot publish a Send component to a service that is online";
 
 /**
  * Prevent guidance-only teams from adding a 'Send' component to an already online flow
- * Only enforced in production
+ * is_guidance_only is not synced from production, so this is only enforced where the flag is set
  */
 export const isGuidanceOnlySendBlocked = async (
   flowId: string,
   flowGraph: FlowGraph,
 ): Promise<boolean> => {
-  if (process.env.APP_ENVIRONMENT !== "production") return false;
   if (!numberOfComponentType(flowGraph, ComponentType.Send)) return false;
 
   const { flow } = await $public.client.request<GetGuidanceOnlyFlowStatus>(
