@@ -21,7 +21,7 @@ interface GetGuidanceOnlyFlowStatus {
 }
 
 export const GUIDANCE_ONLY_SEND_MESSAGE =
-  "Guidance only teams cannot publish a Send component to a service that is online";
+  "Your current contract doesn't include submission services. Contact the OSL team to upgrade";
 
 /**
  * Prevent guidance-only teams from adding a 'Send' component to an already online flow
@@ -62,8 +62,8 @@ export const validateGuidanceOnly = async (
   if (!isBlocked) return;
 
   return {
-    title: "Guidance only",
+    title: "Submission services",
     status: "Fail",
-    message: `${GUIDANCE_ONLY_SEND_MESSAGE}. Remove the Send component or set this service offline before publishing.`,
+    message: GUIDANCE_ONLY_SEND_MESSAGE,
   };
 };

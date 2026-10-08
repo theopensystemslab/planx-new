@@ -70,7 +70,10 @@ describe("validateGuidanceOnly", () => {
   it("returns a failing check when blocked", async () => {
     mockFlowStatus("online", true);
     const result = await validateGuidanceOnly("flow-id", flowWithSend);
-    expect(result).toMatchObject({ title: "Guidance only", status: "Fail" });
+    expect(result).toMatchObject({
+      title: "Submission services",
+      status: "Fail",
+    });
   });
 
   it("returns nothing when not blocked", async () => {

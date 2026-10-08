@@ -161,7 +161,9 @@ describe("publish", () => {
       .set(auth)
       .expect(403)
       .then((res) => {
-        expect(res.body.error).toMatch(/Guidance only teams cannot publish/);
+        expect(res.body.error).toMatch(
+          /contract doesn't include submission services/,
+        );
       });
   });
 
