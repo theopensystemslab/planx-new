@@ -23,6 +23,17 @@ beforeAll(() => {
 
 beforeEach(() => {
   queryMock.mockQuery({
+    name: "GetGuidanceOnlyFlowStatus",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        status: "online",
+        team: { settings: { isGuidanceOnly: false } },
+      },
+    },
+  });
+
+  queryMock.mockQuery({
     name: "GetFlowData",
     matchOnVariables: false,
     data: {

@@ -25,6 +25,17 @@ beforeAll(() => {
 
 beforeEach(() => {
   queryMock.mockQuery({
+    name: "GetGuidanceOnlyFlowStatus",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        status: "online",
+        team: { settings: { isGuidanceOnly: false } },
+      },
+    },
+  });
+
+  queryMock.mockQuery({
     name: "GetFlowData",
     matchOnVariables: false,
     data: {
@@ -124,6 +135,34 @@ describe("publish", () => {
       .send(mockMinBody)
       .set(auth)
       .expect(200);
+  });
+
+  it("blocks publishing a Send component to an online flow for a guidance only team", async () => {
+    queryMock.mockQuery({
+      name: "GetMostRecentPublishedFlow",
+      matchOnVariables: false,
+      data: { flow: { publishedFlows: [] } },
+    });
+
+    queryMock.mockQuery({
+      name: "GetGuidanceOnlyFlowStatus",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          status: "online",
+          team: { settings: { isGuidanceOnly: true } },
+        },
+      },
+    });
+
+    await supertest(app)
+      .post(mockEndpoint)
+      .send(mockMinBody)
+      .set(auth)
+      .expect(403)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Guidance only teams cannot publish/);
+      });
   });
 
   it("does not update if there are no new changes", async () => {

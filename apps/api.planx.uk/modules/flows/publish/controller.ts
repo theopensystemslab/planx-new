@@ -47,6 +47,8 @@ export const publishFlowController: PublishFlowController = async (
         response?.templatedFlowsScheduledEventsResponse,
     });
   } catch (error) {
+    if (error instanceof ServerError) return next(error);
+
     return next(
       new ServerError({
         message: `Failed to publish flow (${flowId}): ${error}`,
