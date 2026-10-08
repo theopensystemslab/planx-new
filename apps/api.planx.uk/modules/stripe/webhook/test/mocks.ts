@@ -1,7 +1,9 @@
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 
 export const FLOW_ID = "7cd1c4b4-4229-424f-8d04-c9fdc958ef4e";
+export const FLOW_NAME = "Apply for a lawful development certificate";
 export const TEAM_SLUG = "southwark";
+export const TEAM_NAME = "Southwark";
 
 export const paymentIntent = {
   id: "pi_test_123",
@@ -43,7 +45,12 @@ export const mockSessionLookup = ({
       session: sessionExists
         ? {
             flowId: FLOW_ID,
-            flow: flowExists ? { team: { slug: TEAM_SLUG } } : null,
+            flow: flowExists
+              ? {
+                  name: FLOW_NAME,
+                  team: { slug: TEAM_SLUG, name: TEAM_NAME },
+                }
+              : null,
             passportData,
           }
         : null,
