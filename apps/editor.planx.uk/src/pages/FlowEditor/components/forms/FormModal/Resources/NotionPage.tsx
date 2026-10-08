@@ -58,7 +58,7 @@ const Root = styled("div")(({ theme }) => ({
   "& .notion-h2": theme.typography.h3,
   "& .notion-h3": theme.typography.h4,
   "& .notion-list": {
-    margin: "1em 0",
+    margin: "0.5em 0",
     "& li": {
       padding: 0,
     },
@@ -70,11 +70,23 @@ const Root = styled("div")(({ theme }) => ({
   },
   "& .notion-list + .notion-list": {
     marginTop: 0,
+    "& li": {
+      marginTop: 0,
+    },
   },
   "& .notion-link": {
     opacity: 1,
     borderBottom: "none",
     transition: "none",
+    "& .notion-page-title-text": {
+      textDecoration: "underline",
+    },
+    "& .notion-page-icon-inline": {
+      width: "20px",
+      height: "16px",
+      marginRight: "0.25em",
+      verticalAlign: "text-bottom",
+    },
   },
   // Embedded content (e.g. videos, Miro, Figma) - match the team settings DesignPreview
   "& .notion-asset-wrapper iframe, & .notion-asset-wrapper .notion-yt-lite": {
