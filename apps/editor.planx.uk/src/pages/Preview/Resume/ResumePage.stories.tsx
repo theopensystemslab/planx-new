@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import ResumePage, { EmailRequired } from ".";
-import { EmailError, EmailSuccess } from "./SendResumeEmail";
 import {
   InvalidSession,
   LockedSession,
@@ -21,14 +20,6 @@ export const Basic = {
   render: () => (
     <EmailRequired handleSubmit={() => console.log("Submitted!")} />
   ),
-} satisfies Story;
-
-export const OnEmailSuccess = {
-  render: () => <EmailSuccess />,
-} satisfies Story;
-
-export const OnEmailError = {
-  render: () => <EmailError retry={() => console.log("")} />,
 } satisfies Story;
 
 export const OnReconciliationSuccess = {

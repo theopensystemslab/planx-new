@@ -1,6 +1,5 @@
-import { resumeApplication } from "./service/resumeApplication.js";
 import { findSession, validateSession } from "./service/validateSession.js";
-import type { ResumeApplication, ValidateSessionController } from "./types.js";
+import type { ValidateSessionController } from "./types.js";
 
 export const validateSessionController: ValidateSessionController = async (
   _req,
@@ -37,23 +36,6 @@ export const validateSessionController: ValidateSessionController = async (
     return next({
       error,
       message: "Failed to validate session",
-    });
-  }
-};
-
-export const resumeApplicationController: ResumeApplication = async (
-  _req,
-  res,
-  next,
-) => {
-  try {
-    const { teamSlug, email } = res.locals.parsedReq.body.payload;
-    const response = await resumeApplication(teamSlug, email);
-    return res.json(response);
-  } catch (error) {
-    return next({
-      error,
-      message: `Failed to send "Resume" email. ${(error as Error).message}`,
     });
   }
 };
