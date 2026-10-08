@@ -37,8 +37,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "camden",
           domain: "planningservices.camden.gov.uk",
-          cloudFrontState: "cutover-ongoing",
-          certificateLocation: "pulumiConfig",
+          cloudFrontState: "shared-final",
         },
         {
           name: "barnet",
