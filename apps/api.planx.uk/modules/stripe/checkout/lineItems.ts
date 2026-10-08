@@ -1,9 +1,9 @@
 import type { FeeBreakdown } from "@opensystemslab/planx-core/types";
 import type Stripe from "stripe";
 
-type LineItem = Stripe.Checkout.SessionCreateParams.LineItem;
+import { getFeeLines, toPence } from "../feeLines.js";
 
-export const toPence = (pounds: number): number => Math.round(pounds * 100);
+type LineItem = Stripe.Checkout.SessionCreateParams.LineItem;
 
 const lineItem = (name: string, unitAmount: number): LineItem => ({
   price_data: {
@@ -17,37 +17,22 @@ const lineItem = (name: string, unitAmount: number): LineItem => ({
 /**
  * Build Stripe Checkout line items from a fee breakdown
  *
- * Line items cannot be negative, so reductions and exemptions cannot be displayed
+ * Each line is displayed inclusive of VAT
  *
  * TODO: VAT not displayed, need to look into Stripe tax handling
  */
 export const buildLineItems = (feeBreakdown: FeeBreakdown): LineItem[] => {
-  const { amount } = feeBreakdown;
-  const payablePence = toPence(amount.payable);
+  const feeLines = getFeeLines(feeBreakdown);
 
-  const secondaryLines = [
-    { name: "Fast Track fee", total: amount.fastTrack + amount.fastTrackVAT },
-    {
-      name: "PlanX service charge",
-      total: amount.serviceCharge + amount.serviceChargeVAT,
-    },
-  ]
-    .map(({ name, total }) => ({ name, pence: toPence(total) }))
-    .filter(({ pence }) => pence > 0);
-
-  const secondaryTotal = secondaryLines.reduce(
-    (sum, { pence }) => sum + pence,
-    0,
-  );
-  const applicationFeePence = payablePence - secondaryTotal;
-
-  // Fallback in case of any failures above
-  if (applicationFeePence < 0) {
-    return [lineItem("Planning application fee", payablePence)];
+  // Fallback in case of an inconsistent fee breakdown
+  if (!feeLines) {
+    return [
+      lineItem(
+        "Planning application fee",
+        toPence(feeBreakdown.amount.payable),
+      ),
+    ];
   }
 
-  return [
-    lineItem("Application fee", applicationFeePence),
-    ...secondaryLines.map(({ name, pence }) => lineItem(name, pence)),
-  ];
+  return feeLines.map(({ description, total }) => lineItem(description, total));
 };
