@@ -5,7 +5,10 @@ import DOMPurify from "dompurify";
 import ReactMarkdown from "react-markdown";
 import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
 
-const styles = (theme: Theme) => ({
+/**
+ * Shared rich text styles, also used to style embedded Notion content
+ */
+export const richTextStyles = (theme: Theme) => ({
   "& a": linkStyle(theme.palette.link.main),
   "& h1": theme.typography.h2,
   "& h2": theme.typography.h3,
@@ -35,9 +38,9 @@ const styles = (theme: Theme) => ({
   },
 });
 
-const HTMLRoot = styled(Box)(({ theme }) => styles(theme));
+const HTMLRoot = styled(Box)(({ theme }) => richTextStyles(theme));
 
-const MarkdownRoot = styled(Box)(({ theme }) => styles(theme));
+const MarkdownRoot = styled(Box)(({ theme }) => richTextStyles(theme));
 
 // Increment H1 and H2 elements to meet a11y requirements in user submitted rich text
 export const incrementHeaderElements = (source: string): string => {
