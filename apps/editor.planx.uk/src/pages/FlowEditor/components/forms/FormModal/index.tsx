@@ -14,7 +14,7 @@ import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import type { FormikProps } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
+import { type FeatureFlag, hasFeatureFlag } from "lib/featureFlags";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -30,6 +30,7 @@ import { SLUGS } from "../../../data/types";
 import { useStore } from "../../../lib/store";
 import ChangeComponentHeader from "./ChangeComponentHeader";
 import ComponentHistory from "./ComponentHistory";
+import Resources from "./Resources";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
@@ -55,23 +56,20 @@ const TabList = styled(Box)(() => ({
 
 type ModalTab = "edit" | "preview" | "history" | "resources";
 
-// TODO simplify to single list of tabs when no longer feature-flagged
+// TODO remove featureFlag properties when no longer feature-flagged
 const MODAL_TABS: {
   label: string;
   value: ModalTab;
+  featureFlag?: FeatureFlag;
 }[] = [
   { label: "Edit", value: "edit" },
+  { label: "Preview", value: "preview", featureFlag: "MODAL_TABS" },
   { label: "History", value: "history" },
-];
-
-const FEATURE_FLAGGED_MODAL_TABS: {
-  label: string;
-  value: ModalTab;
-}[] = [
-  { label: "Edit", value: "edit" },
-  { label: "Preview", value: "preview" },
-  { label: "History", value: "history" },
-  { label: "How to use this component", value: "resources" },
+  {
+    label: "About this component",
+    value: "resources",
+    featureFlag: "COMPONENT_RESOURCES",
+  },
 ];
 
 /**
@@ -317,9 +315,8 @@ const FormModal: React.FC<FormModalProps> = ({
             value={activeTab}
             aria-label="Component editor tabs"
           >
-            {(hasFeatureFlag("MODAL_TABS")
-              ? FEATURE_FLAGGED_MODAL_TABS
-              : MODAL_TABS
+            {MODAL_TABS.filter(
+              ({ featureFlag }) => !featureFlag || hasFeatureFlag(featureFlag),
             ).map(({ label, value }) => (
               <StyledTab key={value} value={value} label={label} />
             ))}
@@ -402,10 +399,10 @@ const FormModal: React.FC<FormModalProps> = ({
             </Box>
           )}
           {activeTab === "resources" && (
-            <Box sx={{ p: 2.5 }}>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                Resources coming soon.
-              </Typography>
+            <Box
+              sx={{ p: 2.5, minHeight: "100%", bgcolor: "background.default" }}
+            >
+              <Resources type={type} />
             </Box>
           )}
         </DialogContent>
