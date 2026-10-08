@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import type { FormikConfig } from "formik";
 import { Form, Formik } from "formik";
 import {
@@ -52,6 +52,7 @@ const validationSchema: SchemaOf<CreateTeam> = object({
 
 export const AddTeamButton: React.FC = () => {
   const navigate = useNavigate();
+  const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const { createTeam } = useCreateTeam();
@@ -76,6 +77,12 @@ export const AddTeamButton: React.FC = () => {
         slug: values.slug,
         category: values.category,
         settings: values.settings,
+      });
+
+      // Refetch team summaries used by the teams list and sidebar team select
+      await router.invalidate({
+        filter: (match) => match.routeId === "/_authenticated/app",
+        sync: true,
       });
 
       navigate({ to: `/app/$team`, params: { team: values.slug } });
