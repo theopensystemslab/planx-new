@@ -40,6 +40,7 @@ const Content = styled(Box, {
 
 const ContentComponent: React.FC<Props> = (props) => {
   const {
+    title,
     color,
     content,
     info,
@@ -77,18 +78,17 @@ const ContentComponent: React.FC<Props> = (props) => {
         data-testid="content"
         sx={{ p: color === "#ffffff" || !color ? 0 : 2 }}
       >
-        <ReactMarkdownOrHtml
-          source={content}
-          openLinksOnNewTab
-          manuallyIncrementHeaders
-        />
+        <Typography variant="h2" component="h1" sx={{ mb: content ? 2 : 0 }}>
+          {title}
+        </Typography>
+        {content && <ReactMarkdownOrHtml source={content} openLinksOnNewTab />}
       </Content>
       {!!(info || policyRef || howMeasured) && (
         <Typography variant="subtitle1" component="div">
           <HelpButton
             variant="help"
             title={`More information`}
-            aria-label={`See more information about this content`}
+            aria-label={`See more information about "${title}"`}
             onClick={handleHelpClick}
             aria-haspopup="dialog"
             data-testid="more-info-button"
