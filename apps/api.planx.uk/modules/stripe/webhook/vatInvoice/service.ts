@@ -136,7 +136,7 @@ export async function sendVatInvoices(
         lineItems: lineItems.council,
       });
 
-      sendVatInvoiceEmail(councilInvoice);
+      await sendVatInvoiceEmail(councilInvoice);
     } else {
       reportError({
         error:
@@ -155,7 +155,7 @@ export async function sendVatInvoices(
       lineItems: lineItems.planx,
     });
 
-    sendVatInvoiceEmail(planXInvoice);
+    await sendVatInvoiceEmail(planXInvoice);
   }
 }
 
