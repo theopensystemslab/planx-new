@@ -105,7 +105,8 @@ const FlowStatus: React.FC = () => {
             )}
             {isBlockedAsGuidanceOnly && (
               <WarningContainer icon={PendingActionsIcon}>
-                Guidance only teams cannot set submission services online.
+                Your current contract doesn't include submission services.
+                Contact the OSL team to upgrade.
               </WarningContainer>
             )}
             {isTemplate && (
