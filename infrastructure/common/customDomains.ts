@@ -37,7 +37,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "camden",
           domain: "planningservices.camden.gov.uk",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "cutover-ongoing",
           certificateLocation: "pulumiConfig",
         },
         {
