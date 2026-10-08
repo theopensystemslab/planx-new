@@ -88,7 +88,6 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
       return next();
     // Handled by other routes
     case "submit":
-    case "general-resume":
     case "lps-login":
       return next();
     default: {
