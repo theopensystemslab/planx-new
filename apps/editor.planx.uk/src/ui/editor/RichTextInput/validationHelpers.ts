@@ -153,9 +153,6 @@ export const getContentHierarchyError: RichTextValidator = (
   if (!content) return;
 
   switch (variant) {
-    case "rootLevelContent":
-      validateRootLevelContent(content, errors);
-      break;
     case "nestedContent":
     case "paragraphContent":
       // No validation carried out
@@ -166,44 +163,6 @@ export const getContentHierarchyError: RichTextValidator = (
   }
 
   return errors.length > 0 ? errors.join(", ") : undefined;
-};
-
-const validateRootLevelContent = (
-  nodes: NonNullable<JSONContent["content"]>,
-  errors: string[],
-) => {
-  const firstNode = nodes[0];
-  if (
-    !firstNode ||
-    firstNode.type !== "heading" ||
-    firstNode.attrs?.level !== 1
-  ) {
-    errors.push("The document must start with a level 1 heading (H1).");
-  }
-
-  let h1Count = 0;
-  let hasH1 = false;
-
-  nodes.forEach((node) => {
-    if (node.type !== "heading") return;
-
-    const level = node.attrs?.level;
-
-    if (level === 1) {
-      h1Count++;
-      hasH1 = true;
-      if (h1Count > 1) {
-        errors.push(
-          "There cannot be more than one level 1 heading (H1) in the document.",
-        );
-      }
-    }
-    if (level === 2 && !hasH1) {
-      errors.push(
-        "A level 1 heading (H1) must come before a level 2 heading (H2).",
-      );
-    }
-  });
 };
 
 const validateDefault = (

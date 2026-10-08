@@ -14,13 +14,6 @@ export interface Placeholder {
 }
 
 /**
- * Used on a "blank" content page
- * Allows heading options h1 + h2
- * @example Content component
- */
-type RootLevelContent = "rootLevelContent";
-
-/**
  * Used in instances where a h1 is already present on page,
  * Allows heading options h2 + h3
  * @example Component descriptions
@@ -41,8 +34,7 @@ type NestedContent = "nestedContent";
  */
 type ParagraphContent = "paragraphContent";
 
-export type Variant =
-  Default | RootLevelContent | NestedContent | ParagraphContent;
+export type Variant = Default | NestedContent | ParagraphContent;
 
 export interface Props extends InputBaseProps {
   className?: string;

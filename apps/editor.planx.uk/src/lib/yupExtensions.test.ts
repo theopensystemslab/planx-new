@@ -62,40 +62,7 @@ describe("richText validation", () => {
   });
 
   describe("content hierarchy (headings)", () => {
-    describe("root level content", () => {
-      it("must start with a H1", async () => {
-        await expect(() =>
-          richText({ variant: "rootLevelContent" }).validate(`
-            <p>Paragraph</p>
-            <h1>Heading</h1>
-          `),
-        ).rejects.toThrow(
-          "The document must start with a level 1 heading (H1).",
-        );
-      });
-
-      it("can only contain a single H1", async () => {
-        await expect(() =>
-          richText({ variant: "rootLevelContent" }).validate(`
-            <h1>Heading</h1>
-            <h1>Another heading</h1>
-          `),
-        ).rejects.toThrow(
-          "There cannot be more than one level 1 heading (H1) in the document.",
-        );
-      });
-
-      it("does not allow a H2 to come before a H1", async () => {
-        await expect(() =>
-          richText({ variant: "rootLevelContent" }).validate(`
-            <h2>Heading</h2>
-            <h1>Another heading</h1>
-          `),
-        ).rejects.toThrow(
-          "The document must start with a level 1 heading (H1).",
-        );
-      });
-
+    describe("default content", () => {
       it("allows correctly formatted headings", () => {
         const result = richText().validate(`
             <h1>Heading 1</h1>

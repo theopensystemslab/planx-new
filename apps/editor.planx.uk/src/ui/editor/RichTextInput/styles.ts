@@ -65,7 +65,7 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
       color: theme.palette.text.disabled,
     },
   },
-  "&.rich-text-editor:not(.allow-h1)": {
+  "&.rich-text-editor": {
     "& h1": {
       fontSize: theme.typography.h1.fontSize,
     },
