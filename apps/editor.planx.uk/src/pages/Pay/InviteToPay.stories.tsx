@@ -57,5 +57,7 @@ export const Paid = {
     ...Unpaid.args,
     paidAt: "2025-12-12",
     govPayPaymentId: "abc-123",
+    govPayMetadata: [],
+    stripeMetadata: [],
   },
 } satisfies Story;
