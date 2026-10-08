@@ -252,8 +252,13 @@ const FormModal: React.FC<FormModalProps> = ({
     ? !canUserEditTemplatedNode
     : !canUserEditNode(teamSlug);
 
+  // Don't allow modal actions when the resources tab is active
+  const isViewingResources = activeTab === "resources";
+
   const isSubmitDisabled =
-    userCannotEdit || (isEditingExistingNode && !isFormDirty);
+    userCannotEdit ||
+    (isEditingExistingNode && !isFormDirty) ||
+    isViewingResources;
 
   const showDeleteButton = id && !isDisabledTemplatedNode;
 
@@ -424,7 +429,7 @@ const FormModal: React.FC<FormModalProps> = ({
                   },
                 });
               }}
-              disabled={disabled}
+              disabled={disabled || isViewingResources}
               sx={{ gap: 1 }}
             >
               <DeleteIcon sx={{ color: "warning.dark" }} fontSize="medium" />
