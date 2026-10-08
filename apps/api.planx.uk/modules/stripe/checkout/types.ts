@@ -89,13 +89,7 @@ export const createPaymentRequestCheckoutSessionSchema = z.object({
 
 export type PaymentRequestRecord = Pick<
   PaymentRequest,
-  | "id"
-  | "sessionId"
-  | "payeeEmail"
-  | "paymentAmount"
-  | "createdAt"
-  | "stripeMetadata"
-  | "govPayMetadata"
+  "id" | "sessionId" | "payeeEmail" | "createdAt" | "stripeMetadata"
 > & {
   feeBreakdown: FeeBreakdown | null;
   paidAt: string | null;
@@ -117,12 +111,7 @@ export type PaymentRequestRecord = Pick<
  */
 export type PayablePaymentRequest = Omit<
   PaymentRequestRecord,
-  | "createdAt"
-  | "paidAt"
-  | "govPayPaymentId"
-  | "stripeMetadata"
-  | "govPayMetadata"
-  | "session"
+  "createdAt" | "paidAt" | "govPayPaymentId" | "stripeMetadata" | "session"
 > & {
   expiresAt: Date;
   metadata: PaymentMetadata[];

@@ -17,10 +17,8 @@ export const getPaymentRequest = async (
           id
           sessionId: session_id
           payeeEmail: payee_email
-          paymentAmount: payment_amount
           feeBreakdown: fee_breakdown
           stripeMetadata: stripe_metadata
-          govPayMetadata: govpay_metadata
           createdAt: created_at
           paidAt: paid_at
           govPayPaymentId: govpay_payment_id
