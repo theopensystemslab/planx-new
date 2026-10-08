@@ -4,14 +4,18 @@ import { validate } from "../../shared/middleware/validate.js";
 import { useTeamEditorAuth } from "../auth/middleware.js";
 import {
   createCheckoutSession,
+  createPaymentRequestCheckoutSession,
   getCheckoutSessionStatus,
 } from "./checkout/controller.js";
 import {
+  fetchPaymentRequest,
+  resolvePaymentRequestConnectedAccount,
   resolveReturnURL,
   resolveTeamPaymentProvider,
 } from "./checkout/middleware.js";
 import {
   createCheckoutSessionSchema,
+  createPaymentRequestCheckoutSessionSchema,
   getCheckoutSessionStatusSchema,
 } from "./checkout/types.js";
 import * as Controller from "./connect/controller.js";
@@ -68,6 +72,14 @@ router.get(
   "/stripe/checkout-session/:localAuthority/:checkoutSessionId",
   validate(getCheckoutSessionStatusSchema),
   getCheckoutSessionStatus,
+);
+
+router.post(
+  "/stripe/payment-request/:paymentRequestId/checkout-session",
+  validate(createPaymentRequestCheckoutSessionSchema),
+  fetchPaymentRequest,
+  resolvePaymentRequestConnectedAccount,
+  createPaymentRequestCheckoutSession,
 );
 
 // Stripe authenticates via the `stripe-signature` header, and signature verification requires

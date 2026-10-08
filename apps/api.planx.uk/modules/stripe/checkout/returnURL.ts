@@ -59,3 +59,17 @@ export const buildReturnURL = (
 
   return url.toString();
 };
+
+export const buildPaymentRequestReturnURL = (
+  flow: NonNullable<ReturnURLContext["flow"]>,
+  paymentRequestId: string,
+): string => {
+  const serviceURL = flow.team.domain
+    ? `https://${flow.team.domain}/${flow.slug}`
+    : `${process.env.EDITOR_URL_EXT}/${flow.team.slug}/${flow.slug}`;
+
+  const url = new URL(`${serviceURL}/pay`);
+  url.searchParams.set("paymentRequestId", paymentRequestId);
+
+  return url.toString();
+};
