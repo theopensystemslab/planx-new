@@ -7,6 +7,7 @@ import type { Send } from "@planx/components/Send/model";
 import { useFormikContext } from "formik";
 import type { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import React, { useEffect } from "react";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
@@ -46,12 +47,14 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
   handleSelectChange,
   disabled,
 }) => {
-  const { values, setFieldValue, touched, errors } = useFormikContext<Send>();
+  const { values, setFieldValue, touched, errors, submitCount } =
+    useFormikContext<Send>();
 
   const newEmail = values.newEmail;
   const isNewEmailSelected =
     emailOptions.length === 0 ? true : values.submissionEmailId === "new-email";
-  const newEmailError = errors.newEmail;
+  // newEmail isn't in initialValues, so Formik won't mark it as touched on submit
+  const showNewEmailError = Boolean(touched.newEmail || submitCount > 0);
 
   useEffect(() => {
     if (emailOptions.length === 0 && values.submissionEmailId !== "new-email") {
@@ -60,52 +63,54 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
   }, [emailOptions.length, setFieldValue, values.submissionEmailId]);
 
   return (
-    <>
-      <InputRow>
-        <Typography variant="body2" sx={{ mb: 2 }}>
-          Add or select a submission email address for this service. To edit or
-          delete submission emails, please visit your{" "}
-          <Link
-            href={`/app/${teamSlug}/settings/integrations`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            team settings
-          </Link>{" "}
-          page.
-        </Typography>
-      </InputRow>
-      {emailOptions.length > 0 && (
+    <ErrorWrapper error={errors.submissionEmailId}>
+      <>
         <InputRow>
-          <SelectInput
-            name="submissionEmail"
-            value={isNewEmailSelected ? "new-email" : submissionEmailId}
-            onChange={handleSelectChange}
-            bordered
-            disabled={disabled}
-          >
-            {emailOptions.map((email) => (
-              <MenuItem key={email.id} value={email.id}>
-                {email.address}
-              </MenuItem>
-            ))}
-            <MenuItem value="new-email">New email...</MenuItem>
-          </SelectInput>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Add or select a submission email address for this service. To edit
+            or delete submission emails, please visit your{" "}
+            <Link
+              href={`/app/${teamSlug}/settings/integrations`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              team settings
+            </Link>{" "}
+            page.
+          </Typography>
         </InputRow>
-      )}
-      {isNewEmailSelected && (
-        <Input
-          name="newEmail"
-          value={newEmail}
-          placeholder="Enter new email"
-          onChange={(e) => {
-            setFieldValue("newEmail", e.target.value);
-          }}
-          disabled={disabled}
-          errorMessage={touched.newEmail ? newEmailError : undefined}
-        />
-      )}
-    </>
+        {emailOptions.length > 0 && (
+          <InputRow>
+            <SelectInput
+              name="submissionEmail"
+              value={isNewEmailSelected ? "new-email" : submissionEmailId}
+              onChange={handleSelectChange}
+              bordered
+              disabled={disabled}
+            >
+              {emailOptions.map((email) => (
+                <MenuItem key={email.id} value={email.id}>
+                  {email.address}
+                </MenuItem>
+              ))}
+              <MenuItem value="new-email">New email...</MenuItem>
+            </SelectInput>
+          </InputRow>
+        )}
+        {isNewEmailSelected && (
+          <Input
+            name="newEmail"
+            value={newEmail}
+            placeholder="Enter new email"
+            onChange={(e) => {
+              setFieldValue("newEmail", e.target.value);
+            }}
+            disabled={disabled}
+            errorMessage={showNewEmailError ? errors.newEmail : undefined}
+          />
+        )}
+      </>
+    </ErrorWrapper>
   );
 };
 
