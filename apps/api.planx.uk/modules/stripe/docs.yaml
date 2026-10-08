@@ -290,6 +290,55 @@ paths:
             - it has already been paid for
         "500":
           description: Failed to create the Stripe Checkout Session.
+  /stripe/payment-request/{paymentRequestId}/checkout-session:
+    post:
+      summary: Create a Stripe Checkout Session for an invite to pay (ITP) request
+      description: |
+        Called when a nominated payee clicks Pay. Creates a Stripe hosted Checkout Session
+        for the payment request and returns its URL.
+
+        Any open Checkout Sessions for the request's session are expired first.
+
+        Docs: [https://docs.stripe.com/api/checkout/sessions/create](https://docs.stripe.com/api/checkout/sessions/create)
+      tags:
+        - stripe
+      parameters:
+        - in: path
+          name: paymentRequestId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          $ref: "#/components/responses/CreateCheckoutSessionResponse"
+        "400":
+          description: Invalid payment request id.
+        "404":
+          description: Payment request not found.
+        "409":
+          description: |
+            A payment cannot be taken, because either:
+            - the payment request has already been paid
+            - the session is not locked, awaiting payment via invite to pay
+            - a GOV.UK Pay payment has already been started for this request
+            - this LPA's payment provider is not Stripe
+            - this LPA has not connected a Stripe account
+            - this LPA's connected account is no longer connected to our platform
+            - this LPA's connected account cannot take payments
+        "410":
+          description: |
+            The payment request can no longer be paid, because either:
+            - it has expired, or expires too soon to open a Checkout Session
+            - its session has been deleted
+        "422":
+          description: |
+            A Checkout Session cannot be created for this payment request, because either:
+            - it has no fee breakdown
+            - its fee breakdown does not match its payment amount
+            - its session has already been paid for
+        "500":
+          description: Failed to create the Stripe Checkout Session.
   /stripe/checkout-session/{localAuthority}/{checkoutSessionId}:
     get:
       summary: Retrieve a Stripe Checkout Session's status
