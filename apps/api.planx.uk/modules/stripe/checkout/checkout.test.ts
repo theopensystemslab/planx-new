@@ -132,6 +132,17 @@ describe("creating a Stripe Checkout Session", () => {
     });
   });
 
+  it("does not set a customer email or expiry", async () => {
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(validBody)
+      .expect(200);
+
+    const { customer_email, expires_at } = mockCreate.mock.calls[0][0];
+    expect(customer_email).toBeUndefined();
+    expect(expires_at).toBeUndefined();
+  });
+
   it("rejects a session locked for invite to pay", async () => {
     mockReturnURLContext({
       session: {

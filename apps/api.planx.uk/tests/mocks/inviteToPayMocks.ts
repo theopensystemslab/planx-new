@@ -102,6 +102,12 @@ export const getPublishedFlowDataQueryMock = {
   },
 };
 
+const paymentRequestMetadata = () => [
+  { key: "source", value: "PlanX", type: "static" },
+  { key: "paidViaInviteToPay", value: true, type: "static" },
+  { key: "flow", value: validSession.flow.slug, type: "static" },
+];
+
 export const createPaymentRequestQueryMock = {
   name: "CreatePaymentRequest",
   data: {
@@ -116,11 +122,8 @@ export const createPaymentRequestQueryMock = {
     payeeName: payee.name,
     payeeEmail: payee.email,
     sessionPreviewData: sessionPreviewData,
-    govPayMetadata: [
-      { key: "source", value: "PlanX" },
-      { key: "paidViaInviteToPay", value: true },
-      { key: "flow", value: validSession.flow.slug },
-    ],
+    govPayMetadata: paymentRequestMetadata(),
+    stripeMetadata: paymentRequestMetadata(),
     feeBreakdown: {
       amount: {
         calculated: 0,
