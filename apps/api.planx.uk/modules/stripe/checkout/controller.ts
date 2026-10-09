@@ -45,7 +45,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
 };
 
 /**
- * Create a Stripe Checkout Session for an ITP request, eturning the checkout URL
+ * Create a Stripe Checkout Session for an ITP request, returning the checkout URL
  */
 export const createPaymentRequestCheckoutSession: CreatePaymentRequestCheckoutSessionController =
   async (_req, res, next) => {
