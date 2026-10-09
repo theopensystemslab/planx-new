@@ -6,7 +6,10 @@ import type Stripe from "stripe";
 import { $api } from "../../../../client/index.js";
 import type { StripePaymentStatus } from "../../../../types.js";
 import { reportError } from "../../../pay/helpers.js";
-import { getOwnedPaymentIntent } from "../ownership/service.js";
+import {
+  getOwnedPaymentIntent,
+  type OwnedPaymentIntent,
+} from "../ownership/service.js";
 import { hasuraClientErrorSchema } from "./types.js";
 
 interface InsertStripePaymentStatusArgs {
@@ -20,17 +23,26 @@ interface InsertStripePaymentStatusArgs {
   metadata: Stripe.Metadata;
 }
 
+export type RecordedPaymentIntent = OwnedPaymentIntent & {
+  feeBreakdown: FeeBreakdown | null;
+};
+
+/**
+ * Record a webhook-driven status for a PaymentIntent
+ *
+ * Returns the owned PaymentIntent's details once recorded, or null if the event was skipped
+ */
 export async function recordStripePaymentIntentStatus(
   paymentIntent: Stripe.PaymentIntent,
   stripeStatus: Exclude<StripePaymentStatus, "initiated">,
-): Promise<void> {
+): Promise<RecordedPaymentIntent | null> {
   const { id, amount, metadata } = paymentIntent;
 
   const ownedPaymentIntent = await getOwnedPaymentIntent(
     paymentIntent,
     stripeStatus,
   );
-  if (!ownedPaymentIntent) return;
+  if (!ownedPaymentIntent) return null;
 
   const { sessionId, flowId, teamSlug, passportData } = ownedPaymentIntent;
   const feeBreakdown = deriveFeeBreakdown(sessionId, passportData);
@@ -51,10 +63,12 @@ export async function recordStripePaymentIntentStatus(
       console.info(
         `Ignoring Stripe event for PaymentIntent ${id} (${stripeStatus}): flow ${flowId} or team ${teamSlug} no longer exists`,
       );
-      return;
+      return null;
     }
     throw error;
   }
+
+  return { ...ownedPaymentIntent, feeBreakdown };
 }
 
 const isForeignKeyViolation = (error: unknown): boolean => {
