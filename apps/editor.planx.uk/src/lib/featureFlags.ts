@@ -2,6 +2,7 @@
 export const AVAILABLE_FEATURE_FLAGS = [
   "STRIPE_MIGRATION",
   "MODAL_TABS",
+  "COMPONENT_RESOURCES",
 ] as const;
 
 export type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
