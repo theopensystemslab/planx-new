@@ -68,28 +68,21 @@ export const getActiveGovPaySessions = async (
 //   return updateTeamPaymentProvider.affectedRows;
 // }
 
-// TODO: check checkout config
-export const isCheckoutConfigured = async (
-  _teamSlug: string,
-): Promise<boolean> => true;
-
 export const getMigrationBlockers = async (
   teamId: number,
   teamSlug: string,
 ): Promise<MigrateResponse> => {
   const blockers: MigrationBlocker[] = [];
 
-  const [accountId, activeSessions, checkoutConfigured] = await Promise.all([
+  const [accountId, activeSessions] = await Promise.all([
     connectionService.getStripeAccountId(teamId),
     migrationService.getActiveGovPaySessions(teamSlug),
-    migrationService.isCheckoutConfigured(teamSlug),
   ]);
 
   if (!accountId) blockers.push({ reason: "stripeNotConnected" });
   if (activeSessions > 0) {
     blockers.push({ reason: "activeGovpaySessions", count: activeSessions });
   }
-  if (!checkoutConfigured) blockers.push({ reason: "checkoutNotConfigured" });
 
   return { canMigrate: blockers.length === 0, blockers };
 };
