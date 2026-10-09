@@ -29,17 +29,23 @@ export const baseQuestionValidationSchema = baseNodeDataValidationSchema
     }),
   )
   .test({
-    name: "uniqueLabels",
+    name: "uniqueLabelsOrDescriptions",
     test: function ({ options }) {
       if (!options?.length) return true;
 
-      const uniqueLabels = new Set(options.map(({ data }) => data.text));
-      const areAllLabelsUnique = uniqueLabels.size === options.length;
-      if (areAllLabelsUnique) return true;
+      const uniqueOptions = new Set(
+        options.map(
+          ({ data }) => `${data.text}_${data.description?.trim() ?? ""}`,
+        ),
+      );
+
+      const areAllOptionsUnique = uniqueOptions.size === options.length;
+      if (areAllOptionsUnique) return true;
 
       return this.createError({
         path: "options",
-        message: "Options must have unique labels",
+        message:
+          "Options must have unique labels, or unique descriptions if labels are duplicated",
       });
     },
   });
