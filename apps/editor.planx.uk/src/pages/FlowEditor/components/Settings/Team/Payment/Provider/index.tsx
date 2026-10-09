@@ -50,6 +50,7 @@ const PROVIDER_LABELS: Record<NonNullable<PaymentProvider>, string> = {
 
 const formatBlockerList = (blockers: MigrationBlocker[]): string => {
   const messages = blockers.map((b) => BLOCKER_MESSAGES[b.reason](b));
+  if (messages.length === 0) return "this functionality is not enabled yet"; // TODO: remove when we remove placedholder in apps/api.planx.uk/modules/stripe/migration/service.ts, if migration is blocked blockers should always be returned
   if (messages.length === 1) return messages[0];
   return `${messages.slice(0, -1).join(", ")} and ${messages[messages.length - 1]}`;
 };

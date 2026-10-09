@@ -95,5 +95,5 @@ export const migrateToStripe = async (teamId: number, teamSlug: string) => {
 
   // TODO: perform actual migration and then re-enable updatePaymentProvider mutation below
   // await updatePaymentProvider(teamId, "stripe");
-  return { canMigrate: true, blockers: [] }; // placeholder for now
+  return { canMigrate: false, blockers: [] }; // placeholder for now
 };
