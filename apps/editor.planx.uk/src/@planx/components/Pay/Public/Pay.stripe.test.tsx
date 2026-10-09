@@ -547,7 +547,7 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
       await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
       expect(handleSubmit).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: { "application.fee.reference": "pi_test_123" },
+          data: { "application.fee.reference.stripe": "pi_test_123" },
         }),
       );
     });
