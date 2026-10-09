@@ -2,6 +2,8 @@ import { gql, useSubscription } from "@apollo/client";
 import type { Notification } from "pages/FlowEditor/components/Notifications/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
+import { EDITOR_ROLES } from "../../ui/editor/Permission";
+
 const NOTIFICATION_FIELDS = gql`
   fragment NotificationFields on notifications {
     id
@@ -55,8 +57,12 @@ export const useRecentNotifications = (): {
   resolved: Notification[];
   loading: boolean;
 } => {
-  const teamId = useStore((state) => state.teamId);
-  const skip = !teamId;
+  const [teamId, role] = useStore((state) => [
+    state.teamId,
+    state.getUserRoleForCurrentTeam(),
+  ]);
+  const hasPermission = Boolean(role && EDITOR_ROLES.includes(role));
+  const skip = !teamId || !hasPermission;
 
   const { data: activeData, loading: activeLoading } = useSubscription<{
     active: Notification[];

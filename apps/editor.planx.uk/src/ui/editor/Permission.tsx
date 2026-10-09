@@ -5,7 +5,11 @@ import type { PropsWithChildren } from "react";
 
 type FC = React.FC<PropsWithChildren>;
 
-const EDITOR_ROLES: Role[] = ["platformAdmin", "teamAdmin", "teamEditor"];
+export const EDITOR_ROLES: Role[] = [
+  "platformAdmin",
+  "teamAdmin",
+  "teamEditor",
+];
 
 interface PermissionComponent extends FC {
   /** Platform admins only */
