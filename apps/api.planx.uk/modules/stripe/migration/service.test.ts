@@ -4,7 +4,6 @@ import * as migrationService from "./service.js";
 import {
   getActiveGovPaySessions,
   getMigrationBlockers,
-  isCheckoutConfigured,
   migrateToStripe,
 } from "./service.js";
 
@@ -53,14 +52,6 @@ describe("getActiveGovPaySessions", () => {
   });
 });
 
-// TODO block for isCheckoutConfigured
-describe("isCheckoutConfigured", () => {
-  it("returns true", async () => {
-    const mockIsCheckoutConfigured = await isCheckoutConfigured("team");
-    await expect(mockIsCheckoutConfigured).toBe(true);
-  });
-});
-
 describe("getStripeAccountId", () => {
   it("returns a stripe account when set", async () => {
     mockRequest.mockResolvedValueOnce({
@@ -92,7 +83,6 @@ describe("getMigrationBlockers", () => {
       "acct_abc",
     );
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
-    vi.spyOn(migrationService, "isCheckoutConfigured").mockResolvedValue(true);
 
     const result = await getMigrationBlockers(1, "team");
 
@@ -102,7 +92,6 @@ describe("getMigrationBlockers", () => {
   it("blocks migration when stripe isn't connected", async () => {
     vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(null);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
-    vi.spyOn(migrationService, "isCheckoutConfigured").mockResolvedValue(true);
 
     const result = await getMigrationBlockers(1, "team");
 
@@ -115,7 +104,6 @@ describe("getMigrationBlockers", () => {
       "acct_abc",
     );
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(2);
-    vi.spyOn(migrationService, "isCheckoutConfigured").mockResolvedValue(true);
 
     const result = await getMigrationBlockers(1, "team");
 
@@ -125,23 +113,9 @@ describe("getMigrationBlockers", () => {
     ]);
   });
 
-  it("blocks migration when checkout isn't configured", async () => {
-    vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(
-      "acct_abc",
-    );
-    vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
-    vi.spyOn(migrationService, "isCheckoutConfigured").mockResolvedValue(false);
-
-    const result = await getMigrationBlockers(1, "team");
-
-    expect(result.canMigrate).toBe(false);
-    expect(result.blockers).toEqual([{ reason: "checkoutNotConfigured" }]);
-  });
-
   it("returns multiple blockers when they exist", async () => {
     vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(null);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(1);
-    vi.spyOn(migrationService, "isCheckoutConfigured").mockResolvedValue(false);
 
     const result = await getMigrationBlockers(1, "team");
 
@@ -150,16 +124,14 @@ describe("getMigrationBlockers", () => {
       expect.arrayContaining([
         { reason: "stripeNotConnected" },
         { reason: "activeGovpaySessions", count: 1 },
-        { reason: "checkoutNotConfigured" },
       ]),
     );
-    expect(result.blockers).toHaveLength(3);
+    expect(result.blockers).toHaveLength(2);
   });
 
   it("returns no blockers when migration can proceed", async () => {
     vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue("111222");
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
-    vi.spyOn(migrationService, "isCheckoutConfigured").mockResolvedValue(true);
 
     const result = await getMigrationBlockers(1, "team");
 
@@ -174,22 +146,23 @@ describe("migrateToStripe", () => {
     vi.restoreAllMocks();
   });
 
+  // TODO(stripe-migration): migrateToStripe is a placeholder — it always reports
+  // `canMigrate: false` for now (so that the frontend never shows a misleading "Migrated to Stripe" success state).
+  // Replace with a test asserting `canMigrate: true` once the actual migration (and updatePaymentProvider call) is implemented.
   it("returns no blockers when migration succeeds", async () => {
     vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(
       "acct_abc",
     );
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
-    vi.spyOn(migrationService, "isCheckoutConfigured").mockResolvedValue(true);
 
     const result = await migrateToStripe(1, "team");
 
-    expect(result).toEqual({ canMigrate: true, blockers: [] });
+    expect(result).toEqual({ canMigrate: false, blockers: [] });
   });
 
   it("returns blockers when migration cannot proceed", async () => {
     vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(null);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
-    vi.spyOn(migrationService, "isCheckoutConfigured").mockResolvedValue(true);
 
     const result = await migrateToStripe(1, "team");
 
