@@ -17,7 +17,11 @@ export const TestWarningPage = ({ children }: PropsWithChildren) => {
           <Card handleSubmit={() => setHasAcknowledgedWarning()}>
             <CardHeader
               title="This is a test environment"
-              description='This version of the service is unpublished and for previewing content changes only. "Send" integrations and features like "save & return" and "invite to pay" are not available on this link. Please use the "/published" link for end-to-end submissions.'
+              description={[
+                "<p>Sending is not available in preview. You can continue through the service, but no submission will be sent.</p>",
+                "<p>To test sending a submission, use the published version of the service in the staging environment.</p>",
+                '<p><a href="https://opensystemslab.notion.site/25-Test-your-Submit-services-459a91cfc50d4f4aafafa56c770ae1f7" target="_blank" rel="noopener noreferrer">Read the guide to testing submission services (opens in a new tab)</a></p>',
+              ].join("")}
             ></CardHeader>
           </Card>
         </Box>

@@ -51,11 +51,16 @@ afterEach(() => {
 
 it("displays a warning at /draft URLs", async () => {
   window.history.pushState({}, "", "/draft");
-  const { getByText } = await setup(
+  const { getByText, getByRole } = await setup(
     <SendComponent title="Send" destinations={["bops", "uniform"]} />,
   );
 
-  expect(getByText(/You can only test submissions on/)).toBeVisible();
+  expect(getByText(/This preview is for reviewing content only/)).toBeVisible();
+  expect(
+    getByRole("link", {
+      name: /Read the guide to testing submission services/,
+    }),
+  ).toHaveAttribute("target", "_blank");
 });
 
 it("displays a warning at /preview URLs", async () => {
@@ -64,7 +69,7 @@ it("displays a warning at /preview URLs", async () => {
     <SendComponent title="Send" destinations={["bops", "uniform"]} />,
   );
 
-  expect(getByText(/You can only test submissions on/)).toBeVisible();
+  expect(getByText(/This preview is for reviewing content only/)).toBeVisible();
 });
 
 it("displays loading messages to the user", async () => {
