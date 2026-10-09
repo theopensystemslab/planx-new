@@ -1,4 +1,6 @@
 /**
+ * STATUS: in development + not run against any environment yet
+ *
  * One-off backfill of Scanii tags onto objects that predate the tagging Lambda.
  *
  * Anything Scanii flags is deleted at scan time, so an object still sitting in the

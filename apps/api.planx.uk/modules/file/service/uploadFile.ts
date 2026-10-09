@@ -21,6 +21,10 @@ export const uploadPublicFile = async (
 
   const { params, key, fileType } = generateFileParams(file, filename, filekey);
 
+  // we mark all objects explicitly as 'private' or not
+  // note that 'public' objects written to S3 before this change will continue to carry no marker at all
+  params.Metadata = { is_private: "false" };
+
   await s3.putObject(params);
   const fileUrl = await buildFileUrl(s3, key, "public");
 
@@ -92,7 +96,12 @@ export function generateFileParams(
   const key = `${filekey || nanoid()}/${filename}`;
 
   const params: PutObjectCommandInput = {
-    ACL: "public-read",
+    // We no longer assign an ACL on PUT, so S3 defaults, IAM roles, and bucket policies reign. That is:
+    // - S3 denies whatever isn't explicitly allowed
+    // - There is no public bucket policy, so nothing we write can be read anonymously
+    // - The writer/owner (api-user as defined in infrastructure/application layer) gets full permissions
+    // Note that objects written previous to this change keep their `public-read` ACL, to avoid breaking raw S3 URLS
+    // See infrastructure/data/README.md.
     Bucket: process.env.AWS_S3_BUCKET,
     Key: key,
     Body: file.buffer,
