@@ -3,10 +3,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import type { Props } from "../Pay";
 import type { NoPaymentAction } from "../types";
 import { Action } from "../types";
-import {
-  PAYMENT_REFERENCE_PASSPORT_KEY,
-  type UsePaymentProviderResult,
-} from "./types";
+import type { UsePaymentProviderResult } from "./types";
 
 /**
  * Used when a team has not configured a payment provider
@@ -48,7 +45,6 @@ export function useNoPaymentProvider(
       resumeExistingPayment: startNewPayment,
       handleSuccess,
     },
-    passportKey: PAYMENT_REFERENCE_PASSPORT_KEY,
     hasExistingPayment: false,
   };
 }

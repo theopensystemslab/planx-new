@@ -17,10 +17,7 @@ import { getDefaultContent } from "../../model";
 import type { Props } from "../Pay";
 import type { StripeAction } from "../types";
 import { Action } from "../types";
-import {
-  PAYMENT_REFERENCE_PASSPORT_KEY,
-  type UsePaymentProviderResult,
-} from "./types";
+import { STRIPE_PASSPORT_KEY, type UsePaymentProviderResult } from "./types";
 
 // Only ever redirect applicants to Stripe's hosted Checkout
 const STRIPE_CHECKOUT_ORIGIN = "https://checkout.stripe.com" as const;
@@ -90,11 +87,7 @@ export function useStripePay(
     // TODO: Store full payload
     props.handleSubmit &&
       props.handleSubmit(
-        makeData(
-          props,
-          checkoutStatus?.paymentIntentId,
-          PAYMENT_REFERENCE_PASSPORT_KEY,
-        ),
+        makeData(props, checkoutStatus?.paymentIntentId, STRIPE_PASSPORT_KEY),
       );
   };
 
@@ -184,7 +177,7 @@ export function useStripePay(
       resumeExistingPayment,
       handleSuccess,
     },
-    passportKey: PAYMENT_REFERENCE_PASSPORT_KEY,
+    passportKey: STRIPE_PASSPORT_KEY,
     hasExistingPayment: hasReturnedFromCheckout,
   };
 }

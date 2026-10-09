@@ -113,4 +113,37 @@ describe("Confirmation component", () => {
 
     expect(screen.queryByText("Continue")).toBeInTheDocument();
   });
+
+  it("shows the Stripe payment reference from the passport", async () => {
+    act(() =>
+      setState({
+        flow: {
+          _root: { edges: ["Pay", "Send", "Confirmation"] },
+          Pay: { type: TYPES.Pay },
+          Send: { type: TYPES.Send },
+          Confirmation: { type: TYPES.Confirmation },
+        },
+        breadcrumbs: {
+          Pay: {
+            auto: false,
+            data: { "application.fee.reference.stripe": "pi_test_123" },
+          },
+          Send: { auto: false },
+        },
+      }),
+    );
+
+    await setup(
+      <ConfirmationComponent
+        heading="heading"
+        description="description"
+        nextSteps={[]}
+        moreInfo="more info"
+        contactInfo="contact info"
+      />,
+    );
+
+    expect(screen.getByText("Payment reference")).toBeInTheDocument();
+    expect(screen.getByText("pi_test_123")).toBeInTheDocument();
+  });
 });
