@@ -106,9 +106,8 @@ export const EditHistoryTimeline = ({
     <Timeline
       sx={{
         padding: 0,
-        [`& .${timelineItemClasses.root}:before`]: {
-          flex: 0,
-          padding: 0,
+        [`&& .${timelineItemClasses.root}::before`]: {
+          display: "none",
         },
       }}
     >
@@ -118,6 +117,7 @@ export const EditHistoryTimeline = ({
             <TimelineDot
               sx={{
                 padding: "3px",
+                boxShadow: "none",
                 bgcolor: (theme) =>
                   inUndoScope(i) && isUndoType(op.type)
                     ? theme.palette.grey[300]
@@ -135,6 +135,7 @@ export const EditHistoryTimeline = ({
                     borderLeftStyle: "dotted",
                     borderLeftWidth: "3px",
                     background: "none",
+                    borderLeftColor: (theme) => theme.palette.grey[500],
                   }),
                 }}
               />
@@ -158,12 +159,13 @@ export const EditHistoryTimeline = ({
               <Box>
                 <Typography
                   variant="body2"
-                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-                  color={
-                    inUndoScope(i) && isUndoType(op.type)
-                      ? "GrayText"
-                      : "inherit"
-                  }
+                  sx={{
+                    fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                    color:
+                      inUndoScope(i) && isUndoType(op.type)
+                        ? "GrayText"
+                        : "inherit",
+                  }}
                 >
                   {`${
                     op.actorId
