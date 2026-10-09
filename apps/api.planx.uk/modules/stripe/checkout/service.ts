@@ -91,7 +91,7 @@ const getInitiatedCheckoutSessionIds = async (
  * Cancelling or abandoning the Stripe Checkout leaves the session open (for 24h)
  * Without this check an applicant could pay for an earlier session in another tab
  */
-const expirePreviousCheckoutSessions = async (
+export const expirePreviousCheckoutSessions = async (
   sessionId: string,
 ): Promise<void> => {
   const checkoutSessionIds = await getInitiatedCheckoutSessionIds(sessionId);

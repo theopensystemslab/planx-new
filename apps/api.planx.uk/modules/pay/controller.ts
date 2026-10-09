@@ -8,6 +8,7 @@ import { responseInterceptor } from "http-proxy-middleware";
 
 import { $api } from "../../client/index.js";
 import { ServerError } from "../../errors/index.js";
+import { expirePreviousCheckoutSessions } from "../stripe/checkout/service.js";
 import { handleGovPayErrors, logPaymentStatus } from "./helpers.js";
 import { usePayProxy } from "./proxy.js";
 import { isSessionOwnedByApplicant } from "./service/inviteToPay/isSessionOwnedByApplicant.js";
@@ -193,6 +194,23 @@ export const inviteToPay: InviteToPayController = async (_req, res, next) => {
       new ServerError({
         message: "Session not found",
         status: 404,
+      }),
+    );
+  }
+
+  // Once invited, the nominee is the only person who can pay for this session
+  // Expire any Stripe Checkout Sessions the applicant has left open, and refuse to invite if one has been paid
+  try {
+    await expirePreviousCheckoutSessions(sessionId);
+  } catch (error) {
+    if (error instanceof ServerError) return next(error);
+
+    return next(
+      new ServerError({
+        message:
+          "Could not initiate a payment request: failed to expire open Stripe Checkout Sessions",
+        status: 500,
+        cause: error,
       }),
     );
   }
