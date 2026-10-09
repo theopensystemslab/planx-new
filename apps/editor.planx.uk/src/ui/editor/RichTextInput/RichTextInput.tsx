@@ -33,7 +33,6 @@ const LINE_HEIGHT_REM = 1.5;
 const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
   const variant = props.variant ?? "default";
-  const isRootLevel = variant === "rootLevelContent";
   const isParagraph = variant === "paragraphContent";
 
   // a11y: Element is treated as a HTMLInputElement but Tiptap renders a HTMLDivElement
@@ -179,9 +178,7 @@ const RichTextInput: FC<Props> = (props) => {
 
   return (
     <ErrorWrapper id={props.name} error={props.errorMessage}>
-      <RichContentContainer
-        className={`rich-text-editor ${isRootLevel ? "allow-h1" : ""}`}
-      >
+      <RichContentContainer className="rich-text-editor">
         {editor && (
           <StyledBubbleMenu editor={editor}>
             <Box
@@ -259,14 +256,8 @@ const RichTextInput: FC<Props> = (props) => {
             >
               {!isParagraph && (
                 <>
-                  <H1Button
-                    editor={editor}
-                    label={<strong>{isRootLevel ? "H1" : "H2"}</strong>}
-                  />
-                  <H2Button
-                    editor={editor}
-                    label={<strong>{isRootLevel ? "H2" : "H3"}</strong>}
-                  />
+                  <H1Button editor={editor} label={<strong>H2</strong>} />
+                  <H2Button editor={editor} label={<strong>H3</strong>} />
                 </>
               )}
               <BoldButton editor={editor} />

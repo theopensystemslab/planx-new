@@ -32,7 +32,7 @@ export const flow: FlowGraph = {
     type: ComponentType.Notice,
   },
   PreSendContent: {
-    data: { content: "<p>About to send</p>" },
+    data: { title: "About to send" },
     type: ComponentType.Content,
   },
   Question1AnswerC: { data: { text: "C" }, type: ComponentType.Answer },

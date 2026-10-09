@@ -11,7 +11,12 @@ test("const { user } = setups correctly", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = await setup(
-    <Content content="hello" color="#fff" handleSubmit={handleSubmit} />,
+    <Content
+      title="Title"
+      content="hello"
+      color="#fff"
+      handleSubmit={handleSubmit}
+    />,
   );
 
   expect(content()).toHaveTextContent("hello");
@@ -27,7 +32,7 @@ test("const { user } = setups correctly", async () => {
 });
 
 test("use light text color if color param is dark", async () => {
-  await setup(<Content content="dark" color="#000" />);
+  await setup(<Content title="Title" content="dark" color="#000" />);
   expect(content()).toHaveStyle({
     backgroundColor: "#000",
     color: "#fff",
@@ -35,7 +40,9 @@ test("use light text color if color param is dark", async () => {
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = await setup(<Content content="dark" color="#000" />);
+  const { container } = await setup(
+    <Content title="Title" content="dark" color="#000" />,
+  );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
@@ -45,6 +52,7 @@ test("should display and open more information link if help text is provided", a
 
   const { user } = await setup(
     <Content
+      title="Doors"
       content="This is a warning about doors"
       handleSubmit={handleSubmit}
       info="The number of doors impact your project fee."
@@ -55,4 +63,20 @@ test("should display and open more information link if help text is provided", a
 
   await user.click(screen.getByTestId("more-info-button"));
   expect(screen.getByText("Why does it matter?")).toBeInTheDocument();
+});
+
+test("renders the title as a level 1 heading", async () => {
+  await setup(<Content title="My title" content="<p>Body</p>" />);
+
+  expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+    "My title",
+  );
+});
+
+test("renders content headings below the title", async () => {
+  await setup(<Content title="My title" content="<h1>Subheading</h1>" />);
+
+  expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
+    "Subheading",
+  );
 });

@@ -17,30 +17,13 @@ import type {
   BackwardsTargetMetadata,
 } from "./types";
 
-/**
- * Generate meaningful title for content analytic log
- */
-export function getContentTitle(node: Store.Node): string {
-  const dom = new DOMParser().parseFromString(node.data?.content, "text/html");
-  const h1 = dom.body.getElementsByTagName("h1")[0]?.textContent;
-  const text = h1 || dom.body.textContent;
-  if (!text) return `Content: ${node.id}`;
-  const TITLE_LENGTH = 50;
-  const truncate = (data: string) =>
-    data.length > TITLE_LENGTH ? data.substring(0, TITLE_LENGTH) + "..." : data;
-  const title = truncate(text);
-  return title;
-}
-
 export function extractNodeTitle(node: Store.Node): string {
   const nodeTitle =
-    node?.type === TYPES.Content
-      ? getContentTitle(node)
-      : (node?.data?.title ??
-        node?.data?.text ??
-        node?.data?.flagSet ??
-        node?.data?.category ??
-        node?.data?.heading);
+    node?.data?.title ??
+    node?.data?.text ??
+    node?.data?.flagSet ??
+    node?.data?.category ??
+    node?.data?.heading;
   return nodeTitle;
 }
 
