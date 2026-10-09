@@ -1,4 +1,5 @@
 import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
+import Link from "@mui/material/Link";
 import { useMutation } from "@tanstack/react-query";
 import { logger } from "airbrake";
 import Bowser from "bowser";
@@ -39,9 +40,25 @@ const SkipSendWarning: React.FC<Props> = (props) => {
   return (
     <Card handleSubmit={props.handleSubmit}>
       <WarningContainer icon={ErrorOutlineOutlined}>
-        You can only test submissions on published routes where Save & Return is
-        enabled. Select <strong>Continue</strong> to finish reviewing content
-        and skip submission.
+        <p>This preview is for reviewing content only. You cannot:</p>
+        <ul>
+          <li>send test submissions</li>
+          <li>make a test payment</li>
+          <li>save and return to a submission</li>
+        </ul>
+        <p>
+          To test any of these, use the published version of the service in the
+          staging environment.
+        </p>
+        <p>
+          <Link
+            href="https://opensystemslab.notion.site/25-Test-your-Submit-services-459a91cfc50d4f4aafafa56c770ae1f7"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read the guide to testing submission services (opens in a new tab)
+          </Link>
+        </p>
       </WarningContainer>
     </Card>
   );
