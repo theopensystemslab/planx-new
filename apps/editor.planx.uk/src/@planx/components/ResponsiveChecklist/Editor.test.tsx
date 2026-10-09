@@ -500,4 +500,108 @@ describe("Responsive Checklist editor component", () => {
       ),
     );
   }, 15_000);
+
+  it("shows an error if options (label and description) are duplicated", async () => {
+    const props: EditorProps<
+      ComponentType.ResponsiveChecklist,
+      ResponsiveChecklist
+    > = {
+      node: {
+        data: {
+          text: "Duplicate options",
+        },
+      },
+      disabled: false,
+    };
+
+    const options: ConditionalOption[] = [
+      {
+        id: "AF4400H41Z",
+        data: {
+          text: "Same option",
+          rule: { condition: Condition.AlwaysRequired },
+        },
+      },
+      {
+        id: "0WeNTfghL4",
+        data: {
+          text: "Same option",
+          rule: { condition: Condition.AlwaysRequired },
+        },
+      },
+    ];
+
+    const handleSubmit = vi.fn();
+
+    await setup(
+      <DndProvider backend={HTML5Backend}>
+        <ResponsiveChecklistEditor
+          handleSubmit={handleSubmit}
+          options={options}
+          {...props}
+        />
+      </DndProvider>,
+    );
+
+    fireEvent.submit(screen.getByTestId("checklistEditorForm"));
+
+    expect(handleSubmit).not.toHaveBeenCalled();
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          /Options must have unique labels, or unique descriptions if labels are duplicated/,
+        ),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it("allows identical labels when descriptions are different", async () => {
+    const props: EditorProps<
+      ComponentType.ResponsiveChecklist,
+      ResponsiveChecklist
+    > = {
+      node: {
+        data: {
+          text: "Duplicate labels with different descriptions",
+        },
+      },
+      disabled: false,
+    };
+
+    const options: ConditionalOption[] = [
+      {
+        id: "AF4400H41Z",
+        data: {
+          text: "Same option",
+          description: "A",
+          rule: { condition: Condition.AlwaysRequired },
+        },
+      },
+      {
+        id: "0WeNTfghL4",
+        data: {
+          text: "Same option",
+          description: "B",
+          rule: { condition: Condition.AlwaysRequired },
+        },
+      },
+    ];
+
+    const handleSubmit = vi.fn();
+
+    await setup(
+      <DndProvider backend={HTML5Backend}>
+        <ResponsiveChecklistEditor
+          handleSubmit={handleSubmit}
+          options={options}
+          {...props}
+        />
+      </DndProvider>,
+    );
+
+    fireEvent.submit(screen.getByTestId("checklistEditorForm"));
+
+    await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
+  });
 });
