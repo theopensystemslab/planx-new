@@ -151,3 +151,72 @@ it("can construct a valid payload", async () => {
     ),
   );
 }, 20_000);
+
+it("shows an error if options (label and description) are duplicated", async () => {
+  const handleSubmit = vi.fn();
+  await setup(
+    <DndProvider backend={HTML5Backend}>
+      <ResponsiveQuestion
+        node={{ data: { text: "My title", description: "My description" } }}
+        options={[
+          {
+            id: "1",
+            data: {
+              text: "Duplicate option",
+              rule: { condition: Condition.AlwaysRequired },
+            },
+          },
+          {
+            id: "2",
+            data: {
+              text: "Duplicate option",
+              rule: { condition: Condition.AlwaysRequired },
+            },
+          },
+        ]}
+      />
+    </DndProvider>,
+  );
+  fireEvent.submit(screen.getByTestId("question-component-form"));
+  expect(handleSubmit).not.toHaveBeenCalled();
+
+  await waitFor(() =>
+    expect(
+      screen.getByText(
+        /Options must have unique labels, or unique descriptions if labels are duplicated/,
+      ),
+    ).toBeInTheDocument(),
+  );
+});
+
+it("allows identical labels when descriptions are different", async () => {
+  const handleSubmit = vi.fn();
+  await setup(
+    <DndProvider backend={HTML5Backend}>
+      <ResponsiveQuestion
+        handleSubmit={handleSubmit}
+        node={{ data: { text: "My title", description: "My description" } }}
+        options={[
+          {
+            id: "1",
+            data: {
+              text: "Duplicate title",
+              description: "A",
+              rule: { condition: Condition.AlwaysRequired },
+            },
+          },
+          {
+            id: "2",
+            data: {
+              text: "Duplicate title",
+              description: "B",
+              rule: { condition: Condition.AlwaysRequired },
+            },
+          },
+        ]}
+      />
+    </DndProvider>,
+  );
+  fireEvent.submit(screen.getByTestId("question-component-form"));
+  await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
+});
