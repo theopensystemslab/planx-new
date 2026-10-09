@@ -17,6 +17,17 @@ import {
   lockSessionQueryMock,
   unlockSessionQueryMock,
 } from "../../../../tests/mocks/inviteToPayMocks.js";
+import {
+  mockExpire,
+  mockInitiatedCheckoutSessions,
+  mockRetrieve,
+} from "../../../stripe/checkout/test/mocks.js";
+
+vi.mock(
+  "stripe",
+  async () =>
+    (await import("../../../stripe/checkout/test/mocks.js")).mockStripeModule,
+);
 
 describe("Invite to pay API route", () => {
   const inviteToPayBaseRoute = "/invite-to-pay";
@@ -38,6 +49,12 @@ describe("Invite to pay API route", () => {
     data: {},
     matchOnVariables: false,
   };
+
+  beforeEach(() => {
+    mockRetrieve.mockReset();
+    mockExpire.mockReset();
+    mockInitiatedCheckoutSessions();
+  });
 
   afterEach(() => {
     queryMock.reset();
@@ -87,6 +104,96 @@ describe("Invite to pay API route", () => {
         "x-hasura-lowcal-email": [applicant.email],
       });
       expect(callsTo("LockSession")).toBe(1);
+    });
+  });
+
+  describe("Stripe Checkout Sessions started by the applicant", () => {
+    const mockCheckoutSessions = (
+      sessions: { id: string; status: string }[],
+    ) => {
+      mockInitiatedCheckoutSessions(sessions.map(({ id }) => id));
+      mockRetrieve.mockImplementation(async (id: string) =>
+        sessions.find((session) => session.id === id),
+      );
+    };
+
+    beforeEach(() => {
+      queryMock.mockQuery(findSessionForInviteQueryMock);
+      queryMock.mockQuery(lockSessionQueryMock);
+      queryMock.mockQuery(detailedValidSessionQueryMock);
+      queryMock.mockQuery(getPublishedFlowDataQueryMock);
+      queryMock.mockQuery(createPaymentRequestQueryMock);
+    });
+
+    test("a session with no Stripe Checkout Sessions makes no calls to Stripe", async () => {
+      await supertest(app)
+        .post(validSessionURL)
+        .send(validPostBody)
+        .expect(200);
+
+      const lookup = queryMock
+        .getCalls()
+        .find((call) => call.id === "GetInitiatedCheckoutSessions");
+      expect(lookup?.variables).toEqual({ sessionId: validSession.id });
+      expect(mockRetrieve).not.toHaveBeenCalled();
+      expect(mockExpire).not.toHaveBeenCalled();
+    });
+
+    test("an open Checkout Session is expired before the session is locked", async () => {
+      mockCheckoutSessions([{ id: "cs_test_open", status: "open" }]);
+
+      let lockCallsBeforeExpiry: number | undefined;
+      mockExpire.mockImplementation(async (id: string) => {
+        lockCallsBeforeExpiry = callsTo("LockSession");
+        return { id, status: "expired" };
+      });
+
+      await supertest(app)
+        .post(validSessionURL)
+        .send(validPostBody)
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual(paymentRequestResponse);
+        });
+
+      expect(mockExpire).toHaveBeenCalledTimes(1);
+      expect(mockExpire).toHaveBeenCalledWith("cs_test_open");
+      expect(lockCallsBeforeExpiry).toBe(0);
+      expect(callsTo("LockSession")).toBe(1);
+      expect(callsTo("CreatePaymentRequest")).toBe(1);
+    });
+
+    test("a completed Checkout Session means the session cannot be locked", async () => {
+      mockCheckoutSessions([{ id: "cs_test_paid", status: "complete" }]);
+
+      await supertest(app)
+        .post(validSessionURL)
+        .send(validPostBody)
+        .expect(422)
+        .then((response) => {
+          expect(response.body.error).toMatch(/has already been paid for/);
+        });
+
+      expect(callsTo("LockSession")).toBe(0);
+      expect(callsTo("CreatePaymentRequest")).toBe(0);
+    });
+
+    test("a failure to reach Stripe means the session cannot be locked", async () => {
+      mockInitiatedCheckoutSessions(["cs_test_open"]);
+      mockRetrieve.mockRejectedValue(new Error("Stripe is down"));
+
+      await supertest(app)
+        .post(validSessionURL)
+        .send(validPostBody)
+        .expect(500)
+        .then((response) => {
+          expect(response.body.error).toMatch(
+            /failed to expire open Stripe Checkout Sessions/,
+          );
+        });
+
+      expect(callsTo("LockSession")).toBe(0);
+      expect(callsTo("CreatePaymentRequest")).toBe(0);
     });
   });
 

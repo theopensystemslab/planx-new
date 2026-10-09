@@ -391,3 +391,9 @@ paths:
           $ref: "#/components/responses/ErrorMessage"
         "409":
           $ref: "#/components/responses/ErrorMessage"
+        "422":
+          description: >-
+            The applicant has already paid for this session via a Stripe Checkout Session, so a payment request cannot be created.
+        "500":
+          description: >-
+            Failed to lock the session, expire the applicant's open Stripe Checkout Sessions, or create the payment request.
