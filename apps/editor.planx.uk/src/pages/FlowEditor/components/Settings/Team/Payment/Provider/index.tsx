@@ -41,7 +41,6 @@ const BLOCKER_MESSAGES: Record<
   stripeNotConnected: () => "Stripe has not been connected for this team",
   activeGovpaySessions: (props) =>
     `${props.count} active GOV.UK Pay session${props.count === 1 ? " is" : "s are"} in progress`,
-  checkoutNotConfigured: () => "Stripe Checkout is not yet configured",
 };
 
 const PROVIDER_LABELS: Record<NonNullable<PaymentProvider>, string> = {
@@ -58,23 +57,17 @@ const formatBlockerList = (blockers: MigrationBlocker[]): string => {
 const formatActionsList = (blockers: MigrationBlocker[]): string => {
   const reasons = new Set(blockers.map((b) => b.reason));
   const hasActiveSessions = reasons.has("activeGovpaySessions");
-  const hasCheckoutNotConfigured = reasons.has("checkoutNotConfigured");
 
-  if (hasActiveSessions && hasCheckoutNotConfigured) {
-    return "Please configure checkout and try again later.";
+  if (hasActiveSessions) {
+    return "Please try again later.";
   }
-  if (hasCheckoutNotConfigured) {
-    return "Please configure checkout and then try again."; // TODO: check if we will configure checkout for them
-  }
+
   return "Please try again later.";
 };
 
 const Provider: React.FC = () => {
   const toast = useToast();
-  const [teamId, teamSlug] = useStore((state) => [
-    state.teamId,
-    state.teamSlug,
-  ]);
+  const teamSlug = useStore((state) => state.teamSlug);
   const { paymentProvider } = usePaymentProvider();
   const [migratedProvider, setMigratedProvider] =
     useState<PaymentProvider | null>(null);
