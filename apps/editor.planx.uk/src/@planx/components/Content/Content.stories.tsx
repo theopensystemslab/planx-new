@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>;
 export const Basic = {
   args: {
     title: "Ready to submit?",
-    content: `<p>You will not be able to make any further changes.You will not be able to make any further changes.</p>`,
+    content: `<p>You will not be able to make any further changes.</p>`,
     color: "#F9F8F8",
   },
 } satisfies Story;
