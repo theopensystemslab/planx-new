@@ -129,11 +129,7 @@ const Provider: React.FC = () => {
           <Button
             onClick={handleMigrateClick}
             variant="contained"
-            disabled={
-              isStripeStatusLoading ||
-              !stripeConnectStatus?.connected ||
-              isMigrating
-            }
+            disabled={isStripeStatusLoading || !stripeConnectStatus?.connected}
           >
             Migrate to Stripe
           </Button>
@@ -257,7 +253,11 @@ const Provider: React.FC = () => {
               >
                 Cancel
               </Button>
-              <Button onClick={handleMigration} variant="contained">
+              <Button
+                onClick={handleMigration}
+                variant="contained"
+                disabled={isMigrating}
+              >
                 Migrate to Stripe
               </Button>
             </DialogActions>
