@@ -3,7 +3,6 @@ import type { Session } from "@opensystemslab/planx-core/types";
 import {
   applicant,
   flowGraph,
-  notFoundSession,
   payee,
   paymentAmountPence,
   paymentRequestResponse,
@@ -72,25 +71,13 @@ export const detailedValidSessionQueryMock = {
   },
 };
 
-export const notFoundQueryMock = {
-  name: "GetSessionDetails",
+export const findSessionForInviteQueryMock = {
+  name: "FindSessionForInvite",
   data: {
-    lowcal_sessions_by_pk: null,
+    sessions: [{ id: validSession.id }],
   },
   variables: {
-    id: notFoundSession.id,
-  },
-};
-
-export const notFoundLockSessionQueryMock = {
-  name: "LockSession",
-  data: {
-    update_lowcal_sessions: {
-      returning: [],
-    },
-  },
-  variables: {
-    id: notFoundSession.id,
+    sessionId: validSession.id,
   },
 };
 
@@ -140,6 +127,12 @@ export const getPublishedFlowDataQueryMock = {
   },
 };
 
+const paymentRequestMetadata = () => [
+  { key: "source", value: "PlanX", type: "static" },
+  { key: "paidViaInviteToPay", value: true, type: "static" },
+  { key: "flow", value: validSession.flow.slug, type: "static" },
+];
+
 export const createPaymentRequestQueryMock = {
   name: "CreatePaymentRequest",
   data: {
@@ -154,11 +147,8 @@ export const createPaymentRequestQueryMock = {
     payeeName: payee.name,
     payeeEmail: payee.email,
     sessionPreviewData: sessionPreviewData,
-    govPayMetadata: [
-      { key: "source", value: "PlanX" },
-      { key: "paidViaInviteToPay", value: true },
-      { key: "flow", value: validSession.flow.slug },
-    ],
+    govPayMetadata: paymentRequestMetadata(),
+    stripeMetadata: paymentRequestMetadata(),
     feeBreakdown: {
       amount: {
         calculated: 0,

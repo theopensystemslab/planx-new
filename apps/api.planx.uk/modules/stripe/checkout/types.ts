@@ -1,3 +1,9 @@
+import type {
+  FeeBreakdown,
+  Passport,
+  PaymentMetadata,
+  PaymentRequest,
+} from "@opensystemslab/planx-core/types";
 import type Stripe from "stripe";
 import { z } from "zod";
 
@@ -10,7 +16,6 @@ export const createCheckoutSessionSchema = z.object({
   body: z.object({
     sessionId: z.string().uuid(),
     flowId: z.string().uuid(),
-    amount: z.number().int().positive(),
     metadata: z
       .object({
         flow: z.string(),
@@ -25,7 +30,6 @@ export const createCheckoutSessionSchema = z.object({
 export interface CreateCheckoutSessionInput {
   sessionId: string;
   flowId: string;
-  amount: number;
   returnURL: string;
   teamSlug: string;
   connectedAccountId: string;
@@ -76,3 +80,70 @@ export type GetCheckoutSessionStatusController = ValidatedRequestHandler<
   typeof getCheckoutSessionStatusSchema,
   CheckoutSessionStatusResponse
 >;
+
+export const createPaymentRequestCheckoutSessionSchema = z.object({
+  params: z.object({
+    paymentRequestId: z.string().uuid(),
+  }),
+});
+
+export type PaymentRequestRecord = Pick<
+  PaymentRequest,
+  "id" | "sessionId" | "payeeEmail" | "createdAt" | "stripeMetadata"
+> & {
+  feeBreakdown: FeeBreakdown | null;
+  paidAt: string | null;
+  govPayPaymentId: string | null;
+  session: {
+    flowId: string;
+    deletedAt: string | null;
+    lockedAt: string | null;
+    passport: Passport;
+    flow: {
+      slug: string;
+      team: { slug: string; domain: string | null };
+    };
+  } | null;
+};
+
+/**
+ * An unpaid, unexpired ITP request, for a locked session
+ */
+export type PayablePaymentRequest = Omit<
+  PaymentRequestRecord,
+  "createdAt" | "paidAt" | "govPayPaymentId" | "stripeMetadata" | "session"
+> & {
+  expiresAt: Date;
+  metadata: PaymentMetadata[];
+  session: NonNullable<PaymentRequestRecord["session"]>;
+};
+
+export interface CreatePaymentRequestCheckoutSessionInput {
+  paymentRequest: PayablePaymentRequest;
+  connectedAccountId: string;
+}
+
+export type PaymentRequestCheckoutSessionLocals = {
+  paymentRequest: PayablePaymentRequest;
+  connectedAccountId: string;
+};
+
+export type FetchPaymentRequestMiddleware = ValidatedRequestHandler<
+  typeof createPaymentRequestCheckoutSessionSchema,
+  CreateCheckoutSessionResponse,
+  PaymentRequestCheckoutSessionLocals
+>;
+
+export type ResolvePaymentRequestConnectedAccountMiddleware =
+  ValidatedRequestHandler<
+    typeof createPaymentRequestCheckoutSessionSchema,
+    CreateCheckoutSessionResponse,
+    PaymentRequestCheckoutSessionLocals
+  >;
+
+export type CreatePaymentRequestCheckoutSessionController =
+  ValidatedRequestHandler<
+    typeof createPaymentRequestCheckoutSessionSchema,
+    CreateCheckoutSessionResponse,
+    PaymentRequestCheckoutSessionLocals
+  >;

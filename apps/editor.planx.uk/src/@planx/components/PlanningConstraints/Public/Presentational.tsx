@@ -1,11 +1,13 @@
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import Typography from "@mui/material/Typography";
 import type { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import capitalize from "lodash/capitalize";
 import type { HandleSubmit } from "pages/Preview/Node";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
-import { Disclaimer } from "../../shared/Disclaimer";
 import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../../shared/Preview/SimpleExpand";
 import { DEFAULT_PLANNING_CONDITIONS_DISCLAIMER } from "../model";
@@ -80,9 +82,12 @@ export function Presentational(props: PresentationalProps) {
               />
             </SimpleExpand>
           )}
-          <Disclaimer
-            text={disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
-          />
+          <WarningContainer icon={ErrorOutlineOutlined}>
+            <ReactMarkdownOrHtml
+              source={disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
+              openLinksOnNewTab
+            />
+          </WarningContainer>
         </>
       )}
       {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
@@ -109,9 +114,12 @@ export function Presentational(props: PresentationalProps) {
               setInaccurateConstraints={setInaccurateConstraints}
             />
           </SimpleExpand>
-          <Disclaimer
-            text={disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
-          />
+          <WarningContainer icon={ErrorOutlineOutlined}>
+            <ReactMarkdownOrHtml
+              source={disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
+              openLinksOnNewTab
+            />
+          </WarningContainer>
         </>
       )}
     </Card>

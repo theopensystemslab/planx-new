@@ -12,7 +12,6 @@ import {
   mockCreateCheckoutSessionDefaults,
   mockExpire,
   mockInitiatedCheckoutSessions,
-  mockPassportLookup,
   mockRetrieve,
   validBody,
 } from "./test/mocks.js";
@@ -57,14 +56,12 @@ describe("tracking Checkout Sessions for a PlanX session", () => {
         metadata: {
           ...defaultMetadata,
           sessionId: validBody.sessionId,
-          flowId: validBody.flowId,
-          teamSlug: "southwark",
           origin: "https://api.example.com",
         },
       });
     });
 
-    it("records the total Stripe will charge, not the client amount", async () => {
+    it("records the total Stripe will charge", async () => {
       mockCreate.mockResolvedValue({
         id: "cs_test_a1b2c3",
         url: "https://checkout.stripe.com/c/pay/cs_test_a1b2c3",
@@ -79,17 +76,13 @@ describe("tracking Checkout Sessions for a PlanX session", () => {
       expect(getPaymentStatusInsert()?.variables?.amount).toBe(16500);
     });
 
-    it("falls back to the client amount when Stripe returns no total", async () => {
-      mockPassportLookup(null);
-
+    it("falls back to the session's payable fee when Stripe returns no total", async () => {
       await supertest(app)
         .post("/stripe/checkout-session/southwark")
         .send(validBody)
         .expect(200);
 
-      expect(getPaymentStatusInsert()?.variables).toEqual(
-        expect.objectContaining({ amount: 14500, feeBreakdown: null }),
-      );
+      expect(getPaymentStatusInsert()?.variables?.amount).toBe(14500);
     });
 
     it("does not return the Checkout Session URL if the payment status cannot be recorded", async () => {

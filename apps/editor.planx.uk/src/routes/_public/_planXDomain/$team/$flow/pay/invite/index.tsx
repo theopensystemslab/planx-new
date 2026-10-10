@@ -1,4 +1,3 @@
-import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import InviteToPay from "pages/Pay/InviteToPay";
@@ -38,7 +37,7 @@ export const Route = createFileRoute(
 });
 
 function InviteToPayComponent() {
-  const data = Route.useLoaderData() as { paymentRequest: PaymentRequest };
+  const data = Route.useLoaderData();
 
   return <InviteToPay {...data.paymentRequest} />;
 }

@@ -4,15 +4,14 @@ import type Stripe from "stripe";
 
 import { $api } from "../../../../client/index.js";
 import { reportError } from "../../../pay/helpers.js";
-import {
-  type StripePaymentMetadata,
-  stripePaymentMetadataSchema,
-} from "../paymentStatus/types.js";
+import { stripePaymentMetadataSchema } from "../paymentStatus/types.js";
 
 type PassportData = Session["data"]["passport"]["data"];
 
 interface OwnedPaymentIntent {
-  metadata: StripePaymentMetadata;
+  sessionId: string;
+  flowId: string;
+  teamSlug: string;
   passportData?: PassportData;
 }
 
@@ -60,16 +59,27 @@ export async function getOwnedPaymentIntent(
     return null;
   }
 
+  // Should not happen - type narrowing
+  if (!session.flow) {
+    throw new Error(
+      `Could not find flow ${session.flowId} for session ${sessionId} (PaymentIntent ${id})`,
+    );
+  }
+
   return {
-    metadata: parsedMetadata.data,
+    sessionId,
+    flowId: session.flowId,
+    teamSlug: session.flow.team.slug,
     passportData: session.passportData,
   };
 }
 
 interface GetSessionResponse {
-  session: Partial<{
-    passportData: PassportData;
-  }> | null;
+  session: {
+    flowId: string;
+    flow: { team: { slug: string } } | null;
+    passportData?: PassportData;
+  } | null;
 }
 
 async function getSession(sessionId: string): Promise<GetSessionResponse> {
@@ -77,6 +87,12 @@ async function getSession(sessionId: string): Promise<GetSessionResponse> {
     gql`
       query GetStripePaymentSession($id: uuid!) {
         session: lowcal_sessions_by_pk(id: $id) {
+          flowId: flow_id
+          flow {
+            team {
+              slug
+            }
+          }
           passportData: data(path: "passport.data")
         }
       }

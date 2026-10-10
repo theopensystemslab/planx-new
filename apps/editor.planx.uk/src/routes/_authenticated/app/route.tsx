@@ -13,6 +13,8 @@ export const Route = createFileRoute("/_authenticated/app")({
   loader: async () => {
     const { client } = await import("lib/graphql");
     const { data } = await client.query<{ teams: TeamSummary[] }>({
+      // always hit the network when cache is invalidated
+      fetchPolicy: "network-only",
       query: gql`
         query GetTeamSummaries {
           teams(order_by: { name: asc }) {
@@ -21,6 +23,7 @@ export const Route = createFileRoute("/_authenticated/app")({
             slug
             settings: team_settings {
               isTrial: is_trial
+              isGuidanceOnly: is_guidance_only
             }
             theme {
               id

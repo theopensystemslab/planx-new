@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import components from "pages/FlowEditor/components/forms";
 import FormModal from "pages/FlowEditor/components/forms/FormModal";
 
@@ -7,6 +7,8 @@ import { loader } from "./-loader";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/_flowEditor/nodes/$parent/nodes/$id/edit",
 )({
+  // loader() snapshots the live graph, never serve it from the TSR cache
+  gcTime: 0,
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
     const { team, flow, parent, id } = params;

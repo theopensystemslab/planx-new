@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { getValidSchemaDictionary } from "@opensystemslab/planx-core";
 import type { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { PAYMENT_REFERENCE_PASSPORT_KEY } from "@planx/components/Pay/Public/providers/types";
+import { STRIPE_PASSPORT_KEY } from "@planx/components/Pay/Public/providers/types";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { type Store, useStore } from "pages/FlowEditor/lib/store";
@@ -22,7 +22,7 @@ const getPaymentReference = (
 ): string | undefined => {
   if (govUkPayment?.payment_id) return govUkPayment.payment_id;
 
-  const stripeReference = passport?.data?.[PAYMENT_REFERENCE_PASSPORT_KEY];
+  const stripeReference = passport?.data?.[STRIPE_PASSPORT_KEY];
   return stripeReference;
 };
 

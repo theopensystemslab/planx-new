@@ -4,18 +4,17 @@ import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import type { GovUKPayment } from "@opensystemslab/planx-core/types";
-import {
-  type PaymentRequest,
-  PaymentStatus,
-} from "@opensystemslab/planx-core/types";
+import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { FeeBreakdown } from "@planx/components/Pay/Public/FeeBreakdown/FeeBreakdown";
 import axios from "axios";
 import { format } from "date-fns";
+import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Banner from "ui/public/Banner";
 import { DescriptionList } from "ui/public/DescriptionList";
+import type { PublicPaymentRequest } from "utils/routeUtils/payQueries";
 import { z } from "zod";
 
 import {
@@ -62,10 +61,11 @@ export default function MakePayment({
   createdAt,
   id: paymentRequestId,
   govPayPaymentId,
+  stripePaymentId,
   paymentAmount,
   paidAt,
   feeBreakdown,
-}: PaymentRequest) {
+}: PublicPaymentRequest) {
   const { address, rawProjectTypes } =
     parseSessionPreviewData(sessionPreviewData);
   const [currentState, setState] = useState<
@@ -102,7 +102,7 @@ export default function MakePayment({
         paymentRequestId,
         govPayPaymentId,
       });
-    } catch (error) {
+    } catch {
       setErrorMessage("Failed to fetch payment details");
     }
 
@@ -145,90 +145,64 @@ export default function MakePayment({
     }
   };
 
-  const Header = () =>
-    currentState === States.Finished ? (
-      <Banner
-        Icon={Check}
-        iconTitle={"Success"}
-        heading="Payment received"
-        color={{
-          background: theme.palette.success.light,
-          text: theme.palette.text.primary,
-        }}
-      >
-        <Typography variant="body2" sx={{ pt: 2, maxWidth: "formWrap" }}>
-          Thanks for making your payment. We'll send you a confirmation email.
-        </Typography>
-      </Banner>
-    ) : (
-      <Container maxWidth="contentWrap">
-        <Typography
-          component="h1"
-          variant="h1"
-          sx={{ maxWidth: "formWrap", pt: 5 }}
-          gutterBottom
-        >
-          Pay
-        </Typography>
-      </Container>
-    );
+  const isPaid = currentState === States.Finished;
+  const paidDate = paidAt ? Date.parse(paidAt) : Date.now();
 
-  const PaymentDetails: React.FC<{ hasFeeBreakdown: boolean }> = ({
-    hasFeeBreakdown,
-  }) => {
-    const projectType = formatRawProjectTypes(rawProjectTypes);
-    const data = [
-      { term: "Application type", details: flowName },
-      {
-        term: "Property address",
-        details: address,
-      },
-      {
-        term: "Project type",
-        details: projectType || "Project type not submitted",
-      },
-    ];
+  const details = objectWithoutNullishValues({
+    "Application type": flowName,
+    Fee: feeBreakdown
+      ? undefined
+      : formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
+    "Property address": address,
+    "Project type":
+      formatRawProjectTypes(rawProjectTypes) || "Project type not submitted",
+    "Valid until": isPaid
+      ? undefined
+      : getExpiryDateForPaymentRequest(createdAt),
+    "Paid at": isPaid ? format(paidDate, "dd MMMM yyyy") : undefined,
+    "Payment reference": isPaid
+      ? govPayPaymentId || stripePaymentId
+      : undefined,
+  }) as Record<string, string>;
 
-    if (!hasFeeBreakdown) {
-      data.splice(1, 0, {
-        term: "Fee",
-        details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
-      });
-    }
-
-    // Handle payments completed before page load
-    if (paidAt) {
-      data.push({
-        term: "Paid at",
-        details: format(Date.parse(paidAt), "dd MMMM yyyy"),
-      });
-      // Handle payments just completed (on immediate return from GovPay)
-    } else if (currentState === States.Finished) {
-      data.push({
-        term: "Paid at",
-        details: format(Date.now(), "dd MMMM yyyy"),
-      });
-      // Handle payments not started
-    } else {
-      data.push({
-        term: "Valid until",
-        details: getExpiryDateForPaymentRequest(createdAt),
-      });
-    }
-
-    return (
-      <Container maxWidth="contentWrap" sx={{ pb: 0 }}>
-        <DescriptionList data={data} />
-      </Container>
-    );
-  };
+  const paymentDetails = Object.entries(details).map(([term, details]) => ({
+    term,
+    details,
+  }));
 
   return isLoading ? (
     <DelayedLoadingIndicator text={currentState.loading} />
   ) : (
     <>
-      <Header />
-      <PaymentDetails hasFeeBreakdown={Boolean(feeBreakdown)} />
+      {isPaid ? (
+        <Banner
+          Icon={Check}
+          iconTitle={"Success"}
+          heading="Payment received"
+          color={{
+            background: theme.palette.success.light,
+            text: theme.palette.text.primary,
+          }}
+        >
+          <Typography variant="body2" sx={{ pt: 2, maxWidth: "formWrap" }}>
+            Thanks for making your payment. We'll send you a confirmation email.
+          </Typography>
+        </Banner>
+      ) : (
+        <Container maxWidth="contentWrap">
+          <Typography
+            component="h1"
+            variant="h1"
+            sx={{ maxWidth: "formWrap", pt: 5 }}
+            gutterBottom
+          >
+            Pay
+          </Typography>
+        </Container>
+      )}
+      <Container maxWidth="contentWrap" sx={{ pb: 0 }}>
+        <DescriptionList data={paymentDetails} />
+      </Container>
       {(currentState === States.Ready ||
         currentState === States.Reset ||
         currentState === States.ReadyToRetry) &&
@@ -257,7 +231,7 @@ async function fetchPayment({
   govPayPaymentId,
 }: {
   paymentRequestId: string;
-  govPayPaymentId?: string;
+  govPayPaymentId: string | null;
 }): Promise<GovUKPayment | null> {
   if (!govPayPaymentId) return Promise.resolve(null);
   const paymentURL = `${
@@ -328,7 +302,7 @@ const parseSessionPreviewData = (sessionPreviewData: unknown) => {
       "proposal.projectType": rawProjectTypes,
     } = schema.parse(sessionPreviewData);
     return { address, rawProjectTypes };
-  } catch (error) {
+  } catch {
     throw Error("Invalid session preview data");
   }
 };

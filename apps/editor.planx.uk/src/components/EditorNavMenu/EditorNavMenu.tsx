@@ -538,7 +538,9 @@ function EditorNavMenu() {
             </>
           )}
           {isTeamRoute &&
-            (role === "platformAdmin" || role === "teamEditor") && (
+            (role === "platformAdmin" ||
+              role === "teamAdmin" ||
+              role === "teamEditor") && (
               <>
                 <Box ref={notificationsRef}>
                   <NavMenuItem

@@ -8,8 +8,10 @@ import { responseInterceptor } from "http-proxy-middleware";
 
 import { $api } from "../../client/index.js";
 import { ServerError } from "../../errors/index.js";
+import { expirePreviousCheckoutSessions } from "../stripe/checkout/service.js";
 import { handleGovPayErrors, logPaymentStatus } from "./helpers.js";
 import { usePayProxy } from "./proxy.js";
+import { isSessionOwnedByApplicant } from "./service/inviteToPay/isSessionOwnedByApplicant.js";
 import {
   addGovPayPaymentIdToPaymentRequest,
   postPaymentNotificationToSlack,
@@ -182,27 +184,54 @@ export function fetchPaymentViaProxyWithCallback(
 
 export const inviteToPay: InviteToPayController = async (_req, res, next) => {
   const { sessionId } = res.locals.parsedReq.params;
-  const { payeeEmail, payeeName, applicantName, sessionPreviewKeys } =
+  const { email, payeeEmail, payeeName, applicantName, sessionPreviewKeys } =
     res.locals.parsedReq.body;
-  // lock session before creating a payment request
-  const locked = await $api.session.lock(sessionId);
-  if (locked === null) {
+
+  // Only the applicant who saved the session can invite a nominee to pay for it
+  const canLock = await isSessionOwnedByApplicant({ sessionId, email });
+  if (!canLock) {
     return next(
       new ServerError({
-        message: "session not found",
+        message: "Session not found",
         status: 404,
       }),
     );
   }
-  if (locked === false) {
-    const cause = new Error(
-      "this session could not be locked, perhaps because it is already locked",
-    );
+
+  // Once invited, the nominee is the only person who can pay for this session
+  // Expire any Stripe Checkout Sessions the applicant has left open, and refuse to invite if one has been paid
+  try {
+    await expirePreviousCheckoutSessions(sessionId);
+  } catch (error) {
+    if (error instanceof ServerError) return next(error);
+
     return next(
       new ServerError({
-        message: `could not initiate a payment request: ${cause.message}`,
-        status: 400,
-        cause,
+        message:
+          "Could not initiate a payment request: failed to expire open Stripe Checkout Sessions",
+        status: 500,
+        cause: error,
+      }),
+    );
+  }
+
+  // Lock session before creating a payment request
+  const locked = await $api.session.lock(sessionId);
+
+  // We know the session exists, so null means it's already locked
+  if (locked === null) {
+    return next(
+      new ServerError({
+        message: "Session is already locked",
+        status: 409,
+      }),
+    );
+  }
+  if (locked === false) {
+    return next(
+      new ServerError({
+        message: "Could not initiate a payment request: failed to lock session",
+        status: 500,
       }),
     );
   }

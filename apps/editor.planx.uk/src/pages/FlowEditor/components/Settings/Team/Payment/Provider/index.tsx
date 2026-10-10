@@ -2,7 +2,6 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,53 +10,66 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import type { TeamSettings } from "@opensystemslab/planx-core/types";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { useToast } from "hooks/useToast";
+import type {
+  MigrationBlocker,
+  MigrationBlockerReason,
+} from "lib/api/stripe/types";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useId, useState } from "react";
+import React, { useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { useStripeConnectStatus } from "../Onboarding/hooks/useStripeConnectStatus";
+import { useMigrateToStripe } from "./hooks/useMigrateToStripe";
 
 export type PaymentProvider = TeamSettings["paymentProvider"];
 
 type DialogState =
   | { type: "closed" }
-  | { type: "checking" }
-  | { type: "blocked"; sessionCount: number }
+  | { type: "blocked"; blockers: MigrationBlocker[] }
   | { type: "confirm" };
+
+const BLOCKER_MESSAGES: Record<
+  MigrationBlockerReason,
+  (props: MigrationBlocker) => string
+> = {
+  stripeNotConnected: () => "Stripe has not been connected for this team",
+  activeGovpaySessions: (props) =>
+    `${props.count} active GOV.UK Pay session${props.count === 1 ? " is" : "s are"} in progress`,
+};
 
 const PROVIDER_LABELS: Record<NonNullable<PaymentProvider>, string> = {
   govpay: "GOV.UK Pay",
   stripe: "Stripe",
 };
 
-/**
- * Placeholder - randomly returns a success or failure option
- * @todo Query DB, return real results
- */
-const checkActiveSessions = async (
-  teamId: number,
-): Promise<{ count: number; canMigrate: boolean }> => {
-  console.log(
-    `[Provider] Checking active payment sessions for team ${teamId}...`,
-  );
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  const count = Math.random() > 0.5 ? 3 : 0;
-  console.log(`[Provider] Found ${count} active session(s)`);
-  return { count, canMigrate: count === 0 };
+const formatBlockerList = (blockers: MigrationBlocker[]): string => {
+  const messages = blockers.map((b) => BLOCKER_MESSAGES[b.reason](b));
+  if (messages.length === 0) return "this functionality is not enabled yet"; // TODO: remove when we remove placedholder in apps/api.planx.uk/modules/stripe/migration/service.ts, if migration is blocked blockers should always be returned
+  if (messages.length === 1) return messages[0];
+  return `${messages.slice(0, -1).join(", ")} and ${messages[messages.length - 1]}`;
+};
+
+const formatActionsList = (blockers: MigrationBlocker[]): string => {
+  const reasons = new Set(blockers.map((b) => b.reason));
+  const hasActiveSessions = reasons.has("activeGovpaySessions");
+
+  if (hasActiveSessions) {
+    return "Please try again later.";
+  }
+
+  return "Please try again later.";
 };
 
 const Provider: React.FC = () => {
   const toast = useToast();
-  const teamId = useStore((state) => state.teamId);
   const teamSlug = useStore((state) => state.teamSlug);
   const { paymentProvider } = usePaymentProvider();
-  const stripeWarningId = useId();
   const [migratedProvider, setMigratedProvider] =
     useState<PaymentProvider | null>(null);
   const provider = migratedProvider ?? paymentProvider ?? null;
@@ -66,28 +78,27 @@ const Provider: React.FC = () => {
     type: "closed",
   });
 
+  const { mutate: migrate, isPending: isMigrating } = useMigrateToStripe();
+
   const handleMigrateClick = async () => {
-    setDialogState({ type: "checking" });
-    const result = await checkActiveSessions(teamId);
-    if (result.canMigrate) {
-      setDialogState({ type: "confirm" });
-    } else {
-      setDialogState({ type: "blocked", sessionCount: result.count });
-    }
+    setDialogState({ type: "confirm" });
   };
 
-  /**
-   * Placeholder - updates local state only, no DB tables updated
-   * @todo Write to Hasura
-   */
-  const handleConfirmMigration = () => {
-    console.log(
-      `[Provider] Migrating team ${teamId} from ${PROVIDER_LABELS[provider!]} to Stripe`,
-    );
-    setMigratedProvider("stripe");
-    setDialogState({ type: "closed" });
-    toast.success("Migration to Stripe successful");
-    console.log("[Provider] Migration complete");
+  const handleMigration = () => {
+    migrate(teamSlug, {
+      onSuccess: (result) => {
+        if (!result.canMigrate) {
+          setDialogState({ type: "blocked", blockers: result.blockers });
+          return;
+        }
+        setMigratedProvider("stripe");
+        setDialogState({ type: "closed" });
+        toast.success("Migration to Stripe successful");
+      },
+      onError: () => {
+        toast.error("Something went wrong migrating to Stripe");
+      },
+    });
   };
 
   const handleClose = () => setDialogState({ type: "closed" });
@@ -100,27 +111,26 @@ const Provider: React.FC = () => {
   const renderProviderAction = () => {
     if (isStripe) {
       return (
-        <WarningContainer aria-labelledby={stripeWarningId} sx={{ my: 0 }}>
-          <WarningIcon sx={{ mr: 1 }} />
-          <Typography id={stripeWarningId} variant="body2">
-            Stripe payments are not yet available. Applicants will not be able
-            to pay online until this is complete.
-          </Typography>
+        <WarningContainer icon={WarningIcon} sx={{ my: 0 }}>
+          Stripe payments are not yet available. Applicants will not be able to
+          pay online until this is complete.
         </WarningContainer>
       );
     }
 
     if (canMigrateToStripe) {
-      if (isStripeStatusLoading || !stripeConnectStatus?.connected) {
-        return null;
-      }
-
       return (
         <Box>
+          {(isStripeStatusLoading || !stripeConnectStatus?.connected) && (
+            <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+              Please connect a Stripe account above before trying to migrate
+              payment providers.
+            </Typography>
+          )}
           <Button
             onClick={handleMigrateClick}
             variant="contained"
-            disabled={dialogState.type === "checking"}
+            disabled={isStripeStatusLoading || !stripeConnectStatus?.connected}
           >
             Migrate to Stripe
           </Button>
@@ -194,37 +204,19 @@ const Provider: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Dialog
-        open={dialogState.type !== "closed"}
-        onClose={dialogState.type === "checking" ? undefined : handleClose}
-      >
-        {dialogState.type === "checking" && (
-          <>
-            <DialogTitle component="h1" variant="h3">
-              Checking active sessions
-            </DialogTitle>
-            <DialogContent
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                py: 4,
-              }}
-            >
-              <CircularProgress />
-            </DialogContent>
-          </>
-        )}
-
+      <Dialog open={dialogState.type !== "closed"} onClose={handleClose}>
         {dialogState.type === "blocked" && (
           <>
             <DialogTitle component="h1" variant="h3">
-              Active payment sessions found
+              Unable to migrate to Stripe
             </DialogTitle>
             <DialogContent dividers>
               <DialogContentText>
-                Unable to migrate payment provider to Stripe. Your team
-                currently has {dialogState.sessionCount} open payment
-                session(s). Please wait for these to complete and try again.
+                This team cannot migrate to Stripe yet because{" "}
+                {formatBlockerList(dialogState.blockers)}.
+              </DialogContentText>
+              <DialogContentText sx={{ mt: 1 }}>
+                {formatActionsList(dialogState.blockers)}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -246,8 +238,8 @@ const Provider: React.FC = () => {
             </DialogTitle>
             <DialogContent dividers>
               <DialogContentText>
-                No active payment sessions found. You can proceed with migrating
-                this team's payment provider from GOV.UK Pay to Stripe.
+                After checking that no active GOV.UK Pay sessions are underway,
+                the migration will start immediately.
               </DialogContentText>
               <DialogContentText sx={{ mt: 1 }}>
                 This action cannot be undone. All future payment sessions will
@@ -262,7 +254,11 @@ const Provider: React.FC = () => {
               >
                 Cancel
               </Button>
-              <Button onClick={handleConfirmMigration} variant="contained">
+              <Button
+                onClick={handleMigration}
+                variant="contained"
+                disabled={isMigrating}
+              >
                 Migrate to Stripe
               </Button>
             </DialogActions>

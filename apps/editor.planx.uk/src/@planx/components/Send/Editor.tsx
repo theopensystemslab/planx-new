@@ -8,7 +8,7 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikProvider, getIn } from "formik";
 import type { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useCallback, useId } from "react";
+import React, { useCallback } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -17,8 +17,8 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
-import { WarningContainer } from "../shared/Preview/WarningContainer";
 import type { EditorProps } from "../shared/types";
 import EmailSection from "./EmailSection";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
@@ -37,7 +37,6 @@ const SendComponent: React.FC<Props> = (props) => {
     state.flowSlug,
     state.id,
   ]);
-  const submissionsWarningId = useId();
 
   const { data: flowData } = useFlowEmailId(id);
   const existingEmailId = flowData?.flowsByPK?.submissionEmailId;
@@ -269,24 +268,17 @@ const SendComponent: React.FC<Props> = (props) => {
             </>
           </ErrorWrapper>
           <ModalSectionContent>
-            <WarningContainer aria-labelledby={submissionsWarningId}>
-              <FactCheckIcon />
-              <Typography
-                id={submissionsWarningId}
-                variant="body2"
-                sx={{ ml: 2 }}
+            <WarningContainer icon={FactCheckIcon}>
+              Records of submissions can be viewed in the{" "}
+              <Link
+                href={`/${teamSlug}/${flowSlug}/submissions`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                Records of submissions can be viewed in the{" "}
-                <Link
-                  href={`/${teamSlug}/${flowSlug}/submissions`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Submissions
-                </Link>{" "}
-                log in the left-hand menu. Editors can download successful
-                submissions within 28 days from receipt.
-              </Typography>
+                Submissions
+              </Link>{" "}
+              log in the left-hand menu. Editors can download successful
+              submissions within 28 days from receipt.
             </WarningContainer>
           </ModalSectionContent>
         </ModalSection>

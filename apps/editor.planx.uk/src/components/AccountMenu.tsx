@@ -16,12 +16,14 @@ import React, { useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { CloseButton } from "ui/shared/CloseButton";
 
-const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
+const ProfileSection = styled(MuiToolbar, {
+  shouldForwardProp: (prop) => prop !== "compact",
+})<{ compact?: boolean }>(({ theme, compact }) => ({
   width: "inherit",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  padding: theme.spacing(0.5, 0.5, 1, 0.5),
+  padding: compact ? 0 : theme.spacing(0.5, 0.5, 1, 0.5),
   backgroundColor: theme.palette.background.paper,
   borderRight: `1px solid ${theme.palette.border.light}`,
   borderTop: `1px solid ${theme.palette.border.light}`,
@@ -56,7 +58,7 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ compact = false }) => {
 
   return (
     <>
-      <ProfileSection disableGutters>
+      <ProfileSection disableGutters compact={compact}>
         <IconButton
           ref={anchorRef}
           edge="end"
@@ -65,7 +67,8 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ compact = false }) => {
           onClick={handleMenuToggle}
           size="large"
           sx={{
-            padding: "0.25em",
+            padding: compact ? "0.75em 0.25em" : "0.25em",
+            borderRadius: compact ? 0 : undefined,
             width: "100%",
             justifyContent: compact ? "center" : "flex-start",
           }}

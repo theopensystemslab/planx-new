@@ -103,7 +103,7 @@ describe("team_invoice_details", () => {
     });
 
     test("can query team_invoice_details", () => {
-      expect(i.queries).not.toContain("team_invoice_details");
+      expect(i.queries).toContain("team_invoice_details");
     });
 
     test("cannot create, update, or delete team_invoice_details", () => {

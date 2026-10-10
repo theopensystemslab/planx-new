@@ -1,8 +1,10 @@
 import {
   calculateStripeSplit,
+  formatStripeMetadata,
   getFeeBreakdown,
 } from "@opensystemslab/planx-core";
 import type { FeeBreakdown, Session } from "@opensystemslab/planx-core/types";
+import { getUnixTime } from "date-fns";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
@@ -12,15 +14,18 @@ import { stripe } from "../client.js";
 import { getStripeId } from "../helpers.js";
 import { insertStripePaymentStatus } from "../webhook/paymentStatus/service.js";
 import { buildLineItems } from "./lineItems.js";
+import { getCheckoutSessionExpiry } from "./paymentRequest.js";
+import { buildPaymentRequestReturnURL } from "./returnURL.js";
 import type {
   CheckoutSessionStatusResponse,
   CreateCheckoutSessionInput,
   CreateCheckoutSessionResponse,
+  CreatePaymentRequestCheckoutSessionInput,
 } from "./types.js";
 
 const getFeeBreakdownForSession = async (
   sessionId: string,
-): Promise<FeeBreakdown | null> => {
+): Promise<FeeBreakdown> => {
   const response = await $api.client.request<{
     session: Partial<{
       passportData: Session["data"]["passport"]["data"];
@@ -37,7 +42,23 @@ const getFeeBreakdownForSession = async (
   );
 
   const passportData = response?.session?.passportData;
-  return passportData ? getFeeBreakdown(passportData) : null;
+
+  if (!passportData) {
+    throw new ServerError({
+      status: 422,
+      message: `Session ${sessionId} has no passport data to build a fee breakdown from`,
+    });
+  }
+
+  try {
+    return getFeeBreakdown(passportData);
+  } catch (error) {
+    throw new ServerError({
+      status: 422,
+      message: `Session ${sessionId} has an invalid fee breakdown`,
+      cause: error,
+    });
+  }
 };
 
 const getInitiatedCheckoutSessionIds = async (
@@ -70,7 +91,7 @@ const getInitiatedCheckoutSessionIds = async (
  * Cancelling or abandoning the Stripe Checkout leaves the session open (for 24h)
  * Without this check an applicant could pay for an earlier session in another tab
  */
-const expirePreviousCheckoutSessions = async (
+export const expirePreviousCheckoutSessions = async (
   sessionId: string,
 ): Promise<void> => {
   const checkoutSessionIds = await getInitiatedCheckoutSessionIds(sessionId);
@@ -98,53 +119,54 @@ const expirePreviousCheckoutSessions = async (
 };
 
 /**
- * Create a Stripe Checkout Session and return the hosted checkout URL
+ * Keys set by PlanX on every Stripe payment, which the API relies on to link a payment back to its session
+ * These always take precedence over Editor-configured metadata
  */
-export const createStripeCheckoutSession = async ({
+const getReservedPaymentMetadata = (sessionId: string) => ({
+  sessionId,
+  // Non-prod environments share a Stripe sandbox
+  // This identifies which environment owns this payment
+  origin: process.env.API_URL_EXT!,
+});
+
+interface DestinationChargeCheckoutSessionInput {
+  sessionId: string;
+  flowId: string;
+  teamSlug: string;
+  connectedAccountId: string;
+  feeBreakdown: FeeBreakdown;
+  returnURL: string;
+  metadata: Record<string, string>;
+  customerEmail?: string;
+  expiresAt?: Date;
+}
+
+/**
+ * Create a Checkout Session for a destination charge to the team's connected account
+ *
+ * @docs https://docs.stripe.com/connect/destination-charges
+ */
+const createDestinationChargeCheckoutSession = async ({
   sessionId,
   flowId,
-  amount,
-  returnURL,
   teamSlug,
   connectedAccountId,
+  feeBreakdown,
+  returnURL,
   metadata,
-}: CreateCheckoutSessionInput): Promise<CreateCheckoutSessionResponse> => {
+  customerEmail,
+  expiresAt,
+}: DestinationChargeCheckoutSessionInput): Promise<CreateCheckoutSessionResponse> => {
   await expirePreviousCheckoutSessions(sessionId);
 
   const separator = returnURL.includes("?") ? "&" : "?";
 
-  const feeBreakdown = await getFeeBreakdownForSession(sessionId).catch(
-    () => null,
-  );
-
-  const lineItems = feeBreakdown
-    ? buildLineItems(feeBreakdown)
-    : // Fallback values to ensure checkout is not blocked
-      [
-        {
-          price_data: {
-            currency: "gbp",
-            product_data: { name: "Planning application fee" },
-            unit_amount: amount,
-          },
-          quantity: 1,
-        },
-      ];
+  const lineItems = buildLineItems(feeBreakdown);
 
   // PlanX's cut (the Stripe application fee)
-  const split = feeBreakdown ? calculateStripeSplit(feeBreakdown) : undefined;
+  const split = calculateStripeSplit(feeBreakdown);
   // 0 is not a valid fee for Stripe, must be undefined if there's no fee amount
-  const applicationFeeAmount = split?.applicationFeeAmount || undefined;
-
-  const paymentMetadata = {
-    ...metadata,
-    sessionId,
-    flowId,
-    teamSlug,
-    // Non-prod environments share a Stripe sandbox
-    // This identifies which environment owns this payment
-    origin: process.env.API_URL_EXT!,
-  };
+  const applicationFeeAmount = split.applicationFeeAmount || undefined;
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
@@ -153,13 +175,15 @@ export const createStripeCheckoutSession = async ({
     line_items: lineItems,
     success_url: `${returnURL}${separator}stripeSessionId={CHECKOUT_SESSION_ID}`,
     cancel_url: `${returnURL}${separator}cancelled=true`,
-    metadata: paymentMetadata,
+    customer_email: customerEmail,
+    expires_at: expiresAt && getUnixTime(expiresAt),
+    metadata,
     payment_intent_data: {
       on_behalf_of: connectedAccountId,
       transfer_data: { destination: connectedAccountId },
       application_fee_amount: applicationFeeAmount,
       // PaymentIntent metadata is returned when the webhook is hit by Stripe
-      metadata: paymentMetadata,
+      metadata,
     },
   });
 
@@ -168,12 +192,75 @@ export const createStripeCheckoutSession = async ({
     flowId,
     sessionId,
     teamSlug,
-    amount: session.amount_total ?? amount,
+    amount: session.amount_total ?? split.amount,
     feeBreakdown,
-    metadata: paymentMetadata,
+    metadata,
   });
 
   return { url: session.url };
+};
+
+/**
+ * Create a Stripe Checkout Session for an applicant paying for their own session
+ */
+export const createStripeCheckoutSession = async ({
+  sessionId,
+  flowId,
+  returnURL,
+  teamSlug,
+  connectedAccountId,
+  metadata,
+}: CreateCheckoutSessionInput): Promise<CreateCheckoutSessionResponse> => {
+  const feeBreakdown = await getFeeBreakdownForSession(sessionId);
+
+  return createDestinationChargeCheckoutSession({
+    sessionId,
+    flowId,
+    teamSlug,
+    connectedAccountId,
+    feeBreakdown,
+    returnURL,
+    metadata: { ...metadata, ...getReservedPaymentMetadata(sessionId) },
+  });
+};
+
+/**
+ * Create a Stripe Checkout Session for a nominated payee paying an ITP request
+ */
+export const createPaymentRequestStripeCheckoutSession = async ({
+  paymentRequest,
+  connectedAccountId,
+}: CreatePaymentRequestCheckoutSessionInput): Promise<CreateCheckoutSessionResponse> => {
+  const { id, sessionId, session, feeBreakdown } = paymentRequest;
+
+  if (!feeBreakdown) {
+    throw new ServerError({
+      status: 422,
+      message: `Payment request ${id} has no fee breakdown`,
+    });
+  }
+
+  const formattedMetadata = formatStripeMetadata({
+    metadata: paymentRequest.metadata,
+    userPassport: session.passport,
+    paidViaInviteToPay: true,
+  });
+
+  return createDestinationChargeCheckoutSession({
+    sessionId,
+    flowId: session.flowId,
+    teamSlug: session.flow.team.slug,
+    connectedAccountId,
+    feeBreakdown,
+    returnURL: buildPaymentRequestReturnURL(session.flow, id),
+    metadata: {
+      ...formattedMetadata,
+      paidViaInviteToPay: "true",
+      ...getReservedPaymentMetadata(sessionId),
+    },
+    customerEmail: paymentRequest.payeeEmail,
+    expiresAt: getCheckoutSessionExpiry(paymentRequest.expiresAt, new Date()),
+  });
 };
 
 /**
@@ -191,7 +278,7 @@ const recordInitiatedPayment = async ({
   sessionId: string;
   teamSlug: string;
   amount: number;
-  feeBreakdown: FeeBreakdown | null;
+  feeBreakdown: FeeBreakdown;
   metadata: Record<string, string>;
 }): Promise<void> => {
   try {

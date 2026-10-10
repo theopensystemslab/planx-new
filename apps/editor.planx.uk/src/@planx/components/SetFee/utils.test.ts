@@ -16,7 +16,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        applyPaymentProcessingFee: false,
       });
 
       expect(result).toEqual({
@@ -40,7 +39,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        applyPaymentProcessingFee: false,
       });
 
       expect(result).toEqual({
@@ -65,7 +63,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: true,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        applyPaymentProcessingFee: false,
       });
 
       expect(result).toEqual({
@@ -90,7 +87,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 150,
         applyServiceCharge: false,
-        applyPaymentProcessingFee: false,
       });
 
       expect(result).toEqual({
@@ -115,7 +111,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        applyPaymentProcessingFee: false,
       });
 
       expect(result).toEqual({
@@ -138,7 +133,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 150,
         applyServiceCharge: false,
-        applyPaymentProcessingFee: false,
       });
 
       expect(result).toEqual({
@@ -164,7 +158,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: true,
         fastTrackFeeAmount: 183,
         applyServiceCharge: false,
-        applyPaymentProcessingFee: false,
       });
 
       expect(result).toEqual({
@@ -191,7 +184,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        applyPaymentProcessingFee: false,
       });
 
       expect(result).toEqual({
@@ -216,7 +208,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 50,
         applyServiceCharge: true,
-        applyPaymentProcessingFee: false,
       });
 
       expect(result).toEqual({
@@ -242,7 +233,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: true,
-        applyPaymentProcessingFee: false,
       });
 
       expect(result).toEqual({
@@ -251,61 +241,6 @@ describe("handleSetFees() function", () => {
         "application.fee.payable.VAT": 8,
         "application.fee.serviceCharge": 40,
         "application.fee.serviceCharge.VAT": 8,
-      });
-    });
-  });
-
-  describe("adding payment processing fee", () => {
-    it("does not add payment processing fee if the SetFee toggle is `off`", () => {
-      const incomingPassport: Store.Passport = {
-        data: {
-          "application.fee.calculated": 200,
-        },
-      };
-
-      const result = handleSetFees({
-        passport: incomingPassport,
-        applyCalculatedVAT: false,
-        fastTrackFeeAmount: 0,
-        applyServiceCharge: false,
-        applyPaymentProcessingFee: false,
-      });
-
-      expect(result).toEqual({
-        "application.fee.calculated": 200,
-        "application.fee.payable": 200,
-        "application.fee.payable.VAT": 0,
-      });
-    });
-
-    it("adds payment processing fee and VAT on top of all other applicable charges if Set toggle is `on`", () => {
-      const incomingPassport: Store.Passport = {
-        data: {
-          "application.type": ["preApp"],
-          "application.fee.calculated": 200,
-          "application.fastTrack": ["yes"],
-        },
-      };
-
-      const result = handleSetFees({
-        passport: incomingPassport,
-        applyCalculatedVAT: true,
-        fastTrackFeeAmount: 80,
-        applyServiceCharge: true,
-        applyPaymentProcessingFee: true,
-      });
-
-      expect(result).toEqual({
-        "application.fee.calculated": 200,
-        "application.fee.calculated.VAT": 40,
-        "application.fee.payable": 388.60799999999995, // total payable before payment processing = 384; 1% fee = 3.84 + 20% VAT =
-        "application.fee.payable.VAT": 64.768,
-        "application.fee.fastTrack": 80,
-        "application.fee.fastTrack.VAT": 16,
-        "application.fee.serviceCharge": 40,
-        "application.fee.serviceCharge.VAT": 8,
-        "application.fee.paymentProcessing": 3.84,
-        "application.fee.paymentProcessing.VAT": 0.768,
       });
     });
   });

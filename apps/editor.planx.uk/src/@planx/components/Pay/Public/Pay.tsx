@@ -105,7 +105,10 @@ function PayWithProvider({
   );
 
   const isTeamSupported = state.status !== "unsupported_team";
-  const showPayOptions = props.allowInviteToPay && !props.hidePay;
+
+  // TODO: Remove provider check once ITP live for Stripe
+  const showPayOptions =
+    props.allowInviteToPay && !props.hidePay && paymentProvider !== "stripe";
 
   useEffect(() => {
     // Skip component when fee is negative

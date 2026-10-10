@@ -1,4 +1,5 @@
 import type { Breadcrumbs } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { act, screen, waitFor } from "@testing-library/react";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
@@ -21,8 +22,11 @@ global.URL.createObjectURL = vi.fn();
 
 const { getState, setState } = useStore;
 
+const submissionServiceFlow = { send: { type: TYPES.Send } };
+
 beforeEach(() => {
   mockedUploadPrivateFile.mockClear();
+  act(() => setState({ flow: submissionServiceFlow }));
 });
 
 test("recovers previously submitted files when clicking the back button", async () => {
@@ -119,7 +123,7 @@ it("should not have any accessibility violations", async () => {
   expect(results).toHaveNoViolations();
 });
 
-test("shows the file upload option by default and requires user data to continue from either page", async () => {
+test("shows the file upload option in submission services and requires user data to continue from either page", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = await setup(
@@ -154,8 +158,9 @@ test("shows the file upload option by default and requires user data to continue
   ).toBeInTheDocument();
 });
 
-test("hides the upload option and allows user to continue without drawing if editor specifies", async () => {
+test("hides the upload option and allows user to continue without drawing in non-submission services", async () => {
   const handleSubmit = vi.fn();
+  act(() => setState({ flow: {} }));
 
   const { user } = await setup(
     <DrawBoundary
@@ -165,7 +170,6 @@ test("hides the upload option and allows user to continue without drawing if edi
       title="Draw a boundary"
       titleForUploading="Upload a file"
       handleSubmit={handleSubmit}
-      hideFileUpload={true}
     />,
   );
 
@@ -270,6 +274,7 @@ test("appends to existing '_requestedFiles' value", async () => {
   };
 
   const flow = {
+    ...submissionServiceFlow,
     _root: {
       edges: ["previousFileUploadComponent", "DrawBoundary"],
     },
@@ -313,7 +318,6 @@ test("appends to existing '_requestedFiles' value", async () => {
         description: "",
         titleForUploading: "Upload a location plan",
         descriptionForUploading: "",
-        hideFileUpload: false,
         fn: "proposal.site",
       },
     },

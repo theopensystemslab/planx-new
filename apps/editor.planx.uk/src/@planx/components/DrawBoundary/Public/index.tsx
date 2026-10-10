@@ -53,9 +53,10 @@ const slotsSchema = array()
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
-  const [passport, teamSlug] = useStore((state) => [
+  const [passport, teamSlug, isSubmissionService] = useStore((state) => [
     state.computePassport(),
     state.teamSlug,
+    state.isSubmissionService(),
   ]);
   const drawViewRef = useRef<HTMLDivElement>(null);
   const uploadViewRef = useRef<HTMLDivElement>(null);
@@ -158,11 +159,11 @@ export default function Component(props: Props) {
 
     // Used the map
     if (page === "draw") {
-      if (!props.hideFileUpload && !boundary) {
+      if (isSubmissionService && !boundary) {
         setMapValidationError("Draw a boundary");
       }
 
-      if (props.hideFileUpload && !boundary) {
+      if (!isSubmissionService && !boundary) {
         props.handleSubmit?.({ data: { ...newPassportData } });
       }
 
@@ -274,7 +275,7 @@ export default function Component(props: Props) {
                   by selecting and dragging the points, or you can erase it by
                   selecting the reset button and draw a new custom boundary.
                 </p>
-                {!props.hideFileUpload && (
+                {isSubmissionService && (
                   <p style={visuallyHidden}>
                     If you prefer to upload a file instead of using the
                     interactive map, please select "Upload a location plan
@@ -320,7 +321,7 @@ export default function Component(props: Props) {
                   {area?.toLocaleString("en-GB") ?? 0} m²
                 </Typography>
               </Typography>
-              {!props.hideFileUpload && (
+              {isSubmissionService && (
                 <Link
                   component="button"
                   onClick={() => setPage("upload")}

@@ -206,9 +206,11 @@ declare module "@mui/material/Drawer" {
 // Add a smaller border radius variant, used for compact elements like menu items
 declare module "@mui/material/styles" {
   interface Shape {
+    borderRadiusLg: number;
     borderRadiusSm: number;
   }
   interface ShapeOptions {
+    borderRadiusLg?: number;
     borderRadiusSm?: number;
   }
 }

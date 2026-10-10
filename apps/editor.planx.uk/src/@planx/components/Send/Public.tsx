@@ -1,15 +1,15 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
-import Typography from "@mui/material/Typography";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
+import Link from "@mui/material/Link";
 import { useMutation } from "@tanstack/react-query";
 import { logger } from "airbrake";
 import Bowser from "bowser";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { createSendEvents } from "lib/api/send/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useId } from "react";
+import React, { useEffect } from "react";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import Card from "../shared/Preview/Card";
-import { WarningContainer } from "../shared/Preview/WarningContainer";
 import type { PublicProps } from "../shared/types";
 import type { Send } from "./model";
 import { DEFAULT_DESTINATION, getCombinedEventsPayload } from "./model";
@@ -37,17 +37,28 @@ const SendComponent: React.FC<Props> = ({
  * Skip queuing up Send events on non-Save&Return layout routes because they don't record lowcal_session data
  */
 const SkipSendWarning: React.FC<Props> = (props) => {
-  const warningId = useId();
-
   return (
     <Card handleSubmit={props.handleSubmit}>
-      <WarningContainer aria-labelledby={warningId}>
-        <ErrorOutline />
-        <Typography id={warningId} variant="body1" sx={{ ml: 2 }}>
-          You can only test submissions on published routes where Save & Return
-          is enabled. Select <strong>Continue</strong> to finish reviewing
-          content and skip submission.
-        </Typography>
+      <WarningContainer icon={ErrorOutlineOutlined}>
+        <p>This preview is for reviewing content only. You cannot:</p>
+        <ul>
+          <li>send test submissions</li>
+          <li>make a test payment</li>
+          <li>save and return to a submission</li>
+        </ul>
+        <p>
+          To test any of these, use the published version of the service in the
+          staging environment.
+        </p>
+        <p>
+          <Link
+            href="https://opensystemslab.notion.site/25-Test-your-Submit-services-459a91cfc50d4f4aafafa56c770ae1f7"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read the guide to testing submission services (opens in a new tab)
+          </Link>
+        </p>
       </WarningContainer>
     </Card>
   );

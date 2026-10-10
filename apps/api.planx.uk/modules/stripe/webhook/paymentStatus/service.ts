@@ -32,11 +32,8 @@ export async function recordStripePaymentIntentStatus(
   );
   if (!ownedPaymentIntent) return;
 
-  const { sessionId, flowId, teamSlug } = ownedPaymentIntent.metadata;
-  const feeBreakdown = deriveFeeBreakdown(
-    sessionId,
-    ownedPaymentIntent.passportData,
-  );
+  const { sessionId, flowId, teamSlug, passportData } = ownedPaymentIntent;
+  const feeBreakdown = deriveFeeBreakdown(sessionId, passportData);
 
   try {
     await insertStripePaymentStatus({

@@ -3,7 +3,6 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -18,7 +17,6 @@ import { Switch } from "ui/shared/Switch";
 
 import type { SetFee } from "./model";
 import {
-  DEFAULT_PAYMENT_PROCESSING_PERCENTAGE,
   DEFAULT_SERVICE_CHARGE_THRESHOLD,
   parseSetFee,
   validationSchema,
@@ -144,41 +142,6 @@ function SetFeeComponent(props: Props) {
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
-        <ModalSectionContent title="Payment processing fee">
-          <InputRow>
-            <Switch
-              checked={formik.values.applyPaymentProcessingFee}
-              onChange={() =>
-                formik.setFieldValue(
-                  "applyPaymentProcessingFee",
-                  !formik.values.applyPaymentProcessingFee,
-                )
-              }
-              label="Put payment processing fee to applicants"
-              disabled={props.disabled}
-            />
-          </InputRow>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            If your council does not wish to absorb transaction fees incurred by
-            the payment provider for this service, use this option to apply an
-            additional {DEFAULT_PAYMENT_PROCESSING_PERCENTAGE * 100}% of{" "}
-            <strong>application.fee.payable</strong> plus {VAT_PERCENTAGE * 100}
-            % VAT payment processing fee to the amount owed by the applicant.
-          </Typography>
-          {!hasFeatureFlag("STRIPE_MIGRATION") ? (
-            <Typography variant="body2" sx={{ mb: 2 }}>
-              Please note that it is your responsibility to configure which
-              credit card types are accepted in your GOV.UK Pay account.{" "}
-              {DEFAULT_PAYMENT_PROCESSING_PERCENTAGE * 100}% is an average
-              processing fee only; American Express and non-EU credit cards are
-              likely to have higher rates.
-            </Typography>
-          ) : (
-            <></>
-          )}
-        </ModalSectionContent>
-      </ModalSection>
-      <ModalSection>
         <ModalSectionContent title="Example" Icon={Code}>
           <Typography variant="body2" sx={{ mb: 2 }}>
             This example output is based on an incoming{" "}
@@ -195,8 +158,6 @@ function SetFeeComponent(props: Props) {
                   applyCalculatedVAT: formik.values.applyCalculatedVAT,
                   fastTrackFeeAmount: formik.values.fastTrackFeeAmount,
                   applyServiceCharge: formik.values.applyServiceCharge,
-                  applyPaymentProcessingFee:
-                    formik.values.applyPaymentProcessingFee,
                 }),
               },
             })}

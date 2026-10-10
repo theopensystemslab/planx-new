@@ -1,6 +1,8 @@
 import { gql, useSubscription } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 
+import { EDITOR_ROLES } from "../../ui/editor/Permission";
+
 const GET_UNRESOLVED_NOTIFICATIONS = gql`
   subscription GetUnresolvedNotificationsForTeam($teamId: Int!) {
     notifications(
@@ -17,11 +19,15 @@ interface QueryResult {
 }
 
 export const useNotificationsCount = (): number => {
-  const teamId = useStore((state) => state.teamId);
+  const [teamId, role] = useStore((state) => [
+    state.teamId,
+    state.getUserRoleForCurrentTeam(),
+  ]);
+  const hasPermission = Boolean(role && EDITOR_ROLES.includes(role));
 
   const { data } = useSubscription<QueryResult>(GET_UNRESOLVED_NOTIFICATIONS, {
     variables: { teamId },
-    skip: !teamId,
+    skip: !teamId || !hasPermission,
   });
 
   return data?.notifications?.length ?? 0;

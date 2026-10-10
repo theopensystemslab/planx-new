@@ -16,6 +16,7 @@ export const payee = {
 
 export const applicant = {
   name: "Applic Ant",
+  email: "the-applicant@opensystemslab.io",
 };
 
 export const paymentAmountPounds = 123.45;

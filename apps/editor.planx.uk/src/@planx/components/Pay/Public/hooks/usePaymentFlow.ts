@@ -15,7 +15,7 @@ export const usePaymentFlow = (
   paymentProvider?: PaymentProvider,
 ): UsePaymentProviderResult => {
   const govPay = useGovUkPay(props, dispatch, fee);
-  const stripe = useStripePay(props, dispatch, fee);
+  const stripe = useStripePay(props, dispatch);
   // A team without a payment provider can still use Pay with props.hidePay
   const noProvider = useNoPaymentProvider(props, dispatch);
 

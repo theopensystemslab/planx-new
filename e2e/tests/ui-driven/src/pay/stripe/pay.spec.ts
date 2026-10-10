@@ -55,7 +55,7 @@ test.describe("Stripe integration @regression", () => {
       .poll(async () => {
         const session = await findSession({ adminGQLClient, sessionId });
         return session?.data?.breadcrumbs?.[payNodeId]?.data?.[
-          "application.fee.reference"
+          "application.fee.reference.stripe"
         ];
       })
       .toEqual(paymentIntent.id);

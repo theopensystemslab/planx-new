@@ -19,8 +19,6 @@ export interface CreateStripeCheckoutSession {
   teamSlug: string;
   sessionId: string;
   flowId: string;
-  /** Fee in pence */
-  amount: number;
   metadata: Record<string, string>;
 }
 
@@ -51,3 +49,17 @@ export type StripeConnectError =
 
 export type StripeConnectResult =
   { type: "success" } | { type: "error"; message: StripeConnectError };
+
+export type MigrationBlockerReason =
+  "stripeNotConnected" | "activeGovpaySessions";
+
+export interface MigrationBlocker {
+  reason: MigrationBlockerReason;
+  /** conditional because it will only show for activeGovpaySessions */
+  count?: number;
+}
+
+export interface StripeCanMigrate {
+  canMigrate: boolean;
+  blockers: MigrationBlocker[];
+}

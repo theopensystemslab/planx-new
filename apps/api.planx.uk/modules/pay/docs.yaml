@@ -42,9 +42,14 @@ components:
           schema:
             type: object
             properties:
+              email:
+                type: string
+                format: email
+                description: The applicant's email
               payeeEmail:
                 type: string
                 format: email
+                description: The payee's email
               payeeName:
                 type: string
               applicantName:
@@ -382,3 +387,13 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CreatePaymentResponse"
+        "404":
+          $ref: "#/components/responses/ErrorMessage"
+        "409":
+          $ref: "#/components/responses/ErrorMessage"
+        "422":
+          description: >-
+            The applicant has already paid for this session via a Stripe Checkout Session, so a payment request cannot be created.
+        "500":
+          description: >-
+            Failed to lock the session, expire the applicant's open Stripe Checkout Sessions, or create the payment request.

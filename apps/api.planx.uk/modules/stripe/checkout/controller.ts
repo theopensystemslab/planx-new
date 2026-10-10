@@ -1,10 +1,12 @@
 import { ServerError } from "../../../errors/index.js";
 import {
+  createPaymentRequestStripeCheckoutSession,
   createStripeCheckoutSession,
   getStripeCheckoutSessionStatus,
 } from "./service.js";
 import type {
   CreateCheckoutSessionController,
+  CreatePaymentRequestCheckoutSessionController,
   GetCheckoutSessionStatusController,
 } from "./types.js";
 
@@ -17,14 +19,13 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
   next,
 ) => {
   const { localAuthority } = res.locals.parsedReq.params;
-  const { sessionId, flowId, amount, metadata } = res.locals.parsedReq.body;
+  const { sessionId, flowId, metadata } = res.locals.parsedReq.body;
   const { connectedAccountId, returnURL } = res.locals;
 
   try {
     const result = await createStripeCheckoutSession({
       sessionId,
       flowId,
-      amount,
       returnURL,
       teamSlug: localAuthority,
       connectedAccountId,
@@ -42,6 +43,31 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
     );
   }
 };
+
+/**
+ * Create a Stripe Checkout Session for an ITP request, returning the checkout URL
+ */
+export const createPaymentRequestCheckoutSession: CreatePaymentRequestCheckoutSessionController =
+  async (_req, res, next) => {
+    const { paymentRequest, connectedAccountId } = res.locals;
+
+    try {
+      const result = await createPaymentRequestStripeCheckoutSession({
+        paymentRequest,
+        connectedAccountId,
+      });
+
+      return res.json(result);
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: `Failed to create Stripe Checkout Session for payment request ${paymentRequest.id}`,
+          status: error instanceof ServerError ? error.status : 500,
+          cause: error,
+        }),
+      );
+    }
+  };
 
 /**
  * Retrieve a Checkout Session's status

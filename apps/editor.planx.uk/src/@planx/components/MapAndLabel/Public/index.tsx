@@ -216,7 +216,7 @@ const FeatureTabs: React.FC = () => {
                 marginTop: 2,
               }}
             >
-              <DeleteIcon color="warning" fontSize="medium" />
+              <DeleteIcon sx={{ color: "warning.dark" }} fontSize="medium" />
               Remove
             </Button>
           </TabPanel>

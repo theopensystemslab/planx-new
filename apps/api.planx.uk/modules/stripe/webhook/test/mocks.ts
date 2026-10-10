@@ -1,12 +1,13 @@
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 
+export const FLOW_ID = "7cd1c4b4-4229-424f-8d04-c9fdc958ef4e";
+export const TEAM_SLUG = "southwark";
+
 export const paymentIntent = {
   id: "pi_test_123",
   amount: 14500,
   metadata: {
     sessionId: "f2d8ca1d-a43b-43ec-b3d9-a9fec63ff19c",
-    flowId: "7cd1c4b4-4229-424f-8d04-c9fdc958ef4e",
-    teamSlug: "southwark",
     origin: "https://api.example.com",
   },
 };
@@ -29,14 +30,24 @@ export const expandedCharge = {
 export const mockSessionLookup = ({
   passportData = null,
   sessionExists = true,
+  flowExists = true,
 }: {
   passportData?: unknown;
   sessionExists?: boolean;
+  flowExists?: boolean;
 } = {}) =>
   queryMock.mockQuery({
     name: "GetStripePaymentSession",
     matchOnVariables: false,
-    data: { session: sessionExists ? { passportData } : null },
+    data: {
+      session: sessionExists
+        ? {
+            flowId: FLOW_ID,
+            flow: flowExists ? { team: { slug: TEAM_SLUG } } : null,
+            passportData,
+          }
+        : null,
+    },
   });
 
 export const getSessionLookup = () =>

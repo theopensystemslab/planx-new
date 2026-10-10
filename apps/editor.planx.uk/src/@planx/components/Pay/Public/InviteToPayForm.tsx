@@ -1,4 +1,4 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutlined";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -6,7 +6,6 @@ import type {
   PaymentRequest,
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useMutation } from "@tanstack/react-query";
 import { notFound, useMatches, useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -16,11 +15,12 @@ import type { APIError } from "lib/api/client";
 import type { CreatePaymentRequest } from "lib/api/inviteToPay/requests";
 import { generateInviteToPayRequest } from "lib/api/inviteToPay/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useId } from "react";
+import React, { useEffect } from "react";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 import { object, string } from "yup";
 
 import { getDefaultContent } from "../model";
@@ -38,7 +38,7 @@ export interface InviteToPayFormProps {
   paymentStatus?: PaymentStatus;
 }
 
-type FormValues = Omit<CreatePaymentRequest, "sessionPreviewKeys">;
+type FormValues = Omit<CreatePaymentRequest, "sessionPreviewKeys" | "email">;
 
 const validationSchema = object({
   payeeName: string()
@@ -81,15 +81,15 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   yourDetailsLabel,
   paymentStatus,
 }) => {
-  const [sessionId, isTestEnvironment] = useStore((state) => [
+  const [sessionId, saveToEmail, isTestEnvironment] = useStore((state) => [
     state.sessionId,
+    state.saveToEmail,
     state.hasAcknowledgedWarning,
   ]);
   const navigate = useNavigate();
   const matches = useMatches();
   const defaults = getDefaultContent();
   const from = usePublicRouteContext();
-  const warningId = useId();
 
   /**
    * Handle differing routes for the confirmation page based on isCustomDomain
@@ -135,6 +135,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     onSubmit: (values) =>
       sendITP({
         ...values,
+        email: saveToEmail || "",
         sessionPreviewKeys: SESSION_PREVIEW_KEYS,
       }),
     validateOnChange: false,
@@ -232,16 +233,11 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
-        <WarningContainer aria-labelledby={warningId}>
-          <ErrorOutline />
-          <Typography
-            id={warningId}
-            variant="body2"
-            sx={{ ml: 2, fontWeight: "bold" }}
-          >
+        <WarningContainer icon={ErrorOutlineOutlined}>
+          <strong>
             Selecting "Send invitation to pay" locks your answers and you'll no
             longer be able to make changes.
-          </Typography>
+          </strong>
         </WarningContainer>
         {isError ? (
           <ErrorWrapper

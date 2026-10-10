@@ -89,7 +89,6 @@ When(
     this.checkoutSessionId = await createCheckoutSession({
       flowId: this.flowId!,
       sessionId: this.sessionId!,
-      feeCase: this.feeCase!,
       metadata:
         this.payComponentMetadata &&
         resolvePayComponentMetadata({
@@ -110,7 +109,6 @@ When(
     this.checkoutSessionId = await createCheckoutSession({
       flowId: this.flowId!,
       sessionId: this.sessionId!,
-      feeCase: this.feeCase!,
     });
     this.paymentIntent = await completeStripeCheckoutSession(
       this.checkoutSessionId,
@@ -125,7 +123,6 @@ When(
     this.checkoutSessionId = await createCheckoutSession({
       flowId: this.flowId!,
       sessionId: this.sessionId!,
-      feeCase: this.feeCase!,
     });
   },
 );
@@ -248,10 +245,7 @@ Then(
   function (this: CustomWorld) {
     assert.deepEqual(
       this.paymentIntent!.metadata,
-      getExpectedPaymentMetadata({
-        flowId: this.flowId!,
-        sessionId: this.sessionId!,
-      }),
+      getExpectedPaymentMetadata({ sessionId: this.sessionId! }),
     );
   },
 );

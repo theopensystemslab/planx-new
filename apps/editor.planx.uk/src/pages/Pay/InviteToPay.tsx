@@ -5,12 +5,12 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import Banner from "ui/public/Banner";
 import ViewApplicationLink from "ui/public/ViewApplicationLink";
+import type { PublicPaymentRequest } from "utils/routeUtils/payQueries";
 
 const List = styled("ul")(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
@@ -23,7 +23,7 @@ const FormInner = styled(Box)(({ theme }) => ({
   },
 }));
 
-const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
+const InviteToPay: React.FC<PublicPaymentRequest> = ({ createdAt, paidAt }) => {
   const theme = useTheme();
   const expiryDate = getExpiryDateForPaymentRequest(createdAt);
   const { helpEmail, helpOpeningHours, helpPhone } = useStore(
@@ -35,15 +35,23 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
       <Banner
         Icon={Check}
         iconTitle={"Success"}
-        heading="Payment invitation sent"
+        heading={paidAt ? "Payment received" : "Payment invitation sent"}
         color={{
           background: theme.palette.success.light,
           text: theme.palette.text.primary,
         }}
       >
         <Typography variant="body2" sx={{ pt: 2, maxWidth: "formWrap" }}>
-          A payment invitation has been sent to your nominee. You will receive
-          an email to confirm when the payment has been completed.
+          {paidAt ? (
+            <>
+              Your nominee has made the payment. Your application has been sent.
+            </>
+          ) : (
+            <>
+              A payment invitation has been sent to your nominee. You will
+              receive an email to confirm when the payment has been completed.
+            </>
+          )}
         </Typography>
       </Banner>
       <Container maxWidth="contentWrap">
@@ -52,7 +60,9 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
             You will be contacted
           </Typography>
           <List>
-            <li>if your nominee fails to make payment by {expiryDate}</li>
+            {!paidAt && (
+              <li>if your nominee fails to make payment by {expiryDate}</li>
+            )}
             <li>
               if there is anything missing from the information you have
               provided so far

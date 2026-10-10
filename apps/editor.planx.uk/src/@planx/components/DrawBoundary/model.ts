@@ -1,6 +1,6 @@
 import { richText } from "lib/yupExtensions";
 import type { SchemaOf } from "yup";
-import { boolean, object, string } from "yup";
+import { object, string } from "yup";
 
 import type { BaseNodeData } from "../shared";
 import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
@@ -17,7 +17,6 @@ export interface DrawBoundary extends BaseNodeData {
   description: string;
   titleForUploading: string;
   descriptionForUploading: string;
-  hideFileUpload?: boolean;
   fn: string;
 }
 
@@ -32,7 +31,6 @@ export const parseDrawBoundary = (
   descriptionForUploading:
     data?.descriptionForUploading ||
     defaultContent?.["descriptionForUploading"],
-  hideFileUpload: data?.hideFileUpload || defaultContent?.["hideFileUpload"],
   fn: defaultContent?.["fn"], // input is disabled, no need to account for data?.fn
   info: data?.info || defaultContent?.["info"],
   policyRef: data?.policyRef || defaultContent?.["policyRef"],
@@ -55,7 +53,6 @@ const defaultContent: DrawBoundary = {
     "<p>Select continue if the red line includes:</p><ul><li><p>the outline of your property boundary</p></li><li><p>any works outside the property boundary</p></li><li><p>areas that will be closed off or you'll need access to during the works</p></li></ul><p>If the red line is wrong go to <strong>More information</strong> for help.</p>",
   howMeasured:
     '<p>We have pre-populated the map with a red outline that includes the entire property using information from Land Registry.</p><p>In some cases, this outline might not include all the works or the areas that will be closed off. This might be because you\'re proposing works to a public highway (such as a dropped kerb), doing works that involve multiple properties, or works to a building that is part of a larger estate.</p><p>In these cases, you should amend the red outline by dragging the edges, or erase it by clicking the 🗑️-icon on the map and draw a new outline.</p><p></p><h1>How to draw and amend the outline</h1><ol><li><p>Move the cursor to the corner you want to start with and click or tap once.<br><br></p><img src="https://api.editor.planx.uk/file/public/9axlxbxo/Draw%20boundary_step%201.png" alt="Move the cursor to the corner you want to start with and click or tap once."><p><br></p></li><li><p>Move the cursor to the next corner and click or tap.<br><br></p><img src="https://api.editor.planx.uk/file/public/5npyu7aq/Draw%20boundary_step%202.png" alt="Move the cursor to the next corner and click or tap."><p><br></p></li><li><p>Repeat until you have the shape you need.<br><br></p><img src="https://api.editor.planx.uk/file/public/3ddotc4q/Draw%20boundary_step%203.png" alt="Repeat until you have the shape you need."><p><br></p></li><li><p>Click or tap the last corner again to stop drawing.<br><br></p><img src="https://api.editor.planx.uk/file/public/pen82j73/Draw%20boundary_step%204.png" alt="Click or tap the last corner again to stop drawing."><p><br></p></li><li><p>To amend the outline, click or tap on a line and drag it into a new position.<br><br></p><img src="https://api.editor.planx.uk/file/public/ko11wuez/Draw%20boundary_step%205.png" alt="To amend the outline, click or tap on a line and drag it into a new position"><p></p></li></ol><p></p>',
-  hideFileUpload: true,
   fn: "proposal.site",
   titleForUploading: "Upload a location plan",
   descriptionForUploading:
@@ -69,7 +66,6 @@ export const validationSchema: SchemaOf<DrawBoundary> =
       description: richText().required(),
       titleForUploading: string().required(),
       descriptionForUploading: richText().required(),
-      hideFileUpload: boolean(),
       fn: string().nullable().required(),
     }),
   );

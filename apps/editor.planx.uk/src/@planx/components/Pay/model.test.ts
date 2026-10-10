@@ -145,6 +145,21 @@ describe("Payment Metadata Schema", () => {
     expect(errors[0]).toMatch(/Keys must be unique/);
   });
 
+  test.each(["sessionId", "origin"])(
+    "the reserved key '%s' cannot be used",
+    async (reservedKey) => {
+      const input = [
+        ...defaults,
+        { key: reservedKey, value: "someValue", type: "static" },
+      ];
+      const errors = await validate(input);
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toMatch(
+        /Keys sessionId and origin are reserved by PlanX and cannot be used/,
+      );
+    },
+  );
+
   test("max 15 entries can be added", async () => {
     const input = [
       ...defaults,

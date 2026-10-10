@@ -111,7 +111,38 @@ test.describe("Nominee journey @regression", () => {
     await markPaymentRequestAsPaid(paymentRequest);
     await navigateToPaymentRequestPage(paymentRequest, page);
 
-    await expect(page.getByText(PAYMENT_NOT_FOUND_TEXT)).toBeVisible();
+    await expect(page.getByText("Payment received")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Pay now" })).toBeHidden();
+  });
+
+  test("responding to a payment request which has been paid, after the expiry period", async ({
+    page,
+    request,
+  }) => {
+    const { paymentRequest } = await setupPaymentRequest(request);
+    await markPaymentRequestAsPaid(paymentRequest);
+    await markPaymentRequestAsExpired(paymentRequest);
+    await navigateToPaymentRequestPage(paymentRequest, page);
+
+    await expect(page.getByText("Payment received")).toBeVisible();
+  });
+
+  test("applicant viewing a payment request which has been paid", async ({
+    page,
+    request,
+  }) => {
+    const { paymentRequest } = await setupPaymentRequest(request);
+    await markPaymentRequestAsPaid(paymentRequest);
+
+    const inviteURL = `/${context.team!.slug!}/${context.flow?.slug}/pay/invite?analytics=false&paymentRequestId=${paymentRequest.id}`;
+    await page.goto(inviteURL);
+
+    await expect(
+      page.getByRole("heading", { name: "Payment received" }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Your application has been sent", { exact: false }),
+    ).toBeVisible();
   });
 
   test("responding to a payment request which has expired", async ({
@@ -143,7 +174,11 @@ async function setupPaymentRequest(
   const sessionId = uuidV4();
   context.sessionIds?.push(sessionId);
   await createSession({ client: adminGQLClient, context, sessionId });
-  const paymentRequest = await createPaymentRequest(request, sessionId);
+  const paymentRequest = await createPaymentRequest(
+    request,
+    sessionId,
+    context.user.email,
+  );
   return { paymentRequest, sessionId };
 }
 
@@ -189,11 +224,12 @@ async function createSession({
 async function createPaymentRequest(
   request: APIRequestContext,
   sessionId: string,
+  email: string,
 ) {
   const response = await request.post(
     `http://localhost:${process.env.API_PORT}/invite-to-pay/${sessionId}`,
     {
-      data: mockPaymentRequestDetails,
+      data: { ...mockPaymentRequestDetails, email },
     },
   );
   return response.json();

@@ -9,8 +9,8 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { object, string } from "yup";
 
-import SendResumeEmail from "./SendResumeEmail";
 import ValidateSession from "./ValidateSession";
+import { InvalidSession } from "./ValidateSession";
 
 export const EmailRequired: React.FC<{
   handleSubmit: (email: string) => void;
@@ -92,26 +92,20 @@ const getInitialEmailValue = (emailQueryParam?: string) => {
 /**
  * Component which handles the "Resume" page used for Save & Return
  * The user can access this page via four "paths"
- * 1. Directly via PlanX, user enters email to trigger "dashboard" email with resume magic links
- * 2. Magic link in email with a sessionId, user enters email to continue application
- * 3. Redirect back from GovPay - sessionId and email come from query params
- * 4. Redirect from localplanning.services - sessionId and email come from query params
+ * 1. Magic link in email with a sessionId, user enters email to continue application
+ * 2. Redirect back from GovPay - sessionId and email come from query params
+ * 3. Redirect from localplanning.services - sessionId and email come from query params
  */
 const ResumePage: React.FC = () => {
   const search = useSearch({
     strict: false,
   });
-  const sessionId = "sessionId" in search ? search.sessionId : undefined;
+  const sessionId = search.sessionId;
 
   const [initialEmail] = useState(getInitialEmailValue(search.email));
-
-  if (sessionId) {
-    return (
-      <ValidateSession sessionId={sessionId} initialEmail={initialEmail} />
-    );
-  }
-
-  return <SendResumeEmail initialEmail={initialEmail} />;
+  if (!sessionId)
+    return <InvalidSession retry={() => window.location.reload()} />;
+  return <ValidateSession sessionId={sessionId} initialEmail={initialEmail} />;
 };
 
 export default ResumePage;

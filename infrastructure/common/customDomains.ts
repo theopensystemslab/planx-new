@@ -37,8 +37,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "camden",
           domain: "planningservices.camden.gov.uk",
-          cloudFrontState: "legacy-with-validation",
-          certificateLocation: "pulumiConfig",
+          cloudFrontState: "shared-final",
         },
         {
           name: "barnet",
@@ -93,7 +92,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "horsham",
           domain: "planningservices.horsham.gov.uk",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "shared-final",
         },
         {
           name: "canterbury",

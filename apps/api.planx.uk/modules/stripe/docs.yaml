@@ -35,7 +35,6 @@ components:
             required:
               - sessionId
               - flowId
-              - amount
               - metadata
             properties:
               sessionId:
@@ -44,11 +43,6 @@ components:
               flowId:
                 type: string
                 format: uuid
-              amount:
-                type: integer
-                format: int32
-                description: Amount to charge, in pence
-                example: 14500
               metadata:
                 type: object
                 required:
@@ -140,6 +134,43 @@ components:
                 enum: [test, live]
                 description: The Stripe mode this environment runs in
                 example: live
+    MigrateResponse:
+      description: >-
+        Result of attempting to migrate a team's payment provider to Stripe.
+        If blocked, no migration is performed and `blockers` explains why.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - canMigrate
+              - blockers
+            properties:
+              canMigrate:
+                type: boolean
+                description: Whether the migration was able to proceed
+                example: false
+              blockers:
+                type: array
+                description: Reasons the migration was blocked; empty when canMigrate is true
+                items:
+                  type: object
+                  required:
+                    - reason
+                  properties:
+                    reason:
+                      type: string
+                      enum:
+                        - stripeNotConnected
+                        - activeGovpaySessions
+                        - checkoutNotConfigured
+                      example: activeGovpaySessions
+                    count:
+                      type: integer
+                      description: >-
+                        Number of active GOV.UK Pay sessions blocking migration.
+                        Only present when reason is activeGovpaySessions.
+                      example: 3
 paths:
   /stripe/connect/{teamSlug}/status:
     get:
@@ -164,6 +195,31 @@ paths:
           description: Team not found.
         "500":
           description: Failed to fetch the Stripe Connect status.
+  /stripe/migrate/{teamSlug}:
+    post:
+      summary: Migrate a team's payment provider to Stripe
+      description: |
+        Checks whether the team has connected a Stripe account, has no GOV.UK Pay
+        payment sessions currently in progress, and has Stripe Checkout configured.
+        If any of these checks fail, the migration is blocked and no changes are made.
+        Otherwise, migrates the team's payment provider to Stripe.
+      tags:
+        - stripe
+      parameters:
+        - $ref: "#/components/parameters/teamSlug"
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/MigrateResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorised"
+        "403":
+          description: The user is not a teamEditor/teamAdmin of this team, or a platformAdmin.
+        "404":
+          description: Team not found.
+        "500":
+          description: Failed to migrate the team's Stripe payment provider.
   /stripe/connect/{teamSlug}:
     get:
       summary: Start Stripe Connect onboarding for a team
@@ -283,11 +339,66 @@ paths:
             Invalid request body or parameters, or a flow or session which doesn't belong to this LPA.
         "409":
           description: |
-            This LPA is not set up to take Stripe payments, because either:
-            - its payment provider is not Stripe
-            - it has not connected a Stripe account
-            - its connected account is no longer connected to our platform
-            - its connected account cannot take payments
+            A payment cannot be taken, because either:
+            - this LPA's payment provider is not Stripe
+            - this LPA has not connected a Stripe account
+            - this LPA's connected account is no longer connected to our platform
+            - this LPA's connected account cannot take payments
+            - the session is locked, awaiting payment via invite to pay
+        "422":
+          description: |
+            A Checkout Session cannot be created for this session, because either:
+            - it has no valid fee breakdown
+            - it has already been paid for
+        "500":
+          description: Failed to create the Stripe Checkout Session.
+  /stripe/payment-request/{paymentRequestId}/checkout-session:
+    post:
+      summary: Create a Stripe Checkout Session for an invite to pay (ITP) request
+      description: |
+        Called when a nominated payee clicks Pay. Creates a Stripe hosted Checkout Session
+        for the payment request and returns its URL.
+
+        Any open Checkout Sessions for the request's session are expired first.
+
+        Docs: [https://docs.stripe.com/api/checkout/sessions/create](https://docs.stripe.com/api/checkout/sessions/create)
+      tags:
+        - stripe
+      parameters:
+        - in: path
+          name: paymentRequestId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          $ref: "#/components/responses/CreateCheckoutSessionResponse"
+        "400":
+          description: Invalid payment request id.
+        "404":
+          description: Payment request not found.
+        "409":
+          description: |
+            A payment cannot be taken, because either:
+            - the payment request has already been paid
+            - the session is not locked, awaiting payment via invite to pay
+            - a GOV.UK Pay payment has already been started for this request
+            - this LPA's payment provider is not Stripe
+            - this LPA has not connected a Stripe account
+            - this LPA's connected account is no longer connected to our platform
+            - this LPA's connected account cannot take payments
+        "410":
+          description: |
+            The payment request can no longer be paid, because either:
+            - it has expired, or expires too soon to open a Checkout Session
+            - its session has been deleted
+        "422":
+          description: |
+            A Checkout Session cannot be created for this payment request, because either:
+            - it has no fee breakdown
+            - its fee breakdown does not match its payment amount
+            - its session has already been paid for
         "500":
           description: Failed to create the Stripe Checkout Session.
   /stripe/checkout-session/{localAuthority}/{checkoutSessionId}:

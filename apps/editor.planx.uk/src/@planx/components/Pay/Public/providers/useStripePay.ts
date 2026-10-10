@@ -13,14 +13,11 @@ import type { FileRouteTypes } from "routeTree.gen";
 import { z } from "zod";
 
 import { makeData } from "../../../shared/utils";
-import { getDefaultContent, toPence } from "../../model";
+import { getDefaultContent } from "../../model";
 import type { Props } from "../Pay";
 import type { StripeAction } from "../types";
 import { Action } from "../types";
-import {
-  PAYMENT_REFERENCE_PASSPORT_KEY,
-  type UsePaymentProviderResult,
-} from "./types";
+import { STRIPE_PASSPORT_KEY, type UsePaymentProviderResult } from "./types";
 
 // Only ever redirect applicants to Stripe's hosted Checkout
 const STRIPE_CHECKOUT_ORIGIN = "https://checkout.stripe.com" as const;
@@ -37,7 +34,6 @@ const isStripeNotConfiguredError = (error: unknown) =>
 export function useStripePay(
   props: Props,
   dispatch: React.Dispatch<StripeAction>,
-  fee: number,
 ): UsePaymentProviderResult {
   const [flowId, sessionId, teamSlug, environment, passport] = useStore(
     (state) => [
@@ -91,11 +87,7 @@ export function useStripePay(
     // TODO: Store full payload
     props.handleSubmit &&
       props.handleSubmit(
-        makeData(
-          props,
-          checkoutStatus?.paymentIntentId,
-          PAYMENT_REFERENCE_PASSPORT_KEY,
-        ),
+        makeData(props, checkoutStatus?.paymentIntentId, STRIPE_PASSPORT_KEY),
       );
   };
 
@@ -119,7 +111,6 @@ export function useStripePay(
         teamSlug,
         sessionId,
         flowId,
-        amount: toPence(fee),
         metadata,
       });
 
@@ -186,7 +177,7 @@ export function useStripePay(
       resumeExistingPayment,
       handleSuccess,
     },
-    passportKey: PAYMENT_REFERENCE_PASSPORT_KEY,
+    passportKey: STRIPE_PASSPORT_KEY,
     hasExistingPayment: hasReturnedFromCheckout,
   };
 }

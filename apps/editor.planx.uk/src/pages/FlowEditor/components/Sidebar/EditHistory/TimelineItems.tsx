@@ -64,12 +64,16 @@ export const OperationTimelineItem = ({
   }
 
   return (
-    <TimeLineItem sx={{ bgcolor: (theme) => theme.palette.info.light }}>
+    <TimeLineItem
+      sx={{
+        color: inUndoScope(i) ? "GrayText" : "inherit",
+        bgcolor: inUndoScope(i) ? "grey.100" : "info.light",
+      }}
+    >
       <Typography
         variant="body3"
         component="ul"
-        sx={{ padding: 1.5, paddingLeft: 3 }}
-        color={inUndoScope(i) ? "GrayText" : "inherit"}
+        sx={{ padding: 1.5, paddingLeft: 3, color: "inherit" }}
       >
         {uniqueFormattedOps.slice(0, OPS_TO_DISPLAY).map((formattedOp, i) => (
           <EditHistoryListItem key={i}>{formattedOp}</EditHistoryListItem>
@@ -90,7 +94,7 @@ export const OperationTimelineItem = ({
             sx={{
               padding: 2,
               paddingLeft: 3.5,
-              color: inUndoScope(i) ? "GrayText" : "inherit",
+              color: "inherit",
               paddingRight: "50px",
             }}
           >

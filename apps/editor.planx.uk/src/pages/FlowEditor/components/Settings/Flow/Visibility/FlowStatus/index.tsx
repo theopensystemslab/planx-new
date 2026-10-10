@@ -4,16 +4,16 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { format } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useId, useState } from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-use";
 import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { useSlackMessage } from "../../../hooks/useSlackMessage";
 import SettingsFormContainer from "../../../shared/SettingsForm";
@@ -45,8 +45,6 @@ const FlowStatus: React.FC = () => {
   const [privacyError, setPrivacyError] = useState(false);
 
   const { mutate: sendSlackMessage } = useSlackMessage();
-  const trialWarningId = useId();
-  const templateWarningId = useId();
 
   const { origin } = useLocation();
 
@@ -90,26 +88,31 @@ const FlowStatus: React.FC = () => {
     >
       {({ formik, data }) => {
         const isTrial = data?.flow.team.settings.isTrial;
+        const isGuidanceOnly = data?.flow.team.settings.isGuidanceOnly;
         const isTemplate = Boolean(data?.flow.templatedFrom);
         const isPublished = Boolean(data?.flow.publishedFlows.length);
+        const isSubmissionService = Boolean(
+          data?.flow.publishedFlows[0]?.hasSendComponent,
+        );
+        const isBlockedAsGuidanceOnly = isGuidanceOnly && isSubmissionService;
 
         return (
           <>
             {isTrial && (
-              <WarningContainer aria-labelledby={trialWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
-                <Typography id={trialWarningId} variant="body2">
-                  Trial accounts cannot set flows online.
-                </Typography>
+              <WarningContainer icon={PendingActionsIcon}>
+                Trial accounts cannot set flows online.
+              </WarningContainer>
+            )}
+            {isBlockedAsGuidanceOnly && (
+              <WarningContainer icon={PendingActionsIcon}>
+                Your current contract doesn't include submission services.
+                Contact the OSL team to upgrade.
               </WarningContainer>
             )}
             {isTemplate && (
-              <WarningContainer aria-labelledby={templateWarningId}>
-                <PendingActionsIcon sx={{ mr: 1 }} />
-                <Typography id={templateWarningId} variant="body2">
-                  Source templates are discoverable from the "Add a new flow"
-                  modal when they are online.
-                </Typography>
+              <WarningContainer icon={PendingActionsIcon}>
+                Source templates are discoverable from the "Add a new flow"
+                modal when they are online.
               </WarningContainer>
             )}
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
@@ -128,7 +131,7 @@ const FlowStatus: React.FC = () => {
                 {formik.values.status}
               </FlowTag>
             </Box>
-            {isProduction && (
+            {isProduction && !isBlockedAsGuidanceOnly && (
               <ErrorWrapper
                 error={
                   privacyError
@@ -141,7 +144,7 @@ const FlowStatus: React.FC = () => {
                     id="set-status-button"
                     data-testid="set-status-button"
                     sx={{ mb: 2 }}
-                    disabled={data?.flow.team.settings.isTrial}
+                    disabled={isTrial}
                     variant="contained"
                     onClick={() => {
                       if (
@@ -163,13 +166,13 @@ const FlowStatus: React.FC = () => {
                 </Box>
               </ErrorWrapper>
             )}
-            {!isProduction && (
+            {!isProduction && !isBlockedAsGuidanceOnly && (
               <Box sx={{ display: "flex" }}>
                 <Button
                   id="set-status-button"
                   data-testid="set-status-button"
                   sx={{ mb: 2 }}
-                  disabled={data?.flow.team.settings.isTrial}
+                  disabled={isTrial}
                   variant="contained"
                   onClick={async () => {
                     await formik.setFieldValue(

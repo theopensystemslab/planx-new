@@ -1,28 +1,38 @@
+import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { paymentRequestContext } from "lib/graphql/contexts";
-import { getRetentionPeriod } from "lib/pay";
+import { isPaymentRequestExpired } from "lib/pay";
+
+/**
+ * Payment request fields readable by the Hasura "public" role
+ * (with the required PaymentRequestContext)
+ */
+export type PublicPaymentRequest = Pick<
+  PaymentRequest,
+  "id" | "sessionPreviewData" | "feeBreakdown" | "createdAt" | "paymentAmount"
+> & {
+  govPayPaymentId: string | null;
+  stripePaymentId: string | null;
+  paidAt: string | null;
+};
 
 export const getPaymentRequest = async (
   paymentRequestId: string,
-): Promise<PaymentRequest | undefined> => {
+): Promise<PublicPaymentRequest | undefined> => {
   try {
     const {
       data: {
         paymentRequests: [paymentRequest],
       },
     } = await client.query<{
-      paymentRequests: PaymentRequest[];
+      paymentRequests: PublicPaymentRequest[];
     }>({
       query: gql`
-        query GetPaymentRequestById($id: uuid!, $retentionPeriod: timestamptz) {
+        query GetPaymentRequestById($id: uuid!) {
           paymentRequests: payment_requests(
             limit: 1
-            where: {
-              id: { _eq: $id }
-              paid_at: { _is_null: true }
-              created_at: { _gt: $retentionPeriod }
-            }
+            where: { id: { _eq: $id } }
           ) {
             id
             sessionPreviewData: session_preview_data
@@ -30,16 +40,19 @@ export const getPaymentRequest = async (
             createdAt: created_at
             paymentAmount: payment_amount
             govPayPaymentId: govpay_payment_id
+            stripePaymentId: stripe_payment_id
             paidAt: paid_at
           }
         }
       `,
       variables: {
         id: paymentRequestId,
-        retentionPeriod: getRetentionPeriod(),
       },
       context: paymentRequestContext(paymentRequestId),
     });
+
+    if (!paymentRequest || isPaymentRequestExpired(paymentRequest)) return;
+
     return paymentRequest;
   } catch (error) {
     console.error(error);

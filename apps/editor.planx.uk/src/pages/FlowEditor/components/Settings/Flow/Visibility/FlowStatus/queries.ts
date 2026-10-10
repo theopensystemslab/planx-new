@@ -10,11 +10,16 @@ export const GET_FLOW_STATUS = gql`
       team {
         settings: team_settings {
           isTrial: is_trial
+          isGuidanceOnly: is_guidance_only
         }
       }
       templatedFrom: templated_from
-      publishedFlows: published_flows(limit: 1) {
+      publishedFlows: published_flows(
+        limit: 1
+        order_by: { created_at: desc }
+      ) {
         id
+        hasSendComponent: has_send_component
       }
       firstOnlineAt: first_online_at
     }

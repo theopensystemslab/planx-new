@@ -70,7 +70,7 @@ describe("Provider", () => {
     ).toBeInTheDocument();
   });
 
-  it("hides the migrate button for a GOV.UK Pay team without a connected Stripe account", async () => {
+  it("disables the migrate button for a GOV.UK Pay team without a connected Stripe account", async () => {
     server.use(providerHandler("govpay"), stripeStatusHandler(false));
 
     await setup(<Provider />);
@@ -78,6 +78,6 @@ describe("Provider", () => {
     expect(await screen.findByText("GOV.UK Pay")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Migrate to Stripe" }),
-    ).not.toBeInTheDocument();
+    ).toBeDisabled();
   });
 });

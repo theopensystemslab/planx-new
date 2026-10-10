@@ -15,7 +15,8 @@ const { getState, setState } = useStore;
 let initialState: FullStore;
 
 describe("Card component", () => {
-  const resumeButtonText = "Resume a form you have already started";
+  const resumeButtonText =
+    "Resume a form you have already started (opens in a new tab)";
   const saveButtonText = "Save and return to this form later";
   const handleSubmit = vi.fn();
 
@@ -74,15 +75,17 @@ describe("Card component", () => {
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
   });
 
-  it("updates state to navigate to the 'Resume' page if the 'Resume' button is clicked", async () => {
+  it("renders a Resume link that opens LPS in a new tab", async () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     const children = <Button>Testing 123</Button>;
-    const { user } = await setup(
-      <Card handleSubmit={handleSubmit} children={children}></Card>,
-    );
+    await setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
-    await user.click(screen.getByText(resumeButtonText));
-    expect(getState().path).toEqual(ApplicationPath.Resume);
+    const resumeLink = screen.getByText(resumeButtonText).closest("a");
+    expect(resumeLink).toHaveAttribute(
+      "href",
+      expect.stringContaining("/applications"),
+    );
+    expect(resumeLink).toHaveAttribute("target", "_blank");
   });
 
   it("updates state to navigate to the 'Save' page if the 'Save' button is clicked", async () => {

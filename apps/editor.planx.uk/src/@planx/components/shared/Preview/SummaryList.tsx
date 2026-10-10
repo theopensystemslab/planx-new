@@ -580,17 +580,11 @@ function DateInput(props: ComponentProps) {
 }
 
 function DrawBoundary(props: ComponentProps) {
-  // check if the user drew a boundary, uploaded a file, or both (or neither if props.node.data?.hideFileUpload is triggered "on")
+  // render whatever the user provided: a drawn boundary, an uploaded file, both, or neither
   const geodata = props.userData?.data?.[props.node.data?.fn];
   const locationPlan = props.userData?.data?.[PASSPORT_UPLOAD_KEY];
 
   const fileName = locationPlan ? locationPlan[0].url.split("/").pop() : "";
-
-  if (!geodata && !locationPlan && !props.node.data?.hideFileUpload) {
-    // XXX: we always expect to have data, this is for temporary debugging
-    console.error(props);
-    throw Error("Location plan geojson or file expected, but not found");
-  }
 
   return (
     <>
@@ -625,10 +619,7 @@ function DrawBoundary(props: ComponentProps) {
             />
           </>
         )}
-        {!locationPlan &&
-          !geodata &&
-          props.node.data?.hideFileUpload &&
-          "Not provided"}
+        {!locationPlan && !geodata && "Not provided"}
       </Box>
     </>
   );
