@@ -34,7 +34,7 @@ export const makePaymentViaProxy: PaymentProxyController = async (
   const { flowId, sessionId } = res.locals.parsedReq.query;
   const teamSlug = res.locals.parsedReq.params.localAuthority;
 
-  const session = await $api.session.findDetails(sessionId);
+  const session = await $api.session.find(sessionId);
 
   if (session?.lockedAt) {
     return next(
