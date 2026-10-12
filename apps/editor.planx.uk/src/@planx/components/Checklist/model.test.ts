@@ -302,6 +302,24 @@ describe("Editor validation", () => {
         ).rejects.toThrow("Options must have unique labels");
       });
 
+      test("checklists - unique labels must be used for each option (even if descriptions differ)", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            text: "Test",
+            options: [
+              {
+                id: "a",
+                data: { text: "Non-unique label", description: "A" },
+              },
+              {
+                id: "b",
+                data: { text: "Non-unique label", description: "B" },
+              },
+            ],
+          }),
+        ).rejects.toThrow("Options must have unique labels");
+      });
+
       test("grouped checklists - labels must be unique within groups", async () => {
         await expect(() =>
           validationSchema.validate({
