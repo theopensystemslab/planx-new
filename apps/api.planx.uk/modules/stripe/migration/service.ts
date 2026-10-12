@@ -12,20 +12,27 @@ export type PaymentProvider = TeamSettings["paymentProvider"];
 export const getActiveGovPaySessions = async (
   teamSlug: string,
 ): Promise<number> => {
+  const createdAfter = new Date(Date.now() - 90 * 60 * 1000).toISOString();
   const { paymentStatuses } = await $api.client.request<{
     paymentStatuses: { paymentId: string; status: string }[];
   }>(
     gql`
-      query GetActiveGovPaySessions($teamSlug: String!) {
+      query GetActiveGovPaySessions(
+        $teamSlug: String!
+        $createdAfter: timestamptz!
+      ) {
         paymentStatuses: payment_status(
-          where: { team_slug: { _eq: $teamSlug } }
+          where: {
+            team_slug: { _eq: $teamSlug }
+            created_at: { _gt: $createdAfter }
+          }
         ) {
           paymentId: payment_id
           status
         }
       }
     `,
-    { teamSlug },
+    { teamSlug, createdAfter },
   );
 
   const statusesByPaymentId = new Map<string, Set<string>>();
