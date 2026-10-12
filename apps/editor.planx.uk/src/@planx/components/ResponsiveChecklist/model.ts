@@ -1,3 +1,4 @@
+import type { TestConfig } from "yup";
 import { array, object, string } from "yup";
 
 import type { ConditionalOption } from "../Option/model";
@@ -7,6 +8,7 @@ import type {
   FlatOptions,
   GroupedOptions,
 } from "../shared/BaseChecklist/model";
+import { uniqueChecklistLabelsOrDescriptionsTest } from "../shared/BaseChecklist/model";
 import {
   baseChecklistValidationSchema,
   parseBaseChecklist,
@@ -40,14 +42,16 @@ export const DEFAULT_RULE: Rule = {
   condition: Condition.AlwaysRequired,
 };
 
-export const validationSchema = baseChecklistValidationSchema.concat(
-  object({
-    groupedOptions: array(
-      object({
-        title: string().required("Section title is a required field").trim(),
-        children: array(optionValidationSchema).required(),
-      }).required(),
-    ).optional(),
-    options: array(optionValidationSchema).optional(),
-  }),
-);
+export const validationSchema = baseChecklistValidationSchema
+  .concat(
+    object({
+      groupedOptions: array(
+        object({
+          title: string().required("Section title is a required field").trim(),
+          children: array(optionValidationSchema).required(),
+        }).required(),
+      ).optional(),
+      options: array(optionValidationSchema).optional(),
+    }),
+  )
+  .test(uniqueChecklistLabelsOrDescriptionsTest as TestConfig<unknown>);
