@@ -2,7 +2,7 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 import type { Option } from "@planx/components/Option/model";
 import { optionValidationSchema } from "@planx/components/Option/model";
 import { richText } from "lib/yupExtensions";
-import { array, object, SchemaOf, string } from "yup";
+import { array, object, string } from "yup";
 
 import type { BaseNodeData } from "..";
 import { baseNodeDataValidationSchema, parseBaseNodeData } from "..";
@@ -18,37 +18,15 @@ export interface BaseQuestion extends BaseNodeData {
   img?: string;
 }
 
-export const baseQuestionValidationSchema = baseNodeDataValidationSchema
-  .concat(
-    object({
-      text: string().required(),
-      description: richText(),
-      img: string(),
-      fn: string().nullable(),
-      options: array(optionValidationSchema).required(),
-    }),
-  )
-  .test({
-    name: "uniqueLabelsOrDescriptions",
-    test: function ({ options }) {
-      if (!options?.length) return true;
-
-      const uniqueOptions = new Set(
-        options.map(
-          ({ data }) => `${data.text}_${data.description?.trim() ?? ""}`,
-        ),
-      );
-
-      const areAllOptionsUnique = uniqueOptions.size === options.length;
-      if (areAllOptionsUnique) return true;
-
-      return this.createError({
-        path: "options",
-        message:
-          "Options must have unique labels, or unique descriptions if labels are duplicated",
-      });
-    },
-  });
+export const baseQuestionValidationSchema = baseNodeDataValidationSchema.concat(
+  object({
+    text: string().required(),
+    description: richText(),
+    img: string(),
+    fn: string().nullable(),
+    options: array(optionValidationSchema).required(),
+  }),
+);
 
 /**
  * Build child nodes from generated options
