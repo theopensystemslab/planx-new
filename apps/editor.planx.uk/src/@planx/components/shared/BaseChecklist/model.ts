@@ -280,8 +280,7 @@ const uniqueLabelsWithinGroupsTest: TestConfig<AnyChecklist> = {
       if (!allUnique) {
         return this.createError({
           path: "options",
-          message:
-            "Options within a single group must have unique labels, or unique descriptions if labels are duplicated",
+          message: "Options within a single group must have unique labels",
         });
       }
     }
