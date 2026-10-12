@@ -183,7 +183,7 @@ it("shows an error if options (label and description) are duplicated", async () 
   await waitFor(() =>
     expect(
       screen.getByText(
-        /Options must have unique labels, or unique descriptions if labels are duplicated/,
+        /Options must have unique labels, or unique descriptions if labels are conditionally shown/,
       ),
     ).toBeInTheDocument(),
   );
