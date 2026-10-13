@@ -5,6 +5,7 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { useCurrentTeamRole } from "hooks/useCurrentTeamRole";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -33,10 +34,8 @@ const Accordion = ({ isOpen, onToggle }: AccordionProps) => {
 };
 
 export const TeamMembers = () => {
-  const [teamSlug, role] = useStore((state) => [
-    state.teamSlug,
-    state.getUserRoleForCurrentTeam(),
-  ]);
+  const teamSlug = useStore((state) => state.teamSlug);
+  const role = useCurrentTeamRole();
 
   const { platformAdmins, activeMembers, archivedMembers, loading, error } =
     useTeamMembers(teamSlug);

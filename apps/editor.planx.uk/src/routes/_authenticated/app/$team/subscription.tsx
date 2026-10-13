@@ -5,16 +5,13 @@ import { roleContext } from "lib/graphql/contexts";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { Subscription } from "pages/FlowEditor/components/Subscription/Subscription";
 import type { ServiceCharge } from "pages/FlowEditor/components/Subscription/types";
-import { useStore } from "pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
   staticData: { pageTitle: "Subscription" },
   loader: async ({ params, context }) => {
-    const role = useStore.getState().getUserRoleForCurrentTeam();
+    const { role } = context;
 
-    const isAuthorised =
-      context.user?.isPlatformAdmin ||
-      useStore.getState().getUserRoleForCurrentTeam() === "teamAdmin";
+    const isAuthorised = role === "platformAdmin" || role === "teamAdmin";
 
     if (!isAuthorised) {
       throw notFound();

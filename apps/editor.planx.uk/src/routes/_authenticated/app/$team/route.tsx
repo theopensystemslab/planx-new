@@ -69,6 +69,7 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
       throw notFound();
     }
 
+    // Set user role for all child routes of app/$team
     const role = getUserRoleForTeam(context.user, team.slug);
 
     return { team, role };
