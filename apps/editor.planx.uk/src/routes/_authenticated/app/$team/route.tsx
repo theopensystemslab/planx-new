@@ -7,11 +7,12 @@ import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 import { useEffect } from "react";
 
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
+import { getUserRoleForTeam } from "../../../../pages/FlowEditor/lib/store/user";
 
 export const Route = createFileRoute("/_authenticated/app/$team")({
   staticData: { pageTitle: (match) => match.context.team?.name },
   pendingComponent: RouteLoadingIndicator,
-  beforeLoad: async ({ params }) => {
+  beforeLoad: async ({ params, context }) => {
     const { data } = await client.query<{ teams: Team[] }>({
       query: gql`
         query GetTeamBySlug($slug: String!) {
@@ -68,7 +69,9 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
       throw notFound();
     }
 
-    return { team };
+    const role = getUserRoleForTeam(context.user, team.slug);
+
+    return { team, role };
   },
   loader: ({ context }) => context.team,
   component: FlowsLayout,
