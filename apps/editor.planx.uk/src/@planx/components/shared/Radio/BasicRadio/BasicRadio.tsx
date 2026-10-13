@@ -75,7 +75,8 @@ const BasicRadio: React.FC<Props> = ({
         mb: variant === "default" ? 1 : 0,
         alignItems: "flex-start",
         [`& .${formControlLabelClasses.label}`]: {
-          paddingTop: theme.spacing(0.95),
+          paddingTop:
+            variant === "default" ? theme.spacing(0.95) : theme.spacing(0.85),
         },
       })}
     />
