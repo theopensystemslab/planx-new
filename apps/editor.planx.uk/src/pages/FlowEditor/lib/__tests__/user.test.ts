@@ -1,7 +1,9 @@
 import type { User } from "@opensystemslab/planx-core/types";
+import { mockUserWithRole } from "test/mockUser";
 
 import type { FullStore } from "../store";
 import { useStore } from "../store";
+import { getUserRoleForTeam } from "../store/user";
 
 const { getState, setState } = useStore;
 const { canUserEditTeam } = getState();
@@ -106,5 +108,49 @@ describe("canUserEditTeam helper function", () => {
     setState({ user: adminUser });
     expect(canUserEditTeam("red-team")).toBe(true);
     expect(canUserEditTeam("blue-team")).toBe(true);
+  });
+});
+
+describe("getUserRoleForTeam", () => {
+  it("returns undefined without a user", () => {
+    expect(getUserRoleForTeam(null, "test-team")).toBeUndefined();
+  });
+
+  it("returns global roles regardless of team", () => {
+    expect(
+      getUserRoleForTeam(mockUserWithRole("platformAdmin"), undefined),
+    ).toBe("platformAdmin");
+    expect(getUserRoleForTeam(mockUserWithRole("analyst"), undefined)).toBe(
+      "analyst",
+    );
+  });
+
+  it("returns undefined for team members without a team", () => {
+    expect(
+      getUserRoleForTeam(mockUserWithRole("teamEditor"), undefined),
+    ).toBeUndefined();
+  });
+
+  it("returns the user's role for the given team", () => {
+    const user = mockUserWithRole("teamEditor", "test-team");
+    expect(getUserRoleForTeam(user, "test-team")).toBe("teamEditor");
+  });
+
+  it("returns teamViewer for a team the user isn't a member of", () => {
+    const user = mockUserWithRole("teamAdmin", "test-team");
+    expect(getUserRoleForTeam(user, "other-team")).toBe("teamViewer");
+  });
+
+  it("prefers teamAdmin when the user holds multiple roles for a team", () => {
+    const team = { id: 1, name: "Test team", slug: "test-team" };
+    const user: User = {
+      ...mockUserWithRole("teamEditor"),
+      teams: [
+        { role: "teamEditor", team },
+        { role: "teamAdmin", team },
+      ],
+    };
+
+    expect(getUserRoleForTeam(user, "test-team")).toBe("teamAdmin");
   });
 });

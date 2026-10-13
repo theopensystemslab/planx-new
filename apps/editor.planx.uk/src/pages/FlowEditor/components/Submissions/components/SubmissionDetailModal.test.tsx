@@ -1,6 +1,8 @@
 import { screen, waitFor } from "@testing-library/react";
 import { graphql, HttpResponse } from "msw";
+import { getUserRoleForTeam } from "pages/FlowEditor/lib/store/user";
 import server from "test/mockServer";
+import { mockUserWithRole } from "test/mockUser";
 import { setup } from "test/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -12,14 +14,14 @@ import {
 } from "../mockSubmissions";
 import SubmissionDetailModal from "./SubmissionDetailModal";
 
-const mockGetUserRoleForCurrentTeam = vi.fn();
 const mockTeamSlug = "test-council";
+let mockUser = mockUserWithRole("teamEditor", mockTeamSlug);
 
 vi.mock("pages/FlowEditor/lib/store", () => ({
   useStore: vi.fn((selector) =>
     selector({
       teamSlug: mockTeamSlug,
-      getUserRoleForCurrentTeam: mockGetUserRoleForCurrentTeam,
+      user: mockUser,
     }),
   ),
 }));
@@ -31,6 +33,9 @@ vi.mock("@tanstack/react-router", async () => {
     ...actual,
     useNavigate: () => mockNavigate,
     useParams: () => ({ flow: "test-flow" }),
+    // Mirror the $team route's context, which resolves the user's role for the team
+    useMatch: ({ select }: { select: (match: unknown) => unknown }) =>
+      select({ context: { role: getUserRoleForTeam(mockUser, mockTeamSlug) } }),
   };
 });
 
@@ -44,7 +49,7 @@ const handlers = [
 beforeEach(() => {
   vi.clearAllMocks();
   server.use(...handlers);
-  mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
+  mockUser = mockUserWithRole("teamEditor", mockTeamSlug);
 });
 
 describe("SubmissionDetailModal", () => {
@@ -182,7 +187,7 @@ describe("SubmissionDetailModal", () => {
 
   describe("Resubmit button", () => {
     it("does not render resubmit button when user is not platform admin", async () => {
-      mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
+      mockUser = mockUserWithRole("teamEditor", mockTeamSlug);
 
       server.use(
         graphql.query("GetSubmissionEvents", () =>
@@ -204,7 +209,7 @@ describe("SubmissionDetailModal", () => {
     });
 
     it("does not render resubmit button for successful events", async () => {
-      mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+      mockUser = mockUserWithRole("platformAdmin", mockTeamSlug);
 
       const successOnlyEvents = mockSubmissionEvents.filter(
         (event) => event.status === "Success",
@@ -228,7 +233,7 @@ describe("SubmissionDetailModal", () => {
     });
 
     it("does not render resubmit button for Pay events", async () => {
-      mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+      mockUser = mockUserWithRole("platformAdmin", mockTeamSlug);
 
       server.use(
         graphql.query("GetSubmissionEvents", () =>
@@ -248,7 +253,7 @@ describe("SubmissionDetailModal", () => {
     });
 
     it("only renders resubmit button for most recent failed event of each type", async () => {
-      mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+      mockUser = mockUserWithRole("platformAdmin", mockTeamSlug);
 
       server.use(
         graphql.query("GetSubmissionEvents", () =>
@@ -269,7 +274,7 @@ describe("SubmissionDetailModal", () => {
     });
 
     it("shows confirmation dialog when resubmit button is clicked", async () => {
-      mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+      mockUser = mockUserWithRole("platformAdmin", mockTeamSlug);
 
       server.use(
         graphql.query("GetSubmissionEvents", () =>

@@ -23,6 +23,8 @@ import userEvent, {
 } from "@testing-library/user-event";
 import { ToastContextProvider } from "contexts/ToastContext";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
+import { useStore } from "pages/FlowEditor/lib/store";
+import { getUserRoleForTeam } from "pages/FlowEditor/lib/store/user";
 
 import { defaultTheme } from "../theme";
 
@@ -67,10 +69,14 @@ const testApolloClient = new ApolloClient({
  * All userEventOptions are accepted, to enable the rare test which needs to change user behaviour
  * e.g. `{ applyAccept: false }` so that a file upload test can exercise a dropzone's own validation.
  * See: http://testing-library.com/docs/user-event/options
+ *
+ * routeOptions.teamSlug renders the component within the "/_authenticated/app/$team" route,
+ * for components which read the current team or role from it (e.g. via usePermission)
  */
 export const setup = async (
   jsx: React.JSX.Element,
   userEventOptions?: Parameters<typeof userEvent.setup>[0],
+  routeOptions?: { teamSlug: string },
 ): Promise<Record<"user", UserEvent> & RenderResult> => {
   testQueryClient.clear();
   await testApolloClient.clearStore();
@@ -105,10 +111,28 @@ export const setup = async (
     component: () => <>{jsx}</>,
   });
 
-  const routeTree = rootRoute.addChildren([indexRoute]);
+  // Mirror the "/_authenticated/app/$team" route, which resolves the user's role for the team
+  const authenticatedRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    id: "_authenticated",
+  });
+
+  const teamRoute = createRoute({
+    getParentRoute: () => authenticatedRoute,
+    path: "app/$team",
+    beforeLoad: ({ params }) => ({
+      role: getUserRoleForTeam(useStore.getState().user, params.team),
+    }),
+    component: () => <>{jsx}</>,
+  });
+
+  const routeTree = rootRoute.addChildren([
+    indexRoute,
+    authenticatedRoute.addChildren([teamRoute]),
+  ]);
 
   const history = createMemoryHistory({
-    initialEntries: ["/"],
+    initialEntries: [routeOptions ? `/app/${routeOptions.teamSlug}` : "/"],
   });
 
   const router = createRouter({
