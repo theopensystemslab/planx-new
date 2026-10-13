@@ -593,8 +593,7 @@ const getThemeOptions = ({
           paper: ({ theme }) => ({
             width: "100%",
             maxWidth: "860px",
-            borderRadius: 0,
-            borderTop: `10px solid ${palette.primary.main}`,
+            borderRadius: theme.shape.borderRadiusLg,
             background: theme.palette.background.paper,
             margin: theme.spacing(1),
           }),
