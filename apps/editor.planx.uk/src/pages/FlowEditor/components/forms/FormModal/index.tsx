@@ -329,60 +329,58 @@ const FormModal: React.FC<FormModalProps> = ({
           dividers
           sx={{ p: 0, position: "relative", flexGrow: 1, overflowY: "auto" }}
         >
-          {activeTab === "edit" && (
-            <>
-              {!handleDelete && (
-                <TextInputToggle type={type} parent={parent} before={before} />
-              )}
-              <AppErrorBoundary>
-                <Component
-                  formikRef={formikRef}
-                  node={node}
-                  {...node?.data}
-                  {...extraProps}
-                  id={id}
-                  disabled={disabled}
-                  handleSubmit={(
-                    data: { data?: Record<string, unknown> },
-                    children:
-                      Array<Record<string, unknown>> | undefined = undefined,
-                  ) => {
-                    // Handle internal portals
-                    if (typeof data === "string" && parent) {
-                      connect(parent, data, { before });
+          <Box sx={{ display: activeTab === "edit" ? "block" : "none" }}>
+            {!handleDelete && (
+              <TextInputToggle type={type} parent={parent} before={before} />
+            )}
+            <AppErrorBoundary>
+              <Component
+                formikRef={formikRef}
+                node={node}
+                {...node?.data}
+                {...extraProps}
+                id={id}
+                disabled={disabled}
+                handleSubmit={(
+                  data: { data?: Record<string, unknown> },
+                  children:
+                    Array<Record<string, unknown>> | undefined = undefined,
+                ) => {
+                  // Handle internal portals
+                  if (typeof data === "string" && parent) {
+                    connect(parent, data, { before });
+                  } else {
+                    const parsedData = parseFormValues(Object.entries(data));
+                    const parsedChildren =
+                      children?.map((o) =>
+                        parseFormValues(Object.entries(o)),
+                      ) || undefined;
+
+                    if (handleDelete) {
+                      updateNode(
+                        { id, ...parsedData },
+                        { children: parsedChildren },
+                      );
                     } else {
-                      const parsedData = parseFormValues(Object.entries(data));
-                      const parsedChildren =
-                        children?.map((o) =>
-                          parseFormValues(Object.entries(o)),
-                        ) || undefined;
-
-                      if (handleDelete) {
-                        updateNode(
-                          { id, ...parsedData },
-                          { children: parsedChildren },
-                        );
-                      } else {
-                        addNode(parsedData, {
-                          children: parsedChildren,
-                          parent,
-                          before,
-                        });
-                      }
+                      addNode(parsedData, {
+                        children: parsedChildren,
+                        parent,
+                        before,
+                      });
                     }
+                  }
 
-                    navigate({
-                      to: "/app/$team/$flow",
-                      params: {
-                        team: teamSlug,
-                        flow: flowSlug,
-                      },
-                    });
-                  }}
-                />
-              </AppErrorBoundary>
-            </>
-          )}
+                  navigate({
+                    to: "/app/$team/$flow",
+                    params: {
+                      team: teamSlug,
+                      flow: flowSlug,
+                    },
+                  });
+                }}
+              />
+            </AppErrorBoundary>
+          </Box>
           {activeTab === "preview" && (
             <Box sx={{ p: 2.5 }}>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
@@ -467,6 +465,8 @@ const FormModal: React.FC<FormModalProps> = ({
               color="primary"
               form="modal"
               disabled={isSubmitDisabled}
+              // Switch to edit tab on submit, so any validation errors are visible
+              onClick={() => setActiveTab("edit")}
             >
               {handleDelete ? `Update` : `Create`}
             </Button>
