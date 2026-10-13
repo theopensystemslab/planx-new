@@ -17,6 +17,7 @@ import * as gateshead from "./local_authorities/metadata/gateshead.js";
 import * as gloucester from "./local_authorities/metadata/gloucester.js";
 import * as greaterCambridgeSharedPlanning from "./local_authorities/metadata/greaterCambridgeSharedPlanning.js";
 import * as horsham from "./local_authorities/metadata/horsham.js";
+import * as kensingtonAndChelsea from "./local_authorities/metadata/kensingtonAndChelsea.js";
 import * as lambeth from "./local_authorities/metadata/lambeth.js";
 import * as liverpool from "./local_authorities/metadata/liverpool.js";
 import * as medway from "./local_authorities/metadata/medway.js";
@@ -67,6 +68,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   gloucester,
   "greater-cambridge-shared-planning": greaterCambridgeSharedPlanning,
   horsham,
+  "kensington-and-chelsea": kensingtonAndChelsea,
   lambeth,
   liverpool,
   medway,
