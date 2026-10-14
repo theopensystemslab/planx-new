@@ -81,7 +81,6 @@ const Customisations = () => {
           <CustomisationCard
             key={nodeId}
             nodeId={nodeId}
-            nodeEdits={flowEdits[nodeId]}
             flowEdits={flowEdits}
           />
         ))}

@@ -7,19 +7,14 @@ import { NodeCard } from "ui/editor/NodeCard";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { hasNodeBeenUpdated } from "./helpers";
-import type { FlowEdits, NodeEdits } from "./types";
+import type { FlowEdits } from "./types";
 
 interface Props {
   nodeId: string;
-  nodeEdits?: NodeEdits;
   flowEdits: FlowEdits;
 }
 
-export const CustomisationCard: React.FC<Props> = ({
-  nodeId,
-  nodeEdits,
-  flowEdits,
-}) => {
+export const CustomisationCard: React.FC<Props> = ({ nodeId, flowEdits }) => {
   const [flow, orderedFlow] = useStore((state) => [
     state.flow,
     state.orderedFlow,
