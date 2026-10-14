@@ -1,9 +1,8 @@
-import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
+import { getPathForNode } from "@opensystemslab/planx-core";
 import type {
   Address,
   Flag,
   FlagSet,
-  FlowGraph,
   GovUKPayment,
   Node,
   NodeId,
@@ -35,6 +34,7 @@ import { ApplicationPath } from "../../../../types";
 import type { Store } from ".";
 import type { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
+import { getIndexedFlow } from "./utils/indexedFlow";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];
 const SUPPORTED_INPUT_TYPES = [
@@ -879,7 +879,7 @@ export const previewStore: StateCreator<
     const { currentCard, flow, flowSlug, teamSlug } = get();
     if (!currentCard?.id) return null;
 
-    const orderedFlow = sortFlow(flow as FlowGraph);
+    const { ordered: orderedFlow, nodes } = getIndexedFlow(flow);
     const path = getPathForNode({ nodeId: currentCard.id, flow: orderedFlow });
     if (!path || path.length === 0) return null;
 
@@ -892,7 +892,7 @@ export const previewStore: StateCreator<
       const pNode = path[i];
 
       if (pNode.type === TYPES.InternalPortal) {
-        const orderedNode = orderedFlow.find((n) => n.id === pNode.id);
+        const orderedNode = nodes[pNode.id];
         const nodeData = orderedNode?.data || {};
 
         if (nodeData.flattenedFromExternalPortal) {
