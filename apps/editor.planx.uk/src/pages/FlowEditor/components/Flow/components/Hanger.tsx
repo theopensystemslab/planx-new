@@ -29,19 +29,16 @@ const DROPPABLE_TYPES = ["DECISION", "PORTAL", "PAGE"];
 
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
-  const { team: teamSlug, flow: flowSlug } = useParams({
+  const { team: teamSlug } = useParams({
     from: "/_authenticated/app/$team/$flow",
   });
 
-  const [moveNode, isTemplatedFrom, flow, orderedFlow, showNotes] = useStore(
-    (state) => [
-      state.moveNode,
-      state.isTemplatedFrom,
-      state.flow,
-      state.orderedFlow,
-      state.showNotes,
-    ],
-  );
+  const [moveNode, isTemplatedFrom, flow, orderedFlow] = useStore((state) => [
+    state.moveNode,
+    state.isTemplatedFrom,
+    state.flow,
+    state.orderedFlow,
+  ]);
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
   const indexedParent = orderedFlow?.find(({ id }) => id === parent);
