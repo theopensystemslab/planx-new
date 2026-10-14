@@ -27,7 +27,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "medway",
           domain: "planningservices.medway.gov.uk",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "cutover-ongoing",
         },
         {
           name: "stalbans",
