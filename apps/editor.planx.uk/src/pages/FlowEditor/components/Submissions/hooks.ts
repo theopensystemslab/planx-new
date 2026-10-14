@@ -34,6 +34,7 @@ export const useGetSubmissionEvents = (sessionId: string) => {
   >(GET_SUBMISSION_EVENTS, {
     variables: { sessionId },
     skip: !sessionId,
+    pollInterval: 10_000,
   });
 
   return query;
