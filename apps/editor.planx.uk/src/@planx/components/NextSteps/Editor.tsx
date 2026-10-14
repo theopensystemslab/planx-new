@@ -162,7 +162,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
               name="hasStepRules"
               checked={Boolean(formik.values.hasStepRules)}
               onChange={formik.handleChange}
-              label="Set rules when to show a step"
+              label="Show steps based on rules"
               disabled={props.disabled}
             />
           </InputRow>
