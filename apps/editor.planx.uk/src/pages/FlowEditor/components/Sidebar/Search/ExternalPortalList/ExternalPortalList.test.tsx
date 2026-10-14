@@ -1,3 +1,4 @@
+import { sortFlow } from "@opensystemslab/planx-core";
 import { act, waitFor } from "@testing-library/react";
 import type { FullStore } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -17,7 +18,7 @@ vi.mock("react-navi", () => ({
 
 const { setState } = useStore;
 
-beforeAll(() => act(() => setState({ flow })));
+beforeAll(() => act(() => setState({ flow, orderedFlow: sortFlow(flow) })));
 
 const externalPortals: FullStore["externalPortals"] = {
   abc: { name: "Portal 1", href: "myTeam/portalOne" },
