@@ -1,4 +1,5 @@
 import { gql, useSubscription } from "@apollo/client";
+import { useOrderedFlow } from "hooks/useIndexedFlow";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import { getEditedFolderIds, hasNodeBeenUpdated } from "../helpers";
@@ -20,12 +21,12 @@ interface QueryResult {
  * Subscribe to the edits made to a templated flow, and count how many required customisations are complete
  */
 export const useTemplatedFlowCustomisations = () => {
-  const [flowId, isTemplatedFrom, flow, orderedFlow] = useStore((state) => [
+  const [flowId, isTemplatedFrom, flow] = useStore((state) => [
     state.id,
     state.isTemplatedFrom,
     state.flow,
-    state.orderedFlow,
   ]);
+  const orderedFlow = useOrderedFlow();
 
   const { data, loading, error } = useSubscription<QueryResult>(
     GET_TEMPLATED_FLOW_EDITS,
@@ -40,7 +41,7 @@ export const useTemplatedFlowCustomisations = () => {
 
   // Only templated flows have customisations to complete
   // Source templates also contain required nodes, but have nothing to customise
-  const requiredNodeIds = (isTemplatedFrom ? (orderedFlow ?? []) : [])
+  const requiredNodeIds = (isTemplatedFrom ? orderedFlow : [])
     .filter(
       (node) =>
         node.data?.isTemplatedNode &&

@@ -2,10 +2,10 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
 import { useFormik } from "formik";
+import { useOrderedFlow } from "hooks/useIndexedFlow";
 import { useSearch } from "hooks/useSearch";
 import { debounce } from "lodash";
-import { useStore } from "pages/FlowEditor/lib/store";
-import React, { forwardRef, useEffect, useMemo, useState } from "react";
+import React, { forwardRef, useMemo, useState } from "react";
 import type { Components } from "react-virtuoso";
 import { Virtuoso } from "react-virtuoso";
 import { SEARCH_DEBOUNCE_MS } from "ui/shared/constants";
@@ -51,15 +51,7 @@ const ListItemComponent = forwardRef<HTMLLIElement>((props, ref) => (
  */
 const Search: React.FC = () => {
   // Get ordered flow of indexed nodes from store
-  const [orderedFlow, setOrderedFlow, flowId] = useStore((state) => [
-    state.orderedFlow,
-    state.setOrderedFlow,
-    state.id,
-  ]);
-
-  useEffect(() => {
-    setOrderedFlow();
-  }, [flowId, setOrderedFlow]);
+  const orderedFlow = useOrderedFlow();
 
   // Set up search input form
   const formik = useFormik<SearchNodes>({
@@ -75,7 +67,7 @@ const Search: React.FC = () => {
 
   // Call custom hook to control searching
   const { results: nodeResults, search: searchNodes } = useSearch({
-    list: orderedFlow || [],
+    list: orderedFlow,
     keys: formik.values.facets,
   });
 

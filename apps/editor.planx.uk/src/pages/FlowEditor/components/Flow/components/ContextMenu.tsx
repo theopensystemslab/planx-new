@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { getIndexedFlow } from "pages/FlowEditor/lib/store/utils/indexedFlow";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -51,7 +52,6 @@ export const ContextMenu: React.FC = () => {
     getNode,
     isTemplatedFrom,
     flow,
-    orderedFlow,
     showHelpText,
     copyHelpText,
     getCopiedHelpText,
@@ -73,7 +73,6 @@ export const ContextMenu: React.FC = () => {
     state.getNode,
     state.isTemplatedFrom,
     state.flow,
-    state.orderedFlow,
     state.showHelpText,
     state.copyHelpText,
     state.getCopiedHelpText(),
@@ -156,7 +155,7 @@ export const ContextMenu: React.FC = () => {
 
     // In templated flows, disable the copy/clone/cut context menus unless within a templated folder
     //   Since "hangers" are hidden in templated flows, isPasteEnabled doesn't need to be aware of isTemplatedFrom
-    const indexedParent = orderedFlow?.find(({ id }) => id === parent);
+    const indexedParent = getIndexedFlow(flow).nodes[parent];
     const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
       flow,
       indexedParent,
