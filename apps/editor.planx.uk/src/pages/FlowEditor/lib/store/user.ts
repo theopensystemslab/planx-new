@@ -24,9 +24,38 @@ export const getDisplayRole = (
   return ROLE_LABELS.teamViewer;
 };
 
+/**
+ * Resolve a user's role for a given team
+ *
+ * Takes an explicit teamSlug (e.g. from route params) rather than reading the store's teamSlug,
+ * which is only set once the $team route has mounted and so lags behind the router
+ */
+export const getUserRoleForTeam = (
+  user: User | null | undefined,
+  teamSlug: Team["slug"] | undefined,
+): Role | undefined => {
+  if (!user) return;
+
+  if (user.isPlatformAdmin) return "platformAdmin";
+  if (user.isAnalyst) return "analyst";
+  if (!teamSlug) return;
+
+  const currentUserTeam = user.teams.filter(
+    ({ team: { slug } }) => slug === teamSlug,
+  );
+
+  const isUserTeamAdmin = currentUserTeam.some(
+    (user) => user.role === "teamAdmin",
+  );
+  if (isUserTeamAdmin) return "teamAdmin";
+
+  if (currentUserTeam[0]?.role) return currentUserTeam[0].role;
+
+  return "teamViewer";
+};
+
 export interface UserStore {
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
-  getUserRoleForCurrentTeam: () => Role | undefined;
   getUserRole: () => string | undefined;
 }
 
@@ -44,28 +73,6 @@ export const userStore: StateCreator<
       team.role !== "teamViewer" && team.team.slug === teamSlug;
 
     return user.isPlatformAdmin || user.teams.some(canEditTeam);
-  },
-
-  getUserRoleForCurrentTeam: () => {
-    const { user, teamSlug } = get();
-    if (!user) return;
-
-    if (user.isPlatformAdmin) return "platformAdmin";
-    if (user.isAnalyst) return "analyst";
-    if (!teamSlug) return "teamViewer"; // for EditorNavMenu, before teamSlug is set
-
-    const currentUserTeam = user.teams.filter(
-      ({ team: { slug } }) => slug === teamSlug,
-    );
-
-    const isUserTeamAdmin = currentUserTeam.some(
-      (user) => user.role === "teamAdmin",
-    );
-    if (isUserTeamAdmin) return "teamAdmin";
-
-    if (currentUserTeam[0]?.role) return currentUserTeam[0].role;
-
-    return "teamViewer";
   },
 
   getUserRole: () => {

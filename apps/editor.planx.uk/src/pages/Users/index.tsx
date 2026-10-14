@@ -2,8 +2,8 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { useCurrentTeamRole } from "hooks/useCurrentTeamRole";
 import { MembersTable } from "pages/FlowEditor/components/Team/components/MembersTable";
-import { useStore } from "pages/FlowEditor/lib/store";
 import { useToggle } from "react-use";
 import { AddButton } from "ui/editor/AddButton";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -15,7 +15,7 @@ import { useGetAnalysts } from "./hooks/useGetAnalysts";
 export const UserManagement = () => {
   const { analysts, loading, error } = useGetAnalysts();
   const [showAddAnalystModal, toggleAddAnalystModal] = useToggle(false);
-  const role = useStore((state) => state.getUserRoleForCurrentTeam());
+  const role = useCurrentTeamRole();
 
   if (error || !role)
     return (

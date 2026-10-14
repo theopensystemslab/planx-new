@@ -1,4 +1,5 @@
 import { gql, useSubscription } from "@apollo/client";
+import { useCurrentTeamRole } from "hooks/useCurrentTeamRole";
 import type { Notification } from "pages/FlowEditor/components/Notifications/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
@@ -57,10 +58,8 @@ export const useRecentNotifications = (): {
   resolved: Notification[];
   loading: boolean;
 } => {
-  const [teamId, role] = useStore((state) => [
-    state.teamId,
-    state.getUserRoleForCurrentTeam(),
-  ]);
+  const teamId = useStore((state) => state.teamId);
+  const role = useCurrentTeamRole();
   const hasPermission = Boolean(role && EDITOR_ROLES.includes(role));
   const skip = !teamId || !hasPermission;
 

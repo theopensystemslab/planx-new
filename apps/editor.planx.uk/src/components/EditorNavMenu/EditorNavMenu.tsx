@@ -26,6 +26,7 @@ import {
 import AccountMenu from "components/AccountMenu";
 import { useFlowAnalyticsLink } from "hooks/analyticsLinks/useFlowAnalyticsLink";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
+import { useCurrentTeamRole } from "hooks/useCurrentTeamRole";
 import { AVAILABLE_FEATURE_FLAGS, hasFeatureFlag } from "lib/featureFlags";
 import { isSystemTeam } from "lib/systemTeams";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -74,8 +75,8 @@ function EditorNavMenu() {
   const notificationsRef = useRef<HTMLDivElement>(null);
   const featureFlagsRef = useRef<HTMLDivElement>(null);
 
-  const [role, team, isPattern] = useStore((state) => [
-    state.getUserRoleForCurrentTeam(),
+  const role = useCurrentTeamRole();
+  const [team, isPattern] = useStore((state) => [
     state.getTeam(),
     state.isPattern,
   ]);

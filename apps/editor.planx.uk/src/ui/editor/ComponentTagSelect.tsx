@@ -3,8 +3,8 @@ import type { AutocompleteProps } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import type { NodeTag, Role } from "@opensystemslab/planx-core/types";
 import { NODE_TAGS } from "@opensystemslab/planx-core/types";
+import { useCurrentTeamRole } from "hooks/useCurrentTeamRole";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
-import { useStore } from "pages/FlowEditor/lib/store";
 import { getContrastTextColor } from "styleUtils";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -18,19 +18,22 @@ interface Props {
   disabled?: boolean;
 }
 
-const skipTag = (role?: Role) => {
-  const userRole = useStore.getState().getUserRoleForCurrentTeam();
-  return role === userRole ? false : true;
-};
+type RenderOption = NonNullable<
+  AutocompleteProps<NodeTag, true, true, false, "div">["renderOption"]
+>;
 
-const renderOption: AutocompleteProps<
-  NodeTag,
-  true,
-  true,
-  false,
-  "div"
->["renderOption"] = (props, tag, state) => {
-  if (TAG_DISPLAY_VALUES[tag].editableBy?.some(skipTag)) return null;
+type RenderValue = NonNullable<
+  AutocompleteProps<NodeTag, true, true, false, "div">["renderValue"]
+>;
+
+const isEditableByRole = (tag: NodeTag, userRole?: Role) =>
+  !TAG_DISPLAY_VALUES[tag].editableBy?.some((role) => role !== userRole);
+
+const renderOption = (
+  userRole: Role | undefined,
+  ...[props, tag, state]: Parameters<RenderOption>
+): ReturnType<RenderOption> => {
+  if (!isEditableByRole(tag, userRole)) return null;
 
   return (
     <RenderOptionCheckbox
@@ -42,13 +45,10 @@ const renderOption: AutocompleteProps<
   );
 };
 
-const renderValue: AutocompleteProps<
-  NodeTag,
-  true,
-  true,
-  false,
-  "div"
->["renderValue"] = (value, getTagProps) =>
+const renderValue = (
+  userRole: Role | undefined,
+  ...[value, getTagProps]: Parameters<RenderValue>
+): ReturnType<RenderValue> =>
   (value as NodeTag[]).map((tag, index) => {
     return (
       <Chip
@@ -66,9 +66,9 @@ const renderValue: AutocompleteProps<
           ),
         })}
         onDelete={
-          TAG_DISPLAY_VALUES[tag].editableBy?.some(skipTag)
-            ? undefined
-            : getTagProps({ index }).onDelete
+          isEditableByRole(tag, userRole)
+            ? getTagProps({ index }).onDelete
+            : undefined
         }
       />
     );
@@ -79,6 +79,8 @@ export const ComponentTagSelect: React.FC<Props> = ({
   onChange,
   disabled,
 }) => {
+  const userRole = useCurrentTeamRole();
+
   return (
     <ModalSection>
       <ModalSectionContent title="Tags" Icon={BookmarksIcon}>
@@ -89,8 +91,8 @@ export const ComponentTagSelect: React.FC<Props> = ({
             options={NODE_TAGS}
             onChange={(_e, value) => onChange(value)}
             value={value}
-            renderOption={renderOption}
-            renderValue={renderValue}
+            renderOption={(...args) => renderOption(userRole, ...args)}
+            renderValue={(...args) => renderValue(userRole, ...args)}
             disabled={disabled}
           />
         </InputRow>

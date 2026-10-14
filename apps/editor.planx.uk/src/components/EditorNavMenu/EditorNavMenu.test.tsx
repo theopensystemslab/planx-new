@@ -1,5 +1,8 @@
+import type { User } from "@opensystemslab/planx-core/types";
 import * as TanStackRouter from "@tanstack/react-router";
 import { within } from "@testing-library/react";
+import { getUserRoleForTeam } from "pages/FlowEditor/lib/store/user";
+import { mockUserWithRole } from "test/mockUser";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 
@@ -12,6 +15,7 @@ vi.mock("@tanstack/react-router", async () => {
     useLocation: vi.fn(),
     useNavigate: vi.fn(() => vi.fn()),
     useParams: vi.fn(() => ({})),
+    useMatch: vi.fn(),
     useLoaderData: vi.fn(() => ({ teams: [] })),
   };
 });
@@ -19,11 +23,10 @@ vi.mock("@tanstack/react-router", async () => {
 const mockUseLocation = vi.mocked(TanStackRouter.useLocation);
 
 let mockAnalyticsLink: string | undefined = undefined;
-const mockGetUserRoleForCurrentTeam = vi.fn();
 const mockGetTeam = vi.fn();
 const mockSetIsNavMenuVisible = vi.fn();
 
-const mockUser = {
+let mockUser: User = {
   firstName: "Test",
   lastName: "User",
   isPlatformAdmin: false,
@@ -37,7 +40,6 @@ const mockUser = {
 vi.mock("pages/FlowEditor/lib/store", async () => ({
   useStore: vi.fn((selector) =>
     selector({
-      getUserRoleForCurrentTeam: mockGetUserRoleForCurrentTeam,
       getUserRole: vi.fn(),
       getTeam: mockGetTeam,
       setIsNavMenuVisible: mockSetIsNavMenuVisible,
@@ -78,6 +80,16 @@ const setRouteContext = (
     ),
   );
   vi.spyOn(TanStackRouter, "useParams").mockReturnValue(params);
+
+  // Mirror the $team route's context, which resolves the user's role for the team
+  vi.spyOn(TanStackRouter, "useMatch").mockImplementation(((opts: {
+    select: (match: unknown) => unknown;
+  }) =>
+    params.team
+      ? opts.select({
+          context: { role: getUserRoleForTeam(mockUser, params.team) },
+        })
+      : undefined) as typeof TanStackRouter.useMatch);
 };
 
 afterEach(() => {
@@ -92,7 +104,7 @@ describe("globalLayoutRoutes", () => {
   });
 
   it("shows menu for teamEditors (only 1 accessible route)", async () => {
-    mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
+    mockUser = mockUserWithRole("teamEditor");
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
@@ -101,7 +113,7 @@ describe("globalLayoutRoutes", () => {
   });
 
   it("displays for platformAdmins", async () => {
-    mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+    mockUser = mockUserWithRole("platformAdmin");
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
@@ -119,7 +131,7 @@ describe("teamLayoutRoutes", () => {
   });
 
   it("only displays the external link routes for teamViewers", async () => {
-    mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
+    mockUser = mockUserWithRole("teamViewer");
 
     const { queryAllByRole, getByRole, user } = await setup(<EditorNavMenu />);
     expect(queryAllByRole("listitem")).toHaveLength(5);
@@ -133,7 +145,7 @@ describe("teamLayoutRoutes", () => {
   });
 
   it("displays for teamEditors", async () => {
-    mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
+    mockUser = mockUserWithRole("teamEditor");
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
@@ -142,7 +154,7 @@ describe("teamLayoutRoutes", () => {
   });
 
   it("displays for platformAdmins", async () => {
-    mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+    mockUser = mockUserWithRole("platformAdmin");
 
     const { getAllByRole, getByRole, user } = await setup(<EditorNavMenu />);
     expect(getAllByRole("listitem")).toHaveLength(6);
@@ -153,7 +165,7 @@ describe("teamLayoutRoutes", () => {
   });
 
   it("hides Dashboard outside of production", async () => {
-    mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+    mockUser = mockUserWithRole("platformAdmin");
     vi.stubEnv("VITE_APP_ENV", "staging");
 
     const { getAllByRole, queryByText } = await setup(<EditorNavMenu />);
@@ -162,7 +174,7 @@ describe("teamLayoutRoutes", () => {
   });
 
   it("displays subtitles for sections", async () => {
-    mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+    mockUser = mockUserWithRole("platformAdmin");
 
     const { getByText } = await setup(<EditorNavMenu />);
     expect(getByText("Settings")).toBeInTheDocument();
@@ -206,7 +218,7 @@ describe("flowLayoutRoutes", () => {
   });
 
   it("displays for teamEditors", async () => {
-    mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
+    mockUser = mockUserWithRole("teamEditor");
 
     const { getAllByRole, getByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
@@ -216,7 +228,7 @@ describe("flowLayoutRoutes", () => {
   });
 
   it("displays for platformAdmins", async () => {
-    mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+    mockUser = mockUserWithRole("platformAdmin");
 
     const { getAllByRole, getByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
@@ -258,7 +270,7 @@ describe("account menu", () => {
       team: "test-team",
       flow: "test-flow",
     });
-    mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
+    mockUser = mockUserWithRole("teamEditor");
   });
 
   it("displays avatar initials and toggle button", async () => {
@@ -271,7 +283,7 @@ describe("account menu", () => {
 describe("layout", () => {
   it("displays in a full mode on global routes", async () => {
     setRouteContext("/", ["app"]);
-    mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+    mockUser = mockUserWithRole("platformAdmin");
 
     const { queryAllByRole, queryByLabelText, getByText } = await setup(
       <EditorNavMenu />,
@@ -290,7 +302,7 @@ describe("layout", () => {
 
   it("displays in a full mode on team routes", async () => {
     setRouteContext("/test-team", ["app", "app/$team"], { team: "test-team" });
-    mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+    mockUser = mockUserWithRole("platformAdmin");
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
     // Dashboard nav item is only shown in production
     vi.stubEnv("VITE_APP_ENV", "production");
@@ -314,7 +326,7 @@ describe("layout", () => {
         flow: "test-flow",
       },
     );
-    mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+    mockUser = mockUserWithRole("platformAdmin");
 
     const { queryAllByRole, getByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
