@@ -13,6 +13,7 @@ import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { StatusMarker } from "ui/editor/StatusMarker";
 
+import { useTemplatedFlowCustomisations } from "../Customisations/hooks/useTemplatedFlowCustomisations";
 import { OpenServiceMenu } from "../OpenServiceMenu";
 import { usePublishFlow } from "./hooks/usePublishFlow";
 import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
@@ -100,30 +101,27 @@ export const CheckForChangesToPublishButton: React.FC<{
     lastPublishedQuery.data,
   );
 
-  const [
-    isPattern,
-    flowStatus,
-    outstandingTemplatedFlowCustomisations,
-    orderedFlow,
-  ] = useStore((state) => [
+  const [isPattern, flowStatus] = useStore((state) => [
     state.isPattern,
     state.flowStatus,
-    state.outstandingTemplatedFlowCustomisations,
-    state.orderedFlow,
   ]);
 
-  // Derived from the flow itself (not flow edits), so never stale and needs no reset
-  const hasRequiredCustomisations = Boolean(
-    orderedFlow?.some(
-      (node) =>
-        node.data?.isTemplatedNode &&
-        node.data?.areTemplatedNodeInstructionsRequired === true,
-    ),
-  );
+  const { required, outstanding, loading } = useTemplatedFlowCustomisations();
+
+  const hasRequiredCustomisations = required > 0;
+
+  const getCustomisationStatusText = () => {
+    if (loading) return "Checking required nodes...";
+    if (outstanding === 0) return "All required nodes customised";
+    return `${outstanding} ${outstanding === 1 ? "node" : "nodes"} to customise`;
+  };
+
+  const customisationStatusText = getCustomisationStatusText();
 
   const isDisabled =
     !useStore.getState().canUserEditTeam(teamSlug) ||
-    outstandingTemplatedFlowCustomisations > 0 ||
+    loading ||
+    outstanding > 0 ||
     isPattern ||
     checkForChangesMutation.isPending ||
     publishMutation.isPending;
@@ -165,30 +163,25 @@ export const CheckForChangesToPublishButton: React.FC<{
                 </Box>
                 {hasRequiredCustomisations && (
                   <Box sx={{ display: "flex", gap: 0.5 }}>
-                    <StatusMarker
-                      isComplete={outstandingTemplatedFlowCustomisations === 0}
-                    />
+                    <StatusMarker isComplete={!loading && outstanding === 0} />
                     <Typography
                       variant="body2"
                       sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
                     >
-                      {outstandingTemplatedFlowCustomisations === 0
-                        ? "All required nodes customised"
-                        : `${outstandingTemplatedFlowCustomisations} ${outstandingTemplatedFlowCustomisations === 1 ? "node" : "nodes"} to customise`}
-                      {outstandingTemplatedFlowCustomisations > 0 &&
-                        !isCustomiseTabOpen && (
-                          <>
-                            {" "}
-                            <Link
-                              component="button"
-                              variant="body2"
-                              onClick={onViewCustomisations}
-                              sx={{ verticalAlign: "baseline" }}
-                            >
-                              view
-                            </Link>
-                          </>
-                        )}
+                      {customisationStatusText}
+                      {!loading && outstanding > 0 && !isCustomiseTabOpen && (
+                        <>
+                          {" "}
+                          <Link
+                            component="button"
+                            variant="body2"
+                            onClick={onViewCustomisations}
+                            sx={{ verticalAlign: "baseline" }}
+                          >
+                            view
+                          </Link>
+                        </>
+                      )}
                     </Typography>
                   </Box>
                 )}

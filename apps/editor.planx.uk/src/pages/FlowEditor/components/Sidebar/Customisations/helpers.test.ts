@@ -2,8 +2,47 @@ import { sortFlow } from "@opensystemslab/planx-core";
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 
-import { hasNodeBeenUpdated } from "./helpers";
+import { getEditedFolderIds, hasNodeBeenUpdated } from "./helpers";
 import type { FlowEdits } from "./types";
+
+describe("getEditedFolderIds", () => {
+  it("returns the folder containing an edited node", () => {
+    const editedFolderIds = getEditedFolderIds(
+      mockFlowEdits,
+      sortFlow(mockTemplatedFlow),
+    );
+    expect(editedFolderIds).toEqual(new Set(["Folder"]));
+  });
+
+  it("returns every folder containing an edited node nested within folders", () => {
+    const editedFolderIds = getEditedFolderIds(
+      { NestedNotice: { data: { text: "Updated" } } },
+      sortFlow(mockNestedFolderFlow),
+    );
+    expect(editedFolderIds).toEqual(new Set(["FolderA", "FolderB"]));
+  });
+
+  it("does not return a folder if only the folder itself has been edited", () => {
+    const editedFolderIds = getEditedFolderIds(
+      { FolderB: { data: { text: "Updated" } } },
+      sortFlow(mockNestedFolderFlow),
+    );
+    expect(editedFolderIds).toEqual(new Set(["FolderA"]));
+  });
+
+  it("returns no folders when there are no edits", () => {
+    const editedFolderIds = getEditedFolderIds(
+      {},
+      sortFlow(mockNestedFolderFlow),
+    );
+    expect(editedFolderIds.size).toBe(0);
+  });
+
+  it("returns no folders when orderedFlow is unavailable", () => {
+    const editedFolderIds = getEditedFolderIds(mockFlowEdits, undefined);
+    expect(editedFolderIds.size).toBe(0);
+  });
+});
 
 describe("hasNodeBeenUpdated", () => {
   it("returns true for a templated node that has been directly edited", () => {
@@ -11,7 +50,7 @@ describe("hasNodeBeenUpdated", () => {
       "SectionTwo",
       mockTemplatedFlow,
       mockFlowEdits,
-      sortFlow(mockTemplatedFlow),
+      getEditedFolderIds(mockFlowEdits, sortFlow(mockTemplatedFlow)),
     );
     expect(isComplete).toBe(true);
   });
@@ -21,7 +60,7 @@ describe("hasNodeBeenUpdated", () => {
       "Question",
       mockTemplatedFlow,
       mockFlowEdits,
-      sortFlow(mockTemplatedFlow),
+      getEditedFolderIds(mockFlowEdits, sortFlow(mockTemplatedFlow)),
     );
     expect(isComplete).toBe(true);
   });
@@ -31,9 +70,32 @@ describe("hasNodeBeenUpdated", () => {
       "Folder",
       mockTemplatedFlow,
       mockFlowEdits,
-      sortFlow(mockTemplatedFlow),
+      getEditedFolderIds(mockFlowEdits, sortFlow(mockTemplatedFlow)),
     );
     expect(isComplete).toBe(true);
+  });
+
+  it("returns true for a folder if a node has been added to a folder nested within it", () => {
+    const flowEdits: FlowEdits = {
+      NestedNotice: { data: { text: "Updated" } },
+    };
+    const isComplete = hasNodeBeenUpdated(
+      "FolderA",
+      mockNestedFolderFlow,
+      flowEdits,
+      getEditedFolderIds(flowEdits, sortFlow(mockNestedFolderFlow)),
+    );
+    expect(isComplete).toBe(true);
+  });
+
+  it("returns false for a folder if none of its children have been edited", () => {
+    const isComplete = hasNodeBeenUpdated(
+      "FolderA",
+      mockNestedFolderFlow,
+      {},
+      getEditedFolderIds({}, sortFlow(mockNestedFolderFlow)),
+    );
+    expect(isComplete).toBe(false);
   });
 
   it("returns false if a templated node has not been edited", () => {
@@ -41,7 +103,7 @@ describe("hasNodeBeenUpdated", () => {
       "Content",
       mockTemplatedFlow,
       mockFlowEdits,
-      sortFlow(mockTemplatedFlow),
+      getEditedFolderIds(mockFlowEdits, sortFlow(mockTemplatedFlow)),
     );
     expect(isComplete).toBe(false);
   });
@@ -161,5 +223,33 @@ const mockTemplatedFlow: FlowGraph = {
       text: "Notice inside a customisable folder not on root branch",
     },
     type: ComponentType.Notice,
+  },
+};
+
+const mockNestedFolderFlow: FlowGraph = {
+  _root: {
+    edges: ["FolderA"],
+  },
+  FolderA: {
+    type: ComponentType.InternalPortal,
+    data: {
+      text: "Outer folder",
+      isTemplatedNode: true,
+      areTemplatedNodeInstructionsRequired: true,
+    },
+    edges: ["FolderB"],
+  },
+  FolderB: {
+    type: ComponentType.InternalPortal,
+    data: {
+      text: "Inner folder",
+    },
+    edges: ["NestedNotice"],
+  },
+  NestedNotice: {
+    type: ComponentType.Notice,
+    data: {
+      text: "Notice inside a folder inside a folder",
+    },
   },
 };

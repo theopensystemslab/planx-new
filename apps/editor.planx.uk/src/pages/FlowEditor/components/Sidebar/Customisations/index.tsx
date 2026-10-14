@@ -1,4 +1,3 @@
-import { gql, useSubscription } from "@apollo/client";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
@@ -7,48 +6,29 @@ import { useStore } from "pages/FlowEditor/lib/store";
 
 import { CustomisationCard } from "./CustomisationCard";
 import { CustomisationCounter } from "./CustomisationCounter";
-import type { FlowEdits } from "./types";
+import { useTemplatedFlowCustomisations } from "./hooks/useTemplatedFlowCustomisations";
 
 const Customisations = () => {
-  const [flowId, isTemplatedFrom, isTemplate, orderedFlow] = useStore(
-    (state) => [
-      state.id,
-      state.isTemplatedFrom,
-      state.isTemplate,
-      state.orderedFlow,
-    ],
-  );
+  const [isTemplatedFrom, isTemplate, orderedFlow] = useStore((state) => [
+    state.isTemplatedFrom,
+    state.isTemplate,
+    state.orderedFlow,
+  ]);
 
   // Get the nodes within this flow that are customisable and sort them top-down to match graph
   const sortedCustomisableNodeIds = (orderedFlow ?? [])
     .filter((node) => Boolean(node.data?.isTemplatedNode))
     .map((node) => node.id);
 
-  // Subscribe to edits in order to mark customisable nodes "done"
-  const { data, loading, error } = useSubscription<{
-    edits: [{ data: FlowEdits }];
-  }>(
-    gql`
-      subscription GetTemplatedFlowEdits($flow_id: uuid = "") {
-        edits: templated_flow_edits(where: { flow_id: { _eq: $flow_id } }) {
-          data
-        }
-      }
-    `,
-    {
-      variables: {
-        flow_id: flowId,
-      },
-      skip: !isTemplatedFrom,
-    },
-  );
+  const { flowEdits, editedFolderIds, required, completed, loading, error } =
+    useTemplatedFlowCustomisations();
 
   if (error) {
     console.log(error.message);
     return null;
   }
 
-  if (loading && !data) {
+  if (loading) {
     return (
       <Box>
         <DelayedLoadingIndicator
@@ -59,15 +39,10 @@ const Customisations = () => {
     );
   }
 
-  const flowEdits = data?.edits?.[0]?.data || {};
-
   return (
     <Box sx={{ p: 2, backgroundColor: "background.paper", minHeight: "100%" }}>
       {isTemplatedFrom && (
-        <CustomisationCounter
-          flowEdits={flowEdits}
-          customisableNodeIds={sortedCustomisableNodeIds}
-        />
+        <CustomisationCounter required={required} completed={completed} />
       )}
       {isTemplate && (
         <>
@@ -81,6 +56,7 @@ const Customisations = () => {
           <CustomisationCard
             key={nodeId}
             nodeId={nodeId}
+            editedFolderIds={editedFolderIds}
             flowEdits={flowEdits}
           />
         ))}

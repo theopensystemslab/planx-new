@@ -12,19 +12,24 @@ import type { FlowEdits } from "./types";
 interface Props {
   nodeId: string;
   flowEdits: FlowEdits;
+  editedFolderIds: Set<string>;
 }
 
-export const CustomisationCard: React.FC<Props> = ({ nodeId, flowEdits }) => {
-  const [flow, orderedFlow] = useStore((state) => [
-    state.flow,
-    state.orderedFlow,
-  ]);
+export const CustomisationCard: React.FC<Props> = ({
+  nodeId,
+  flowEdits,
+  editedFolderIds,
+}) => {
+  const flow = useStore((state) => state.flow);
   const node = flow[nodeId];
 
   const theme = useTheme();
 
-  const isComplete = Boolean(
-    hasNodeBeenUpdated(nodeId, flow, flowEdits, orderedFlow),
+  const isComplete = hasNodeBeenUpdated(
+    nodeId,
+    flow,
+    flowEdits,
+    editedFolderIds,
   );
 
   return (

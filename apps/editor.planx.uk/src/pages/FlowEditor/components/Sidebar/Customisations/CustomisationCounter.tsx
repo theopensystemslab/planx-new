@@ -5,17 +5,12 @@ import LinearProgress, {
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { useEffect } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 import { StatusMarker } from "ui/editor/StatusMarker";
 
-import { hasNodeBeenUpdated } from "./helpers";
-import type { FlowEdits } from "./types";
-
 interface Props {
-  flowEdits: FlowEdits;
-  customisableNodeIds: string[];
+  required: number;
+  completed: number;
 }
 
 const Container = styled(Box, {
@@ -47,43 +42,15 @@ const ProgressBar = styled(LinearProgress)(({ theme }) => ({
 }));
 
 export const CustomisationCounter: React.FC<Props> = ({
-  flowEdits,
-  customisableNodeIds,
+  required,
+  completed,
 }) => {
-  const [flow, orderedFlow] = useStore((state) => [
-    state.flow,
-    state.orderedFlow,
-  ]);
-
-  const requiredCustomisableNodeIds = customisableNodeIds.filter(
-    (id) => flow[id]?.data?.areTemplatedNodeInstructionsRequired === true,
-  );
-
-  const countRequiredNodes = requiredCustomisableNodeIds.length;
-  const countCompletedRequiredNodes = requiredCustomisableNodeIds.filter(
-    (requiredNodeId) =>
-      hasNodeBeenUpdated(requiredNodeId, flow, flowEdits, orderedFlow),
-  ).length;
-
-  const hasEveryRequiredNodeBeenUpdated =
-    countCompletedRequiredNodes === countRequiredNodes;
-
-  useEffect(() => {
-    // Set basic EditorStore state so other components (publish button, templated status)
-    //   can reference it without re-calculating
-    useStore.setState({
-      outstandingTemplatedFlowCustomisations:
-        countRequiredNodes - countCompletedRequiredNodes,
-    });
-  }, [flowEdits, customisableNodeIds]);
-
   // Nothing to track if the template has no required customisations
-  if (!countRequiredNodes) return null;
+  if (!required) return null;
 
-  const countOutstanding = countRequiredNodes - countCompletedRequiredNodes;
-  const progress = countRequiredNodes
-    ? (countCompletedRequiredNodes / countRequiredNodes) * 100
-    : 100;
+  const outstanding = required - completed;
+  const hasEveryRequiredNodeBeenUpdated = outstanding === 0;
+  const progress = (completed / required) * 100;
 
   return (
     <Container
@@ -103,7 +70,7 @@ export const CustomisationCounter: React.FC<Props> = ({
         <Typography variant="body2" sx={{ fontWeight: FONT_WEIGHT_BOLD }}>
           {hasEveryRequiredNodeBeenUpdated
             ? "All required nodes customised"
-            : `${countOutstanding} ${countOutstanding === 1 ? "node" : "nodes"} to customise`}
+            : `${outstanding} ${outstanding === 1 ? "node" : "nodes"} to customise`}
         </Typography>
         {!hasEveryRequiredNodeBeenUpdated && (
           <Typography variant="body3">
@@ -117,8 +84,7 @@ export const CustomisationCounter: React.FC<Props> = ({
             aria-label="Required nodes customised"
           />
           <Typography variant="caption">
-            {countCompletedRequiredNodes} of {countRequiredNodes} required nodes
-            customised
+            {completed} of {required} required nodes customised
           </Typography>
         </Stack>
       </Box>
