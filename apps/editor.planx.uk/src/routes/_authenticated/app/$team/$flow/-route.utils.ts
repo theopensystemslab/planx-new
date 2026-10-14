@@ -36,12 +36,6 @@ export async function connectToFlowRoute(teamSlug: string, rootFlow: string) {
       isPattern: flowEditorData.isPattern,
     });
 
-    // Both templated flows and source templates render the <Customise/> panel by default
-    // This requires `orderedFlow` - prepare it once here
-    if (flowEditorData.templatedFrom || flowEditorData.isTemplate) {
-      store.setOrderedFlow();
-    }
-
     store.getFlowInformation(rootFlow, teamSlug);
   } catch (error) {
     console.error("[connectToFlowRoute] threw:", error);
