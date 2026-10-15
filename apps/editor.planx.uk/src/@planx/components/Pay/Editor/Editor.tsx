@@ -21,7 +21,6 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import type { EditorProps } from "../../shared/types";
-import { InviteToPaySection } from "./InviteToPaySection";
 import { PaymentMetadataSection } from "./PaymentMetadataSection";
 
 export type Props = EditorProps<TYPES.Pay, Pay>;
@@ -121,9 +120,22 @@ const Component: React.FC<Props> = (props: Props) => {
                 disabled={props.disabled}
               />
             </InputRow>
+            <InputRow>
+              <Switch
+                checked={formik.values.allowInviteToPay}
+                onChange={() =>
+                  formik.setFieldValue(
+                    "allowInviteToPay",
+                    !formik.values.allowInviteToPay,
+                  )
+                }
+                label="Allow applicants to invite someone else to pay"
+                disabled={props.disabled}
+                error={formik.errors.allowInviteToPay}
+              />
+            </InputRow>
           </ModalSectionContent>
         </ModalSection>
-        <InviteToPaySection disabled={props.disabled} />
         <PaymentMetadataSection disabled={props.disabled} />
         <MoreInformation formik={formik} disabled={props.disabled} />
         <ComponentTagSelect

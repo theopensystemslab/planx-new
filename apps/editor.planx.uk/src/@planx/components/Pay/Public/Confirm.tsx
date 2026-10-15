@@ -193,11 +193,6 @@ export default function Confirm(props: Props) {
   const isSaveReturn = path === ApplicationPath.SaveAndReturn;
 
   const inviteToPayFormProps: InviteToPayFormProps = {
-    nomineeTitle: props.nomineeTitle,
-    nomineeDescription: props.nomineeDescription,
-    yourDetailsTitle: props.yourDetailsTitle,
-    yourDetailsDescription: props.yourDetailsDescription,
-    yourDetailsLabel: props.yourDetailsLabel,
     paymentStatus: props.paymentStatus,
     changePage: toggleToPayPage,
   };
@@ -207,7 +202,7 @@ export default function Confirm(props: Props) {
       <Container maxWidth="contentWrap">
         <Typography variant="h2" component="h1" align="left" sx={{ pb: 3 }}>
           {componentState === "inviteToPay"
-            ? props.secondaryPageTitle
+            ? "Invite someone else to pay"
             : props.title}
         </Typography>
       </Container>
