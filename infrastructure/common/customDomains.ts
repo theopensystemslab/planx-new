@@ -154,6 +154,11 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           domain: "planningservices.swale.gov.uk",
           cloudFrontState: "shared-final",
         },
+        {
+          name: "north-tyneside",
+          domain: "planningservices.northtyneside.gov.uk",
+          cloudFrontState: "validation-only",
+        },
       ]
     : [
         // we keep one custom domain on staging to function as a canary (monitored by UptimeRobot)
