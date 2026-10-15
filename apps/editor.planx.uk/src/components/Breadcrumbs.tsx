@@ -63,7 +63,7 @@ const Breadcrumbs: React.FC = () => {
       <BreadcrumbsRoot>
         {params.team && (
           <BreadcrumbsLink
-            to="/app/$team"
+            to="/app/$team/flows"
             params={{
               team: teamSlug,
             }}
