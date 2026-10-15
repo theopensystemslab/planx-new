@@ -4,8 +4,8 @@ import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
 import { useNavigate } from "@tanstack/react-router";
-import { useIndexedNode } from "hooks/useIndexedFlow";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { selectIndexedNode } from "pages/FlowEditor/lib/store/selectors";
 import type { PropsWithChildren } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -74,7 +74,7 @@ export const NodeCard: React.FC<Props> = ({
 }) => {
   const navigate = useNavigate();
   const getURLForNode = useStore((state) => state.getURLForNode);
-  const node = useIndexedNode(nodeId);
+  const node = useStore(selectIndexedNode(nodeId));
 
   if (!node) return;
 

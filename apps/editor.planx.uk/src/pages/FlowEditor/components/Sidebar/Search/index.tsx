@@ -2,9 +2,10 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
 import { useFormik } from "formik";
-import { useOrderedFlow } from "hooks/useIndexedFlow";
 import { useSearch } from "hooks/useSearch";
 import { debounce } from "lodash";
+import { useStore } from "pages/FlowEditor/lib/store";
+import { selectOrderedFlow } from "pages/FlowEditor/lib/store/selectors";
 import React, { forwardRef, useMemo, useState } from "react";
 import type { Components } from "react-virtuoso";
 import { Virtuoso } from "react-virtuoso";
@@ -51,7 +52,7 @@ const ListItemComponent = forwardRef<HTMLLIElement>((props, ref) => (
  */
 const Search: React.FC = () => {
   // Get ordered flow of indexed nodes from store
-  const orderedFlow = useOrderedFlow();
+  const orderedFlow = useStore(selectOrderedFlow);
 
   // Set up search input form
   const formik = useFormik<SearchNodes>({

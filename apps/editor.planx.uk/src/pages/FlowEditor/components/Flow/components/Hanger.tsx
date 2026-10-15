@@ -2,8 +2,8 @@ import type { NodeId } from "@opensystemslab/planx-core/types";
 import { useParams } from "@tanstack/react-router";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
-import { useIndexedNode } from "hooks/useIndexedFlow";
 import AddComponentModal from "pages/FlowEditor/components/forms/AddComponentModal";
+import { selectIndexedNode } from "pages/FlowEditor/lib/store/selectors";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -41,7 +41,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   ]);
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
-  const indexedParent = useIndexedNode(parent);
+  const indexedParent = useStore(selectIndexedNode(parent));
   const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
     flow,
     indexedParent,

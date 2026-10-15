@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { MENU_WIDTH_COMPACT } from "components/EditorNavMenu/styles";
-import { useIndexedNode } from "hooks/useIndexedFlow";
+import { selectIndexedNode } from "pages/FlowEditor/lib/store/selectors";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
 import { useRef } from "react";
 
@@ -59,7 +59,7 @@ const FlowEditor = () => {
 
   const parentId = getParentId(undefined);
 
-  const indexedParent = useIndexedNode(parentId);
+  const indexedParent = useStore(selectIndexedNode(parentId));
   const parentIsTemplatedInternalPortal = parentNodeIsTemplatedInternalPortal(
     flowObject,
     indexedParent,

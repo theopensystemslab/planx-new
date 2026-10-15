@@ -1,6 +1,6 @@
 import { gql, useSubscription } from "@apollo/client";
-import { useOrderedFlow } from "hooks/useIndexedFlow";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { selectOrderedFlow } from "pages/FlowEditor/lib/store/selectors";
 
 import { getEditedFolderIds, hasNodeBeenUpdated } from "../helpers";
 import type { FlowEdits } from "../types";
@@ -26,7 +26,7 @@ export const useTemplatedFlowCustomisations = () => {
     state.isTemplatedFrom,
     state.flow,
   ]);
-  const orderedFlow = useOrderedFlow();
+  const orderedFlow = useStore(selectOrderedFlow);
 
   const { data, loading, error } = useSubscription<QueryResult>(
     GET_TEMPLATED_FLOW_EDITS,

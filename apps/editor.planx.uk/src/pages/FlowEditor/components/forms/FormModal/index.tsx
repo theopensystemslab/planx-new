@@ -15,8 +15,8 @@ import { ROOT_NODE_KEY } from "@planx/graph";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import type { FormikProps } from "formik";
-import { useIndexedNode } from "hooks/useIndexedFlow";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { selectIndexedNode } from "pages/FlowEditor/lib/store/selectors";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -230,7 +230,7 @@ const FormModal: React.FC<FormModalProps> = ({
     return useStore.getState().canUserEditTeam(teamSlug);
   };
 
-  const indexedParent = useIndexedNode(parent ?? ROOT_NODE_KEY);
+  const indexedParent = useStore(selectIndexedNode(parent ?? ROOT_NODE_KEY));
   const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
     flow,
     indexedParent,

@@ -35,8 +35,8 @@ import { FlowLayout } from "../../components/Flow";
 import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
 import type { NavigationStore } from "./navigation";
+import { selectOrderedFlow } from "./selectors";
 import type { SharedStore } from "./shared";
-import { getIndexedFlow } from "./utils/indexedFlow";
 import { stripTemplatedNodeProps } from "./utils/stripTemplatedNodeProps";
 
 let doc: Doc;
@@ -778,8 +778,8 @@ export const editorStore: StateCreator<
   },
 
   getURLForNode: (nodeId) => {
-    const { flow: rawFlow, flowSlug, teamSlug } = get();
-    const flow = getIndexedFlow(rawFlow).ordered;
+    const { flowSlug, teamSlug } = get();
+    const flow = selectOrderedFlow(get());
     if (!flow.length) throw Error("Missing ordered flow!");
 
     const path = getPathForNode({ nodeId, flow });

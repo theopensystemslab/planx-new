@@ -33,8 +33,8 @@ import type { Session } from "../../../../types";
 import { ApplicationPath } from "../../../../types";
 import type { Store } from ".";
 import type { NavigationStore } from "./navigation";
+import { selectIndexedFlow } from "./selectors";
 import type { SharedStore } from "./shared";
-import { getIndexedFlow } from "./utils/indexedFlow";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];
 const SUPPORTED_INPUT_TYPES = [
@@ -876,10 +876,10 @@ export const previewStore: StateCreator<
   setHasAcknowledgedWarning: () => set({ hasAcknowledgedWarning: true }),
 
   currentCardURL: () => {
-    const { currentCard, flow, flowSlug, teamSlug } = get();
+    const { currentCard, flowSlug, teamSlug } = get();
     if (!currentCard?.id) return null;
 
-    const { ordered: orderedFlow, nodes } = getIndexedFlow(flow);
+    const { ordered: orderedFlow, nodes } = selectIndexedFlow(get());
     const path = getPathForNode({ nodeId: currentCard.id, flow: orderedFlow });
     if (!path || path.length === 0) return null;
 
