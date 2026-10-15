@@ -4,12 +4,14 @@ import Typography from "@mui/material/Typography";
 import { EllipsesText } from "components/EllipsesText/EllipsesText";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-import { PatternMosaic } from "./PatternMosaic";
+import { PatternComponentIcons } from "./PatternComponentIcons";
 import type { Pattern } from "./queries";
 import { usePatternData } from "./usePatterns";
-import { getPatternCounts } from "./utils";
+import { getPatternComponentTypes, getPatternCounts } from "./utils";
 
 export const DETAIL_PANEL_WIDTH = 300;
+
+const PREVIEW_ICON_LIMIT = 5;
 
 interface Props {
   pattern: Pattern | null;
@@ -21,6 +23,12 @@ export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
 
   // Null while there's no graph data (loading, error, or nothing previewed)
   const counts = graph ? getPatternCounts(graph) : null;
+  const componentTypes = graph
+    ? getPatternComponentTypes(graph, PREVIEW_ICON_LIMIT)
+    : [];
+  const remainingCount = counts
+    ? counts.components + counts.nestedFlows - componentTypes.length
+    : 0;
 
   if (!pattern) {
     return (
@@ -68,7 +76,7 @@ export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
         sx={{
           position: "relative",
           width: "100%",
-          aspectRatio: "2.2 / 1",
+          aspectRatio: "2.5 / 1",
           borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           border: (theme) => `1px solid ${theme.palette.divider}`,
           overflow: "hidden",
@@ -79,13 +87,10 @@ export const PatternDetailPanel: React.FC<Props> = ({ pattern }) => {
           paddingBottom: 1.85,
         }}
       >
-        {counts && (
-          <PatternMosaic
-            seed={pattern.id}
-            counts={counts}
-            sx={{ maxWidth: "80%", maxHeight: "75%" }}
-          />
-        )}
+        <PatternComponentIcons
+          types={componentTypes}
+          remainingCount={remainingCount}
+        />
         {(loading || componentCountLabel) && (
           <Typography
             variant="body3"
