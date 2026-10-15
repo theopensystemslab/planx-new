@@ -548,8 +548,6 @@ describe("Confirm component with inviteToPay", () => {
   const inviteProps: Props = {
     ...defaultProps,
     showInviteToPay: true,
-    nomineeTitle: "Details of your nominee",
-    nomineeDescription: "Invite someone else to pay",
     paymentStatus: undefined,
   };
 
@@ -565,7 +563,9 @@ describe("Confirm component with inviteToPay", () => {
 
     // Click link to navigate to "InviteToPay" page
     await user.click(screen.getByText(invitePrompt));
-    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(
+      screen.getByText("Details of the person paying"),
+    ).toBeInTheDocument();
     expect(screen.getByText(payPrompt)).toBeInTheDocument();
 
     // Go back to "Pay page"
@@ -578,7 +578,9 @@ describe("Confirm component with inviteToPay", () => {
 
     // Switch to "InviteToPay" page
     await user.click(screen.getByText(invitePrompt));
-    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(
+      screen.getByText("Details of the person paying"),
+    ).toBeInTheDocument();
 
     await user.click(await screen.findByLabelText("Email"));
     await user.paste("jess@");
@@ -595,7 +597,9 @@ describe("Confirm component with inviteToPay", () => {
 
     // Switch to "InviteToPay" page
     await user.click(screen.getByText(invitePrompt));
-    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(
+      screen.getByText("Details of the person paying"),
+    ).toBeInTheDocument();
 
     await user.click(await screen.findByLabelText("Email"));
     await user.paste("test@opensystemslab.io");
@@ -610,7 +614,9 @@ describe("Confirm component with inviteToPay", () => {
 
     // Switch to "InviteToPay" page
     await user.click(screen.getByText(invitePrompt));
-    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(
+      screen.getByText("Details of the person paying"),
+    ).toBeInTheDocument();
 
     await user.click(await screen.findByLabelText("Email"));
     await user.paste("test@opensystemslab.io");
@@ -688,7 +694,9 @@ describe("Confirm component with inviteToPay", () => {
 
     // Switch to "InviteToPay" page
     await user.click(screen.getByText(invitePrompt));
-    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(
+      screen.getByText("Details of the person paying"),
+    ).toBeInTheDocument();
     expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
   });
 
@@ -703,7 +711,9 @@ describe("Confirm component with inviteToPay", () => {
 
     // Switch to "InviteToPay" page
     await user.click(screen.getByText(invitePrompt));
-    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(
+      screen.getByText("Details of the person paying"),
+    ).toBeInTheDocument();
     expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
   });
 
@@ -741,7 +751,9 @@ describe("Confirm component with inviteToPay", () => {
       const { user } = await setup(<Confirm {...inviteProps} />);
 
       await user.click(screen.getByText(invitePrompt));
-      expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+      expect(
+        screen.getByText("Details of the person paying"),
+      ).toBeInTheDocument();
 
       await user.click(screen.getByText(payPrompt));
       expect(screen.getByText("How to pay")).toBeInTheDocument();

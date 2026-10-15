@@ -38,10 +38,6 @@ export const WithInviteToPay = {
     onConfirm: () => {},
     error: undefined,
     showInviteToPay: true,
-    nomineeTitle: "Details of your nominee",
-    nomineeDescription: "Invite someone else to pay",
-    yourDetailsTitle: "Your details",
-    yourDetailsLabel: "Your name or organisation name",
   },
 } satisfies Story;
 
