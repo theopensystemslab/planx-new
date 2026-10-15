@@ -1,4 +1,5 @@
 import type { Role } from "@opensystemslab/planx-core/types";
+import { isRedirect } from "@tanstack/react-router";
 import { graphql, HttpResponse } from "msw";
 import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
@@ -17,8 +18,8 @@ const initialState = getState();
  * Run the $team route's beforeLoad, as the router would on navigation
  * Returns the context it provides to child routes
  */
-const loadTeamRoute = async (role: Role) => {
-  const user = mockUserWithRole(role, TEAM_SLUG);
+const loadTeamRoute = async (role: Role, userTeamSlug = TEAM_SLUG) => {
+  const user = mockUserWithRole(role, userTeamSlug);
 
   // Mimic a cold page load - the user is authenticated, but FlowsLayout hasn't yet mounted to call setTeam()
   // A JWT is required, or the Apollo auth link waits for authentication
@@ -71,22 +72,49 @@ describe("$team route context", () => {
   });
 });
 
-describe.each([
-  { name: "dashboard", route: DashboardRoute },
-  { name: "settings", route: SettingsRoute },
-])("$name route guard on a cold page load", ({ route }) => {
+describe("dashboard route guard on a cold page load", () => {
+  it.each<Role>(["platformAdmin", "teamAdmin", "teamEditor", "teamViewer"])(
+    "allows a %s",
+    async (role) => {
+      const context = await loadTeamRoute(role);
+      expect(runGuard(DashboardRoute, context)).not.toThrow();
+    },
+  );
+
+  it("allows a member of another team to view, as a teamViewer", async () => {
+    const context = await loadTeamRoute("teamEditor", "another-team");
+
+    expect(context.role).toBe("teamViewer");
+    expect(runGuard(DashboardRoute, context)).not.toThrow();
+  });
+
+  it("redirects an analyst to flows", async () => {
+    const context = await loadTeamRoute("analyst");
+
+    let error: unknown;
+    try {
+      runGuard(DashboardRoute, context)();
+    } catch (e) {
+      error = e;
+    }
+
+    expect(isRedirect(error)).toBe(true);
+  });
+});
+
+describe("settings route guard on a cold page load", () => {
   it.each<Role>(["platformAdmin", "teamAdmin", "teamEditor"])(
     "allows a %s",
     async (role) => {
       const context = await loadTeamRoute(role);
-      expect(runGuard(route, context)).not.toThrow();
+      expect(runGuard(SettingsRoute, context)).not.toThrow();
     },
   );
 
   it.each<Role>(["teamViewer", "analyst"])("blocks a %s", async (role) => {
     const context = await loadTeamRoute(role);
 
-    expect(runGuard(route, context)).toThrow(
+    expect(runGuard(SettingsRoute, context)).toThrow(
       expect.objectContaining({ isNotFound: true }),
     );
   });
