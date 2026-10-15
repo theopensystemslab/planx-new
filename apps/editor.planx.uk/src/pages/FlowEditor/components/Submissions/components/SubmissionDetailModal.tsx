@@ -39,12 +39,12 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
         sx={{
           display: "flex",
           flexDirection: "row",
-          alignItems: "flex-start",
+          alignItems: "center",
           marginX: 1,
         }}
       >
         <DialogTitle variant="h2">Submission details</DialogTitle>
-        <CloseButton onClick={handleClose} sx={{ paddingTop: 2.5 }} />
+        <CloseButton onClick={handleClose} />
       </Box>
 
       <SubmissionDetailContent sessionId={sessionId} />
