@@ -1,6 +1,14 @@
+import type { TestConfig } from "yup";
+import { array, object } from "yup";
+
 import type { ConditionalOption } from "../Option/model";
+import { optionValidationSchema } from "../Option/model";
 import type { BaseQuestion } from "../shared/BaseQuestion/model";
-import { parseBaseQuestion } from "../shared/BaseQuestion/model";
+import {
+  baseQuestionValidationSchema,
+  parseBaseQuestion,
+} from "../shared/BaseQuestion/model";
+import { uniqueOptionsTest } from "../shared/helpers";
 import type { Rule } from "../shared/RuleBuilder/types";
 import { Condition } from "../shared/RuleBuilder/types";
 
@@ -13,6 +21,14 @@ export type ResponsiveQuestion = BaseQuestion;
 export type ResponsiveQuestionWithOptions = ResponsiveQuestion & {
   options: ConditionalOption[];
 };
+
+export const validationSchema = baseQuestionValidationSchema.concat(
+  object({
+    options: array(optionValidationSchema)
+      .required()
+      .test(uniqueOptionsTest as TestConfig<unknown>),
+  }),
+);
 
 export const parseResponsiveQuestion = (
   data: Record<string, any> | undefined,

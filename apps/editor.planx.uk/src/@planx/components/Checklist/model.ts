@@ -1,10 +1,8 @@
+import type { TestConfig } from "yup";
 import { array, boolean, object, string } from "yup";
 
 import type { Option } from "../Option/model";
-import {
-  type ConditionalOption,
-  optionValidationSchema,
-} from "../Option/model";
+import { optionValidationSchema } from "../Option/model";
 import type {
   BaseChecklist,
   FlatOptions,
@@ -14,6 +12,7 @@ import {
   baseChecklistValidationSchema,
   getFlatOptions,
   parseBaseChecklist,
+  uniqueChecklistLabelsTest,
 } from "../shared/BaseChecklist/model";
 
 /**
@@ -149,7 +148,8 @@ export const validationSchema = baseChecklistValidationSchema.concat(
             "Exactly one option should have a blank data field when never putting to user",
         });
       },
-    }),
+    })
+    .test(uniqueChecklistLabelsTest as TestConfig<unknown>),
 );
 
 export const parseChecklist = (
