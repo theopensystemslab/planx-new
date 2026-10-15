@@ -1,4 +1,3 @@
-import { sortFlow } from "@opensystemslab/planx-core";
 import { waitFor, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { setup } from "test/utils";
@@ -24,7 +23,7 @@ import { VirtuosoWrapper } from "./testUtils";
 const { setState } = useStore;
 
 beforeEach(() => {
-  setState({ flow, orderedFlow: sortFlow(flow) });
+  setState({ flow });
 });
 
 test("data field checkbox is unchecked and enabled by default", async () => {

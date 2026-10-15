@@ -1,4 +1,3 @@
-import { sortFlow } from "@opensystemslab/planx-core";
 import { waitFor } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { setup } from "test/utils";
@@ -14,7 +13,7 @@ vi.mock("react-navi", () => ({
   }),
 }));
 
-beforeAll(() => useStore.setState({ flow, orderedFlow: sortFlow(flow) }));
+beforeAll(() => useStore.setState({ flow }));
 
 it("Displays a warning if no results are returned", async () => {
   const { getByLabelText, getByText, getByRole, user } = await setup(
