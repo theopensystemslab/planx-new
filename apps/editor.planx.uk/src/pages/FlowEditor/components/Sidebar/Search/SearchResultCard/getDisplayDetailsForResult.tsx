@@ -147,24 +147,6 @@ const keyFormatters: KeyMap = {
   "data.instructionsDescription": {
     getDisplayKey: () => "Instructions description",
   },
-  "data.secondaryPageTitle": {
-    getDisplayKey: () => "Secondary page title",
-  },
-  "data.nomineeTitle": {
-    getDisplayKey: () => "Nominee title",
-  },
-  "data.nomineeDescription": {
-    getDisplayKey: () => "Nominee description",
-  },
-  "data.yourDetailsTitle": {
-    getDisplayKey: () => "Title (your details)",
-  },
-  "data.yourDetailsDescription": {
-    getDisplayKey: () => "Description (your details)",
-  },
-  "data.yourDetailsLabel": {
-    getDisplayKey: () => "Label (your details)",
-  },
   "data.govPayMetadata.key": {
     getDisplayKey: () => "Payment metadata (key)",
   },

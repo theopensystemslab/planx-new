@@ -137,7 +137,6 @@ export const mockFlow: FlowGraph = {
       hidePay: false,
       bannerTitle: "Moose",
       description: "<p>.</p>",
-      nomineeTitle: "Aardvark",
       govPayMetadata: [
         {
           key: "flow",
@@ -157,12 +156,7 @@ export const mockFlow: FlowGraph = {
         },
       ],
       allowInviteToPay: true,
-      yourDetailsLabel: "Skunk",
-      yourDetailsTitle: "Camel",
       instructionsTitle: "Pelican",
-      nomineeDescription: "<p>Cheetah</p>",
-      secondaryPageTitle: "Chicken",
-      yourDetailsDescription: "<p>Macaw</p>",
       instructionsDescription: "<p>Cockatoo</p>",
     },
     type: 400,
@@ -343,7 +337,6 @@ export const mockPayResult: SearchResult<IndexedNode> = {
       hidePay: false,
       bannerTitle: "Moose",
       description: "<p>.</p>",
-      nomineeTitle: "Aardvark",
       govPayMetadata: [
         {
           key: "flow",
@@ -363,12 +356,7 @@ export const mockPayResult: SearchResult<IndexedNode> = {
         },
       ],
       allowInviteToPay: true,
-      yourDetailsLabel: "Skunk",
-      yourDetailsTitle: "Camel",
       instructionsTitle: "Pelican",
-      nomineeDescription: "<p>Cheetah</p>",
-      secondaryPageTitle: "Chicken",
-      yourDetailsDescription: "<p>Macaw</p>",
       instructionsDescription: "<p>Cockatoo</p>",
     },
   },
