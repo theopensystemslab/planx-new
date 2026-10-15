@@ -108,7 +108,7 @@ const Node: React.FC<any> = (props) => {
       const showNoteComponent =
         showNotes &&
         (!isTemplatedFrom ||
-          showNoteInTemplatedFlow(node.id, flow, orderedFlow));
+          showNoteInTemplatedFlow(props.id, flow, orderedFlow));
 
       return showNoteComponent ? (
         <Question {...allProps} text={node?.data?.text ?? "Note"} />
