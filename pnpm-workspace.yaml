@@ -10,7 +10,7 @@ packages:
 
 catalog:
   '@opensystemslab/map': 1.0.0-alpha.17
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#436fb79a41dfde0d10af82c7baee93b00ae9cbc7
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#8b3971907aad40a598c7a732d7f293bd7b91b32f
   '@types/jsdom': ^30.0.0
   '@types/node': ~24.10.15
   axios: ^1.20.0
