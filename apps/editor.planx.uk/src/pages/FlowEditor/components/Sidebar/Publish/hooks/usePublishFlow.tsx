@@ -92,7 +92,7 @@ export const usePublishFlow = () => {
    * Update publish button text based on state
    */
   const getButtonText = (checkForChanges: typeof checkForChangesMutation) => {
-    if (checkForChanges.isPending) return "Publishing...";
+    if (checkForChanges.isPending) return "Checking for changes...";
     return "Publish";
   };
 
