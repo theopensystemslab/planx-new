@@ -8,6 +8,12 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ApplicationPath } from "types";
 
 import { useStore } from "../../../pages/FlowEditor/lib/store";
+import {
+  selectCurrentSectionIndex,
+  selectCurrentSectionTitle,
+  selectHasSections,
+  selectSectionCount,
+} from "../../../pages/FlowEditor/lib/store/selectors";
 import { ProgressBar } from "./ProgressBar";
 
 const StyledNavBar = styled("nav")(({ theme }) => ({
@@ -18,10 +24,10 @@ const StyledNavBar = styled("nav")(({ theme }) => ({
 export const SectionNavBar: React.FC = () => {
   const [index, sectionCount, title, hasSections, saveToEmail, path] = useStore(
     (state) => [
-      state.currentSectionIndex,
-      state.sectionCount,
-      state.currentSectionTitle,
-      state.hasSections,
+      selectCurrentSectionIndex(state),
+      selectSectionCount(state),
+      selectCurrentSectionTitle(state),
+      selectHasSections(state),
       state.saveToEmail,
       state.path,
     ],

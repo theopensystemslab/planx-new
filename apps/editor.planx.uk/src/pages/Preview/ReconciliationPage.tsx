@@ -10,6 +10,10 @@ import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList
 import type { ReconciliationResponse } from "lib/api/saveAndReturn/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
+import {
+  selectHasSections,
+  selectSectionNodes,
+} from "pages/FlowEditor/lib/store/selectors";
 import Banner from "ui/public/Banner";
 
 interface Props {
@@ -35,8 +39,8 @@ const ReconciliationPage: React.FC<Props> = ({
     passport,
   ] = useStore((state) => [
     state.flow,
-    state.hasSections,
-    state.sectionNodes,
+    selectHasSections(state),
+    selectSectionNodes(state),
     state.currentCard,
     state.changeAnswer,
     state.record,
