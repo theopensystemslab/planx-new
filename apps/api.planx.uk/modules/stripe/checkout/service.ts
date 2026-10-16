@@ -257,6 +257,8 @@ export const createPaymentRequestStripeCheckoutSession = async ({
       ...formattedMetadata,
       paidViaInviteToPay: "true",
       ...getReservedPaymentMetadata(sessionId),
+      // Links this Checkout Session to its payment request, required for fulfilment
+      paymentRequestId: id,
     },
     customerEmail: paymentRequest.payeeEmail,
     expiresAt: getCheckoutSessionExpiry(paymentRequest.expiresAt, new Date()),
