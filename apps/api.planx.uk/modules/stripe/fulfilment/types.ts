@@ -27,7 +27,7 @@ export type FulfilmentResult =
   | { status: "notPaymentRequest" }
   /** Created by another environment sharing the Stripe sandbox */
   | { status: "foreign" }
-  /** The payment request doesn't exist in this environment */
+  /** The payment request (or its session) doesn't exist in this environment */
   | { status: "notFound" }
   /** The Checkout Session doesn't belong to this payment request or session */
   | { status: "mismatch" };

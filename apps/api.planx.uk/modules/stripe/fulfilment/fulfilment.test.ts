@@ -195,7 +195,7 @@ describe("fulfilling an invite to pay request", () => {
     });
 
     it("still writes the payment reference when the session has no passport", async () => {
-      mockPaymentRequestRow({ session: null });
+      mockPaymentRequestRow({}, { passport: null });
 
       await postWebhook(
         checkoutSessionEvent("checkout.session.completed"),
@@ -436,6 +436,15 @@ describe("fulfilling an invite to pay request", () => {
 
       await postFulfil().expect(404);
 
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
+    });
+
+    it("returns 404, without updating, when the payment request's session no longer exists", async () => {
+      const db = mockPaymentRequestRow({ session: null });
+
+      await postFulfil().expect(404);
+
+      expect(db.updates).toBe(0);
       expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 

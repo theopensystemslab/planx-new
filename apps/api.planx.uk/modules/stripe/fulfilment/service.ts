@@ -49,7 +49,7 @@ export async function fulfilPaymentRequest(
 
   const paymentRequest = await getPaymentRequest(paymentRequestId);
   // Local environments share a single origin, so a matching origin alone can't prove the request is ours
-  if (!paymentRequest) return { status: "notFound" };
+  if (!paymentRequest?.session) return { status: "notFound" };
 
   if (paymentRequest.sessionId !== sessionId) return { status: "mismatch" };
 
@@ -74,7 +74,7 @@ export async function fulfilPaymentRequest(
     paymentRequestId,
     sessionId,
     stripePaymentId,
-    passport: paymentRequest.session?.passport,
+    passport: paymentRequest.session.passport,
   });
 
   // A concurrent call got there first
