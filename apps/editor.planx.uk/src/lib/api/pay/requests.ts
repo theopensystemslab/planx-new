@@ -1,7 +1,12 @@
 import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 
 import apiClient from "../client";
-import type { GetPayment, InitiatePayment } from "./types";
+import type {
+  GetITPPayment,
+  GetPayment,
+  InitiateITPPayment,
+  InitiatePayment,
+} from "./types";
 
 export const getPayment = async ({
   teamSlug,
@@ -27,6 +32,30 @@ export const initiatePayment = async ({
     `/pay/${teamSlug}`,
     payload,
     { params: { sessionId, flowId } },
+  );
+
+  return data;
+};
+
+export const getITPPayment = async ({
+  paymentRequestId,
+  govPayPaymentId,
+}: GetITPPayment): Promise<GovUKPayment> => {
+  const { data } = await apiClient.get<GovUKPayment>(
+    `/payment-request/${paymentRequestId}/payment/${govPayPaymentId}`,
+  );
+
+  return data;
+};
+
+export const initiateITPPayment = async ({
+  paymentRequestId,
+  returnURL,
+}: InitiateITPPayment): Promise<GovUKPayment> => {
+  const { data } = await apiClient.post<GovUKPayment>(
+    `/payment-request/${paymentRequestId}/pay?returnURL=${encodeURIComponent(
+      returnURL,
+    )}`,
   );
 
   return data;
