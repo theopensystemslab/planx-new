@@ -193,11 +193,7 @@ export const createPublicRouteHead = (mode: PublicRouteMode) => {
 };
 
 export const updateStoreWithFlowData = (flowData: Store.Flow): void => {
-  useStore.setState({ flow: flowData, isFlowLoaded: false });
-  // Initialise navigation store now that we have flow data to derive sections from
-  // TODO: Pre-compute this on publish?
-  useStore.getState().initNavigationStore();
-  useStore.setState({ isFlowLoaded: true });
+  useStore.setState({ flow: flowData, isFlowLoaded: true });
 };
 
 /**

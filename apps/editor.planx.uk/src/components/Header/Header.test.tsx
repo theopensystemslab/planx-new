@@ -10,7 +10,7 @@ import flowWithoutSections from "../../pages/FlowEditor/lib/__tests__/mocks/flow
 import flowWithThreeSections from "../../pages/FlowEditor/lib/__tests__/mocks/flowWithThreeSections.json";
 import Header from "./Header";
 
-const { setState, getState } = useStore;
+const { setState } = useStore;
 
 const mockTeam1: Team = {
   id: 123,
@@ -250,7 +250,6 @@ describe("Section navigation bar", () => {
     it("does not display", async () => {
       await setup(<Header />);
       act(() => setState({ flow: flowWithoutSections }));
-      act(() => getState().initNavigationStore());
 
       expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
     });
@@ -259,7 +258,6 @@ describe("Section navigation bar", () => {
   describe("Flow with sections", () => {
     it("displays as expected", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
-      act(() => getState().initNavigationStore());
       await setup(<Header />);
 
       expect(screen.getByTestId("navigation-bar")).toBeInTheDocument();
@@ -267,7 +265,6 @@ describe("Section navigation bar", () => {
 
     it("display the correct information from the store", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
-      act(() => getState().initNavigationStore());
       await setup(<Header />);
 
       expect(screen.getByText("Section 1 of 3")).toBeInTheDocument();
@@ -276,7 +273,6 @@ describe("Section navigation bar", () => {
 
     it("should not have any accessibility violations", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
-      act(() => getState().initNavigationStore());
       const { container } = await setup(<Header />);
 
       const results = await axe(container);
