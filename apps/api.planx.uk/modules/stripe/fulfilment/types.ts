@@ -18,11 +18,11 @@ export const paymentRequestCheckoutMetadataSchema = z.object({
  */
 export type FulfilmentResult =
   /** This call marked the payment request as paid */
-  | { status: "fulfilled"; paymentRequestId: string }
+  | { status: "fulfilled" }
   /** The payment request was already paid, nothing changed */
-  | { status: "alreadyFulfilled"; paymentRequestId: string }
+  | { status: "alreadyFulfilled" }
   /** Stripe hasn't taken payment for this Checkout Session */
-  | { status: "unpaid"; paymentRequestId: string }
+  | { status: "unpaid" }
   /** Not an invite to pay Checkout Session (e.g. self-pay) */
   | { status: "notPaymentRequest" }
   /** Created by another environment sharing the Stripe sandbox */

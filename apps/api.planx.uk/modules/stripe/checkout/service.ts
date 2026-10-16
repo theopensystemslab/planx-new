@@ -120,7 +120,7 @@ export const expirePreviousCheckoutSessions = async (
 
 /**
  * Keys set by PlanX on every Stripe payment, which the API relies on to link a payment back to its session
- * These always take precedence over Editor-configured metadata
+ * Always spread last, so these are the values Stripe receives
  */
 const getReservedPaymentMetadata = (sessionId: string) => ({
   sessionId,

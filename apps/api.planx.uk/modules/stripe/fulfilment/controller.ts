@@ -35,10 +35,12 @@ export const fulfilPaymentRequestController: FulfilPaymentRequestController =
             status: 404,
             message: `Payment request ${paymentRequestId} not found`,
           });
-        default:
+        case "notPaymentRequest":
+        case "foreign":
+        case "mismatch":
           return next({
             status: 400,
-            message: `Checkout Session ${checkoutSessionId} does not belong to payment request ${paymentRequestId}`,
+            message: `Checkout Session ${checkoutSessionId} does not belong to payment request ${paymentRequestId} (${result.status})`,
           });
       }
     } catch (error) {

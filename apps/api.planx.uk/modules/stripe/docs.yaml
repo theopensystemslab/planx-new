@@ -443,7 +443,10 @@ paths:
                     enum: [paid]
         "400":
           description: |
-            Invalid request, or the Checkout Session does not belong to this payment request.
+            Invalid request, or the Checkout Session does not belong to this payment request, because either:
+            - it was created for a different payment request or session
+            - it's a self-pay Checkout Session
+            - it was created by another environment
         "404":
           description: The payment request, its session, or the Checkout Session was not found.
         "409":

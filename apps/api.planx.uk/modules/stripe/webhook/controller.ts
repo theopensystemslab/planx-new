@@ -27,16 +27,21 @@ const handleCheckoutSessionPaid = async (
   const result = await fulfilPaymentRequest(id);
 
   switch (result.status) {
+    case "fulfilled":
+    case "alreadyFulfilled":
+    case "unpaid":
+    case "foreign":
+    case "notFound":
+      return console.info(
+        `Stripe Checkout Session ${id} (${eventType}): ${result.status}`,
+      );
+    // Needs investigating
     case "notPaymentRequest":
     case "mismatch":
       return reportError({
-        error: `Could not fulfil payment request: Checkout Session metadata is invalid or does not match (${result.status})`,
+        error: `Could not fulfil payment request from Checkout Session ${id} (${result.status})`,
         context: { checkoutSessionId: id, eventType },
       });
-    default:
-      console.info(
-        `Stripe Checkout Session ${id} (${eventType}): ${result.status}`,
-      );
   }
 };
 

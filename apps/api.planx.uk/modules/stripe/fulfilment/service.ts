@@ -54,12 +54,12 @@ export async function fulfilPaymentRequest(
   if (paymentRequest.sessionId !== sessionId) return { status: "mismatch" };
 
   if (paymentRequest.paidAt) {
-    return { status: "alreadyFulfilled", paymentRequestId };
+    return { status: "alreadyFulfilled" };
   }
 
   // Checkout hasn't been completed
   if (checkoutSession.payment_status !== "paid") {
-    return { status: "unpaid", paymentRequestId };
+    return { status: "unpaid" };
   }
 
   const stripePaymentId = getStripeId(checkoutSession.payment_intent);
@@ -78,9 +78,9 @@ export async function fulfilPaymentRequest(
   });
 
   // A concurrent call got there first
-  if (!affectedRows) return { status: "alreadyFulfilled", paymentRequestId };
+  if (!affectedRows) return { status: "alreadyFulfilled" };
 
-  return { status: "fulfilled", paymentRequestId };
+  return { status: "fulfilled" };
 }
 
 interface MarkPaymentRequestAsPaidResponse {
