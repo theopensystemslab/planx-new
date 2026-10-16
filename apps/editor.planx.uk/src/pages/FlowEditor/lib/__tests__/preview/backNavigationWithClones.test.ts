@@ -26,32 +26,28 @@ describe("Navigation", () => {
 
     // Answer the first question
     clickContinue("RootQuestion", { auto: false, answers: ["RightPath"] });
-    // The clone has been incorrectly hoisted from the left branch into first position
+    // The clone is queued in its position on the right branch, not hoisted from the left branch
     expect(upcomingCardIds()).toEqual([
-      "ClonedSetValue",
       "RightPathFirstQuestion",
+      "ClonedSetValue",
       "FinalNotice",
     ]);
 
-    // Automate the SetValue and answer the next question
-    clickContinue("ClonedSetValue", { auto: true });
+    // Answer the next question
     clickContinue("RightPathFirstQuestion", {
       auto: false,
       answers: ["FbbUQsAXnS"],
     });
 
-    // This is our expected "forwards" order from start to end of flow down the right, then left path
+    // This is our expected "forwards" order from start to end of flow down the right path
     const forwardsSequence = [
       "RootQuestion", // Answer right path
-      "ClonedSetValue",
-      "RightPathFirstQuestion", // Answer left path
+      "RightPathFirstQuestion", // Answer building
       "ClonedContent",
+      "ClonedSetValue",
       "FinalNotice",
     ];
     expect(visitedNodes().concat(upcomingCardIds())).toEqual(forwardsSequence);
-
-    // In a future where clones are fixed, forwards order _should_ be:
-    // ["RootQuestion", "RightPathFirstQuestion", "ClonedContent", "ClonedSetValue", "FinalNotice"]
   });
 
   test("It navigates backwards in the same order", () => {
@@ -64,19 +60,19 @@ describe("Navigation", () => {
           seq: 1,
           answers: ["RightPath"],
         },
-        ClonedSetValue: {
-          auto: true,
-          createdAt: "2026-06-12T19:03:02.550Z",
-          seq: 2,
-        },
         RightPathFirstQuestion: {
           auto: false,
-          createdAt: "2026-06-12T19:52:57.807Z",
-          seq: 3,
+          createdAt: "2026-06-12T19:03:02.550Z",
+          seq: 2,
           answers: ["FbbUQsAXnS"],
         },
         ClonedContent: {
           auto: false,
+          createdAt: "2026-06-12T19:52:57.807Z",
+          seq: 3,
+        },
+        ClonedSetValue: {
+          auto: true,
           createdAt: "2026-06-12T19:53:00.876Z",
           seq: 4,
         },
@@ -91,13 +87,13 @@ describe("Navigation", () => {
     expect(canGoBack(getCurrentCard())).toBe(true);
 
     // Emulate clicking "back" via record(<previousCardId>)
+    // Skips ClonedSetValue because was automated
     expect(previousCard(flow["FinalNotice"])).toBe("ClonedContent");
     record("ClonedContent");
 
     expect(previousCard(flow["ClonedContent"])).toBe("RightPathFirstQuestion");
     record("RightPathFirstQuestion");
 
-    // Skips ClonedSetValue because was automated
     expect(previousCard(flow["RightPathFirstQuestion"])).toBe("RootQuestion");
   });
 });

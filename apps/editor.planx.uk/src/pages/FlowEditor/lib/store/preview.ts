@@ -20,7 +20,6 @@ import type { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { DEFAULT_FN as planningConstraintsFn } from "@planx/components/PlanningConstraints/model";
 import type { SetValue } from "@planx/components/SetValue/model";
 import { handleSetValue } from "@planx/components/SetValue/utils";
-import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import isEqual from "lodash/isEqual";
@@ -501,42 +500,37 @@ export const previewStore: StateCreator<
     const { flow, breadcrumbs } = get();
 
     const ids: Set<NodeId> = new Set();
+    const walked: Set<NodeId> = new Set();
 
-    // Based on a given node, get the nodes we should navigate through next: the children of any selected options, as well as nodes on the _root graph that should be seen no matter which option is selected
-    const nodeIdsConnectedFrom = (source: NodeId): void => {
-      return (flow[source]?.edges ?? [])
-        .filter((id) => {
-          // Filter out nodes we've already visited (aka have a breadcrumb for) (eg clones)
-          const node = flow[id];
-          return node && !breadcrumbs[id];
-        })
-        .forEach((id) => {
-          const node = flow[id];
+    // Walk the graph depth-first along the path the user has taken, so that order is determined by position on that path
+    //   Sorting against a single global ordering of the graph does not work for clones, which have one position per parent
+    const walk = (source: NodeId): void => {
+      if (walked.has(source)) return;
+      walked.add(source);
 
-          // Recursively get children in internal portals
-          if (node.type === TYPES.InternalPortal) {
-            return nodeIdsConnectedFrom(id);
-          }
+      (flow[source]?.edges ?? []).forEach((id) => {
+        const node = flow[id];
+        if (!node) return;
 
-          ids.add(id);
-        });
+        // Already visited (eg clones) - continue down the selected options, in edge order
+        const breadcrumb = breadcrumbs[id];
+        if (breadcrumb) {
+          const answers = new Set(breadcrumb.answers);
+          return node.edges
+            ?.filter((answerId) => answers.has(answerId))
+            .forEach(walk);
+        }
+
+        // Recursively get children in internal portals
+        if (node.type === TYPES.InternalPortal) return walk(id);
+
+        ids.add(id);
+      });
     };
 
-    // With a guaranteed unique set
-    new Set(
-      // of all the answers collected so far
-      Object.values(breadcrumbs)
-        // in reverse order
-        .flatMap(({ answers }) => answers as Array<NodeId>)
-        // .filter(Boolean)
-        .reverse()
-        // ending with _root
-        .concat("_root"),
-      // run nodeIdsConnectedFrom(answerId)
-    ).forEach(nodeIdsConnectedFrom);
+    walk("_root");
 
-    // Then return an array of the upcoming node ids, in depth-first order
-    return sortIdsDepthFirst(flow)(ids);
+    return [...ids];
   },
 
   autoAnswerableInputs: (id: NodeId) => {
