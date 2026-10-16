@@ -71,37 +71,30 @@ const postFulfil = (body: Record<string, unknown> = {}) =>
     .post(FULFIL_ENDPOINT)
     .send({ checkoutSessionId: CHECKOUT_SESSION_ID, ...body });
 
-/**
- * A stand-in for the payment_requests row, honouring `WHERE paid_at IS NULL`
- * so that idempotency is tested against the mutation's real guard
- */
 const mockPaymentRequestRow = (
   overrides: Record<string, unknown> = {},
   sessionOverrides: Record<string, unknown> = {},
 ) => {
-  const row = buildPaymentRequest(overrides, sessionOverrides);
-  const db = { paidAt: row.paidAt as string | null, updates: 0 };
-
   queryMock.mockQuery({
     name: "GetPaymentRequestForCheckout",
     matchOnVariables: false,
-    data: {},
-    customHandler: () => [
-      200,
-      { data: { paymentRequest: { ...row, paidAt: db.paidAt } } },
-    ],
+    data: { paymentRequest: buildPaymentRequest(overrides, sessionOverrides) },
   });
+  mockMarkAsPaid();
+};
 
+let markAsPaidQuery = "";
+
+/**
+ * @param affectedRows 0 when a concurrent call has already marked the request as paid
+ */
+const mockMarkAsPaid = (affectedRows = 1) =>
   queryMock.mockQuery({
     name: "MarkStripePaymentRequestAsPaid",
     matchOnVariables: false,
     data: {},
-    customHandler: () => {
-      const affectedRows = db.paidAt ? 0 : 1;
-      if (affectedRows) {
-        db.paidAt = new Date().toISOString();
-        db.updates++;
-      }
+    customHandler: (_req, { query }) => {
+      markAsPaidQuery = query.replace(/\s+/g, " ");
       return [
         200,
         {
@@ -113,9 +106,6 @@ const mockPaymentRequestRow = (
       ];
     },
   });
-
-  return db;
-};
 
 const mockPaymentRequestNotFound = () =>
   queryMock.mockQuery({
@@ -155,7 +145,7 @@ describe("fulfilling an invite to pay request", () => {
 
   describe("via the webhook", () => {
     it("marks the payment request as paid on a checkout.session.completed event, and writes the payment reference into the session", async () => {
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postWebhook(
         checkoutSessionEvent("checkout.session.completed"),
@@ -165,7 +155,7 @@ describe("fulfilling an invite to pay request", () => {
       expect(stripe.checkout.sessions.retrieve).toHaveBeenCalledWith(
         CHECKOUT_SESSION_ID,
       );
-      expect(db.updates).toBe(1);
+      expect(getMarkAsPaidCalls()).toHaveLength(1);
       expect(getMarkAsPaidCalls()[0].variables).toEqual({
         paymentRequestId: PAYMENT_REQUEST_ID,
         sessionId: SESSION_ID,
@@ -181,15 +171,30 @@ describe("fulfilling an invite to pay request", () => {
       });
     });
 
+    it("guards the update so the request is only paid once", async () => {
+      mockPaymentRequestRow();
+
+      await postWebhook(
+        checkoutSessionEvent("checkout.session.completed"),
+      ).expect(200);
+
+      expect(markAsPaidQuery).toContain(
+        "update_payment_requests( where: { id: { _eq: $paymentRequestId } paid_at: { _is_null: true } }",
+      );
+    });
+
     it("only updates once when the same event is delivered twice", async () => {
-      const db = mockPaymentRequestRow();
       const event = checkoutSessionEvent("checkout.session.completed");
 
-      await postWebhook(event).expect(200);
+      mockPaymentRequestRow();
       await postWebhook(event).expect(200);
 
-      expect(db.updates).toBe(1);
+      // By the time of redelivery, the request has been paid
+      mockPaymentRequestRow({ paidAt: new Date().toISOString() });
+      await postWebhook(event).expect(200);
+
       expect(getMarkAsPaidCalls()).toHaveLength(1);
+      expect(payHelpers.reportError).not.toHaveBeenCalled();
     });
 
     it("accepts an expanded PaymentIntent on the Checkout Session", async () => {
@@ -221,7 +226,7 @@ describe("fulfilling an invite to pay request", () => {
 
     it("reports, and does not update, an unpaid Checkout Session", async () => {
       mockRetrieve({ payment_status: "unpaid" });
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postWebhook(
         checkoutSessionEvent("checkout.session.completed", {
@@ -229,7 +234,6 @@ describe("fulfilling an invite to pay request", () => {
         }),
       ).expect(200);
 
-      expect(db.updates).toBe(0);
       expect(getMarkAsPaidCalls()).toHaveLength(0);
       expectReported("unpaid");
     });
@@ -237,7 +241,7 @@ describe("fulfilling an invite to pay request", () => {
     it("ignores a self-pay Checkout Session (no paymentRequestId)", async () => {
       const { paymentRequestId: _, ...selfPayMetadata } =
         checkoutSession().metadata;
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postWebhook(
         checkoutSessionEvent("checkout.session.completed", {
@@ -246,7 +250,7 @@ describe("fulfilling an invite to pay request", () => {
       ).expect(200);
 
       expect(stripe.checkout.sessions.retrieve).not.toHaveBeenCalled();
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
     it("ignores a Checkout Session created by another environment", async () => {
@@ -278,19 +282,18 @@ describe("fulfilling an invite to pay request", () => {
     });
 
     it("reports, and does not update, a payment request whose session no longer exists", async () => {
-      const db = mockPaymentRequestRow({ session: null });
+      mockPaymentRequestRow({ session: null });
 
       await postWebhook(
         checkoutSessionEvent("checkout.session.completed"),
       ).expect(200);
 
-      expect(db.updates).toBe(0);
       expect(getMarkAsPaidCalls()).toHaveLength(0);
       expectReported("notFound");
     });
 
     it("refuses, and reports, a Checkout Session for a different session", async () => {
-      const db = mockPaymentRequestRow({
+      mockPaymentRequestRow({
         sessionId: "00000000-0000-4000-8000-000000000000",
       });
 
@@ -298,7 +301,7 @@ describe("fulfilling an invite to pay request", () => {
         checkoutSessionEvent("checkout.session.completed"),
       ).expect(200);
 
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
       expect(payHelpers.reportError).toHaveBeenCalledWith(
         expect.objectContaining({
           context: {
@@ -312,13 +315,13 @@ describe("fulfilling an invite to pay request", () => {
     it("refuses, and reports, a Checkout Session with invalid reserved metadata", async () => {
       const metadata = { paymentRequestId: PAYMENT_REQUEST_ID };
       mockRetrieve({ metadata });
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postWebhook(
         checkoutSessionEvent("checkout.session.completed", { metadata }),
       ).expect(200);
 
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
       expect(payHelpers.reportError).toHaveBeenCalled();
     });
 
@@ -326,13 +329,13 @@ describe("fulfilling an invite to pay request", () => {
       vi.spyOn(stripe.checkout.sessions, "retrieve").mockRejectedValue(
         new Error("Stripe is unreachable"),
       );
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postWebhook(
         checkoutSessionEvent("checkout.session.completed"),
       ).expect(500);
 
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
     it("returns 500 when marking the payment request as paid fails", async () => {
@@ -359,19 +362,19 @@ describe("fulfilling an invite to pay request", () => {
 
     it("returns 500 when a paid Checkout Session has no PaymentIntent", async () => {
       mockRetrieve({ payment_intent: null });
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postWebhook(
         checkoutSessionEvent("checkout.session.completed"),
       ).expect(500);
 
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
   });
 
   describe("via the payer's return page", () => {
     it("marks the payment request as paid", async () => {
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postFulfil()
         .expect(200)
@@ -380,11 +383,11 @@ describe("fulfilling an invite to pay request", () => {
       expect(stripe.checkout.sessions.retrieve).toHaveBeenCalledWith(
         CHECKOUT_SESSION_ID,
       );
-      expect(db.updates).toBe(1);
+      expect(getMarkAsPaidCalls()).toHaveLength(1);
     });
 
     it("responds 'paid' without updating when the request has already been paid", async () => {
-      const db = mockPaymentRequestRow({
+      mockPaymentRequestRow({
         paidAt: new Date().toISOString(),
       });
 
@@ -392,17 +395,16 @@ describe("fulfilling an invite to pay request", () => {
         .expect(200)
         .then((res) => expect(res.body).toEqual({ paymentStatus: "paid" }));
 
-      expect(db.updates).toBe(0);
       expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
     it("refuses a Checkout Session which hasn't been paid", async () => {
       mockRetrieve({ status: "open", payment_status: "unpaid" });
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postFulfil().expect(409);
 
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
     it("refuses a Checkout Session for a different payment request", async () => {
@@ -412,33 +414,33 @@ describe("fulfilling an invite to pay request", () => {
           paymentRequestId: "00000000-0000-4000-8000-000000000000",
         },
       });
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postFulfil().expect(400);
 
       expect(getPaymentRequestLookups()).toHaveLength(0);
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
     it("refuses a Checkout Session for a different session", async () => {
-      const db = mockPaymentRequestRow({
+      mockPaymentRequestRow({
         sessionId: "00000000-0000-4000-8000-000000000000",
       });
 
       await postFulfil().expect(400);
 
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
     it("refuses a self-pay Checkout Session", async () => {
       const { paymentRequestId: _, ...selfPayMetadata } =
         checkoutSession().metadata;
       mockRetrieve({ metadata: selfPayMetadata });
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postFulfil().expect(400);
 
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
     it("refuses a Checkout Session created by another environment", async () => {
@@ -448,11 +450,11 @@ describe("fulfilling an invite to pay request", () => {
           origin: "https://api.another.example.com",
         },
       });
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postFulfil().expect(400);
 
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
     it("returns 404 when the payment request does not exist", async () => {
@@ -464,11 +466,10 @@ describe("fulfilling an invite to pay request", () => {
     });
 
     it("returns 404, without updating, when the payment request's session no longer exists", async () => {
-      const db = mockPaymentRequestRow({ session: null });
+      mockPaymentRequestRow({ session: null });
 
       await postFulfil().expect(404);
 
-      expect(db.updates).toBe(0);
       expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
@@ -506,11 +507,11 @@ describe("fulfilling an invite to pay request", () => {
       vi.spyOn(stripe.checkout.sessions, "retrieve").mockRejectedValue(
         new Error("Stripe is unreachable"),
       );
-      const db = mockPaymentRequestRow();
+      mockPaymentRequestRow();
 
       await postFulfil().expect(500);
 
-      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
     it.each([
@@ -532,35 +533,15 @@ describe("fulfilling an invite to pay request", () => {
     });
   });
 
-  it("only updates once when the webhook and the return page race", async () => {
-    const db = mockPaymentRequestRow();
-
-    const [webhook, returnPage] = await Promise.all([
-      postWebhook(checkoutSessionEvent("checkout.session.completed")),
-      postFulfil(),
-    ]);
-
-    expect(webhook.status).toBe(200);
-    expect(returnPage.status).toBe(200);
-    expect(returnPage.body).toEqual({ paymentStatus: "paid" });
-    expect(db.updates).toBe(1);
-  });
-
-  it("succeeds without updating when a concurrent call marks the request as paid first", async () => {
-    const db = mockPaymentRequestRow();
-    // The row is read as unpaid, but has been paid by the time the mutation runs
-    queryMock.mockQuery({
-      name: "GetPaymentRequestForCheckout",
-      matchOnVariables: false,
-      data: { paymentRequest: buildPaymentRequest() },
-    });
-    db.paidAt = new Date().toISOString();
+  it("responds 'paid', without reporting, when a concurrent call has already marked the request as paid", async () => {
+    mockPaymentRequestRow();
+    mockMarkAsPaid(0);
 
     await postFulfil()
       .expect(200)
       .then((res) => expect(res.body).toEqual({ paymentStatus: "paid" }));
 
     expect(getMarkAsPaidCalls()).toHaveLength(1);
-    expect(db.updates).toBe(0);
+    expect(payHelpers.reportError).not.toHaveBeenCalled();
   });
 });
