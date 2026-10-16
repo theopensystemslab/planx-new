@@ -2,6 +2,7 @@ import { reportError } from "../../pay/helpers.js";
 import { propagateMetadataToDestinationPayment } from "./destinationPayment/service.js";
 import { recordStripePaymentIntentStatus } from "./paymentStatus/service.js";
 import type { StripeWebhookController } from "./types.js";
+import { sendVatInvoices } from "./vatInvoice/service.js";
 
 /**
  * Handle a verified inbound Stripe webhook event
@@ -24,9 +25,14 @@ export const handleStripeWebhook: StripeWebhookController = async (
       case "payment_intent.processing":
         await recordStripePaymentIntentStatus(event.data.object, "processing");
         break;
-      case "payment_intent.succeeded":
-        await recordStripePaymentIntentStatus(event.data.object, "succeeded");
+      case "payment_intent.succeeded": {
+        const recorded = await recordStripePaymentIntentStatus(
+          event.data.object,
+          "succeeded",
+        );
+        if (recorded) await sendVatInvoices(event.data.object, recorded);
         break;
+      }
       case "payment_intent.payment_failed":
         await recordStripePaymentIntentStatus(
           event.data.object,
