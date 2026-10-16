@@ -1,6 +1,6 @@
 import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
-import axios from "axios";
+import { getITPPayment, initiateITPPayment } from "lib/api/pay/requests";
 import { useEffect, useState } from "react";
 
 import { logger } from "../../../airbrake";
@@ -66,10 +66,12 @@ export function useGovUkPayRequest({
     let responseData: GovUKPayment | null = null;
 
     try {
-      responseData = await fetchPayment({
-        paymentRequestId,
-        govPayPaymentId,
-      });
+      if (govPayPaymentId) {
+        responseData = await getITPPayment({
+          paymentRequestId,
+          govPayPaymentId,
+        });
+      }
     } catch {
       setErrorMessage("Failed to fetch payment details");
     }
@@ -106,7 +108,10 @@ export function useGovUkPayRequest({
     if (payment && currentState === States.ReadyToRetry) {
       redirectToGovPay(payment);
     } else {
-      await startNewPayment(paymentRequestId)
+      await initiateITPPayment({
+        paymentRequestId,
+        returnURL: window.location.href,
+      })
         .then(resolvePaymentResponse)
         .then(redirectToGovPay)
         .catch(logger.notify);
@@ -129,35 +134,6 @@ export function useGovUkPayRequest({
     default:
       return { status: "loading", text: currentState.loading };
   }
-}
-
-// refetch payment from GovPay (via proxy) to confirm it's status
-async function fetchPayment({
-  paymentRequestId,
-  govPayPaymentId,
-}: {
-  paymentRequestId: string;
-  govPayPaymentId: string | null;
-}): Promise<GovUKPayment | null> {
-  if (!govPayPaymentId) return Promise.resolve(null);
-  const paymentURL = `${
-    import.meta.env.VITE_APP_API_URL
-  }/payment-request/${paymentRequestId}/payment/${govPayPaymentId}`;
-  const response = await axios.get<GovUKPayment>(paymentURL);
-  return response.data;
-}
-
-// initiate a new payment with GovPay (via proxy)
-async function startNewPayment(
-  paymentRequestId: string,
-): Promise<GovUKPayment> {
-  const paymentURL = `${
-    import.meta.env.VITE_APP_API_URL
-  }/payment-request/${paymentRequestId}/pay?returnURL=${encodeURIComponent(
-    window.location.href,
-  )}`;
-  const response = await axios.post<GovUKPayment>(paymentURL);
-  return response.data;
 }
 
 // return to GovPay with an existing payment
