@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { MENU_WIDTH_COMPACT } from "components/EditorNavMenu/styles";
+import { selectIndexedNode } from "pages/FlowEditor/lib/store/selectors";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
 import { useRef } from "react";
 
@@ -44,21 +45,21 @@ const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
 }));
 
 const FlowEditor = () => {
-  const [flowObject, orderedFlow, isTemplatedFrom, teamSlug, isNavMenuVisible] =
-    useStore((state) => [
+  const [flowObject, isTemplatedFrom, teamSlug, isNavMenuVisible] = useStore(
+    (state) => [
       state.flow,
-      state.orderedFlow,
       state.isTemplatedFrom,
       state.getTeam().slug,
       state.isNavMenuVisible,
-    ]);
+    ],
+  );
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
 
   const parentId = getParentId(undefined);
 
-  const indexedParent = orderedFlow?.find(({ id }) => id === parentId);
+  const indexedParent = useStore(selectIndexedNode(parentId));
   const parentIsTemplatedInternalPortal = parentNodeIsTemplatedInternalPortal(
     flowObject,
     indexedParent,

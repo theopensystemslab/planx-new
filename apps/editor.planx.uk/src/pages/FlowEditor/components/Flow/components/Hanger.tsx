@@ -3,6 +3,7 @@ import { useParams } from "@tanstack/react-router";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import AddComponentModal from "pages/FlowEditor/components/forms/AddComponentModal";
+import { selectIndexedNode } from "pages/FlowEditor/lib/store/selectors";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -33,15 +34,14 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     from: "/_authenticated/app/$team/$flow",
   });
 
-  const [moveNode, isTemplatedFrom, flow, orderedFlow] = useStore((state) => [
+  const [moveNode, isTemplatedFrom, flow] = useStore((state) => [
     state.moveNode,
     state.isTemplatedFrom,
     state.flow,
-    state.orderedFlow,
   ]);
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
-  const indexedParent = orderedFlow?.find(({ id }) => id === parent);
+  const indexedParent = useStore(selectIndexedNode(parent));
   const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
     flow,
     indexedParent,

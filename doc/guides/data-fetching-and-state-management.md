@@ -195,7 +195,8 @@ We use **Zustand** stores for global client-side state.
 **Do not store server data in Zustand**
 
 - ❌ **Bad:** Storing `teamSettings`, `teamMembers`, or `planningConstraints` in a global store. (Use Apollo/TanStack Query caches for this).
-- ✅ **Good:** Storing `isSidebarOpen`, `breadcrumbs`, or `sectionNodes` (simple UI data, client side data, or complex derived flow data)
+- ✅ **Good:** Storing `isSidebarOpen` or `breadcrumbs` (simple UI data, or client side data)
+- ❌ **Bad:** Storing data derived from other state, e.g. `orderedFlow` (see [Derived state](#derived-state-selectors) below)
 
 > [!NOTE]
 > Currently, this rule is very much not adhered to in our codebase! Going forward we're working to improve and simplify this by taking server state out of the stores and relying on Apollo and Tanstack caches.
@@ -227,6 +228,31 @@ export const editorUIStore: StateCreator<
   },
 });
 ```
+
+### Derived state (selectors)
+
+Store **sources** (e.g. `flow`, `breadcrumbs`), and derive everything else. Derived data that is stored alongside its source has to be manually kept in sync, and goes stale when it isn't.
+
+Instead, add a named selector to `apps/editor.planx.uk/src/pages/FlowEditor/lib/store/selectors.ts`. The same selector is used by components and store actions.
+
+```ts
+// selectors.ts
+export const selectOrderedFlow = (state: FlowState): OrderedFlow =>
+  getIndexedFlow(state.flow).ordered;
+
+// In a component
+const orderedFlow = useStore(selectOrderedFlow);
+
+// In a store action
+const orderedFlow = selectOrderedFlow(get());
+```
+
+Selectors must return a **stable reference** - the same object until their inputs change. A selector that builds a new object or array on each call will re-render its components on every store update. For anything expensive or non-primitive, cache on the inputs - e.g. `getIndexedFlow()` caches on the `flow` object in a `WeakMap`, so each version of the flow is only sorted once, and only when something reads it.
+
+> [!NOTE]
+> Much of our existing derived state doesn't follow this pattern yet (e.g. `computePassport()`, `sectionNodes`). Migrate these opportunistically, rather than copying them.
+
+Docs: https://zustand.docs.pmnd.rs/learn/guides/beginner-typescript.html#derived-state-with-selectors
 
 ## 4. Testing strategy
 

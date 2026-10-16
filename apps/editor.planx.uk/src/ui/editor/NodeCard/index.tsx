@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { selectIndexedNode } from "pages/FlowEditor/lib/store/selectors";
 import type { PropsWithChildren } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -72,14 +73,9 @@ export const NodeCard: React.FC<Props> = ({
   backgroundColor,
 }) => {
   const navigate = useNavigate();
-  const [orderedFlow, getURLForNode] = useStore((state) => [
-    state.orderedFlow,
-    state.getURLForNode,
-  ]);
+  const getURLForNode = useStore((state) => state.getURLForNode);
+  const node = useStore(selectIndexedNode(nodeId));
 
-  if (!orderedFlow) return;
-
-  const node = orderedFlow?.find(({ id }) => id === nodeId);
   if (!node) return;
 
   const { iconKey, componentType, title } = getDisplayDetailsForNodeCard(node);

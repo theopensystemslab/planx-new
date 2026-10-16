@@ -1,4 +1,3 @@
-import * as planxCore from "@opensystemslab/planx-core";
 import { waitFor, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { setup } from "test/utils";
@@ -21,19 +20,10 @@ import Search from ".";
 import { flow } from "./mocks/simple";
 import { VirtuosoWrapper } from "./testUtils";
 
-const { setState, getState } = useStore;
+const { setState } = useStore;
 
 beforeEach(() => {
-  setState({ flow, orderedFlow: undefined });
-});
-
-vi.mock("@opensystemslab/planx-core", async (originalModule) => {
-  const actualModule = await originalModule<typeof planxCore>();
-  return {
-    ...actualModule,
-    // Spy on sortFlow while keeping its original implementation
-    sortFlow: vi.fn(actualModule.sortFlow),
-  };
+  setState({ flow });
 });
 
 test("data field checkbox is unchecked and enabled by default", async () => {
@@ -96,36 +86,6 @@ test("cards link to their associated nodes", async () => {
       to: expect.stringContaining(urlToParentQuestion),
     }),
   );
-});
-
-it("orderedFlow is set in the store on render of Search", async () => {
-  expect(getState().orderedFlow).toBeUndefined();
-
-  await setup(
-    <VirtuosoWrapper>
-      <Search />
-    </VirtuosoWrapper>,
-  );
-
-  expect(getState().orderedFlow).toBeDefined();
-});
-
-test("setOrderedFlow is only called once on initial render", async () => {
-  const sortFlowSpy = vi.spyOn(planxCore, "sortFlow");
-  expect(sortFlowSpy).not.toHaveBeenCalled();
-
-  const { user, getAllByRole, getByLabelText } = await setup(
-    <VirtuosoWrapper>
-      <Search />
-    </VirtuosoWrapper>,
-  );
-
-  const searchInput = getByLabelText("Search this flow");
-  user.type(searchInput, "ind");
-
-  await waitFor(() => expect(getAllByRole("listitem")).toHaveLength(2));
-
-  expect(sortFlowSpy).toHaveBeenCalledTimes(1);
 });
 
 it("should not have any accessibility violations on initial load", async () => {
