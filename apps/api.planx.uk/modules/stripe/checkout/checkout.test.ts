@@ -110,27 +110,21 @@ describe("creating a Stripe Checkout Session", () => {
     expect(payment_intent_data.metadata).toEqual(expected);
   });
 
-  it("keeps the reserved keys authoritative over client metadata", async () => {
-    await supertest(app)
-      .post("/stripe/checkout-session/southwark")
-      .send({
-        ...validBody,
-        // The editor blocks these keys, but they must never override the keys the webhook relies on
-        metadata: {
-          ...defaultMetadata,
-          sessionId: "spoofed",
-          origin: "https://api.spoofed.com",
-        },
-      })
-      .expect(200);
+  // The editor blocks these keys, but they must never reach the keys the webhook and fulfilment rely on
+  it.each(["sessionId", "origin", "paymentRequestId"])(
+    "rejects client metadata with the reserved key '%s'",
+    async (reservedKey) => {
+      await supertest(app)
+        .post("/stripe/checkout-session/southwark")
+        .send({
+          ...validBody,
+          metadata: { ...defaultMetadata, [reservedKey]: "spoofed" },
+        })
+        .expect(400);
 
-    const { metadata } = mockCreate.mock.calls[0][0];
-    expect(metadata).toEqual({
-      ...defaultMetadata,
-      sessionId: validBody.sessionId,
-      origin: "https://api.example.com",
-    });
-  });
+      expect(mockCreate).not.toHaveBeenCalled();
+    },
+  );
 
   it("does not set a customer email or expiry", async () => {
     await supertest(app)

@@ -41,6 +41,7 @@ describe("creating a Stripe Checkout Session for an invite to pay request", () =
     propertyType: "house.semiDetached",
     sessionId: validBody.sessionId,
     origin: "https://api.example.com",
+    paymentRequestId: PAYMENT_REQUEST_ID,
   };
 
   beforeEach(() => {
@@ -131,6 +132,11 @@ describe("creating a Stripe Checkout Session for an invite to pay request", () =
           { key: "source", value: "PlanX", type: "static" },
           { key: "sessionId", value: "spoofed", type: "static" },
           { key: "origin", value: "https://api.spoofed.com", type: "static" },
+          {
+            key: "paymentRequestId",
+            value: "00000000-0000-4000-8000-000000000000",
+            type: "static",
+          },
         ],
       }),
     );
@@ -144,6 +150,7 @@ describe("creating a Stripe Checkout Session for an invite to pay request", () =
       paidViaInviteToPay: "true",
       sessionId: validBody.sessionId,
       origin: "https://api.example.com",
+      paymentRequestId: PAYMENT_REQUEST_ID,
     });
   });
 
