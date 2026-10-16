@@ -11,7 +11,6 @@ import { exhaustiveCheck } from "utils";
 
 import type { Store } from "../../../lib/store";
 import { useStore } from "../../../lib/store";
-import { stripTagsAndLimitLength } from "../lib/utils";
 import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";
 import Filter from "./Filter";
@@ -48,12 +47,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Confirmation:
       return <Question {...allProps} text="Confirmation" />;
     case TYPES.Content:
-      return (
-        <Question
-          {...allProps}
-          text={stripTagsAndLimitLength(node?.data?.content, "Content", 100)}
-        />
-      );
+      return <Question {...allProps} text={node?.data?.title ?? "Content"} />;
     case TYPES.DateInput:
       return <Question {...allProps} text={node?.data?.title ?? "Date"} />;
     case TYPES.DrawBoundary:
