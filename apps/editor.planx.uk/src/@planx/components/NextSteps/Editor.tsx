@@ -4,9 +4,12 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NextSteps, Step } from "@planx/components/NextSteps/model";
 import {
+  DEFAULT_RULE,
   parseNextSteps,
   validationSchema,
 } from "@planx/components/NextSteps/model";
+import { RuleBuilder } from "@planx/components/shared/RuleBuilder";
+import { Condition } from "@planx/components/shared/RuleBuilder/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import type { ChangeEvent } from "react";
@@ -19,6 +22,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { Switch } from "ui/shared/Switch";
 
 type Props = EditorProps<TYPES.NextSteps, NextSteps>;
 
@@ -28,7 +32,11 @@ const newStep = (): Step => ({
   url: "",
 });
 
-const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
+type TaskEditorProps = ListManagerEditorProps<Step> & {
+  hasStepRules?: boolean;
+};
+
+const TaskEditor: React.FC<TaskEditorProps> = (props) => {
   return (
     <Box sx={{ flex: 1 }}>
       <InputRow>
@@ -79,6 +87,19 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
             disabled={props.disabled}
           />
         </InputRow>
+        {props.hasStepRules && (
+          <RuleBuilder
+            labels={{
+              [Condition.AlwaysRequired]: "Always show",
+              [Condition.RequiredIf]: "Show if",
+            }}
+            dataSchema={[]}
+            conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
+            disabled={props.disabled}
+            rule={props.value.rule || DEFAULT_RULE}
+            onChange={(rule) => props.onChange({ ...props.value, rule })}
+          />
+        )}
       </Collapse>
     </Box>
   );
@@ -136,12 +157,22 @@ const NextStepsComponent: React.FC<Props> = (props) => {
               />
             </InputRow>
           </Box>
+          <InputRow>
+            <Switch
+              name="hasStepRules"
+              checked={Boolean(formik.values.hasStepRules)}
+              onChange={formik.handleChange}
+              label="Show steps based on rules"
+              disabled={props.disabled}
+            />
+          </InputRow>
           <ListManager
             values={formik.values.steps}
             onChange={(steps: Array<Step>) => {
               formik.setFieldValue("steps", steps);
             }}
             Editor={TaskEditor}
+            editorExtraProps={{ hasStepRules: formik.values.hasStepRules }}
             newValue={newStep}
             itemName="step"
             disabled={props.disabled}
