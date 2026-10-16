@@ -24,12 +24,6 @@ export interface Pay extends BaseNodeData {
   instructionsDescription?: string;
   hidePay?: boolean;
   allowInviteToPay?: boolean;
-  secondaryPageTitle?: string;
-  nomineeTitle?: string;
-  nomineeDescription?: string;
-  yourDetailsTitle?: string;
-  yourDetailsDescription?: string;
-  yourDetailsLabel?: string;
   govPayMetadata: PaymentMetadata[];
 }
 
@@ -193,26 +187,6 @@ export const validationSchema = object({
     message: "Cannot both allow invite to pay and hide the pay buttons",
     test: (value, { parent }) => !(value && parent.hidePay),
   }),
-  nomineeTitle: string().trim().when("allowInviteToPay", {
-    is: true,
-    then: string().required(),
-  }),
-  nomineeDescription: richText().when("allowInviteToPay", {
-    is: true,
-    then: richText(),
-  }),
-  yourDetailsTitle: string().trim().when("allowInviteToPay", {
-    is: true,
-    then: string().required(),
-  }),
-  yourDetailsDescription: richText().when("allowInviteToPay", {
-    is: true,
-    then: richText(),
-  }),
-  yourDetailsLabel: string().trim().when("allowInviteToPay", {
-    is: true,
-    then: string().required(),
-  }),
   govPayMetadata: paymentMetadataSchema,
 });
 
@@ -228,10 +202,6 @@ export const getDefaultContent = (): Pay => ({
     Wait until you see a form sent message before closing your browser.</p>`,
   hidePay: false,
   allowInviteToPay: true,
-  secondaryPageTitle: "Invite someone else to pay",
-  nomineeTitle: "Details of the person paying",
-  yourDetailsTitle: "Your details",
-  yourDetailsLabel: "Your name or organisation name",
   govPayMetadata: [
     {
       key: "flow",

@@ -137,12 +137,6 @@ const pay: SearchFacets = [
   "data.bannerTitle",
   "data.instructionsTitle",
   richTextField("data.instructionsDescription"),
-  "data.secondaryPageTitle",
-  "data.nomineeTitle",
-  richTextField("data.nomineeDescription"),
-  "data.yourDetailsTitle",
-  richTextField("data.yourDetailsDescription"),
-  "data.yourDetailsLabel",
   "data.govPayMetadata.key",
   "data.govPayMetadata.value",
 ];

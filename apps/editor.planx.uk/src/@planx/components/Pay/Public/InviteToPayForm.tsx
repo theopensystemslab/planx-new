@@ -19,22 +19,14 @@ import React, { useEffect } from "react";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 import { object, string } from "yup";
-
-import { getDefaultContent } from "../model";
 
 // Passport keys which will be used to display a preview of the session to the payee as part of their journey
 const SESSION_PREVIEW_KEYS = [["_address", "title"], ["proposal.projectType"]];
 
 export interface InviteToPayFormProps {
   changePage: () => void;
-  nomineeTitle?: string;
-  nomineeDescription?: string;
-  yourDetailsTitle?: string;
-  yourDetailsDescription?: string;
-  yourDetailsLabel?: string;
   paymentStatus?: PaymentStatus;
 }
 
@@ -74,11 +66,6 @@ const SubmitButton: React.FC = () => (
 
 const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   changePage,
-  nomineeTitle,
-  nomineeDescription,
-  yourDetailsTitle,
-  yourDetailsDescription,
-  yourDetailsLabel,
   paymentStatus,
 }) => {
   const [sessionId, saveToEmail, isTestEnvironment] = useStore((state) => [
@@ -88,7 +75,6 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   ]);
   const navigate = useNavigate();
   const matches = useMatches();
-  const defaults = getDefaultContent();
   const from = usePublicRouteContext();
 
   /**
@@ -148,15 +134,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   ) : (
     <>
       <StyledForm onSubmit={formik.handleSubmit}>
-        <Typography variant="h2">{nomineeTitle}</Typography>
-        {nomineeDescription && (
-          <Typography variant="body2">
-            <ReactMarkdownOrHtml
-              source={nomineeDescription}
-              openLinksOnNewTab
-            />
-          </Typography>
-        )}
+        <Typography variant="h2">Details of the person paying</Typography>
         <InputLabel label="Full name" htmlFor="payeeName">
           <Input
             bordered
@@ -201,18 +179,10 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
           />
         </InputLabel>
         <Typography variant="h2" sx={{ pt: 2 }}>
-          {yourDetailsTitle}
+          Your details
         </Typography>
-        {yourDetailsDescription && (
-          <Typography variant="body2">
-            <ReactMarkdownOrHtml
-              source={yourDetailsDescription}
-              openLinksOnNewTab
-            />
-          </Typography>
-        )}
         <InputLabel
-          label={yourDetailsLabel || defaults.yourDetailsLabel}
+          label="Your name or organisation name"
           htmlFor="applicantName"
         >
           <Input
