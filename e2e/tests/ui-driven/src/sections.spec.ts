@@ -87,10 +87,10 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectSections({
         page,
@@ -109,29 +109,29 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await answerQuestion({ page, title: "Question 2", answer: "B" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await answerChecklist({
         page,
         title: "Multi-select",
         answers: ["B", "C", "D"],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectNotice({ page, text: "Reached B" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectNotice({ page, text: "Reached C" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectNotice({ page, text: "Reached D" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectNotice({ page, text: "Reached the end of section two" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectSections({
         page,
@@ -150,10 +150,10 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       // send
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectConfirmation({ page, text: "Form sent" });
     });
@@ -179,10 +179,10 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectSections({
         page,
@@ -201,10 +201,10 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await answerQuestion({ page, title: "Question 2", answer: "A" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       // back to Question 2
       await clickBack({ page });
@@ -229,13 +229,13 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       // skip Question 2
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       // skip end of section 2 notice
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectSections({
         page,
@@ -254,7 +254,7 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       // back to Section Three Overview
       await clickBack({ page });
@@ -336,10 +336,10 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       const sectionsBeforeSaveAndReturn = [
         {
@@ -393,10 +393,10 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectSections({
         page,
@@ -415,10 +415,10 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await answerQuestion({ page, title: "Question 2", answer: "B" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       const sessionId = await saveSession({ page, context });
       expect(sessionId).toBeDefined();
@@ -467,10 +467,10 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await expectSections({
         page,
@@ -489,10 +489,10 @@ test.describe("Section statuses", () => {
           },
         ],
       });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       await answerQuestion({ page, title: "Question 2", answer: "B" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       const sessionId = await saveSession({ page, context });
       expect(sessionId).toBeDefined();

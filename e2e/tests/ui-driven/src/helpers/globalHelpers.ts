@@ -25,18 +25,6 @@ export function debugPageConsole(page: Page) {
   page.on("console", (msg) => console.log(msg.text()));
 }
 
-// used to detect `{ "setItem": ... }`, `{"getItem": ... }`
-// and "section state updated" debug messages on state transitions
-export async function waitForDebugLog(page: Page) {
-  return new Promise((resolve) => {
-    page.on("console", (msg) => {
-      if (msg.type() == "debug") {
-        resolve(true);
-      }
-    });
-  });
-}
-
 export async function createAuthenticatedSession({
   browser,
   userId,
