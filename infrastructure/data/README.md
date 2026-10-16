@@ -1,10 +1,10 @@
-# Deploying the data layer
+## Deploying the data layer
 
 The data layer manages configurations for our AWS RDS Postgres database. This layer is manually managed and never automatically deployed via CI.
 
 We are currently running Postgres 16, which is [supported until Nov 2028](https://www.postgresql.org/support/versioning/). Therefore we should plan to upgrade to the latest major version bar one in early 2028.
 
-## Steps
+### Steps
 
 1. Export the AWS profile credentials for `planx-staging-pulumi` in your active terminal
 
@@ -23,6 +23,34 @@ We are currently running Postgres 16, which is [supported until Nov 2028](https:
    The [`up` command](https://www.pulumi.com/docs/iac/cli/commands/pulumi_up/) will attempt to apply the state prescribed by `infrastructure/data/index.ts` to the AWS stack. However, it will only display a diff against the state of our Pulumi stack, which may be out of sync with the real state - this is why we should always run `refresh` first.
 
 4. Confirm success/"available" status and new configurations in AWS RDS console
+
+## Public vs. private files in the user-data bucket
+
+### Current state
+
+The `user-data-xxx` buckets holds two kinds of object in one flat keyspace (`<nanoid>/<filename>`):
+
+| Kind of object                                                             | Written by          | Attached metadata     |
+| -------------------------------------------------------------------------- | ------------------- | --------------------- |
+| Editor uploads ("public"), e.g. logos, question and definition images      | `uploadPublicFile`  | `is_private: "false"` |
+| User uploads ("private"), e.g. applicant files, generated submission JSONs | `uploadPrivateFile` | `is_private: "true"`  |
+
+**Neither is written with an ACL**, so S3 applies its default `private` [canned ACL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#canned-acl): the owner (the API's IAM user) gets full control. S3 denies any request not explicitly allowed, and the bucket has no public policy, so these objects are reachable only through the API, i.e. `GET /file/public/...` and `GET /file/private/...`, where the latter requires an `api-key`.
+
+Note this scenario results from the _absence_ of any public grant, not the 'Block public access' setting, which only overrides grants and never creates them. Both upload routes hand back an API URL, so nothing we write is ever fetched from S3 directly.
+
+### Legacy objects
+
+Until this was fixed, _every_ object was written with `ACL: "public-read"`, which made them readable by anyone holding the S3 URL (or who could contruct it). Such a person could bypass the API, and therefore the requirement to have an `api-key`, the `is_private` check and the Scanii check all at once.
+
+We will run `apps/api.planx.uk/scripts/restrictPrivateFileAcls.ts` to remediate this for known private uploads (i.e. we will remove the ACL from such objects).
+
+We will not do the same for any other legacy objects, because anything uploaded before the `is_private` marker was introduced (in #[1084](https://github.com/theopensystemslab/planx-new/pull/1084)) cannot be easily classified.
+
+> [!WARNING]
+> Do **not** add `ignorePublicAcls` to the bucket's `BucketPublicAccessBlock`, and do **not** set `objectOwnership: "BucketOwnerEnforced"`. This could 403 images in published services i.e. any live flow which still references editor images by raw S3 URL. The block declared in `index.ts` deliberately sets two flags which are future-oriented, and do not affect existing object ACLs.
+
+When we implement [ADR 0012](../../doc/architecture/decisions/0012-reorganise-s3-storage-for-session-files.md), we will make a new bucket for user uploads, organised with hierarchical keys. The new bucket can be 'bucket owner enforced' from go, with all other access controlled by prefix-scoped bucket policies rather than ACLs (which according to AWS should [no longer be necessary](https://docs.aws.amazon.com/AmazonS3/latest/userguide/managing-acls.html) for most use cases).
 
 ## Scanii
 

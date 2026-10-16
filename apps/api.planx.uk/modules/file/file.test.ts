@@ -365,8 +365,55 @@ describe("File upload", () => {
       expect(getSignedUrl).toHaveBeenCalledTimes(1);
     });
 
-    // objects are written with a public-read ACL, so what we persist is what a client fetching
-    // straight from S3 would be handed - it should match what the API itself would serve
+    // Nothing we write should be readable straight from S3, only through the API
+    it("should not set an ACL on a private upload", async () => {
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "some_file.png")
+        .attach("file", PNG_FIXTURE, "some_file.png")
+        .expect(200);
+
+      expect(mockPutObject).toHaveBeenCalledWith(
+        expect.not.objectContaining({ ACL: expect.anything() }),
+      );
+      expect(mockPutObject).toHaveBeenCalledWith(
+        expect.objectContaining({
+          Metadata: expect.objectContaining({ is_private: "true" }),
+        }),
+      );
+    });
+
+    it("should not set an ACL on a public upload", async () => {
+      await supertest(app)
+        .post(PUBLIC_ENDPOINT)
+        .set(authHeader({ role: "teamEditor" }))
+        .field("filename", "some_file.png")
+        .attach("file", PNG_FIXTURE, "some_file.png")
+        .expect(200);
+
+      expect(mockPutObject).toHaveBeenCalledWith(
+        expect.not.objectContaining({ ACL: expect.anything() }),
+      );
+    });
+
+    // so that a later audit can tell an editor image from a user upload
+    it("should mark a public upload as not private", async () => {
+      await supertest(app)
+        .post(PUBLIC_ENDPOINT)
+        .set(authHeader({ role: "teamEditor" }))
+        .field("filename", "some_file.png")
+        .attach("file", PNG_FIXTURE, "some_file.png")
+        .expect(200);
+
+      expect(mockPutObject).toHaveBeenCalledWith(
+        expect.objectContaining({
+          Metadata: expect.objectContaining({ is_private: "false" }),
+        }),
+      );
+    });
+
+    // anything fetching an object without going through the API (e.g. a legacy object still carrying
+    // its public-read ACL) should be handed headers consistent with what the API would serve
     it("should store headers we chose, not ones the client supplied", async () => {
       await supertest(app)
         .post(PRIVATE_ENDPOINT)

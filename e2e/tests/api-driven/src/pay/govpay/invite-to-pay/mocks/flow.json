@@ -1458,7 +1458,7 @@
     },
     "0VEQ56jzkD": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/wsb395dp/Roofmaterials_stickingout%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/wsb395dp/Roofmaterials_stickingout%404x.png",
         "val": "true",
         "text": "Yes"
       },
@@ -4619,7 +4619,7 @@
     },
     "1ikPyMZOwV": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/oyu4q03l/semiDetached.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/oyu4q03l/semiDetached.svg",
         "val": "residential.dwelling.house.semiDetached",
         "text": "Semi-detached"
       },
@@ -4635,7 +4635,7 @@
     },
     "1ikPydJp1E": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/oyu4q03l/semiDetached.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/oyu4q03l/semiDetached.svg",
         "val": "residential.dwelling.house.semiDetached",
         "text": "Semi-detached"
       },
@@ -4643,7 +4643,7 @@
     },
     "1ikPypRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/oyu4q03l/semiDetached.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/oyu4q03l/semiDetached.svg",
         "val": "residential.dwelling.house.semiDetached",
         "text": "Semi-detached"
       },
@@ -5762,7 +5762,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/qd4w3khu/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/qd4w3khu/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["YJpJ5dDHDv", "79UgydDHDv", "3yIEvdDHDv"]
@@ -5773,7 +5773,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/qd4w3khu/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/qd4w3khu/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["YJpJ59nH8n", "79Ugyxsz0Q", "3yIEvB8bNg"]
@@ -6341,7 +6341,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/r1ngu8ob/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/r1ngu8ob/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["eFELStb30v", "ghf0Vi2b2Y", "wu3puUc8qQ"]
@@ -6352,7 +6352,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before the. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/r1ngu8ob/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/r1ngu8ob/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["eFELSdDHDv", "ghf0VdDHDv", "wu3pudDHDv"]
@@ -6473,7 +6473,7 @@
     },
     "2JCMLCLZee": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/xk8t94um/Rooftype_other%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/xk8t94um/Rooftype_other%404x.png",
         "val": "other",
         "text": "Other"
       },
@@ -6481,7 +6481,7 @@
     },
     "2JCMLpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/xk8t94um/Rooftype_other%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/xk8t94um/Rooftype_other%404x.png",
         "val": "other",
         "text": "Other"
       },
@@ -8057,7 +8057,7 @@
     },
     "2snrSi5dqg": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/lyijuki5/terrace.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/lyijuki5/terrace.svg",
         "val": "residential.dwelling.house.terrace",
         "text": "Mid terrace",
         "flags": ["flag.pp.permissionNeeded"]
@@ -8237,7 +8237,7 @@
     },
     "2wEoRkUlB3": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/2b5av3rv/3.8.3_Detached_windturbines_mounted_heightfromroof_3m.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/2b5av3rv/3.8.3_Detached_windturbines_mounted_heightfromroof_3m.svg",
         "text": "3m higher than the roof",
         "flags": ["flag.pp.permittedDevelopment"]
       },
@@ -8360,7 +8360,7 @@
     "2yimZgrxPj": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/d6tkejml/RetainEaves_OR_lower-small.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/d6tkejml/RetainEaves_OR_lower-small.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission. This does not apply for hip to gable roof extensions as long as the eaves are re-used and the closest edge of the new extension to the eaves is at least 0.2m.</p>",
         "text": "Will all original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.</a></p>",
@@ -8373,7 +8373,7 @@
     "2yimZpRCYG": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/d6tkejml/RetainEaves_OR_lower-small.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/d6tkejml/RetainEaves_OR_lower-small.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission. This does not apply for hip to gable roof extensions as long as the eaves are re-used and the closest edge of the new extension to the eaves is at least 0.2m.</p>",
         "text": "Will all original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.</a></p>",
@@ -8686,7 +8686,7 @@
     },
     "33jxLxvGUQ": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/fi6atymt/heatpump_%20flatroof_2mplus.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/fi6atymt/heatpump_%20flatroof_2mplus.svg",
         "text": "Yes",
         "flags": ["flag.pp.permittedDevelopment"]
       },
@@ -9591,7 +9591,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/5d59s704/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/5d59s704/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["nqXO6OEe2h", "ufH0YqOMy6"]
@@ -9602,7 +9602,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/5d59s704/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/5d59s704/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["nqXO6dDHDv", "ufH0YdDHDv"]
@@ -15365,7 +15365,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/w0qjcrjj/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/w0qjcrjj/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["GFPTk1U1Lt", "turHIvcMRI", "PN92cYA0rF"]
@@ -15376,7 +15376,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/w0qjcrjj/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/w0qjcrjj/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["GFPTkdDHDv", "turHIdDHDv", "PN92cdDHDv"]
@@ -16584,7 +16584,7 @@
     },
     "6GUMWdJp1E": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/vk6cv0yb/detached.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/vk6cv0yb/detached.svg",
         "val": "residential.dwelling.house.detached",
         "text": "Detached"
       },
@@ -16592,7 +16592,7 @@
     },
     "6GUMWpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/vk6cv0yb/detached.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/vk6cv0yb/detached.svg",
         "val": "residential.dwelling.house.detached",
         "text": "Detached"
       },
@@ -16600,7 +16600,7 @@
     },
     "6GUMWpt6ha": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/vk6cv0yb/detached.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/vk6cv0yb/detached.svg",
         "val": "residential.dwelling.house.detached",
         "text": "Detached"
       },
@@ -17223,7 +17223,7 @@
     },
     "6apFcVkxRC": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/24cggp3z/Butterfly%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/24cggp3z/Butterfly%404x.png",
         "val": "butterfly",
         "text": "Butterfly roof"
       },
@@ -17231,7 +17231,7 @@
     },
     "6apFcpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/24cggp3z/Butterfly%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/24cggp3z/Butterfly%404x.png",
         "val": "butterfly",
         "text": "Butterfly roof"
       },
@@ -19991,7 +19991,7 @@
     },
     "7cSvOxPrVn": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/72r94f7y/3.3_rooflights_3.3_SemiD_Rooflights_above1.7m.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/72r94f7y/3.3_rooflights_3.3_SemiD_Rooflights_above1.7m.svg",
         "text": "1.7m or more",
         "flags": ["flag.pp.permittedDevelopment"]
       },
@@ -20086,7 +20086,7 @@
     },
     "7eiMEsafv2": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/mqb8f8ko/3.8.3_Detached_windturbines_heatpump_no.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/mqb8f8ko/3.8.3_Detached_windturbines_heatpump_no.svg",
         "text": "No"
       },
       "type": 200
@@ -20604,7 +20604,7 @@
     },
     "7tWhdzxQR4": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/wfaqsf1e/heatpump_%20flatroof.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/wfaqsf1e/heatpump_%20flatroof.svg",
         "text": "A flat roof"
       },
       "type": 200,
@@ -21320,7 +21320,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/s2hhx0f3/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/s2hhx0f3/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["qsfPjlt9wa", "yCtNWMBkob", "X4bsPE35vG"]
@@ -21331,7 +21331,7 @@
         "text": "How far does the new rear addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/s2hhx0f3/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/s2hhx0f3/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["qsfPjdDHDv", "yCtNWdDHDv", "X4bsPdDHDv"]
@@ -25321,7 +25321,7 @@
     },
     "9lYdS3pdxb": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/vzxcl5gi/Roofmaterials_notstickingout%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/vzxcl5gi/Roofmaterials_notstickingout%404x.png",
         "val": "false",
         "text": "No",
         "flags": ["flag.pp.permittedDevelopment"]
@@ -25954,7 +25954,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before the. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/ualdzl7f/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/ualdzl7f/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["KoZ2fdDHDv", "iy6QRdDHDv"]
@@ -25965,7 +25965,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/ualdzl7f/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/ualdzl7f/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["KoZ2fE9nyr", "iy6QR7AVHc"]
@@ -26216,7 +26216,7 @@
     },
     "A7QW9I9wuT": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/4zyji0qo/3.8.3_Detached_windturbines_heatpump_yes.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/4zyji0qo/3.8.3_Detached_windturbines_heatpump_yes.svg",
         "text": "Yes",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -31212,7 +31212,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/1q96uiuh/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/1q96uiuh/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["uWvcjBd1rz", "mcqEoovxQe"]
@@ -31223,7 +31223,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/1q96uiuh/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/1q96uiuh/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["uWvcjdDHDv", "mcqEodDHDv"]
@@ -34339,7 +34339,7 @@
     },
     "DImGrs1CvT": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/nszgx962/height-flat-morethan4.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/nszgx962/height-flat-morethan4.svg",
         "text": "Over 4m",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -35211,7 +35211,7 @@
     "Dhw9DpRCYG": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/v50qrfko/RetainEaves_OR_lower_large.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/v50qrfko/RetainEaves_OR_lower_large.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission. This does not apply for hip to gable roof extensions as long as the eaves are re-used and the closest edge of the new extension to the eaves is at least 0.2m.</p>",
         "text": "Will all original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.2 (b)(i)(a)</a></p>",
@@ -36300,7 +36300,7 @@
     },
     "Dzw9l6AmCn": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/87ldxqqt/heatpump_%20flatroof_1mplus.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/87ldxqqt/heatpump_%20flatroof_1mplus.svg",
         "text": "Yes",
         "flags": ["flag.pp.permittedDevelopment"]
       },
@@ -37102,7 +37102,7 @@
     },
     "EIt3BFWEtQ": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/fdc9fwga/Rooftype_hip%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/fdc9fwga/Rooftype_hip%404x.png",
         "val": "hip",
         "text": "Hip"
       },
@@ -37110,7 +37110,7 @@
     },
     "EIt3BpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/fdc9fwga/Rooftype_hip%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/fdc9fwga/Rooftype_hip%404x.png",
         "val": "hip",
         "text": "Hip"
       },
@@ -37874,7 +37874,7 @@
     },
     "EfplyZD38y": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/jzv10bul/Rooftype_slope%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/jzv10bul/Rooftype_slope%404x.png",
         "val": "monopitch",
         "text": "Sloping"
       },
@@ -37882,7 +37882,7 @@
     },
     "EfplypRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/jzv10bul/Rooftype_slope%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/jzv10bul/Rooftype_slope%404x.png",
         "val": "monopitch",
         "text": "Sloping"
       },
@@ -39678,7 +39678,7 @@
     "FPZsQ3Yh7X": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/g7nn5len/RetainEaves_OR_same_small.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/g7nn5len/RetainEaves_OR_same_small.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission. This does not apply for hip to gable roof extensions as long as the eaves are re-used and the closest edge of the new extension to the eaves is at least 0.2m.</p>",
         "text": "Will all original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.2 (b)(i)(a)</a></p>",
@@ -39691,7 +39691,7 @@
     "FPZsQpRCYG": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/g7nn5len/RetainEaves_OR_same_small.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/g7nn5len/RetainEaves_OR_same_small.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission. This does not apply for hip to gable roof extensions as long as the eaves are re-used and the closest edge of the new extension to the eaves is at least 0.2m.</p>",
         "text": "Will all original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.2 (b)(i)(a)</a></p>",
@@ -42701,7 +42701,7 @@
     },
     "GXoyrdjaaW": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/dvofbjab/Rooftype_mansard%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/dvofbjab/Rooftype_mansard%404x.png",
         "val": "mansard",
         "text": "Mansard roof"
       },
@@ -42709,7 +42709,7 @@
     },
     "GXoyrpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/dvofbjab/Rooftype_mansard%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/dvofbjab/Rooftype_mansard%404x.png",
         "val": "mansard",
         "text": "Mansard roof"
       },
@@ -43413,7 +43413,7 @@
     "GmSCQLVo06": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/g7nn5len/RetainEaves_OR_same_small.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/g7nn5len/RetainEaves_OR_same_small.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission. This does not apply to the part of the eaves that is removed as part of a hip to gable roof enlargement.</p>",
         "text": "Apart from the eaves that will be removed in order to create a gable wall, will all other original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.2 (b)(i)(a)</a></p>",
@@ -43426,7 +43426,7 @@
     "GmSCQpRCYG": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/g7nn5len/RetainEaves_OR_same_small.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/g7nn5len/RetainEaves_OR_same_small.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission. This does not apply to the part of the eaves that is removed as part of a hip to gable roof enlargement.</p>",
         "text": "Apart from the eaves that will be removed in order to create a gable wall, will all other original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.2 (b)(i)(a)</a></p>",
@@ -50037,7 +50037,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/0daxlkzf/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/0daxlkzf/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["5P6eDfgNmd", "B3n7INWDZy"]
@@ -50048,7 +50048,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/0daxlkzf/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/0daxlkzf/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["5P6eDdDHDv", "B3n7IdDHDv"]
@@ -51367,7 +51367,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/eks4rtb0/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/eks4rtb0/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["A1XzNQ2B1v", "1BbKaIRxvB"]
@@ -51378,7 +51378,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/eks4rtb0/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/eks4rtb0/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["A1XzNdDHDv", "1BbKadDHDv"]
@@ -52027,7 +52027,7 @@
         "notes": "In principle, if you have not heard back from your local planning authority within 42 days of submitting a valid application for prior approval, it can be deemed that Prior Approval is not required. However, this assumes the information was valid. If you have not heard back about your Prior Approval application it is strongly recommended you contact them before proceeding with works.",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/t64igh30/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/t64igh30/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["rAPDAgo8F2", "XEZZbSPaiR", "0JdL1XgBZI"]
@@ -52039,7 +52039,7 @@
         "notes": "In principle, if you have not heard back from your local planning authority within 42 days of submitting a valid application for prior approval, it can be deemed that Prior Approval is not required. However, this assumes the information was valid. If you have not heard back about your Prior Approval application it is strongly recommended you contact them before proceeding with works.",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/t64igh30/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/t64igh30/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["rAPDAdDHDv", "XEZZbdDHDv", "0JdL1dDHDv"]
@@ -52283,7 +52283,7 @@
     },
     "JpAvrj5G47": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/2y7k6yk0/3.8.3_Detached_windturbines_mounted_heightfromroof_morethan3m1.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/2y7k6yk0/3.8.3_Detached_windturbines_mounted_heightfromroof_morethan3m1.svg",
         "text": "More than 3m higher than the roof",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -63168,7 +63168,7 @@
     },
     "NQ0RZySahc": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/epo9s71y/Roofmaterials_notstickingout%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/epo9s71y/Roofmaterials_notstickingout%404x.png",
         "val": "false",
         "text": "No",
         "flags": ["flag.pp.permittedDevelopment"]
@@ -65197,7 +65197,7 @@
     },
     "O5E5HVzt9P": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/hzvivr7h/heatpump_%20roof_less1m.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/hzvivr7h/heatpump_%20roof_less1m.svg",
         "text": "No",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -66303,7 +66303,7 @@
     },
     "OWPgSeADPu": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/p66sb6e4/heatpump_%20flatroof.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/p66sb6e4/heatpump_%20flatroof.svg",
         "text": "A flat roof"
       },
       "type": 200,
@@ -69776,7 +69776,7 @@
     },
     "PqfrsUXimX": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/iwkml3is/heatpump_%20roof_less2m.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/iwkml3is/heatpump_%20roof_less2m.svg",
         "text": "No",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -70853,7 +70853,7 @@
     },
     "QGCfMln2lh": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/hwwy4zqn/heatpump_roof.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/hwwy4zqn/heatpump_roof.svg",
         "text": "A sloping roof",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -71287,7 +71287,7 @@
     },
     "QSdvSesIOH": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/l4vdgs7o/height_flat_lessthan4.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/l4vdgs7o/height_flat_lessthan4.svg",
         "text": "4m or less",
         "flags": ["flag.pp.permittedDevelopment"]
       },
@@ -71543,7 +71543,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/vv0m0gk0/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/vv0m0gk0/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["PLp7K4VLbs", "pVsTUS0Eod", "Z7sKQ3Egr1"]
@@ -71554,7 +71554,7 @@
         "text": "How far does the new rear addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a target=\"_self\" rel=\"noopener noreferrer nofollow\" href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/vv0m0gk0/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/vv0m0gk0/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["PLp7KdDHDv", "pVsTUdDHDv", "Z7sKQdDHDv"]
@@ -74448,7 +74448,7 @@
     },
     "RcBIYOUG7H": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/h23f1bgn/Roofmaterials_morethan15%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/h23f1bgn/Roofmaterials_morethan15%404x.png",
         "text": "Yes",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -76570,7 +76570,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this dimension includes any prior extension that may have been added to the house. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/zguphlnd/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/zguphlnd/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["Srg3i6bjKs", "hfvFdPRpZ7"]
@@ -76581,7 +76581,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/zguphlnd/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/zguphlnd/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["Srg3idDHDv", "hfvFddDHDv"]
@@ -77089,7 +77089,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/tn7z1ezw/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/tn7z1ezw/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["y2BLcualSY", "EDBCasrtDr"]
@@ -77100,7 +77100,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/tn7z1ezw/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/tn7z1ezw/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["y2BLcdDHDv", "EDBCadDHDv"]
@@ -79083,7 +79083,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a target=\"_self\" rel=\"noopener noreferrer nofollow\" href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/ns52iw1v/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/ns52iw1v/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["y4FCxdDHDv", "RMsyfdDHDv", "t7p5TdDHDv"]
@@ -79094,7 +79094,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/ns52iw1v/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/ns52iw1v/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["y4FCxoxVmy", "RMsyfhrVpn", "t7p5Tc1248"]
@@ -80381,7 +80381,7 @@
     },
     "TmNLDS8IQj": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/11b9oghy/heatpump_ground.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/11b9oghy/heatpump_ground.svg",
         "text": "The ground"
       },
       "type": 200,
@@ -82498,7 +82498,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/wg46vv8p/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/wg46vv8p/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["gbBAkftT6u", "hydxJGjBBU", "AU2H4I7vrD"]
@@ -82509,7 +82509,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before the. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/wg46vv8p/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/wg46vv8p/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["gbBAkdDHDv", "hydxJdDHDv", "AU2H4dDHDv"]
@@ -87376,7 +87376,7 @@
     },
     "WSDUKxtBjC": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/ieaprirl/heatpump_%20wall_lower.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/ieaprirl/heatpump_%20wall_lower.svg",
         "text": "No",
         "flags": ["flag.pp.permittedDevelopment"]
       },
@@ -88067,7 +88067,7 @@
     "WkGfnGAgsS": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/yfpuamoh/retaineaves_NOR.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/yfpuamoh/retaineaves_NOR.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission, unless those eaves are being removed as part of a hip-to gable roof alteration. This does not apply for the part of the eaves that will be removed as part of a hip to gable roof enlargement.</p>",
         "text": "Apart from the eaves that will be removed in order to create a gable wall, will all other original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.</a></p>",
@@ -88080,7 +88080,7 @@
     "WkGfnpRCYG": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/yfpuamoh/retaineaves_NOR.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/yfpuamoh/retaineaves_NOR.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission, unless those eaves are being removed as part of a hip-to gable roof alteration. This does not apply for the part of the eaves that will be removed as part of a hip to gable roof enlargement.</p>",
         "text": "Apart from the eaves that will be removed in order to create a gable wall, will all other original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.</a></p>",
@@ -88253,7 +88253,7 @@
     "WmgOL0bknK": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/qx2p7q91/RetainEaves_OR_same_large.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/qx2p7q91/RetainEaves_OR_same_large.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission.</p>",
         "text": "Apart from the eaves that will be removed in order to create a gable wall, will all other original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.2 (b)(i)(a)</a></p>",
@@ -88266,7 +88266,7 @@
     "WmgOLpRCYG": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/qx2p7q91/RetainEaves_OR_same_large.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/qx2p7q91/RetainEaves_OR_same_large.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission.</p>",
         "text": "Apart from the eaves that will be removed in order to create a gable wall, will all other original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.2 (b)(i)(a)</a></p>",
@@ -88330,7 +88330,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/577ie3k6/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/577ie3k6/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["azUFEZzhvC", "MMnt5beKcA", "FqZXmpOVtD"]
@@ -88341,7 +88341,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before the. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/577ie3k6/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/577ie3k6/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["azUFEdDHDv", "MMnt5dDHDv", "FqZXmdDHDv"]
@@ -89878,7 +89878,7 @@
     },
     "XPpDketPaB": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/t5w2n4x2/Rooftype_barrel%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/t5w2n4x2/Rooftype_barrel%404x.png",
         "val": "barrel",
         "text": "Barrel"
       },
@@ -89886,7 +89886,7 @@
     },
     "XPpDkpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/t5w2n4x2/Rooftype_barrel%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/t5w2n4x2/Rooftype_barrel%404x.png",
         "val": "barrel",
         "text": "Barrel"
       },
@@ -91335,7 +91335,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/fbjat8mq/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/fbjat8mq/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["A1A9JDQwOh", "cbL7v21iUJ"]
@@ -91346,7 +91346,7 @@
         "text": "How far does the new rear addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/fbjat8mq/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/fbjat8mq/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["A1A9JdDHDv", "cbL7vdDHDv"]
@@ -92095,7 +92095,7 @@
     },
     "YEsaeLJBzA": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/win9jdvo/3.8.3_Detached_windturbines_mounted_heightfromroof_lessthan3m.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/win9jdvo/3.8.3_Detached_windturbines_mounted_heightfromroof_lessthan3m.svg",
         "text": "Less than 3m higher than the roof",
         "flags": ["flag.pp.permittedDevelopment"]
       },
@@ -93053,7 +93053,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">General Permitted Development Order 2015 S.2 P.1 A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/9wh82658/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/9wh82658/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["nUxVvjtrmO", "BumtuxiZ03", "pLUIDrG0mb"]
@@ -93064,7 +93064,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a target=\"_self\" rel=\"noopener noreferrer nofollow\" href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/9wh82658/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/9wh82658/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["nUxVvdDHDv", "BumtudDHDv", "pLUIDdDHDv"]
@@ -93296,7 +93296,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/c5gvd6af/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/c5gvd6af/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["nBl5D9ntCk", "2aLgk0XPpU", "hO9vdlNRpF"]
@@ -93307,7 +93307,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/c5gvd6af/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/c5gvd6af/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["nBl5DdDHDv", "2aLgkdDHDv", "hO9vddDHDv"]
@@ -93351,7 +93351,7 @@
     },
     "Yfhf7tIF6s": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/luwiy4pv/3.3_rooflights_3.3_SemiD_Rooflights_non-openable.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/luwiy4pv/3.3_rooflights_3.3_SemiD_Rooflights_non-openable.svg",
         "text": "Less than 1.7m",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -97102,7 +97102,7 @@
     },
     "aFsUzGXWPo": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/lyijuki5/terrace.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/lyijuki5/terrace.svg",
         "val": "residential.dwelling.house.terrace",
         "text": "Mid terrace"
       },
@@ -97118,7 +97118,7 @@
     },
     "aFsUzdJp1E": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/lyijuki5/terrace.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/lyijuki5/terrace.svg",
         "val": "residential.dwelling.house.terrace",
         "text": "Mid terrace"
       },
@@ -97126,7 +97126,7 @@
     },
     "aFsUzpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/lyijuki5/terrace.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/lyijuki5/terrace.svg",
         "val": "residential.dwelling.house.terrace",
         "text": "Mid terrace"
       },
@@ -101336,7 +101336,7 @@
     },
     "bojK2MbctI": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/72r94f7y/3.3_rooflights_3.3_SemiD_Rooflights_above1.7m.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/72r94f7y/3.3_rooflights_3.3_SemiD_Rooflights_above1.7m.svg",
         "text": "1.7m or more",
         "flags": ["flag.pp.permittedDevelopment"]
       },
@@ -101547,7 +101547,7 @@
     },
     "byvtCOCyWU": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/luwiy4pv/3.3_rooflights_3.3_SemiD_Rooflights_non-openable.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/luwiy4pv/3.3_rooflights_3.3_SemiD_Rooflights_non-openable.svg",
         "text": "Less than 1.7m",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -106960,7 +106960,7 @@
     },
     "e0GDPNfvB0": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/pqkaa90a/Rooftype_flat%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/pqkaa90a/Rooftype_flat%404x.png",
         "val": "flat",
         "text": "Flat roof"
       },
@@ -106968,7 +106968,7 @@
     },
     "e0GDPpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/pqkaa90a/Rooftype_flat%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/pqkaa90a/Rooftype_flat%404x.png",
         "val": "flat",
         "text": "Flat roof"
       },
@@ -107840,7 +107840,7 @@
         "text": "How far does the new rear addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/7yeyqip5/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/7yeyqip5/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["koJpCdDHDv", "Pde8vdDHDv"]
@@ -107851,7 +107851,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/7yeyqip5/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/7yeyqip5/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["koJpCPYl9U", "Pde8vcvQx1"]
@@ -108398,7 +108398,7 @@
     },
     "eZ67ZbcdC5": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/14icpdya/heatpump_%20wall_upper.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/14icpdya/heatpump_%20wall_upper.svg",
         "text": "Yes",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -110753,7 +110753,7 @@
     "fK3hckrrLY": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/qx2p7q91/RetainEaves_OR_same_large.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/qx2p7q91/RetainEaves_OR_same_large.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission.</p>",
         "text": "Will all original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.2 (b)(i)(a)</a></p>",
@@ -110766,7 +110766,7 @@
     "fK3hcpRCYG": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/qx2p7q91/RetainEaves_OR_same_large.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/qx2p7q91/RetainEaves_OR_same_large.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission.</p>",
         "text": "Will all original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.2 (b)(i)(a)</a></p>",
@@ -110880,7 +110880,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/lil6lpf2/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/lil6lpf2/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["krkdXTxqP9", "pxi0CBg2S4"]
@@ -110891,7 +110891,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/lil6lpf2/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/lil6lpf2/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["krkdXdDHDv", "pxi0CdDHDv"]
@@ -112476,7 +112476,7 @@
         "text": "How far does the new rear addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/g3fx37rb/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/g3fx37rb/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["FavN7dDHDv", "J2VhwdDHDv"]
@@ -112487,7 +112487,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/g3fx37rb/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/g3fx37rb/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["FavN7PMQ9G", "J2VhwttWha"]
@@ -116150,7 +116150,7 @@
     },
     "hEqb27ehMn": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/vl3fjz93/heatpump_roof.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/vl3fjz93/heatpump_roof.svg",
         "text": "A sloping roof",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -117017,7 +117017,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/dy6e1pwb/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/dy6e1pwb/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["wAbhDJnHXE", "wcZIhqZgjY"]
@@ -117028,7 +117028,7 @@
         "text": "How far does the new rear addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/dy6e1pwb/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/dy6e1pwb/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["wAbhDdDHDv", "wcZIhdDHDv"]
@@ -119234,7 +119234,7 @@
     },
     "iKZIllUjGG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/bwssnt37/terrace.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/bwssnt37/terrace.svg",
         "val": "residential.dwelling.house.terrace",
         "text": "End terrace",
         "flags": ["flag.pp.permissionNeeded"]
@@ -121351,7 +121351,7 @@
     },
     "j2FZLPYfNf": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/mnadr0wi/heatpump_wall.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/mnadr0wi/heatpump_wall.svg",
         "text": "A wall"
       },
       "type": 200,
@@ -122014,7 +122014,7 @@
     },
     "jFjYX7d19B": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/sz4tsh5m/Rooftype_pyramid%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/sz4tsh5m/Rooftype_pyramid%404x.png",
         "val": "pyramid",
         "text": "Pyramid"
       },
@@ -122022,7 +122022,7 @@
     },
     "jFjYXpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/sz4tsh5m/Rooftype_pyramid%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/sz4tsh5m/Rooftype_pyramid%404x.png",
         "val": "pyramid",
         "text": "Pyramid"
       },
@@ -122522,7 +122522,7 @@
     },
     "jQwuOYBbUI": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/vk6cv0yb/detached.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/vk6cv0yb/detached.svg",
         "val": "residential.dwelling.house.detached",
         "text": "Detached"
       },
@@ -127456,7 +127456,7 @@
     },
     "lCZZiYi745": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/6atuorun/heatpump_wall.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/6atuorun/heatpump_wall.svg",
         "text": "A wall"
       },
       "type": 200,
@@ -128035,7 +128035,7 @@
     },
     "lSNxbdc5ef": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/usvvnv05/Roofmaterials_lessthan15%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/usvvnv05/Roofmaterials_lessthan15%404x.png",
         "text": "No",
         "flags": ["flag.pp.permittedDevelopment"]
       },
@@ -128107,7 +128107,7 @@
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(ii)</a></p>",
         "description": "<p>Measure at the highest point, including any parapet walls.</p>",
         "howMeasured": "<p>Height refers to the distance between the highest point of the roof of the extension (including any parapets or protrusions) and the ground level at the base of the structure. Where ground level is sloping, then the ground level is measured at the highest point around the perimeter of the building.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/lhd8m0db/eaves_howtomeasure_height_flat.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/lhd8m0db/eaves_howtomeasure_height_flat.svg"
       },
       "type": 100,
       "edges": ["QSdvSesIOH", "DImGrs1CvT"]
@@ -130094,7 +130094,7 @@
     },
     "mE3DsKY9J7": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/k38jujsz/Rooftype_gable%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/k38jujsz/Rooftype_gable%404x.png",
         "val": "gable",
         "text": "Gable"
       },
@@ -130102,7 +130102,7 @@
     },
     "mE3DspRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/k38jujsz/Rooftype_gable%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/k38jujsz/Rooftype_gable%404x.png",
         "val": "gable",
         "text": "Gable"
       },
@@ -133284,7 +133284,7 @@
     },
     "nQITye9reG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/oyu4q03l/semiDetached.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/oyu4q03l/semiDetached.svg",
         "val": "residential.dwelling.house.semiDetached",
         "text": "Semi-detached",
         "flags": ["flag.pp.permissionNeeded"]
@@ -135246,7 +135246,7 @@
         "text": "How far does the new rear addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/fyqu6dnc/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/fyqu6dnc/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["TpWeodDHDv", "kSjdmdDHDv"]
@@ -135257,7 +135257,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/fyqu6dnc/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/fyqu6dnc/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["TpWeoe0b7G", "kSjdm4ohYQ"]
@@ -135973,7 +135973,7 @@
     },
     "oZy4nQYb7I": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/qfmp8s6n/Rooftype_saltbox%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/qfmp8s6n/Rooftype_saltbox%404x.png",
         "val": "saltbox",
         "text": "Saltbox"
       },
@@ -135981,7 +135981,7 @@
     },
     "oZy4npRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/qfmp8s6n/Rooftype_saltbox%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/qfmp8s6n/Rooftype_saltbox%404x.png",
         "val": "saltbox",
         "text": "Saltbox"
       },
@@ -137723,7 +137723,7 @@
     },
     "pFmbGkGbf9": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/eyxe8nyf/Rooftype_M%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/eyxe8nyf/Rooftype_M%404x.png",
         "val": "m",
         "text": "M-shape"
       },
@@ -137731,7 +137731,7 @@
     },
     "pFmbGpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/eyxe8nyf/Rooftype_M%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/eyxe8nyf/Rooftype_M%404x.png",
         "val": "m",
         "text": "M-shape"
       },
@@ -137760,7 +137760,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/aw330kt4/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/aw330kt4/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["n7BkeHnkVc", "mDSfXRU2kA"]
@@ -137771,7 +137771,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before the. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/aw330kt4/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/aw330kt4/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["n7BkedDHDv", "mDSfXdDHDv"]
@@ -141190,7 +141190,7 @@
     },
     "qOV2DGv7fT": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/n4b0c2a7/Roofmaterials_stickingout%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/n4b0c2a7/Roofmaterials_stickingout%404x.png",
         "val": "true",
         "text": "Yes"
       },
@@ -144173,7 +144173,7 @@
         "text": "How far does the new rear addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/g5r4gps4/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/g5r4gps4/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["HO9QWdDHDv", "n5UjNdDHDv"]
@@ -144184,7 +144184,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/g5r4gps4/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/g5r4gps4/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["HO9QWWMsgw", "n5UjNnAcaw"]
@@ -147290,7 +147290,7 @@
     },
     "smg1FGHVPw": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/icysehcd/heatpump_ground.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/icysehcd/heatpump_ground.svg",
         "text": "The ground"
       },
       "type": 200
@@ -148594,7 +148594,7 @@
     },
     "tHCJqKfxoQ": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/bwssnt37/terrace.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/bwssnt37/terrace.svg",
         "val": "residential.dwelling.house.terrace",
         "text": "End terrace"
       },
@@ -148610,7 +148610,7 @@
     },
     "tHCJqdJp1E": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/bwssnt37/terrace.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/bwssnt37/terrace.svg",
         "val": "residential.dwelling.house.terrace",
         "text": "End terrace"
       },
@@ -148618,7 +148618,7 @@
     },
     "tHCJqpRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/bwssnt37/terrace.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/bwssnt37/terrace.svg",
         "val": "residential.dwelling.house.terrace",
         "text": "End terrace"
       },
@@ -150480,7 +150480,7 @@
     },
     "twRf5ECwsx": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/imjnagza/Rooftype_clerestorey%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/imjnagza/Rooftype_clerestorey%404x.png",
         "val": "clerestorey",
         "text": "Clerestorey"
       },
@@ -150488,7 +150488,7 @@
     },
     "twRf5pRCYG": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/imjnagza/Rooftype_clerestorey%404x.png",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/imjnagza/Rooftype_clerestorey%404x.png",
         "val": "clerestorey",
         "text": "Clerestorey"
       },
@@ -150726,7 +150726,7 @@
     },
     "u1x7bdDHDv": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/zcja8lon/Terrace_outrigger_infill_morethan6.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/zcja8lon/Terrace_outrigger_infill_morethan6.svg",
         "text": "More than 6m",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -150734,7 +150734,7 @@
     },
     "u1x7bhlAu9": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/zcja8lon/Terrace_outrigger_infill_morethan6.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/zcja8lon/Terrace_outrigger_infill_morethan6.svg",
         "text": "More than 6m",
         "flags": ["flag.pp.permissionNeeded"]
       },
@@ -155427,7 +155427,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/ec8s80ya/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/ec8s80ya/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["S0Rfk17XhZ", "p6vC9zDIpg"]
@@ -155438,7 +155438,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/ec8s80ya/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/ec8s80ya/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["S0RfkdDHDv", "p6vC9dDHDv"]
@@ -156226,7 +156226,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/jt2gde14/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/jt2gde14/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["pp4iSTMlvN", "V6LUjaddTc"]
@@ -156237,7 +156237,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before the. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/jt2gde14/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/jt2gde14/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["pp4iSdDHDv", "V6LUjdDHDv"]
@@ -157691,7 +157691,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any prior extension that may have been added to the house. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/x6fu034z/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/x6fu034z/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["F6Cwtk9rL4", "sVIVIsrXmV", "IishjtHg6N"]
@@ -157702,7 +157702,7 @@
         "text": "How far does the new extension extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. This does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/x6fu034z/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/x6fu034z/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["F6CwtdDHDv", "sVIVIdDHDv", "IishjdDHDv"]
@@ -158220,7 +158220,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. So this includes any previous extensions. It does not include any guttering or barge boards.</p>\n<p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p>\n<p>The original house is the house as it was first built, or as it was in 1948 (if it was built before 1948) not including any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/93g6oc2o/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/93g6oc2o/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["yn84pSBHnN", "tkTIzO3AGa"]
@@ -158231,7 +158231,7 @@
         "text": "How far does the new addition extend beyond the back wall of the original house?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class A.1 (f)(i)</a></p>",
         "howMeasured": "<p>The depth of an extension is measured from the external face of the rear wall of the original house. This includes any previous extensions. It does not include any guttering or barge boards.</p><p>If the rear of the original house is stepped, the extension should be measured from each part of the rear walls you are extending from, even if it is not the rearmost part of the original house.</p><p>The original house is the house as it was first built, or as it was in 1948 if it was built before then. It does not include any subsequent additions or alterations.</p>",
-        "definitionImg": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/93g6oc2o/extension_stepped.svg"
+        "definitionImg": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/93g6oc2o/extension_stepped.svg"
       },
       "type": 100,
       "edges": ["yn84pdDHDv", "tkTIzdDHDv"]
@@ -160046,7 +160046,7 @@
     "xYRIILSLUL": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/yfpuamoh/retaineaves_NOR.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/yfpuamoh/retaineaves_NOR.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission, unless those eaves are being removed as part of a hip-to gable roof alteration. This does not apply for the part of the eaves that will be removed as part of a hip to gable roof enlargement.</p>",
         "text": "Will all original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.</a></p>",
@@ -160059,7 +160059,7 @@
     "xYRIIpRCYG": {
       "data": {
         "fn": "proposal.eavesRetained",
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/yfpuamoh/retaineaves_NOR.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/yfpuamoh/retaineaves_NOR.svg",
         "info": "<p>A roof extension that does not keep the original eaves will need planning permission, unless those eaves are being removed as part of a hip-to gable roof alteration. This does not apply for the part of the eaves that will be removed as part of a hip to gable roof enlargement.</p>",
         "text": "Will all original eaves be kept?",
         "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1/crossheading/class-b-additions-etc-to-the-roof-of-a-dwellinghouse\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 1, Class B.</a></p>",
@@ -165928,7 +165928,7 @@
     },
     "zpxDuAKeCj": {
       "data": {
-        "img": "https://user-data-8038f15.s3.eu-west-2.amazonaws.com/cyjsxb8h/heatpump_%20dimensions.svg",
+        "img": "https://user-data-abc123.s3.eu-west-2.amazonaws.com/cyjsxb8h/heatpump_%20dimensions.svg",
         "info": "<p>A heat pump compressor larger than 0.6 cubic metres will need planning permission.</p>",
         "text": "What is the volume of the heap pump unit?",
         "notes": "The volume of the air source heat pump's outdoor compressor unit includes any housing",
