@@ -401,6 +401,55 @@ paths:
             - its session has already been paid for
         "500":
           description: Failed to create the Stripe Checkout Session.
+  /stripe/payment-request/{paymentRequestId}/fulfil:
+    post:
+      summary: Fulfil an invite to pay (ITP) request on return from Stripe Checkout
+      description: |
+        Called by the payer's page when Stripe Checkout redirects back to PlanX.
+
+        Docs: [https://docs.stripe.com/checkout/fulfillment](https://docs.stripe.com/checkout/fulfillment)
+      tags:
+        - stripe
+      parameters:
+        - in: path
+          name: paymentRequestId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - checkoutSessionId
+              properties:
+                checkoutSessionId:
+                  type: string
+                  example: cs_test_a1b2c3
+                  description: The `stripeSessionId` query parameter on the return URL
+      responses:
+        "200":
+          description: The payment request has been paid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  paymentStatus:
+                    type: string
+                    enum: [paid]
+        "400":
+          description: |
+            Invalid request, or the Checkout Session does not belong to this payment request.
+        "404":
+          description: Payment request not found.
+        "409":
+          description: The Checkout Session has not been paid (e.g. Checkout was not completed).
+        "500":
+          description: Failed to retrieve the Checkout Session from Stripe, or to update the payment request.
   /stripe/checkout-session/{localAuthority}/{checkoutSessionId}:
     get:
       summary: Retrieve a Stripe Checkout Session's status
@@ -431,6 +480,9 @@ paths:
         PaymentIntent metadata onto the connected account's destination payment
         (`transfer.created` events).
 
+        Fulfils invite to pay requests once their Checkout Session is paid
+        (`checkout.session.completed` events with a `paymentRequestId` in their metadata). Self-pay Checkout Sessions are ignored.
+
         Docs: [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
       tags:
         - stripe
@@ -447,6 +499,6 @@ paths:
           description: Missing or invalid `stripe-signature` - verification failed.
         "500":
           description: >-
-            Event verified, but handling it failed (recording the payment status, or
-            updating the destination payment). Returned deliberately so Stripe
+            Event verified, but handling it failed (recording the payment status,
+            updating the destination payment, or fulfilling a payment request). Returned deliberately so Stripe
             redelivers the event and the write is retried.
