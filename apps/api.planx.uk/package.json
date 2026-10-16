@@ -50,6 +50,8 @@
     "multer": "^2.3.0",
     "nanoid": "catalog:",
     "notifications-node-client": "^8.4.0",
+    "notion-client": "^8.0.8",
+    "notion-types": "^8.0.8",
     "openid-client": "^5.7.1",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
