@@ -445,7 +445,7 @@ paths:
           description: |
             Invalid request, or the Checkout Session does not belong to this payment request.
         "404":
-          description: Payment request not found.
+          description: The payment request, its session, or the Checkout Session was not found.
         "409":
           description: The Checkout Session has not been paid (e.g. Checkout was not completed).
         "500":

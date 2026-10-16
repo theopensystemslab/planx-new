@@ -1,4 +1,4 @@
-import type Stripe from "stripe";
+import Stripe from "stripe";
 import supertest from "supertest";
 
 import app from "../../../server.js";
@@ -446,6 +446,36 @@ describe("fulfilling an invite to pay request", () => {
 
       expect(db.updates).toBe(0);
       expect(getMarkAsPaidCalls()).toHaveLength(0);
+    });
+
+    it("returns 404 when Stripe has no such Checkout Session", async () => {
+      vi.spyOn(stripe.checkout.sessions, "retrieve").mockRejectedValue(
+        new Stripe.errors.StripeInvalidRequestError({
+          type: "invalid_request_error",
+          code: "resource_missing",
+          message: `No such checkout.session: '${CHECKOUT_SESSION_ID}'`,
+        }),
+      );
+
+      await postFulfil()
+        .expect(404)
+        .then((res) =>
+          expect(res.body.error).toMatch(/Checkout Session .* not found/),
+        );
+    });
+
+    it("returns 500 when Stripe rejects the request for another reason", async () => {
+      vi.spyOn(stripe.checkout.sessions, "retrieve").mockRejectedValue(
+        new Stripe.errors.StripeInvalidRequestError({
+          type: "invalid_request_error",
+          code: "parameter_invalid_string",
+          message: "Invalid string",
+        }),
+      );
+
+      await postFulfil()
+        .expect(500)
+        .then((res) => expect(res.body.error).toMatch(/Failed to fulfil/));
     });
 
     it("returns 500 when retrieving the Checkout Session fails", async () => {

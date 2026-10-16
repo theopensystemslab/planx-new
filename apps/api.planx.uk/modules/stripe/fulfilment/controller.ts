@@ -1,3 +1,5 @@
+import Stripe from "stripe";
+
 import { ServerError } from "../../../errors/index.js";
 import { fulfilPaymentRequest } from "./service.js";
 import type { FulfilPaymentRequestController } from "./types.js";
@@ -40,6 +42,13 @@ export const fulfilPaymentRequestController: FulfilPaymentRequestController =
           });
       }
     } catch (error) {
+      if (isUnknownCheckoutSession(error)) {
+        return next({
+          status: 404,
+          message: `Checkout Session ${checkoutSessionId} not found`,
+        });
+      }
+
       return next(
         new ServerError({
           message: `Failed to fulfil payment request ${paymentRequestId} from Checkout Session ${checkoutSessionId}`,
@@ -48,3 +57,7 @@ export const fulfilPaymentRequestController: FulfilPaymentRequestController =
       );
     }
   };
+
+const isUnknownCheckoutSession = (error: unknown): boolean =>
+  error instanceof Stripe.errors.StripeInvalidRequestError &&
+  error.code === "resource_missing";
