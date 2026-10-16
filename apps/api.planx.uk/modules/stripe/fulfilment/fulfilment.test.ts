@@ -134,6 +134,17 @@ const getPaymentRequestLookups = () =>
     .getCalls()
     .filter((call) => call.id === "GetPaymentRequestForCheckout");
 
+const expectReported = (status: string) =>
+  expect(payHelpers.reportError).toHaveBeenCalledWith(
+    expect.objectContaining({
+      error: expect.stringContaining(`(${status})`),
+      context: {
+        checkoutSessionId: CHECKOUT_SESSION_ID,
+        eventType: "checkout.session.completed",
+      },
+    }),
+  );
+
 describe("fulfilling an invite to pay request", () => {
   beforeEach(() => {
     mockRetrieve();
@@ -208,7 +219,7 @@ describe("fulfilling an invite to pay request", () => {
       });
     });
 
-    it("does not update an unpaid Checkout Session", async () => {
+    it("reports, and does not update, an unpaid Checkout Session", async () => {
       mockRetrieve({ payment_status: "unpaid" });
       const db = mockPaymentRequestRow();
 
@@ -220,6 +231,7 @@ describe("fulfilling an invite to pay request", () => {
 
       expect(db.updates).toBe(0);
       expect(getMarkAsPaidCalls()).toHaveLength(0);
+      expectReported("unpaid");
     });
 
     it("ignores a self-pay Checkout Session (no paymentRequestId)", async () => {
@@ -254,7 +266,7 @@ describe("fulfilling an invite to pay request", () => {
       expect(payHelpers.reportError).not.toHaveBeenCalled();
     });
 
-    it("ignores a payment request which doesn't exist in this environment", async () => {
+    it("reports a payment request which doesn't exist in this environment", async () => {
       mockPaymentRequestNotFound();
 
       await postWebhook(
@@ -262,7 +274,19 @@ describe("fulfilling an invite to pay request", () => {
       ).expect(200);
 
       expect(getMarkAsPaidCalls()).toHaveLength(0);
-      expect(payHelpers.reportError).not.toHaveBeenCalled();
+      expectReported("notFound");
+    });
+
+    it("reports, and does not update, a payment request whose session no longer exists", async () => {
+      const db = mockPaymentRequestRow({ session: null });
+
+      await postWebhook(
+        checkoutSessionEvent("checkout.session.completed"),
+      ).expect(200);
+
+      expect(db.updates).toBe(0);
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
+      expectReported("notFound");
     });
 
     it("refuses, and reports, a Checkout Session for a different session", async () => {

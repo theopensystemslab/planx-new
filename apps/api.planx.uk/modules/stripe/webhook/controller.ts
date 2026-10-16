@@ -29,13 +29,14 @@ const handleCheckoutSessionPaid = async (
   switch (result.status) {
     case "fulfilled":
     case "alreadyFulfilled":
-    case "unpaid":
     case "foreign":
-    case "notFound":
       return console.info(
         `Stripe Checkout Session ${id} (${eventType}): ${result.status}`,
       );
-    // Needs investigating
+    // Stripe has (or should have) taken payment, but we can't submit the application
+    // Needs dev attention to debug
+    case "unpaid":
+    case "notFound":
     case "notPaymentRequest":
     case "mismatch":
       return reportError({
