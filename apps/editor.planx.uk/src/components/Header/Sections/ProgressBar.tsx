@@ -3,6 +3,7 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { selectSectionProgress } from "pages/FlowEditor/lib/store/selectors";
 
 const Root = styled(LinearProgress)(({ theme }) => ({
   height: theme.spacing(2),
@@ -26,7 +27,7 @@ const Root = styled(LinearProgress)(({ theme }) => ({
 }));
 
 export const ProgressBar: React.FC = () => {
-  const progress = useStore((state) => state.sectionProgress);
+  const progress = useStore(selectSectionProgress);
 
   if (!progress) return;
 

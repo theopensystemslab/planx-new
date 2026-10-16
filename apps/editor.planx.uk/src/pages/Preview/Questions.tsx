@@ -8,6 +8,7 @@ import { getLocalFlow, setLocalFlow } from "lib/local";
 import { getLocalFlowIdb, setLocalFlowIdb } from "lib/local.idb";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
+import { selectSectionProgress } from "pages/FlowEditor/lib/store/selectors";
 import type { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Session } from "types";
@@ -74,7 +75,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.getType,
     state.currentCard,
     state.setCurrentCard,
-    state.sectionProgress,
+    selectSectionProgress(state),
   ]);
   const isStandalone = previewEnvironment === "standalone";
   const isDraft =

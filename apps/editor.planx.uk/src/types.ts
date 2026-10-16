@@ -7,7 +7,7 @@ import type {
 import type { SectionLength } from "@planx/components/Section/model";
 import type { OT } from "@planx/graph/types";
 import type { FormikValues, useFormik } from "formik";
-import type { Progress } from "pages/FlowEditor/lib/store/navigation";
+import type { Progress } from "pages/FlowEditor/lib/store/utils/sections";
 
 import type { Store } from "./pages/FlowEditor/lib/store/index";
 import type { SharedStore } from "./pages/FlowEditor/lib/store/shared";

@@ -2,13 +2,25 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
 import type { FullStore } from "../store";
 import { useStore } from "../store";
+import {
+  selectCurrentSectionIndex,
+  selectCurrentSectionTitle,
+  selectSectionCount,
+  selectSectionNodes,
+  selectSectionProgress,
+} from "../store/selectors";
 import flowWithoutSections from "./mocks/flowWithClones.json";
 import flowWithSectionsInFolders from "./mocks/flowWithSectionsInFolders.json";
 import flowWithThreeSections from "./mocks/flowWithThreeSections.json";
 
 const { getState, setState } = useStore;
-const { filterFlowByType, initNavigationStore, record, upcomingCardIds } =
-  getState();
+const {
+  filterFlowByType,
+  record,
+  resetPreview,
+  setCurrentCard,
+  upcomingCardIds,
+} = getState();
 
 let initialState: FullStore;
 
@@ -76,19 +88,19 @@ describe("filterFlowByType()", () => {
   });
 });
 
-describe("initNavigationStore()", () => {
+const getSectionState = () => ({
+  sectionNodes: selectSectionNodes(getState()),
+  sectionCount: selectSectionCount(getState()),
+  currentSectionIndex: selectCurrentSectionIndex(getState()),
+  currentSectionTitle: selectCurrentSectionTitle(getState()),
+});
+
+describe("section state on initial load", () => {
   test("sets expected initial values for flow without sections", () => {
     setState({ flow: flowWithoutSections });
-    let sectionCount, currentSectionTitle, sectionNodes;
 
-    ({ sectionCount, currentSectionTitle, sectionNodes } = getState());
-    expect(sectionCount).toBe(0);
-    expect(currentSectionTitle).toBeUndefined();
-    expect(Object.keys(sectionNodes).length).toBe(0);
-
-    initNavigationStore();
-
-    ({ sectionCount, currentSectionTitle, sectionNodes } = getState());
+    const { sectionCount, currentSectionTitle, sectionNodes } =
+      getSectionState();
     expect(sectionCount).toBe(0);
     expect(currentSectionTitle).toBeUndefined();
     expect(Object.keys(sectionNodes).length).toBe(0);
@@ -96,16 +108,9 @@ describe("initNavigationStore()", () => {
 
   test("sets expected initial values for flow with sections", () => {
     setState({ flow: flowWithThreeSections });
-    let sectionCount, currentSectionTitle, sectionNodes;
 
-    ({ sectionCount, currentSectionTitle, sectionNodes } = getState());
-    expect(sectionCount).toBe(0);
-    expect(currentSectionTitle).toBeUndefined();
-    expect(Object.keys(sectionNodes).length).toBe(0);
-
-    initNavigationStore();
-
-    ({ sectionCount, currentSectionTitle, sectionNodes } = getState());
+    const { sectionCount, currentSectionTitle, sectionNodes } =
+      getSectionState();
     expect(sectionCount).toBe(3);
     expect(currentSectionTitle).toBe("First section");
     expect(Object.keys(sectionNodes)).toEqual(
@@ -115,16 +120,9 @@ describe("initNavigationStore()", () => {
 
   test("sets expected initial values for flow with sections in folders", () => {
     setState({ flow: flowWithSectionsInFolders });
-    let sectionCount, currentSectionTitle, sectionNodes;
 
-    ({ sectionCount, currentSectionTitle, sectionNodes } = getState());
-    expect(sectionCount).toBe(0);
-    expect(currentSectionTitle).toBeUndefined();
-    expect(Object.keys(sectionNodes).length).toBe(0);
-
-    initNavigationStore();
-
-    ({ sectionCount, currentSectionTitle, sectionNodes } = getState());
+    const { sectionCount, currentSectionTitle, sectionNodes } =
+      getSectionState();
     expect(sectionCount).toBe(3);
     expect(currentSectionTitle).toBe("First");
     expect(Object.keys(sectionNodes)).toEqual(
@@ -137,32 +135,27 @@ describe("initNavigationStore()", () => {
   });
 });
 
-describe("updateSectionData() on forwards navigation", () => {
-  test("does not update state if there are no sections in the flow", () => {
+describe("section state on forwards navigation", () => {
+  test("does not change if there are no sections in the flow", () => {
     setState({ flow: flowWithoutSections });
-    initNavigationStore();
 
-    let currentSectionTitle, currentSectionIndex;
-    ({ currentSectionTitle, currentSectionIndex } = getState());
+    let { currentSectionTitle, currentSectionIndex } = getSectionState();
     expect(currentSectionIndex).toBe(1);
     expect(currentSectionTitle).toBeUndefined();
 
-    // Navigate forward, which calls updateSectionData()
     record("question", { answers: ["leftChoice"] });
     record("leftChoice", { answers: ["leftNotice"] });
 
-    ({ currentSectionTitle, currentSectionIndex } = getState());
+    ({ currentSectionTitle, currentSectionIndex } = getSectionState());
     expect(currentSectionIndex).toBe(1);
     expect(currentSectionTitle).toBeUndefined();
   });
 
   test("updates section title and index correctly for a flow with sections", () => {
-    let currentSectionTitle, currentSectionIndex;
     setState({ flow: flowWithThreeSections });
-    initNavigationStore();
 
     // First section correctly set on initial load
-    ({ currentSectionTitle, currentSectionIndex } = getState());
+    let { currentSectionTitle, currentSectionIndex } = getSectionState();
     expect(currentSectionIndex).toBe(1);
     expect(currentSectionTitle).toEqual("First section");
 
@@ -170,7 +163,7 @@ describe("updateSectionData() on forwards navigation", () => {
     record("firstSection", { auto: true });
 
     // First section is still correctly set
-    ({ currentSectionTitle, currentSectionIndex } = getState());
+    ({ currentSectionTitle, currentSectionIndex } = getSectionState());
     expect(currentSectionIndex).toBe(1);
     expect(currentSectionTitle).toEqual("First section");
 
@@ -179,7 +172,7 @@ describe("updateSectionData() on forwards navigation", () => {
     record("secondSection", { auto: true });
 
     // Second section is correctly set
-    ({ currentSectionTitle, currentSectionIndex } = getState());
+    ({ currentSectionTitle, currentSectionIndex } = getSectionState());
     expect(currentSectionIndex).toBe(2);
     expect(currentSectionTitle).toEqual("Second section");
 
@@ -188,21 +181,19 @@ describe("updateSectionData() on forwards navigation", () => {
     record("thirdSection", { auto: true });
 
     // Third section is correctly set
-    ({ currentSectionTitle, currentSectionIndex } = getState());
+    ({ currentSectionTitle, currentSectionIndex } = getSectionState());
     expect(currentSectionIndex).toBe(3);
     expect(currentSectionTitle).toEqual("Third section");
   });
 
   test("updates section title and index correctly for a flow with sections in folders", () => {
-    let currentSectionTitle, currentSectionIndex;
     setState({ flow: flowWithSectionsInFolders });
-    initNavigationStore();
 
     // Navigate into first section
     record("FirstSection", { auto: false });
 
     // First section is set correctly
-    ({ currentSectionTitle, currentSectionIndex } = getState());
+    let { currentSectionTitle, currentSectionIndex } = getSectionState();
     expect(currentSectionIndex).toBe(1);
     expect(currentSectionTitle).toEqual("First");
 
@@ -212,7 +203,7 @@ describe("updateSectionData() on forwards navigation", () => {
     record("MiddleSectionInFolder", { auto: false });
 
     // Second section in folder is set correctly
-    ({ currentSectionTitle, currentSectionIndex } = getState());
+    ({ currentSectionTitle, currentSectionIndex } = getSectionState());
     expect(currentSectionIndex).toBe(2);
     expect(currentSectionTitle).toEqual("Middle");
 
@@ -223,20 +214,73 @@ describe("updateSectionData() on forwards navigation", () => {
     record("FinalSection", { auto: false });
 
     // Final section is set correctly
-    ({ currentSectionTitle, currentSectionIndex } = getState());
+    ({ currentSectionTitle, currentSectionIndex } = getSectionState());
     expect(currentSectionIndex).toBe(3);
     expect(currentSectionTitle).toEqual("Final");
   });
+
+  test("enters a section as soon as its card is reached", () => {
+    setState({ flow: flowWithThreeSections });
+
+    record("firstSection", { auto: true });
+    record("firstQuestion", { answers: ["firstAnswer"] });
+
+    // Second section card is current, but not yet in breadcrumbs
+    expect(getState().currentCard?.id).toBe("secondSection");
+    expect(getState().breadcrumbs).not.toHaveProperty("secondSection");
+
+    const { currentSectionTitle, currentSectionIndex } = getSectionState();
+    expect(currentSectionIndex).toBe(2);
+    expect(currentSectionTitle).toEqual("Second section");
+  });
 });
 
-describe("updateSectionData() on backwards navigation", () => {
-  test.todo("does not update state if there are no sections in the flow");
+describe("section state on backwards navigation", () => {
+  test("updates section title and index correctly for a flow with sections", () => {
+    setState({ flow: flowWithThreeSections });
 
-  test.todo(
-    "updates section title and index correctly for a flow with sections",
-  );
+    record("firstSection", { auto: true });
+    record("firstQuestion", { answers: ["firstAnswer"] });
+    record("secondSection", { auto: true });
+    expect(getSectionState().currentSectionIndex).toBe(2);
 
-  test.todo(
-    "updates section title and index correctly for a flow with sections in folders",
-  );
+    // Go back to the first question
+    record("firstQuestion");
+
+    const { currentSectionTitle, currentSectionIndex } = getSectionState();
+    expect(currentSectionIndex).toBe(1);
+    expect(currentSectionTitle).toEqual("First section");
+  });
+});
+
+describe("section state on resetPreview()", () => {
+  test("returns to the first section", () => {
+    setState({ flow: flowWithThreeSections, previewEnvironment: "editor" });
+
+    record("firstSection", { auto: true });
+    record("firstQuestion", { answers: ["firstAnswer"] });
+    record("secondSection", { auto: true });
+    expect(getSectionState().currentSectionIndex).toBe(2);
+
+    resetPreview();
+    setCurrentCard();
+
+    const { currentSectionTitle, currentSectionIndex } = getSectionState();
+    expect(getState().currentCard?.id).toBe("firstSection");
+    expect(currentSectionIndex).toBe(1);
+    expect(currentSectionTitle).toEqual("First section");
+    expect(selectSectionProgress(getState())?.completed).toBe(0);
+  });
+});
+
+describe("section state on flow changes", () => {
+  test("updates when the flow is replaced", () => {
+    setState({ flow: flowWithoutSections });
+    expect(getSectionState().sectionCount).toBe(0);
+
+    // e.g. a ShareDB sync, or loading a published flow
+    setState({ flow: flowWithThreeSections });
+    expect(getSectionState().sectionCount).toBe(3);
+    expect(getSectionState().currentSectionTitle).toEqual("First section");
+  });
 });

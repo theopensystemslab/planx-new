@@ -17,6 +17,7 @@ import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { selectHasSections } from "pages/FlowEditor/lib/store/selectors";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
@@ -169,7 +170,7 @@ interface SummaryListProps extends SummaryListBaseProps {
 
 function SummaryListsBySections(props: SummaryListsBySectionsProps) {
   const [hasSections, getSortedBreadcrumbsBySection] = useStore((state) => [
-    state.hasSections,
+    selectHasSections(state),
     state.getSortedBreadcrumbsBySection,
   ]);
 
