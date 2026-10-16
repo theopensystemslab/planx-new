@@ -1,7 +1,11 @@
+import type { FeeBreakdown } from "@opensystemslab/planx-core/types";
+
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 
 export const FLOW_ID = "7cd1c4b4-4229-424f-8d04-c9fdc958ef4e";
+export const FLOW_NAME = "Apply for a lawful development certificate";
 export const TEAM_SLUG = "southwark";
+export const TEAM_NAME = "Southwark";
 
 export const paymentIntent = {
   id: "pi_test_123",
@@ -43,7 +47,12 @@ export const mockSessionLookup = ({
       session: sessionExists
         ? {
             flowId: FLOW_ID,
-            flow: flowExists ? { team: { slug: TEAM_SLUG } } : null,
+            flow: flowExists
+              ? {
+                  name: FLOW_NAME,
+                  team: { slug: TEAM_SLUG, name: TEAM_NAME },
+                }
+              : null,
             passportData,
           }
         : null,
@@ -113,3 +122,59 @@ export const mockPaymentStatusInsert = (
 
 export const getPaymentStatusInsert = () =>
   queryMock.getCalls().find((call) => call.id === "InsertStripePaymentStatus");
+
+export const COUNCIL_INVOICE_DETAILS = {
+  organisationName: "London Borough of Southwark",
+  addressLine1: "160 Tooley Street",
+  addressLine2: null,
+  townCity: "London",
+  county: null,
+  postcode: "SE1 2QH",
+  vatNumber: "GB123456789",
+  companyRegistration: null,
+  emailAddress: "planning@southwark.gov.uk",
+};
+
+export const mockCouncilInvoiceDetails = ({
+  invoiceDetails = COUNCIL_INVOICE_DETAILS,
+}: { invoiceDetails?: typeof COUNCIL_INVOICE_DETAILS | null } = {}) =>
+  queryMock.mockQuery({
+    name: "GetCouncilInvoiceDetails",
+    matchOnVariables: false,
+    data: {
+      teams: [
+        {
+          name: TEAM_NAME,
+          invoiceDetails,
+          theme: {
+            logo: "https://example.com/logo.png",
+            primaryColour: "#000",
+          },
+        },
+      ],
+    },
+  });
+
+export const mockFeeBreakdown = (
+  amount: Partial<FeeBreakdown["amount"]> = {},
+): FeeBreakdown => ({
+  amount: {
+    calculated: 0,
+    calculatedVAT: 0,
+    payable: 0,
+    payableVAT: 0,
+    fastTrack: 0,
+    fastTrackVAT: 0,
+    serviceCharge: 0,
+    serviceChargeVAT: 0,
+    paymentProcessing: 0,
+    paymentProcessingVAT: 0,
+    reduction: 0,
+    reductionVAT: 0,
+    exemption: 0,
+    exemptionVAT: 0,
+    ...amount,
+  } as FeeBreakdown["amount"],
+  reductions: [],
+  exemptions: [],
+});
