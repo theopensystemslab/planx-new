@@ -406,7 +406,6 @@ export const editorStore: StateCreator<
     const cloneStateFromShareDb = () => {
       const flow = JSON.parse(JSON.stringify(doc.data));
       set({ flow });
-      get().initNavigationStore();
     };
 
     // set state from initial load

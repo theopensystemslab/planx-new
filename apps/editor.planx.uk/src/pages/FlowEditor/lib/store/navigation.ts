@@ -1,41 +1,22 @@
-import type { NodeTag } from "@opensystemslab/planx-core/types";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import type { Section } from "@planx/components/Section/model";
-import { ROOT_NODE_KEY, sortIdsDepthFirst } from "@planx/graph";
-import { findLast, pick, sum } from "lodash";
+import type {
+  ComponentType as TYPES,
+  NodeTag,
+} from "@opensystemslab/planx-core/types";
+import { sortIdsDepthFirst } from "@planx/graph";
+import { pick } from "lodash";
 import type { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
 
-import { SECTION_WEIGHTS } from "../../../../@planx/components/Section/model";
 import type { PreviewStore } from "./preview";
+import { selectHasSections, selectSectionNodes } from "./selectors";
 import type { SharedStore } from "./shared";
-
-export interface SectionNode extends Store.Node {
-  data: Section;
-}
-
-export interface Progress {
-  completed: number;
-  current: number;
-}
+import type { SectionNode } from "./utils/sections";
 
 export interface NavigationStore {
-  currentSectionIndex: number;
-  sectionCount: number;
-  currentSectionTitle?: string;
-  hasSections: boolean;
-  sectionNodes: Record<string, SectionNode>;
-  initNavigationStore: () => void;
-  updateSectionData: () => void;
   filterFlowByType: (type: TYPES) => Store.Flow;
   filterFlowByTag: (tag: NodeTag) => Store.Flow;
   getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
-  _getSortedSections: () => Record<string, SectionNode>;
-  _calculateSectionProgress: (
-    currentSectionIndex: number,
-  ) => Progress | undefined;
-  sectionProgress: Progress | undefined;
   isNavMenuVisible: boolean;
   setIsNavMenuVisible: (visible: boolean) => void;
 }
@@ -46,86 +27,6 @@ export const navigationStore: StateCreator<
   [],
   NavigationStore
 > = (set, get) => ({
-  currentSectionIndex: 1,
-
-  sectionCount: 0,
-
-  currentSectionTitle: undefined,
-
-  hasSections: false,
-
-  sectionNodes: {},
-
-  /**
-   * Set up initial values to populate store
-   */
-  initNavigationStore: () => {
-    const {
-      currentSectionIndex,
-      _calculateSectionProgress,
-      _getSortedSections,
-    } = get();
-
-    const sectionNodes = _getSortedSections();
-    const sectionCount = Object.keys(sectionNodes).length;
-    const hasSections = Boolean(sectionCount);
-    const currentSectionTitle = Object.values(sectionNodes)[0]?.data.title;
-    const sectionProgress = _calculateSectionProgress(currentSectionIndex);
-
-    set({
-      sectionNodes,
-      sectionCount,
-      hasSections,
-      currentSectionTitle,
-      sectionProgress,
-    });
-  },
-
-  /**
-   * Update title and index on record()
-   * Triggered when going backwards, forwards, or changing answer
-   */
-  updateSectionData: () => {
-    const {
-      breadcrumbs,
-      sectionNodes,
-      hasSections,
-      currentCard,
-      _calculateSectionProgress,
-    } = get();
-    // Sections not being used, do not proceed
-    if (!hasSections) return;
-
-    const breadcrumbIds = Object.keys(breadcrumbs);
-    const sectionIds = Object.keys(sectionNodes);
-    const sectionIdsSet = new Set(sectionIds);
-
-    // Transition to a new section index as soon as a section is reached
-    // It won't yet be in the breadcrumbs but should count as the starting point of the next section
-    const isSectionCardReached = currentCard?.type === TYPES.Section;
-    if (isSectionCardReached) breadcrumbIds.push(currentCard.id);
-
-    const mostRecentSectionId = findLast(
-      breadcrumbIds,
-      (breadcrumbId: string) => sectionIdsSet.has(breadcrumbId),
-    );
-
-    const hasPassedFirstSection = Boolean(mostRecentSectionId);
-
-    // No sections in breadcrumbs, first section values already set in store
-    if (!hasPassedFirstSection) return;
-
-    // No sections in breadcrumbs, first section values already set in store
-    if (!mostRecentSectionId) return;
-
-    const currentSectionTitle = sectionNodes[mostRecentSectionId].data.title;
-    const currentSectionIndex = sectionIds.indexOf(mostRecentSectionId) + 1;
-    const sectionProgress = _calculateSectionProgress(currentSectionIndex);
-
-    set({ currentSectionTitle, currentSectionIndex, sectionProgress });
-    console.debug("section state updated"); // used as a transition trigger in e2e tests
-  },
-
   /**
    * Get a subset of the full flow by type
    * Returned in depth-first order
@@ -187,9 +88,10 @@ export const navigationStore: StateCreator<
   // if this flow has sections, split the breadcrumbs up by sections,
   //    so we can render section node titles as h2s and the following nodes as individual SummaryLists
   getSortedBreadcrumbsBySection: () => {
-    const { breadcrumbs, sectionNodes, hasSections } = get();
+    const { breadcrumbs } = get();
+    const sectionNodes = selectSectionNodes(get());
     const sortedBreadcrumbsBySection: Store.Breadcrumbs[] = [];
-    if (hasSections) {
+    if (selectHasSections(get())) {
       const sortedNodeIdsBySection: string[][] = [];
       Object.keys(sectionNodes).forEach((sectionId, i) => {
         const nextSectionId: string = Object.keys(sectionNodes)[i + 1];
@@ -217,7 +119,8 @@ export const navigationStore: StateCreator<
   },
 
   getSectionForNode: (nodeId: string): SectionNode => {
-    const { getSortedBreadcrumbsBySection, sectionNodes } = get();
+    const { getSortedBreadcrumbsBySection } = get();
+    const sectionNodes = selectSectionNodes(get());
     const sections = getSortedBreadcrumbsBySection();
     const sectionIndex = sections.findIndex((section) =>
       Object.keys(section).includes(nodeId),
@@ -225,57 +128,6 @@ export const navigationStore: StateCreator<
     const sectionId = Object.keys(sectionNodes)[sectionIndex];
     const section = sectionNodes[sectionId];
     return section;
-  },
-
-  sectionProgress: undefined,
-
-  _calculateSectionProgress: (currentSectionIndex: number) => {
-    const { sectionNodes, isFinalCard, sectionCount } = get();
-    if (!sectionCount) return;
-
-    // if (isFinalCard()) return { completed: 100, current: 100 };
-
-    // Account for offset index
-    const index = currentSectionIndex - 1;
-
-    const sectionWeights = Object.values(sectionNodes).map(
-      ({ data: { length = "medium" } }) => SECTION_WEIGHTS[length],
-    );
-    const totalWeight = sum(sectionWeights);
-    const currentWeight = sectionWeights[index];
-    const currentPercentage = (currentWeight / totalWeight) * 100;
-
-    const completedWeight = sum(sectionWeights.slice(0, index));
-    const completedPercentage = (completedWeight / totalWeight) * 100;
-
-    return { completed: completedPercentage, current: currentPercentage };
-  },
-
-  _getSortedSections: () => {
-    const { flow } = get();
-    const sortedSections: Record<string, SectionNode> = {};
-    const rootEdges = flow[ROOT_NODE_KEY]?.edges || [];
-
-    rootEdges.forEach((nodeId) => {
-      const node = flow[nodeId];
-      if (!node) return;
-
-      if (node.type === TYPES.Section) {
-        // Section directly on the root
-        sortedSections[nodeId] = node as SectionNode;
-      } else if (node.type === TYPES.InternalPortal) {
-        // Section is within a folder / internal portal
-        const folderEdges = node.edges || [];
-        folderEdges.forEach((childId) => {
-          const childNode = flow[childId];
-          if (childNode?.type === TYPES.Section) {
-            sortedSections[childId] = childNode as SectionNode;
-          }
-        });
-      }
-    });
-
-    return sortedSections;
   },
 
   isNavMenuVisible: true,
