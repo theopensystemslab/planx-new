@@ -2,7 +2,7 @@ import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 
 import { findSessionId, getGraphQLClient } from "./context.js";
-import { log, waitForDebugLog } from "./globalHelpers.js";
+import { log } from "./globalHelpers.js";
 import type { TestContext } from "./types.js";
 
 export async function saveSession({
@@ -48,32 +48,42 @@ export async function returnToSession({
   }
 }
 
+/**
+ * Click a navigation button, and wait for the current card to be replaced
+ * Cards are keyed by node id, so each card renders its own continue button
+ */
+async function clickAndWaitForNextCard(page: Page, button: Locator) {
+  const currentCard = await page.getByTestId("continue-button").elementHandle();
+  await button.click();
+  await currentCard?.waitForElementState("hidden");
+}
+
 export async function clickContinue({
   page,
-  waitForLogEvent = false,
+  waitForNextCard = false,
   waitForResponse = false,
 }: {
   page: Page;
   waitForResponse?: boolean;
-  waitForLogEvent?: boolean;
+  waitForNextCard?: boolean;
 }) {
-  if (waitForLogEvent || waitForResponse) {
-    const waitPromise = waitForResponse
-      ? page.waitForResponse((response) => {
-          return response.url().includes("/graphql");
-        })
-      : waitForDebugLog(page); // assume debug message is triggered on state transition
-    await page.getByTestId("continue-button").click();
+  const continueButton = page.getByTestId("continue-button");
+
+  if (waitForResponse) {
+    const waitPromise = page.waitForResponse((response) => {
+      return response.url().includes("/graphql");
+    });
+    await continueButton.click();
     await waitPromise;
+  } else if (waitForNextCard) {
+    await clickAndWaitForNextCard(page, continueButton);
   } else {
-    await page.getByTestId("continue-button").click();
+    await continueButton.click();
   }
 }
 
 export async function clickBack({ page }: { page: Page }) {
-  const waitPromise = waitForDebugLog(page); // assume debug message is triggered on state transition
-  await page.getByTestId("backButton").click();
-  await waitPromise;
+  await clickAndWaitForNextCard(page, page.getByTestId("backButton"));
 }
 
 export async function fillInEmail({
