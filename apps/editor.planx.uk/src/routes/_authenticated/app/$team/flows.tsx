@@ -1,39 +1,25 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
-import { fallback, zodValidator } from "@tanstack/zod-adapter";
+import {
+  createFileRoute,
+  notFound,
+  stripSearchParams,
+} from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
 import Flows from "pages/Flows";
 import type { GetAnyFlowsQuery, GetAnyFlowsVars } from "pages/Flows/queries";
 import { GET_FLOWS } from "pages/Flows/queries";
-import { z } from "zod";
 
 import { client } from "../../../../lib/graphql";
-
-export const flowsSearchSchema = z.object({
-  sort: fallback(
-    z.enum(["last-edited", "last-published", "name"]),
-    "last-edited",
-  )
-    .default("last-edited")
-    .optional(),
-  sortDirection: fallback(z.enum(["asc", "desc"]), "desc")
-    .default("desc")
-    .optional(),
-  search: z.string().optional(),
-  "service-status": z.enum(["online", "offline"]).optional(),
-  "flow-type": z
-    .enum(["submission", "fee carrying", "service charge enabled"])
-    .optional(),
-  templates: z.enum(["templated", "source template"]).optional(),
-  "lps-listing": z.enum(["listed", "not listed"]).optional(),
-});
-
-export type FlowSearch = z.infer<typeof flowsSearchSchema>;
+import { flowsSearchSchema, searchDefaults } from "./-flowsSearchSchema";
 
 export const Route = createFileRoute("/_authenticated/app/$team/flows")({
   staticData: { pageTitle: "Flows" },
   beforeLoad: startNewRecentFlowsJourney,
   validateSearch: zodValidator(flowsSearchSchema),
+  search: {
+    middlewares: [stripSearchParams(searchDefaults)],
+  },
   pendingComponent: RouteLoadingIndicator,
   loader: async ({ context }) => {
     const { team } = context;
@@ -46,7 +32,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/flows")({
       });
 
       return { team, flows: result.data.flows };
-    } catch (error) {
+    } catch {
       throw notFound();
     }
   },
