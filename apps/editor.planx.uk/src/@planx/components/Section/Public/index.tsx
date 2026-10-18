@@ -92,7 +92,7 @@ export const Root = ({
   sectionCount,
   ...props
 }: RootProps) => (
-  <Card isValid handleSubmit={handleSubmit}>
+  <Card handleSubmit={handleSubmit}>
     <CardHeader title={flowName} />
     <Box>
       <Typography variant="h3" component="h2" sx={{ pb: "0.25em" }}>

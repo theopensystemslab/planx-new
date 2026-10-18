@@ -20,7 +20,7 @@ const EnhancedTextInputComponent = (props: Props) => {
   const previous = getPreviouslySubmittedData(props);
   const [step, setStep] = useState<Step>("input");
   const [queryInput, setQueryInput] = useState("");
-  const isRunningTask = useIsFetching({ queryKey: [props.task] });
+  const isRunningTask = Boolean(useIsFetching({ queryKey: [props.task] }));
 
   const initialValues: FormValues = previous
     ? {
@@ -76,9 +76,7 @@ const EnhancedTextInputComponent = (props: Props) => {
     >
       {({ submitForm, values, setFieldValue }) => {
         const showCardHeader =
-          step === "input" ||
-          values.status === "idle" ||
-          Boolean(isRunningTask);
+          step === "input" || values.status === "idle" || isRunningTask;
 
         const handleBack = (() => {
           if (step === "modification") return () => setStep("selection");
@@ -94,7 +92,7 @@ const EnhancedTextInputComponent = (props: Props) => {
         return (
           <Card
             handleSubmit={submitForm}
-            isValid={!isRunningTask}
+            disabled={isRunningTask}
             handleBack={handleBack}
           >
             {showCardHeader && (

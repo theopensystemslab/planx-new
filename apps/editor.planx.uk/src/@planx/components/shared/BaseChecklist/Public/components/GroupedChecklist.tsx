@@ -100,7 +100,7 @@ const GroupedChecklistComponent: React.FC<PublicProps<GroupedChecklist>> = (
   }
 
   return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
+    <Card handleSubmit={formik.handleSubmit}>
       <CardHeader
         title={text}
         description={description}

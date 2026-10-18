@@ -14,9 +14,9 @@ import OrNavigationButton from "./OrNavigationButton";
 interface Props {
   children: React.ReactNode;
   /**
-   * If falsey then disable Continue button, otherwise enable
+   * If true then disable the Continue button (e.g. whilst data is loading)
    */
-  isValid?: boolean;
+  disabled?: boolean;
   /**
    * If included then show the Continue button
    */
@@ -49,7 +49,7 @@ const InnerContainer = styled(Box)(({ theme }) => ({
  */
 const Card: React.FC<Props> = ({
   children,
-  isValid = true,
+  disabled = false,
   handleSubmit,
   sx,
   handleBack,
@@ -91,7 +91,7 @@ const Card: React.FC<Props> = ({
                   color="prompt"
                   size="large"
                   type="submit"
-                  disabled={!isValid}
+                  disabled={disabled}
                   onClick={async () => await handleSubmit()}
                   data-testid="continue-button"
                 >
