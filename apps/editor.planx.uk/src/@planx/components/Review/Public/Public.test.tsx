@@ -266,7 +266,6 @@ describe("Flow with sections", () => {
         flow: flowWithSections,
         breadcrumbs: breadcrumbsWithSections,
       });
-      getState().initNavigationStore();
     });
   });
 
@@ -328,7 +327,6 @@ describe("Flow with empty sections", () => {
         flow: flowWithEmptySections,
         breadcrumbs: breadcrumbsWithEmptySections,
       });
-      getState().initNavigationStore();
     });
   });
 

@@ -49,7 +49,7 @@ test.describe("Focus navigation accessibility", () => {
     await clickContinue({ page, waitForResponse: true });
 
     await answerQuestion({ page, title: "Question 1", answer: "A" });
-    await clickContinue({ page, waitForLogEvent: true });
+    await clickContinue({ page, waitForNextCard: true });
 
     await page.keyboard.press("Tab");
 
@@ -59,7 +59,7 @@ test.describe("Focus navigation accessibility", () => {
     await skipLink.click();
 
     await answerQuestion({ page, title: "Question 2", answer: "One" });
-    await clickContinue({ page, waitForLogEvent: true });
+    await clickContinue({ page, waitForNextCard: true });
 
     await page.keyboard.press("Tab");
 

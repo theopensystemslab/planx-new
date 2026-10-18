@@ -323,7 +323,6 @@ export const previewStore: StateCreator<
       cachedBreadcrumbs,
       _nodesPendingEdit,
       changedNode,
-      updateSectionData,
       setCurrentCard,
     } = get();
 
@@ -420,7 +419,6 @@ export const previewStore: StateCreator<
     }
 
     setCurrentCard();
-    updateSectionData();
   },
 
   resultData(flagSet, overrides) {
@@ -492,7 +490,6 @@ export const previewStore: StateCreator<
 
     set({ ...session, breadcrumbs: sortedBreadcrumbs });
     get().setCurrentCard();
-    get().updateSectionData();
   },
 
   sessionId: uuidV4(),

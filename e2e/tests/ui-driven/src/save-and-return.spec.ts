@@ -73,7 +73,7 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       const sessionId = await saveSession({ page, context });
       expect(sessionId).toBeDefined();
@@ -99,7 +99,7 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       let secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();
@@ -124,7 +124,7 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       let secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();
@@ -149,7 +149,7 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page, waitForLogEvent: true });
+      await clickContinue({ page, waitForNextCard: true });
 
       const secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();

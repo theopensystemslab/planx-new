@@ -7,6 +7,11 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
+import {
+  selectCurrentSectionIndex,
+  selectSectionCount,
+  selectSectionNodes,
+} from "pages/FlowEditor/lib/store/selectors";
 import type { SectionNode } from "types";
 import { SectionStatus as SectionStatusEnum } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
@@ -44,11 +49,11 @@ export default function Component(props: Props) {
     state.cachedBreadcrumbs,
     state.changeAnswer,
     state.currentCard,
-    state.currentSectionIndex,
+    selectCurrentSectionIndex(state),
     state.flow,
     state.flowName,
-    state.sectionCount,
-    state.sectionNodes,
+    selectSectionCount(state),
+    selectSectionNodes(state),
   ]);
 
   return (

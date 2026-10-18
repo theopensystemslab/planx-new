@@ -250,7 +250,7 @@ const orderedFlow = selectOrderedFlow(get());
 Selectors must return a **stable reference** - the same object until their inputs change. A selector that builds a new object or array on each call will re-render its components on every store update. For anything expensive or non-primitive, cache on the inputs - e.g. `getIndexedFlow()` caches on the `flow` object in a `WeakMap`, so each version of the flow is only sorted once, and only when something reads it.
 
 > [!NOTE]
-> Much of our existing derived state doesn't follow this pattern yet (e.g. `computePassport()`, `sectionNodes`). Migrate these opportunistically, rather than copying them.
+> Much of our existing derived state doesn't follow this pattern yet (e.g. `computePassport()`). Migrate these opportunistically, rather than copying them.
 
 Docs: https://zustand.docs.pmnd.rs/learn/guides/beginner-typescript.html#derived-state-with-selectors
 
