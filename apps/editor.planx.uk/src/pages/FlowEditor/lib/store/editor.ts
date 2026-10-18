@@ -1,11 +1,6 @@
 import { gql } from "@apollo/client";
-import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
-import type {
-  FlowGraph,
-  FlowStatus,
-  NodeId,
-  OrderedFlow,
-} from "@opensystemslab/planx-core/types";
+import { getPathForNode } from "@opensystemslab/planx-core";
+import type { FlowStatus, NodeId } from "@opensystemslab/planx-core/types";
 import {
   ComponentType as TYPES,
   flatFlags,
@@ -40,6 +35,7 @@ import { FlowLayout } from "../../components/Flow";
 import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
 import type { NavigationStore } from "./navigation";
+import { selectOrderedFlow } from "./selectors";
 import type { SharedStore } from "./shared";
 import { stripTemplatedNodeProps } from "./utils/stripTemplatedNodeProps";
 
@@ -344,8 +340,6 @@ export interface EditorStore extends Store.Store {
   removeNode: (id: NodeId, parent: NodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
   undoOperation: (ops: OT.Op[]) => void;
-  orderedFlow?: OrderedFlow;
-  setOrderedFlow: () => void;
   externalPortals: Record<string, { name: string; href: string }>;
   addExternalPortal: (portal: {
     id: string;
@@ -417,11 +411,6 @@ export const editorStore: StateCreator<
 
     // set state from initial load
     cloneStateFromShareDb();
-
-    // Templated flows require access to an ordered flow
-    // Set this once upstream as it's an expensive operation
-    const { isTemplatedFrom, setOrderedFlow } = get();
-    if (isTemplatedFrom) setOrderedFlow();
 
     // local operation so we can assume that multiple ops will arrive
     // almost instantaneously so wait for 100ms of 'silence' before running
@@ -780,14 +769,6 @@ export const editorStore: StateCreator<
     send(inverseOps);
   },
 
-  orderedFlow: undefined,
-
-  setOrderedFlow: () => {
-    const flow = get().flow as FlowGraph;
-    const orderedFlow = sortFlow(flow);
-    set({ orderedFlow });
-  },
-
   externalPortals: {},
 
   addExternalPortal: ({ id, name, href }) => {
@@ -797,8 +778,9 @@ export const editorStore: StateCreator<
   },
 
   getURLForNode: (nodeId) => {
-    const { orderedFlow: flow, flowSlug, teamSlug } = get();
-    if (!flow) throw Error("Missing ordered flow!");
+    const { flowSlug, teamSlug } = get();
+    const flow = selectOrderedFlow(get());
+    if (!flow.length) throw Error("Missing ordered flow!");
 
     const path = getPathForNode({ nodeId, flow });
     const internalPortals = path.filter(

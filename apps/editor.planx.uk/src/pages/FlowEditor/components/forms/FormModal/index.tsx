@@ -11,10 +11,12 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
+import { ROOT_NODE_KEY } from "@planx/graph";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import type { FormikProps } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { selectIndexedNode } from "pages/FlowEditor/lib/store/selectors";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -171,7 +173,6 @@ const FormModal: React.FC<FormModalProps> = ({
     makeUnique,
     connect,
     isTemplatedFrom,
-    orderedFlow,
     isClone,
   ] = useStore((store) => [
     store.addNode,
@@ -180,7 +181,6 @@ const FormModal: React.FC<FormModalProps> = ({
     store.makeUnique,
     store.connect,
     store.isTemplatedFrom,
-    store.orderedFlow,
     store.isClone,
   ]);
 
@@ -230,7 +230,7 @@ const FormModal: React.FC<FormModalProps> = ({
     return useStore.getState().canUserEditTeam(teamSlug);
   };
 
-  const indexedParent = orderedFlow?.find(({ id }) => id === parent);
+  const indexedParent = useStore(selectIndexedNode(parent ?? ROOT_NODE_KEY));
   const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
     flow,
     indexedParent,

@@ -3,20 +3,21 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { selectOrderedFlow } from "pages/FlowEditor/lib/store/selectors";
 
 import { CustomisationCard } from "./CustomisationCard";
 import { CustomisationCounter } from "./CustomisationCounter";
 import { useTemplatedFlowCustomisations } from "./hooks/useTemplatedFlowCustomisations";
 
 const Customisations = () => {
-  const [isTemplatedFrom, isTemplate, orderedFlow] = useStore((state) => [
+  const [isTemplatedFrom, isTemplate] = useStore((state) => [
     state.isTemplatedFrom,
     state.isTemplate,
-    state.orderedFlow,
   ]);
+  const orderedFlow = useStore(selectOrderedFlow);
 
   // Get the nodes within this flow that are customisable and sort them top-down to match graph
-  const sortedCustomisableNodeIds = (orderedFlow ?? [])
+  const sortedCustomisableNodeIds = orderedFlow
     .filter((node) => Boolean(node.data?.isTemplatedNode))
     .map((node) => node.id);
 

@@ -1,4 +1,6 @@
-import { fireEvent, screen } from "@testing-library/react";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { act, fireEvent, screen } from "@testing-library/react";
+import type { Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -28,7 +30,6 @@ const renderHanger = (props: React.ComponentProps<typeof Hanger>) =>
 beforeEach(() => {
   useStore.setState({
     flow: {},
-    orderedFlow: undefined,
     isTemplatedFrom: false,
     showNotes: true,
     user: {
@@ -61,5 +62,66 @@ describe("hanger interactions", () => {
     fireEvent.contextMenu(screen.getByRole("button"));
 
     expect(useStore.getState().contextMenuSource).toBe("hanger");
+  });
+});
+
+describe("hangers in a templated flow", () => {
+  const templatedFlow: Store.Flow = {
+    _root: { edges: ["lockedQuestion", "folder"] },
+    lockedQuestion: {
+      type: TYPES.Question,
+      data: { text: "Not customisable" },
+      edges: ["lockedAnswer"],
+    },
+    lockedAnswer: { type: TYPES.Answer, data: { text: "Locked answer" } },
+    folder: {
+      type: TYPES.InternalPortal,
+      data: { text: "Customisable folder", isTemplatedNode: true },
+      edges: ["checklist"],
+    },
+    checklist: {
+      type: TYPES.Checklist,
+      data: { text: "Pick some options" },
+      edges: ["existingAnswer"],
+    },
+    existingAnswer: { type: TYPES.Answer, data: { text: "Existing answer" } },
+  };
+
+  const getHangerListItem = () => screen.getByRole("button").closest("li");
+
+  beforeEach(() => {
+    useStore.setState({ flow: templatedFlow, isTemplatedFrom: true });
+  });
+
+  it("is hidden outside of a customisable folder", async () => {
+    await renderHanger({ parent: "lockedAnswer" });
+
+    expect(getHangerListItem()).toHaveClass("hidden");
+  });
+
+  it("is visible within a customisable folder", async () => {
+    await renderHanger({ parent: "existingAnswer" });
+
+    expect(getHangerListItem()).not.toHaveClass("hidden");
+  });
+
+  it("is visible on a new branch added to a customisable folder, without a refresh", async () => {
+    await renderHanger({ parent: "newAnswer" });
+
+    // A ShareDB sync adds a new branch to the checklist
+    act(() =>
+      useStore.setState({
+        flow: {
+          ...templatedFlow,
+          checklist: {
+            ...templatedFlow.checklist,
+            edges: ["existingAnswer", "newAnswer"],
+          },
+          newAnswer: { type: TYPES.Answer, data: { text: "New answer" } },
+        },
+      }),
+    );
+
+    expect(getHangerListItem()).not.toHaveClass("hidden");
   });
 });

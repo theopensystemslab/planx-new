@@ -20,15 +20,15 @@ import Portal from "./Portal";
 import Question from "./Question";
 
 const Node: React.FC<any> = (props) => {
-  const [node, wasVisited, showNotes, isTemplatedFrom, flow, orderedFlow] =
-    useStore((state) => [
+  const [node, wasVisited, showNotes, isTemplatedFrom, flow] = useStore(
+    (state) => [
       state.flow[props.id],
       state.wasVisited(props.id),
       state.showNotes,
       state.isTemplatedFrom,
       state.flow,
-      state.orderedFlow,
-    ]);
+    ],
+  );
 
   const allProps = {
     ...props,
@@ -107,8 +107,7 @@ const Node: React.FC<any> = (props) => {
       //   from the source template unless within a templated folder
       const showNoteComponent =
         showNotes &&
-        (!isTemplatedFrom ||
-          showNoteInTemplatedFlow(props.id, flow, orderedFlow));
+        (!isTemplatedFrom || showNoteInTemplatedFlow(props.id, flow));
 
       return showNoteComponent ? (
         <Question {...allProps} text={node?.data?.text ?? "Note"} />

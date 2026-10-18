@@ -1,4 +1,4 @@
-import type { OrderedFlow } from "@opensystemslab/planx-core/types";
+import type { IndexedNode } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { setup } from "test/utils";
@@ -8,10 +8,10 @@ import Customisations from ".";
 const { setState } = useStore;
 
 describe("Customisations tab", () => {
-  it("renders no customisable nodes, and does not throw, when orderedFlow is unavailable", async () => {
+  it("renders no customisable nodes, and does not throw, when the flow is empty", async () => {
     setState({
       id: "test-flow-id",
-      orderedFlow: undefined,
+      flow: { _root: { edges: [] } },
       isTemplatedFrom: false,
       isTemplate: true,
     });
@@ -23,11 +23,8 @@ describe("Customisations tab", () => {
     expect(queryAllByRole("listitem")).toHaveLength(0);
   });
 
-  it("lists only templated nodes, in orderedFlow order", async () => {
-    const node = (
-      id: string,
-      isTemplatedNode: boolean,
-    ): OrderedFlow[number] => ({
+  it("lists only templated nodes, in flow order", async () => {
+    const node = (id: string, isTemplatedNode: boolean): IndexedNode => ({
       id,
       parentId: "_root",
       type: ComponentType.Question,
@@ -37,7 +34,7 @@ describe("Customisations tab", () => {
       },
     });
 
-    const orderedFlow: OrderedFlow = [
+    const nodes = [
       node("alpha", true),
       node("skip1", false),
       node("bravo", true),
@@ -46,13 +43,12 @@ describe("Customisations tab", () => {
     ];
 
     const flow = Object.fromEntries(
-      orderedFlow.map(({ id, type, data }) => [id, { type, data }]),
+      nodes.map(({ id, type, data }) => [id, { type, data }]),
     );
 
     setState({
       id: "test-flow-id",
-      orderedFlow,
-      flow: { _root: { edges: [] }, ...flow },
+      flow: { _root: { edges: nodes.map(({ id }) => id) }, ...flow },
       isTemplatedFrom: false,
       isTemplate: true,
     });
@@ -63,7 +59,7 @@ describe("Customisations tab", () => {
       (li) => li.textContent,
     );
 
-    // Exactly the three templated nodes, in orderedFlow order
+    // Exactly the three templated nodes, in flow order
     expect(renderedInstructions).toEqual([
       expect.stringContaining("instructions for alpha"),
       expect.stringContaining("instructions for bravo"),

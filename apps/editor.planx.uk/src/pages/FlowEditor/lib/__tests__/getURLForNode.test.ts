@@ -1,11 +1,11 @@
 import { useStore } from "../store";
-import { orderedFlow } from "./mocks/getURLForNode/orderedFlow";
+import { flow } from "./mocks/getURLForNode/flow";
 
 const { getState, setState } = useStore;
 const { getURLForNode } = getState();
 
 beforeAll(() => {
-  setState({ orderedFlow, teamSlug: "testTeam", flowSlug: "testFlow" });
+  setState({ flow, teamSlug: "testTeam", flowSlug: "testFlow" });
   Object.defineProperty(window, "location", {
     value: { host: "editor.planx.uk" },
     writable: true,

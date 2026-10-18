@@ -8,18 +8,16 @@ export const AttachedNote: React.FC<{
   note: string;
   variant?: "option";
 }> = ({ nodeId, note, variant }) => {
-  const [showNotes, isTemplatedFrom, flow, orderedFlow] = useStore((state) => [
+  const [showNotes, isTemplatedFrom, flow] = useStore((state) => [
     state.showNotes,
     state.isTemplatedFrom,
     state.flow,
-    state.orderedFlow,
   ]);
 
   // In templated flows, always hide `AttachedNote` in the graph
   //   unless it is attached to a templated node or within a templated folder
   const showAttachedNote =
-    showNotes &&
-    (!isTemplatedFrom || showNoteInTemplatedFlow(nodeId, flow, orderedFlow));
+    showNotes && (!isTemplatedFrom || showNoteInTemplatedFlow(nodeId, flow));
 
   if (!showAttachedNote) return null;
 
