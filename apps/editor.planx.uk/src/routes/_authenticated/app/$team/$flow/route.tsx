@@ -9,13 +9,13 @@ import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 import FlowSkeleton from "pages/FlowEditor/FlowSkeleton";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { flowsSearchSchema } from "../flows";
+import { flowsSearchSchema } from "../-flowsSearchSchema";
 import { connectToFlowRoute } from "./-route.utils";
 
 export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
   staticData: { pageTitle: (match) => match.context.flowName },
   pendingComponent: FlowSkeleton,
-  validateSearch: zodValidator(flowsSearchSchema),
+  validateSearch: zodValidator(flowsSearchSchema.partial()),
   search: {
     middlewares: [
       stripSearchParams([
