@@ -59,7 +59,28 @@ Every council adds two CNAME records. Send them both at once - they're independe
 | 1   | **Validation** | `_abc123.planningservices.council.gov.uk` | `_def456.acm-validations.aws`           | Proves ownership so ACM can issue and auto-renew the cert | ❌ Never      |
 | 2   | **Routing**    | `planningservices.council.gov.uk`         | `d1234abcd.cloudfront.net` (shared CDN) | Points live traffic at the CDN                            | ✅ Yes        |
 
-For a migration, the routing record _replaces_ an existing one (legacy CDN → shared CDN). You can switch it at any point: CloudFront serves each request from whichever distribution owns the alias, so traffic keeps flowing through the legacy CDN until you move the alias - regardless of where the DNS points (see [Appendix B](#appendix-b-cloudfront-routing)).
+For a migration, the routing record _replaces_ an existing one (legacy CDN → shared CDN). You can switch it at any point: CloudFront serves each request from whichever distribution owns the alias, so traffic keeps flowing through the legacy CDN until you move the alias - regardless of where the DNS points (see [Appendix B](#appendix-b-cloudfront-routing)). This only holds while the legacy CDN exists - once it's torn down, any DNS answer still pointing at it is a dead end.
+
+### Verifying the records
+
+Always verify by querying each of the council's authoritative nameservers directly, never a single public resolver like `dig @1.1.1.1`:
+
+- **Nameservers don't always agree.** A council's zone is usually served by several nameservers, and one may be missing a record or still serving an old value (e.g. if it was updated by hand or isn't syncing from the primary NS). A public resolver only shows whichever answer it happened to get, so it can look fine while a share of real users get a broken one - a site that's **intermittently unreachable** (see [Troubleshooting](#site-intermittently-unreachable-after-go-live)).
+- **No caching.** Authoritative answers are always fresh, so there's no stale `NXDOMAIN` to wait out after the council adds a record.
+
+Run this for both records:
+
+```sh
+ZONE=council.gov.uk
+for NAME in planningservices.$ZONE _abc123.planningservices.$ZONE; do
+  for ns in $(dig +short NS "$ZONE"); do
+    echo "$NAME @ $ns -> $(dig @"$ns" +norec +short "$NAME" CNAME)"
+  done
+done
+
+# Every nameserver must return the same expected target for each record.
+# An empty or different line means that nameserver needs fixing.
+```
 
 ## Deploy layers & ordering 🚦
 
@@ -123,17 +144,7 @@ Send the council both CNAMEs together.
 
 ### 4. Wait for the validation record, then verify it
 
-Wait for the council to confirm. Then verify both records are actually live (don't rely on the ACM console alone - see [Troubleshooting](#troubleshooting)). Councils commonly add one record and forget the other - a missing routing record surfaces later as an SSL error / site-not-loading, so check both now before proceeding:
-
-```sh
-# 1. Validation record
-dig _abc123.planningservices.a-new-council.gov.uk CNAME +short @1.1.1.1
-# → Returns the ...acm-validations.aws. target
-
-# 2. Routing record
-dig planningservices.a-new-council.gov.uk CNAME +short @1.1.1.1
-# → Returns the shared CDN domain (d1234abcd.cloudfront.net)
-```
+Wait for the council to confirm. Then verify both records are actually live (don't rely on the ACM console alone - see [Troubleshooting](#troubleshooting)). Councils commonly add one record and forget the other - a missing routing record surfaces later as an SSL error / site-not-loading, so check both now before proceeding, using the [record check](#verifying-the-records).
 
 In the [ACM console](https://us-east-1.console.aws.amazon.com/acm/certificates/list) (region **us-east-1**), the domain on the mining cert should flip from `Pending validation` to `Success`.
 
@@ -211,15 +222,9 @@ Send the council both CNAMEs together - the routing record replaces their existi
 
 ### 2. Wait for the validation record, then verify it
 
-```sh
-# 1. Validation record
-dig _abc123.planningservices.an-existing-council.gov.uk CNAME +short @1.1.1.1
-# → Returns the ...acm-validations.aws. target
+Run the [record check](#verifying-the-records).
 
-# 2. Routing record
-dig planningservices.an-existing-council.gov.uk CNAME +short @1.1.1.1
-# → Returns the shared CDN domain (d1234abcd.cloudfront.net) - not their old CDN
-```
+**Don't advance until every nameserver agrees.** A nameserver still returning the old CDN is harmless while the legacy CDN exists, but once step 7 tears it down, every resolver that asks that nameserver gets a dead end - and the site goes intermittently down for real users. Ask the council to fix it first.
 
 Confirm `Success` on the mining cert in the [ACM console](https://us-east-1.console.aws.amazon.com/acm/certificates/list) (us-east-1). Don't advance until this is confirmed - the next step's cert won't issue otherwise.
 
@@ -251,7 +256,7 @@ aws acm describe-certificate --region us-east-1 --certificate-arn <arn> \
   --query 'Certificate.{Status:Status,SANs:SubjectAlternativeNames}'
 ```
 
-Then **deploy `application`** (production rollout) so the shared CDN re-attaches to this new cert. This is essential - until it happens, the shared CDN can't serve the domain and the alias move in step 6 will fail. Confirm the cert now attached to the shared CDN includes the domain:
+Then **deploy `application`** (production rollout) so the shared CDN re-attaches to this new cert. This is essential - until it happens, the shared CDN can't serve the domain and the alias move in step 5 will fail. Confirm the cert now attached to the shared CDN includes the domain:
 
 ```sh
 cd infrastructure/application
@@ -299,11 +304,9 @@ If it errors, see [Troubleshooting](#troubleshooting) - the two common failures 
 # The alias should now be owned by the shared CDN, not the legacy one:
 aws cloudfront list-distributions \
   --query "DistributionList.Items[?contains(Aliases.Items, 'planningservices.an-existing-council.gov.uk')].{Id:Id}"
-
-dig planningservices.an-existing-council.gov.uk CNAME +short   # → the shared CDN domain
 ```
 
-Also load the site in a browser and confirm it works. (Note: once the routing record points at the shared CDN, `dig` alone can't tell you which distribution is _serving_ - use the alias ownership check above.)
+Also load the site in a browser and confirm it works.
 
 ### 7. Advance to `shared-final` and tear down the legacy CDN
 
@@ -379,14 +382,19 @@ If a preview wants to **delete** `sslCert-custom-domains` or `sslCert-dns-mining
 
 ### `dig` still shows `NXDOMAIN` after the council added the record
 
-This is due to DNS negative-caching. The zone's SOA sets a negative-cache TTL (often 30 min), so a resolver that already saw `NXDOMAIN` keeps serving it. Query a public resolver directly to get a fresh answer:
-
-```sh
-dig _abc123.planningservices.council.gov.uk CNAME +short @1.1.1.1
-dig _abc123.planningservices.council.gov.uk CNAME +short @8.8.8.8
-```
+This is due to DNS negative-caching. The zone's SOA sets a negative-cache TTL (often 30 min), so a resolver that already saw `NXDOMAIN` keeps serving it. Use the [record check](#verifying-the-records) instead - it queries the council's nameservers directly, so it bypasses caches. If it still shows nothing, the record isn't there yet (or not on every nameserver).
 
 If the validation record name looks wrong, re-pull the expected value with `pulumi stack output pendingCouncilDnsRecords --stack production --json` (the ACM validation name is a stable hash of the domain, so it shouldn't change between cert recreations).
+
+### Site intermittently unreachable after go-live
+
+Symptoms: users report the site "can't be reached" or the DNS doesn't resolve, while it loads fine for you; UptimeRobot report intermittent downtime. Our CDN is serving fine - it's a DNS problem.
+
+Cause: one of the council's authoritative nameservers is serving a missing or stale routing record (e.g. still pointing at a torn-down legacy CDN). Resolvers that happen to ask that nameserver cache the bad answer for the record's TTL, then may pick a healthy nameserver next time - hence the intermittency.
+
+Diagnose with the [record check](#verifying-the-records) - the odd one out is the culprit. 
+
+Fix: send the council's IT team the output, and ask them to correct that nameserver. There's nothing to fix on our side - a deleted CloudFront domain name can't be reclaimed. Outages will clear within one TTL of their fix being applied.
 
 ## Appendix A. Automatic certificate renewal
 
