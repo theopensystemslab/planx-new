@@ -12,3 +12,13 @@ export interface InitiatePayment {
   flowId: string;
   payload: GovUKCreatePaymentPayload;
 }
+
+export interface GetITPPayment {
+  paymentRequestId: string;
+  govPayPaymentId: string;
+}
+
+export interface InitiateITPPayment {
+  paymentRequestId: string;
+  returnURL: string;
+}
