@@ -27,7 +27,13 @@ export interface Pay extends BaseNodeData {
   govPayMetadata: PaymentMetadata[];
 }
 
-export const toPence = (decimal: number) => Math.trunc(decimal * 100);
+/**
+ * Convert a passport amount in pounds (123.45) to an integer in pence (12345)
+ *
+ * Rounds rather than truncates, as floating point means some values land just
+ * under a whole penny (e.g. 300.15 * 100 = 30014.999...)
+ */
+export const toPence = (decimal: number) => Math.round(decimal * 100);
 export const toDecimal = (pence: number) => pence / 100;
 
 export const formattedPriceWithCurrencySymbol = (
