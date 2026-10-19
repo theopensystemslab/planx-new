@@ -191,7 +191,9 @@ PostgresDB.prototype.getSnapshot = function (
             row.version,
             "http://sharejs.org/types/JSONv0",
             row.data,
-            undefined // TODO: metadata
+            // Snapshot metadata is not persisted here
+            // We capture the flow metadata we need via Hasura triggers (created_at, updated_at)
+            undefined,
           );
         } else {
           snapshot = new PostgresSnapshot(id, 0, null, undefined, undefined);
