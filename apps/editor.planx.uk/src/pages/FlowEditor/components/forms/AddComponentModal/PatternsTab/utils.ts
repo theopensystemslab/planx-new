@@ -1,6 +1,10 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import type { Graph } from "@planx/graph";
 
+/** Answers are part of their parent component, and Notes are editor-only annotations */
+const isCountedComponent = (type?: number): boolean =>
+  type !== ComponentType.Answer && type !== ComponentType.Note;
+
 export interface PatternCounts {
   components: number;
   nestedFlows: number;
@@ -18,7 +22,7 @@ export const getPatternCounts = (graph: Graph): PatternCounts => {
     for (const childId of node.edges ?? []) {
       const child = graph[childId];
       if (!child) continue;
-      if (child.type === ComponentType.Answer) continue;
+      if (!isCountedComponent(child.type)) continue;
 
       if (child.type === ComponentType.ExternalPortal) {
         nestedFlows++;
@@ -33,7 +37,7 @@ export const getPatternCounts = (graph: Graph): PatternCounts => {
 
 /**
  * Depth-first traversal from the root, returning the types of the first
- * components in flow order (excluding Answers, which are traversed through)
+ * components in flow order (excluding Answers, which are traversed through, and Notes)
  */
 export const getPatternComponentTypes = (
   graph: Graph,
@@ -46,7 +50,7 @@ export const getPatternComponentTypes = (
     const node = graph[nodeId];
     if (!node) return;
 
-    if (node.type && node.type !== ComponentType.Answer) {
+    if (node.type && isCountedComponent(node.type)) {
       types.push(node.type as ComponentType);
     }
 

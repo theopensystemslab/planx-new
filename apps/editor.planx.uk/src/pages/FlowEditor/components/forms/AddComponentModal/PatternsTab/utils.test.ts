@@ -31,6 +31,16 @@ describe("getPatternCounts", () => {
     expect(getPatternCounts(graph)).toEqual({ components: 1, nestedFlows: 0 });
   });
 
+  it("excludes Note nodes from the count", () => {
+    const graph: Graph = {
+      _root: { edges: ["q", "n"] },
+      q: { type: ComponentType.Question },
+      n: { type: ComponentType.Note },
+    };
+
+    expect(getPatternCounts(graph)).toEqual({ components: 1, nestedFlows: 0 });
+  });
+
   it("counts ExternalPortals as nested flows", () => {
     const graph: Graph = {
       _root: { edges: ["a", "ep"] },
@@ -85,6 +95,18 @@ describe("getPatternComponentTypes", () => {
       ComponentType.Question,
       ComponentType.TextInput,
       ComponentType.Notice,
+    ]);
+  });
+
+  it("excludes Notes", () => {
+    const graph: Graph = {
+      _root: { edges: ["n", "q"] },
+      n: { type: ComponentType.Note },
+      q: { type: ComponentType.Question },
+    };
+
+    expect(getPatternComponentTypes(graph, 6)).toEqual([
+      ComponentType.Question,
     ]);
   });
 
