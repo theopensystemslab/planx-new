@@ -16,7 +16,6 @@ import { getTextLimit, textInputValidationSchema } from "./model";
 
 export type Props = PublicProps<TextInput> & { autoAnswer?: UserData };
 
-// TODO: fix this data field bug for all components
 const TextInputComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
