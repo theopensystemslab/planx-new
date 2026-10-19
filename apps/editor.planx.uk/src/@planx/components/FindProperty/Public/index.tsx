@@ -55,8 +55,6 @@ function Component(props: Props) {
   } = useFindPropertyData(address);
 
   const validateAndSubmit = () => {
-    // TODO `if (isPending)` on either page, wrap Continue button in error mesage?
-
     if (page === "new-address") {
       if (address?.x === undefined && address?.y === undefined)
         setMapValidationError("Click or tap to place a point on the map");
