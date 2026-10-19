@@ -57,7 +57,7 @@ export type TaskRegistry = {
       revisionDescription: string;
     }
   >;
-  // TODO: other tasks here!
+  // Register additional tasks here
 };
 
 export type Task = keyof TaskRegistry;
