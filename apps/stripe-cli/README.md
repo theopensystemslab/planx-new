@@ -21,4 +21,4 @@ The API reads the secret via `STRIPE_WEBHOOK_SECRET_FILE` on each request. We re
 
 All non-production environments share a single Stripe sandbox, and every listener receives every event on it. Expect to see events for payments made in other environments (Pizzas, other devs, CI). Events can be stratified by environment via the `STRIPE_DEVICE_NAME` variable.
 
-The API is responsible for ignoring events for cross-environment sessions it doesn't recognise (TODO!).
+The API ignores events for cross-environment sessions it doesn't recognise (see `apps/api.planx.uk/modules/stripe/webhook/ownership/service.ts`).
