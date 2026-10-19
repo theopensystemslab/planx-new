@@ -23,6 +23,7 @@ import { nanoid } from "nanoid";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
 import { TransitionGroup } from "react-transition-group";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { insertAt, removeAt, setAt } from "../../../utils";
 import { ListManagerHeader } from "./ListManagerHeader";
@@ -67,6 +68,8 @@ export interface Props<T, EditorExtraProps = {}> {
 const Item = styled(Box)(() => ({
   display: "flex",
 }));
+
+const DRAG_HANDLE_GUTTER = 5;
 
 const InsertButtonRoot = styled(ButtonBase)(({ theme }) => ({
   justifyContent: "space-between",
@@ -151,6 +154,37 @@ const InsertButton: React.FC<{
 export default function ListManager<T, EditorExtraProps>(
   props: Props<T, EditorExtraProps>,
 ) {
+  const [isTemplate, isPlatformAdmin] = useStore((state) => [
+    state.isTemplate,
+    state.user?.isPlatformAdmin,
+  ]);
+
+  const isLocked = Boolean(
+    props.isTemplatedNode &&
+    !props.isLocalAuthorityDistrictNode &&
+    !isPlatformAdmin &&
+    !isTemplate,
+  );
+
+  const listError = typeof props.errors === "string" ? props.errors : undefined;
+  const hasDragHandles = !isLocked && !props.noDragAndDrop;
+
+  const gutterOffset = listError && hasDragHandles ? DRAG_HANDLE_GUTTER : 0;
+
+  return (
+    <Box sx={{ ml: -gutterOffset }}>
+      <ErrorWrapper error={listError}>
+        <Box sx={{ pl: gutterOffset }}>
+          <ListItems {...props} isLocked={isLocked} />
+        </Box>
+      </ErrorWrapper>
+    </Box>
+  );
+}
+
+function ListItems<T, EditorExtraProps>(
+  props: Props<T, EditorExtraProps> & { isLocked: boolean },
+) {
   const {
     Editor,
     maxItems = Infinity,
@@ -182,10 +216,7 @@ export default function ListManager<T, EditorExtraProps>(
   const isMaxLength = props.values.length >= maxItems;
   const [isDragging, setIsDragging] = useState(false);
 
-  const [isTemplate, isPlatformAdmin] = useStore((state) => [
-    state.isTemplate,
-    state.user?.isPlatformAdmin,
-  ]);
+  const itemErrors = Array.isArray(props.errors) ? props.errors : undefined;
 
   useScrollToOptionOrGroup();
 
@@ -215,14 +246,7 @@ export default function ListManager<T, EditorExtraProps>(
   const allCollapsed = hasItems && collapsedItems.size === itemKeys.length;
   const allExpanded = hasItems && collapsedItems.size === 0;
 
-  // `isTemplatedNode` disables reordering, adding, and deleting options in the templated flow unless it sorts on
-  // property.localAuthorityDistrict, you're a platform admin, or you're in the source template
-  if (
-    props.isTemplatedNode &&
-    !props.isLocalAuthorityDistrictNode &&
-    !isPlatformAdmin &&
-    !isTemplate
-  ) {
+  if (props.isLocked) {
     return (
       <>
         {collapsible && hasItems && (
@@ -270,7 +294,7 @@ export default function ListManager<T, EditorExtraProps>(
                         }}
                         {...(props.editorExtraProps || {})}
                         disabled={disabled}
-                        errors={props.errors?.[index]}
+                        errors={itemErrors?.[index]}
                         isCollapsed={
                           collapsible
                             ? collapsedItems.has(itemKeys[index])
@@ -337,7 +361,7 @@ export default function ListManager<T, EditorExtraProps>(
                         }}
                         {...(props.editorExtraProps || {})}
                         disabled={disabled}
-                        errors={props.errors?.[index]}
+                        errors={itemErrors?.[index]}
                         isCollapsed={
                           collapsible
                             ? collapsedItems.has(itemKeys[index])
@@ -458,7 +482,10 @@ export default function ListManager<T, EditorExtraProps>(
                             <Item
                               {...provided.draggableProps}
                               ref={provided.innerRef}
-                              sx={{ ml: -5, alignItems: "flex-start" }}
+                              sx={{
+                                ml: -DRAG_HANDLE_GUTTER,
+                                alignItems: "flex-start",
+                              }}
                             >
                               <Tooltip title="Drag to reorder" placement="left">
                                 <Box
@@ -538,7 +565,7 @@ export default function ListManager<T, EditorExtraProps>(
                                     }}
                                     {...(props.editorExtraProps || {})}
                                     disabled={disabled}
-                                    errors={props.errors?.[index]}
+                                    errors={itemErrors?.[index]}
                                     isCollapsed={
                                       collapsible
                                         ? collapsedItems.has(itemKeys[index])
