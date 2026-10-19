@@ -56,22 +56,6 @@ export const ForInformationOnly = {
   },
 } satisfies Story;
 
-// // TODO: Setup fee breakdown amounts
-// export const WithFeeBreakdown = {
-//   args: {
-//     title: "Pay",
-//     bannerTitle: "The fee is",
-//     description: "The fee covers the cost of processing your form",
-//     fee: 103,
-//     instructionsTitle: "How to pay",
-//     instructionsDescription: "Pay online",
-//     buttonTitle: "Pay",
-//     onConfirm: () => {},
-//     error: undefined,
-//     showInviteToPay: false,
-//   },
-// } satisfies Story;
-
 export const WithError = {
   args: {
     error: "Online payments are not enabled for this local authority",
