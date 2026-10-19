@@ -14,7 +14,6 @@ export const Route = createFileRoute("/_authenticated/app/$team/notifications")(
         throw notFound();
       }
 
-      // TODO only fetch active (resolved = not null) notifications ??
       const {
         data: { notifications },
       } = await client.query<{ notifications: Notification[] }>({
