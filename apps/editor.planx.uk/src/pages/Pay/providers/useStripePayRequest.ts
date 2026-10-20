@@ -23,7 +23,6 @@ const isNotPaidError = (error: unknown) =>
     .safeParse(error).success;
 
 /**
- * Pay a payment request with Stripe Checkout
  *
  * Stripe returns the payer to /pay with either `stripeSessionId` (success URL) or `cancelled` (cancel URL)
  */
@@ -46,7 +45,6 @@ export function useStripePayRequest({
     throwOnError: true,
   });
 
-  // The webhook also fulfils the payment request, this is the fast path for the payer
   // Fulfilment is idempotent, so it's read like a query - it reports whether this Checkout Session paid
   const fulfilment = useQuery({
     queryKey: ["fulfilPaymentRequest", paymentRequestId, stripeSessionId],
@@ -75,6 +73,7 @@ export function useStripePayRequest({
   }
 
   if (stripeSessionId) {
+    // TODO: Show the payment reference directly here
     if (fulfilment.isSuccess) return { status: "paid" };
 
     if (fulfilment.isError && !fulfilment.isFetching) {
