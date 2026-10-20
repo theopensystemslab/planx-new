@@ -12,7 +12,7 @@ const createFlowFromTemplate = async (
   const sourceTemplate = await getFlowData(templateId);
 
   // Create the new templated flow, including an associated operation and initial publish, and templated_from reference to the source templateId
-  //   The templated flow should also inherit the readme info of the source template
+  //   The templated flow should also inherit the readme info and privacy notice of the source template
   const { id } = await createFlow({
     teamId,
     slug,
@@ -31,6 +31,9 @@ const createFlowFromTemplate = async (
       : sourceTemplate.limitations,
     isService: sourceTemplate.isService,
     isPattern: false,
+    settings: sourceTemplate.settings?.elements?.privacy
+      ? { elements: { privacy: sourceTemplate.settings.elements.privacy } }
+      : undefined,
     // INSERT using the API client to bypass redundant input validation
     // The source data is already pre-validated and comes directly from the DB
     $apiClient: $api.client,
