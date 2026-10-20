@@ -85,9 +85,14 @@ export const REQUIRED_PAYMENT_METADATA = [
 ];
 
 /**
- * Keys set by PlanX on every Stripe payment, which the API relies on to link a payment back to its session
+ * Keys set by PlanX on Stripe payments, which the API relies on to link a payment back
+ * to its session (or for ITP its payment request)
  */
-export const RESERVED_PAYMENT_METADATA = ["sessionId", "origin"];
+export const RESERVED_PAYMENT_METADATA = [
+  "sessionId",
+  "origin",
+  "paymentRequestId",
+];
 
 /**
  * Validation rules for both GovPay and Stripe metadata

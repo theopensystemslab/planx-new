@@ -1,7 +1,50 @@
+import type Stripe from "stripe";
+import { z } from "zod";
+
 import { reportError } from "../../pay/helpers.js";
+import { fulfilPaymentRequest } from "../fulfilment/service.js";
 import { propagateMetadataToDestinationPayment } from "./destinationPayment/service.js";
 import { recordStripePaymentIntentStatus } from "./paymentStatus/service.js";
 import type { StripeWebhookController } from "./types.js";
+
+const inviteToPayMetadataSchema = z.object({ paymentRequestId: z.string() });
+
+/**
+ * Fulfil an ITP request once its Checkout Session is paid
+ */
+const handleCheckoutSessionPaid = async (
+  checkoutSession: Stripe.Checkout.Session,
+  eventType: Stripe.Event.Type,
+): Promise<void> => {
+  const { id } = checkoutSession;
+
+  // Non-ITP Checkout Sessions (no paymentRequestId)
+  // These are submitted by the applicant's browser, no action required
+  if (!inviteToPayMetadataSchema.safeParse(checkoutSession.metadata).success) {
+    return;
+  }
+
+  const result = await fulfilPaymentRequest(id);
+
+  switch (result.status) {
+    case "fulfilled":
+    case "alreadyFulfilled":
+    case "foreign":
+      return console.info(
+        `Stripe Checkout Session ${id} (${eventType}): ${result.status}`,
+      );
+    // Stripe has (or should have) taken payment, but we can't submit the application
+    // Needs dev attention to debug
+    case "unpaid":
+    case "notFound":
+    case "notPaymentRequest":
+    case "mismatch":
+      return reportError({
+        error: `Could not fulfil payment request from Checkout Session ${id} (${result.status})`,
+        context: { checkoutSessionId: id, eventType },
+      });
+  }
+};
 
 /**
  * Handle a verified inbound Stripe webhook event
@@ -35,6 +78,9 @@ export const handleStripeWebhook: StripeWebhookController = async (
         break;
       case "transfer.created":
         await propagateMetadataToDestinationPayment(event.data.object);
+        break;
+      case "checkout.session.completed":
+        await handleCheckoutSessionPaid(event.data.object, event.type);
         break;
       default:
         console.log(
