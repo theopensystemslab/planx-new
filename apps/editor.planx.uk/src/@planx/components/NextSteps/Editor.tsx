@@ -144,6 +144,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
             Editor={TaskEditor}
             newValue={newStep}
             itemName="step"
+            errors={formik.errors.steps}
             disabled={props.disabled}
             collapsible={true}
           />
