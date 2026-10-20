@@ -23,10 +23,6 @@ interface InsertStripePaymentStatusArgs {
   metadata: Stripe.Metadata;
 }
 
-export type RecordedPaymentIntent = OwnedPaymentIntent & {
-  feeBreakdown: FeeBreakdown | null;
-};
-
 /**
  * Record a webhook-driven status for a PaymentIntent
  *
@@ -35,7 +31,7 @@ export type RecordedPaymentIntent = OwnedPaymentIntent & {
 export async function recordStripePaymentIntentStatus(
   paymentIntent: Stripe.PaymentIntent,
   stripeStatus: Exclude<StripePaymentStatus, "initiated">,
-): Promise<RecordedPaymentIntent | null> {
+): Promise<OwnedPaymentIntent | null> {
   const { id, amount, metadata } = paymentIntent;
 
   const ownedPaymentIntent = await getOwnedPaymentIntent(
@@ -68,7 +64,7 @@ export async function recordStripePaymentIntentStatus(
     throw error;
   }
 
-  return { ...ownedPaymentIntent, feeBreakdown };
+  return ownedPaymentIntent;
 }
 
 const isForeignKeyViolation = (error: unknown): boolean => {

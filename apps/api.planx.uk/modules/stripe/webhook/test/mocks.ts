@@ -184,3 +184,12 @@ export const mockFeeBreakdown = (
   reductions: [],
   exemptions: [],
 });
+
+export const mockChargedFeeBreakdown = (feeBreakdown: FeeBreakdown | null) =>
+  queryMock.mockQuery({
+    name: "GetChargedFeeBreakdown",
+    matchOnVariables: false,
+    data: {
+      paymentStatus: feeBreakdown ? [{ feeBreakdown }] : [],
+    },
+  });

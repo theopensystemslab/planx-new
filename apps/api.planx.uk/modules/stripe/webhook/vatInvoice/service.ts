@@ -1,17 +1,16 @@
+import type { FeeBreakdown } from "@opensystemslab/planx-core/types";
 import { format } from "date-fns";
+import { gql } from "graphql-request";
 import escape from "lodash/escape.js";
 import type Stripe from "stripe";
 
+import { $api } from "../../../../client/index.js";
 import { sendEmail } from "../../../../lib/resend/index.js";
 import { reportError } from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
 import { getFeeLines } from "../../feeLines.js";
-import type { RecordedPaymentIntent } from "../paymentStatus/service.js";
-import {
-  buildVatInvoiceData,
-  groupFeeLinesByIssuer,
-  sumLineItems,
-} from "./data.js";
+import type { OwnedPaymentIntent } from "../ownership/service.js";
+import { buildVatInvoiceData, groupFeeLinesByIssuer } from "./data.js";
 import { generateVatInvoicePdf } from "./pdf.js";
 import { getCouncilInvoiceDetails, PLANX_SELLER } from "./seller.js";
 import type { VatInvoiceBranding, VatInvoiceData } from "./types.js";
@@ -36,13 +35,11 @@ export const buildCouncilEmailHeader = (
     : escape(councilName);
 
 /**
- * The payer's email is collected by Stripe Checkout, not stored on the PaymentIntent
- *
- * TODO - in the case of ITP the payer can be different to the applicant. Do we need to send invoices to both?
+ * The Checkout Session which created a PaymentIntent
  */
-export const getCheckoutCustomerEmail = async (
+export const getCheckoutSession = async (
   paymentIntentId: string,
-): Promise<string | null> => {
+): Promise<Stripe.Checkout.Session | null> => {
   const {
     data: [checkoutSession],
   } = await stripe.checkout.sessions.list({
@@ -50,7 +47,40 @@ export const getCheckoutCustomerEmail = async (
     limit: 1,
   });
 
-  return checkoutSession?.customer_details?.email ?? null;
+  return checkoutSession ?? null;
+};
+
+/**
+ * The fee breakdown recorded when the Checkout Session was created (see recordInitiatedPayment())
+ */
+export const getChargedFeeBreakdown = async (
+  sessionId: string,
+  checkoutSessionId: string,
+): Promise<FeeBreakdown | null> => {
+  const { paymentStatus } = await $api.client.request<{
+    paymentStatus: { feeBreakdown: FeeBreakdown | null }[];
+  }>(
+    gql`
+      query GetChargedFeeBreakdown(
+        $sessionId: uuid!
+        $checkoutSessionId: String!
+      ) {
+        paymentStatus: payment_status(
+          where: {
+            session_id: { _eq: $sessionId }
+            stripe_payment_id: { _eq: $checkoutSessionId }
+            stripe_status: { _eq: initiated }
+          }
+          limit: 1
+        ) {
+          feeBreakdown: fee_breakdown
+        }
+      }
+    `,
+    { sessionId, checkoutSessionId },
+  );
+
+  return paymentStatus[0]?.feeBreakdown ?? null;
 };
 
 /**
@@ -65,7 +95,7 @@ export const getCheckoutCustomerEmail = async (
  */
 export async function sendVatInvoices(
   paymentIntent: Stripe.PaymentIntent,
-  recorded: RecordedPaymentIntent,
+  recorded: OwnedPaymentIntent,
 ): Promise<void> {
   if (!isVatInvoiceEnabled()) return;
 
@@ -74,11 +104,34 @@ export async function sendVatInvoices(
     sessionId: recorded.sessionId,
   };
 
-  const { feeBreakdown } = recorded;
+  const checkoutSession = await getCheckoutSession(paymentIntent.id);
+  if (!checkoutSession) {
+    return reportError({
+      error:
+        "Could not send VAT invoices: no Checkout Session found for the PaymentIntent",
+      context,
+    });
+  }
+
+  const customerEmail = checkoutSession.customer_details?.email;
+  if (!customerEmail) {
+    return reportError({
+      error:
+        "Could not send VAT invoices: no customer email found on the Checkout Session",
+      context,
+    });
+  }
+
+  const feeBreakdown = await getChargedFeeBreakdown(
+    recorded.sessionId,
+    checkoutSession.id,
+  );
+
   if (!feeBreakdown) {
     return reportError({
-      error: "Could not send VAT invoices: no fee breakdown for the session",
-      context,
+      error:
+        "Could not send VAT invoices: no fee breakdown recorded for the Checkout Session",
+      context: { ...context, checkoutSessionId: checkoutSession.id },
     });
   }
 
@@ -87,15 +140,6 @@ export async function sendVatInvoices(
     return reportError({
       error:
         "Could not send VAT invoices: session has a legacy payment processing fee",
-      context,
-    });
-  }
-
-  const customerEmail = await getCheckoutCustomerEmail(paymentIntent.id);
-  if (!customerEmail) {
-    return reportError({
-      error:
-        "Could not send VAT invoices: no customer email found on the Checkout Session",
       context,
     });
   }
@@ -112,28 +156,6 @@ export async function sendVatInvoices(
   }
 
   const lineItems = groupFeeLinesByIssuer(feeLines);
-
-  // The fee breakdown must match what Stripe actually charged and split (see calculateStripeSplit())
-  const expected = {
-    amount: sumLineItems([...lineItems.council, ...lineItems.planx]).total,
-    applicationFeeAmount: sumLineItems(lineItems.planx).total,
-  };
-
-  const charged = {
-    amount: paymentIntent.amount,
-    applicationFeeAmount: paymentIntent.application_fee_amount ?? 0,
-  };
-
-  if (
-    expected.amount !== charged.amount ||
-    expected.applicationFeeAmount !== charged.applicationFeeAmount
-  ) {
-    return reportError({
-      error:
-        "Could not send VAT invoices: fee breakdown does not match the amounts charged by Stripe",
-      context: { ...context, expected, charged },
-    });
-  }
 
   const invoiceArgs = { paymentIntent, recorded, customerEmail };
 

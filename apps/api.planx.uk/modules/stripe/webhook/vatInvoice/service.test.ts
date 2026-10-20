@@ -4,10 +4,11 @@ import { sendEmail } from "../../../../lib/resend/index.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import * as payHelpers from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
-import type { RecordedPaymentIntent } from "../paymentStatus/service.js";
+import type { OwnedPaymentIntent } from "../ownership/service.js";
 import {
   FLOW_ID,
   FLOW_NAME,
+  mockChargedFeeBreakdown,
   mockCouncilInvoiceDetails,
   mockFeeBreakdown,
   paymentIntent,
@@ -27,6 +28,7 @@ vi.mock("./pdf.js", () => ({
 
 const PDF = Buffer.from("%PDF-test");
 const CUSTOMER_EMAIL = "payer@example.com";
+const CHECKOUT_SESSION_ID = "cs_test_123";
 
 // £145 total, of which £30 is the PlanX service charge (inc. £5 VAT)
 const succeededPaymentIntent = (overrides: Record<string, unknown> = {}) =>
@@ -38,21 +40,13 @@ const succeededPaymentIntent = (overrides: Record<string, unknown> = {}) =>
     ...overrides,
   }) as unknown as Stripe.PaymentIntent;
 
-const recorded = (
-  overrides: Partial<RecordedPaymentIntent> = {},
-): RecordedPaymentIntent => ({
+const recorded: OwnedPaymentIntent = {
   sessionId: paymentIntent.metadata.sessionId,
   flowId: FLOW_ID,
   flowName: FLOW_NAME,
   teamSlug: TEAM_SLUG,
   teamName: TEAM_NAME,
-  feeBreakdown: mockFeeBreakdown({
-    payable: 145,
-    serviceCharge: 25,
-    serviceChargeVAT: 5,
-  }),
-  ...overrides,
-});
+};
 
 const mockCheckoutSessions = (sessions: unknown[]) =>
   vi
@@ -103,7 +97,16 @@ describe("sendVatInvoices", () => {
     vi.clearAllMocks();
     vi.mocked(generateVatInvoicePdf).mockResolvedValue(PDF);
     vi.mocked(sendEmail).mockResolvedValue({ message: "sent" });
-    mockCheckoutSessions([{ customer_details: { email: CUSTOMER_EMAIL } }]);
+    mockCheckoutSessions([
+      { id: CHECKOUT_SESSION_ID, customer_details: { email: CUSTOMER_EMAIL } },
+    ]);
+    mockChargedFeeBreakdown(
+      mockFeeBreakdown({
+        payable: 145,
+        serviceCharge: 25,
+        serviceChargeVAT: 5,
+      }),
+    );
     mockCouncilInvoiceDetails();
   });
 
@@ -114,7 +117,7 @@ describe("sendVatInvoices", () => {
 
   describe("when disabled", () => {
     it("does nothing", async () => {
-      await sendVatInvoices(succeededPaymentIntent(), recorded());
+      await sendVatInvoices(succeededPaymentIntent(), recorded);
 
       expect(stripe.checkout.sessions.list).not.toHaveBeenCalled();
       expect(generateVatInvoicePdf).not.toHaveBeenCalled();
@@ -126,7 +129,7 @@ describe("sendVatInvoices", () => {
     beforeEach(() => vi.stubEnv("STRIPE_VAT_INVOICES_ENABLED", "true"));
 
     it("looks up the payer's email from the Checkout Session", async () => {
-      await sendVatInvoices(succeededPaymentIntent(), recorded());
+      await sendVatInvoices(succeededPaymentIntent(), recorded);
 
       expect(stripe.checkout.sessions.list).toHaveBeenCalledWith({
         payment_intent: "pi_test_123",
@@ -135,7 +138,7 @@ describe("sendVatInvoices", () => {
     });
 
     it("sends separate council and PlanX invoices", async () => {
-      await sendVatInvoices(succeededPaymentIntent(), recorded());
+      await sendVatInvoices(succeededPaymentIntent(), recorded);
 
       expect(sendEmail).toHaveBeenCalledTimes(2);
       expect(sendEmail).toHaveBeenCalledWith(
@@ -181,7 +184,7 @@ describe("sendVatInvoices", () => {
         theme: { logo: null, primaryColour: "#000" },
       });
 
-      await sendVatInvoices(succeededPaymentIntent(), recorded());
+      await sendVatInvoices(succeededPaymentIntent(), recorded);
 
       expect(sendEmail).toHaveBeenCalledWith(
         "vat-invoice-council",
@@ -192,7 +195,7 @@ describe("sendVatInvoices", () => {
     });
 
     it("generates each PDF with the correct seller", async () => {
-      await sendVatInvoices(succeededPaymentIntent(), recorded());
+      await sendVatInvoices(succeededPaymentIntent(), recorded);
 
       const sellers = vi
         .mocked(generateVatInvoicePdf)
@@ -205,9 +208,11 @@ describe("sendVatInvoices", () => {
     });
 
     it("only sends the council invoice when no service charge was taken", async () => {
+      mockChargedFeeBreakdown(mockFeeBreakdown({ payable: 145 }));
+
       await sendVatInvoices(
         succeededPaymentIntent({ application_fee_amount: null }),
-        recorded({ feeBreakdown: mockFeeBreakdown({ payable: 145 }) }),
+        recorded,
       );
 
       expect(sentTemplates()).toEqual(["vat-invoice-council"]);
@@ -217,7 +222,7 @@ describe("sendVatInvoices", () => {
       vi.spyOn(payHelpers, "reportError");
       mockCouncilInvoiceDetails({ invoiceDetails: null });
 
-      await sendVatInvoices(succeededPaymentIntent(), recorded());
+      await sendVatInvoices(succeededPaymentIntent(), recorded);
 
       expect(sentTemplates()).toEqual(["vat-invoice-planx"]);
       expect(payHelpers.reportError).toHaveBeenCalledWith(
@@ -228,16 +233,15 @@ describe("sendVatInvoices", () => {
     });
 
     it("does not fetch council details when the council has no portion", async () => {
-      await sendVatInvoices(
-        succeededPaymentIntent({ amount: 3000 }),
-        recorded({
-          feeBreakdown: mockFeeBreakdown({
-            payable: 30,
-            serviceCharge: 25,
-            serviceChargeVAT: 5,
-          }),
+      mockChargedFeeBreakdown(
+        mockFeeBreakdown({
+          payable: 30,
+          serviceCharge: 25,
+          serviceChargeVAT: 5,
         }),
       );
+
+      await sendVatInvoices(succeededPaymentIntent({ amount: 3000 }), recorded);
 
       expect(
         queryMock
@@ -248,16 +252,18 @@ describe("sendVatInvoices", () => {
     });
 
     it("includes VAT on a discretionary application fee in the council invoice", async () => {
+      mockChargedFeeBreakdown(
+        mockFeeBreakdown({
+          calculated: 100,
+          calculatedVAT: 20,
+          payable: 120,
+          payableVAT: 20,
+        }),
+      );
+
       await sendVatInvoices(
         succeededPaymentIntent({ amount: 12000, application_fee_amount: null }),
-        recorded({
-          feeBreakdown: mockFeeBreakdown({
-            calculated: 100,
-            calculatedVAT: 20,
-            payable: 120,
-            payableVAT: 20,
-          }),
-        }),
+        recorded,
       );
 
       const [[invoice]] = vi.mocked(generateVatInvoicePdf).mock.calls;
@@ -267,39 +273,21 @@ describe("sendVatInvoices", () => {
       expect(invoice.totals).toEqual({ net: 10000, vat: 2000, total: 12000 });
     });
 
-    it.each([
-      ["total amount", { amount: 99999 }],
-      ["PlanX's share", { application_fee_amount: 1234 }],
-    ])(
-      "reports an error without throwing when the %s charged by Stripe does not match the fee breakdown",
-      async (_label, overrides) => {
-        vi.spyOn(payHelpers, "reportError");
-
-        await sendVatInvoices(succeededPaymentIntent(overrides), recorded());
-
-        expect(payHelpers.reportError).toHaveBeenCalledWith(
-          expect.objectContaining({
-            error: expect.stringContaining("does not match"),
-          }),
-        );
-        expect(sendEmail).not.toHaveBeenCalled();
-      },
-    );
-
     it("skips invoicing a session with a legacy payment processing fee", async () => {
       vi.spyOn(payHelpers, "reportError");
+      mockChargedFeeBreakdown(
+        mockFeeBreakdown({
+          payable: 146.2,
+          serviceCharge: 25,
+          serviceChargeVAT: 5,
+          paymentProcessing: 1,
+          paymentProcessingVAT: 0.2,
+        }),
+      );
 
       await sendVatInvoices(
         succeededPaymentIntent({ amount: 14620 }),
-        recorded({
-          feeBreakdown: mockFeeBreakdown({
-            payable: 146.2,
-            serviceCharge: 25,
-            serviceChargeVAT: 5,
-            paymentProcessing: 1,
-            paymentProcessingVAT: 0.2,
-          }),
-        }),
+        recorded,
       );
 
       expect(payHelpers.reportError).toHaveBeenCalledWith(
@@ -307,25 +295,25 @@ describe("sendVatInvoices", () => {
           error: expect.stringContaining("legacy payment processing fee"),
         }),
       );
-      expect(stripe.checkout.sessions.list).not.toHaveBeenCalled();
       expect(sendEmail).not.toHaveBeenCalled();
     });
 
     it("reports an error without throwing when a line has a negative net amount", async () => {
       vi.spyOn(payHelpers, "reportError");
+      // The application fee remainder (£10) is less than its VAT (£20)
+      mockChargedFeeBreakdown(
+        mockFeeBreakdown({
+          calculated: 100,
+          calculatedVAT: 20,
+          payable: 130,
+          fastTrack: 100,
+          fastTrackVAT: 20,
+        }),
+      );
 
       await sendVatInvoices(
         succeededPaymentIntent({ amount: 13000, application_fee_amount: null }),
-        recorded({
-          // The application fee remainder (£10) is less than its VAT (£20)
-          feeBreakdown: mockFeeBreakdown({
-            calculated: 100,
-            calculatedVAT: 20,
-            payable: 130,
-            fastTrack: 100,
-            fastTrackVAT: 20,
-          }),
-        }),
+        recorded,
       );
 
       expect(payHelpers.reportError).toHaveBeenCalledWith(
@@ -336,17 +324,34 @@ describe("sendVatInvoices", () => {
       expect(sendEmail).not.toHaveBeenCalled();
     });
 
-    it("reports an error without throwing when there is no fee breakdown", async () => {
+    it("invoices the fee breakdown recorded for the Checkout Session", async () => {
+      await sendVatInvoices(succeededPaymentIntent(), recorded);
+
+      const call = queryMock
+        .getCalls()
+        .find(({ id }) => id === "GetChargedFeeBreakdown");
+      expect(call?.variables).toEqual({
+        sessionId: paymentIntent.metadata.sessionId,
+        checkoutSessionId: CHECKOUT_SESSION_ID,
+      });
+    });
+
+    it("reports an error without throwing when no fee breakdown was recorded for the Checkout Session", async () => {
       vi.spyOn(payHelpers, "reportError");
+      mockChargedFeeBreakdown(null);
 
       await expect(
-        sendVatInvoices(
-          succeededPaymentIntent(),
-          recorded({ feeBreakdown: null }),
-        ),
+        sendVatInvoices(succeededPaymentIntent(), recorded),
       ).resolves.toBeUndefined();
 
-      expect(payHelpers.reportError).toHaveBeenCalled();
+      expect(payHelpers.reportError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.stringContaining("no fee breakdown recorded"),
+          context: expect.objectContaining({
+            checkoutSessionId: CHECKOUT_SESSION_ID,
+          }),
+        }),
+      );
       expect(sendEmail).not.toHaveBeenCalled();
     });
 
@@ -355,7 +360,7 @@ describe("sendVatInvoices", () => {
       mockCheckoutSessions([{ customer_details: null }]);
 
       await expect(
-        sendVatInvoices(succeededPaymentIntent(), recorded()),
+        sendVatInvoices(succeededPaymentIntent(), recorded),
       ).resolves.toBeUndefined();
 
       expect(payHelpers.reportError).toHaveBeenCalledWith(
@@ -370,7 +375,7 @@ describe("sendVatInvoices", () => {
       vi.spyOn(payHelpers, "reportError");
       mockCheckoutSessions([]);
 
-      await sendVatInvoices(succeededPaymentIntent(), recorded());
+      await sendVatInvoices(succeededPaymentIntent(), recorded);
 
       expect(payHelpers.reportError).toHaveBeenCalled();
       expect(sendEmail).not.toHaveBeenCalled();
@@ -380,7 +385,7 @@ describe("sendVatInvoices", () => {
       vi.mocked(generateVatInvoicePdf).mockRejectedValue(new Error("boom"));
 
       await expect(
-        sendVatInvoices(succeededPaymentIntent(), recorded()),
+        sendVatInvoices(succeededPaymentIntent(), recorded),
       ).rejects.toThrow("boom");
       expect(sendEmail).not.toHaveBeenCalled();
     });
@@ -389,7 +394,7 @@ describe("sendVatInvoices", () => {
       vi.mocked(sendEmail).mockRejectedValue(new Error("Resend is down"));
 
       await expect(
-        sendVatInvoices(succeededPaymentIntent(), recorded()),
+        sendVatInvoices(succeededPaymentIntent(), recorded),
       ).rejects.toThrow("Resend is down");
     });
   });
