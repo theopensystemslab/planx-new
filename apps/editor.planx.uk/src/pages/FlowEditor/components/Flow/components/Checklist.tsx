@@ -1,4 +1,3 @@
-import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import type {
   ComponentType as TYPES,
@@ -19,6 +18,7 @@ import { getParentId } from "../lib/utils";
 import { AttachedNote } from "./AttachedNote";
 import { DataField } from "./DataField";
 import Hanger from "./Hanger";
+import { HelpTextBadge } from "./HelpTextBadge";
 import Node from "./Node";
 import { Tag } from "./Tag";
 import { Thumbnail } from "./Thumbnail";
@@ -31,15 +31,12 @@ type Props = {
 };
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, showHelpText, showTags, showNotes] = useStore(
-    (state) => [
-      state.isClone,
-      state.childNodesOf(props.id),
-      state.showHelpText,
-      state.showTags,
-      state.showNotes,
-    ],
-  );
+  const [isClone, childNodes, showTags, showNotes] = useStore((state) => [
+    state.isClone,
+    state.childNodesOf(props.id),
+    state.showTags,
+    state.showNotes,
+  ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -135,6 +132,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               drag(el);
             }}
           >
+            {hasHelpText && <HelpTextBadge />}
             {props.data?.img && (
               <Thumbnail
                 imageSource={props.data?.img}
@@ -144,9 +142,6 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
               {Icon && <Icon />}
               <span>{props.text}</span>
-              {showHelpText && hasHelpText && (
-                <Help fontSize="small" sx={{ marginLeft: "auto" }} />
-              )}
             </Box>
           </Link>
           {props.data?.fn && (
