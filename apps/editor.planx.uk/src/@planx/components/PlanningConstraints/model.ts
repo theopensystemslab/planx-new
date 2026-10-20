@@ -1,10 +1,20 @@
-import { activePlanningConstraints } from "@opensystemslab/planx-core/types";
+import {
+  activePlanningConstraints,
+  walesActivePlanningConstraints,
+} from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import type { SchemaOf } from "yup";
 import { array, object, string } from "yup";
 
 import type { BaseNodeData } from "../shared";
 import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+
+// hardcode wales teams
+const WALES_TEAMS = ["bannau-brycheiniog"];
+
+export function isWalesTeam(teamSlug?: string): boolean {
+  return teamSlug ? WALES_TEAMS.includes(teamSlug) : false;
+}
 
 export interface PlanningConstraints extends BaseNodeData {
   title: string;
@@ -39,26 +49,39 @@ export const DEFAULT_PLANNING_CONDITIONS_DISCLAIMER =
 interface Dataset {
   text: string;
   val: string;
-  source: "Planning Data" | "Ordnance Survey";
+  source: "Planning Data" | "Ordnance Survey" | "DataMapWales";
   datasets: string[];
   entity?: number;
 }
 
-export const availableDatasets: Dataset[] = Object.entries(
-  activePlanningConstraints,
-).map(([dataValue, constraint]) => ({
-  text: constraint.name,
-  val: dataValue,
-  source: constraint.source,
-  datasets:
-    constraint.source === "Planning Data"
-      ? constraint["digital-land-datasets"]
-      : Array.from(constraint["os-dataset"]),
-  entity:
-    constraint.source === "Planning Data"
-      ? constraint["digital-land-entities"]?.[0]
-      : undefined,
-}));
+export function getAvailableDatasets(teamSlug?: string): Dataset[] {
+  const constraints = isWalesTeam(teamSlug)
+    ? walesActivePlanningConstraints
+    : activePlanningConstraints;
+
+  return Object.entries(constraints).map(([dataValue, constraint]) => {
+    let datasets: string[];
+    if (constraint.source === "Planning Data") {
+      datasets = constraint["digital-land-datasets"];
+    } else if (constraint.source === "DataMapWales") {
+      datasets = [constraint["dmw-layer"]];
+    } else {
+      // Ordnance Survey
+      datasets = Array.from(constraint["os-dataset"]);
+    }
+
+    return {
+      text: constraint.name,
+      val: dataValue,
+      source: constraint.source,
+      datasets,
+      entity:
+        constraint.source === "Planning Data"
+          ? constraint["digital-land-entities"]?.[0]
+          : undefined,
+    };
+  });
+}
 
 export const validationSchema: SchemaOf<PlanningConstraints> =
   baseNodeDataValidationSchema.concat(

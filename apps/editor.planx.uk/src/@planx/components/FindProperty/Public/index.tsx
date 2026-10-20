@@ -9,6 +9,7 @@ import area from "@turf/area";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import type { Feature } from "geojson";
 import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { parse } from "postcode";
 import { useState } from "react";
 import { exhaustiveCheck } from "utils";
@@ -26,6 +27,8 @@ import { AddressLoadingWrap } from "./styles";
 type Props = PublicProps<FindProperty>;
 
 function Component(props: Props) {
+  const teamSlug = useStore((state) => state.teamSlug);
+
   const previouslySubmittedData = props.previouslySubmittedData?.data;
   const previouslySubmittedAddressSource =
     previouslySubmittedData?._address?.source;
@@ -53,7 +56,7 @@ function Component(props: Props) {
     developmentCorporations,
     titleBoundary,
     isPending,
-  } = useFindPropertyData(address);
+  } = useFindPropertyData(address, teamSlug);
 
   const validateAndSubmit = () => {
     if (page === "new-address") {
