@@ -60,7 +60,7 @@ async function go(
 
   // set up request query params per https://www.planning.data.gov.uk/docs
   const options = {
-    entries: "current",
+    period: "current", // exclude historic entities
     geometry: geom,
     geometry_relation: "intersects",
     exclude_field: "geometry,point",
