@@ -11,7 +11,7 @@ import { array, number, object, string, type TestConfig } from "yup";
 
 import type { BaseNodeData } from "..";
 import { baseNodeDataValidationSchema, parseBaseNodeData } from "..";
-import { hasUniqueLabels, hasUniqueLabelsOrDescriptions } from "../helpers";
+import { hasUniqueLabels, hasUniqueOptions } from "../helpers";
 import type { Child } from "../types";
 
 export enum ChecklistLayout {
@@ -75,7 +75,7 @@ export const uniqueChecklistLabelsOrDescriptionsTest: TestConfig<ResponsiveCheck
     name: "uniqueLabelsOrDescriptions",
     test: function ({ options, groupedOptions }) {
       const flatOptions = getFlatOptions({ options, groupedOptions });
-      if (hasUniqueLabelsOrDescriptions(flatOptions)) return true;
+      if (hasUniqueOptions(flatOptions)) return true;
       return this.createError({
         path: "options",
         message:

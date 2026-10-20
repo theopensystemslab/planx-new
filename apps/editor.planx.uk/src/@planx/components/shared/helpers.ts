@@ -7,9 +7,7 @@ export const hasUniqueLabels = (options: AnyOption[]): boolean => {
   return new Set(labels).size === options.length;
 };
 
-export const hasUniqueLabelsOrDescriptions = (
-  options: AnyOption[],
-): boolean => {
+export const hasUniqueOptions = (options: AnyOption[]): boolean => {
   const labels = options.map(
     ({ data }) => `${data.text}_${data.description?.trim() ?? ""}`,
   );
@@ -32,7 +30,7 @@ export const uniqueOptionsTest: TestConfig<Option[]> = {
   name: "uniqueOptions",
   test: function (options) {
     if (!options) return true;
-    if (hasUniqueLabelsOrDescriptions(options)) return true;
+    if (hasUniqueOptions(options)) return true;
     return this.createError({
       path: "options",
       message:
