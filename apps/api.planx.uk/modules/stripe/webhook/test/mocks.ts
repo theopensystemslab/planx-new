@@ -174,7 +174,7 @@ export const mockFeeBreakdown = (
     exemption: 0,
     exemptionVAT: 0,
     ...amount,
-  } as FeeBreakdown["amount"],
+  },
   reductions: [],
   exemptions: [],
 });
