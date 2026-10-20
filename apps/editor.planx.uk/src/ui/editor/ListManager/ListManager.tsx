@@ -167,18 +167,19 @@ export default function ListManager<T, EditorExtraProps>(
   );
 
   const listError = typeof props.errors === "string" ? props.errors : undefined;
-  const hasDragHandles = !isLocked && !props.noDragAndDrop;
+  const isFieldDisplayed = props.isFieldDisplayed ?? (() => true);
+  const hasDragHandles =
+    !isLocked && !props.noDragAndDrop && props.values.some(isFieldDisplayed);
 
+  // Keep the error border aligned with other fields, and pull the drag handles inside it
   const gutterOffset = listError && hasDragHandles ? DRAG_HANDLE_GUTTER : 0;
 
   return (
-    <Box sx={{ ml: -gutterOffset }}>
-      <ErrorWrapper error={listError}>
-        <Box sx={{ pl: gutterOffset }}>
-          <ListItems {...props} isLocked={isLocked} />
-        </Box>
-      </ErrorWrapper>
-    </Box>
+    <ErrorWrapper error={listError}>
+      <Box sx={{ pl: gutterOffset }}>
+        <ListItems {...props} isLocked={isLocked} />
+      </Box>
+    </ErrorWrapper>
   );
 }
 

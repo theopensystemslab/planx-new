@@ -1,6 +1,5 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
-import { getIn } from "formik";
 import React, { useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
@@ -156,9 +155,7 @@ export const BaseChecklistComponent: React.FC<Props> = (props) => {
             )}
           </InputGroup>
         </ModalSectionContent>
-        <ErrorWrapper error={getIn(formik.errors, "options")}>
-          <Options {...props} />
-        </ErrorWrapper>
+        <Options {...props} />
       </ModalSection>
       <ModalFooter {...props} />
     </form>
