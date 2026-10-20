@@ -135,9 +135,18 @@ export const COUNCIL_INVOICE_DETAILS = {
   emailAddress: "planning@southwark.gov.uk",
 };
 
+const COUNCIL_THEME = {
+  logo: "https://example.com/logo.png" as string | null,
+  primaryColour: "#000",
+};
+
 export const mockCouncilInvoiceDetails = ({
   invoiceDetails = COUNCIL_INVOICE_DETAILS,
-}: { invoiceDetails?: typeof COUNCIL_INVOICE_DETAILS | null } = {}) =>
+  theme = COUNCIL_THEME,
+}: {
+  invoiceDetails?: typeof COUNCIL_INVOICE_DETAILS | null;
+  theme?: typeof COUNCIL_THEME | null;
+} = {}) =>
   queryMock.mockQuery({
     name: "GetCouncilInvoiceDetails",
     matchOnVariables: false,
@@ -146,10 +155,7 @@ export const mockCouncilInvoiceDetails = ({
         {
           name: TEAM_NAME,
           invoiceDetails,
-          theme: {
-            logo: "https://example.com/logo.png",
-            primaryColour: "#000",
-          },
+          theme,
         },
       ],
     },

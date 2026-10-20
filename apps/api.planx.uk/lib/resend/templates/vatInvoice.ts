@@ -15,7 +15,7 @@ export type VatInvoiceCouncilTemplate = EmailTemplate<
   "vat-invoice-council",
   VatInvoiceVariables & {
     councilName: string;
-    logo: string;
+    header: string; // council logo if set, falls back to council name otherwise
     primaryColour: string;
   }
 >;

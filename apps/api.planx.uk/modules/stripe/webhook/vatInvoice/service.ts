@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import escape from "lodash/escape.js";
 import type Stripe from "stripe";
 
 import { sendEmail } from "../../../../lib/resend/index.js";
@@ -13,7 +14,7 @@ import {
 } from "./data.js";
 import { generateVatInvoicePdf } from "./pdf.js";
 import { getCouncilInvoiceDetails, PLANX_SELLER } from "./seller.js";
-import type { VatInvoiceData } from "./types.js";
+import type { VatInvoiceBranding, VatInvoiceData } from "./types.js";
 
 /**
  * Feature flag whilst VAT invoices are in development
@@ -23,6 +24,16 @@ export const isVatInvoiceEnabled = () =>
 
 const formatPence = (pence: number) =>
   (pence / 100).toLocaleString("en-GB", { style: "currency", currency: "GBP" });
+
+const DEFAULT_PRIMARY_COLOUR = "#0010A4";
+
+export const buildCouncilEmailHeader = (
+  councilName: string,
+  branding: VatInvoiceBranding | null,
+): string =>
+  branding?.logo
+    ? `<img src="${escape(branding.logo)}" alt="${escape(councilName)}" height="40" />`
+    : escape(councilName);
 
 /**
  * The payer's email is collected by Stripe Checkout, not stored on the PaymentIntent
@@ -187,8 +198,9 @@ async function sendVatInvoiceEmail(invoice: VatInvoiceData): Promise<void> {
       {
         ...variables,
         councilName: invoice.seller.name,
-        logo: invoice.branding?.logo ?? "",
-        primaryColour: invoice.branding?.primaryColour ?? "",
+        header: buildCouncilEmailHeader(invoice.seller.name, invoice.branding),
+        primaryColour:
+          invoice.branding?.primaryColour ?? DEFAULT_PRIMARY_COLOUR,
       },
       options,
     );

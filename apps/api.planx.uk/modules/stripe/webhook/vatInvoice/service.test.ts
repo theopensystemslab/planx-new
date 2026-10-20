@@ -15,7 +15,7 @@ import {
   TEAM_SLUG,
 } from "../test/mocks.js";
 import { generateVatInvoicePdf } from "./pdf.js";
-import { sendVatInvoices } from "./service.js";
+import { buildCouncilEmailHeader, sendVatInvoices } from "./service.js";
 
 vi.mock("../../../../lib/resend/index.js", () => ({
   sendEmail: vi.fn(),
@@ -63,6 +63,40 @@ const mockCheckoutSessions = (sessions: unknown[]) =>
 
 const sentTemplates = () =>
   vi.mocked(sendEmail).mock.calls.map(([template]) => template);
+
+describe("buildCouncilEmailHeader", () => {
+  it("renders the councils logo", () => {
+    expect(
+      buildCouncilEmailHeader("Southwark", {
+        logo: "https://example.com/logo.png",
+        primaryColour: "#000",
+      }),
+    ).toBe(
+      '<img src="https://example.com/logo.png" alt="Southwark" height="40" />',
+    );
+  });
+
+  it("falls back to the council name as text", () => {
+    expect(
+      buildCouncilEmailHeader("Southwark", {
+        logo: null,
+        primaryColour: "#000",
+      }),
+    ).toBe("Southwark");
+    expect(buildCouncilEmailHeader("Southwark", null)).toBe("Southwark");
+  });
+
+  it("escapes values interpolated into HTML", () => {
+    expect(
+      buildCouncilEmailHeader('Barking & "Dagenham"', {
+        logo: 'https://example.com/a.png" onerror="alert(1)',
+        primaryColour: "#000",
+      }),
+    ).toBe(
+      '<img src="https://example.com/a.png&quot; onerror=&quot;alert(1)" alt="Barking &amp; &quot;Dagenham&quot;" height="40" />',
+    );
+  });
+});
 
 describe("sendVatInvoices", () => {
   beforeEach(() => {
@@ -113,7 +147,8 @@ describe("sendVatInvoices", () => {
           amount: "£115.00",
           paymentDate: "7 October 2026",
           councilName: "London Borough of Southwark",
-          logo: "https://example.com/logo.png",
+          header:
+            '<img src="https://example.com/logo.png" alt="London Borough of Southwark" height="40" />',
           primaryColour: "#000",
         },
         {
@@ -138,6 +173,21 @@ describe("sendVatInvoices", () => {
             { filename: "invoice-planx-pi_test_123.pdf", content: PDF },
           ],
         },
+      );
+    });
+
+    it("falls back to the council name in the email header when they have no logo", async () => {
+      mockCouncilInvoiceDetails({
+        theme: { logo: null, primaryColour: "#000" },
+      });
+
+      await sendVatInvoices(succeededPaymentIntent(), recorded());
+
+      expect(sendEmail).toHaveBeenCalledWith(
+        "vat-invoice-council",
+        CUSTOMER_EMAIL,
+        expect.objectContaining({ header: "London Borough of Southwark" }),
+        expect.anything(),
       );
     });
 
