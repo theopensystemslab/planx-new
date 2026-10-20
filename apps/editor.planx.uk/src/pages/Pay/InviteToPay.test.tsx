@@ -1,8 +1,16 @@
+import { useMatches } from "@tanstack/react-router";
 import { screen } from "@testing-library/react";
 import { setup } from "test/utils";
 import type { PublicPaymentRequest } from "utils/routeUtils/payQueries";
 
 import InviteToPay from "./InviteToPay";
+
+vi.mock("@tanstack/react-router", async () => ({
+  ...(await vi.importActual("@tanstack/react-router")),
+  useMatches: vi.fn(() => [
+    { routeId: "/_public/_planXDomain/$team/$flow/pay/invite/" },
+  ]),
+}));
 
 const mockPaymentRequest: PublicPaymentRequest = {
   id: "9e13f784-7299-4414-92ff-803bcacdfba8",
@@ -51,4 +59,25 @@ describe("InviteToPay", () => {
     ).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Print form" })).toBeVisible();
   });
+
+  it.each([
+    ["PlanX", "/_public/_planXDomain/$team/$flow/pay/invite/"],
+    ["custom", "/_public/_customDomain/$flow/pay/invite/"],
+  ])(
+    "links to the pay view application page on %s domains",
+    async (_domain, routeId) => {
+      vi.mocked(useMatches).mockReturnValue([{ routeId }] as ReturnType<
+        typeof useMatches
+      >);
+      await setup(<InviteToPay {...mockPaymentRequest} />);
+
+      const printFormLink = await screen.findByRole("link", {
+        name: "Print form",
+      });
+      expect(printFormLink).toHaveAttribute(
+        "href",
+        expect.stringMatching(/\/pay\/view-application$/),
+      );
+    },
+  );
 });
