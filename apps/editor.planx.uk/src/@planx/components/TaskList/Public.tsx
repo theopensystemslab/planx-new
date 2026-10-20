@@ -8,7 +8,7 @@ export type Props = PublicProps<TaskList>;
 
 const TaskListComponent: React.FC<Props> = (props) => {
   return (
-    <Card handleSubmit={props.handleSubmit} isValid>
+    <Card handleSubmit={props.handleSubmit}>
       <CardHeader
         title={props.title}
         description={props.description}

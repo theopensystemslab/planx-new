@@ -53,7 +53,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
   }
 
   return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
+    <Card handleSubmit={formik.handleSubmit}>
       <CardHeader
         title={props.title}
         description={props.description}

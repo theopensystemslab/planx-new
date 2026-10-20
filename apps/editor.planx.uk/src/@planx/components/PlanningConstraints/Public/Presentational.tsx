@@ -135,7 +135,7 @@ interface ConstraintsFetchErrorProps {
 }
 
 const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
-  <Card handleSubmit={props.handleSubmit} isValid>
+  <Card handleSubmit={props.handleSubmit}>
     <CardHeader title={props.title} description={props.description} />
     <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
       <Typography variant="h4" component="h2" gutterBottom>

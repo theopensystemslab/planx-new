@@ -71,7 +71,7 @@ const ContentComponent: React.FC<Props> = (props) => {
   };
 
   return (
-    <Card handleSubmit={handleSubmit} isValid>
+    <Card handleSubmit={handleSubmit}>
       <Content
         color={color}
         data-testid="content"

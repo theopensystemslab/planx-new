@@ -58,7 +58,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
   }
 
   return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
+    <Card handleSubmit={formik.handleSubmit}>
       <CardHeader
         title={props.title}
         description={props.description}

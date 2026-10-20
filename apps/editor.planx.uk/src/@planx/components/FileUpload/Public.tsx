@@ -87,7 +87,7 @@ const FileUploadComponent: React.FC<Props> = (props) => {
   }, [slots]);
 
   return (
-    <Card isValid={true} handleSubmit={handleSubmit}>
+    <Card handleSubmit={handleSubmit}>
       <CardHeader
         title={props.title}
         description={props.description}

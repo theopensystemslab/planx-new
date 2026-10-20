@@ -154,7 +154,7 @@ function Component(props: Props) {
 
   if (isLoading)
     return (
-      <Card handleSubmit={props.handleSubmit} isValid={false}>
+      <Card handleSubmit={props.handleSubmit} disabled>
         <CardHeader title={props.title} description={props.description || ""} />
         <DelayedLoadingIndicator
           variant="ellipses"
