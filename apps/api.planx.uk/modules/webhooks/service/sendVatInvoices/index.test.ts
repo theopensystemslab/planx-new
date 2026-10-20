@@ -47,7 +47,6 @@ const mockRetrievePaymentIntent = (value: unknown = paymentIntent) =>
 
 describe("Send VAT invoices endpoint", () => {
   beforeEach(() => {
-    vi.stubEnv("STRIPE_VAT_INVOICES_ENABLED", "true");
     mockRetrievePaymentIntent();
     mockSessionLookup();
   });
@@ -55,7 +54,6 @@ describe("Send VAT invoices endpoint", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.mocked(sendVatInvoices).mockReset();
-    vi.unstubAllEnvs();
   });
 
   describe("authentication and validation", () => {
@@ -92,15 +90,6 @@ describe("Send VAT invoices endpoint", () => {
         .send(event({ stripePaymentId: null, stripeStatus: null }))
         .expect(200);
 
-      expect(sendVatInvoices).not.toHaveBeenCalled();
-    });
-
-    it("returns 200 without contacting Stripe when VAT invoices are disabled", async () => {
-      vi.stubEnv("STRIPE_VAT_INVOICES_ENABLED", "false");
-
-      await post(ENDPOINT).set(AUTH).send(event()).expect(200);
-
-      expect(stripe.paymentIntents.retrieve).not.toHaveBeenCalled();
       expect(sendVatInvoices).not.toHaveBeenCalled();
     });
 

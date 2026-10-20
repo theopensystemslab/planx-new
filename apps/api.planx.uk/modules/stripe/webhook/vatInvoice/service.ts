@@ -15,15 +15,6 @@ import { generateVatInvoicePdf } from "./pdf.js";
 import { getCouncilInvoiceDetails, PLANX_SELLER } from "./seller.js";
 import type { VatInvoiceBranding, VatInvoiceData } from "./types.js";
 
-/**
- * Feature flag whilst VAT invoices are in development
- */
-export const isVatInvoiceEnabled = () =>
-  process.env.STRIPE_VAT_INVOICES_ENABLED === "true";
-
-const formatPence = (pence: number) =>
-  (pence / 100).toLocaleString("en-GB", { style: "currency", currency: "GBP" });
-
 const DEFAULT_PRIMARY_COLOUR = "#0010A4";
 
 export const buildCouncilEmailHeader = (
@@ -97,8 +88,6 @@ export async function sendVatInvoices(
   paymentIntent: Stripe.PaymentIntent,
   recorded: OwnedPaymentIntent,
 ): Promise<void> {
-  if (!isVatInvoiceEnabled()) return;
-
   const context = {
     paymentIntentId: paymentIntent.id,
     sessionId: recorded.sessionId,

@@ -1,9 +1,6 @@
 import { stripe } from "../../../stripe/client.js";
 import { getOwnedPaymentIntent } from "../../../stripe/webhook/ownership/service.js";
-import {
-  isVatInvoiceEnabled,
-  sendVatInvoices,
-} from "../../../stripe/webhook/vatInvoice/service.js";
+import { sendVatInvoices } from "../../../stripe/webhook/vatInvoice/service.js";
 
 /**
  * Send VAT invoices for a PaymentIntent recorded as succeeded in payment_status
@@ -14,8 +11,6 @@ import {
 export const sendVatInvoicesForPaymentIntent = async (
   paymentIntentId: string,
 ): Promise<void> => {
-  if (!isVatInvoiceEnabled()) return;
-
   const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
   const ownedPaymentIntent = await getOwnedPaymentIntent(
