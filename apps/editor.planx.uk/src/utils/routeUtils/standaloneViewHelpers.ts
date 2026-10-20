@@ -27,6 +27,7 @@ export const fetchDataForStandaloneView = async (
             id
             name
             team {
+              id
               theme {
                 primaryColour: primary_colour
                 actionColour: action_colour

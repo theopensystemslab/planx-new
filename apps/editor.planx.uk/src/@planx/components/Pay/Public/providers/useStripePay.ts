@@ -1,5 +1,6 @@
 import { formatStripeMetadata } from "@opensystemslab/planx-core";
 import type { Passport as IPassport } from "@opensystemslab/planx-core/types";
+import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { useQuery } from "@tanstack/react-query";
 import { useMatches, useSearch } from "@tanstack/react-router";
 import {
@@ -17,10 +18,8 @@ import { getDefaultContent } from "../../model";
 import type { Props } from "../Pay";
 import type { StripeAction } from "../types";
 import { Action } from "../types";
+import { getStripeCheckoutURL } from "./stripeCheckout";
 import { STRIPE_PASSPORT_KEY, type UsePaymentProviderResult } from "./types";
-
-// Only ever redirect applicants to Stripe's hosted Checkout
-const STRIPE_CHECKOUT_ORIGIN = "https://checkout.stripe.com" as const;
 
 // Payments are only taken on published services - never on /draft or /preview test links
 const TEST_ENVIRONMENT_ROUTE_IDS = new Set<string>([
@@ -114,18 +113,8 @@ export function useStripePay(
         metadata,
       });
 
-      if (!url) {
-        throw new Error("Stripe Checkout Session did not include a URL");
-      }
-
-      if (new URL(url).origin !== STRIPE_CHECKOUT_ORIGIN) {
-        throw new Error(
-          `Stripe Checkout Session URL is not on ${STRIPE_CHECKOUT_ORIGIN}`,
-        );
-      }
-
       // Redirect the browser to hosted Stripe Checkout
-      window.location.assign(url);
+      window.location.assign(getStripeCheckoutURL(url));
     } catch (error) {
       if (isStripeNotConfiguredError(error)) {
         dispatch(Action.StartNewPaymentError);
@@ -170,6 +159,16 @@ export function useStripePay(
     await startNewPayment();
   };
 
+  // Like GOV.UK Pay, any payment started via Checkout disables "Invite someone else to pay"
+  const getExistingPaymentStatus = (): PaymentStatus | undefined => {
+    if (wasCancelled) return PaymentStatus.cancelled;
+    if (!stripeSessionId) return;
+
+    return checkoutStatus?.paymentStatus === "paid"
+      ? PaymentStatus.success
+      : PaymentStatus.started;
+  };
+
   return {
     actions: {
       startNewPayment,
@@ -179,5 +178,6 @@ export function useStripePay(
     },
     passportKey: STRIPE_PASSPORT_KEY,
     hasExistingPayment: hasReturnedFromCheckout,
+    existingPaymentStatus: getExistingPaymentStatus(),
   };
 }

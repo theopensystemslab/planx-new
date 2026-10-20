@@ -2,6 +2,8 @@ import type { APIError } from "../client";
 import apiClient from "../client";
 import type {
   CreateStripeCheckoutSession,
+  FulfilPaymentRequest,
+  FulfilPaymentRequestResult,
   StripeCanMigrate,
   StripeCheckoutSession,
   StripeCheckoutSessionStatus,
@@ -39,6 +41,34 @@ export const getStripeCheckoutSessionStatus = async ({
 }): Promise<StripeCheckoutSessionStatus> => {
   const { data } = await apiClient.get<StripeCheckoutSessionStatus>(
     `/stripe/checkout-session/${teamSlug}/${checkoutSessionId}`,
+  );
+
+  return data;
+};
+
+/**
+ * Invite to pay: create the payer's Checkout Session from the payment request
+ */
+export const createPaymentRequestCheckoutSession = async (
+  paymentRequestId: string,
+): Promise<StripeCheckoutSession> => {
+  const { data } = await apiClient.post<StripeCheckoutSession>(
+    `/stripe/payment-request/${paymentRequestId}/checkout-session`,
+  );
+
+  return data;
+};
+
+/**
+ * Invite to pay: confirm the payer's Checkout Session when they return from Stripe
+ */
+export const fulfilPaymentRequest = async ({
+  paymentRequestId,
+  checkoutSessionId,
+}: FulfilPaymentRequest): Promise<FulfilPaymentRequestResult> => {
+  const { data } = await apiClient.post<FulfilPaymentRequestResult>(
+    `/stripe/payment-request/${paymentRequestId}/fulfil`,
+    { checkoutSessionId },
   );
 
   return data;
