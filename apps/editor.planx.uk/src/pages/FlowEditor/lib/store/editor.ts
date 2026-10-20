@@ -157,10 +157,6 @@ export const editorUIStore: StateCreator<
 
     toggleShowDataFields: () => set({ showDataFields: !get().showDataFields }),
 
-    showHelpText: false,
-
-    toggleShowHelpText: () => set({ showHelpText: !get().showHelpText }),
-
     previousURL: undefined,
 
     currentURL: window.location.pathname,
@@ -226,7 +222,6 @@ export const editorUIStore: StateCreator<
       showImages: state.showImages,
       showNotes: state.showNotes,
       showDataFields: state.showDataFields,
-      showHelpText: state.showHelpText,
     }),
   },
 );

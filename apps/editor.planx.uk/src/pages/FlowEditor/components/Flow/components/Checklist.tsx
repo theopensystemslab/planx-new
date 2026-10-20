@@ -31,15 +31,12 @@ type Props = {
 };
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, showHelpText, showTags, showNotes] = useStore(
-    (state) => [
-      state.isClone,
-      state.childNodesOf(props.id),
-      state.showHelpText,
-      state.showTags,
-      state.showNotes,
-    ],
-  );
+  const [isClone, childNodes, showTags, showNotes] = useStore((state) => [
+    state.isClone,
+    state.childNodesOf(props.id),
+    state.showTags,
+    state.showNotes,
+  ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -144,7 +141,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
               {Icon && <Icon />}
               <span>{props.text}</span>
-              {showHelpText && hasHelpText && (
+              {hasHelpText && (
                 <Help fontSize="small" sx={{ marginLeft: "auto" }} />
               )}
             </Box>

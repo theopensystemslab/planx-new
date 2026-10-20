@@ -29,14 +29,11 @@ type Props = {
 };
 
 const Question: React.FC<Props> = memo((props) => {
-  const [isCloneValue, childNodes, showHelpText, showTags] = useStore(
-    (state) => [
-      state.isClone(props.id),
-      state.childNodesOf(props.id),
-      state.showHelpText,
-      state.showTags,
-    ],
-  );
+  const [isCloneValue, childNodes, showTags] = useStore((state) => [
+    state.isClone(props.id),
+    state.childNodesOf(props.id),
+    state.showTags,
+  ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -125,7 +122,7 @@ const Question: React.FC<Props> = memo((props) => {
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
               {Icon && <Icon titleAccess={iconTitleAccess} />}
               <span>{props.text}</span>
-              {showHelpText && hasHelpText && (
+              {hasHelpText && (
                 <Help fontSize="small" sx={{ marginLeft: "auto" }} />
               )}
             </Box>
