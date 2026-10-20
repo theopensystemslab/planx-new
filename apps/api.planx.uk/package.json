@@ -54,6 +54,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pino-http": "^11.0.0",
+    "playwright-core": "^1.63.0",
     "resend": "^6.24.0",
     "sanitize-filename": "^1.6.4",
     "slack-notify": "^2.0.7",

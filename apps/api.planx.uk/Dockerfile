@@ -11,6 +11,10 @@ FROM node:24.14.1-alpine AS base
 
 # Git required for planx-core github dependency
 RUN apk add --no-cache git
+
+# Chromium required for rendering PDFs with Playwright (bundled Playwright browsers don't support Alpine)
+RUN apk add --no-cache chromium
+ENV CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
 COPY .gitconfig /root/.gitconfig
 
 WORKDIR /app
@@ -36,6 +40,9 @@ RUN npm_config_inject_workspace_packages=true pnpm --filter api.planx.uk deploy 
 ## PRODUCTION ##
 FROM node:24.14.1-alpine AS production
 WORKDIR /api
+
+RUN apk add --no-cache chromium
+ENV CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 ENV NODE_ENV=production
 COPY --from=base /deploy/api ./

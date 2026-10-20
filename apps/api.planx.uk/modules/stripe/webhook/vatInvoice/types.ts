@@ -20,7 +20,7 @@ export interface VatInvoiceSeller {
 
 export interface VatInvoiceBranding {
   logo: string | null;
-  primaryColour: string;
+  primaryColour: string | null;
 }
 
 export interface VatInvoiceData {

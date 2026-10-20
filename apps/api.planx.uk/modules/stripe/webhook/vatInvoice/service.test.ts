@@ -180,6 +180,21 @@ describe("sendVatInvoices", () => {
     );
   });
 
+  it("falls back to the default primary colour in the email when the council's is invalid", async () => {
+    mockCouncilInvoiceDetails({
+      theme: { logo: null, primaryColour: "red; } body { display: none" },
+    });
+
+    await sendVatInvoices(succeededPaymentIntent(), recorded);
+
+    expect(sendEmail).toHaveBeenCalledWith(
+      "vat-invoice-council",
+      CUSTOMER_EMAIL,
+      expect.objectContaining({ primaryColour: "#0010A4" }),
+      expect.anything(),
+    );
+  });
+
   it("generates each PDF with the correct seller", async () => {
     await sendVatInvoices(succeededPaymentIntent(), recorded);
 

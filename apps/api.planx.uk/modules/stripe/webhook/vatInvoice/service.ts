@@ -12,13 +12,16 @@ import { getFeeLines } from "../../feeLines.js";
 import type { OwnedPaymentIntent } from "../ownership/service.js";
 import { buildVatInvoiceData, groupFeeLinesByIssuer } from "./data.js";
 import { generateVatInvoicePdf } from "./pdf.js";
-import { getCouncilInvoiceDetails, PLANX_SELLER } from "./seller.js";
+import {
+  getCouncilInvoiceDetails,
+  PLANX_BRANDING,
+  PLANX_SELLER,
+} from "./seller.js";
+import { DEFAULT_PRIMARY_COLOUR, getPrimaryColour } from "./template.js";
 import type { VatInvoiceBranding, VatInvoiceData } from "./types.js";
 
 export const formatPence = (pence: number) =>
   (pence / 100).toLocaleString("en-GB", { style: "currency", currency: "GBP" });
-
-const DEFAULT_PRIMARY_COLOUR = "#0010A4";
 
 export const buildCouncilEmailHeader = (
   councilName: string,
@@ -176,7 +179,7 @@ export async function sendVatInvoices(
       ...invoiceArgs,
       issuer: "planx",
       seller: PLANX_SELLER,
-      branding: null,
+      branding: PLANX_BRANDING,
       lineItems: lineItems.planx,
     });
 
@@ -214,7 +217,8 @@ async function sendVatInvoiceEmail(invoice: VatInvoiceData): Promise<void> {
         councilName: invoice.seller.name,
         header: buildCouncilEmailHeader(invoice.seller.name, invoice.branding),
         primaryColour:
-          invoice.branding?.primaryColour ?? DEFAULT_PRIMARY_COLOUR,
+          getPrimaryColour(invoice.branding?.primaryColour) ??
+          DEFAULT_PRIMARY_COLOUR,
       },
       options,
     );
