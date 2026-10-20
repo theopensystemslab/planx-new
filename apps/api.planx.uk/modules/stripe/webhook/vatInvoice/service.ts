@@ -90,7 +90,7 @@ export const getChargedFeeBreakdown = async (
  *  - council: for the portion transferred to the council, with the council's branding
  *  - planx: for the PlanX service charge, only if one was charged
  *
- * Throws errors to make Stripe redeliver the event
+ * Called from the payment_status event trigger - throws errors to make Hasura retry the event
  * Uses idempotency keys to prevent duplicate emails being sent
  */
 export async function sendVatInvoices(
