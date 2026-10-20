@@ -12,7 +12,6 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import { Switch } from "ui/shared/Switch";
 
 import { baseNodeDataValidationSchema } from "../shared";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
@@ -53,13 +52,6 @@ export default function Component(props: Props) {
 
           if (Number.isNaN(Number(result))) {
             errors.formula = "Enter a formula which outputs a number";
-          }
-          if (
-            typeof result === "boolean" &&
-            !values.formatOutputForAutomations
-          ) {
-            errors.formula =
-              "For Boolean functions, toggle on 'Format the output to automate a future Question or Checklist only'";
           }
         } catch (error: any) {
           errors.formula = error.message;
@@ -150,19 +142,6 @@ export default function Component(props: Props) {
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}
           />
-          <InputRow>
-            <Switch
-              checked={formik.values.formatOutputForAutomations}
-              onChange={() =>
-                formik.setFieldValue(
-                  "formatOutputForAutomations",
-                  !formik.values.formatOutputForAutomations,
-                )
-              }
-              label="Format the output to automate a future Question or Checklist only"
-              disabled={props.disabled}
-            />
-          </InputRow>
         </ModalSectionContent>
         <ModalSectionContent title="Formula">
           <InputRow>
@@ -176,6 +155,11 @@ export default function Component(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            Formulas which output true or false (e.g. <code>a &gt; b</code>) are
+            formatted to automate a future Question or Checklist. All other
+            formulas output a number.
+          </Typography>
         </ModalSectionContent>
         <ModalSectionContent title="Default values">
           {!variables || variables.length === 0 ? (

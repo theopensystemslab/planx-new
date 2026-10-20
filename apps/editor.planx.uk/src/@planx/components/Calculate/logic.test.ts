@@ -13,13 +13,16 @@ beforeEach(() => {
   resetPreview();
 });
 
-test("When formatOutputForAutomations is true, Calculate writes an array and future questions are auto-answered", () => {
+test("When the formula outputs a boolean, Calculate writes an array and future questions are auto-answered", () => {
   // Setup
   setState({ flow: flowWithAutomation });
   expect(upcomingCardIds()).toEqual(["Calculate", "Question"]);
 
   // Step forwards through the Calculate
-  clickContinue("Calculate", { data: { testGroup: ["2"] }, auto: true });
+  clickContinue("Calculate", {
+    data: { testGroupTwo: ["true"] },
+    auto: true,
+  });
 
   // The Question can be auto-answered
   expect(visitedNodes()).toEqual(["Calculate"]);
@@ -27,7 +30,7 @@ test("When formatOutputForAutomations is true, Calculate writes an array and fut
   expect(autoAnswerableOptions("Question")).toEqual(["Group2Response"]);
 });
 
-test("When formatOutputForAutomations is false, Calculate writes a number and future questions are not auto-answered", () => {
+test("When the formula outputs a number, Calculate writes a number and future questions are not auto-answered", () => {
   // Setup
   setState({ flow: flowWithoutAutomation });
   expect(upcomingCardIds()).toEqual(["Calculate", "Question"]);
@@ -55,9 +58,8 @@ const flowWithAutomation: Store.Flow = {
   },
   Calculate: {
     data: {
-      fn: "testGroup",
-      formula: "pickRandom([1,2])",
-      formatOutputForAutomations: true,
+      fn: "testGroupTwo",
+      formula: "pickRandom([1,2]) == 2",
     },
     type: TYPES.Calculate,
   },
@@ -71,24 +73,24 @@ const flowWithAutomation: Store.Flow = {
   },
   Group1Response: {
     data: {
-      val: "1",
-      text: "1",
+      val: "false",
+      text: "No",
     },
     type: TYPES.Answer,
     edges: ["Group1Notice"],
   },
   Question: {
     data: {
-      fn: "testGroup",
-      text: "Which test group? ",
+      fn: "testGroupTwo",
+      text: "Are you group 2?",
     },
     type: TYPES.Question,
     edges: ["Group1Response", "Group2Response"],
   },
   Group2Response: {
     data: {
-      val: "2",
-      text: "2",
+      val: "true",
+      text: "Yes",
     },
     type: TYPES.Answer,
     edges: ["Group2Notice"],
@@ -111,7 +113,6 @@ const flowWithoutAutomation: Store.Flow = {
     data: {
       fn: "testGroup",
       formula: "pickRandom([1,2])",
-      formatOutputForAutomations: false,
     },
     type: TYPES.Calculate,
   },

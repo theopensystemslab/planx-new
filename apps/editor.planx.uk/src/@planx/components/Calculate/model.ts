@@ -9,7 +9,6 @@ export interface Calculate extends BaseNodeData {
   defaults: Record<string, number>;
   formula: string;
   samples: Record<string, number>;
-  formatOutputForAutomations?: boolean;
 }
 
 export interface Input {
@@ -25,7 +24,6 @@ export const parseCalculate = (
   defaults: data?.defaults || {},
   formula: data?.formula || "",
   samples: data?.samples || {},
-  formatOutputForAutomations: data?.formatOutputForAutomations || false,
   title: data?.title || "",
 });
 

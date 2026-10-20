@@ -16,8 +16,8 @@ export default function Component(props: Props) {
     props.handleSubmit?.({
       ...makeData(
         props,
-        props.formatOutputForAutomations
-          ? [evaluatedResult.toString()]
+        typeof evaluatedResult === "boolean"
+          ? [String(evaluatedResult)]
           : evaluatedResult,
         props.fn,
       ),
