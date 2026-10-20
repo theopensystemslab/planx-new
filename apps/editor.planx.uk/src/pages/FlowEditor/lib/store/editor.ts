@@ -76,8 +76,6 @@ export interface EditorUIStore {
   toggleShowNotes: () => void;
   showDataFields: boolean;
   toggleShowDataFields: () => void;
-  showHelpText: boolean;
-  toggleShowHelpText: () => void;
   previousURL?: string;
   currentURL: string;
   initURLTracking: (router: RegisteredRouter) => () => void;
