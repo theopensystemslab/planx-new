@@ -292,6 +292,35 @@ $fontMonospace: "Source Code Pro", monospace;
       height: 20px;
       opacity: 0.95;
     }
+
+    // Anchor for help text badge
+    .card-help-badge {
+      position: relative;
+      align-self: stretch;
+      height: 0;
+
+      // Help text badge
+      > div {
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        color: white;
+        background: $black;
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 1;
+
+        .flow-locked & {
+          background: #555;
+        }
+      }
+    }
   }
 
   & .card-data-field {

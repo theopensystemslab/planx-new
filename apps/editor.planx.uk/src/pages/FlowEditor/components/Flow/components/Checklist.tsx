@@ -1,4 +1,3 @@
-import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import type {
   ComponentType as TYPES,
@@ -19,6 +18,7 @@ import { getParentId } from "../lib/utils";
 import { AttachedNote } from "./AttachedNote";
 import { DataField } from "./DataField";
 import Hanger from "./Hanger";
+import { HelpTextBadge } from "./HelpTextBadge";
 import Node from "./Node";
 import { Tag } from "./Tag";
 import { Thumbnail } from "./Thumbnail";
@@ -132,6 +132,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               drag(el);
             }}
           >
+            {hasHelpText && <HelpTextBadge />}
             {props.data?.img && (
               <Thumbnail
                 imageSource={props.data?.img}
@@ -141,9 +142,6 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
               {Icon && <Icon />}
               <span>{props.text}</span>
-              {hasHelpText && (
-                <Help fontSize="small" sx={{ marginLeft: "auto" }} />
-              )}
             </Box>
           </Link>
           {props.data?.fn && (
