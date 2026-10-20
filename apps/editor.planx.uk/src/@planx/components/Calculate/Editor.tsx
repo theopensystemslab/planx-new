@@ -72,7 +72,7 @@ export default function Component(props: Props) {
       );
       // Type guard as mathjs evaluates `m` to a "Unit" object for "meter"
       if (!Number.isNaN(Number(result))) {
-        return result;
+        return String(result);
       } else if (result === undefined) {
         return "a number returned from the formula above";
       } else {
