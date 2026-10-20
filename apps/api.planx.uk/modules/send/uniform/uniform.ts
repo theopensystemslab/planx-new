@@ -382,7 +382,7 @@ async function retrieveSubmission(
  */
 const getUniformClient = (localAuthority: string): UniformClient => {
   // Greedily match any non-word characters
-  // XXX: Matches regex used in IAC (getCustomerSecrets.ts)
+  // XXX: Matches regex used in IAC (infrastructure/application/utils/generateTeamSecrets.ts)
   const regex = new RegExp(/\W+/g);
   const client =
     process.env[

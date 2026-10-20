@@ -18,7 +18,6 @@ const mockSucceededPayment: Submission = {
 };
 
 const meta = {
-  // TODO: Match Ollie's paths
   title: "Editor Components/Submissions/Details Modal/Payment menu",
   component: PaymentMenu,
   decorators: [

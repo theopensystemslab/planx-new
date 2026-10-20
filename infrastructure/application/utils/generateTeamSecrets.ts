@@ -4,7 +4,7 @@ import { teams } from "../../common/teams";
 import type { KeyValuePair } from "../types";
 
 // Greedily match any non-word characters
-// XXX: Matches regex used in apps/api.planx.uk/send.js
+// XXX: Matches regex used in apps/api.planx.uk/modules/send/uniform/uniform.ts
 const regex = new RegExp(/\W+/g);
 
 /**

@@ -51,7 +51,6 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
     if (lastSubmittedAppStatus === 202 || lastSubmittedAppStatus === 204) {
       return next({
         status: 200,
-        // TODO decide how to better communicate this (eg "already uploaded" ??)
         message: `Skipping send, already successfully submitted`,
       });
     }
