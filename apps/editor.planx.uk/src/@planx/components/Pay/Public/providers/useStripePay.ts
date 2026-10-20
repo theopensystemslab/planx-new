@@ -1,6 +1,5 @@
 import { formatStripeMetadata } from "@opensystemslab/planx-core";
 import type { Passport as IPassport } from "@opensystemslab/planx-core/types";
-import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { useQuery } from "@tanstack/react-query";
 import { useMatches, useSearch } from "@tanstack/react-router";
 import {
@@ -159,16 +158,6 @@ export function useStripePay(
     await startNewPayment();
   };
 
-  // Like GOV.UK Pay, any payment started via Checkout disables "Invite someone else to pay"
-  const getExistingPaymentStatus = (): PaymentStatus | undefined => {
-    if (wasCancelled) return PaymentStatus.cancelled;
-    if (!stripeSessionId) return;
-
-    return checkoutStatus?.paymentStatus === "paid"
-      ? PaymentStatus.success
-      : PaymentStatus.started;
-  };
-
   return {
     actions: {
       startNewPayment,
@@ -178,6 +167,5 @@ export function useStripePay(
     },
     passportKey: STRIPE_PASSPORT_KEY,
     hasExistingPayment: hasReturnedFromCheckout,
-    existingPaymentStatus: getExistingPaymentStatus(),
   };
 }
