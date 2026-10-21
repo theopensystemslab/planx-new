@@ -72,3 +72,7 @@ export interface StripeCanMigrate {
   canMigrate: boolean;
   blockers: MigrationBlocker[];
 }
+
+export interface StripeRevertResult {
+  paymentProvider: "govpay";
+}

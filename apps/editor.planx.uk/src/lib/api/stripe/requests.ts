@@ -8,6 +8,7 @@ import type {
   StripeCheckoutSession,
   StripeCheckoutSessionStatus,
   StripeConnectStatus,
+  StripeRevertResult,
 } from "./types";
 
 export const getStripeConnectStatus = async (
@@ -89,4 +90,11 @@ export const migrateToStripe = async (
     }
     throw err;
   }
+};
+
+export const revertToGovPay = async (teamSlug: string) => {
+  const { data } = await apiClient.post<StripeRevertResult>(
+    `/stripe/revert/${teamSlug}`,
+  );
+  return data;
 };

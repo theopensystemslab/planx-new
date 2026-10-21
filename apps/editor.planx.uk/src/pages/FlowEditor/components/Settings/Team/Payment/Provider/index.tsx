@@ -25,6 +25,7 @@ import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { useStripeConnectStatus } from "../Onboarding/hooks/useStripeConnectStatus";
 import { useMigrateToStripe } from "./hooks/useMigrateToStripe";
+import { useRevertToGovPay } from "./hooks/useRevertToGovPay";
 
 export type PaymentProvider = TeamSettings["paymentProvider"];
 
@@ -73,6 +74,7 @@ const formatActionsList = (blockers: MigrationBlocker[]): string => {
 const Provider: React.FC = () => {
   const toast = useToast();
   const teamSlug = useStore((state) => state.teamSlug);
+  const isProduction = import.meta.env.VITE_APP_ENV === "production";
   const { paymentProvider } = usePaymentProvider();
   const [migratedProvider, setMigratedProvider] =
     useState<PaymentProvider | null>(null);
@@ -83,6 +85,7 @@ const Provider: React.FC = () => {
   });
 
   const { mutate: migrate, isPending: isMigrating } = useMigrateToStripe();
+  const { mutate: revert, isPending: isReverting } = useRevertToGovPay();
 
   const handleMigrateClick = async () => {
     setDialogState({ type: "confirm" });
@@ -105,6 +108,18 @@ const Provider: React.FC = () => {
     });
   };
 
+  const handleRevert = async () => {
+    revert(teamSlug, {
+      onSuccess: () => {
+        setMigratedProvider("govpay");
+        toast.success("Revert to GOV.UK Pay successful");
+      },
+      onError: () => {
+        toast.error("Something went wrong reverting to GOV.UK Pay");
+      },
+    });
+  };
+
   const handleClose = () => setDialogState({ type: "closed" });
 
   const isStripe = provider === "stripe";
@@ -117,10 +132,20 @@ const Provider: React.FC = () => {
       if (canUseStripe) return null;
 
       return (
-        <WarningContainer icon={WarningIcon} sx={{ my: 0 }}>
-          Stripe payments are not yet available. Applicants will not be able to
-          pay online until this is complete.
-        </WarningContainer>
+        <>
+          <WarningContainer icon={WarningIcon} sx={{ my: 0 }}>
+            Stripe payments are not yet available. Applicants will not be able
+            to pay online until this is complete.
+          </WarningContainer>
+
+          {!isProduction && (
+            <Box>
+              <Button onClick={handleRevert} variant="contained">
+                Revert to GOV.UK Pay
+              </Button>
+            </Box>
+          )}
+        </>
       );
     }
 
@@ -248,10 +273,19 @@ const Provider: React.FC = () => {
                 After checking that no active GOV.UK Pay sessions are underway,
                 the migration will start immediately.
               </DialogContentText>
-              <DialogContentText sx={{ mt: 1 }}>
-                This action cannot be undone. All future payment sessions will
-                be processed through Stripe.
-              </DialogContentText>
+              {isProduction && (
+                <DialogContentText sx={{ mt: 1 }}>
+                  This action cannot be undone. All future payment sessions will
+                  be processed through Stripe.
+                </DialogContentText>
+              )}
+
+              {!isProduction && (
+                <DialogContentText sx={{ mt: 1 }}>
+                  You will still be able to revert to GOV.UK Pay to test
+                  end-to-end journeys on staging.
+                </DialogContentText>
+              )}
             </DialogContent>
             <DialogActions>
               <Button
