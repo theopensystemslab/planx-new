@@ -53,7 +53,7 @@ export const availableDatasets: Dataset[] = Object.entries(
   datasets:
     constraint.source === "Planning Data"
       ? constraint["digital-land-datasets"]
-      : Array.from(constraint["os-dataset"]),
+      : [constraint["os-dataset"]],
   entity:
     constraint.source === "Planning Data"
       ? constraint["digital-land-entities"]?.[0]
