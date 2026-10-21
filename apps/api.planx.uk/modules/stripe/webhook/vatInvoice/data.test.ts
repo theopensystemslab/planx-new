@@ -1,7 +1,7 @@
 import type Stripe from "stripe";
 
 import type { FeeLine } from "../../feeLines.js";
-import type { RecordedPaymentIntent } from "../paymentStatus/service.js";
+import type { OwnedPaymentIntent } from "../ownership/service.js";
 import {
   FLOW_ID,
   FLOW_NAME,
@@ -67,13 +67,12 @@ describe("groupFeeLinesByIssuer", () => {
 });
 
 describe("buildVatInvoiceData", () => {
-  const recorded: RecordedPaymentIntent = {
+  const recorded: OwnedPaymentIntent = {
     sessionId: paymentIntent.metadata.sessionId,
     flowId: FLOW_ID,
     flowName: FLOW_NAME,
     teamSlug: TEAM_SLUG,
     teamName: TEAM_NAME,
-    feeBreakdown: null,
   };
 
   it("builds invoice data with totals summed from the line items", () => {
