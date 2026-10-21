@@ -210,7 +210,7 @@ async function sendVatInvoiceEmail(invoice: VatInvoiceData): Promise<void> {
 
   if (issuer === "council") {
     await sendEmail(
-      "vat-invoice-council",
+      "vat-invoice-council-2",
       customerEmail,
       {
         ...variables,
