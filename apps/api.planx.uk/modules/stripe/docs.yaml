@@ -225,6 +225,29 @@ paths:
           description: Team not found.
         "500":
           description: Failed to migrate the team's Stripe payment provider.
+  /stripe/revert/{teamSlug}:
+    post:
+      summary: Revert a team's payment provider back to GOV.UK Pay, _only_ in test environments!
+      description: |
+        Non-production only (route is not registered in production). Reverts the
+        team's payment provider back to GOV.UK Pay.
+      tags:
+        - stripe
+      parameters:
+        - $ref: "#/components/parameters/teamSlug"
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/RevertResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorised"
+        "403":
+          description: The user is not a teamEditor/teamAdmin of this team, or a platformAdmin.
+        "404":
+          description: Team not found.
+        "500":
+          description: Failed to revert the team's payment provider.
   /stripe/connect/{teamSlug}:
     get:
       summary: Start Stripe Connect onboarding for a team
