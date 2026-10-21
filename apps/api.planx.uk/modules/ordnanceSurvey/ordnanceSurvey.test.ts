@@ -53,6 +53,24 @@ describe("Ordnance Survey proxy endpoint", () => {
     );
   });
 
+  it("does not forward the X-Forwarded-Host header", async () => {
+    nock(OS_DOMAIN, {
+      reqheaders: { key: process.env.ORDNANCE_SURVEY_API_KEY! },
+      badheaders: ["x-forwarded-host"],
+    })
+      .get(TILE_PATH)
+      .reply(200, { test: "returned tile" });
+
+    await get(ENDPOINT + TILE_PATH)
+      .set("X-Forwarded-Host", "api.123.planx.pizza")
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual({
+          test: "returned tile",
+        });
+      });
+  });
+
   it("returns an error when an OS request fails", async () => {
     mockOS().get(TILE_PATH).reply(401, { test: "failed request" });
 
