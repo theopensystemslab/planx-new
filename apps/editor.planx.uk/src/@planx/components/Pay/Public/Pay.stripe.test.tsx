@@ -12,10 +12,6 @@ import { vi } from "vitest";
 
 import Pay from "./Pay";
 
-vi.mock("lib/featureFlags", () => ({
-  hasFeatureFlag: (flag: string) => flag === "STRIPE_MIGRATION",
-}));
-
 vi.mock("@tanstack/react-router", async () => {
   const actual = await vi.importActual("@tanstack/react-router");
   return {
@@ -479,7 +475,7 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
     expect(screen.queryByText("Retry payment")).not.toBeInTheDocument();
   });
 
-  it("hides the invite to pay link", async () => {
+  it("shows the invite to pay link", async () => {
     act(() =>
       setState({
         flow: flowWithFee,
@@ -502,9 +498,69 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
     );
 
     expect(await screen.findByText("Pay now")).toBeInTheDocument();
-    expect(
-      screen.queryByText("Invite someone else to pay"),
-    ).not.toBeInTheDocument();
+    expect(screen.getByText("Invite someone else to pay")).toBeEnabled();
+  });
+
+  it("keeps the invite to pay link enabled after a cancelled Checkout", async () => {
+    vi.mocked(useSearch).mockReturnValue({ cancelled: true });
+
+    act(() =>
+      setState({
+        flow: flowWithFee,
+        breadcrumbs: feeBreadcrumbs,
+        previewEnvironment: "standalone",
+        teamSlug: "test-team",
+      }),
+    );
+
+    await setup(
+      <AppErrorBoundary>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={vi.fn()}
+          allowInviteToPay={true}
+          govPayMetadata={[]}
+        />
+      </AppErrorBoundary>,
+    );
+
+    expect(await screen.findByText("Pay now")).toBeInTheDocument();
+    expect(screen.getByText("Invite someone else to pay")).toBeEnabled();
+  });
+
+  // Open checkout sessions are expired by the API when a new session is set up
+  it("keeps the invite to pay link enabled after an unpaid Checkout", async () => {
+    vi.mocked(useSearch).mockReturnValue({ stripeSessionId: "cs_test_123" });
+    server.use(
+      http.get(checkoutStatusUrl, () =>
+        HttpResponse.json({ status: "expired", paymentStatus: "unpaid" }),
+      ),
+    );
+
+    act(() =>
+      setState({
+        flow: flowWithFee,
+        breadcrumbs: feeBreadcrumbs,
+        previewEnvironment: "standalone",
+        teamSlug: "test-team",
+      }),
+    );
+
+    await setup(
+      <AppErrorBoundary>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={vi.fn()}
+          allowInviteToPay={true}
+          govPayMetadata={[]}
+        />
+      </AppErrorBoundary>,
+    );
+
+    expect(await screen.findByText("Pay now")).toBeInTheDocument();
+    expect(screen.getByText("Invite someone else to pay")).toBeEnabled();
   });
 
   describe("return from hosted Checkout", () => {

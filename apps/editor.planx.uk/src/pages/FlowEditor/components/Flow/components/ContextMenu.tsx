@@ -52,7 +52,6 @@ export const ContextMenu: React.FC = () => {
     getNode,
     isTemplatedFrom,
     flow,
-    showHelpText,
     copyHelpText,
     getCopiedHelpText,
     pasteHelpText,
@@ -73,7 +72,6 @@ export const ContextMenu: React.FC = () => {
     state.getNode,
     state.isTemplatedFrom,
     state.flow,
-    state.showHelpText,
     state.copyHelpText,
     state.getCopiedHelpText(),
     state.pasteHelpText,
@@ -181,10 +179,7 @@ export const ContextMenu: React.FC = () => {
       ];
 
       const supportsHelpText = Boolean(
-        showHelpText &&
-        node &&
-        node.type !== undefined &&
-        !excludedTypes.includes(node.type),
+        node && node.type !== undefined && !excludedTypes.includes(node.type),
       );
       const hasCopiedHelper = Boolean(getCopiedHelpText);
 

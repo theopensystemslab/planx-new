@@ -1,4 +1,8 @@
 import type { SubmitTemplate } from "./submit.js";
+import type {
+  VatInvoiceCouncilTemplate,
+  VatInvoicePlanXTemplate,
+} from "./vatInvoice.js";
 import type { WelcomeTemplate } from "./welcome.js";
 
 export type EmailTemplate<
@@ -12,6 +16,8 @@ export type EmailTemplate<
 export interface TemplateRegistry {
   welcome: WelcomeTemplate;
   submit: SubmitTemplate;
+  "vat-invoice-council": VatInvoiceCouncilTemplate;
+  "vat-invoice-planx": VatInvoicePlanXTemplate;
 }
 
 export type ResendTemplate = keyof TemplateRegistry;

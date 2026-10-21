@@ -3,6 +3,7 @@ import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
 import * as connectionService from "../connect/service.js";
+import { isStripePaymentsEnabled } from "../helpers.js";
 import * as migrationService from "./service.js";
 import type { MigrateResponse, MigrationBlocker } from "./types.js";
 
@@ -86,6 +87,9 @@ export const getMigrationBlockers = async (
     migrationService.getActiveGovPaySessions(teamSlug),
   ]);
 
+  if (!isStripePaymentsEnabled()) {
+    blockers.push({ reason: "stripePaymentsNotEnabled" });
+  }
   if (!accountId) blockers.push({ reason: "stripeNotConnected" });
   if (activeSessions > 0) {
     blockers.push({ reason: "activeGovpaySessions", count: activeSessions });

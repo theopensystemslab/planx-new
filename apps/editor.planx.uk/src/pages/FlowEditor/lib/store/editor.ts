@@ -76,8 +76,6 @@ export interface EditorUIStore {
   toggleShowNotes: () => void;
   showDataFields: boolean;
   toggleShowDataFields: () => void;
-  showHelpText: boolean;
-  toggleShowHelpText: () => void;
   previousURL?: string;
   currentURL: string;
   initURLTracking: (router: RegisteredRouter) => () => void;
@@ -157,10 +155,6 @@ export const editorUIStore: StateCreator<
 
     toggleShowDataFields: () => set({ showDataFields: !get().showDataFields }),
 
-    showHelpText: false,
-
-    toggleShowHelpText: () => set({ showHelpText: !get().showHelpText }),
-
     previousURL: undefined,
 
     currentURL: window.location.pathname,
@@ -226,7 +220,6 @@ export const editorUIStore: StateCreator<
       showImages: state.showImages,
       showNotes: state.showNotes,
       showDataFields: state.showDataFields,
-      showHelpText: state.showHelpText,
     }),
   },
 );

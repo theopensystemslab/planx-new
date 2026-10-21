@@ -1,8 +1,14 @@
 import gql from "graphql-tag";
 
 export const GET_LPAS_QUERY = gql`
-  query GetLPAs($teamSlugs: [String!]) {
-    lpas: teams(order_by: { name: asc }, where: { slug: { _in: $teamSlugs } }) {
+  query GetLPAs {
+    lpas: teams(
+      order_by: { name: asc }
+      where: {
+        category: { _eq: lpa }
+        team_settings: { _not: { is_trial: { _eq: true } } }
+      }
+    ) {
       name
       slug
       theme {

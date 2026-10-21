@@ -51,3 +51,32 @@ select_permissions:
         - status
         - amount
       filter: {}
+event_triggers:
+  - name: send_vat_invoices
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 60
+      num_retries: 3
+      timeout_sec: 120
+    webhook_from_env: HASURA_PLANX_API_URL
+    headers:
+      - name: authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "payload": {
+              "stripePaymentId": {{$body.event.data.new.stripe_payment_id}},
+              "stripeStatus": {{$body.event.data.new.stripe_status}}
+            }
+          }
+      method: POST
+      query_params: {}
+      template_engine: Kriti
+      url: '{{$base_url}}/webhooks/hasura/send-vat-invoices'
+      version: 2

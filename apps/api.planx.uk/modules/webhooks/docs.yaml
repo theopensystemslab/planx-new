@@ -191,6 +191,19 @@ components:
               type: string
             data:
               type: object
+    SendVatInvoicesEvent:
+      type: object
+      properties:
+        payload:
+          required: true
+          type: object
+          properties:
+            stripePaymentId:
+              type: string
+              nullable: true
+            stripeStatus:
+              type: string
+              nullable: true
   requests:
     ValidateInputRequest:
       description: |
@@ -506,5 +519,23 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UpdateTemplatedFlowEditsSuccess"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/send-vat-invoices:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth: []
+      summary: Send VAT invoices
+      description: Triggered by a `payment_status` insert - emails VAT invoices to the payer when a Stripe payment has succeeded, and skips all other rows
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendVatInvoicesEvent"
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"

@@ -8,10 +8,12 @@ import { stripePaymentMetadataSchema } from "../paymentStatus/types.js";
 
 type PassportData = Session["data"]["passport"]["data"];
 
-interface OwnedPaymentIntent {
+export interface OwnedPaymentIntent {
   sessionId: string;
   flowId: string;
+  flowName: string;
   teamSlug: string;
+  teamName: string;
   passportData?: PassportData;
 }
 
@@ -69,7 +71,9 @@ export async function getOwnedPaymentIntent(
   return {
     sessionId,
     flowId: session.flowId,
+    flowName: session.flow.name,
     teamSlug: session.flow.team.slug,
+    teamName: session.flow.team.name,
     passportData: session.passportData,
   };
 }
@@ -77,7 +81,7 @@ export async function getOwnedPaymentIntent(
 interface GetSessionResponse {
   session: {
     flowId: string;
-    flow: { team: { slug: string } } | null;
+    flow: { name: string; team: { slug: string; name: string } } | null;
     passportData?: PassportData;
   } | null;
 }
@@ -89,8 +93,10 @@ async function getSession(sessionId: string): Promise<GetSessionResponse> {
         session: lowcal_sessions_by_pk(id: $id) {
           flowId: flow_id
           flow {
+            name
             team {
               slug
+              name
             }
           }
           passportData: data(path: "passport.data")

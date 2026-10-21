@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import { FeeBreakdown } from "@planx/components/Pay/Public/FeeBreakdown/FeeBreakdown";
 import { format } from "date-fns";
+import { usePaymentProvider } from "hooks/usePaymentProvider";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -21,19 +22,54 @@ import Confirm from "../../@planx/components/Pay/Public/Confirm";
 import DelayedLoadingIndicator from "../../components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import type { PaymentRequestState } from "./providers/types";
 import { useGovUkPayRequest } from "./providers/useGovUkPayRequest";
+import { useStripePayRequest } from "./providers/useStripePayRequest";
 
-export default function MakePayment(props: PublicPaymentRequest) {
+type Props = PublicPaymentRequest & {
+  stripeSessionId?: string;
+  cancelled?: boolean;
+};
+
+export default function MakePayment(props: Props) {
   if (props.paidAt) {
     return <PaymentRequestPage {...props} payment={{ status: "paid" }} />;
   }
 
-  return <PayWithGovUkPay {...props} />;
+  // A payment request stays on GOV.UK Pay once a GOV.UK payment has been started
+  if (props.govPayPaymentId) return <PayWithGovUkPay {...props} />;
+
+  return <PayWithTeamProvider {...props} />;
 }
 
-function PayWithGovUkPay(props: PublicPaymentRequest) {
+function PayWithTeamProvider(props: Props) {
+  const { paymentProvider, data, loading, error } = usePaymentProvider();
+
+  // Don't fall back to GOV.UK Pay for a team which may be on Stripe
+  // There's no useNoPaymentProvider() path for ITP
+  if (error) throw error;
+
+  if (loading && !data) return <DelayedLoadingIndicator text="Loading..." />;
+
+  return paymentProvider === "stripe" ? (
+    <PayWithStripe {...props} />
+  ) : (
+    <PayWithGovUkPay {...props} />
+  );
+}
+
+function PayWithGovUkPay(props: Props) {
   const payment = useGovUkPayRequest({
     paymentRequestId: props.id,
     govPayPaymentId: props.govPayPaymentId,
+  });
+
+  return <PaymentRequestPage {...props} payment={payment} />;
+}
+
+function PayWithStripe(props: Props) {
+  const payment = useStripePayRequest({
+    paymentRequestId: props.id,
+    stripeSessionId: props.stripeSessionId,
+    cancelled: props.cancelled,
   });
 
   return <PaymentRequestPage {...props} payment={payment} />;
@@ -48,7 +84,7 @@ function PaymentRequestPage({
   paidAt,
   feeBreakdown,
   payment,
-}: PublicPaymentRequest & { payment: PaymentRequestState }) {
+}: Props & { payment: PaymentRequestState }) {
   const { address, rawProjectTypes } =
     parseSessionPreviewData(sessionPreviewData);
   const flowName = useStore((state) => state.flowName);
