@@ -132,7 +132,6 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               drag(el);
             }}
           >
-            {hasHelpText && <HelpTextBadge />}
             {props.data?.img && (
               <Thumbnail
                 imageSource={props.data?.img}
@@ -142,6 +141,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
               {Icon && <Icon />}
               <span>{props.text}</span>
+              {hasHelpText && <HelpTextBadge />}
             </Box>
           </Link>
           {props.data?.fn && (
