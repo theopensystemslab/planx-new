@@ -157,8 +157,8 @@ export default function Component(props: Props) {
           </InputRow>
           <Typography variant="body2" sx={{ mt: 1 }}>
             Formulas which output true or false (e.g. <code>a &gt; b</code>) are
-            formatted to automate a future Question or Checklist. All other
-            formulas output a number.
+            formatted to automate later parts of the service. All other formulas
+            output a number.
           </Typography>
         </ModalSectionContent>
         <ModalSectionContent title="Default values">
