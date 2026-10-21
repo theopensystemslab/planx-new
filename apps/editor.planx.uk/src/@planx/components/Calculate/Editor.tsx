@@ -106,6 +106,20 @@ export default function Component(props: Props) {
     }
   }, [formik.values.formula]);
 
+  // Evaluates with placeholders so we can determine the output type before defaults are entered
+  const outputType = useMemo(() => {
+    try {
+      const result = evaluate(
+        formik.values.formula,
+        Object.fromEntries(variables.map((variable) => [variable, 1])),
+      );
+      if (typeof result === "boolean") return "true or false";
+      if (!Number.isNaN(Number(result))) return "number";
+    } catch (e) {
+      return;
+    }
+  }, [formik.values.formula, variables]);
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <TemplatedNodeInstructions
@@ -134,8 +148,6 @@ export default function Component(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-        </ModalSectionContent>
-        <ModalSectionContent title="Output">
           <DataFieldAutocomplete
             required
             value={formik.values.fn}
@@ -153,12 +165,25 @@ export default function Component(props: Props) {
               onChange={formik.handleChange}
               errorMessage={formik.errors.formula}
               disabled={props.disabled}
+              aria-describedby="formula-hint formula-output-type"
             />
           </InputRow>
-          <Typography variant="body2" sx={{ mt: 1 }}>
+          <Typography id="formula-hint" variant="body2" sx={{ mt: 1 }}>
             Formulas that output true or false (e.g. <code>a &gt; b</code>) can
             be used to automate later parts of the service. All other formulas
             output a number.
+          </Typography>
+          <Typography
+            id="formula-output-type"
+            variant="body2"
+            aria-live="polite"
+            sx={{ mt: 1 }}
+          >
+            {outputType && (
+              <>
+                Output: <strong>{outputType}</strong>
+              </>
+            )}
           </Typography>
         </ModalSectionContent>
         <ModalSectionContent title="Default values">
