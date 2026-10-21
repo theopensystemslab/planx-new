@@ -1,15 +1,13 @@
 import { format } from "date-fns";
 import he from "he";
 
+import { formatPence } from "./service.js";
 import type { VatInvoiceData, VatInvoiceSeller } from "./types.js";
 
 const TEXT_COLOUR = "#0B0C0C";
 const LABEL_COLOUR = "#505A5F";
 
 const escape = (value: string) => he.escape(value);
-
-export const formatPence = (pence: number) =>
-  (pence / 100).toLocaleString("en-GB", { style: "currency", currency: "GBP" });
 
 export const DEFAULT_PRIMARY_COLOUR = "#0010A4";
 
