@@ -53,28 +53,28 @@ export const getActiveGovPaySessions = async (
   return activeSessionsCount;
 };
 
-// const updatePaymentProvider = async (
-//   teamId: number,
-//   paymentProvider: PaymentProvider,
-// ): Promise<number> => {
-//     const { updateTeamPaymentProvider } = await $api.client.request<{
-//     updateTeamPaymentProvider: { affectedRows: number };
-//   }>(
-//     gql`
-//       mutation UpdatePaymentProvider($teamId: Int!, $paymentProvider: String!) {
-//         updateTeamPaymentProvider:update_team_settings(
-//           where: {team_id: {_eq: $teamId}},
-//           _set: {payment_provider: $paymentProvider}
-//         ) {
-//           affectedRows: affected_rows
-//         }
-//       }
-//     `,
-//     { teamId, paymentProvider },
-//   );
+const updatePaymentProvider = async (
+  teamId: number,
+  paymentProvider: PaymentProvider,
+): Promise<number> => {
+  const { updateTeamPaymentProvider } = await $api.client.request<{
+    updateTeamPaymentProvider: { affectedRows: number };
+  }>(
+    gql`
+      mutation UpdatePaymentProvider($teamId: Int!, $paymentProvider: String!) {
+        updateTeamPaymentProvider: update_team_settings(
+          where: { team_id: { _eq: $teamId } }
+          _set: { payment_provider: $paymentProvider }
+        ) {
+          affectedRows: affected_rows
+        }
+      }
+    `,
+    { teamId, paymentProvider },
+  );
 
-//   return updateTeamPaymentProvider.affectedRows;
-// }
+  return updateTeamPaymentProvider.affectedRows;
+};
 
 export const getMigrationBlockers = async (
   teamId: number,
@@ -104,7 +104,6 @@ export const migrateToStripe = async (teamId: number, teamSlug: string) => {
     return migrationCheck;
   }
 
-  // TODO: perform actual migration and then re-enable updatePaymentProvider mutation below
-  // await updatePaymentProvider(teamId, "stripe");
-  return { canMigrate: false, blockers: [] }; // placeholder for now
+  await updatePaymentProvider(teamId, "stripe");
+  return migrationCheck;
 };
