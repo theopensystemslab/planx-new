@@ -21,31 +21,6 @@ export interface LPA {
   domain: string | null;
 }
 
-const TEAMS_ALLOW_LIST = [
-  "barking-and-dagenham",
-  "barnet",
-  "birmingham",
-  "braintree",
-  "bromley",
-  "buckinghamshire",
-  "camden",
-  "canterbury",
-  "doncaster",
-  "epsom-and-ewell",
-  "gateshead",
-  "gloucester",
-  "horsham",
-  "kingston",
-  "lambeth",
-  "medway",
-  "newcastle",
-  "south-gloucestershire",
-  "southwark",
-  "st-albans",
-  "tewkesbury",
-  "west-berkshire",
-] as const;
-
 export async function fetchAllLPAs(): Promise<LPA[]> {
   try {
     const response = await fetch(PUBLIC_PLANX_BUILD_TIME_GRAPHQL_API_URL, {
@@ -53,9 +28,6 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: print(GET_LPAS_QUERY),
-        variables: {
-          teamSlugs: TEAMS_ALLOW_LIST,
-        },
       }),
     });
 
