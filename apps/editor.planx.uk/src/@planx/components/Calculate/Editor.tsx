@@ -222,8 +222,8 @@ export default function Component(props: Props) {
             <></>
           )}
           <p>
-            <strong>{formik.values.fn || "<output>"}</strong> would be set to{" "}
-            <strong>{sampleResult}</strong>
+            <strong>{formik.values.fn || "<data field>"}</strong> would be set
+            to <strong>{sampleResult}</strong>
           </p>
         </ModalSectionContent>
       </ModalSection>
