@@ -6,6 +6,7 @@ import { useStore } from "../../../lib/store";
 import {
   mockInvitedToPayEvents,
   mockSanitisedSuccessEvents,
+  mockStripeSubmissionEvents,
   mockSubmissionEvents,
   mockUnresolvedFailureEvents,
   teamData,
@@ -67,6 +68,17 @@ const mocks = [
       },
     },
   },
+  {
+    request: {
+      query: GET_SUBMISSION_EVENTS,
+      variables: { sessionId: "sanitised-stripe-success-0000-0000-0000000" },
+    },
+    result: {
+      data: {
+        submissions: mockStripeSubmissionEvents,
+      },
+    },
+  },
 ];
 
 const meta = {
@@ -112,5 +124,11 @@ export const UnresolvedFailure = {
 export const SanitisedSuccess = {
   args: {
     sessionId: "sanitised-success-0000-0000-0000000",
+  },
+} satisfies Story;
+
+export const SanitisedSuccessStripePayment = {
+  args: {
+    sessionId: "sanitised-stripe-success-0000-0000-0000000",
   },
 } satisfies Story;

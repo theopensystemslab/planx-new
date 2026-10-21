@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Permission from "ui/editor/Permission";
 
-import type { Attempt, GroupedEvent, Submission } from "../types";
+import type { Attempt, GroupedEvent, SessionEvent, Submission } from "../types";
 import { canResubmit } from "../utils";
 import { OpenResponseButton } from "./OpenResponseButton";
 import { ResubmitButton } from "./ResubmitButton";
@@ -164,7 +164,11 @@ const SubmissionEvent: React.FC<{
             </Box>
           </>
         ) : (
-          <SubmissionAttempts attempts={attempts} sessionId={sessionId} />
+          <SubmissionAttempts
+            attempts={attempts}
+            sessionId={sessionId}
+            eventType={eventType}
+          />
         )}
       </Box>
     </Box>
@@ -174,7 +178,16 @@ const SubmissionEvent: React.FC<{
 const SubmissionAttempts: React.FC<{
   attempts: Attempt[];
   sessionId: string;
-}> = ({ attempts, sessionId }) => {
+  eventType:
+    | "Pay"
+    | "Submit to BOPS"
+    | "Submit to Uniform"
+    | "Send to email"
+    | "Upload to AWS S3"
+    | "Upload to AWS S3 (no notification)"
+    | "Submit to Idox Nexus"
+    | SessionEvent;
+}> = ({ attempts, sessionId, eventType }) => {
   const numberAttempts = attempts.length;
 
   return (
@@ -186,7 +199,11 @@ const SubmissionAttempts: React.FC<{
               <StatusChip status={attempt.status} />
             </Box>
             <Box>
-              <Typography>Attempt {numberAttempts - index}</Typography>
+              {eventType === "Pay" && attempt.status ? (
+                <Typography>{attempt.status}</Typography>
+              ) : (
+                <Typography>Attempt {numberAttempts - index}</Typography>
+              )}
               <Typography>
                 {new Date(attempt.createdAt).toLocaleString()}
               </Typography>

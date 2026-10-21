@@ -8,12 +8,21 @@ export const getConsolidatedStatus = (
 ): string => {
   if (eventType === "Invited to pay" && status === "Success") {
     return eventType;
-  } else if (status === "Started" || status === "Capturable") {
+  } else if (
+    status === "Started" ||
+    status === "Capturable" ||
+    status === "Initiated" ||
+    status === "Processing"
+  ) {
     return "Payment in progress";
   } else if (status === "Submitted") {
     // "Submitted" status only possible on Pay events, hence "Sending" status
     return "Sending";
-  } else if (eventType === "Pay" && status === "Success") {
+  } else if (
+    eventType === "Pay" &&
+    status &&
+    ["Success", "Succeeded"].includes(status)
+  ) {
     // Pay succeeded but Send hasn't happened yet
     return "Sending";
   } else if (status === "Success") {
@@ -29,7 +38,11 @@ export const getSucceededPayment = (
   events: Submission[],
 ): Submission | undefined =>
   events.find(
-    (event) => event.eventType === "Pay" && event.status === "Success",
+    // Handle both GOV Pay (Success) and Stripe (Succeeded) statuses
+    (event) =>
+      event.eventType === "Pay" &&
+      event.status &&
+      ["Success", "Succeeded"].includes(event.status),
   );
 
 const NON_RESUBMITTABLE_EVENT_TYPES = [
