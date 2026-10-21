@@ -16,7 +16,6 @@ import type {
   MigrationBlocker,
   MigrationBlockerReason,
 } from "lib/api/stripe/types";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
@@ -34,10 +33,15 @@ type DialogState =
   | { type: "blocked"; blockers: MigrationBlocker[] }
   | { type: "confirm" };
 
+// Mirrors the API's go-live switch (`isStripePaymentsEnabled` in api.planx.uk/modules/stripe/helpers.ts) - delete both together
+const isStripePaymentsEnabled = () =>
+  import.meta.env.VITE_APP_ENV !== "production";
+
 const BLOCKER_MESSAGES: Record<
   MigrationBlockerReason,
   (props: MigrationBlocker) => string
 > = {
+  stripePaymentsNotEnabled: () => "Stripe payments are not yet live on PlanX",
   stripeNotConnected: () => "Stripe has not been connected for this team",
   activeGovpaySessions: (props) =>
     `${props.count} active GOV.UK Pay session${props.count === 1 ? " is" : "s are"} in progress`,
@@ -104,12 +108,14 @@ const Provider: React.FC = () => {
   const handleClose = () => setDialogState({ type: "closed" });
 
   const isStripe = provider === "stripe";
-  const canMigrateToStripe = hasFeatureFlag("STRIPE_MIGRATION");
+  const canUseStripe = isStripePaymentsEnabled();
   const { data: stripeConnectStatus, isLoading: isStripeStatusLoading } =
     useStripeConnectStatus(teamSlug);
 
   const renderProviderAction = () => {
     if (isStripe) {
+      if (canUseStripe) return null;
+
       return (
         <WarningContainer icon={WarningIcon} sx={{ my: 0 }}>
           Stripe payments are not yet available. Applicants will not be able to
@@ -118,7 +124,7 @@ const Provider: React.FC = () => {
       );
     }
 
-    if (canMigrateToStripe) {
+    if (canUseStripe) {
       return (
         <Box>
           {(isStripeStatusLoading || !stripeConnectStatus?.connected) && (
@@ -140,7 +146,8 @@ const Provider: React.FC = () => {
 
     return (
       <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        Switching to Stripe is not yet available.
+        Switching to Stripe is not yet available. You can connect a Stripe
+        account above ahead of time.
       </Typography>
     );
   };

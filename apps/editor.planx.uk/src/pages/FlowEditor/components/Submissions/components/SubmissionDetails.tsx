@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { hasFeatureFlag } from "lib/featureFlags";
 import type { DescriptionListItem } from "ui/public/DescriptionList";
 import { DescriptionList } from "ui/public/DescriptionList";
 
@@ -53,8 +52,7 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
 
   const showSubmissionActions =
     Boolean(props.submittedAt) && props.isSubmissionAvailable;
-  const showPaymentActions =
-    hasFeatureFlag("STRIPE_MIGRATION") && Boolean(props.succeededPayment);
+  const showPaymentActions = Boolean(props.succeededPayment);
 
   return (
     <Box

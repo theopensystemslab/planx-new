@@ -1,8 +1,5 @@
 // add/edit/remove feature flags in array below
-export const AVAILABLE_FEATURE_FLAGS = [
-  "STRIPE_MIGRATION",
-  "MODAL_TABS",
-] as const;
+export const AVAILABLE_FEATURE_FLAGS = ["MODAL_TABS"] as const;
 
 export type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 
