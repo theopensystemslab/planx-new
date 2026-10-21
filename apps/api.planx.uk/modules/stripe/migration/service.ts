@@ -2,6 +2,7 @@ import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
+import { sendSlackMessage } from "../../slack/utils.js";
 import * as connectionService from "../connect/service.js";
 import { isStripePaymentsEnabled } from "../helpers.js";
 import * as migrationService from "./service.js";
@@ -98,12 +99,32 @@ export const getMigrationBlockers = async (
   return { canMigrate: blockers.length === 0, blockers };
 };
 
+export const postStripeMigratedToSlack = async (
+  teamSlug: string,
+  affectedRows: number,
+): Promise<void> => {
+  const environment = process.env.APP_ENVIRONMENT;
+  if (environment !== "production" || affectedRows === 0) return;
+
+  try {
+    await sendSlackMessage(
+      `:large_green_square: :tada: *${teamSlug}* has migrated to Stripe on production`,
+    );
+  } catch (error) {
+    console.error(
+      "Failed to post Stripe migrated notification to Slack",
+      error,
+    );
+  }
+};
+
 export const migrateToStripe = async (teamId: number, teamSlug: string) => {
   const migrationCheck = await getMigrationBlockers(teamId, teamSlug);
   if (!migrationCheck.canMigrate) {
     return migrationCheck;
   }
 
-  await updatePaymentProvider(teamId, "stripe");
+  const affectedRows = await updatePaymentProvider(teamId, "stripe");
+  await postStripeMigratedToSlack(teamSlug, affectedRows);
   return migrationCheck;
 };
