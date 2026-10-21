@@ -178,15 +178,7 @@ const SubmissionEvent: React.FC<{
 const SubmissionAttempts: React.FC<{
   attempts: Attempt[];
   sessionId: string;
-  eventType:
-    | "Pay"
-    | "Submit to BOPS"
-    | "Submit to Uniform"
-    | "Send to email"
-    | "Upload to AWS S3"
-    | "Upload to AWS S3 (no notification)"
-    | "Submit to Idox Nexus"
-    | SessionEvent;
+  eventType: Submission["eventType"] | SessionEvent;
 }> = ({ attempts, sessionId, eventType }) => {
   const numberAttempts = attempts.length;
 
