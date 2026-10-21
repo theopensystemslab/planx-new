@@ -12,10 +12,6 @@ import { vi } from "vitest";
 
 import Pay from "./Pay";
 
-vi.mock("lib/featureFlags", () => ({
-  hasFeatureFlag: (flag: string) => flag === "STRIPE_MIGRATION",
-}));
-
 vi.mock("@tanstack/react-router", async () => {
   const actual = await vi.importActual("@tanstack/react-router");
   return {
