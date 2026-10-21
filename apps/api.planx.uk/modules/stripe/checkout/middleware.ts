@@ -1,10 +1,12 @@
 import { isBefore } from "date-fns";
+import type { RequestHandler } from "express";
 
 import {
   getStripeAccountId,
   getTeamBySlug,
   isAccountReadyForPayments,
 } from "../connect/service.js";
+import { isStripePaymentsEnabled } from "../helpers.js";
 import {
   getMinimumCheckoutSessionExpiry,
   getPaymentRequest,
@@ -61,6 +63,19 @@ const getConnectedAccount = async (
   }
 
   return { connectedAccountId: stripeAccountId };
+};
+
+export const requireStripePaymentsEnabled: RequestHandler = (
+  _req,
+  _res,
+  next,
+) => {
+  if (isStripePaymentsEnabled()) return next();
+
+  return next({
+    status: 409,
+    message: "Stripe payments are not yet enabled",
+  });
 };
 
 export const resolveTeamPaymentProvider: ResolveTeamPaymentProviderMiddleware =

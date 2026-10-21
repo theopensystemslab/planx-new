@@ -10,7 +10,7 @@ export const migrateSchema = z.object({
 export type TeamLocals = { team: Team };
 
 export type MigrationBlockerReason =
-  "stripeNotConnected" | "activeGovpaySessions";
+  "stripePaymentsNotEnabled" | "stripeNotConnected" | "activeGovpaySessions";
 
 export interface MigrationBlocker {
   reason: MigrationBlockerReason;

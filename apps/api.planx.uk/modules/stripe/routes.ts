@@ -9,6 +9,7 @@ import {
 } from "./checkout/controller.js";
 import {
   fetchPaymentRequest,
+  requireStripePaymentsEnabled,
   resolvePaymentRequestConnectedAccount,
   resolveReturnURL,
   resolveTeamPaymentProvider,
@@ -67,6 +68,7 @@ router.get(
 router.post(
   "/stripe/checkout-session/:localAuthority",
   validate(createCheckoutSessionSchema),
+  requireStripePaymentsEnabled,
   resolveTeamPaymentProvider,
   resolveReturnURL,
   createCheckoutSession,
@@ -81,6 +83,7 @@ router.get(
 router.post(
   "/stripe/payment-request/:paymentRequestId/checkout-session",
   validate(createPaymentRequestCheckoutSessionSchema),
+  requireStripePaymentsEnabled,
   fetchPaymentRequest,
   resolvePaymentRequestConnectedAccount,
   createPaymentRequestCheckoutSession,
