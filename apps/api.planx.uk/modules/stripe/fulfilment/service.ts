@@ -54,7 +54,10 @@ export async function fulfilPaymentRequest(
   if (paymentRequest.sessionId !== sessionId) return { status: "mismatch" };
 
   if (paymentRequest.paidAt) {
-    return { status: "alreadyFulfilled" };
+    return {
+      status: "alreadyFulfilled",
+      stripePaymentId: paymentRequest.stripePaymentId,
+    };
   }
 
   // Checkout hasn't been completed
@@ -78,9 +81,18 @@ export async function fulfilPaymentRequest(
   });
 
   // A concurrent call got there first
-  if (!affectedRows) return { status: "alreadyFulfilled" };
+  if (!affectedRows) {
+    // Re-read the payment reference it wrote
+    const paidRequest = await getPaymentRequest(paymentRequestId);
+    if (!paidRequest) return { status: "notFound" };
 
-  return { status: "fulfilled" };
+    return {
+      status: "alreadyFulfilled",
+      stripePaymentId: paidRequest.stripePaymentId,
+    };
+  }
+
+  return { status: "fulfilled", stripePaymentId };
 }
 
 interface MarkPaymentRequestAsPaidResponse {

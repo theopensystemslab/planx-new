@@ -437,10 +437,17 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - paymentStatus
+                  - paymentIntentId
                 properties:
                   paymentStatus:
                     type: string
                     enum: [paid]
+                  paymentIntentId:
+                    type: string
+                    nullable: true
+                    example: pi_3Abc123
         "400":
           description: |
             Invalid request, or the Checkout Session does not belong to this payment request, because either:

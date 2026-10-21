@@ -24,7 +24,10 @@ export const fulfilPaymentRequestController: FulfilPaymentRequestController =
       switch (result.status) {
         case "fulfilled":
         case "alreadyFulfilled":
-          return res.json({ paymentStatus: "paid" });
+          return res.json({
+            paymentStatus: "paid",
+            paymentIntentId: result.stripePaymentId,
+          });
         case "unpaid":
           return next({
             status: 409,

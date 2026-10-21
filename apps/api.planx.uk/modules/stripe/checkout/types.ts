@@ -111,6 +111,7 @@ export type PaymentRequestRecord = Pick<
   feeBreakdown: FeeBreakdown | null;
   paidAt: string | null;
   govPayPaymentId: string | null;
+  stripePaymentId: string | null;
   session: {
     flowId: string;
     deletedAt: string | null;
@@ -128,7 +129,12 @@ export type PaymentRequestRecord = Pick<
  */
 export type PayablePaymentRequest = Omit<
   PaymentRequestRecord,
-  "createdAt" | "paidAt" | "govPayPaymentId" | "stripeMetadata" | "session"
+  | "createdAt"
+  | "paidAt"
+  | "govPayPaymentId"
+  | "stripePaymentId"
+  | "stripeMetadata"
+  | "session"
 > & {
   expiresAt: Date;
   metadata: PaymentMetadata[];

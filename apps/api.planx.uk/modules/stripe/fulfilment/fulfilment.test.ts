@@ -15,6 +15,8 @@ import { sign } from "../webhook/test/utils.js";
 
 const CHECKOUT_SESSION_ID = "cs_test_itp";
 const PAYMENT_INTENT_ID = "pi_test_itp";
+/** Paid via another Checkout Session (e.g. in a second tab) */
+const OTHER_PAYMENT_INTENT_ID = "pi_test_other_tab";
 const SESSION_ID = validBody.sessionId;
 const FULFIL_ENDPOINT = `/stripe/payment-request/${PAYMENT_REQUEST_ID}/fulfil`;
 
@@ -114,6 +116,27 @@ const mockPaymentRequestNotFound = () =>
     data: { paymentRequest: null },
   });
 
+/**
+ * A concurrent call marks the request as paid between this call's lookup and update
+ *
+ * @param paidRequest the payment request when re-read after the update
+ */
+const mockPaidConcurrently = (paidRequest: unknown) => {
+  queryMock.mockQuery({
+    name: "GetPaymentRequestForCheckout",
+    matchOnVariables: false,
+    data: { paymentRequest: paidRequest },
+  });
+  // The latest mock answers the first lookup, then is used up
+  queryMock.mockQuery({
+    name: "GetPaymentRequestForCheckout",
+    matchOnVariables: false,
+    persist: false,
+    data: { paymentRequest: buildPaymentRequest() },
+  });
+  mockMarkAsPaid(0);
+};
+
 const getMarkAsPaidCalls = () =>
   queryMock
     .getCalls()
@@ -190,7 +213,10 @@ describe("fulfilling an invite to pay request", () => {
       await postWebhook(event).expect(200);
 
       // By the time of redelivery, the request has been paid
-      mockPaymentRequestRow({ paidAt: new Date().toISOString() });
+      mockPaymentRequestRow({
+        paidAt: new Date().toISOString(),
+        stripePaymentId: PAYMENT_INTENT_ID,
+      });
       await postWebhook(event).expect(200);
 
       expect(getMarkAsPaidCalls()).toHaveLength(1);
@@ -373,12 +399,17 @@ describe("fulfilling an invite to pay request", () => {
   });
 
   describe("via the payer's return page", () => {
-    it("marks the payment request as paid", async () => {
+    it("marks the payment request as paid, and responds with the payment reference", async () => {
       mockPaymentRequestRow();
 
       await postFulfil()
         .expect(200)
-        .then((res) => expect(res.body).toEqual({ paymentStatus: "paid" }));
+        .then((res) =>
+          expect(res.body).toEqual({
+            paymentStatus: "paid",
+            paymentIntentId: PAYMENT_INTENT_ID,
+          }),
+        );
 
       expect(stripe.checkout.sessions.retrieve).toHaveBeenCalledWith(
         CHECKOUT_SESSION_ID,
@@ -386,14 +417,39 @@ describe("fulfilling an invite to pay request", () => {
       expect(getMarkAsPaidCalls()).toHaveLength(1);
     });
 
-    it("responds 'paid' without updating when the request has already been paid", async () => {
+    it("responds 'paid' with the stored payment reference, without updating, when the request has already been paid", async () => {
+      // e.g. paid via a Checkout Session in another tab
       mockPaymentRequestRow({
         paidAt: new Date().toISOString(),
+        stripePaymentId: OTHER_PAYMENT_INTENT_ID,
       });
 
       await postFulfil()
         .expect(200)
-        .then((res) => expect(res.body).toEqual({ paymentStatus: "paid" }));
+        .then((res) =>
+          expect(res.body).toEqual({
+            paymentStatus: "paid",
+            paymentIntentId: OTHER_PAYMENT_INTENT_ID,
+          }),
+        );
+
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
+    });
+
+    it("responds 'paid' without a payment reference when the request has already been paid without Stripe", async () => {
+      mockPaymentRequestRow({
+        paidAt: new Date().toISOString(),
+        govPayPaymentId: "govpay_123",
+      });
+
+      await postFulfil()
+        .expect(200)
+        .then((res) =>
+          expect(res.body).toEqual({
+            paymentStatus: "paid",
+            paymentIntentId: null,
+          }),
+        );
 
       expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
@@ -533,15 +589,35 @@ describe("fulfilling an invite to pay request", () => {
     });
   });
 
-  it("responds 'paid', without reporting, when a concurrent call has already marked the request as paid", async () => {
-    mockPaymentRequestRow();
-    mockMarkAsPaid(0);
+  describe("when a concurrent call has already marked the request as paid", () => {
+    it("responds 'paid' with the stored payment reference, without reporting", async () => {
+      mockPaidConcurrently(
+        buildPaymentRequest({
+          paidAt: new Date().toISOString(),
+          stripePaymentId: OTHER_PAYMENT_INTENT_ID,
+        }),
+      );
 
-    await postFulfil()
-      .expect(200)
-      .then((res) => expect(res.body).toEqual({ paymentStatus: "paid" }));
+      await postFulfil()
+        .expect(200)
+        .then((res) =>
+          expect(res.body).toEqual({
+            paymentStatus: "paid",
+            paymentIntentId: OTHER_PAYMENT_INTENT_ID,
+          }),
+        );
 
-    expect(getMarkAsPaidCalls()).toHaveLength(1);
-    expect(payHelpers.reportError).not.toHaveBeenCalled();
+      expect(getPaymentRequestLookups()).toHaveLength(2);
+      expect(getMarkAsPaidCalls()).toHaveLength(1);
+      expect(payHelpers.reportError).not.toHaveBeenCalled();
+    });
+
+    it("returns 404 when the payment request no longer exists", async () => {
+      mockPaidConcurrently(null);
+
+      await postFulfil().expect(404);
+
+      expect(getPaymentRequestLookups()).toHaveLength(2);
+    });
   });
 });
