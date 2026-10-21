@@ -113,7 +113,6 @@ const Question: React.FC<Props> = memo((props) => {
               drag(el);
             }}
           >
-            {hasHelpText && <HelpTextBadge />}
             {props.data?.img && (
               <Thumbnail
                 imageSource={props.data?.img}
@@ -123,6 +122,7 @@ const Question: React.FC<Props> = memo((props) => {
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
               {Icon && <Icon titleAccess={iconTitleAccess} />}
               <span>{props.text}</span>
+              {hasHelpText && <HelpTextBadge />}
             </Box>
           </Link>
           {props.type !== TYPES.SetValue && props.data?.fn && (
