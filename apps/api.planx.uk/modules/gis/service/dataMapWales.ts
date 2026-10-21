@@ -3,6 +3,7 @@ import {
   type DataMapWalesConstraint,
   type GISResponse,
   type Metadata,
+  type PlanningConstraintSchema,
   walesActivePlanningConstraints,
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
@@ -18,6 +19,11 @@ export function isWalesTeam(teamSlug: string): boolean {
   return WALES_TEAMS.includes(teamSlug);
 }
 
+const isDataMapWalesConstraint = (
+  entry: [string, PlanningConstraintSchema[string]],
+): entry is [string, DataMapWalesConstraint] =>
+  entry[1].source === "DataMapWales";
+
 // Query DataMapWales
 async function queryWFSLayer(
   constraint: DataMapWalesConstraint,
@@ -31,8 +37,8 @@ async function queryWFSLayer(
 
   // POINT(...)
   if (isPoint) {
-    // Extract coordinates from POINT(lon lat)
-    const coords = geometry.match(/POINT\(([-\d.]+)\s+([-\d.]+)\)/);
+    // Extract coordinates from POINT (lon lat)
+    const coords = geometry.match(/POINT\s*\(([-\d.]+)\s+([-\d.]+)\)/);
     if (!coords) throw new Error(`Invalid POINT geometry: ${geometry}`);
 
     filterXml = `
@@ -49,7 +55,7 @@ async function queryWFSLayer(
   // POLYGON(...)
   else {
     // Extract coordinates from POLYGON((lon1 lat1, lon2 lat2, ...))
-    const coords = geometry.match(/POLYGON\(\((.*?)\)\)/);
+    const coords = geometry.match(/POLYGON\s*\(\((.*?)\)\)/);
     if (!coords) throw new Error(`Invalid POLYGON geometry: ${geometry}`);
 
     // Convert "lon1 lat1, lon2 lat2, ..." to GML posList format
@@ -133,17 +139,22 @@ async function go(
   geom: string,
   extras: Record<string, string>,
 ): Promise<GISResponse> {
-  const baseSchema = walesActivePlanningConstraints as Record<
-    string,
-    DataMapWalesConstraint
-  >;
+  // Classified roads are sourced from Ordnance Survey by the editor, not DataMapWales
+  const baseSchema = Object.fromEntries(
+    Object.entries(walesActivePlanningConstraints).filter(
+      isDataMapWalesConstraint,
+    ),
+  );
 
   // Generate list of Wales datasets and constraints we should query
   const activeDatasets: string[] = [];
   let activeDataValues: string[] = [];
   if (extras?.vals) {
     // If the editor selected constraints, prioritise their selection
-    activeDataValues = extras.vals.split(",");
+    //   Nodes copied from English flows can carry Planning Data values with no Welsh equivalent
+    activeDataValues = extras.vals
+      .split(",")
+      .filter((val) => Object.keys(baseSchema).includes(val));
   } else {
     // else default to all active Wales constraints
     activeDataValues = Object.keys(baseSchema);
@@ -155,7 +166,7 @@ async function go(
   );
 
   // Build list of active datasets (WFS layer names)
-  constraintsToQuery.forEach(([key, constraint]) => {
+  constraintsToQuery.forEach(([_key, constraint]) => {
     activeDatasets.push(constraint["dmw-layer"]);
   });
 
