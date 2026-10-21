@@ -6,4 +6,4 @@ export type PaymentRequestState =
       onPay: () => void;
       warning?: string;
     }
-  | { status: "paid" };
+  | { status: "paid"; reference: string | null };

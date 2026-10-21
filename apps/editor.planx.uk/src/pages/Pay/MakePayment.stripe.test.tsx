@@ -121,12 +121,15 @@ describe("MakePayment with Stripe", () => {
   });
 
   describe("on return from hosted Checkout", () => {
-    it("confirms the payment", async () => {
+    it("confirms the payment, and shows its payment reference", async () => {
       let body: unknown;
       server.use(
         http.post(fulfilUrl, async ({ request }) => {
           body = await request.json();
-          return HttpResponse.json({ paymentStatus: "paid" });
+          return HttpResponse.json({
+            paymentStatus: "paid",
+            paymentIntentId: "pi_test_123",
+          });
         }),
       );
 
@@ -135,6 +138,8 @@ describe("MakePayment with Stripe", () => {
       );
 
       expect(await screen.findByText("Payment received")).toBeVisible();
+      expect(screen.getByText("Payment reference")).toBeVisible();
+      expect(screen.getByText("pi_test_123")).toBeVisible();
       expect(screen.queryByText("Valid until")).not.toBeInTheDocument();
       expect(body).toEqual({ checkoutSessionId: "cs_test_123" });
     });
@@ -170,7 +175,10 @@ describe("MakePayment with Stripe", () => {
           { once: true },
         ),
         http.post(fulfilUrl, () =>
-          HttpResponse.json({ paymentStatus: "paid" }),
+          HttpResponse.json({
+            paymentStatus: "paid",
+            paymentIntentId: "pi_test_123",
+          }),
         ),
       );
 

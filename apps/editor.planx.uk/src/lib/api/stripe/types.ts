@@ -39,6 +39,7 @@ export interface FulfilPaymentRequest {
 
 export interface FulfilPaymentRequestResult {
   paymentStatus: "paid";
+  paymentIntentId: string | null;
 }
 
 /**

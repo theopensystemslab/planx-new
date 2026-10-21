@@ -31,7 +31,11 @@ type Props = PublicPaymentRequest & {
 
 export default function MakePayment(props: Props) {
   if (props.paidAt) {
-    return <PaymentRequestPage {...props} payment={{ status: "paid" }} />;
+    const reference = props.govPayPaymentId ?? props.stripePaymentId;
+
+    return (
+      <PaymentRequestPage {...props} payment={{ status: "paid", reference }} />
+    );
   }
 
   // A payment request stays on GOV.UK Pay once a GOV.UK payment has been started
@@ -78,8 +82,6 @@ function PayWithStripe(props: Props) {
 function PaymentRequestPage({
   sessionPreviewData,
   createdAt,
-  govPayPaymentId,
-  stripePaymentId,
   paymentAmount,
   paidAt,
   feeBreakdown,
@@ -105,9 +107,8 @@ function PaymentRequestPage({
       ? undefined
       : getExpiryDateForPaymentRequest(createdAt),
     "Paid at": isPaid ? format(paidDate, "dd MMMM yyyy") : undefined,
-    "Payment reference": isPaid
-      ? govPayPaymentId || stripePaymentId
-      : undefined,
+    "Payment reference":
+      payment.status === "paid" ? payment.reference : undefined,
   }) as Record<string, string>;
 
   const paymentDetails = Object.entries(details).map(([term, details]) => ({

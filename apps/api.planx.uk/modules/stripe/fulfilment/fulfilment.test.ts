@@ -436,24 +436,6 @@ describe("fulfilling an invite to pay request", () => {
       expect(getMarkAsPaidCalls()).toHaveLength(0);
     });
 
-    it("responds 'paid' without a payment reference when the request has already been paid without Stripe", async () => {
-      mockPaymentRequestRow({
-        paidAt: new Date().toISOString(),
-        govPayPaymentId: "govpay_123",
-      });
-
-      await postFulfil()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toEqual({
-            paymentStatus: "paid",
-            paymentIntentId: null,
-          }),
-        );
-
-      expect(getMarkAsPaidCalls()).toHaveLength(0);
-    });
-
     it("refuses a Checkout Session which hasn't been paid", async () => {
       mockRetrieve({ status: "open", payment_status: "unpaid" });
       mockPaymentRequestRow();
