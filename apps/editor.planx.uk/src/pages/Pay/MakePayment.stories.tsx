@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
+import { graphql, HttpResponse } from "msw";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import MakePayment from "./MakePayment";
@@ -15,6 +16,8 @@ The nominee's payment page, reached from the link in their invitation email. Thi
 **Route:** \`/$team/$flow/pay?paymentRequestId=…\` (or \`/$flow/pay\` on custom domains).
 
 **Not shown on this page:** an unknown payment request, or an unpaid one past its 28-day expiry, redirects to \`pay/not-found\`. A paid request is shown as paid even after the expiry period, until the row is sanitised.
+
+**Provider:** GOV.UK Pay if a GovPay payment has already been started (\`govPayPaymentId\` is set), otherwise the team's payment provider. On Stripe, "Pay now" redirects to hosted Checkout, and the page confirms the payment when Stripe returns the nominee with \`stripeSessionId\` (or \`cancelled\`).
 
 **Retry state:** if a GovPay payment has already been started (\`govPayPaymentId\` is set), the page fetches its status on load and may show "Retry payment".
 `,
@@ -37,6 +40,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Unpaid = {
+  beforeEach({ msw }) {
+    msw.use(
+      graphql.query("GetPaymentProvider", () =>
+        HttpResponse.json({
+          data: { teamSettings: [{ paymentProvider: "govpay" }] },
+        }),
+      ),
+    );
+  },
   parameters: {
     docs: {
       description: {

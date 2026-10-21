@@ -32,6 +32,15 @@ export interface StripeCheckoutSessionStatus {
   paymentIntentId: string | null;
 }
 
+export interface FulfilPaymentRequest {
+  paymentRequestId: string;
+  checkoutSessionId: string;
+}
+
+export interface FulfilPaymentRequestResult {
+  paymentStatus: "paid";
+}
+
 /**
  * Values that the API Stripe Connect callback can redirect back with via the `stripeError` search param
  * `string & {}` keeps these as autocomplete hints without excluding other error codes Stripe may send
