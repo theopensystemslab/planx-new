@@ -156,8 +156,8 @@ export default function Component(props: Props) {
             />
           </InputRow>
           <Typography variant="body2" sx={{ mt: 1 }}>
-            Formulas which output true or false (e.g. <code>a &gt; b</code>) are
-            formatted to automate later parts of the service. All other formulas
+            Formulas which output true or false (e.g. <code>a &gt; b</code>) can
+            be used to automate later parts of the service. All other formulas
             output a number.
           </Typography>
         </ModalSectionContent>
