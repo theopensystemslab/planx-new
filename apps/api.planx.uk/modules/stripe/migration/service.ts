@@ -1,4 +1,3 @@
-import type { TeamSettings } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
@@ -6,10 +5,13 @@ import { sendSlackMessage } from "../../slack/utils.js";
 import * as connectionService from "../connect/service.js";
 import { isStripePaymentsEnabled } from "../helpers.js";
 import * as migrationService from "./service.js";
-import type { MigrateResponse, MigrationBlocker } from "./types.js";
+import type {
+  MigrateResponse,
+  MigrationBlocker,
+  PaymentProvider,
+} from "./types.js";
 
 const FINISHED_STATUSES = new Set(["success", "failed", "cancelled", "error"]);
-export type PaymentProvider = TeamSettings["paymentProvider"];
 
 export const getActiveGovPaySessions = async (
   teamSlug: string,
@@ -127,4 +129,20 @@ export const migrateToStripe = async (teamId: number, teamSlug: string) => {
   const affectedRows = await updatePaymentProvider(teamId, "stripe");
   await postStripeMigratedToSlack(teamSlug, affectedRows);
   return migrationCheck;
+};
+
+/** This should never be called on prod! Route itself is gated with additional env check here */
+export const revertToGovPay = async (
+  teamId: number,
+): Promise<PaymentProvider> => {
+  const environment = process.env.APP_ENVIRONMENT;
+  if (environment === "production") {
+    throw new Error("Cannot revert to GovPay on production");
+  }
+
+  const affectedRows = await updatePaymentProvider(teamId, "govpay");
+  if (affectedRows === 0) {
+    throw new Error(`Could not revert to Gov Pay for ${teamId}`);
+  }
+  return "govpay";
 };
