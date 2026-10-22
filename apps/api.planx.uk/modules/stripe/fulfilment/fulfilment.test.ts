@@ -119,23 +119,24 @@ const mockPaymentRequestNotFound = () =>
 /**
  * A concurrent call marks the request as paid between this call's lookup and update
  *
- * @param paidRequest the payment request when re-read after the update
+ * @param paidRequest the payment request when its reference is re-read after the update
  */
-const mockPaidConcurrently = (paidRequest: unknown) => {
+const mockPaidConcurrently = (
+  paidRequest: { stripePaymentId: string | null } | null,
+) => {
+  mockPaymentRequestRow();
+  mockMarkAsPaid(0);
   queryMock.mockQuery({
-    name: "GetPaymentRequestForCheckout",
+    name: "GetPaymentRequestStripePaymentId",
     matchOnVariables: false,
     data: { paymentRequest: paidRequest },
   });
-  // The latest mock answers the first lookup, then is used up
-  queryMock.mockQuery({
-    name: "GetPaymentRequestForCheckout",
-    matchOnVariables: false,
-    persist: false,
-    data: { paymentRequest: buildPaymentRequest() },
-  });
-  mockMarkAsPaid(0);
 };
+
+const getPaymentReferenceLookups = () =>
+  queryMock
+    .getCalls()
+    .filter((call) => call.id === "GetPaymentRequestStripePaymentId");
 
 const getMarkAsPaidCalls = () =>
   queryMock
@@ -573,12 +574,7 @@ describe("fulfilling an invite to pay request", () => {
 
   describe("when a concurrent call has already marked the request as paid", () => {
     it("responds 'paid' with the stored payment reference, without reporting", async () => {
-      mockPaidConcurrently(
-        buildPaymentRequest({
-          paidAt: new Date().toISOString(),
-          stripePaymentId: OTHER_PAYMENT_INTENT_ID,
-        }),
-      );
+      mockPaidConcurrently({ stripePaymentId: OTHER_PAYMENT_INTENT_ID });
 
       await postFulfil()
         .expect(200)
@@ -589,7 +585,7 @@ describe("fulfilling an invite to pay request", () => {
           }),
         );
 
-      expect(getPaymentRequestLookups()).toHaveLength(2);
+      expect(getPaymentReferenceLookups()).toHaveLength(1);
       expect(getMarkAsPaidCalls()).toHaveLength(1);
       expect(payHelpers.reportError).not.toHaveBeenCalled();
     });
@@ -599,7 +595,7 @@ describe("fulfilling an invite to pay request", () => {
 
       await postFulfil().expect(404);
 
-      expect(getPaymentRequestLookups()).toHaveLength(2);
+      expect(getPaymentReferenceLookups()).toHaveLength(1);
     });
   });
 });

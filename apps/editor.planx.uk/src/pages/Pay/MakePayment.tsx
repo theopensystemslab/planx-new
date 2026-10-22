@@ -107,8 +107,7 @@ function PaymentRequestPage({
       ? undefined
       : getExpiryDateForPaymentRequest(createdAt),
     "Paid at": isPaid ? format(paidDate, "dd MMMM yyyy") : undefined,
-    "Payment reference":
-      payment.status === "paid" ? payment.reference : undefined,
+    "Payment reference": isPaid ? payment.reference : undefined,
   }) as Record<string, string>;
 
   const paymentDetails = Object.entries(details).map(([term, details]) => ({

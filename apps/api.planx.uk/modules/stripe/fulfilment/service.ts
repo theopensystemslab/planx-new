@@ -82,8 +82,7 @@ export async function fulfilPaymentRequest(
 
   // A concurrent call got there first
   if (!affectedRows) {
-    // Re-read the payment reference it wrote
-    const paidRequest = await getPaymentRequest(paymentRequestId);
+    const paidRequest = await getPaymentReference(paymentRequestId);
     if (!paidRequest) return { status: "notFound" };
 
     return {
@@ -93,6 +92,28 @@ export async function fulfilPaymentRequest(
   }
 
   return { status: "fulfilled", stripePaymentId };
+}
+
+/**
+ * Read only the payment reference, without the session data getPaymentRequest returns
+ */
+async function getPaymentReference(
+  paymentRequestId: string,
+): Promise<{ stripePaymentId: string | null } | null> {
+  const { paymentRequest } = await $api.client.request<{
+    paymentRequest: { stripePaymentId: string | null } | null;
+  }>(
+    gql`
+      query GetPaymentRequestStripePaymentId($paymentRequestId: uuid!) {
+        paymentRequest: payment_requests_by_pk(id: $paymentRequestId) {
+          stripePaymentId: stripe_payment_id
+        }
+      }
+    `,
+    { paymentRequestId },
+  );
+
+  return paymentRequest;
 }
 
 interface MarkPaymentRequestAsPaidResponse {
