@@ -119,6 +119,7 @@ const sendToAWSFailureAttempt2: Submission = {
   address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
 
+// GOV.UK Pay
 export const mockPay = {
   flowId: "d0744118-f902-4538-b439-573f4b42a727",
   sessionId: "6fcb873f-cc7f-4fc0-ad9d-b4148de7a3b5",
@@ -152,6 +153,7 @@ export const mockSubmissionSingleFailureEvents = [
   sendToBOPSFailure,
 ];
 
+// GOV.UK Pay
 const paymentInProgressSummary: SubmissionSummary = {
   id: "1a2b3c4d-1111-4aaa-8aaa-111111111111",
   flowId: "d0744118-f902-4538-b439-573f4b42a727",
@@ -335,6 +337,46 @@ export const mockSanitisedSuccessEvents: Submission[] = [
     status: "Success",
     retry: false,
     response: { paymentId: "gov-pay-sanitised" },
+    createdAt: monthsAgo(7),
+    flowName: "Apply for planning permission",
+    address: "No longer retained",
+  },
+];
+
+// Stripe
+export const mockStripeSubmissionEvents: Submission[] = [
+  {
+    flowId: "d0744118-f902-4538-b439-573f4b42a727",
+    sessionId: "sanitised-stripe-success-0000-0000-0000000",
+    eventId: "sanitised-bops-0000-0000-000000000000",
+    eventType: "Submit to BOPS",
+    status: "Success",
+    retry: false,
+    response: { data: { body: { message: "Application received" } } },
+    createdAt: monthsAgo(7),
+    flowName: "Apply for planning permission",
+    address: "No longer retained",
+  },
+  {
+    flowId: "d0744118-f902-4538-b439-573f4b42a727",
+    sessionId: "sanitised-stripe-success-0000-0000-0000000",
+    eventId: "sanitised-stripe-0000-0000-000000000000",
+    eventType: "Pay",
+    status: "Succeeded",
+    retry: false,
+    response: { paymentId: "stripe-sanitised" },
+    createdAt: monthsAgo(7),
+    flowName: "Apply for planning permission",
+    address: "No longer retained",
+  },
+  {
+    flowId: "d0744118-f902-4538-b439-573f4b42a727",
+    sessionId: "sanitised-stripe-success-0000-0000-0000000",
+    eventId: "sanitised-stripe-init-0000-0000-000000000000",
+    eventType: "Pay",
+    status: "Initiated",
+    retry: false,
+    response: { paymentId: "stripe-sanitised" },
     createdAt: monthsAgo(7),
     flowName: "Apply for planning permission",
     address: "No longer retained",

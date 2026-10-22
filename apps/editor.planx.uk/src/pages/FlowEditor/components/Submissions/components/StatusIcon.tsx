@@ -13,6 +13,7 @@ const StatusIconMap: Record<
   React.ReactElement
 > = {
   Success: <CheckCircleIcon color="success" fontSize="medium" />,
+  Succeeded: <CheckCircleIcon color="success" fontSize="medium" />,
   Submitted: <CheckCircleIcon color="success" fontSize="medium" />,
   Failed: <CancelIcon color="error" fontSize="medium" />,
   "Failed (500)": <CancelIcon color="error" fontSize="medium" />,
@@ -21,9 +22,14 @@ const StatusIconMap: Record<
   "Failed (504)": <CancelIcon color="error" fontSize="medium" />,
   "Failed (400)": <CancelIcon color="error" fontSize="medium" />,
   "Failed (401)": <CancelIcon color="error" fontSize="medium" />,
+  // GOV.UK Pay
   Started: <PendingIcon color="info" fontSize="medium" />,
   Capturable: <PendingIcon color="warning" fontSize="medium" />,
   Cancelled: <CancelIcon color="disabled" fontSize="medium" />,
+  // Stripe
+  Initiated: <PendingIcon color="info" fontSize="medium" />,
+  Processing: <PendingIcon color="warning" fontSize="medium" />,
+  Payment_failed: <CancelIcon color="disabled" fontSize="medium" />,
   Error: <CancelIcon color="error" fontSize="medium" />,
   Unknown: <CancelIcon color="error" fontSize="medium" />,
 };
