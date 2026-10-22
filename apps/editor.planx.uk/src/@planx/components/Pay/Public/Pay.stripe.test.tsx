@@ -224,6 +224,7 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
   });
 
   it.each([
+    "Stripe payments are not yet enabled",
     "Stripe payments are not enabled for this local authority (test-team)",
     "This local authority (test-team) has not connected a Stripe account",
     "The Stripe account for this local authority (test-team) is not connected or cannot take payments",
@@ -273,6 +274,57 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
       expect(handleSubmit).toHaveBeenCalled();
     },
   );
+
+  it("does not let the applicant skip payment on a locked session", async () => {
+    server.use(
+      http.post(checkoutSessionUrl, () =>
+        HttpResponse.json(
+          {
+            error: "Cannot initialise a new payment for locked session 123-abc",
+          },
+          { status: 409 },
+        ),
+      ),
+    );
+
+    const handleSubmit = vi.fn();
+
+    act(() =>
+      setState({
+        flow: flowWithFee,
+        breadcrumbs: feeBreadcrumbs,
+        previewEnvironment: "standalone",
+        teamSlug: "test-team",
+      }),
+    );
+
+    const { user } = await setup(
+      <AppErrorBoundary>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          govPayMetadata={[]}
+        />
+      </AppErrorBoundary>,
+    );
+
+    await user.click(await screen.findByText("Pay now"));
+
+    // Matches GOV.UK Pay - an invite to pay has been sent, so the applicant cannot pay or continue
+    expect(
+      await screen.findByText(
+        /Cannot initialise a new payment for locked session/,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "Online payments are not enabled for this local authority",
+      ),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Continue")).not.toBeInTheDocument();
+    expect(handleSubmit).not.toHaveBeenCalled();
+  });
 
   it.each([
     ["a non-Stripe domain", "https://evil.example.com/c/pay/cs_test_123"],
