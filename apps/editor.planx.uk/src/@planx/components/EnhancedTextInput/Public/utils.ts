@@ -42,7 +42,6 @@ export const makeBreadcrumb = (
   return {
     [fn]: userInput,
     [`enhancedTextInput.${fn}.action`]: userAction,
-    // TODO: Ensure we deep merge this
     _enhancements: {
       [fn]: enhancement,
     },

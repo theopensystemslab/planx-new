@@ -1,6 +1,7 @@
 import type { FullStore } from "../store";
 import { useStore } from "../store";
 import { flowWithDuplicatePassportVars } from "./mocks/computePassport/flowWithDuplicatePassportVars";
+import { flowWithMultipleEnhancedTextInputs } from "./mocks/computePassport/flowWithMultipleEnhancedTextInputs";
 import { flowWithMultipleSetValues } from "./mocks/computePassport/flowWithMultipleSetValues";
 
 const { getState, setState } = useStore;
@@ -137,5 +138,59 @@ describe("breadcrumb order is significant when computing the passport", () => {
 
     // "Last" breadcrumb
     expect(output.data?.[duplicateKey][0]).toEqual("456");
+  });
+});
+
+describe("breadcrumbs from multiple EnhancedTextInput nodes", () => {
+  const breadcrumbs = {
+    projectDescriptionNode: {
+      auto: false,
+      data: {
+        "proposal.description": "A new rear extension",
+        "enhancedTextInput.proposal.description.action":
+          "Accepted the AI-enhanced description",
+        _enhancements: {
+          "proposal.description": {
+            original: "rear extension",
+            enhanced: "A new rear extension",
+            userAction: "Accepted the AI-enhanced description",
+          },
+        },
+      },
+    },
+    workDescriptionNode: {
+      auto: false,
+      data: {
+        "proposal.works.description": "Demolish garage",
+        "enhancedTextInput.proposal.works.description.action":
+          "Retained their original description",
+        _enhancements: {
+          "proposal.works.description": {
+            original: "Demolish garage",
+            enhanced: "Demolition of the existing garage",
+            userAction: "Retained their original description",
+          },
+        },
+      },
+    },
+  };
+
+  it("retains the enhancements recorded by each node", () => {
+    setState({ flow: flowWithMultipleEnhancedTextInputs, breadcrumbs });
+
+    const output = computePassport();
+
+    expect(output.data?._enhancements).toEqual({
+      "proposal.description": {
+        original: "rear extension",
+        enhanced: "A new rear extension",
+        userAction: "Accepted the AI-enhanced description",
+      },
+      "proposal.works.description": {
+        original: "Demolish garage",
+        enhanced: "Demolition of the existing garage",
+        userAction: "Retained their original description",
+      },
+    });
   });
 });
