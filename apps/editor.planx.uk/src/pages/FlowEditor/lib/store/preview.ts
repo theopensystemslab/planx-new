@@ -291,6 +291,7 @@ export const previewStore: StateCreator<
             ...acc.data,
             ...responseData,
             ...passportData,
+            ...mergeEnhancements(acc.data, responseData),
           },
         };
 
@@ -1075,6 +1076,24 @@ export const removeNodesDependentOnPassport = (
     return acc;
   }, [] as string[]);
   return { removedNodeIds, breadcrumbsWithoutPassportData: newBreadcrumbs };
+};
+
+/**
+ * Each EnhancedTextInput records its `_enhancements` keyed by its own `fn`
+ * Merge these so that a later node does not overwrite an earlier node's entry
+ */
+const mergeEnhancements = (
+  previous: Store.Passport["data"],
+  incoming: Store.Passport["data"],
+): Store.Passport["data"] => {
+  if (!incoming?._enhancements) return {};
+
+  return {
+    _enhancements: {
+      ...previous?._enhancements,
+      ...incoming._enhancements,
+    },
+  };
 };
 
 const collectedFlagValuesByCategory = (
