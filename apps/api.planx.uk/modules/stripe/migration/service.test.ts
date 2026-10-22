@@ -146,18 +146,18 @@ describe("migrateToStripe", () => {
     vi.restoreAllMocks();
   });
 
-  // TODO(stripe-migration): migrateToStripe is a placeholder — it always reports
-  // `canMigrate: false` for now (so that the frontend never shows a misleading "Migrated to Stripe" success state).
-  // Replace with a test asserting `canMigrate: true` once the actual migration (and updatePaymentProvider call) is implemented.
   it("returns no blockers when migration succeeds", async () => {
     vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(
       "acct_abc",
     );
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
+    mockRequest.mockResolvedValueOnce({
+      updateTeamPaymentProvider: { affectedRows: 1 },
+    });
 
     const result = await migrateToStripe(1, "team");
 
-    expect(result).toEqual({ canMigrate: false, blockers: [] });
+    expect(result).toEqual({ canMigrate: true, blockers: [] });
   });
 
   it("returns blockers when migration cannot proceed", async () => {
@@ -168,5 +168,15 @@ describe("migrateToStripe", () => {
 
     expect(result.canMigrate).toBe(false);
     expect(result.blockers).toEqual([{ reason: "stripeNotConnected" }]);
+  });
+});
+
+describe("revert to GOV.UK pay", async () => {
+  it("throws an error if called on production", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+
+    await expect(migrationService.revertToGovPay(1)).rejects.toThrow(
+      "Cannot revert to GovPay on production",
+    );
   });
 });
