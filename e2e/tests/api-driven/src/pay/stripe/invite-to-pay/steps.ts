@@ -1,14 +1,16 @@
 import { strict as assert } from "node:assert";
 
-import { Given, Then, When } from "@cucumber/cucumber";
+import { After, Given, Then, When } from "@cucumber/cucumber";
 
 import { getStripeTestClient } from "../../../../../shared/stripe/client.js";
 import { completeStripeCheckoutSession } from "../../../../../shared/stripe/completeCheckoutSession.js";
 import { $admin } from "../../../client.js";
+import { cleanup as cleanupSubmissions } from "../../govpay/invite-to-pay/helpers.js";
 import { createCheckoutSession, toFeeCase } from "../helpers.js";
 import type { CustomWorld } from "../steps.js";
 import {
   buildInviteToPaySession,
+  buildSubmittingInviteToPaySession,
   createPaymentRequestCheckoutSession,
   expirePaymentRequest,
   fulfilPaymentRequest,
@@ -44,6 +46,26 @@ Given(
       userId: this.userId,
       feeCase: this.feeCase,
     });
+    this.flowId = flowId;
+    this.sessionId = sessionId;
+  },
+);
+
+After(
+  "@stripe-invite-to-pay-submissions",
+  async function (this: InviteToPayWorld) {
+    await cleanupSubmissions(this);
+  },
+);
+
+Given(
+  "an invite to pay session on Stripe where {string} is a send destination",
+  { timeout: 60 * 1000 },
+  async function (this: InviteToPayWorld, destination: string) {
+    const { teamId, userId, flowId, sessionId } =
+      await buildSubmittingInviteToPaySession(destination);
+    this.teamId = teamId;
+    this.userId = userId;
     this.flowId = flowId;
     this.sessionId = sessionId;
   },
