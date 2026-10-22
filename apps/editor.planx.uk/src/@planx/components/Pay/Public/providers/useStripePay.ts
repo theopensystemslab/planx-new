@@ -2,6 +2,7 @@ import { formatStripeMetadata } from "@opensystemslab/planx-core";
 import type { Passport as IPassport } from "@opensystemslab/planx-core/types";
 import { useQuery } from "@tanstack/react-query";
 import { useMatches, useSearch } from "@tanstack/react-router";
+import type { APIError } from "lib/api/client";
 import {
   createStripeCheckoutSession,
   getStripeCheckoutSessionStatus,
@@ -26,8 +27,26 @@ const TEST_ENVIRONMENT_ROUTE_IDS = new Set<string>([
   "/_public/_planXDomain/$team/$flow/preview",
 ] satisfies FileRouteTypes["id"][]);
 
-const isStripeNotConfiguredError = (error: unknown) =>
-  z.object({ statusCode: z.literal(409) }).safeParse(error).success;
+type StripeAPIError = APIError<{ error: string }>;
+
+const stripeAPIErrorSchema = z.object({
+  message: z.string(),
+  statusCode: z.number(),
+  data: z.object({ error: z.string() }),
+}) satisfies z.ZodType<StripeAPIError>;
+
+/**
+ * Refusals which mean this team cannot take Stripe payments yet
+ */
+const STRIPE_NOT_CONFIGURED_ERRORS = [
+  /^Stripe payments are not (yet )?enabled/,
+  /has not connected a Stripe account/,
+  /is not connected or cannot take payments/,
+];
+
+const isStripeNotConfiguredError = ({ statusCode, data }: StripeAPIError) =>
+  statusCode === 409 &&
+  STRIPE_NOT_CONFIGURED_ERRORS.some((pattern) => pattern.test(data.error));
 
 export function useStripePay(
   props: Props,
@@ -115,12 +134,18 @@ export function useStripePay(
       // Redirect the browser to hosted Stripe Checkout
       window.location.assign(getStripeCheckoutURL(url));
     } catch (error) {
-      if (isStripeNotConfiguredError(error)) {
+      const apiError = stripeAPIErrorSchema.safeParse(error);
+      if (!apiError.success) {
+        showBoundary(error);
+        return;
+      }
+
+      if (isStripeNotConfiguredError(apiError.data)) {
         dispatch(Action.StartNewPaymentError);
         return;
       }
 
-      showBoundary(error);
+      showBoundary(Error(apiError.data.data.error));
     }
   };
 
