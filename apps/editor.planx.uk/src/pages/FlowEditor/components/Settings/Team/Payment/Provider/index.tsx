@@ -130,52 +130,50 @@ const Provider: React.FC = () => {
     useStripeConnectStatus(teamSlug);
 
   const renderProviderAction = () => {
-    if (isStripe) {
-      if (canUseStripe) return null;
-
-      return (
-        <>
-          <WarningContainer icon={WarningIcon} sx={{ my: 0 }}>
-            Stripe payments are not yet available. Applicants will not be able
-            to pay online until this is complete.
-          </WarningContainer>
-
-          {!isProduction && (
-            <Box>
-              <Button onClick={handleRevert} variant="contained">
-                Revert to GOV.UK Pay
-              </Button>
-            </Box>
-          )}
-        </>
+    if (!canUseStripe) {
+      return isStripe ? (
+        <WarningContainer icon={WarningIcon} sx={{ my: 0 }}>
+          Stripe payments are not yet available. Applicants will not be able to
+          pay online until this is complete.
+        </WarningContainer>
+      ) : (
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          Switching to Stripe is not yet available. You can connect a Stripe
+          account above ahead of time.
+        </Typography>
       );
     }
 
-    if (canUseStripe) {
+    if (isStripe) {
       return (
         <Box>
-          {(isStripeStatusLoading || !stripeConnectStatus?.connected) && (
-            <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
-              Please connect a Stripe account above before trying to migrate
-              payment providers.
-            </Typography>
-          )}
           <Button
-            onClick={handleMigrateClick}
+            onClick={handleRevert}
             variant="contained"
-            disabled={isStripeStatusLoading || !stripeConnectStatus?.connected}
+            disabled={isReverting}
           >
-            Migrate to Stripe
+            Revert to GOV.UK Pay
           </Button>
         </Box>
       );
     }
 
     return (
-      <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        Switching to Stripe is not yet available. You can connect a Stripe
-        account above ahead of time.
-      </Typography>
+      <Box>
+        {(isStripeStatusLoading || !stripeConnectStatus?.connected) && (
+          <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+            Please connect a Stripe account above before trying to migrate
+            payment providers.
+          </Typography>
+        )}
+        <Button
+          onClick={handleMigrateClick}
+          variant="contained"
+          disabled={isStripeStatusLoading || !stripeConnectStatus?.connected}
+        >
+          Migrate to Stripe
+        </Button>
+      </Box>
     );
   };
 
