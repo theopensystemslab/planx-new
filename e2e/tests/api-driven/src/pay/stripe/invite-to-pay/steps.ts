@@ -248,7 +248,10 @@ Then(
   "the payer page is told the payment request is paid",
   function (this: InviteToPayWorld) {
     assert.equal(this.fulfilResponse!.status, 200);
-    assert.deepEqual(this.fulfilResponse!.data, { paymentStatus: "paid" });
+    assert.deepEqual(this.fulfilResponse!.data, {
+      paymentStatus: "paid",
+      paymentIntentId: this.paymentIntent!.id,
+    });
   },
 );
 
