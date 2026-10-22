@@ -37,6 +37,7 @@ export const ComponentsTab: React.FC<Props> = ({ onSelect, onSelectNote }) => {
     null,
   );
   const listRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const filteredCategories = useMemo<Category[]>(() => {
     if (!searchedItems) return ALL_CATEGORIES;
@@ -47,11 +48,8 @@ export const ComponentsTab: React.FC<Props> = ({ onSelect, onSelectNote }) => {
     })).filter((cat) => cat.items.length > 0);
   }, [searchedItems]);
 
-  // TODO: useRef instead of getElementById
   useEffect(() => {
-    const timer = setTimeout(() => {
-      (document.getElementById("search") as HTMLInputElement | null)?.focus();
-    }, 50);
+    const timer = setTimeout(() => searchRef.current?.focus(), 50);
     return () => clearTimeout(timer);
   }, []);
 
@@ -66,6 +64,7 @@ export const ComponentsTab: React.FC<Props> = ({ onSelect, onSelectNote }) => {
           hideLabel
           fullWidth
           placeholder="Search components"
+          inputRef={searchRef}
         />
       </TabHeader>
       <Box ref={listRef} sx={{ overflowY: "auto", pb: 2 }}>
