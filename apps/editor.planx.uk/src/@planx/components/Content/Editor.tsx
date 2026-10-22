@@ -12,6 +12,7 @@ import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
@@ -42,13 +43,23 @@ const ContentComponent: React.FC<Props> = (props) => {
       <ModalSection>
         <ModalSectionContent>
           <InputRow>
+            <Input
+              format="bold"
+              name="title"
+              value={formik.values.title}
+              placeholder="Title"
+              onChange={formik.handleChange}
+              disabled={props.disabled}
+              errorMessage={formik.errors.title}
+            />
+          </InputRow>
+          <InputRow>
             <RichTextInput
               placeholder="Content"
               name="content"
               value={formik.values.content}
               onChange={formik.handleChange}
               disabled={props.disabled}
-              variant="rootLevelContent"
               errorMessage={formik.errors.content}
             />
           </InputRow>
