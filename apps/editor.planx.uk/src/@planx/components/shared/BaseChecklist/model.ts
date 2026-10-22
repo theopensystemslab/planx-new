@@ -11,7 +11,6 @@ import { array, number, object, string, type TestConfig } from "yup";
 
 import type { BaseNodeData } from "..";
 import { baseNodeDataValidationSchema, parseBaseNodeData } from "..";
-import { hasUniqueLabels, hasUniqueOptions } from "../helpers";
 import type { Child } from "../types";
 
 export enum ChecklistLayout {
@@ -57,32 +56,6 @@ export interface BaseChecklist extends BaseNodeData {
   img?: string;
   categories?: Array<Category>;
 }
-
-export const uniqueChecklistLabelsTest: TestConfig<ChecklistWithOptions> = {
-  name: "uniqueLabels",
-  test: function ({ options }) {
-    if (!options) return true;
-    if (hasUniqueLabels(options)) return true;
-    return this.createError({
-      path: "options",
-      message: "Options must have unique labels",
-    });
-  },
-};
-
-export const uniqueChecklistLabelsOrDescriptionsTest: TestConfig<ResponsiveChecklistWithOptions> =
-  {
-    name: "uniqueLabelsOrDescriptions",
-    test: function ({ options, groupedOptions }) {
-      const flatOptions = getFlatOptions({ options, groupedOptions });
-      if (hasUniqueOptions(flatOptions)) return true;
-      return this.createError({
-        path: "options",
-        message:
-          "Options must have unique labels, or unique descriptions if labels are duplicated",
-      });
-    },
-  };
 
 export const parseBaseChecklist = (
   data: Record<string, any> | undefined,
@@ -262,33 +235,6 @@ const atLeastOneOption: TestConfig<AnyChecklist> = {
   },
 };
 
-const uniqueLabelsWithinGroupsTest: TestConfig<AnyChecklist> = {
-  name: "uniqueLabelsWithinGroups",
-  test: function ({ groupedOptions }) {
-    if (!groupedOptions) return true;
-
-    for (const group of groupedOptions) {
-      if (!group.children) continue;
-
-      const uniqueOptions = new Set(
-        group.children.map(
-          ({ data: { text, description } }) => `${text}_${description ?? ""}`,
-        ),
-      );
-      const allUnique = uniqueOptions.size === group.children.length;
-
-      if (!allUnique) {
-        return this.createError({
-          path: "options",
-          message: "Options within a single group must have unique labels",
-        });
-      }
-    }
-
-    return true;
-  },
-};
-
 const uniqueGroupTitlesTest: TestConfig<AnyChecklist> = {
   name: "uniqueGroupTitles",
   test: function ({ groupedOptions }) {
@@ -327,7 +273,6 @@ export const baseChecklistValidationSchema =
       // Casting is required for Yup, tests themselves are correctly typed
       .test(onlyOneExclusiveOptionTest as TestConfig<unknown>)
       .test(atLeastOneDataFieldTest as TestConfig<unknown>)
-      .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>)
       .test(uniqueGroupTitlesTest as TestConfig<unknown>)
       .test(atLeastOneOption as TestConfig<unknown>),
   );

@@ -12,8 +12,8 @@ import {
   baseChecklistValidationSchema,
   getFlatOptions,
   parseBaseChecklist,
-  uniqueChecklistLabelsTest,
 } from "../shared/BaseChecklist/model";
+import { hasUniqueLabels, uniqueLabelsTest } from "../shared/helpers";
 
 /**
  * Database representation of a Checklist component
@@ -32,6 +32,28 @@ export type GroupedChecklist = Checklist & GroupedOptions<Option>;
  * Contains options derived from child Answer nodes
  */
 export type ChecklistWithOptions = FlatChecklist | GroupedChecklist;
+
+const uniqueLabelsWithinGroupsTest: TestConfig<ChecklistWithOptions> = {
+  name: "uniqueLabelsWithinGroups",
+  test: function ({ groupedOptions }) {
+    if (!groupedOptions) return true;
+
+    for (const group of groupedOptions) {
+      if (!group.children) continue;
+
+      const allUnique = hasUniqueLabels(group.children);
+
+      if (!allUnique) {
+        return this.createError({
+          path: "options",
+          message: "Options within a single group must have unique labels",
+        });
+      }
+    }
+
+    return true;
+  },
+};
 
 export const checklistInputValidationSchema = ({
   data: { allRequired, options, groupedOptions },
@@ -71,7 +93,10 @@ export const validationSchema = baseChecklistValidationSchema.concat(
       }).required(),
     ).optional(),
     allRequired: boolean(),
-    options: array(optionValidationSchema).optional(),
+    options: array(optionValidationSchema)
+      .optional()
+      .test(uniqueLabelsTest as TestConfig<unknown>)
+      .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>),
     neverAutoAnswer: boolean(),
     alwaysAutoAnswerBlank: boolean(),
     autoAnswers: array(string()),
@@ -148,8 +173,7 @@ export const validationSchema = baseChecklistValidationSchema.concat(
             "Exactly one option should have a blank data field when never putting to user",
         });
       },
-    })
-    .test(uniqueChecklistLabelsTest as TestConfig<unknown>),
+    }),
 );
 
 export const parseChecklist = (
