@@ -1,13 +1,13 @@
 ## PRUNE ##
 # Produce a pruned monorepo containing only api.planx.uk + its workspace dependencies
-FROM node:24.14.0-alpine AS pruner
+FROM node:24.22.1-alpine AS pruner
 WORKDIR /app
 RUN npm install -g pnpm@10.30.2 turbo@2.10.2
 COPY . .
 RUN turbo prune api.planx.uk --docker
 
 ## BASE ##
-FROM node:24.14.1-alpine AS base
+FROM node:24.22.1-alpine AS base
 
 # Git required for planx-core github dependency
 RUN apk add --no-cache git
@@ -34,12 +34,14 @@ RUN pnpm --filter api.planx.uk... build
 RUN npm_config_inject_workspace_packages=true pnpm --filter api.planx.uk deploy --prod --prefer-offline /deploy/api
 
 ## PRODUCTION ##
-FROM node:24.14.1-alpine AS production
+FROM node:24.22.1-alpine AS production
+# Package managers are unused at runtime, and their bundled dependencies carry CVEs
+RUN rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg /opt/yarn-*
 WORKDIR /api
 
 ENV NODE_ENV=production
 COPY --from=base /deploy/api ./
-CMD ["npm", "start"]
+CMD ["node", "--enable-source-maps", "./dist/index.js"]
 
 ## DEVELOPMENT ##
 FROM base AS development

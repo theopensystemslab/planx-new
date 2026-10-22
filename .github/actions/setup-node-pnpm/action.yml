@@ -2,10 +2,6 @@ name: Setup Node and pnpm
 description: Install pnpm, set up Node with pnpm cache, and apply .gitconfig
 
 inputs:
-  node-version:
-    description: The Node.js version to use
-    required: false
-    default: 24.14.0
   pnpm-version:
     description: The pnpm version to use
     required: false
@@ -24,7 +20,7 @@ runs:
 
     - uses: actions/setup-node@v6
       with:
-        node-version: ${{ inputs.node-version }}
+        node-version-file: ".nvmrc"
         cache: "pnpm"
         cache-dependency-path: "pnpm-lock.yaml"
 

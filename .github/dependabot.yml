@@ -63,6 +63,9 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["sharedb", "docker"]
+    ignore:
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "[skip pizza] "
     open-pull-requests-limit: 1
@@ -72,6 +75,9 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["api", "docker"]
+    ignore:
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "[skip pizza] "
     open-pull-requests-limit: 1
