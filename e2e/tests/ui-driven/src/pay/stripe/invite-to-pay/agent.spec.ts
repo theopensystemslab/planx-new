@@ -146,8 +146,7 @@ test.describe("Stripe agent journey @regression", () => {
     ).rejects.toThrow();
   });
 
-  // TODO: Enable once a locked session's 409 is no longer shown as "Online payments are not enabled"
-  test.fixme("agent cannot make a payment after sending a payment request in another tab", async ({
+  test("agent cannot make a payment after sending a payment request in another tab", async ({
     page,
     context: browserContext,
   }) => {
