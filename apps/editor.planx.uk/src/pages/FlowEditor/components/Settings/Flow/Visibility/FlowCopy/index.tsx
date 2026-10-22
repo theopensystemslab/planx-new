@@ -47,10 +47,9 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
   };
 
   const getDescription = () => {
-    if (isPattern)
-      return "Control if this pattern is available to editors, when adding components.";
+    if (isPattern) return "Available to editors when adding components.";
     if (isSourceTemplate)
-      return "Control if this template is available to editors, when creating a new flow from a template.";
+      return "Available to editors when creating a new flow from a template.";
     return `Control if this ${flowType} can be used to create new ${flowType}s in other teams. It can still be copied and modified within your team.`;
   };
 
