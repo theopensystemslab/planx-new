@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { FlowView } from "pages/Flows";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType } from "ui/editor/FlowTag/types";
+import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import Permission from "ui/editor/Permission";
 import TruncatedText from "ui/editor/TruncatedText";
 
@@ -42,6 +42,8 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
     isTemplatedFlow,
     isService,
     isPattern,
+    hasVisibility,
+    isVisible,
     statusVariant,
   } = useFlowMetadata(flow);
 
@@ -51,7 +53,19 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
     {
       type: FlowTagType.Status,
       displayName: statusVariant,
-      shouldAddTag: isService || isPattern,
+      statusVariant,
+      shouldAddTag: isService && !hasVisibility,
+    },
+    {
+      type: FlowTagType.Status,
+      displayName: "Visible",
+      statusVariant: StatusVariant.Online,
+      shouldAddTag: isVisible,
+    },
+    {
+      type: FlowTagType.ServiceType,
+      displayName: "Service",
+      shouldAddTag: isService && isSourceTemplate && !hasSendComponent,
     },
     {
       type: FlowTagType.ServiceType,
@@ -121,7 +135,7 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
                   <FlowTag
                     key={`${tag.displayName}-flowtag`}
                     tagType={tag.type}
-                    statusVariant={statusVariant}
+                    statusVariant={tag.statusVariant}
                   >
                     {tag.displayName}
                   </FlowTag>

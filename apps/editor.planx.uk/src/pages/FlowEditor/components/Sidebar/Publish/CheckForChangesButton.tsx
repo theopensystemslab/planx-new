@@ -12,6 +12,7 @@ import type { Template } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { StatusMarker } from "ui/editor/StatusMarker";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useTemplatedFlowCustomisations } from "../Customisations/hooks/useTemplatedFlowCustomisations";
 import { OpenServiceMenu } from "../OpenServiceMenu";
@@ -101,9 +102,9 @@ export const CheckForChangesToPublishButton: React.FC<{
     lastPublishedQuery.data,
   );
 
-  const [isPattern, flowStatus] = useStore((state) => [
+  const [isPattern, flowSlug] = useStore((state) => [
     state.isPattern,
-    state.flowStatus,
+    state.flowSlug,
   ]);
 
   const { required, outstanding, loading } = useTemplatedFlowCustomisations();
@@ -206,7 +207,17 @@ export const CheckForChangesToPublishButton: React.FC<{
                 <strong>{`This flow is a pattern`}</strong>
               </Typography>
               <Typography variant="body2">
-                {`Patterns are made available to team editors when adding components only. This pattern is ${flowStatus} and therefore ${flowStatus === "online" ? "discoverable" : "not discoverable yet"}.`}
+                {
+                  "Patterns are made available to team editors when adding components only. Control whether other teams can use this pattern in "
+                }
+                <CustomLink
+                  to="/app/$team/$flow/settings/visibility"
+                  params={{ team: teamSlug, flow: flowSlug }}
+                  variant="body2"
+                >
+                  Pattern visibility
+                </CustomLink>
+                {" settings."}
               </Typography>
             </Box>
           </Box>

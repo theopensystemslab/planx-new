@@ -4,7 +4,7 @@ import { useParams } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType } from "ui/editor/FlowTag/types";
+import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useGetFlowDetails } from "../hooks/useGetFlowDetails";
@@ -53,10 +53,19 @@ const Breadcrumbs: React.FC = () => {
 
   const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
-  const isPattern = useStore((state) => state.isPattern);
-
   if (!teamSlug || !flowSlug || !data?.flows.length) return null;
-  const { status: flowStatus, isService } = data.flows[0];
+  const {
+    status: flowStatus,
+    isService,
+    isPattern,
+    isTemplate: isSourceTemplate,
+    canCreateFromCopy,
+  } = data.flows[0];
+
+  // Patterns and source templates can't be set online, their discoverability is controlled by "visibility" instead
+  const hasVisibility = isPattern || isSourceTemplate;
+  const showVisibleTag = hasVisibility && canCreateFromCopy;
+  const showStatusTag = !hasVisibility && isService && flowStatus;
 
   return (
     <BreadcrumbsContainer>
@@ -91,7 +100,7 @@ const Breadcrumbs: React.FC = () => {
           </>
         )}
       </BreadcrumbsRoot>
-      {(isService || isPattern) && flowStatus && canUserEditTeam(teamSlug) && (
+      {(showVisibleTag || showStatusTag) && canUserEditTeam(teamSlug) && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
           <BreadcrumbsLink
             to="/app/$team/$flow/settings"
@@ -99,12 +108,23 @@ const Breadcrumbs: React.FC = () => {
               team: teamSlug,
               flow: flowSlug,
             }}
-            title="Update service status"
+            title={
+              hasVisibility ? "Update visibility" : "Update service status"
+            }
             sx={{ textDecoration: "none" }}
           >
-            <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
-              {flowStatus}
-            </FlowTag>
+            {showVisibleTag ? (
+              <FlowTag
+                tagType={FlowTagType.Status}
+                statusVariant={StatusVariant.Online}
+              >
+                Visible
+              </FlowTag>
+            ) : (
+              <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
+                {flowStatus}
+              </FlowTag>
+            )}
           </BreadcrumbsLink>
         </Box>
       )}

@@ -9,6 +9,9 @@ const GET_FLOW_DETAILS = gql`
       id
       status
       isService: is_service
+      isPattern: is_pattern
+      isTemplate: is_template
+      canCreateFromCopy: can_create_from_copy
     }
   }
 `;
@@ -17,6 +20,9 @@ export type GetFlowDetailsQuery = {
   flows: {
     status: "online" | "offline";
     isService: boolean;
+    isPattern: boolean;
+    isTemplate: boolean;
+    canCreateFromCopy: boolean;
   }[];
 };
 

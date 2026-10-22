@@ -29,6 +29,7 @@ const baseFlow: Omit<FlowSummary, "id" | "name" | "slug"> = {
   isListedOnLPS: false,
   isService: true,
   isPattern: false,
+  canCreateFromCopy: false,
   pinnedFlows: [],
   template: { team: { name: "" } },
 };

@@ -12,6 +12,9 @@ export const useFlowMetadata = (flow: FlowSummary) => {
     const statusVariant =
       flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
     const isPattern = flow.isPattern;
+    // Patterns and source templates can't be set online, their discoverability is controlled by "visibility" instead
+    const hasVisibility = isPattern || isSourceTemplate;
+    const isVisible = hasVisibility && flow.canCreateFromCopy;
 
     return {
       hasSendComponent,
@@ -21,6 +24,8 @@ export const useFlowMetadata = (flow: FlowSummary) => {
       isAnyTemplate,
       statusVariant,
       isPattern,
+      hasVisibility,
+      isVisible,
     };
   }, [flow]);
 };

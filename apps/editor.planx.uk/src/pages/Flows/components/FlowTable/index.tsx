@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import type { FlowView } from "pages/Flows";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType } from "ui/editor/FlowTag/types";
+import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import Permission from "ui/editor/Permission";
 import TruncatedText from "ui/editor/TruncatedText";
 
@@ -135,6 +135,8 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     isTemplatedFlow,
     isService,
     isPattern,
+    hasVisibility,
+    isVisible,
     statusVariant,
   } = useFlowMetadata(flow);
 
@@ -185,7 +187,15 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
         <>
           <FlowStatusCell>
             <Box sx={{ display: "inline-flex" }}>
-              {isService && (
+              {isVisible && (
+                <FlowTag
+                  tagType={FlowTagType.Status}
+                  statusVariant={StatusVariant.Online}
+                >
+                  Visible
+                </FlowTag>
+              )}
+              {isService && !hasVisibility && (
                 <FlowTag
                   tagType={FlowTagType.Status}
                   statusVariant={statusVariant}
@@ -196,11 +206,14 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
             </Box>
           </FlowStatusCell>
           <FlowStatusCell>
-            {hasSendComponent && isService && (
-              <Box sx={{ display: "inline-flex" }}>
+            <Box sx={{ display: "inline-flex" }}>
+              {isService && isSourceTemplate && !hasSendComponent && (
+                <FlowTag tagType={FlowTagType.ServiceType}>Service</FlowTag>
+              )}
+              {hasSendComponent && isService && (
                 <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
-              </Box>
-            )}
+              )}
+            </Box>
           </FlowStatusCell>
           <FlowDateCell>
             <Box>
