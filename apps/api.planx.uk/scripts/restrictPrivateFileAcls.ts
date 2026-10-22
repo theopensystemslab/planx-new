@@ -68,6 +68,12 @@ const restrict = async (dryRun: boolean) => {
         continue;
       }
 
+      // cover the case where is_private is malformed/has unexpected value
+      if (Metadata.is_private !== "true") {
+        unclassified++;
+        continue;
+      }
+
       if (!(await isPubliclyReadable(s3, Bucket, Key))) {
         alreadyPrivate++;
         continue;

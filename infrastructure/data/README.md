@@ -28,7 +28,7 @@ We are currently running Postgres 16, which is [supported until Nov 2028](https:
 
 ### Current state
 
-The `user-data-xxx` buckets holds two kinds of object in one flat keyspace (`<nanoid>/<filename>`):
+The `user-data-xxx` buckets hold two kinds of object in one flat keyspace (`<nanoid>/<filename>`):
 
 | Kind of object                                                             | Written by          | Attached metadata     |
 | -------------------------------------------------------------------------- | ------------------- | --------------------- |

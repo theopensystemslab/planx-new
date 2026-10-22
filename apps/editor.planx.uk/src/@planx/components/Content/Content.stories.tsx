@@ -28,7 +28,7 @@ export const Basic = {
 export const WithImage = {
   args: {
     title: "What should planning drawings look like?",
-    content: `<img src="https://user-data-abc123.s3.eu-west-2.amazonaws.com/kbqmvxh3/Floor%20plans%20proposed.svg" alt="Planning drawing"><p><strong>Do</strong></p><ul><li><p>Draw to scale, for example 1:100</p></li><li><p>Indicate which direction is north</p></li><li><p>Include a unique reference number</p></li></ul><p><strong>Do not</strong></p><ul><li><p>Take photographs of paper drawings</p></li><li><p>Add poor quality scans</p></li></ul>`,
+    content: `<img src="https://api.editor.planx.uk/file/public/kbqmvxh3/Floor%20plans%20proposed.svg" alt="Planning drawing"><p><strong>Do</strong></p><ul><li><p>Draw to scale, for example 1:100</p></li><li><p>Indicate which direction is north</p></li><li><p>Include a unique reference number</p></li></ul><p><strong>Do not</strong></p><ul><li><p>Take photographs of paper drawings</p></li><li><p>Add poor quality scans</p></li></ul>`,
     color: "#FFF",
   },
 } satisfies Story;
