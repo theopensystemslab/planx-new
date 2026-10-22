@@ -5,7 +5,7 @@ import { After, Given, Then, When } from "@cucumber/cucumber";
 import { getStripeTestClient } from "../../../../../shared/stripe/client.js";
 import { completeStripeCheckoutSession } from "../../../../../shared/stripe/completeCheckoutSession.js";
 import { $admin } from "../../../client.js";
-import { cleanup as cleanupSubmissions } from "../../govpay/invite-to-pay/helpers.js";
+import { cleanup as cleanupSubmissions } from "../../invite-to-pay/helpers.js";
 import { createCheckoutSession, toFeeCase } from "../helpers.js";
 import type { CustomWorld } from "../steps.js";
 import {

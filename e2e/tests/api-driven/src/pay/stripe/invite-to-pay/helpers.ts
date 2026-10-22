@@ -12,11 +12,11 @@ import { TEST_EMAIL } from "../../../globalHelpers.js";
 import {
   buildITPFlow,
   setup as setupSubmittingTeam,
-} from "../../govpay/invite-to-pay/helpers.js";
+} from "../../invite-to-pay/helpers.js";
 import {
   mockBreadcrumbs,
   mockPassport,
-} from "../../govpay/invite-to-pay/mocks/index.js";
+} from "../../invite-to-pay/mocks/index.js";
 import {
   connectStripeAccount,
   createSessionWithFees,
