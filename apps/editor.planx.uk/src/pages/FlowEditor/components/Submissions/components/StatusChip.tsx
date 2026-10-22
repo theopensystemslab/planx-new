@@ -14,11 +14,18 @@ export const StatusChip: React.FC<Props> = ({ status }) => {
   if (status === "Sending") {
     return <Chip label={status} size="small" color="sending" />;
   }
-  if (status === "Invited to pay" || status === "Payment in progress") {
+  if (
+    [
+      "Invited to pay",
+      "Payment in progress",
+      "Processing",
+      "Initiated",
+    ].includes(status)
+  ) {
     return <Chip label={status} size="small" color="paymentPending" />;
   }
-  if (status === "Success") {
-    return <Chip label={status} size="small" color="success" />;
+  if (["Success", "Succeeded"].includes(status)) {
+    return <Chip label="Success" size="small" color="success" />;
   }
 
   return null;
