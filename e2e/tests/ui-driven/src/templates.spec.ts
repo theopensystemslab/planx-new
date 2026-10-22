@@ -282,7 +282,7 @@ test.describe("Templates", () => {
       await navigateToService(page, SOURCE_TEMPLATE_SLUG);
       await navigateToFlowSettings(page);
 
-      await page.getByLabel("Not visible to other teams").click();
+      await page.getByLabel("Not visible", { exact: true }).click();
       await page.getByTestId("settings-submit-button").click();
 
       await expect(

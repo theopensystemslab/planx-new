@@ -207,9 +207,7 @@ export const CheckForChangesToPublishButton: React.FC<{
                 <strong>{`This flow is a pattern`}</strong>
               </Typography>
               <Typography variant="body2">
-                {
-                  "Patterns are made available to team editors when adding components only. Control whether other teams can use this pattern in "
-                }
+                {"Control whether this pattern is available to editors in "}
                 <CustomLink
                   to="/app/$team/$flow/settings/visibility"
                   params={{ team: teamSlug, flow: flowSlug }}

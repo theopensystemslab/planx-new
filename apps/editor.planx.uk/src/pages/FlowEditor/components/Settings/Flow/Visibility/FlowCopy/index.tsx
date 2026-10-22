@@ -33,9 +33,7 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
   const flowType = isService ? "service" : "flow";
   const getSwitchLabel = (canCreateFromCopy: boolean) => {
     if (isPattern || isSourceTemplate) {
-      return canCreateFromCopy
-        ? "Visible to other teams"
-        : "Not visible to other teams";
+      return canCreateFromCopy ? "Visible" : "Not visible";
     }
     return canCreateFromCopy
       ? "Can be copied to create new services"
@@ -50,9 +48,9 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
 
   const getDescription = () => {
     if (isPattern)
-      return "Control if this pattern can be used by editors in other teams when adding components. It can still be used within your team.";
+      return "Control if this pattern is available to editors, when adding components.";
     if (isSourceTemplate)
-      return "Control if this template can be used to create new templated flows in other teams. It can still be used within your team.";
+      return "Control if this template is available to editors, when creating a new flow from a template.";
     return `Control if this ${flowType} can be used to create new ${flowType}s in other teams. It can still be copied and modified within your team.`;
   };
 
