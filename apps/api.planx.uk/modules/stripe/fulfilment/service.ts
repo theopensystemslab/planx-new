@@ -54,7 +54,10 @@ export async function fulfilPaymentRequest(
   if (paymentRequest.sessionId !== sessionId) return { status: "mismatch" };
 
   if (paymentRequest.paidAt) {
-    return { status: "alreadyFulfilled" };
+    return {
+      status: "alreadyFulfilled",
+      stripePaymentId: paymentRequest.stripePaymentId,
+    };
   }
 
   // Checkout hasn't been completed
@@ -78,9 +81,39 @@ export async function fulfilPaymentRequest(
   });
 
   // A concurrent call got there first
-  if (!affectedRows) return { status: "alreadyFulfilled" };
+  if (!affectedRows) {
+    const paidRequest = await getPaymentReference(paymentRequestId);
+    if (!paidRequest) return { status: "notFound" };
 
-  return { status: "fulfilled" };
+    return {
+      status: "alreadyFulfilled",
+      stripePaymentId: paidRequest.stripePaymentId,
+    };
+  }
+
+  return { status: "fulfilled", stripePaymentId };
+}
+
+/**
+ * Read only the payment reference, without the session data getPaymentRequest returns
+ */
+async function getPaymentReference(
+  paymentRequestId: string,
+): Promise<{ stripePaymentId: string | null } | null> {
+  const { paymentRequest } = await $api.client.request<{
+    paymentRequest: { stripePaymentId: string | null } | null;
+  }>(
+    gql`
+      query GetPaymentRequestStripePaymentId($paymentRequestId: uuid!) {
+        paymentRequest: payment_requests_by_pk(id: $paymentRequestId) {
+          stripePaymentId: stripe_payment_id
+        }
+      }
+    `,
+    { paymentRequestId },
+  );
+
+  return paymentRequest;
 }
 
 interface MarkPaymentRequestAsPaidResponse {

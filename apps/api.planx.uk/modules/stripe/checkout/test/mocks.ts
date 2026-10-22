@@ -166,6 +166,7 @@ export const buildPaymentRequest = (
   createdAt: subDays(new Date(), 1).toISOString(),
   paidAt: null,
   govPayPaymentId: null,
+  stripePaymentId: null,
   session: {
     flowId: validBody.flowId,
     deletedAt: null,

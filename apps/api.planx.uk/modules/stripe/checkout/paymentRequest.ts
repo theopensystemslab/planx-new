@@ -22,6 +22,7 @@ export const getPaymentRequest = async (
           createdAt: created_at
           paidAt: paid_at
           govPayPaymentId: govpay_payment_id
+          stripePaymentId: stripe_payment_id
           session {
             flowId: flow_id
             deletedAt: deleted_at

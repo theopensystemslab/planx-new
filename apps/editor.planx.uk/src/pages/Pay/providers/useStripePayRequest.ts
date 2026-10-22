@@ -73,8 +73,12 @@ export function useStripePayRequest({
   }
 
   if (stripeSessionId) {
-    // TODO: Show the payment reference directly here
-    if (fulfilment.isSuccess) return { status: "paid" };
+    if (fulfilment.isSuccess) {
+      return {
+        status: "paid",
+        reference: fulfilment.data.paymentIntentId,
+      };
+    }
 
     if (fulfilment.isError && !fulfilment.isFetching) {
       return isNotPaidError(fulfilment.error)
