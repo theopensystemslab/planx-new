@@ -9,7 +9,19 @@ import { poll } from "../../../../../shared/poll.js";
 import { getCheckoutSessionId } from "../../../../../shared/stripe/completeCheckoutSession.js";
 import { $admin, targetURL } from "../../../client.js";
 import { TEST_EMAIL } from "../../../globalHelpers.js";
-import { createSessionWithFees, type FeeCase } from "../helpers.js";
+import {
+  buildITPFlow,
+  setup as setupSubmittingTeam,
+} from "../../govpay/invite-to-pay/helpers.js";
+import {
+  mockBreadcrumbs,
+  mockPassport,
+} from "../../govpay/invite-to-pay/mocks/index.js";
+import {
+  connectStripeAccount,
+  createSessionWithFees,
+  type FeeCase,
+} from "../helpers.js";
 
 /**
  * Invite to pay requires a Pay node, and submits to each of the Send node's destinations once paid
@@ -49,6 +61,22 @@ export async function buildInviteToPaySession({
   });
   const sessionId = await createSessionWithFees({ flowId, feeCase });
   return { flowId, sessionId };
+}
+
+/**
+ * A Stripe team whose invite to pay flow submits to a real destination, via the mock server
+ * Reuses the GOV.UK Pay submissions setup - submission after `paid_at` is provider-neutral
+ */
+export async function buildSubmittingInviteToPaySession(destination: string) {
+  const { teamId, userId } = await setupSubmittingTeam();
+  await connectStripeAccount(teamId);
+  const { flowId } = await buildITPFlow({ destination, teamId, userId });
+  const sessionId = await $admin.session.create({
+    flowId,
+    data: { breadcrumbs: mockBreadcrumbs, passport: mockPassport },
+    email: TEST_EMAIL,
+  });
+  return { teamId, userId, flowId, sessionId };
 }
 
 export async function inviteNominee(sessionId: string): Promise<string> {
