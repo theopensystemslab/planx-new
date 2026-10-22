@@ -24,11 +24,28 @@ const isDataMapWalesConstraint = (
 ): entry is [string, DataMapWalesConstraint] =>
   entry[1].source === "DataMapWales";
 
+// Properties used to split or filter results for specific constraints (see INTERSECTIONS below)
+const ADDITIONAL_PROPERTIES: Record<string, string[]> = {
+  listed: ["Grade"],
+  flood: ["risk"],
+  "nature.ASNW": ["category_name"],
+};
+
+// Only request the properties we read - like `exclude_field` for Planning Data, this omits geometries which can be several MB per feature
+const getRequiredProperties = (
+  key: string,
+  constraint: DataMapWalesConstraint,
+): string[] => [
+  ...(constraint["dmw-name-field"] ? [constraint["dmw-name-field"]] : []),
+  ...(ADDITIONAL_PROPERTIES[key] || []),
+];
+
 // Query DataMapWales
 async function queryWFSLayer(
   constraint: DataMapWalesConstraint,
   geometry: string,
   geometryField: string,
+  propertyNames: string[],
 ): Promise<{ features: any[] }> {
   // parse WKT
   const isPoint = geometry.startsWith("POINT");
@@ -90,6 +107,7 @@ async function queryWFSLayer(
     typeNames: constraint["dmw-layer"],
     outputFormat: "application/json",
     filter: filterXml,
+    ...(propertyNames.length && { propertyName: propertyNames.join(",") }),
   };
 
   const url = `https://datamap.gov.wales/geoserver/wfs?${new URLSearchParams(
@@ -174,7 +192,12 @@ async function go(
   const queryResults = await Promise.all(
     constraintsToQuery.map(async ([key, constraint]) => {
       const geometryField = constraint["dmw-geometry-field"] || "geom";
-      const result = await queryWFSLayer(constraint, geom, geometryField);
+      const result = await queryWFSLayer(
+        constraint,
+        geom,
+        geometryField,
+        getRequiredProperties(key, constraint),
+      );
       return { key, constraint, result };
     }),
   );
@@ -201,7 +224,8 @@ async function go(
 
           // Add name field if specified
           if (constraint["dmw-name-field"]) {
-            entity.name = feature.properties[constraint["dmw-name-field"]];
+            entity.name =
+              feature.properties[constraint["dmw-name-field"]]?.trim();
           }
 
           // Use feature id as entity identifier
