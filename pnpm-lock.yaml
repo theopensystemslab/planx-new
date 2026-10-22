@@ -280,6 +280,9 @@ importers:
       pino-http:
         specifier: ^11.0.0
         version: 11.0.0
+      playwright-core:
+        specifier: ^1.63.0
+        version: 1.63.0
       resend:
         specifier: ^6.24.0
         version: 6.30.0
