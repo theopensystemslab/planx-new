@@ -129,12 +129,22 @@ export async function buildSessionWithFees({
     slug: "stripe-split-test",
     name: "Stripe split test",
   });
-  const sessionId = await $admin.session.create({
+  const sessionId = await createSessionWithFees({ flowId, feeCase });
+  return { flowId, sessionId };
+}
+
+export function createSessionWithFees({
+  flowId,
+  feeCase,
+}: {
+  flowId: string;
+  feeCase: FeeCase;
+}): Promise<string> {
+  return $admin.session.create({
     flowId,
     data: { breadcrumbs: {}, passport: { data: feePassports[feeCase] } },
     email: TEST_EMAIL,
   });
-  return { flowId, sessionId };
 }
 
 /**
