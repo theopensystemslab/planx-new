@@ -6,10 +6,10 @@ import {
   createPrefilledTestAccount,
   exchangeCodeForAccountId,
   getAccountStatus,
+  getPaymentCapabilities,
   getStripeAccountId,
   getStripeMode,
   getTeamBySlug,
-  isAccountReadyForPayments,
   isInvalidRequestError,
   isOnboardingComplete,
   postStripeConnectedToSlack,
@@ -370,46 +370,73 @@ describe("getAccountStatus", () => {
   });
 });
 
-describe("isAccountReadyForPayments", () => {
+describe("getPaymentCapabilities", () => {
   afterEach(() => {
     mockAccountsRetrieve.mockReset();
   });
 
-  it("returns true for a connected account which can take payments", async () => {
-    mockAccountsRetrieve.mockResolvedValue({ charges_enabled: true });
+  it("returns the capabilities of a connected account which can take payments", async () => {
+    const capabilities = {
+      card_payments: "active",
+      pay_by_bank_payments: "active",
+    };
+    mockAccountsRetrieve.mockResolvedValue({
+      charges_enabled: true,
+      capabilities,
+    });
 
-    await expect(isAccountReadyForPayments("acct_abc")).resolves.toBe(true);
+    await expect(getPaymentCapabilities("acct_abc")).resolves.toEqual(
+      capabilities,
+    );
     expect(mockAccountsRetrieve).toHaveBeenCalledWith("acct_abc");
   });
 
-  it("returns false for a connected account which cannot take payments", async () => {
+  it.each([
+    { capabilities: undefined },
+    {
+      capabilities: {
+        card_payments: "inactive",
+        pay_by_bank_payments: "active",
+      },
+    },
+  ])(
+    "returns null for a connected account which cannot take card ($capabilities)",
+    async ({ capabilities }) => {
+      mockAccountsRetrieve.mockResolvedValue({
+        charges_enabled: true,
+        capabilities,
+      });
+
+      await expect(getPaymentCapabilities("acct_abc")).resolves.toBeNull();
+    },
+  );
+
+  it("returns null for a connected account which cannot take payments", async () => {
     mockAccountsRetrieve.mockResolvedValue({ charges_enabled: false });
 
-    await expect(isAccountReadyForPayments("acct_abc")).resolves.toBe(false);
+    await expect(getPaymentCapabilities("acct_abc")).resolves.toBeNull();
   });
 
-  it("returns false when the account is not connected to the platform", async () => {
+  it("returns null when the account is not connected to the platform", async () => {
     mockAccountsRetrieve.mockRejectedValue(
       new MockStripePermissionError("does not have access to account"),
     );
 
-    await expect(isAccountReadyForPayments("acct_other")).resolves.toBe(false);
+    await expect(getPaymentCapabilities("acct_other")).resolves.toBeNull();
   });
 
-  it("returns false when the account does not exist", async () => {
+  it("returns null when the account does not exist", async () => {
     mockAccountsRetrieve.mockRejectedValue(
       new MockStripeInvalidRequestError("No such account"),
     );
 
-    await expect(isAccountReadyForPayments("acct_missing")).resolves.toBe(
-      false,
-    );
+    await expect(getPaymentCapabilities("acct_missing")).resolves.toBeNull();
   });
 
   it("rethrows other errors (e.g. Stripe being unreachable)", async () => {
     mockAccountsRetrieve.mockRejectedValue(new Error("Stripe is down"));
 
-    await expect(isAccountReadyForPayments("acct_abc")).rejects.toThrow(
+    await expect(getPaymentCapabilities("acct_abc")).rejects.toThrow(
       "Stripe is down",
     );
   });

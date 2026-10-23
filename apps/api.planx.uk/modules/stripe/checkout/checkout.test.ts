@@ -5,8 +5,10 @@ import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import { getPaymentStatusInsert } from "../webhook/test/mocks.js";
 import {
   defaultMetadata,
+  largeFeeBreakdownPassport,
   mockCreate,
   mockCreateCheckoutSessionDefaults,
+  mockGetPaymentCapabilities,
   mockPassportLookup,
   mockReturnURLContext,
   RETURN_URL,
@@ -50,7 +52,7 @@ describe("creating a Stripe Checkout Session", () => {
     expect(mockCreate).toHaveBeenCalledWith(
       expect.objectContaining({
         mode: "payment",
-        payment_method_types: ["card"],
+        payment_method_types: ["card", "pay_by_bank"],
         line_items: [
           {
             price_data: {
@@ -347,5 +349,40 @@ describe("creating a Stripe Checkout Session", () => {
       .expect(500);
 
     expect(getPaymentStatusInsert()).toBeUndefined();
+  });
+});
+
+describe("choosing the payment methods for a Stripe Checkout Session", () => {
+  beforeEach(() => {
+    mockCreateCheckoutSessionDefaults();
+  });
+
+  it("offers Pay by Bank only for a total above £600", async () => {
+    mockPassportLookup(largeFeeBreakdownPassport);
+
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(validBody)
+      .expect(200);
+
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ payment_method_types: ["pay_by_bank"] }),
+    );
+  });
+
+  it("offers card only when the council account cannot take Pay by Bank", async () => {
+    mockGetPaymentCapabilities.mockResolvedValue({
+      card_payments: "active",
+      pay_by_bank_payments: "inactive",
+    });
+
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(validBody)
+      .expect(200);
+
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ payment_method_types: ["card"] }),
+    );
   });
 });
