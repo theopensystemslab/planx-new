@@ -16,8 +16,9 @@ export default function Component(props: Props) {
     props.handleSubmit?.({
       ...makeData(
         props,
-        props.formatOutputForAutomations
-          ? [evaluatedResult.toString()]
+        // convert booleans and multiple return values to lists of strings for automation
+        typeof evaluatedResult === "boolean" || Array.isArray(evaluatedResult)
+          ? [evaluatedResult].flat().map(String)
           : evaluatedResult,
         props.fn,
       ),

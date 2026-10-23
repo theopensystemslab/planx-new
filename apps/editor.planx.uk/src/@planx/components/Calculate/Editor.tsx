@@ -12,7 +12,6 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import { Switch } from "ui/shared/Switch";
 
 import { baseNodeDataValidationSchema } from "../shared";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
@@ -52,14 +51,8 @@ export default function Component(props: Props) {
           );
 
           if (Number.isNaN(Number(result))) {
-            errors.formula = "Enter a formula which outputs a number";
-          }
-          if (
-            typeof result === "boolean" &&
-            !values.formatOutputForAutomations
-          ) {
             errors.formula =
-              "For Boolean functions, toggle on 'Format the output to automate a future Question or Checklist only'";
+              "Enter a formula which outputs a number, true or false";
           }
         } catch (error: any) {
           errors.formula = error.message;
@@ -80,7 +73,7 @@ export default function Component(props: Props) {
       );
       // Type guard as mathjs evaluates `m` to a "Unit" object for "meter"
       if (!Number.isNaN(Number(result))) {
-        return result;
+        return String(result);
       } else if (result === undefined) {
         return "a number returned from the formula above";
       } else {
@@ -114,6 +107,20 @@ export default function Component(props: Props) {
     }
   }, [formik.values.formula]);
 
+  // Evaluates with placeholders so we can determine the output type before defaults are entered
+  const outputType = useMemo(() => {
+    try {
+      const result = evaluate(
+        formik.values.formula,
+        Object.fromEntries(variables.map((variable) => [variable, 1])),
+      );
+      if (typeof result === "boolean") return "true or false";
+      if (!Number.isNaN(Number(result))) return "number";
+    } catch (e) {
+      return;
+    }
+  }, [formik.values.formula, variables]);
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <TemplatedNodeInstructions
@@ -142,26 +149,11 @@ export default function Component(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-        </ModalSectionContent>
-        <ModalSectionContent title="Output">
           <InputRow>
             <DataFieldAutocomplete
               required
               value={formik.values.fn}
               onChange={(value) => formik.setFieldValue("fn", value)}
-              disabled={props.disabled}
-            />
-          </InputRow>
-          <InputRow>
-            <Switch
-              checked={formik.values.formatOutputForAutomations}
-              onChange={() =>
-                formik.setFieldValue(
-                  "formatOutputForAutomations",
-                  !formik.values.formatOutputForAutomations,
-                )
-              }
-              label="Format the output to automate a future Question or Checklist only"
               disabled={props.disabled}
             />
           </InputRow>
@@ -176,8 +168,26 @@ export default function Component(props: Props) {
               onChange={formik.handleChange}
               errorMessage={formik.errors.formula}
               disabled={props.disabled}
+              aria-describedby="formula-hint formula-output-type"
             />
           </InputRow>
+          <Typography id="formula-hint" variant="body2" sx={{ mt: 1 }}>
+            Formulas that output true or false (e.g. <code>a &gt; b</code>) can
+            be used to automate later parts of the service. All other formulas
+            output a number.
+          </Typography>
+          <Typography
+            id="formula-output-type"
+            variant="body2"
+            aria-live="polite"
+            sx={{ mt: 1 }}
+          >
+            {outputType && (
+              <>
+                Output: <strong>{outputType}</strong>
+              </>
+            )}
+          </Typography>
         </ModalSectionContent>
         <ModalSectionContent title="Default values">
           {!variables || variables.length === 0 ? (
@@ -222,8 +232,8 @@ export default function Component(props: Props) {
             <></>
           )}
           <p>
-            <strong>{formik.values.fn || "<output>"}</strong> would be set to{" "}
-            <strong>{sampleResult}</strong>
+            <strong>{formik.values.fn || "<data field>"}</strong> would be set
+            to <strong>{sampleResult}</strong>
           </p>
         </ModalSectionContent>
       </ModalSection>

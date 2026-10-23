@@ -9,7 +9,6 @@ export interface Calculate extends BaseNodeData {
   defaults: Record<string, number>;
   formula: string;
   samples: Record<string, number>;
-  formatOutputForAutomations?: boolean;
 }
 
 export interface Input {
@@ -25,7 +24,6 @@ export const parseCalculate = (
   defaults: data?.defaults || {},
   formula: data?.formula || "",
   samples: data?.samples || {},
-  formatOutputForAutomations: data?.formatOutputForAutomations || false,
   title: data?.title || "",
 });
 
@@ -60,7 +58,12 @@ export function evaluate(input: string, scope = {}, defaults = {}): number {
   const ast = math.parse(input);
   const code = ast.transform(flattenVariables).compile();
 
-  return code.evaluate(serializeKeys(applyDefaults(scope, defaults)));
+  try {
+    return code.evaluate(serializeKeys(applyDefaults(scope, defaults)));
+  } catch {
+    // Fall back to Editor defaults when variable value and formula are incompatible
+    return code.evaluate(serializeKeys(applyDefaults({}, defaults)));
+  }
 
   function flattenVariables(node: any) {
     if (node instanceof math.AccessorNode) {
@@ -82,11 +85,15 @@ export function evaluate(input: string, scope = {}, defaults = {}): number {
   function applyDefaults(object: any, defaults: any) {
     const keys = new Set([...Object.keys(object), ...Object.keys(defaults)]);
     return Object.fromEntries(
-      // Ensure that value === 0 isn't incorrectly falling back to default
-      [...keys].map((key) => [
-        key,
-        object[key] === 0 ? object[key] : object[key] || defaults[key],
-      ]),
+      [...keys].map((key) => {
+        // Unwrap single-item lists
+        const value =
+          Array.isArray(object[key]) && object[key].length === 1
+            ? object[key][0]
+            : object[key];
+        // Ensure that value === 0 isn't incorrectly falling back to default
+        return [key, value === 0 ? value : value || defaults[key]];
+      }),
     );
   }
 }
