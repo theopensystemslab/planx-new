@@ -25,4 +25,4 @@ Feature: Stripe payment metadata
       | fee                 | vat |
       | a statutory fee     | 8   |
       | a Fast Track fee    | 38  |
-      | a discretionary fee | 108 |
+      | a discretionary fee | 88  |

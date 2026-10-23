@@ -44,12 +44,12 @@ const feePassports = {
   },
   // Discretionary fees (e.g. pre-application advice) carry VAT on the council's fee too
   "a discretionary fee": {
-    "application.fee.calculated": 500,
-    "application.fee.calculated.VAT": 100,
+    "application.fee.calculated": 400,
+    "application.fee.calculated.VAT": 80,
     "application.fee.serviceCharge": 40,
     "application.fee.serviceCharge.VAT": 8,
-    "application.fee.payable": 648,
-    "application.fee.payable.VAT": 108,
+    "application.fee.payable": 528,
+    "application.fee.payable.VAT": 88,
   },
   "a Fast Track fee": {
     "application.fee.calculated": 258,
