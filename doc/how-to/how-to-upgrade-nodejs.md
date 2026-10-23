@@ -6,37 +6,42 @@ We should always aim to be on an LTS version (even release numbers). For the ful
 
 ## planx-new
 
-1. Locally install desired Node.js version
+The Node.js version is pinned in two places:
+
+- `.nvmrc` - used for local development, and by our "Setup Node and pnpm" GitHub action for CI.
+- Dockerfiles - Dependabot raises PRs for new patch and minor releases of the `node` image.
+
+### Patch or minor upgrade (e.g. a security release)
+
+1. Update `.nvmrc`
+
+2. Locally install the new version
 
 ```shell
-nvm install 24.14.0
-nvm use 24.14.0
+nvm install
+nvm use
 ```
 
-2. Update `.nvmrc` file
-
-3. Update Dockerfiles -
+3. Update Dockerfiles (or merge the Dependabot PR) -
 
 - `apps/api.planx.uk/Dockerfile`
 - `apps/sharedb.planx.uk/Dockerfile`
 
-4. Update `@types/node` package across all projects ([npm](https://www.npmjs.com/package/@types/node)). Note: Only major.minor version need to match e.g. types version 22.10.7893 would be fine for Node 22.10.x ([docs](https://github.com/definitelytyped/definitelytyped#how-do-definitely-typed-package-versions-relate-to-versions-of-the-corresponding-library)).
+4. Rebuild docker containers, test and run locally
 
-5. Fix any type issues flagged by the above change
+### Major upgrade
 
-6. Update references to `engines` in API `package.json` file
+All of the above, plus -
 
-7. Update `README.md`
+5. Update `@types/node` package across all projects ([npm](https://www.npmjs.com/package/@types/node)). Note: Only major.minor version need to match e.g. types version 22.10.7893 would be fine for Node 22.10.x ([docs](https://github.com/definitelytyped/definitelytyped#how-do-definitely-typed-package-versions-relate-to-versions-of-the-corresponding-library)).
 
-8. Rebuild docker containers, test and run locally
+6. Fix any type issues flagged by the above change
 
-9. Upgrade the Node version used for GitHub Actions by updating our "Setup Node and pnpm" action (/.github/actions/setup-node-pnpm/action.yml). This shared action is used across our GHA jobs to define which Node version runs our CI services.
-
-Please note - this update is immediate and will effect other open PRs. It's advisable to hardcode the desired Node version into the GitHub action files initially to test CI and regression tests, before making this change.
+7. Update `engines` in API `package.json` file
 
 ## planx-core
 
-Steps 1, 2, 4, 5 & 9 also apply here and should be updated shortly after.
+Steps 1, 2, 5 & 6 also apply here, as does the Node version used by its GitHub Actions. These should be updated shortly after.
 
 ## AWS Lambda
 
