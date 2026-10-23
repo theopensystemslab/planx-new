@@ -203,13 +203,10 @@ export const getPaymentCapabilities = async (
   accountId: string,
 ): Promise<Stripe.Account.Capabilities | null> => {
   try {
-    const { charges_enabled, capabilities } =
-      await stripe.accounts.retrieve(accountId);
-    if (!charges_enabled || capabilities?.card_payments !== "active") {
-      return null;
-    }
+    const account = await stripe.accounts.retrieve(accountId);
+    if (!account.charges_enabled) return null;
 
-    return capabilities;
+    return account.capabilities ?? {};
   } catch (error) {
     if (
       isInvalidRequestError(error) ||

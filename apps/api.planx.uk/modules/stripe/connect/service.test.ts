@@ -391,25 +391,11 @@ describe("getPaymentCapabilities", () => {
     expect(mockAccountsRetrieve).toHaveBeenCalledWith("acct_abc");
   });
 
-  it.each([
-    { capabilities: undefined },
-    {
-      capabilities: {
-        card_payments: "inactive",
-        pay_by_bank_payments: "active",
-      },
-    },
-  ])(
-    "returns null for a connected account which cannot take card ($capabilities)",
-    async ({ capabilities }) => {
-      mockAccountsRetrieve.mockResolvedValue({
-        charges_enabled: true,
-        capabilities,
-      });
+  it("returns no capabilities when Stripe omits them", async () => {
+    mockAccountsRetrieve.mockResolvedValue({ charges_enabled: true });
 
-      await expect(getPaymentCapabilities("acct_abc")).resolves.toBeNull();
-    },
-  );
+    await expect(getPaymentCapabilities("acct_abc")).resolves.toEqual({});
+  });
 
   it("returns null for a connected account which cannot take payments", async () => {
     mockAccountsRetrieve.mockResolvedValue({ charges_enabled: false });

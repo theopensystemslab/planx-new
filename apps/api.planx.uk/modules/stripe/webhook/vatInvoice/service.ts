@@ -9,14 +9,12 @@ import { sendEmail } from "../../../../lib/resend/index.js";
 import { reportError } from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
 import { getFeeLines } from "../../feeLines.js";
+import { formatPence } from "../../helpers.js";
 import type { OwnedPaymentIntent } from "../ownership/service.js";
 import { buildVatInvoiceData, groupFeeLinesByIssuer } from "./data.js";
 import { generateVatInvoicePdf } from "./pdf.js";
 import { getCouncilInvoiceDetails, PLANX_SELLER } from "./seller.js";
 import type { VatInvoiceBranding, VatInvoiceData } from "./types.js";
-
-export const formatPence = (pence: number) =>
-  (pence / 100).toLocaleString("en-GB", { style: "currency", currency: "GBP" });
 
 const DEFAULT_PRIMARY_COLOUR = "#0010A4";
 

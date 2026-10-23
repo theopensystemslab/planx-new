@@ -10,7 +10,6 @@ describe("getPaymentMethodTypes", () => {
     { amount: CARD_LIMIT - 1, expected: ["card", "pay_by_bank"] },
     { amount: CARD_LIMIT, expected: ["pay_by_bank"] },
     { amount: PAY_BY_BANK_LIMIT, expected: ["pay_by_bank"] },
-    { amount: PAY_BY_BANK_LIMIT + 1, expected: ["card"] },
   ])(
     "offers $expected for a total of $amount pence",
     ({ amount, expected }) => {
@@ -60,16 +59,19 @@ describe("getPaymentMethodTypes", () => {
       },
     },
     {
-      amount: PAY_BY_BANK_LIMIT + 1,
+      amount: PAY_BY_BANK_LIMIT,
       capabilities: {
-        card_payments: "inactive",
-        pay_by_bank_payments: "active",
+        card_payments: "active",
+        pay_by_bank_payments: "pending",
       },
     },
+    { amount: PAY_BY_BANK_LIMIT + 1, capabilities: activeCapabilities },
   ])(
-    "falls back to card when no method remains for a total of $amount pence",
+    "refuses a total of $amount pence when no method remains, never falling back to card",
     ({ amount, capabilities }) => {
-      expect(getPaymentMethodTypes({ amount, capabilities })).toEqual(["card"]);
+      expect(() => getPaymentMethodTypes({ amount, capabilities })).toThrow(
+        expect.objectContaining({ status: 409 }),
+      );
     },
   );
 });

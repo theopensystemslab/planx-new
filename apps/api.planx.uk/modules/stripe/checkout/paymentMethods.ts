@@ -1,5 +1,8 @@
 import type Stripe from "stripe";
 
+import { ServerError } from "../../../errors/index.js";
+import { formatPence } from "../helpers.js";
+
 type PaymentMethodType = "card" | "pay_by_bank";
 
 type PaymentCapabilities = Pick<
@@ -30,7 +33,7 @@ const CAPABILITY_FOR_METHOD: Record<
 const getMethodsForAmount = (amount: number): PaymentMethodType[] => {
   if (amount < CARD_LIMIT) return ["card", "pay_by_bank"];
   if (amount <= PAY_BY_BANK_LIMIT) return ["pay_by_bank"];
-  return ["card"];
+  return [];
 };
 
 const isActiveFor =
@@ -42,7 +45,7 @@ const isActiveFor =
  * The payment methods an applicant can use to pay a total (in pence) to a council account
  *
  * With on_behalf_of, Stripe refuses a method the council account cannot take, so those are removed
- * The list is never empty - card is the fallback, and the account check refuses accounts which cannot take card
+ * Card is never offered from the card limit up, even if nothing else is available - card fees are too high
  */
 export const getPaymentMethodTypes = ({
   amount,
@@ -53,5 +56,12 @@ export const getPaymentMethodTypes = ({
 }): PaymentMethodType[] => {
   const methods = getMethodsForAmount(amount).filter(isActiveFor(capabilities));
 
-  return methods.length ? methods : ["card"];
+  if (!methods.length) {
+    throw new ServerError({
+      status: 409,
+      message: `The Stripe account for this local authority cannot take a payment method for a total of ${formatPence(amount)}`,
+    });
+  }
+
+  return methods;
 };

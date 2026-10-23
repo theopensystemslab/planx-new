@@ -126,6 +126,20 @@ describe("creating a Stripe Checkout Session for an invite to pay request", () =
     );
   });
 
+  it("refuses a total above £600 when the council account cannot take Pay by Bank, never falling back to card", async () => {
+    mockPaymentRequest(
+      buildPaymentRequest({ feeBreakdown: largePaymentRequestFeeBreakdown }),
+    );
+    mockGetPaymentCapabilities.mockResolvedValue({
+      card_payments: "active",
+      pay_by_bank_payments: "inactive",
+    });
+
+    await supertest(app).post(ENDPOINT).expect(409);
+
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
   it("returns the payer to the team's custom domain", async () => {
     mockPaymentRequest(
       buildPaymentRequest(

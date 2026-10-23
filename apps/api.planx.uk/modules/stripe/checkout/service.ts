@@ -161,23 +161,26 @@ const createDestinationChargeCheckoutSession = async ({
   customerEmail,
   expiresAt,
 }: DestinationChargeCheckoutSessionInput): Promise<CreateCheckoutSessionResponse> => {
+  // PlanX's cut (the Stripe application fee)
+  const split = calculateStripeSplit(feeBreakdown);
+  // 0 is not a valid fee for Stripe, must be undefined if there's no fee amount
+  const applicationFeeAmount = split.applicationFeeAmount || undefined;
+
+  // A refused payment should not change anything at Stripe, so check before expiring previous sessions
+  const paymentMethodTypes = getPaymentMethodTypes({
+    amount: split.amount,
+    capabilities,
+  });
+
   await expirePreviousCheckoutSessions(sessionId);
 
   const separator = returnURL.includes("?") ? "&" : "?";
 
   const lineItems = buildLineItems(feeBreakdown);
 
-  // PlanX's cut (the Stripe application fee)
-  const split = calculateStripeSplit(feeBreakdown);
-  // 0 is not a valid fee for Stripe, must be undefined if there's no fee amount
-  const applicationFeeAmount = split.applicationFeeAmount || undefined;
-
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
-    payment_method_types: getPaymentMethodTypes({
-      amount: split.amount,
-      capabilities,
-    }),
+    payment_method_types: paymentMethodTypes,
     line_items: lineItems,
     success_url: `${returnURL}${separator}stripeSessionId={CHECKOUT_SESSION_ID}`,
     cancel_url: `${returnURL}${separator}cancelled=true`,

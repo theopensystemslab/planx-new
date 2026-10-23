@@ -8,8 +8,11 @@ import {
   largeFeeBreakdownPassport,
   mockCreate,
   mockCreateCheckoutSessionDefaults,
+  mockExpire,
   mockGetPaymentCapabilities,
+  mockInitiatedCheckoutSessions,
   mockPassportLookup,
+  mockRetrieve,
   mockReturnURLContext,
   RETURN_URL,
   STRIPE_ACCOUNT_ID,
@@ -384,5 +387,23 @@ describe("choosing the payment methods for a Stripe Checkout Session", () => {
     expect(mockCreate).toHaveBeenCalledWith(
       expect.objectContaining({ payment_method_types: ["card"] }),
     );
+  });
+
+  it("refuses a total above £600 when the council account cannot take Pay by Bank, never falling back to card", async () => {
+    mockPassportLookup(largeFeeBreakdownPassport);
+    mockGetPaymentCapabilities.mockResolvedValue({
+      card_payments: "active",
+      pay_by_bank_payments: "inactive",
+    });
+    mockInitiatedCheckoutSessions(["cs_test_previous"]);
+    mockRetrieve.mockResolvedValue({ id: "cs_test_previous", status: "open" });
+
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(validBody)
+      .expect(409);
+
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockExpire).not.toHaveBeenCalled();
   });
 });
