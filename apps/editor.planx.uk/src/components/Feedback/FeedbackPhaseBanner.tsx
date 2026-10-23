@@ -16,6 +16,9 @@ const ReportButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.common.white,
   color: theme.palette.primary.main,
   padding: "0.7em 1em",
+  "@media print": {
+    display: "none",
+  },
 }));
 
 const Inner = styled(Box)(({ theme }) => ({

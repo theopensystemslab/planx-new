@@ -19,6 +19,9 @@ import { ProgressBar } from "./ProgressBar";
 const StyledNavBar = styled("nav")(({ theme }) => ({
   backgroundColor: theme.palette.primary.dark,
   padding: theme.spacing(1.5, 0),
+  "@media print": {
+    backgroundColor: theme.palette.background.paper,
+  },
 }));
 
 export const SectionNavBar: React.FC = () => {
