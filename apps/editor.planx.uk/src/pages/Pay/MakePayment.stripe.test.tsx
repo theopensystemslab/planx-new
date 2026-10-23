@@ -120,6 +120,63 @@ describe("MakePayment with Stripe", () => {
     expect(location.assign).not.toHaveBeenCalled();
   });
 
+  it("tells the payer the fee cannot be paid online when the council cannot take a payment method for it", async () => {
+    server.use(
+      http.post(checkoutSessionUrl, () =>
+        HttpResponse.json(
+          {
+            error:
+              "The Stripe account for this local authority cannot take a payment method for a total of £748.00",
+          },
+          { status: 409 },
+        ),
+      ),
+    );
+
+    const { user } = await setup(
+      <AppErrorBoundary disableReporting>
+        <MakePayment {...mockPaymentRequest} />
+      </AppErrorBoundary>,
+    );
+
+    await user.click(await screen.findByRole("button", { name: "Pay now" }));
+
+    expect(
+      await screen.findByText("This fee cannot be paid online"),
+    ).toBeVisible();
+    expect(
+      screen.getByText(
+        "Contact your local planning authority to arrange payment.",
+      ),
+    ).toBeVisible();
+    expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Pay now" }),
+    ).not.toBeInTheDocument();
+    expect(location.assign).not.toHaveBeenCalled();
+  });
+
+  it("shows the error boundary for other Checkout Session errors", async () => {
+    server.use(
+      http.post(checkoutSessionUrl, () =>
+        HttpResponse.json(
+          { error: "Payment request 123 has already been paid" },
+          { status: 409 },
+        ),
+      ),
+    );
+
+    const { user } = await setup(
+      <AppErrorBoundary disableReporting>
+        <MakePayment {...mockPaymentRequest} />
+      </AppErrorBoundary>,
+    );
+
+    await user.click(await screen.findByRole("button", { name: "Pay now" }));
+
+    expect(await screen.findByText(/something went wrong/i)).toBeVisible();
+  });
+
   describe("on return from hosted Checkout", () => {
     it("confirms the payment, and shows its payment reference", async () => {
       let body: unknown;
