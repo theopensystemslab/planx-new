@@ -11,6 +11,10 @@ FROM node:24.22.1-alpine AS base
 
 # Git required for planx-core github dependency
 RUN apk add --no-cache git
+
+# Chromium required for rendering PDFs with Playwright (bundled Playwright browsers don't support Alpine)
+RUN apk add --no-cache chromium
+ENV CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
 COPY .gitconfig /root/.gitconfig
 
 WORKDIR /app
@@ -38,6 +42,9 @@ FROM node:24.22.1-alpine AS production
 # Package managers are unused at runtime, and their bundled dependencies carry CVEs
 RUN rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg /opt/yarn-*
 WORKDIR /api
+
+RUN apk add --no-cache chromium
+ENV CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 ENV NODE_ENV=production
 COPY --from=base /deploy/api ./

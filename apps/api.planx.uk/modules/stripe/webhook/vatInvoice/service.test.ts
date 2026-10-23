@@ -128,7 +128,7 @@ describe("sendVatInvoices", () => {
 
     expect(sendEmail).toHaveBeenCalledTimes(2);
     expect(sendEmail).toHaveBeenCalledWith(
-      "vat-invoice-council",
+      "vat-invoice-council-2",
       CUSTOMER_EMAIL,
       {
         serviceName: FLOW_NAME,
@@ -173,9 +173,24 @@ describe("sendVatInvoices", () => {
     await sendVatInvoices(succeededPaymentIntent(), recorded);
 
     expect(sendEmail).toHaveBeenCalledWith(
-      "vat-invoice-council",
+      "vat-invoice-council-2",
       CUSTOMER_EMAIL,
       expect.objectContaining({ header: "London Borough of Southwark" }),
+      expect.anything(),
+    );
+  });
+
+  it("falls back to the default primary colour in the email when the council's is invalid", async () => {
+    mockCouncilInvoiceDetails({
+      theme: { logo: null, primaryColour: "red; } body { display: none" },
+    });
+
+    await sendVatInvoices(succeededPaymentIntent(), recorded);
+
+    expect(sendEmail).toHaveBeenCalledWith(
+      "vat-invoice-council-2",
+      CUSTOMER_EMAIL,
+      expect.objectContaining({ primaryColour: "#0010A4" }),
       expect.anything(),
     );
   });
@@ -201,7 +216,7 @@ describe("sendVatInvoices", () => {
       recorded,
     );
 
-    expect(sentTemplates()).toEqual(["vat-invoice-council"]);
+    expect(sentTemplates()).toEqual(["vat-invoice-council-2"]);
   });
 
   it("still sends the PlanX invoice when the council has no invoice details", async () => {

@@ -12,7 +12,7 @@ type VatInvoiceVariables = {
  * Branded with the council's theme
  */
 export type VatInvoiceCouncilTemplate = EmailTemplate<
-  "vat-invoice-council",
+  "vat-invoice-council-2",
   VatInvoiceVariables & {
     councilName: string;
     header: string; // council logo if set, falls back to council name otherwise

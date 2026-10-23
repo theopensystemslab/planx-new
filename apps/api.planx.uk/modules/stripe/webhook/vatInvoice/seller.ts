@@ -14,6 +14,17 @@ export const PLANX_SELLER: VatInvoiceSeller = {
   email: null,
 };
 
+/**
+ * Placeholder PlanX wordmark - TODO replace with real logo
+ */
+const PLANX_LOGO =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAAyCAYAAACXpx/YAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAqFJREFUeNrsmoFtozAUht0qAzACtwEjcBMkN0Fhg3aDdIKqE5CbILcB2YB2gqQTwAYtqA+d9WRsMGDsu/+TrCbBGOzPftimQgAAAAAAAAAAAAAAAAAAAMzgbsGy4jZlhjw3Sm9tajT5MiqvP+cEVduTtulzQjq3KRkoq5TylWhae+43vPahTdWIUe8zEdWhmFlOsUAZSnYrVn4oDKeKynVh+BKg4JKiUB+Jcku5cifPfa0sD9GpptefWd4y0BBdsHoUjs/3UrBK4qc0qbIVnGie6VMni6kDSUHJtRGcafKPEdxFgmObrooJ3JWORQPn8utG1MA1O1bRXGFpWcHJtRHM82cTBCcKGapUDUiW8/STPV052YKSg5S7hODDSMGxQm5N+UrFsdIg+Gr4rnqE2EoOVq6N4KNliOYTtEdF6C4NclQjPWWdiI/ql5nP1qDlThXMQ2w9YRadUeNUmkZPDCGWj/544BlfW87mC0NUCE7uWMExNXZtGB1LLJPk8o+aY8VIUfXMJdAmctfc6BgrptsQeV7gegmNuu7vfsJ5HyOPRRPvJ6dOLkeHm+uNjN3Go77bvfol9C8edMusPQmNhX8UivuK6ff8XxZ8o1H7u01/LEdqsdCmxppyM1bnWOqYwpXkNQX/FOvsL3O5DV3nXfx9HXmh550Pck8kU/7dmeSdCIuUye0a78kyxLuUK8t0Kvk+QMEyQ3Jjz+TKE6+TYskHwVI4HsOLh3I3kRya4ItCZMSWMl1jHTyV61xyaILfKMkN0+9DV/Q581yuU8mhCe4bpjFMvrb4r4iTxXW5ZK9n0Q0Loc3Mkar63H//Ib5fMjywCVW3rn6l+3hg69ChUH8zrNkvBkFzO1W+cccEAAAAAAAAAAAAAAAAAAAA/y1fAgwArulzMLC30j4AAAAASUVORK5CYII=";
+
+export const PLANX_BRANDING: VatInvoiceBranding = {
+  logo: PLANX_LOGO,
+  primaryColour: null,
+};
+
 interface GetCouncilInvoiceDetailsResponse {
   teams: {
     name: string;

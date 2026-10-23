@@ -16,7 +16,7 @@ export type EmailTemplate<
 export interface TemplateRegistry {
   welcome: WelcomeTemplate;
   submit: SubmitTemplate;
-  "vat-invoice-council": VatInvoiceCouncilTemplate;
+  "vat-invoice-council-2": VatInvoiceCouncilTemplate;
   "vat-invoice-planx": VatInvoicePlanXTemplate;
 }
 
