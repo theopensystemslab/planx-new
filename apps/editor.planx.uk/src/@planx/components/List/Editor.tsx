@@ -148,12 +148,14 @@ function ListComponent(props: Props) {
               errorMessage={formik.errors.description}
             />
           </InputRow>
-          <DataFieldAutocomplete
-            required
-            value={formik.values.fn}
-            onChange={(value) => formik.setFieldValue("fn", value)}
-            disabled={props.disabled}
-          />
+          <InputRow>
+            <DataFieldAutocomplete
+              required
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+              disabled={props.disabled}
+            />
+          </InputRow>
           <ErrorWrapper error={formik.errors.schema?.max}>
             <InputRow>
               <InputRowLabel>Schema</InputRowLabel>

@@ -67,12 +67,14 @@ export default function NumberInputComponent(props: Props): FCReturn {
               errorMessage={formik.errors.description}
             />
           </InputRow>
-          <DataFieldAutocomplete
-            value={formik.values.fn}
-            onChange={(value) => formik.setFieldValue("fn", value)}
-            disabled={props.disabled}
-            errorMessage={formik.errors.fn}
-          />
+          <InputRow>
+            <DataFieldAutocomplete
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+              disabled={props.disabled}
+              errorMessage={formik.errors.fn}
+            />
+          </InputRow>
           <InputRow>
             <InputRowLabel>units</InputRowLabel>
             <InputRowItem>

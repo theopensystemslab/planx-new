@@ -5,7 +5,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect, useRef, useState } from "react";
 import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import InputRow from "ui/shared/InputRow";
 
 interface Props {
   schema?: string[];
@@ -91,50 +90,46 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
   };
 
   return (
-    <InputRow>
-      <ErrorWrapper error={props.errorMessage}>
-        <AutocompleteInput
-          id="data-field-autocomplete"
-          key="data-field-autocomplete"
-          data-testid={props["data-testid"]}
-          placeholder={placeholder}
-          required={Boolean(props.required)}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          inputValue={inputValue}
-          onInputChange={(_event, newInputValue) =>
-            setInputValue(newInputValue)
+    <ErrorWrapper error={props.errorMessage}>
+      <AutocompleteInput
+        id="data-field-autocomplete"
+        key="data-field-autocomplete"
+        data-testid={props["data-testid"]}
+        placeholder={placeholder}
+        required={Boolean(props.required)}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        inputValue={inputValue}
+        onInputChange={(_event, newInputValue) => setInputValue(newInputValue)}
+        value={value}
+        options={options}
+        disabled={props.disabled}
+        filterOptions={(options, params) => {
+          const filtered = filter(options, params);
+          const { inputValue } = params;
+          // Suggest the creation of a new value
+          const isExisting = options.some((option) => inputValue === option);
+          if (allowCustomValues && inputValue !== "" && !isExisting) {
+            filtered.push(`Add "${inputValue}"`);
           }
-          value={value}
-          options={options}
-          disabled={props.disabled}
-          filterOptions={(options, params) => {
-            const filtered = filter(options, params);
-            const { inputValue } = params;
-            // Suggest the creation of a new value
-            const isExisting = options.some((option) => inputValue === option);
-            if (allowCustomValues && inputValue !== "" && !isExisting) {
-              filtered.push(`Add "${inputValue}"`);
-            }
-            return filtered;
-          }}
-          getOptionLabel={(option) => {
-            let formattedOption = option;
-            // If a new option was added, strip out the value between ""
-            if (option.startsWith('Add "')) {
-              formattedOption = option.split('"')[1];
-            }
-            return formattedOption;
-          }}
-          renderOption={renderOptions}
-          useDataFieldInput={true}
-          freeSolo={allowCustomValues}
-          selectOnFocus
-          clearOnEscape
-          handleHomeEndKeys
-          autoHighlight
-        />
-      </ErrorWrapper>
-    </InputRow>
+          return filtered;
+        }}
+        getOptionLabel={(option) => {
+          let formattedOption = option;
+          // If a new option was added, strip out the value between ""
+          if (option.startsWith('Add "')) {
+            formattedOption = option.split('"')[1];
+          }
+          return formattedOption;
+        }}
+        renderOption={renderOptions}
+        useDataFieldInput={true}
+        freeSolo={allowCustomValues}
+        selectOnFocus
+        clearOnEscape
+        handleHomeEndKeys
+        autoHighlight
+      />
+    </ErrorWrapper>
   );
 };

@@ -70,14 +70,16 @@ function Component(props: Props) {
               errorMessage={formik.errors.description}
             />
           </InputRow>
-          <DataFieldAutocomplete
-            required
-            schema={schema}
-            value={formik.values.fn}
-            onChange={(value) => formik.setFieldValue("fn", value)}
-            disabled={props.disabled}
-            allowCustomValues={false}
-          />
+          <InputRow>
+            <DataFieldAutocomplete
+              required
+              schema={schema}
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+              disabled={props.disabled}
+              allowCustomValues={false}
+            />
+          </InputRow>
           <InputRow>
             <Switch
               checked={Boolean(formik.values.maxFiles === 1)}
