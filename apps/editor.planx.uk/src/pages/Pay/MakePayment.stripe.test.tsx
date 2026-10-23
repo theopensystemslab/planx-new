@@ -126,7 +126,7 @@ describe("MakePayment with Stripe", () => {
         HttpResponse.json(
           {
             error:
-              "The Stripe account for this local authority cannot take a payment method for a total of £748.00",
+              "Failed to create Stripe Checkout Session for payment request 123. Reason: The Stripe account for this local authority cannot take a payment method for a total of £748.00, this error has been logged",
           },
           { status: 409 },
         ),

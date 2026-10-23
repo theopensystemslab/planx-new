@@ -11,6 +11,13 @@ import type {
 } from "./types.js";
 
 /**
+ * Our own errors give a reason the Pay component can read (e.g. a refusal)
+ * Other errors (e.g. from Stripe) may hold internal details, so are not passed on
+ */
+const getReason = (error: unknown) =>
+  error instanceof ServerError ? `. Reason: ${error.message}` : "";
+
+/**
  * Create a Stripe Checkout Session and return the hosted checkout URL
  */
 export const createCheckoutSession: CreateCheckoutSessionController = async (
@@ -37,7 +44,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
   } catch (error) {
     return next(
       new ServerError({
-        message: `Failed to create Stripe Checkout Session for ${localAuthority}`,
+        message: `Failed to create Stripe Checkout Session for ${localAuthority}${getReason(error)}`,
         status: error instanceof ServerError ? error.status : 500,
         cause: error,
       }),
@@ -63,7 +70,7 @@ export const createPaymentRequestCheckoutSession: CreatePaymentRequestCheckoutSe
     } catch (error) {
       return next(
         new ServerError({
-          message: `Failed to create Stripe Checkout Session for payment request ${paymentRequest.id}`,
+          message: `Failed to create Stripe Checkout Session for payment request ${paymentRequest.id}${getReason(error)}`,
           status: error instanceof ServerError ? error.status : 500,
           cause: error,
         }),

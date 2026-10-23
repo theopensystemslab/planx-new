@@ -281,7 +281,7 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
         HttpResponse.json(
           {
             error:
-              "The Stripe account for this local authority cannot take a payment method for a total of £748.00",
+              "Failed to create Stripe Checkout Session for test-team. Reason: The Stripe account for this local authority cannot take a payment method for a total of £748.00, this error has been logged",
           },
           { status: 409 },
         ),

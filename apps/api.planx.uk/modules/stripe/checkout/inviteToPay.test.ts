@@ -135,7 +135,14 @@ describe("creating a Stripe Checkout Session for an invite to pay request", () =
       pay_by_bank_payments: "inactive",
     });
 
-    await supertest(app).post(ENDPOINT).expect(409);
+    await supertest(app)
+      .post(ENDPOINT)
+      .expect(409)
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Reason: The Stripe account for this local authority cannot take a payment method for a total of £748\.00/,
+        );
+      });
 
     expect(mockCreate).not.toHaveBeenCalled();
   });

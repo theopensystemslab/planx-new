@@ -401,7 +401,12 @@ describe("choosing the payment methods for a Stripe Checkout Session", () => {
     await supertest(app)
       .post("/stripe/checkout-session/southwark")
       .send(validBody)
-      .expect(409);
+      .expect(409)
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Reason: The Stripe account for this local authority cannot take a payment method for a total of £748\.00/,
+        );
+      });
 
     expect(mockCreate).not.toHaveBeenCalled();
     expect(mockExpire).not.toHaveBeenCalled();
