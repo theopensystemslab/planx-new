@@ -41,8 +41,8 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
   };
 
   const getLegend = () => {
-    if (isPattern) return "Pattern visibility";
-    if (isSourceTemplate) return "Template visibility";
+    if (isPattern) return "Pattern availability";
+    if (isSourceTemplate) return "Template availability";
     return `${isService ? "Service" : "Flow"} copy permission`;
   };
 
@@ -54,9 +54,9 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
   };
 
   const getTrialWarning = () => {
-    if (isPattern) return "Trial accounts cannot set pattern visibility.";
+    if (isPattern) return "Trial accounts cannot set pattern availability.";
     if (isSourceTemplate)
-      return "Trial accounts cannot set template visibility.";
+      return "Trial accounts cannot set template availability.";
     return "Trial accounts cannot set flow copy permissions.";
   };
 

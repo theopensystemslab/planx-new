@@ -213,7 +213,7 @@ export const CheckForChangesToPublishButton: React.FC<{
                   params={{ team: teamSlug, flow: flowSlug }}
                   variant="body2"
                 >
-                  Pattern visibility
+                  Pattern availability
                 </CustomLink>
                 {" settings."}
               </Typography>

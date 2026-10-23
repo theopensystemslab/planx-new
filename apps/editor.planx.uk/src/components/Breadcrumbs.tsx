@@ -63,9 +63,9 @@ const Breadcrumbs: React.FC = () => {
   } = data.flows[0];
 
   // Patterns and source templates can't be set online, their discoverability is controlled by "availability" instead
-  const hasVisibility = isPattern || isSourceTemplate;
-  const showVisibleTag = hasVisibility && canCreateFromCopy;
-  const showStatusTag = !hasVisibility && isService && flowStatus;
+  const usesAvailability = isPattern || isSourceTemplate;
+  const showAvailableTag = usesAvailability && canCreateFromCopy;
+  const showStatusTag = !usesAvailability && isService && flowStatus;
 
   return (
     <BreadcrumbsContainer>
@@ -100,7 +100,7 @@ const Breadcrumbs: React.FC = () => {
           </>
         )}
       </BreadcrumbsRoot>
-      {(showVisibleTag || showStatusTag) && canUserEditTeam(teamSlug) && (
+      {(showAvailableTag || showStatusTag) && canUserEditTeam(teamSlug) && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
           <BreadcrumbsLink
             to="/app/$team/$flow/settings"
@@ -109,11 +109,11 @@ const Breadcrumbs: React.FC = () => {
               flow: flowSlug,
             }}
             title={
-              hasVisibility ? "Update visibility" : "Update service status"
+              usesAvailability ? "Update availability" : "Update service status"
             }
             sx={{ textDecoration: "none" }}
           >
-            {showVisibleTag ? (
+            {showAvailableTag ? (
               <FlowTag tagType={FlowTagType.Availability}>Available</FlowTag>
             ) : (
               <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>

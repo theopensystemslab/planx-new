@@ -135,8 +135,8 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     isTemplatedFlow,
     isService,
     isPattern,
-    hasVisibility,
-    isVisible,
+    usesAvailability,
+    isAvailable,
     statusVariant,
   } = useFlowMetadata(flow);
 
@@ -187,10 +187,10 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
         <>
           <FlowStatusCell>
             <Box sx={{ display: "inline-flex" }}>
-              {isVisible && (
+              {isAvailable && (
                 <FlowTag tagType={FlowTagType.Availability}>Available</FlowTag>
               )}
-              {isService && !hasVisibility && (
+              {isService && !usesAvailability && (
                 <FlowTag
                   tagType={FlowTagType.Status}
                   statusVariant={statusVariant}
