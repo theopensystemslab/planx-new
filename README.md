@@ -10,7 +10,7 @@ Explore our component library and design system here: https://storybook.planx.uk
 
 - Production: https://status.planx.uk
 - Staging: https://status.planx.dev
-- GIS & other data integrations: https://gis-status.planx.uk (ask for the password in Slack!)
+- GIS & other data integrations: https://gis-status.planx.uk (ask for the password in Slack !)
 
 ## Our stack
 
