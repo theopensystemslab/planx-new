@@ -61,7 +61,7 @@
     "stripe": "catalog:",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
-    "type-fest": "^4.41.0",
+    "type-fest": "^5.10.0",
     "zod": "^3.25.76"
   },
   "scripts": {

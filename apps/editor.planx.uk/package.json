@@ -82,7 +82,7 @@
     "sharedb": "catalog:sharedb",
     "subscriptions-transport-ws": "^0.11.0",
     "tippy.js": "^6.3.7",
-    "type-fest": "^4.41.0",
+    "type-fest": "^5.10.0",
     "uuid": "catalog:",
     "vite": "catalog:",
     "wkt": "^0.1.1",
