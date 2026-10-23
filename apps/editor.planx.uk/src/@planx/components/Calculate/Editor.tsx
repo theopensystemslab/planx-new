@@ -51,7 +51,8 @@ export default function Component(props: Props) {
           );
 
           if (Number.isNaN(Number(result))) {
-            errors.formula = "Enter a formula which outputs a number";
+            errors.formula =
+              "Enter a formula which outputs a number, true or false";
           }
         } catch (error: any) {
           errors.formula = error.message;
