@@ -1,10 +1,8 @@
+import type { TestConfig } from "yup";
 import { array, boolean, object, string } from "yup";
 
 import type { Option } from "../Option/model";
-import {
-  type ConditionalOption,
-  optionValidationSchema,
-} from "../Option/model";
+import { optionValidationSchema } from "../Option/model";
 import type {
   BaseChecklist,
   FlatOptions,
@@ -15,6 +13,7 @@ import {
   getFlatOptions,
   parseBaseChecklist,
 } from "../shared/BaseChecklist/model";
+import { hasUniqueLabels, uniqueLabelsTest } from "../shared/helpers";
 
 /**
  * Database representation of a Checklist component
@@ -33,6 +32,28 @@ export type GroupedChecklist = Checklist & GroupedOptions<Option>;
  * Contains options derived from child Answer nodes
  */
 export type ChecklistWithOptions = FlatChecklist | GroupedChecklist;
+
+const uniqueLabelsWithinGroupsTest: TestConfig<ChecklistWithOptions> = {
+  name: "uniqueLabelsWithinGroups",
+  test: function ({ groupedOptions }) {
+    if (!groupedOptions) return true;
+
+    for (const group of groupedOptions) {
+      if (!group.children) continue;
+
+      const allUnique = hasUniqueLabels(group.children);
+
+      if (!allUnique) {
+        return this.createError({
+          path: "options",
+          message: "Options within a single group must have unique labels",
+        });
+      }
+    }
+
+    return true;
+  },
+};
 
 export const checklistInputValidationSchema = ({
   data: { allRequired, options, groupedOptions },
@@ -72,7 +93,10 @@ export const validationSchema = baseChecklistValidationSchema.concat(
       }).required(),
     ).optional(),
     allRequired: boolean(),
-    options: array(optionValidationSchema).optional(),
+    options: array(optionValidationSchema)
+      .optional()
+      .test(uniqueLabelsTest as TestConfig<unknown>)
+      .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>),
     neverAutoAnswer: boolean(),
     alwaysAutoAnswerBlank: boolean(),
     autoAnswers: array(string()),

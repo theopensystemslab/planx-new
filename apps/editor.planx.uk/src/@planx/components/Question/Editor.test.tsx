@@ -105,6 +105,28 @@ describe("validation", () => {
     );
   }, 10_000);
 
+  test("labels for options must be unique, even if descriptions differ", async () => {
+    await setup(
+      <DndProvider backend={HTML5Backend}>
+        <Question
+          node={{
+            data: { neverAutoAnswer: true, alwaysAutoAnswerBlank: true },
+          }}
+          options={[
+            { id: "opt1", data: { text: "A", description: "B" } },
+            { id: "opt2", data: { text: "A", description: "C" } },
+          ]}
+        />
+      </DndProvider>,
+    );
+
+    fireEvent.submit(screen.getByTestId("question-component-form"));
+
+    await waitFor(() =>
+      expect(screen.getByText(/Options must have unique labels/)).toBeVisible(),
+    );
+  });
+
   test("both 'always put to user' and 'never put to user' cannot be toggled on together", async () => {
     await setup(
       <DndProvider backend={HTML5Backend}>
