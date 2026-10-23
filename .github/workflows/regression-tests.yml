@@ -4,8 +4,7 @@ permissions: read-all
 
 on:
   schedule:
-    # Runs every morning at 06:06 (https://crontab.guru/#06_6_*_*_*)
-    - cron: "06 6 * * *"
+    - cron: "06 6,14 * * *"
   workflow_dispatch:
     inputs:
       comment_id:
