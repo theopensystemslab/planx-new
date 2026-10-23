@@ -62,7 +62,7 @@ const Breadcrumbs: React.FC = () => {
     canCreateFromCopy,
   } = data.flows[0];
 
-  // Patterns and source templates can't be set online, their discoverability is controlled by "visibility" instead
+  // Patterns and source templates can't be set online, their discoverability is controlled by "availability" instead
   const hasVisibility = isPattern || isSourceTemplate;
   const showVisibleTag = hasVisibility && canCreateFromCopy;
   const showStatusTag = !hasVisibility && isService && flowStatus;
