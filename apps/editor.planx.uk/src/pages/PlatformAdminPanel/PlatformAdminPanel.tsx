@@ -1,5 +1,6 @@
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { useStripeConnectStatus } from "pages/FlowEditor/components/Settings/Team/Payment/Onboarding/hooks/useStripeConnectStatus";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import type { AdminPanelData } from "types";
 import { type LiveFlow } from "types";
@@ -84,6 +85,9 @@ export const PlatformAdminPanel = () => {
       field: "stripeConnected",
       headerName: "Stripe connected",
       type: ColumnFilterType.BOOLEAN,
+      customComponent: (params) => (
+        <StripeConnectedCell teamSlug={params.row.slug} />
+      ),
     },
     {
       field: "paymentProvider",
@@ -164,4 +168,20 @@ export const PlatformAdminPanel = () => {
       )}
     </FixedHeightDashboardContainer>
   );
+};
+
+interface StripeConnectedCellProps {
+  teamSlug: string;
+}
+
+const StripeConnectedCell = ({ teamSlug }: StripeConnectedCellProps) => {
+  // `teams_summary` view exclusively checks for existance of account URL
+  //   but we want to override with additional API check of actual account status (eg don't show 'partial' as complete)
+  const { data, isLoading } = useStripeConnectStatus(teamSlug);
+
+  if (!isLoading && data?.accountStatus === "active") {
+    return <Configured />;
+  } else {
+    return <NotConfigured />;
+  }
 };
