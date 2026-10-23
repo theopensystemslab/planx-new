@@ -4,7 +4,7 @@ import { useParams } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import { FlowTagType } from "ui/editor/FlowTag/types";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useGetFlowDetails } from "../hooks/useGetFlowDetails";
@@ -114,12 +114,7 @@ const Breadcrumbs: React.FC = () => {
             sx={{ textDecoration: "none" }}
           >
             {showVisibleTag ? (
-              <FlowTag
-                tagType={FlowTagType.Status}
-                statusVariant={StatusVariant.Online}
-              >
-                Visible
-              </FlowTag>
+              <FlowTag tagType={FlowTagType.Availability}>Available</FlowTag>
             ) : (
               <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
                 {flowStatus}

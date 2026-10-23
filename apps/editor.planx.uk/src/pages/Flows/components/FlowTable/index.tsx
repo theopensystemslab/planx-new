@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import type { FlowView } from "pages/Flows";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import { FlowTagType } from "ui/editor/FlowTag/types";
 import Permission from "ui/editor/Permission";
 import TruncatedText from "ui/editor/TruncatedText";
 
@@ -188,12 +188,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           <FlowStatusCell>
             <Box sx={{ display: "inline-flex" }}>
               {isVisible && (
-                <FlowTag
-                  tagType={FlowTagType.Status}
-                  statusVariant={StatusVariant.Online}
-                >
-                  Visible
-                </FlowTag>
+                <FlowTag tagType={FlowTagType.Availability}>Available</FlowTag>
               )}
               {isService && !hasVisibility && (
                 <FlowTag

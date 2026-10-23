@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { FlowView } from "pages/Flows";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import { FlowTagType } from "ui/editor/FlowTag/types";
 import Permission from "ui/editor/Permission";
 import TruncatedText from "ui/editor/TruncatedText";
 
@@ -57,9 +57,8 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
       shouldAddTag: isService && !hasVisibility,
     },
     {
-      type: FlowTagType.Status,
-      displayName: "Visible",
-      statusVariant: StatusVariant.Online,
+      type: FlowTagType.Availability,
+      displayName: "Available",
       shouldAddTag: isVisible,
     },
     {

@@ -33,7 +33,7 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
   const flowType = isService ? "service" : "flow";
   const getSwitchLabel = (canCreateFromCopy: boolean) => {
     if (isPattern || isSourceTemplate) {
-      return canCreateFromCopy ? "Visible" : "Not visible";
+      return canCreateFromCopy ? "Available" : "Not available";
     }
     return canCreateFromCopy
       ? "Can be copied to create new services"
