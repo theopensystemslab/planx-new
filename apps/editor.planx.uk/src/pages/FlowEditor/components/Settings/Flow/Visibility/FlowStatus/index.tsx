@@ -89,7 +89,6 @@ const FlowStatus: React.FC = () => {
       {({ formik, data }) => {
         const isTrial = data?.flow.team.settings.isTrial;
         const isGuidanceOnly = data?.flow.team.settings.isGuidanceOnly;
-        const isTemplate = Boolean(data?.flow.templatedFrom);
         const isPublished = Boolean(data?.flow.publishedFlows.length);
         const isSubmissionService = Boolean(
           data?.flow.publishedFlows[0]?.hasSendComponent,
@@ -107,12 +106,6 @@ const FlowStatus: React.FC = () => {
               <WarningContainer icon={PendingActionsIcon}>
                 Your current contract doesn't include submission services.
                 Contact the OSL team to upgrade.
-              </WarningContainer>
-            )}
-            {isTemplate && (
-              <WarningContainer icon={PendingActionsIcon}>
-                Source templates are discoverable from the "Add a new flow"
-                modal when they are online.
               </WarningContainer>
             )}
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>

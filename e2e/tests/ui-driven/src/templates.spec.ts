@@ -282,7 +282,7 @@ test.describe("Templates", () => {
       await navigateToService(page, SOURCE_TEMPLATE_SLUG);
       await navigateToFlowSettings(page);
 
-      await page.getByLabel("Cannot be copied to create new services").click();
+      await page.getByLabel("Not available", { exact: true }).click();
       await page.getByTestId("settings-submit-button").click();
 
       await expect(
@@ -349,7 +349,7 @@ test.describe("Templates", () => {
   });
 
   // team editor creating a flow from source template, customising it and publishing it
-  // relies on the source template being online and published from the first block
+  // relies on the source template being available and published from the first block
   test.describe("As a team editor", () => {
     test("can create a templated flow from an available source template", async ({
       browser,

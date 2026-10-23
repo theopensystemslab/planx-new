@@ -21,6 +21,7 @@ export const FLOW_SUMMARY_FIELDS = gql`
     isTemplate: is_template
     isService: is_service
     isPattern: is_pattern
+    canCreateFromCopy: can_create_from_copy
     template {
       team {
         id

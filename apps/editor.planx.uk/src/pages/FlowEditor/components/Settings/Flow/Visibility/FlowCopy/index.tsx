@@ -20,11 +20,45 @@ const REQUEST_A_REVIEW_URL =
 type Props = { isService: boolean };
 
 const FlowCopySettings: React.FC<Props> = ({ isService }) => {
-  const [flowId, flowSlug, teamSlug] = useStore((state) => [
-    state.id,
-    state.flowSlug,
-    state.teamSlug,
-  ]);
+  const [flowId, flowSlug, teamSlug, isPattern, isSourceTemplate] = useStore(
+    (state) => [
+      state.id,
+      state.flowSlug,
+      state.teamSlug,
+      state.isPattern,
+      state.isTemplate,
+    ],
+  );
+
+  const flowType = isService ? "service" : "flow";
+  const getSwitchLabel = (canCreateFromCopy: boolean) => {
+    if (isPattern || isSourceTemplate) {
+      return canCreateFromCopy ? "Available" : "Not available";
+    }
+    return canCreateFromCopy
+      ? "Can be copied to create new services"
+      : "Cannot be copied to create new services";
+  };
+
+  const getLegend = () => {
+    if (isPattern) return "Pattern availability";
+    if (isSourceTemplate) return "Template availability";
+    return `${isService ? "Service" : "Flow"} copy permission`;
+  };
+
+  const getDescription = () => {
+    if (isPattern) return "Available to editors when adding components.";
+    if (isSourceTemplate)
+      return "Available to editors when creating a new flow from a template.";
+    return `Control if this ${flowType} can be used to create new ${flowType}s in other teams. It can still be copied and modified within your team.`;
+  };
+
+  const getTrialWarning = () => {
+    if (isPattern) return "Trial accounts cannot set pattern availability.";
+    if (isSourceTemplate)
+      return "Trial accounts cannot set template availability.";
+    return "Trial accounts cannot set flow copy permissions.";
+  };
 
   const { mutate: sendSlackMessage } = useSlackMessage();
 
@@ -37,22 +71,22 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
       query={GET_FLOW_VISIBILITY}
       mutation={UPDATE_FLOW_VISIBILITY}
       validationSchema={validationSchema}
-      legend={`${isService ? "Service" : "Flow"} copy permission`}
+      legend={getLegend()}
       description={
         <>
-          <p>
-            {`Control if this ${isService ? "service" : "flow"} can be used to create new ${isService ? "services" : "flows"} in other teams. It can still be copied and modified within your team.`}
-          </p>
-          <p>
-            <Link
-              href={REQUEST_A_REVIEW_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Request a review (opens in a new tab)
-            </Link>
-            {` by our services team before making this ${isService ? "service" : "flow"} available to copy.`}
-          </p>
+          <p>{getDescription()}</p>
+          {!isPattern && !isSourceTemplate && (
+            <p>
+              <Link
+                href={REQUEST_A_REVIEW_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Request a review (opens in a new tab)
+              </Link>
+              {` by our services team before making this ${flowType} available to copy.`}
+            </p>
+          )}
         </>
       }
       defaultValues={defaultValues}
@@ -78,15 +112,11 @@ const FlowCopySettings: React.FC<Props> = ({ isService }) => {
           <>
             {isTrial && (
               <WarningContainer icon={PendingActionsIcon}>
-                Trial accounts cannot set flow copy permissions.
+                {getTrialWarning()}
               </WarningContainer>
             )}
             <Switch
-              label={
-                formik.values.canCreateFromCopy
-                  ? "Can be copied to create new services"
-                  : "Cannot be copied to create new services"
-              }
+              label={getSwitchLabel(formik.values.canCreateFromCopy)}
               name="canCreateFromCopy"
               variant="editorPage"
               checked={formik.values.canCreateFromCopy}

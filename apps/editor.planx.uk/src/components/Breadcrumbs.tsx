@@ -53,10 +53,19 @@ const Breadcrumbs: React.FC = () => {
 
   const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
-  const isPattern = useStore((state) => state.isPattern);
-
   if (!teamSlug || !flowSlug || !data?.flows.length) return null;
-  const { status: flowStatus, isService } = data.flows[0];
+  const {
+    status: flowStatus,
+    isService,
+    isPattern,
+    isTemplate: isSourceTemplate,
+    canCreateFromCopy,
+  } = data.flows[0];
+
+  // Patterns and source templates can't be set online, their discoverability is controlled by "availability" instead
+  const usesAvailability = isPattern || isSourceTemplate;
+  const showAvailableTag = usesAvailability && canCreateFromCopy;
+  const showStatusTag = !usesAvailability && isService && flowStatus;
 
   return (
     <BreadcrumbsContainer>
@@ -91,7 +100,7 @@ const Breadcrumbs: React.FC = () => {
           </>
         )}
       </BreadcrumbsRoot>
-      {(isService || isPattern) && flowStatus && canUserEditTeam(teamSlug) && (
+      {(showAvailableTag || showStatusTag) && canUserEditTeam(teamSlug) && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
           <BreadcrumbsLink
             to="/app/$team/$flow/settings"
@@ -99,12 +108,18 @@ const Breadcrumbs: React.FC = () => {
               team: teamSlug,
               flow: flowSlug,
             }}
-            title="Update service status"
+            title={
+              usesAvailability ? "Update availability" : "Update service status"
+            }
             sx={{ textDecoration: "none" }}
           >
-            <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
-              {flowStatus}
-            </FlowTag>
+            {showAvailableTag ? (
+              <FlowTag tagType={FlowTagType.Availability}>Available</FlowTag>
+            ) : (
+              <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
+                {flowStatus}
+              </FlowTag>
+            )}
           </BreadcrumbsLink>
         </Box>
       )}

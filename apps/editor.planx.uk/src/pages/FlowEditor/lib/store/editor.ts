@@ -253,6 +253,7 @@ export interface FlowSummary {
   isListedOnLPS: boolean;
   isService: boolean;
   isPattern: boolean;
+  canCreateFromCopy: boolean;
   pinnedFlows: { flowId: string }[];
   template: {
     team: {

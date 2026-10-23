@@ -42,6 +42,8 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
     isTemplatedFlow,
     isService,
     isPattern,
+    usesAvailability,
+    isAvailable,
     statusVariant,
   } = useFlowMetadata(flow);
 
@@ -51,7 +53,18 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
     {
       type: FlowTagType.Status,
       displayName: statusVariant,
-      shouldAddTag: isService || isPattern,
+      statusVariant,
+      shouldAddTag: isService && !usesAvailability,
+    },
+    {
+      type: FlowTagType.Availability,
+      displayName: "Available",
+      shouldAddTag: isAvailable,
+    },
+    {
+      type: FlowTagType.ServiceType,
+      displayName: "Service",
+      shouldAddTag: isService && isSourceTemplate && !hasSendComponent,
     },
     {
       type: FlowTagType.ServiceType,
@@ -121,7 +134,7 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
                   <FlowTag
                     key={`${tag.displayName}-flowtag`}
                     tagType={tag.type}
-                    statusVariant={statusVariant}
+                    statusVariant={tag.statusVariant}
                   >
                     {tag.displayName}
                   </FlowTag>

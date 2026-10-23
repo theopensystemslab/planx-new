@@ -40,4 +40,7 @@ export const Root = styled(Box, {
   ...(tagType === FlowTagType.ServiceType && {
     backgroundColor: theme.palette.flowTag.serviceType,
   }),
+  ...(tagType === FlowTagType.Availability && {
+    backgroundColor: theme.palette.flowTag.online,
+  }),
 }));
