@@ -79,12 +79,14 @@ function PageComponent(props: Props) {
               errorMessage={formik.errors.description}
             />
           </InputRow>
-          <DataFieldAutocomplete
-            errorMessage={formik.errors.fn}
-            value={formik.values.fn}
-            onChange={(value) => formik.setFieldValue("fn", value)}
-            disabled={props.disabled}
-          />
+          <InputRow>
+            <DataFieldAutocomplete
+              errorMessage={formik.errors.fn}
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+              disabled={props.disabled}
+            />
+          </InputRow>
           <InputRow>
             <InputRowLabel>Schema</InputRowLabel>
             <InputRowItem>

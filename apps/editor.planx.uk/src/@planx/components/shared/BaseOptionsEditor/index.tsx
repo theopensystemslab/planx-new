@@ -88,16 +88,18 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
           </InputRow>
         )}
         {props.showValueField && (
-          <DataFieldAutocomplete
-            key={`${props.value.id}-data-field-autocomplete`}
-            data-testid={`data-field-autocomplete-option-${props.index}`}
-            schema={props.schema}
-            value={props.value.data.val}
-            disabled={props.disabled}
-            onChange={(targetValue) =>
-              updateSharedField("val", targetValue ?? "")
-            }
-          />
+          <InputRow>
+            <DataFieldAutocomplete
+              key={`${props.value.id}-data-field-autocomplete`}
+              data-testid={`data-field-autocomplete-option-${props.index}`}
+              schema={props.schema}
+              value={props.value.data.val}
+              disabled={props.disabled}
+              onChange={(targetValue) =>
+                updateSharedField("val", targetValue ?? "")
+              }
+            />
+          </InputRow>
         )}
         <FlagsSelect
           value={props.value.data.flags}
