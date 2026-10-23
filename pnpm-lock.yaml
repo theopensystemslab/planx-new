@@ -37,8 +37,8 @@ catalogs:
       specifier: ^9.39.5
       version: 9.39.5
     globals:
-      specifier: ^16.5.0
-      version: 16.5.0
+      specifier: ^17.13.0
+      version: 17.13.0
     jsdom:
       specifier: ~30.0.1
       version: 30.0.1
@@ -379,7 +379,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
       graphql-query-test-mock:
         specifier: ^0.12.1
         version: 0.12.1(nock@13.5.6)
@@ -825,7 +825,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
 
   apps/localplanning.services:
     dependencies:
@@ -925,7 +925,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@24.10.15)(typescript@5.9.3)
@@ -985,7 +985,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.9
@@ -1120,7 +1120,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
       mime:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1163,7 +1163,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.9
@@ -1197,7 +1197,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.9
@@ -1234,7 +1234,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.9
@@ -1268,7 +1268,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.9
@@ -1305,7 +1305,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.9
@@ -1375,7 +1375,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.13.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.9
@@ -1484,8 +1484,8 @@ packages:
     resolution: {integrity: sha512-vC/bk1Lz7Tn/EfU9/apOTBk80/8dyGyWMowPoV1tJ52muDGsDqt2HPT2klrFUiY60MQmQv9q8yIht15JnBgDGw==}
     engines: {node: ^22.13.0 || >=24.0.0}
 
-  '@asamuzakjp/css-color@7.1.7':
-    resolution: {integrity: sha512-Q7ioeear07HwixdIitIn9KS1LZi97CEDFCSjPNm9v+y8KNbsu9q4Lrd4zUQW4faED+E7qxvfeVnbNRW46wFKuw==}
+  '@asamuzakjp/css-color@7.1.5':
+    resolution: {integrity: sha512-jCpAvj8apa7SKHZYogk0rbXB3Kb0hLFrpkWF+Ap+vBA5rirItnpv9NKyAyEuDuFizvl0qwnj6JWR70RGJ0rOlw==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
 
   '@asamuzakjp/dom-selector@8.3.2':
@@ -6936,12 +6936,12 @@ packages:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
 
-  globals@16.5.0:
-    resolution: {integrity: sha512-c/c15i26VrJ4IRt5Z89DnIzCGDn9EcebibhAOjw5ibqEHsE1wLUgkPn9RDmNcUKyU87GeaL633nyJ+pplFR2ZQ==}
-    engines: {node: '>=18'}
-
   globals@17.12.0:
     resolution: {integrity: sha512-cezEd/DTyyht9cvSSURyygXPfy04GtWO/5e6ZPvH7fCtjKz9PYOmuawphw1Ctd1f6C+5JypXfGD7ahNMXvevBA==}
+    engines: {node: '>=18'}
+
+  globals@17.13.0:
+    resolution: {integrity: sha512-RwMTC61u7hrG3ZJMkZQOK4JLJrKS8QtoTii63EmWvFXHqycY9FObBJQCbsLxSO8kjKhWE5kV1GC+Vb1g3RI0Zg==}
     engines: {node: '>=18'}
 
   globalthis@1.0.4:
@@ -10449,10 +10449,6 @@ packages:
     resolution: {integrity: sha512-u4UB2/IrKdU6lFxumHmmo1a3fCQO5tzQllRorfoRS63txhrB7xTpSn1PftwC4qEHkOaqP95fCWW4lJzwErwzhQ==}
     engines: {node: '>=22.19.0'}
 
-  undici@8.12.3:
-    resolution: {integrity: sha512-+fdndUTwBP86cVjihTp21hZHo7d6oj1c/47XPA3lL8mM0XHs+C4EkcjmgRsFnFk2f/UONGDy9ItBItmXsLOQHw==}
-    engines: {node: '>=22.19.0'}
-
   unicorn-magic@0.4.1:
     resolution: {integrity: sha512-lzlXPoVB0Uy/FvTaUgX39RbixYiSKoc3JSoSf01+0c2B6FR3qdYIPN7Qjo/AV7n6sqLCk0509cT3LRj1oSZ1+A==}
     engines: {node: '>=20'}
@@ -11375,7 +11371,7 @@ snapshots:
       '@csstools/css-tokenizer': 4.0.2
       lru-cache: 11.5.3
 
-  '@asamuzakjp/css-color@7.1.7':
+  '@asamuzakjp/css-color@7.1.5':
     dependencies:
       '@csstools/css-calc': 3.4.3(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
       '@csstools/css-color-parser': 4.2.6(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
@@ -17415,9 +17411,9 @@ snapshots:
 
   globals@14.0.0: {}
 
-  globals@16.5.0: {}
-
   globals@17.12.0: {}
+
+  globals@17.13.0: {}
 
   globalthis@1.0.4:
     dependencies:
@@ -18172,7 +18168,7 @@ snapshots:
 
   jsdom@30.1.1(@noble/hashes@1.8.0):
     dependencies:
-      '@asamuzakjp/css-color': 7.1.7
+      '@asamuzakjp/css-color': 7.1.5
       '@asamuzakjp/dom-selector': 9.2.4
       '@bramus/specificity': 2.4.3
       '@csstools/css-syntax-patches-for-csstree': 1.1.15(css-tree@3.2.1)
@@ -18186,7 +18182,7 @@ snapshots:
       parse5: 8.0.1
       saxes: 6.0.0
       tough-cookie: 6.0.2
-      undici: 8.12.3
+      undici: 8.11.2
       w3c-xmlserializer: 6.0.0
       webidl-conversions: 8.0.1
       whatwg-mimetype: 5.0.0
@@ -21594,9 +21590,6 @@ snapshots:
   undici@7.30.0: {}
 
   undici@8.11.2: {}
-
-  undici@8.12.3:
-    optional: true
 
   unicorn-magic@0.4.1: {}
 
