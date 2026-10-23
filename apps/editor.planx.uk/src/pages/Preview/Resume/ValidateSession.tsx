@@ -73,9 +73,9 @@ export const LockedSession: React.FC<{
           ) to pay and changes might affect the fee.
           <br />
           <br />
-          You can {/* TODO: Check / fix this link */}
+          You can{" "}
           <CustomLink
-            to="pay"
+            to={from === "/$flow" ? "/$flow/pay" : "/$team/$flow/pay"}
             from={from}
             search={{ paymentRequestId: paymentRequest.id }}
           >

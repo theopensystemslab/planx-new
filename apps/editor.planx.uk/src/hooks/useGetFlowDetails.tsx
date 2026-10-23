@@ -6,6 +6,7 @@ const GET_FLOW_DETAILS = gql`
     flows(
       where: { team: { slug: { _eq: $teamSlug } }, slug: { _eq: $flowSlug } }
     ) {
+      id
       status
       isService: is_service
     }

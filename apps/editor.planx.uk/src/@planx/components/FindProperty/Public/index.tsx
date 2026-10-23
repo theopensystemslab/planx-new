@@ -11,6 +11,7 @@ import type { Feature } from "geojson";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { parse } from "postcode";
 import { useState } from "react";
+import { exhaustiveCheck } from "utils";
 
 import type { FindProperty, SiteAddress } from "../model";
 import {
@@ -55,8 +56,6 @@ function Component(props: Props) {
   } = useFindPropertyData(address);
 
   const validateAndSubmit = () => {
-    // TODO `if (isPending)` on either page, wrap Continue button in error mesage?
-
     if (page === "new-address") {
       if (address?.x === undefined && address?.y === undefined)
         setMapValidationError("Click or tap to place a point on the map");
@@ -138,21 +137,26 @@ function Component(props: Props) {
     }
   };
 
-  const getValidStatus = () => {
-    // Continue button enabled unless actively fetching
-    if (page === "new-address") return !address || !isPending;
-
-    // Continue button enabled once we have an address and not actively fetching
-    if (page === "os-address") return Boolean(address) && !isPending;
+  const getDisabledStatus = (): boolean => {
+    switch (page) {
+      // Continue button enabled unless actively fetching
+      case "new-address":
+        return Boolean(address) && isPending;
+      // Continue button enabled once we have an address and not actively fetching
+      case "os-address":
+        return !address || isPending;
+      default:
+        return exhaustiveCheck(page);
+    }
   };
 
-  const isValid = getValidStatus();
+  const isDisabled = getDisabledStatus();
 
   return (
     <Card
       sx={{ marginBottom: "220px" }}
       handleSubmit={validateAndSubmit}
-      isValid={isValid}
+      disabled={isDisabled}
     >
       {getBody()}
     </Card>

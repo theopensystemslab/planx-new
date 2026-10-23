@@ -3,10 +3,6 @@ name: "Automatic production deployment"
 permissions: read-all
 
 on:
-  # TODO: Enable CRON if desired
-  # schedule:
-  #   # “At 09:00 on every day-of-week from Tuesday through Friday.”
-  #   -   cron: "0 9 * * 2-5"
   workflow_dispatch:
 
 jobs:

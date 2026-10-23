@@ -109,7 +109,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
   };
 
   return (
-    <Card handleSubmit={handleSubmit} isValid>
+    <Card handleSubmit={handleSubmit}>
       <>
         <Container
           customColor={props.color}

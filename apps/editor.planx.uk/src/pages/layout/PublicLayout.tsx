@@ -8,6 +8,7 @@ import {
 import Typography from "@mui/material/Typography";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import Feedback from "components/Feedback";
+import ServiceToolbar from "components/ServiceToolbar";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { PropsWithChildren } from "react";
 import { generateTeamTheme } from "theme";
@@ -110,6 +111,7 @@ const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
             <AppErrorBoundary>{children}</AppErrorBoundary>
           </MainContainer>
           <PublicFooter />
+          <ServiceToolbar />
         </RootContainer>
       </ThemeProvider>
     </StyledEngineProvider>

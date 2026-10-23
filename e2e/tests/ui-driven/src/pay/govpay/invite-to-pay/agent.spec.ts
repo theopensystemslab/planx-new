@@ -22,9 +22,12 @@ import {
   getPaymentRequestBySessionId,
   makePaymentRequest,
   navigateToPayComponent,
-} from "./helpers.js";
-import inviteToPayFlow from "./invite-to-pay-flow.js";
-import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks.js";
+} from "../../invite-to-pay/helpers.js";
+import inviteToPayFlow from "../../invite-to-pay/invite-to-pay-flow.js";
+import {
+  mockPaymentRequest,
+  modifiedInviteToPayFlow,
+} from "../../invite-to-pay/mocks.js";
 
 let context: TestContext = {
   ...contextDefaults,

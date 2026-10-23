@@ -11,6 +11,7 @@ export default [
         "error",
         {
           assertFunctionNames: [
+            "expectPaidPaymentRequest",
             "expectSections",
             "expectSessionResumedAtPay",
             "expectSessionResumedAtRetryPayment",

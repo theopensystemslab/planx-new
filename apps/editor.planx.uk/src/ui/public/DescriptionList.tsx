@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
 import React, { Fragment } from "react";
+import { FONT_WEIGHT_BOLD } from "theme";
 
 export interface DescriptionListItem {
   term: string;
@@ -31,8 +32,7 @@ const List = styled("dl")<{ hideLastBorder?: boolean }>(
 );
 
 const Term = styled("dt")(() => ({
-  // TODO: Standardise this from the theme
-  fontWeight: 700,
+  fontWeight: FONT_WEIGHT_BOLD,
 }));
 
 const Details = styled("dd")(() => ({

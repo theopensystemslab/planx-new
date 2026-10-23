@@ -56,7 +56,7 @@ const PayText = styled(Box)(({ theme }) => ({
 const Error: React.FC<Props> = ({ onConfirm, error }) => {
   if (error?.startsWith(PAY_API_ERROR_UNSUPPORTED_TEAM)) {
     return (
-      <Card handleSubmit={onConfirm} isValid>
+      <Card handleSubmit={onConfirm}>
         <ErrorSummary
           format="error"
           heading={error}

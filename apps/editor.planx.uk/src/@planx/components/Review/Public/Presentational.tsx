@@ -29,7 +29,7 @@ function Component(props: Props) {
   const titleId = "review-title";
 
   return (
-    <Card isValid handleSubmit={props.handleSubmit}>
+    <Card handleSubmit={props.handleSubmit}>
       <CardHeader
         title={props.title}
         description={props.description}

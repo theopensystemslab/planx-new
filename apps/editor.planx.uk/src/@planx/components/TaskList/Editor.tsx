@@ -122,25 +122,18 @@ const TaskListComponent: React.FC<Props> = (props) => {
                 />
               </InputRow>
             </Box>
-            <ErrorWrapper
-              error={
-                typeof formik.errors.tasks === "string"
-                  ? formik.errors.tasks
-                  : undefined
-              }
-            >
-              <ListManager
-                values={formik.values.tasks}
-                onChange={(tasks: Array<Task>) => {
-                  formik.setFieldValue("tasks", tasks);
-                }}
-                Editor={TaskEditor}
-                newValue={newTask}
-                disabled={props.disabled}
-                collapsible={true}
-                itemName="task"
-              />
-            </ErrorWrapper>
+            <ListManager
+              values={formik.values.tasks}
+              errors={formik.errors.tasks}
+              onChange={(tasks: Array<Task>) => {
+                formik.setFieldValue("tasks", tasks);
+              }}
+              Editor={TaskEditor}
+              newValue={newTask}
+              disabled={props.disabled}
+              collapsible={true}
+              itemName="task"
+            />
           </ModalSectionContent>
         </ModalSection>
         <ModalFooter formik={formik} disabled={props.disabled} />

@@ -9,6 +9,7 @@ import {
 } from "./checkout/controller.js";
 import {
   fetchPaymentRequest,
+  requireStripePaymentsEnabled,
   resolvePaymentRequestConnectedAccount,
   resolveReturnURL,
   resolveTeamPaymentProvider,
@@ -21,6 +22,8 @@ import {
 import * as Controller from "./connect/controller.js";
 import { requireStripeConnectTeamAuth } from "./connect/middleware.js";
 import { connectCallbackSchema, connectSchema } from "./connect/types.js";
+import { fulfilPaymentRequestController } from "./fulfilment/controller.js";
+import { fulfilPaymentRequestSchema } from "./fulfilment/types.js";
 import { migrate } from "./migration/controller.js";
 import { migrateSchema } from "./migration/types.js";
 import { handleStripeWebhook } from "./webhook/controller.js";
@@ -65,6 +68,7 @@ router.get(
 router.post(
   "/stripe/checkout-session/:localAuthority",
   validate(createCheckoutSessionSchema),
+  requireStripePaymentsEnabled,
   resolveTeamPaymentProvider,
   resolveReturnURL,
   createCheckoutSession,
@@ -79,9 +83,16 @@ router.get(
 router.post(
   "/stripe/payment-request/:paymentRequestId/checkout-session",
   validate(createPaymentRequestCheckoutSessionSchema),
+  requireStripePaymentsEnabled,
   fetchPaymentRequest,
   resolvePaymentRequestConnectedAccount,
   createPaymentRequestCheckoutSession,
+);
+
+router.post(
+  "/stripe/payment-request/:paymentRequestId/fulfil",
+  validate(fulfilPaymentRequestSchema),
+  fulfilPaymentRequestController,
 );
 
 router.post(

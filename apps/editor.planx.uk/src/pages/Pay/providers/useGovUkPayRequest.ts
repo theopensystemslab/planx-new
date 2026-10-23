@@ -122,7 +122,7 @@ export function useGovUkPayRequest({
 
   switch (currentState) {
     case States.Finished:
-      return { status: "paid" };
+      return { status: "paid", reference: govPayPaymentId };
     case States.Ready:
     case States.Reset:
     case States.ReadyToRetry:

@@ -4,7 +4,6 @@ import {
 } from "@opensystemslab/planx-core/types";
 import QuestionOptionsEditor from "@planx/components/Question/OptionsEditor";
 import { DEFAULT_RULE } from "@planx/components/ResponsiveQuestion/model";
-import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
@@ -164,43 +163,42 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
           </InputGroup>
         </ModalSectionContent>
         <ModalSectionContent subtitle="Options">
-          <ErrorWrapper error={getIn(formik.errors, "options")}>
-            <ListManager
-              values={formik.values.options}
-              disabled={props.disabled}
-              onChange={(newOptions) => {
-                formik.setFieldValue("options", newOptions);
-              }}
-              newValue={() => ({
-                id: "",
-                data: {
-                  text: "",
-                  description: "",
-                  val: "",
-                  flags: [],
-                  ...(type === ComponentType.ResponsiveQuestion && {
-                    rule: DEFAULT_RULE,
-                  }),
-                },
-              })}
-              Editor={QuestionOptionsEditor}
-              editorExtraProps={{
-                type,
-                showValueField: !!formik.values.fn,
-                schema: getOptionsSchemaByFn(
-                  formik.values.fn,
-                  planningDataSchema ??
-                    planningConstraintsSchema ??
-                    schema?.options,
-                  currentOptionVals,
-                ),
-              }}
-              isTemplatedNode={props.node?.data?.isTemplatedNode}
-              isLocalAuthorityDistrictNode={isLocalAuthorityDistrictNode}
-              collapsible={true}
-              itemName="option"
-            />
-          </ErrorWrapper>
+          <ListManager
+            values={formik.values.options}
+            errors={formik.errors.options}
+            disabled={props.disabled}
+            onChange={(newOptions) => {
+              formik.setFieldValue("options", newOptions);
+            }}
+            newValue={() => ({
+              id: "",
+              data: {
+                text: "",
+                description: "",
+                val: "",
+                flags: [],
+                ...(type === ComponentType.ResponsiveQuestion && {
+                  rule: DEFAULT_RULE,
+                }),
+              },
+            })}
+            Editor={QuestionOptionsEditor}
+            editorExtraProps={{
+              type,
+              showValueField: !!formik.values.fn,
+              schema: getOptionsSchemaByFn(
+                formik.values.fn,
+                planningDataSchema ??
+                  planningConstraintsSchema ??
+                  schema?.options,
+                currentOptionVals,
+              ),
+            }}
+            isTemplatedNode={props.node?.data?.isTemplatedNode}
+            isLocalAuthorityDistrictNode={isLocalAuthorityDistrictNode}
+            collapsible={true}
+            itemName="option"
+          />
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation {...props} />

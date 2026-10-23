@@ -9,6 +9,15 @@ import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
+/**
+ * Keys which only PlanX can set - see RESERVED_PAYMENT_METADATA in the Pay component's model
+ */
+const RESERVED_PAYMENT_METADATA_KEYS = [
+  "sessionId",
+  "origin",
+  "paymentRequestId",
+];
+
 export const createCheckoutSessionSchema = z.object({
   params: z.object({
     localAuthority: z.string(),
@@ -23,7 +32,15 @@ export const createCheckoutSessionSchema = z.object({
         paidViaInviteToPay: z.string(),
       })
       // All additional metadata must have string() values
-      .catchall(z.string()),
+      .catchall(z.string())
+      // The editor blocks these keys, so a client sending one is a bug or tampering
+      .refine(
+        (metadata) =>
+          !RESERVED_PAYMENT_METADATA_KEYS.some((key) => key in metadata),
+        {
+          message: `Metadata keys ${RESERVED_PAYMENT_METADATA_KEYS.join(", ")} are reserved by PlanX`,
+        },
+      ),
   }),
 });
 
@@ -94,6 +111,7 @@ export type PaymentRequestRecord = Pick<
   feeBreakdown: FeeBreakdown | null;
   paidAt: string | null;
   govPayPaymentId: string | null;
+  stripePaymentId: string | null;
   session: {
     flowId: string;
     deletedAt: string | null;
@@ -111,7 +129,12 @@ export type PaymentRequestRecord = Pick<
  */
 export type PayablePaymentRequest = Omit<
   PaymentRequestRecord,
-  "createdAt" | "paidAt" | "govPayPaymentId" | "stripeMetadata" | "session"
+  | "createdAt"
+  | "paidAt"
+  | "govPayPaymentId"
+  | "stripePaymentId"
+  | "stripeMetadata"
+  | "session"
 > & {
   expiresAt: Date;
   metadata: PaymentMetadata[];

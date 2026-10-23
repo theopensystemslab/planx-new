@@ -71,7 +71,7 @@ function PageComponent(props: Props) {
   });
 
   return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
+    <Card handleSubmit={formik.handleSubmit}>
       <CardHeader {...props} />
       <SchemaFields
         formik={formik}

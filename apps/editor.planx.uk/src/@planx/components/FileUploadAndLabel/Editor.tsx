@@ -163,16 +163,18 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
         errorMessage={getIn(props.errors, "name")}
       />
       <Collapse in={!props.isCollapsed} timeout="auto">
-        <DataFieldAutocomplete
-          errorMessage={getIn(props.errors, "fn")}
-          schema={schema}
-          value={props.value.fn}
-          disabled={props.disabled}
-          onChange={(value) =>
-            props.onChange(merge(props.value, { fn: value }))
-          }
-          allowCustomValues={false}
-        />
+        <InputRow>
+          <DataFieldAutocomplete
+            errorMessage={getIn(props.errors, "fn")}
+            schema={schema}
+            value={props.value.fn}
+            disabled={props.disabled}
+            onChange={(value) =>
+              props.onChange(merge(props.value, { fn: value }))
+            }
+            allowCustomValues={false}
+          />
+        </InputRow>
         <RuleBuilder
           rule={props.value.rule}
           disabled={props.disabled}

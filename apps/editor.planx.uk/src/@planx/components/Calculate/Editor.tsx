@@ -149,12 +149,14 @@ export default function Component(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-          <DataFieldAutocomplete
-            required
-            value={formik.values.fn}
-            onChange={(value) => formik.setFieldValue("fn", value)}
-            disabled={props.disabled}
-          />
+          <InputRow>
+            <DataFieldAutocomplete
+              required
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+              disabled={props.disabled}
+            />
+          </InputRow>
         </ModalSectionContent>
         <ModalSectionContent title="Formula">
           <InputRow>

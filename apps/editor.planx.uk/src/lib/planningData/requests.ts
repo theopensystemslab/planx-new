@@ -17,7 +17,6 @@ export const searchEntity = async (params: SearchEntityParams) => {
   const { data } = await axios.get<SearchEntityResponse>("/entity.geojson", {
     baseURL: PLANNING_DATA_URL,
     params: {
-      entries: params.entries,
       longitude: params.longitude,
       latitude: params.latitude,
       geometry_relation: params.geometryRelation,
@@ -34,14 +33,15 @@ export const searchEntity = async (params: SearchEntityParams) => {
 
 /**
  * Query the "Search Entity" endpoint with the required parameters to get data for the FindProperty component
+ *
+ * Planning Data includes historic entities by default, needed for pre-merger LADs (eg Wycombe etc for
+ * Uniform connector mappings)
  */
 export const getFindPropertyData = async (
   params: Pick<SearchEntityParams, "latitude" | "longitude">,
 ) =>
   searchEntity({
     ...params,
-    // includes historic for pre-merger LADs (eg Wycombe etc for Uniform connector mappings)
-    entries: "all",
     geometryRelation: "intersects",
     datasets: [
       "local-authority-district",
@@ -65,6 +65,8 @@ export const getEntity = async (
 
 /**
  * Get all named entities (omitting geometry) in a single dataset to autosuggest data values for `property.{dataset}`
+ *
+ * Historic entities are included by default (period: "all")
  */
 export const getEntityNames = async (dataset: string) => {
   const { data } = await axios.get<SearchEntityResponseExcludeGeom>(
@@ -73,7 +75,6 @@ export const getEntityNames = async (dataset: string) => {
       baseURL: PLANNING_DATA_URL,
       params: {
         limit: 500,
-        entries: "all", // include "historic" entities
         dataset: dataset,
         exclude_field: "geometry,point", // don't return geometry for faster, lighter response
       },

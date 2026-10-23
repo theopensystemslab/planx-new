@@ -519,7 +519,7 @@ test.describe("Templates", () => {
         .getByRole("link", { name: NON_TEMPLATED_NODE_TITLE })
         .click({ button: "right" });
       await expect(
-        page.getByRole("menuitem", { name: "Copy" }),
+        page.getByRole("menuitem", { name: "Copy", exact: true }),
       ).toHaveAttribute("aria-disabled", "true");
       await expect(
         page.getByRole("menuitem", { name: "Clone" }),

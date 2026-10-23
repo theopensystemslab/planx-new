@@ -143,19 +143,9 @@ const createBaseComponent = async (
         .fill(options?.[0] || "proposal.list");
       await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
-    case ComponentType.Content: {
-      // Type content
-      await page
-        .locator("p[data-placeholder='Content']")
-        .fill(options?.[0] || "");
-      // Highlight text
-      await page
-        .locator('div[contenteditable="true"][role="textbox"][name="content"]')
-        .selectText();
-      // Create H1 to meet a11y requirements
-      await page.getByRole("button", { name: "H1" }).click();
+    case ComponentType.Content:
+      await page.getByPlaceholder("Title").fill(title || "");
       break;
-    }
     case ComponentType.Filter:
       await page
         .getByTestId("flagset-category-select")
@@ -501,15 +491,9 @@ export const createUploadAndLabel = async (
 export const createContent = async (
   page: Page,
   locatingNode: Locator,
-  content: string,
+  title: string,
 ) => {
-  await createBaseComponent(
-    page,
-    locatingNode,
-    ComponentType.Content,
-    undefined,
-    [content],
-  );
+  await createBaseComponent(page, locatingNode, ComponentType.Content, title);
 };
 
 export const createFilter = async (page: Page, locatingNode: Locator) => {

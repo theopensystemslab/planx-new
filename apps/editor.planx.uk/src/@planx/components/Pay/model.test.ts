@@ -158,7 +158,7 @@ describe("Payment Metadata Schema", () => {
     expect(errors[0]).toMatch(/Keys must be unique/);
   });
 
-  test.each(["sessionId", "origin"])(
+  test.each(["sessionId", "origin", "paymentRequestId"])(
     "the reserved key '%s' cannot be used",
     async (reservedKey) => {
       const input = [
@@ -168,7 +168,7 @@ describe("Payment Metadata Schema", () => {
       const errors = await validate(input);
       expect(errors).toHaveLength(1);
       expect(errors[0]).toMatch(
-        /Keys sessionId and origin are reserved by PlanX and cannot be used/,
+        /Keys sessionId, origin and paymentRequestId are reserved by PlanX and cannot be used/,
       );
     },
   );

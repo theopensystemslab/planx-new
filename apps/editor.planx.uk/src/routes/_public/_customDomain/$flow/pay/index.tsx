@@ -6,6 +6,9 @@ import { z } from "zod";
 
 const paymentSearchSchema = z.object({
   paymentRequestId: z.string().uuid(),
+  // Stripe Checkout return URLs
+  stripeSessionId: z.string().optional(),
+  cancelled: z.coerce.boolean().optional(),
 });
 
 export const Route = createFileRoute("/_public/_customDomain/$flow/pay/")({
@@ -36,6 +39,13 @@ export const Route = createFileRoute("/_public/_customDomain/$flow/pay/")({
 
 function PayIndexComponent() {
   const data = Route.useLoaderData();
+  const { stripeSessionId, cancelled } = Route.useSearch();
 
-  return <MakePayment {...data.paymentRequest} />;
+  return (
+    <MakePayment
+      {...data.paymentRequest}
+      stripeSessionId={stripeSessionId}
+      cancelled={cancelled}
+    />
+  );
 }

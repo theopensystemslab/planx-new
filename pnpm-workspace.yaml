@@ -10,13 +10,13 @@ packages:
 
 catalog:
   '@opensystemslab/map': 1.0.0-alpha.17
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#436fb79a41dfde0d10af82c7baee93b00ae9cbc7
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#99c38b638b10fefcf64d707c762f647ad3dc6290
   '@types/jsdom': ^30.0.0
   '@types/node': ~24.10.15
   axios: ^1.20.0
   csv-stringify: ^6.8.3
   date-fns: ^4.4.0
-  dompurify: ^3.4.16
+  dompurify: ^3.4.17
   dotenv: ^18.0.1
   eslint: ^9.39.5
   globals: ^16.5.0

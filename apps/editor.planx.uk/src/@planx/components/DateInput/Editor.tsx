@@ -70,12 +70,14 @@ const DateInputComponent: React.FC<Props> = (props) => {
               errorMessage={formik.errors.description}
             />
           </InputRow>
-          <DataFieldAutocomplete
-            errorMessage={formik.errors.fn}
-            value={formik.values.fn}
-            onChange={(value) => formik.setFieldValue("fn", value)}
-            disabled={props.disabled}
-          />
+          <InputRow>
+            <DataFieldAutocomplete
+              errorMessage={formik.errors.fn}
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+              disabled={props.disabled}
+            />
+          </InputRow>
           <Box sx={{ mt: 2 }}>
             <InputRow>
               <DateInputUi

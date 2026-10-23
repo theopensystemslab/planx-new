@@ -375,7 +375,7 @@ export default function Component(props: Props) {
   }
 
   return (
-    <Card handleSubmit={validateAndSubmit} isValid={true}>
+    <Card handleSubmit={validateAndSubmit}>
       {getBody(mapValidationError, fileValidationError)}
     </Card>
   );

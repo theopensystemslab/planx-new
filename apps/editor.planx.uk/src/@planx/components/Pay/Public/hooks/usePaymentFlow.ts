@@ -1,4 +1,3 @@
-import { hasFeatureFlag } from "lib/featureFlags";
 import type { PaymentProvider } from "pages/FlowEditor/components/Settings/Team/Payment/Provider";
 
 import type { Props } from "../Pay";
@@ -21,9 +20,7 @@ export const usePaymentFlow = (
 
   switch (paymentProvider) {
     case "stripe":
-      // Stripe payments are not yet feature complete - applicants can't pay until it's removed
-      // TODO: Drop when Stripe payments have feature parity w/ GovPay
-      return hasFeatureFlag("STRIPE_MIGRATION") ? stripe : noProvider;
+      return stripe;
     case "govpay":
       return govPay;
     default:

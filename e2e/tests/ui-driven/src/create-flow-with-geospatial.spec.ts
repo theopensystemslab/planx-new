@@ -273,6 +273,5 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(dontApplyHeadings).toHaveText(planningConstraintHeadersMock);
 
     // TODO: answer uploadAndLabel
-    // TODO: answerPropertyInfo, answerPlanningConstraints
   });
 });

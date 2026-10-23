@@ -39,6 +39,6 @@ export const validationSchema: SchemaOf<NextSteps> =
           description: string(),
           url: string().url(),
         }),
-      ).min(1),
+      ).min(1, "Add at least one step"),
     }),
   );

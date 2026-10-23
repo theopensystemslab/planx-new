@@ -5,7 +5,7 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 
-import { TEST_EMAIL } from "../../../helpers/globalHelpers.js";
+import { TEST_EMAIL } from "../../helpers/globalHelpers.js";
 import inviteToPayFlow from "./invite-to-pay-flow.js";
 
 export const mockPaymentRequest: Partial<PaymentRequest> = {

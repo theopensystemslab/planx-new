@@ -47,8 +47,7 @@ const verifyCallback: StrategyVerifyCallbackReq<Express.User> = async (
   tokenSet,
   done,
 ): Promise<void> => {
-  // TODO: use tokenSet.state to pass the redirectTo query param through the auth flow
-  // TODO: validate id_token sig with the public key from the jwks_uri (...v2.0/keys)
+  // id_token signature is already validated against the issuer's JWKS by openid-client
   const claims: IdTokenClaims = tokenSet.claims();
 
   // ensure the response is authentic by comparing nonce

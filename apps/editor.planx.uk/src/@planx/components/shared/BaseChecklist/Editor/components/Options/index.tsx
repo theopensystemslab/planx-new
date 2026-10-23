@@ -6,11 +6,13 @@ import {
   usePlanningDataEntityNames,
 } from "@planx/components/shared/hooks";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
+import { getIn } from "formik";
 import { partition } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import type { AnyChecklist } from "../../../model";
 import { useCurrentOptions } from "../../../Public/hooks/useInitialOptions";
@@ -37,6 +39,9 @@ export const Options = <T extends AnyChecklist>({
 
   const exclusiveOrOptionManagerShouldRender = nonExclusiveOptions.length > 0;
 
+  const optionsError: string | undefined = getIn(formik.errors, "options");
+  const listError = typeof optionsError === "string" ? optionsError : undefined;
+
   const { schema, currentOptionVals } = useCurrentOptions(formik);
 
   const { data: planningDataSchema } = usePlanningDataEntityNames(
@@ -50,16 +55,19 @@ export const Options = <T extends AnyChecklist>({
   return (
     <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
-        <GroupedOptions<T>
-          type={type}
-          formik={formik}
-          disabled={disabled}
-          isTemplatedNode={isTemplatedNode}
-        />
+        <ErrorWrapper error={listError}>
+          <GroupedOptions<T>
+            type={type}
+            formik={formik}
+            disabled={disabled}
+            isTemplatedNode={isTemplatedNode}
+          />
+        </ErrorWrapper>
       ) : (
         <>
           <ListManager
             values={nonExclusiveOptions || []}
+            errors={listError}
             onChange={(newOptions) => {
               const newCombinedOptions =
                 newOptions.length === 0

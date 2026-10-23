@@ -20,11 +20,15 @@ export interface Submission {
     | "Failed (504)"
     | "Failed (400)"
     | "Failed (401)"
-    | "Started" // Payment status enum codes (excluding "Created")
+    | "Started" // GOV.UK Payment status enum codes (excluding "Created")
     | "Submitted"
     | "Capturable"
     | "Failed"
     | "Cancelled"
+    | "Initiated" // Stripe Payment status enum codes (excluding "Created")
+    | "Processing"
+    | "Succeeded"
+    | "Payment_failed"
     | "Error"
     | "Unknown";
   retry: boolean;

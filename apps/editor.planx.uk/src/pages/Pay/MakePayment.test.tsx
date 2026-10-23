@@ -1,6 +1,6 @@
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import type { PublicPaymentRequest } from "utils/routeUtils/payQueries";
@@ -21,6 +21,16 @@ const mockPaymentRequest: PublicPaymentRequest = {
 };
 
 describe("MakePayment", () => {
+  beforeEach(() => {
+    server.use(
+      graphql.query("GetPaymentProvider", () =>
+        HttpResponse.json({
+          data: { teamSettings: [{ paymentProvider: "govpay" }] },
+        }),
+      ),
+    );
+  });
+
   describe("when the payment request has been paid", () => {
     it("displays the payment date and reference", async () => {
       await setup(

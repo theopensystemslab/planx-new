@@ -8,7 +8,7 @@ import { buildJWT } from "./jwt.js";
 assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);
 assert(process.env.HASURA_GRAPHQL_URL);
 
-const targetURL = process.env.HASURA_GRAPHQL_URL!.replace(
+export const targetURL = process.env.HASURA_GRAPHQL_URL!.replace(
   "${HASURA_PROXY_PORT}",
   process.env.HASURA_PROXY_PORT!,
 );

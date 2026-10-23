@@ -302,7 +302,7 @@ const Root = () => {
     "";
 
   return (
-    <Card handleSubmit={validateAndSubmitForm} isValid>
+    <Card handleSubmit={validateAndSubmitForm}>
       <CardHeader
         title={title}
         description={description}

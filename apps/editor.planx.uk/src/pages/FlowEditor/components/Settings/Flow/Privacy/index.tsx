@@ -8,11 +8,7 @@ import type { TextContent } from "types";
 import SettingsFormContainer from "../../shared/SettingsForm";
 import { GET_FLOW_SETTINGS, UPDATE_FLOW_SETTINGS } from "../shared/queries";
 import { textContentValidationSchema } from "../shared/schema";
-import {
-  DEFAULT_TEXT_CONTENT,
-  type GetFlowSettings,
-  type UpdateFlowSettings,
-} from "../shared/types";
+import type { GetFlowSettings, UpdateFlowSettings } from "../shared/types";
 import { defaultValues } from "./schema";
 
 const Privacy: React.FC = () => {
@@ -33,7 +29,7 @@ const Privacy: React.FC = () => {
       }
       defaultValues={defaultValues}
       getInitialValues={({ flow: { settings } }) =>
-        settings?.elements?.privacy || DEFAULT_TEXT_CONTENT
+        settings?.elements?.privacy || defaultValues
       }
       queryVariables={{ flowId }}
       getMutationVariables={(values, data) => ({

@@ -1,5 +1,4 @@
 import ErrorIcon from "@mui/icons-material/Error";
-import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import type { NodeTag } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -17,6 +16,7 @@ import { getParentId } from "../lib/utils";
 import { AttachedNote } from "./AttachedNote";
 import { DataField } from "./DataField";
 import Hanger from "./Hanger";
+import { HelpTextBadge } from "./HelpTextBadge";
 import Node from "./Node";
 import { Tag } from "./Tag";
 import { Thumbnail } from "./Thumbnail";
@@ -29,14 +29,11 @@ type Props = {
 };
 
 const Question: React.FC<Props> = memo((props) => {
-  const [isCloneValue, childNodes, showHelpText, showTags] = useStore(
-    (state) => [
-      state.isClone(props.id),
-      state.childNodesOf(props.id),
-      state.showHelpText,
-      state.showTags,
-    ],
-  );
+  const [isCloneValue, childNodes, showTags] = useStore((state) => [
+    state.isClone(props.id),
+    state.childNodesOf(props.id),
+    state.showTags,
+  ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -125,9 +122,7 @@ const Question: React.FC<Props> = memo((props) => {
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
               {Icon && <Icon titleAccess={iconTitleAccess} />}
               <span>{props.text}</span>
-              {showHelpText && hasHelpText && (
-                <Help fontSize="small" sx={{ marginLeft: "auto" }} />
-              )}
+              {hasHelpText && <HelpTextBadge />}
             </Box>
           </Link>
           {props.type !== TYPES.SetValue && props.data?.fn && (

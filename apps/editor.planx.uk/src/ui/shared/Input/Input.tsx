@@ -13,6 +13,13 @@ import ErrorWrapper from "../ErrorWrapper";
 
 const PREFIX = "Input";
 
+const INPUT_HEIGHT = 50;
+const TEXTAREA_LINE_HEIGHT = 1.6;
+
+/** Vertical padding which keeps a single line of text at INPUT_HEIGHT, in line with single-line inputs and buttons */
+const singleLineTextareaPadding = (borderWidth: number) =>
+  `calc((${INPUT_HEIGHT}px - ${2 * borderWidth}px - ${TEXTAREA_LINE_HEIGHT}em) / 2) 0`;
+
 const classes: Partial<InputBaseClasses> = {
   multiline: `${PREFIX}-multiline`,
   focused: `${PREFIX}-focused`,
@@ -42,7 +49,7 @@ const StyledInputBase = styled(InputBase, {
   fontSize: "1rem",
   width: "100%",
   padding: theme.spacing(0, 1.5),
-  height: 50,
+  height: INPUT_HEIGHT,
   border: `1px solid ${theme.palette.border.main}`,
   "& input": {
     fontWeight: "inherit",
@@ -69,9 +76,11 @@ const StyledInputBase = styled(InputBase, {
   }),
   [`&.${classes.multiline}`]: {
     height: "100%",
+    // Textarea autosize rounds its height, so guard against a sub-pixel shortfall
+    minHeight: INPUT_HEIGHT,
     "& textarea": {
-      padding: theme.spacing(1, 0),
-      lineHeight: 1.6,
+      padding: singleLineTextareaPadding(bordered ? 2 : 1),
+      lineHeight: TEXTAREA_LINE_HEIGHT,
     },
   },
   [`&.${classes.focused}`]: {
