@@ -1,4 +1,7 @@
-import { getStripeCheckoutURL } from "@planx/components/Pay/Public/providers/stripeCheckout";
+import {
+  getStripeCheckoutURL,
+  isNoPaymentMethodError,
+} from "@planx/components/Pay/Public/providers/stripeCheckout";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createPaymentRequestCheckoutSession,
@@ -42,7 +45,7 @@ export function useStripePayRequest({
       return getStripeCheckoutURL(url);
     },
     onSuccess: (url) => window.location.assign(url),
-    throwOnError: true,
+    throwOnError: (error) => !isNoPaymentMethodError(error),
   });
 
   // Fulfilment is idempotent, so it's read like a query - it reports whether this Checkout Session paid
@@ -66,6 +69,9 @@ export function useStripePayRequest({
     hasStartedCheckout.current = true;
     checkout.mutate();
   };
+
+  // Every other error is thrown to the error boundary
+  if (checkout.isError) return { status: "no_payment_method" };
 
   // Hide the Pay button from the click until the redirect
   if (checkout.isPending || checkout.isSuccess) {

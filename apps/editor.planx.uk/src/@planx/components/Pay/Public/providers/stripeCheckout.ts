@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 // Only ever redirect applicants to Stripe's hosted Checkout
 const STRIPE_CHECKOUT_ORIGIN = "https://checkout.stripe.com" as const;
 
@@ -17,3 +19,17 @@ export const getStripeCheckoutURL = (url: string | null): string => {
 
   return url;
 };
+
+const noPaymentMethodErrorSchema = z.object({
+  statusCode: z.literal(409),
+  data: z.object({
+    error: z.string().regex(/cannot take a payment method for a total of/),
+  }),
+});
+
+/**
+ * The API refuses a Checkout Session when the council's Stripe account cannot take any payment method allowed for the total
+ * Card is never offered from £600, so this is not a fault - the applicant has to pay the council another way
+ */
+export const isNoPaymentMethodError = (error: unknown): boolean =>
+  noPaymentMethodErrorSchema.safeParse(error).success;

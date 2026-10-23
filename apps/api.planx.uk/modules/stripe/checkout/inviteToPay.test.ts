@@ -6,9 +6,11 @@ import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import { getPaymentStatusInsert } from "../webhook/test/mocks.js";
 import {
   buildPaymentRequest,
+  largePaymentRequestFeeBreakdown,
   mockCreate,
   mockCreatePaymentRequestCheckoutSessionDefaults,
   mockExpire,
+  mockGetPaymentCapabilities,
   mockGetTeamBySlug,
   mockInitiatedCheckoutSessions,
   mockPaymentRequest,
@@ -66,7 +68,7 @@ describe("creating a Stripe Checkout Session for an invite to pay request", () =
     expect(mockCreate).toHaveBeenCalledWith(
       expect.objectContaining({
         mode: "payment",
-        payment_method_types: ["card"],
+        payment_method_types: ["card", "pay_by_bank"],
         line_items: [
           {
             price_data: {
@@ -97,6 +99,52 @@ describe("creating a Stripe Checkout Session for an invite to pay request", () =
         },
       }),
     );
+  });
+
+  it("offers Pay by Bank only for a total above £600", async () => {
+    mockPaymentRequest(
+      buildPaymentRequest({ feeBreakdown: largePaymentRequestFeeBreakdown }),
+    );
+
+    await supertest(app).post(ENDPOINT).expect(200);
+
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ payment_method_types: ["pay_by_bank"] }),
+    );
+  });
+
+  it("offers card only when the council account cannot take Pay by Bank", async () => {
+    mockGetPaymentCapabilities.mockResolvedValue({
+      card_payments: "active",
+      pay_by_bank_payments: "inactive",
+    });
+
+    await supertest(app).post(ENDPOINT).expect(200);
+
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ payment_method_types: ["card"] }),
+    );
+  });
+
+  it("refuses a total above £600 when the council account cannot take Pay by Bank, never falling back to card", async () => {
+    mockPaymentRequest(
+      buildPaymentRequest({ feeBreakdown: largePaymentRequestFeeBreakdown }),
+    );
+    mockGetPaymentCapabilities.mockResolvedValue({
+      card_payments: "active",
+      pay_by_bank_payments: "inactive",
+    });
+
+    await supertest(app)
+      .post(ENDPOINT)
+      .expect(409)
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Reason: The Stripe account for this local authority cannot take a payment method for a total of £748\.00/,
+        );
+      });
+
+    expect(mockCreate).not.toHaveBeenCalled();
   });
 
   it("returns the payer to the team's custom domain", async () => {

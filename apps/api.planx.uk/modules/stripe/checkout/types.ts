@@ -50,6 +50,7 @@ export interface CreateCheckoutSessionInput {
   returnURL: string;
   teamSlug: string;
   connectedAccountId: string;
+  capabilities: Stripe.Account.Capabilities;
   metadata: Record<string, string>;
 }
 
@@ -59,6 +60,7 @@ export interface CreateCheckoutSessionResponse {
 
 export type CheckoutSessionLocals = {
   connectedAccountId: string;
+  capabilities: Stripe.Account.Capabilities;
   returnURL: string;
 };
 
@@ -144,11 +146,13 @@ export type PayablePaymentRequest = Omit<
 export interface CreatePaymentRequestCheckoutSessionInput {
   paymentRequest: PayablePaymentRequest;
   connectedAccountId: string;
+  capabilities: Stripe.Account.Capabilities;
 }
 
 export type PaymentRequestCheckoutSessionLocals = {
   paymentRequest: PayablePaymentRequest;
   connectedAccountId: string;
+  capabilities: Stripe.Account.Capabilities;
 };
 
 export type FetchPaymentRequestMiddleware = ValidatedRequestHandler<

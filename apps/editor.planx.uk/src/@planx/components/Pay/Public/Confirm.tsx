@@ -19,7 +19,11 @@ import { formattedPriceWithCurrencySymbol, getDefaultContent } from "../model";
 import { FeeBreakdown } from "./FeeBreakdown/FeeBreakdown";
 import type { InviteToPayFormProps } from "./InviteToPayForm";
 import InviteToPayForm from "./InviteToPayForm";
-import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
+import {
+  PAY_API_ERROR_UNSUPPORTED_TEAM,
+  PAY_ERROR_NO_PAYMENT_METHOD,
+  PAY_ERROR_NO_PAYMENT_METHOD_MESSAGE,
+} from "./Pay";
 
 type ComponentState =
   "error" | "informationOnly" | "inviteToPay" | "zeroFee" | "pay";
@@ -61,6 +65,19 @@ const Error: React.FC<Props> = ({ onConfirm, error }) => {
           format="error"
           heading={error}
           message="Click continue to skip payment and continue testing."
+        />
+      </Card>
+    );
+  }
+
+  // Not a fault, so nothing is logged - and the applicant cannot skip payment
+  if (error === PAY_ERROR_NO_PAYMENT_METHOD) {
+    return (
+      <Card>
+        <ErrorSummary
+          format="error"
+          heading={error}
+          message={PAY_ERROR_NO_PAYMENT_METHOD_MESSAGE}
         />
       </Card>
     );

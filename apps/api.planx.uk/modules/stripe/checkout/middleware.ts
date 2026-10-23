@@ -1,10 +1,11 @@
 import { isBefore } from "date-fns";
 import type { RequestHandler } from "express";
+import type Stripe from "stripe";
 
 import {
+  getPaymentCapabilities,
   getStripeAccountId,
   getTeamBySlug,
-  isAccountReadyForPayments,
 } from "../connect/service.js";
 import { isStripePaymentsEnabled } from "../helpers.js";
 import {
@@ -21,7 +22,7 @@ import type {
 } from "./types.js";
 
 type ConnectedAccountResult =
-  | { connectedAccountId: string }
+  | { connectedAccountId: string; capabilities: Stripe.Account.Capabilities }
   | { refusal: { status: number; message: string } };
 
 /**
@@ -53,7 +54,8 @@ const getConnectedAccount = async (
   }
 
   // Only pay out to an account which is connected to our platform, never to an unknown account id
-  if (!(await isAccountReadyForPayments(stripeAccountId))) {
+  const capabilities = await getPaymentCapabilities(stripeAccountId);
+  if (!capabilities) {
     return {
       refusal: {
         status: 409,
@@ -62,7 +64,7 @@ const getConnectedAccount = async (
     };
   }
 
-  return { connectedAccountId: stripeAccountId };
+  return { connectedAccountId: stripeAccountId, capabilities };
 };
 
 export const requireStripePaymentsEnabled: RequestHandler = (
@@ -87,6 +89,7 @@ export const resolveTeamPaymentProvider: ResolveTeamPaymentProviderMiddleware =
       if ("refusal" in result) return next(result.refusal);
 
       res.locals.connectedAccountId = result.connectedAccountId;
+      res.locals.capabilities = result.capabilities;
 
       return next();
     } catch (error) {
@@ -221,6 +224,7 @@ export const resolvePaymentRequestConnectedAccount: ResolvePaymentRequestConnect
       if ("refusal" in result) return next(result.refusal);
 
       res.locals.connectedAccountId = result.connectedAccountId;
+      res.locals.capabilities = result.capabilities;
 
       return next();
     } catch (error) {

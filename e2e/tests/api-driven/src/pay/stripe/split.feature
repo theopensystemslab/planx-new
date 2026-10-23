@@ -14,6 +14,6 @@ Feature: Stripe Connect split
     Examples:
       | fee                 | amount | applicationFee |
       | a statutory fee     | 30600  | 4800           |
-      | a discretionary fee | 64800  | 4800           |
+      | a discretionary fee | 52800  | 4800           |
       | a Fast Track fee    | 48600  | 4800           |
       | a reduced fee       | 17700  | 4800           |

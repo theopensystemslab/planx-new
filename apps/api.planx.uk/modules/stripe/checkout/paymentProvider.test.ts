@@ -4,9 +4,9 @@ import app from "../../../server.js";
 import {
   mockCreate,
   mockCreateCheckoutSessionDefaults,
+  mockGetPaymentCapabilities,
   mockGetStripeAccountId,
   mockGetTeamBySlug,
-  mockIsAccountReadyForPayments,
   STRIPE_ACCOUNT_ID,
   stripeTeam,
   validBody,
@@ -68,13 +68,11 @@ describe("resolving the team's Stripe account", () => {
       .send(validBody)
       .expect(200);
 
-    expect(mockIsAccountReadyForPayments).toHaveBeenCalledWith(
-      STRIPE_ACCOUNT_ID,
-    );
+    expect(mockGetPaymentCapabilities).toHaveBeenCalledWith(STRIPE_ACCOUNT_ID);
   });
 
   it("rejects a team whose Stripe account is not connected to the platform, or cannot take payments, with a 409", async () => {
-    mockIsAccountReadyForPayments.mockResolvedValue(false);
+    mockGetPaymentCapabilities.mockResolvedValue(null);
 
     await supertest(app)
       .post("/stripe/checkout-session/southwark")
@@ -85,9 +83,7 @@ describe("resolving the team's Stripe account", () => {
   });
 
   it("surfaces an error when the connected account check fails", async () => {
-    mockIsAccountReadyForPayments.mockRejectedValue(
-      new Error("Stripe is down"),
-    );
+    mockGetPaymentCapabilities.mockRejectedValue(new Error("Stripe is down"));
 
     await supertest(app)
       .post("/stripe/checkout-session/southwark")

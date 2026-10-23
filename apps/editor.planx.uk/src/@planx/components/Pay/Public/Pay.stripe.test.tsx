@@ -275,6 +275,62 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
     },
   );
 
+  it("tells the applicant the fee cannot be paid online when the council cannot take a payment method for it", async () => {
+    server.use(
+      http.post(checkoutSessionUrl, () =>
+        HttpResponse.json(
+          {
+            error:
+              "Failed to create Stripe Checkout Session for test-team. Reason: The Stripe account for this local authority cannot take a payment method for a total of £748.00, this error has been logged",
+          },
+          { status: 409 },
+        ),
+      ),
+    );
+
+    const handleSubmit = vi.fn();
+
+    act(() =>
+      setState({
+        flow: flowWithFee,
+        breadcrumbs: feeBreadcrumbs,
+        previewEnvironment: "standalone",
+        teamSlug: "test-team",
+      }),
+    );
+
+    const { user } = await setup(
+      <AppErrorBoundary>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          allowInviteToPay={true}
+          govPayMetadata={[]}
+        />
+      </AppErrorBoundary>,
+    );
+
+    await user.click(await screen.findByText("Pay now"));
+
+    expect(
+      await screen.findByText("This fee cannot be paid online"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Contact your local planning authority to arrange payment.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();
+
+    // A nominee would be refused too, and the applicant cannot skip payment
+    expect(
+      screen.queryByText("Invite someone else to pay"),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Continue")).not.toBeInTheDocument();
+    expect(handleSubmit).not.toHaveBeenCalled();
+  });
+
   it("does not let the applicant skip payment on a locked session", async () => {
     server.use(
       http.post(checkoutSessionUrl, () =>
