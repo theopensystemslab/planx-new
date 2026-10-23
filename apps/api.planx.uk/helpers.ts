@@ -1,6 +1,5 @@
 import type { FlowStatus } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
-import capitalize from "lodash/capitalize.js";
 
 import { $public, getClient } from "./client/index.js";
 import { userContext } from "./modules/auth/middleware.js";
@@ -434,33 +433,15 @@ const makeUniqueFlow = (
   return flowData;
 };
 
-const isLiveEnv = () =>
-  ["production", "staging", "pizza"].includes(process.env.NODE_ENV || "");
-
-/**
- * Get current environment, formatted for display
- */
-const getFormattedEnvironment = (): string => {
-  let environment = process.env.NODE_ENV;
-  if (environment === "pizza") {
-    const pizzaNumber = new URL(process.env.API_URL_EXT!).href.split(".")[1];
-    environment += ` ${pizzaNumber}`;
-  }
-  // For readability redefine development as local for slack warnings
-  if (environment === "development") {
-    environment = "local";
-  }
-  return capitalize(environment);
-};
-
 export {
   createFlow,
   getChildren,
   getFlowData,
-  getFormattedEnvironment,
   getMostRecentPublishedFlow,
   getMostRecentPublishedFlowVersion,
-  isLiveEnv,
   makeUniqueFlow,
   renameNodeId,
 };
+
+// re-export env lib to persist imports via helpers.ts and minimise changes
+export { getFormattedEnvironment, isLiveEnv } from "./lib/env.js";
