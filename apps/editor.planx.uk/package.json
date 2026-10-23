@@ -57,7 +57,7 @@
     "libphonenumber-js": "^1.13.13",
     "lodash": "catalog:lodash",
     "mathjs": "^15.2.0",
-    "msw": "^2.15.0",
+    "msw": "^3.0.2",
     "nanoid": "catalog:",
     "nanoid-good": "^3.1.0",
     "natsort": "^2.0.3",
