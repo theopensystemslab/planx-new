@@ -11,6 +11,7 @@ import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import Banner from "ui/public/Banner";
 import { DescriptionList } from "ui/public/DescriptionList";
+import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import type { PublicPaymentRequest } from "utils/routeUtils/payQueries";
 import { z } from "zod";
 
@@ -19,6 +20,10 @@ import {
   toDecimal,
 } from "../../@planx/components/Pay/model";
 import Confirm from "../../@planx/components/Pay/Public/Confirm";
+import {
+  PAY_ERROR_NO_PAYMENT_METHOD,
+  PAY_ERROR_NO_PAYMENT_METHOD_MESSAGE,
+} from "../../@planx/components/Pay/Public/Pay";
 import DelayedLoadingIndicator from "../../components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import type { PaymentRequestState } from "./providers/types";
 import { useGovUkPayRequest } from "./providers/useGovUkPayRequest";
@@ -148,6 +153,15 @@ function PaymentRequestPage({
       <Container maxWidth="contentWrap" sx={{ pb: 0 }}>
         <DescriptionList data={paymentDetails} />
       </Container>
+      {payment.status === "no_payment_method" && (
+        <Container maxWidth="contentWrap" sx={{ mt: 6 }}>
+          <ErrorSummary
+            format="error"
+            heading={PAY_ERROR_NO_PAYMENT_METHOD}
+            message={PAY_ERROR_NO_PAYMENT_METHOD_MESSAGE}
+          />
+        </Container>
+      )}
       {payment.status === "ready" && (
         <>
           <Container maxWidth="contentWrap" sx={{ mt: 6, pb: 0 }}>

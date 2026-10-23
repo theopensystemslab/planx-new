@@ -27,10 +27,16 @@ type ComponentState =
   | { status: "undefined_fee" }
   | { status: "zero_fee" }
   | { status: "payment_pending"; displayText?: string }
-  | { status: "payment_cancelled" };
+  | { status: "payment_cancelled" }
+  | { status: "no_payment_method" };
 
 export const PAY_API_ERROR_UNSUPPORTED_TEAM =
   "Online payments are not enabled for";
+
+export const PAY_ERROR_NO_PAYMENT_METHOD = "This fee cannot be paid online";
+
+export const PAY_ERROR_NO_PAYMENT_METHOD_MESSAGE =
+  "Contact your local planning authority to arrange payment.";
 
 const reducer = (_state: ComponentState, action: Action): ComponentState => {
   switch (action) {
@@ -70,6 +76,8 @@ const reducer = (_state: ComponentState, action: Action): ComponentState => {
       };
     case Action.PaymentCancelled:
       return { status: "payment_cancelled" };
+    case Action.NoPaymentMethod:
+      return { status: "no_payment_method" };
   }
 };
 
@@ -104,7 +112,9 @@ function PayWithProvider({
     paymentProvider,
   );
 
-  const isTeamSupported = state.status !== "unsupported_team";
+  // Whoever pays, the council cannot take this fee online
+  const canInviteToPay =
+    state.status !== "unsupported_team" && state.status !== "no_payment_method";
 
   const showPayOptions = props.allowInviteToPay && !props.hidePay;
 
@@ -177,7 +187,8 @@ function PayWithProvider({
       state.status === "unsupported_team" ||
       state.status === "undefined_fee" ||
       state.status === "zero_fee" ||
-      state.status === "payment_cancelled" ? (
+      state.status === "payment_cancelled" ||
+      state.status === "no_payment_method" ? (
         <Confirm
           {...props}
           fee={fee}
@@ -195,9 +206,11 @@ function PayWithProvider({
               "Online payments are not enabled for this local authority") ||
             (state.status === "undefined_fee" &&
               "We are unable to calculate your fee right now") ||
+            (state.status === "no_payment_method" &&
+              PAY_ERROR_NO_PAYMENT_METHOD) ||
             undefined
           }
-          showInviteToPay={showPayOptions && isTeamSupported}
+          showInviteToPay={showPayOptions && canInviteToPay}
           paymentStatus={existingPaymentStatus}
         />
       ) : (

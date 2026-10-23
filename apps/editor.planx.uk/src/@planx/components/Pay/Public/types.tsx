@@ -15,6 +15,8 @@ export enum Action {
   PaymentPending,
   /** Applicant cancelled, or the Checkout Session expired */
   PaymentCancelled,
+  /** The council cannot take any payment method allowed for this fee */
+  NoPaymentMethod,
 }
 
 export type SharedAction =
@@ -33,6 +35,9 @@ export type GovPayAction =
   | Action.ResumePayment;
 
 export type StripeAction =
-  SharedAction | Action.PaymentPending | Action.PaymentCancelled;
+  | SharedAction
+  | Action.PaymentPending
+  | Action.PaymentCancelled
+  | Action.NoPaymentMethod;
 
 export type NoPaymentAction = SharedAction;
