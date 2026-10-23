@@ -6,6 +6,7 @@ import {
 import type { FeeBreakdown, Session } from "@opensystemslab/planx-core/types";
 import { getUnixTime } from "date-fns";
 import { gql } from "graphql-request";
+import type Stripe from "stripe";
 
 import { $api } from "../../../client/index.js";
 import { ServerError } from "../../../errors/index.js";
@@ -14,6 +15,7 @@ import { stripe } from "../client.js";
 import { getStripeId } from "../helpers.js";
 import { insertStripePaymentStatus } from "../webhook/paymentStatus/service.js";
 import { buildLineItems } from "./lineItems.js";
+import { getPaymentMethodTypes } from "./paymentMethods.js";
 import { getCheckoutSessionExpiry } from "./paymentRequest.js";
 import { buildPaymentRequestReturnURL } from "./returnURL.js";
 import type {
@@ -134,6 +136,7 @@ interface DestinationChargeCheckoutSessionInput {
   flowId: string;
   teamSlug: string;
   connectedAccountId: string;
+  capabilities: Stripe.Account.Capabilities;
   feeBreakdown: FeeBreakdown;
   returnURL: string;
   metadata: Record<string, string>;
@@ -151,6 +154,7 @@ const createDestinationChargeCheckoutSession = async ({
   flowId,
   teamSlug,
   connectedAccountId,
+  capabilities,
   feeBreakdown,
   returnURL,
   metadata,
@@ -170,8 +174,10 @@ const createDestinationChargeCheckoutSession = async ({
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
-    // TODO: Configure payment types
-    payment_method_types: ["card"],
+    payment_method_types: getPaymentMethodTypes({
+      amount: split.amount,
+      capabilities,
+    }),
     line_items: lineItems,
     success_url: `${returnURL}${separator}stripeSessionId={CHECKOUT_SESSION_ID}`,
     cancel_url: `${returnURL}${separator}cancelled=true`,
@@ -209,6 +215,7 @@ export const createStripeCheckoutSession = async ({
   returnURL,
   teamSlug,
   connectedAccountId,
+  capabilities,
   metadata,
 }: CreateCheckoutSessionInput): Promise<CreateCheckoutSessionResponse> => {
   const feeBreakdown = await getFeeBreakdownForSession(sessionId);
@@ -218,6 +225,7 @@ export const createStripeCheckoutSession = async ({
     flowId,
     teamSlug,
     connectedAccountId,
+    capabilities,
     feeBreakdown,
     returnURL,
     metadata: { ...metadata, ...getReservedPaymentMetadata(sessionId) },
@@ -230,6 +238,7 @@ export const createStripeCheckoutSession = async ({
 export const createPaymentRequestStripeCheckoutSession = async ({
   paymentRequest,
   connectedAccountId,
+  capabilities,
 }: CreatePaymentRequestCheckoutSessionInput): Promise<CreateCheckoutSessionResponse> => {
   const { id, sessionId, session, feeBreakdown } = paymentRequest;
 
@@ -251,6 +260,7 @@ export const createPaymentRequestStripeCheckoutSession = async ({
     flowId: session.flowId,
     teamSlug: session.flow.team.slug,
     connectedAccountId,
+    capabilities,
     feeBreakdown,
     returnURL: buildPaymentRequestReturnURL(session.flow, id),
     metadata: {

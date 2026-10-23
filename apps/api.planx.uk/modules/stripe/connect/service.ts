@@ -199,18 +199,23 @@ export const isInvalidRequestError = (error: unknown): boolean =>
  * Stripe refuses to retrieve an account which isn't connected to the platform (e.g. access was revoked)
  * Docs: https://docs.stripe.com/api/accounts/retrieve
  */
-export const isAccountReadyForPayments = async (
+export const getPaymentCapabilities = async (
   accountId: string,
-): Promise<boolean> => {
+): Promise<Stripe.Account.Capabilities | null> => {
   try {
-    const account = await stripe.accounts.retrieve(accountId);
-    return account.charges_enabled;
+    const { charges_enabled, capabilities } =
+      await stripe.accounts.retrieve(accountId);
+    if (!charges_enabled || capabilities?.card_payments !== "active") {
+      return null;
+    }
+
+    return capabilities;
   } catch (error) {
     if (
       isInvalidRequestError(error) ||
       error instanceof Stripe.errors.StripePermissionError
     ) {
-      return false;
+      return null;
     }
     throw error;
   }

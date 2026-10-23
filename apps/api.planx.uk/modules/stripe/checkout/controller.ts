@@ -20,7 +20,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
 ) => {
   const { localAuthority } = res.locals.parsedReq.params;
   const { sessionId, flowId, metadata } = res.locals.parsedReq.body;
-  const { connectedAccountId, returnURL } = res.locals;
+  const { connectedAccountId, capabilities, returnURL } = res.locals;
 
   try {
     const result = await createStripeCheckoutSession({
@@ -29,6 +29,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
       returnURL,
       teamSlug: localAuthority,
       connectedAccountId,
+      capabilities,
       metadata,
     });
 
@@ -49,12 +50,13 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
  */
 export const createPaymentRequestCheckoutSession: CreatePaymentRequestCheckoutSessionController =
   async (_req, res, next) => {
-    const { paymentRequest, connectedAccountId } = res.locals;
+    const { paymentRequest, connectedAccountId, capabilities } = res.locals;
 
     try {
       const result = await createPaymentRequestStripeCheckoutSession({
         paymentRequest,
         connectedAccountId,
+        capabilities,
       });
 
       return res.json(result);
