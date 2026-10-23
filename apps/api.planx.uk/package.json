@@ -38,7 +38,7 @@
     "form-data": "^4.0.6",
     "graphql": "catalog:graphql",
     "graphql-request": "catalog:graphql",
-    "he": "^1.2.0",
+    "he": "^2.0.0",
     "helmet": "^8.3.0",
     "http-proxy-middleware": "^4.2.0",
     "isomorphic-fetch": "^3.0.0",
