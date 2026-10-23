@@ -1,7 +1,6 @@
 import type { Flag } from "@opensystemslab/planx-core/types";
 import { array, mixed, object, string } from "yup";
 
-import { ruleSchema } from "../shared/RuleBuilder/schema";
 import type { Rule } from "../shared/RuleBuilder/types";
 
 /**
@@ -46,6 +45,6 @@ export const optionValidationSchema = object({
     val: string(),
     exclusive: mixed().oneOf([true, undefined]),
     notes: string(),
-    rule: ruleSchema.default(undefined).optional(),
+    // TODO: Validate rules?
   }),
 });

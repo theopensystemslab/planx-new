@@ -5,15 +5,36 @@ import {
 import { richText } from "lib/yupExtensions";
 import type { TestContext } from "vitest";
 import type { SchemaOf } from "yup";
-import { array, boolean, object, string, ValidationError } from "yup";
+import { array, boolean, mixed, object, string, ValidationError } from "yup";
 
-import { ruleSchema } from "../shared/RuleBuilder/schema";
+import type { Rule } from "../shared/RuleBuilder/types";
+import { Condition, Operator } from "../shared/RuleBuilder/types";
+import { checkIfConditionalRule } from "../shared/RuleBuilder/utils";
 import type {
   FileList,
   FileType,
   FileUploadAndLabel,
   FileUploadAndLabelSlot,
 } from "./model";
+
+const valFnSchema = mixed().when("condition", {
+  is: checkIfConditionalRule,
+  then: (schema) => schema.required(),
+  otherwise: (schema) => schema.equals([undefined]),
+});
+
+const operatorSchema = mixed().when("condition", {
+  is: checkIfConditionalRule,
+  then: (schema) => schema.equals([Operator.Equals]).required(),
+  otherwise: (schema) => schema.equals([undefined]),
+});
+
+export const ruleSchema: SchemaOf<Rule> = object({
+  condition: mixed().oneOf(Object.values(Condition)).required(),
+  operator: operatorSchema,
+  val: valFnSchema,
+  fn: valFnSchema,
+});
 
 export const fileTypeSchema: SchemaOf<FileType> = object({
   name: string().required(),
