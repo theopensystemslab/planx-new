@@ -12,11 +12,11 @@ import { v4 as uuidv4 } from "uuid";
 
 const defaultCreateContextValue = {
   remove: (_id: string) => {},
-  addToast: (_type: ToastType, _message: string) => {},
-  success: (_message: string) => {},
-  warning: (_message: string) => {},
-  info: (_message: string) => {},
-  error: (_message: string) => {},
+  addToast: (_type: ToastType, _message: string, _hideDuration?: number) => {},
+  success: (_message: string, _hideDuration?: number) => {},
+  warning: (_message: string, _hideDuration?: number) => {},
+  info: (_message: string, _hideDuration?: number) => {},
+  error: (_message: string, _hideDuration?: number) => {},
 };
 
 export const ToastContext = createContext<ToastContextType>(
@@ -31,27 +31,34 @@ export const ToastContextProvider = ({
   children,
 }: Readonly<{ children: ReactNode }>) => {
   const [state, dispatch] = useReducer(toastReducer, initialState);
-  const addToast = (type: ToastType, message: string) => {
+  const addToast = (
+    type: ToastType,
+    message: string,
+    hideDuration?: number,
+  ) => {
     const id = uuidv4();
-    dispatch({ type: "ADD_TOAST", payload: { id, message, type } });
+    dispatch({
+      type: "ADD_TOAST",
+      payload: { id, message, type, hideDuration },
+    });
   };
   const remove = (id: string) => {
     dispatch({ type: "REMOVE_TOAST", payload: { id } });
   };
-  const success = (message: string) => {
-    addToast("success", message);
+  const success = (message: string, hideDuration?: number) => {
+    addToast("success", message, hideDuration);
   };
 
-  const warning = (message: string) => {
-    addToast("warning", message);
+  const warning = (message: string, hideDuration?: number) => {
+    addToast("warning", message, hideDuration);
   };
 
-  const info = (message: string) => {
-    addToast("info", message);
+  const info = (message: string, hideDuration?: number) => {
+    addToast("info", message, hideDuration);
   };
 
-  const error = (message: string) => {
-    addToast("error", message);
+  const error = (message: string, hideDuration?: number) => {
+    addToast("error", message, hideDuration);
   };
 
   const value: ToastContextType = {

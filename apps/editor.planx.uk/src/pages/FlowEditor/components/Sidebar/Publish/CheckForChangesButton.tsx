@@ -5,6 +5,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { millisecondsToMinutes } from "date-fns/millisecondsToMinutes";
 import { useToast } from "hooks/useToast";
 import type { PublishFlowArgs } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -25,6 +26,7 @@ export const CheckForChangesToPublishButton: React.FC<{
 }> = ({ previewURL, isCustomiseTabOpen, onViewCustomisations }) => {
   const [
     isTemplatedFrom,
+    isTemplate,
     template,
     showLoading,
     hideLoading,
@@ -32,6 +34,7 @@ export const CheckForChangesToPublishButton: React.FC<{
     teamSlug,
   ] = useStore((state) => [
     state.isTemplatedFrom,
+    state.isTemplate,
     state.template,
     state.showLoading,
     state.hideLoading,
@@ -58,7 +61,18 @@ export const CheckForChangesToPublishButton: React.FC<{
     setDialogOpen(false);
 
     setLoadingCompleteCallback(() => {
-      toast.success("Successfully published changes");
+      if (isTemplate && args.templatedFlowIds?.length) {
+        // When publishing a source template, warn about withholding editing
+        //   while templated flows are being updated async (cautiously allow 30s per templated flow)
+        const templatedFlowUpdateLagMS = args.templatedFlowIds.length * 30_000;
+        toast.warning(
+          `Successfully published source template. It will take approximately ${millisecondsToMinutes(templatedFlowUpdateLagMS)} minutes to further update each templated flow. Please do not make changes during this time.`,
+          templatedFlowUpdateLagMS,
+        );
+      } else {
+        toast.success("Successfully published changes");
+      }
+
       setLoadingCompleteCallback(undefined);
     });
 

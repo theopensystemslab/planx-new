@@ -2,6 +2,7 @@ export interface Toast {
   message: string;
   type: ToastType;
   id: string;
+  hideDuration?: number;
 }
 export type ToastType = "success" | "warning" | "info" | "error";
 
@@ -24,8 +25,8 @@ type RemoveToast = {
 export type ToastContextType = {
   addToast: (type: ToastType, message: string) => void;
   remove: (id: string) => void;
-  success: (message: string) => void;
-  warning: (message: string) => void;
-  info: (message: string) => void;
-  error: (message: string) => void;
+  success: (message: string, hideDuration?: number) => void;
+  warning: (message: string, hideDuration?: number) => void;
+  info: (message: string, hideDuration?: number) => void;
+  error: (message: string, hideDuration?: number) => void;
 };
