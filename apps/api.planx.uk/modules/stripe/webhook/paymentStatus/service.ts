@@ -6,6 +6,7 @@ import type Stripe from "stripe";
 import { $api } from "../../../../client/index.js";
 import type { StripePaymentStatus } from "../../../../types.js";
 import { reportError } from "../../../pay/helpers.js";
+import { postStripePaymentNotificationToSlack } from "../../helpers.js";
 import { getOwnedPaymentIntent } from "../ownership/service.js";
 import { hasuraClientErrorSchema } from "./types.js";
 
@@ -46,6 +47,10 @@ export async function recordStripePaymentIntentStatus(
       feeBreakdown,
       metadata,
     });
+
+    if (stripeStatus !== "created") {
+      await postStripePaymentNotificationToSlack(teamSlug, id, stripeStatus);
+    }
   } catch (error) {
     if (isForeignKeyViolation(error)) {
       console.info(
