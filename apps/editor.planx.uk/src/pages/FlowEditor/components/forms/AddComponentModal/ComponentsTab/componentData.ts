@@ -165,13 +165,7 @@ export const ALL_CATEGORIES: Category[] = [
         type: TYPES.Content,
         slug: "content",
         title: title(TYPES.Content),
-        description: "Display rich content",
-      },
-      {
-        type: TYPES.Notice,
-        slug: "notice",
-        title: title(TYPES.Notice),
-        description: "Show an important notice",
+        description: "Display rich content and notices",
       },
       {
         type: TYPES.TaskList,

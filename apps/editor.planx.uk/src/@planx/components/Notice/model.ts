@@ -5,6 +5,9 @@ import { boolean, object, string } from "yup";
 import type { BaseNodeData } from "../shared";
 import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
+/**
+ * @deprecated Migrating to Content with `styleAsNotice` instead
+ */
 export interface Notice extends BaseNodeData {
   title?: string;
   description: string;

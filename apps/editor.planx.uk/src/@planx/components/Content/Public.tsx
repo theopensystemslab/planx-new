@@ -1,5 +1,7 @@
 import { mostReadable } from "@ctrl/tinycolor";
+import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import HelpIcon from "@mui/icons-material/Help";
+import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -10,8 +12,9 @@ import Card, {
 } from "@planx/components/shared/Preview/Card";
 import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { getContrastTextColor } from "styleUtils";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
@@ -22,21 +25,40 @@ import MoreInfoSection from "../shared/Preview/MoreInfoSection";
 export type Props = PublicProps<Content>;
 
 const Content = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "color",
-})<{ color?: string }>(({ theme, color = "#ffffff" }) => ({
-  backgroundColor: color,
-  color:
-    mostReadable(color || "#fff", [
-      "#fff",
-      theme.palette.text.primary,
-    ])?.toHexString() || theme.palette.text.primary,
-  "& a": {
-    color: getContrastTextColor(color || "#fff", theme.palette.link.main),
-  },
-  "& *:nth-of-type(1)": {
-    marginTop: 0,
-  },
-}));
+  shouldForwardProp: (prop) => prop !== "color" && prop !== "styleAsNotice",
+})<BoxProps & { color?: string; styleAsNotice?: boolean }>(
+  ({ theme, color = "#ffffff", styleAsNotice }) => ({
+    backgroundColor: color,
+    color:
+      mostReadable(color || "#fff", [
+        "#fff",
+        theme.palette.text.primary,
+      ])?.toHexString() || theme.palette.text.primary,
+    "& a": {
+      color: getContrastTextColor(color || "#fff", theme.palette.link.main),
+    },
+    "& *:nth-of-type(1)": {
+      marginTop: 0,
+    },
+    ...(styleAsNotice && {
+      position: "relative",
+      "& a": {
+        color: "inherit !important",
+      },
+      "&:before": {
+        content: "' '",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        opacity: 0.3,
+        border: "2px solid currentColor",
+        pointerEvents: "none",
+      },
+    }),
+  }),
+);
 
 const ContentComponent: React.FC<Props> = (props) => {
   const {
@@ -48,8 +70,10 @@ const ContentComponent: React.FC<Props> = (props) => {
     howMeasured,
     definitionImg,
     resetButton,
+    styleAsNotice,
   } = props;
 
+  const titleId = useId();
   const [open, setOpen] = useState(false);
   const { trackEvent } = useAnalyticsTracking();
 
@@ -75,12 +99,31 @@ const ContentComponent: React.FC<Props> = (props) => {
     <Card handleSubmit={handleSubmit}>
       <Content
         color={color}
+        styleAsNotice={styleAsNotice}
+        component={styleAsNotice ? "section" : "div"}
+        aria-labelledby={styleAsNotice ? titleId : undefined}
         data-testid="content"
-        sx={{ p: color === "#ffffff" || !color ? 0 : 2 }}
+        sx={{
+          p: styleAsNotice || (color && color !== "#ffffff") ? 2 : 0,
+        }}
       >
-        <Typography variant="h2" component="h1" sx={{ mb: content ? 2 : 0 }}>
-          {title}
-        </Typography>
+        <Box
+          sx={{ display: "flex", alignItems: "center", mb: content ? 2 : 0 }}
+        >
+          {styleAsNotice && (
+            <ErrorOutline sx={{ width: 34, height: 34, mr: 1 }} />
+          )}
+          <Typography
+            id={titleId}
+            variant={styleAsNotice ? "h3" : "h2"}
+            component="h1"
+            sx={
+              styleAsNotice ? { fontWeight: FONT_WEIGHT_SEMI_BOLD } : undefined
+            }
+          >
+            {title}
+          </Typography>
+        </Box>
         {content && <ReactMarkdownOrHtml source={content} openLinksOnNewTab />}
       </Content>
       {!!(info || policyRef || howMeasured) && (

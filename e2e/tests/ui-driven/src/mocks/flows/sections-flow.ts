@@ -28,8 +28,13 @@ export const flow: FlowGraph = {
   Section2: { data: { title: "Section Two" }, type: ComponentType.Section },
   Question1AnswerB: { data: { text: "B" }, type: ComponentType.Answer },
   NoticeC: {
-    data: { color: "#EFEFEF", title: "Reached C", resetButton: false },
-    type: ComponentType.Notice,
+    data: {
+      title: "Reached C",
+      color: "#EFEFEF",
+      resetButton: false,
+      styleAsNotice: true,
+    },
+    type: ComponentType.Content,
   },
   PreSendContent: {
     data: { title: "About to send" },
@@ -37,20 +42,35 @@ export const flow: FlowGraph = {
   },
   Question1AnswerC: { data: { text: "C" }, type: ComponentType.Answer },
   NoticeB: {
-    data: { color: "#EFEFEF", title: "Reached B", resetButton: false },
-    type: ComponentType.Notice,
+    data: {
+      title: "Reached B",
+      color: "#EFEFEF",
+      resetButton: false,
+      styleAsNotice: true,
+    },
+    type: ComponentType.Content,
   },
   Send: {
     data: { title: "Send", destinations: ["email"] },
     type: ComponentType.Send,
   },
   NoticeD: {
-    data: { color: "#EFEFEF", title: "Reached D", resetButton: false },
-    type: ComponentType.Notice,
+    data: {
+      title: "Reached D",
+      color: "#EFEFEF",
+      resetButton: false,
+      styleAsNotice: true,
+    },
+    type: ComponentType.Content,
   },
   NoticeA: {
-    data: { color: "#EFEFEF", title: "Reached A", resetButton: false },
-    type: ComponentType.Notice,
+    data: {
+      title: "Reached A",
+      color: "#EFEFEF",
+      resetButton: false,
+      styleAsNotice: true,
+    },
+    type: ComponentType.Content,
   },
   ChecklistOptionB: {
     data: { text: "B" },
@@ -101,11 +121,12 @@ export const flow: FlowGraph = {
   },
   EndOfSection2Notice: {
     data: {
-      color: "#EFEFEF",
       title: "Reached the end of section two",
+      color: "#EFEFEF",
       resetButton: false,
+      styleAsNotice: true,
     },
-    type: ComponentType.Notice,
+    type: ComponentType.Content,
   },
 };
 

@@ -10,6 +10,7 @@ export interface Content extends BaseNodeData {
   content: string;
   color?: string;
   resetButton?: boolean;
+  styleAsNotice?: boolean;
 }
 
 export const parseContent = (
@@ -19,6 +20,7 @@ export const parseContent = (
   content: data?.content || "",
   color: data?.color,
   resetButton: data?.resetButton || false,
+  styleAsNotice: data?.styleAsNotice || false,
   ...parseBaseNodeData(data),
 });
 
@@ -29,5 +31,6 @@ export const validationSchema: SchemaOf<Content> =
       content: richText(),
       color: string(),
       resetButton: boolean(),
+      styleAsNotice: boolean(),
     }),
   );

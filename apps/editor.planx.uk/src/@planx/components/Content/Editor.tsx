@@ -75,6 +75,20 @@ const ContentComponent: React.FC<Props> = (props) => {
           />
           <InputRow>
             <Switch
+              name="styleAsNotice"
+              checked={Boolean(formik.values.styleAsNotice)}
+              onChange={(event) => {
+                formik.handleChange(event);
+                if (event.target.checked && !formik.values.color) {
+                  formik.setFieldValue("color", "#EFEFEF");
+                }
+              }}
+              label="Style content as a notice"
+              disabled={props.disabled}
+            />
+          </InputRow>
+          <InputRow>
+            <Switch
               name="resetButton"
               checked={Boolean(formik.values.resetButton)}
               onChange={formik.handleChange}

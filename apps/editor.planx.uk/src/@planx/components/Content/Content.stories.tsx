@@ -33,6 +33,15 @@ export const WithImage = {
   },
 } satisfies Story;
 
+export const StyledAsNotice = {
+  args: {
+    title: "This service is still in development",
+    content: `<p>This new kind of service is still in development, so you may encounter bumps and issues. Please use the feedback button to record comments or report issues as you go along.</p>`,
+    color: "#F9F8F8",
+    styleAsNotice: true,
+  },
+} satisfies Story;
+
 export const WithEditor = () => (
   <Wrapper
     Editor={Editor}
