@@ -71,14 +71,29 @@ const SettingsLayout: React.FC<Props> = ({
           [theme.breakpoints.up("lg")]: {
             paddingTop: theme.spacing(5 + topOffset),
           },
-          borderBottom: `1px solid ${theme.palette.border.light}`,
         })}
       >
         <Container maxWidth="contentWrap">
           <Typography variant="h2" component="h1" gutterBottom>
             {title}
           </Typography>
-          {settingsLinks && (
+        </Container>
+      </Box>
+      {settingsLinks && (
+        <Box
+          sx={(theme) => ({
+            position: "sticky",
+            top: 0,
+            zIndex: theme.zIndex.appBar - 1,
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            bgcolor: "background.default",
+            borderBottom: `1px solid ${theme.palette.border.light}`,
+          })}
+        >
+          <Container maxWidth="contentWrap">
             <TabList>
               <Tabs
                 variant={isScrollable ? "scrollable" : "standard"}
@@ -103,9 +118,9 @@ const SettingsLayout: React.FC<Props> = ({
                 )}
               </Tabs>
             </TabList>
-          )}
-        </Container>
-      </Box>
+          </Container>
+        </Box>
+      )}
       <Container maxWidth="contentWrap">{children}</Container>
     </Box>
   );
