@@ -62,7 +62,7 @@
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
     "type-fest": "^4.41.0",
-    "zod": "^3.25.76"
+    "zod": "^4.6.6"
   },
   "scripts": {
     "build": "rimraf ./dist && NODE_OPTIONS=--max-old-space-size=4096 npx tsc && pnpm copy-swagger-files && pnpm copy-prompt-files",
