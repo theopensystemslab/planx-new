@@ -153,7 +153,7 @@ importers:
     dependencies:
       '@ai-sdk/gateway':
         specifier: ^4.0.72
-        version: 4.0.94(zod@3.25.76)
+        version: 4.0.94(zod@4.6.7)
       '@airbrake/node':
         specifier: ^2.1.9
         version: 2.1.9
@@ -180,7 +180,7 @@ importers:
         version: 0.6.1
       ai:
         specifier: ^7.0.79
-        version: 7.0.116(zod@3.25.76)
+        version: 7.0.116(zod@4.6.7)
       axios:
         specifier: 'catalog:'
         version: 1.20.0
@@ -305,8 +305,8 @@ importers:
         specifier: ^4.41.0
         version: 4.41.0
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: ^4.6.6
+        version: 4.6.7
     devDependencies:
       '@planx/eslint-config':
         specifier: workspace:*
@@ -478,7 +478,7 @@ importers:
         version: 1.167.2(@tanstack/react-router@1.170.39(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(@tanstack/router-core@1.171.32)(csstype@3.2.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@tanstack/zod-adapter':
         specifier: ^1.167.0
-        version: 1.167.0(@tanstack/react-router@1.170.39(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(zod@3.25.76)
+        version: 1.167.0(@tanstack/react-router@1.170.39(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(zod@4.6.7)
       '@tiptap/core':
         specifier: ^3.30.5
         version: 3.31.3(@tiptap/pm@3.31.3)
@@ -669,8 +669,8 @@ importers:
         specifier: ^0.32.11
         version: 0.32.11
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: ^4.6.6
+        version: 4.6.7
       zustand:
         specifier: ^4.5.7
         version: 4.5.7(@types/react@19.3.0)(immer@9.0.21)(react@19.3.0)
@@ -1484,8 +1484,8 @@ packages:
     resolution: {integrity: sha512-vC/bk1Lz7Tn/EfU9/apOTBk80/8dyGyWMowPoV1tJ52muDGsDqt2HPT2klrFUiY60MQmQv9q8yIht15JnBgDGw==}
     engines: {node: ^22.13.0 || >=24.0.0}
 
-  '@asamuzakjp/css-color@7.1.7':
-    resolution: {integrity: sha512-Q7ioeear07HwixdIitIn9KS1LZi97CEDFCSjPNm9v+y8KNbsu9q4Lrd4zUQW4faED+E7qxvfeVnbNRW46wFKuw==}
+  '@asamuzakjp/css-color@7.1.9':
+    resolution: {integrity: sha512-vZ6JQVq8Ivgz6b/IBlAf90wZviXdluY13cQOPO+nJHbmXwGrPl2GcpqUY7a55/8ZVdfONXpCFMpRijOBCHNlcQ==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
 
   '@asamuzakjp/dom-selector@8.3.2':
@@ -11249,8 +11249,8 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zod@4.6.5:
-    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
   zstddec@0.2.0:
     resolution: {integrity: sha512-oyPnDa1X5c13+Y7mA/FDMNJrn4S8UNBe0KCqtDmor40Re7ALrPN6npFwyYVRRh+PqozZQdeg23QtbcamZnG5rA==}
@@ -11280,21 +11280,21 @@ snapshots:
 
   '@adobe/css-tools@4.5.0': {}
 
-  '@ai-sdk/gateway@4.0.94(zod@3.25.76)':
+  '@ai-sdk/gateway@4.0.94(zod@4.6.7)':
     dependencies:
       '@ai-sdk/provider': 4.0.18
-      '@ai-sdk/provider-utils': 5.0.49(zod@3.25.76)
+      '@ai-sdk/provider-utils': 5.0.49(zod@4.6.7)
       '@vercel/oidc': 3.2.0
-      zod: 3.25.76
+      zod: 4.6.7
 
-  '@ai-sdk/provider-utils@5.0.49(zod@3.25.76)':
+  '@ai-sdk/provider-utils@5.0.49(zod@4.6.7)':
     dependencies:
       '@ai-sdk/provider': 4.0.18
       '@standard-schema/spec': 1.1.0
       '@workflow/serde': 4.1.0
       eventsource-parser: 3.1.1
       undici: 7.30.0
-      zod: 3.25.76
+      zod: 4.6.7
 
   '@ai-sdk/provider@4.0.18':
     dependencies:
@@ -11375,7 +11375,7 @@ snapshots:
       '@csstools/css-tokenizer': 4.0.2
       lru-cache: 11.5.3
 
-  '@asamuzakjp/css-color@7.1.7':
+  '@asamuzakjp/css-color@7.1.9':
     dependencies:
       '@csstools/css-calc': 3.4.3(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
       '@csstools/css-color-parser': 4.2.6(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
@@ -11578,7 +11578,7 @@ snapshots:
   '@astrojs/sitemap@3.7.4':
     dependencies:
       sitemap: 9.0.1
-      zod: 4.6.5
+      zod: 4.6.7
 
   '@astrojs/telemetry@3.3.3':
     dependencies:
@@ -14310,7 +14310,7 @@ snapshots:
       jiti: 2.7.0
       magic-string: 0.30.21
       prettier: 3.9.9
-      zod: 4.6.5
+      zod: 4.6.7
     transitivePeerDependencies:
       - supports-color
 
@@ -14324,7 +14324,7 @@ snapshots:
       '@tanstack/router-utils': 1.162.3
       chokidar: 5.0.0
       unplugin: 3.4.0(esbuild@0.28.2)(rolldown@1.2.11)(rollup@4.63.5)(vite@6.4.3(@types/node@24.10.15)(jiti@2.7.0)(less@4.9.1)(lightningcss@1.33.0)(sass@1.105.0)(stylus@0.62.0)(tsx@4.23.15)(yaml@2.9.1))
-      zod: 4.6.5
+      zod: 4.6.7
     optionalDependencies:
       '@tanstack/react-router': 1.170.39(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       vite: 6.4.3(@types/node@24.10.15)(jiti@2.7.0)(less@4.9.1)(lightningcss@1.33.0)(sass@1.105.0)(stylus@0.62.0)(tsx@4.23.15)(yaml@2.9.1)
@@ -14355,10 +14355,10 @@ snapshots:
 
   '@tanstack/virtual-file-routes@1.162.0': {}
 
-  '@tanstack/zod-adapter@1.167.0(@tanstack/react-router@1.170.39(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(zod@3.25.76)':
+  '@tanstack/zod-adapter@1.167.0(@tanstack/react-router@1.170.39(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(zod@4.6.7)':
     dependencies:
       '@tanstack/react-router': 1.170.39(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      zod: 3.25.76
+      zod: 4.6.7
 
   '@teamwork/websocket-json-stream@2.0.0': {}
 
@@ -15440,12 +15440,12 @@ snapshots:
 
   agent-base@7.1.4: {}
 
-  ai@7.0.116(zod@3.25.76):
+  ai@7.0.116(zod@4.6.7):
     dependencies:
-      '@ai-sdk/gateway': 4.0.94(zod@3.25.76)
+      '@ai-sdk/gateway': 4.0.94(zod@4.6.7)
       '@ai-sdk/provider': 4.0.18
-      '@ai-sdk/provider-utils': 5.0.49(zod@3.25.76)
-      zod: 3.25.76
+      '@ai-sdk/provider-utils': 5.0.49(zod@4.6.7)
+      zod: 4.6.7
 
   ajv-draft-04@1.0.0(ajv@8.20.0):
     optionalDependencies:
@@ -15677,7 +15677,7 @@ snapshots:
       vitefu: 1.1.3(vite@8.3.1(@types/node@24.10.15)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1)(sass@1.105.0)(stylus@0.62.0)(tsx@4.23.15)(yaml@2.9.1))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
-      zod: 4.6.5
+      zod: 4.6.7
     optionalDependencies:
       '@astrojs/markdown-remark': 7.2.4
       sharp: 0.35.5(@types/node@24.10.15)
@@ -16914,8 +16914,8 @@ snapshots:
       '@babel/parser': 7.29.9
       eslint: 9.39.5(jiti@2.7.0)
       hermes-parser: 0.25.1
-      zod: 3.25.76
-      zod-validation-error: 4.0.2(zod@3.25.76)
+      zod: 4.6.7
+      zod-validation-error: 4.0.2(zod@4.6.7)
     transitivePeerDependencies:
       - supports-color
 
@@ -18172,7 +18172,7 @@ snapshots:
 
   jsdom@30.1.1(@noble/hashes@1.8.0):
     dependencies:
-      '@asamuzakjp/css-color': 7.1.7
+      '@asamuzakjp/css-color': 7.1.9
       '@asamuzakjp/dom-selector': 9.2.4
       '@bramus/specificity': 2.4.3
       '@csstools/css-syntax-patches-for-csstree': 1.1.15(css-tree@3.2.1)
@@ -22305,13 +22305,13 @@ snapshots:
 
   zen-observable@0.8.15: {}
 
-  zod-validation-error@4.0.2(zod@3.25.76):
+  zod-validation-error@4.0.2(zod@4.6.7):
     dependencies:
-      zod: 3.25.76
+      zod: 4.6.7
 
   zod@3.25.76: {}
 
-  zod@4.6.5: {}
+  zod@4.6.7: {}
 
   zstddec@0.2.0: {}
 
