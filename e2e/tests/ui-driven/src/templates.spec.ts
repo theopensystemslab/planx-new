@@ -471,7 +471,7 @@ test.describe("Templates", () => {
       await page.getByRole("link", { name: FIRST_NODE_IN_FOLDER }).click();
       await page.getByRole("dialog").waitFor();
 
-      const editor = page.getByRole("textbox", { name: "Description" });
+      const editor = page.getByRole("textbox", { name: "Content" });
       await editor.click();
       await editor.pressSequentially("some text");
 
