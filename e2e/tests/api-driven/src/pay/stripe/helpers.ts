@@ -68,6 +68,20 @@ const feePassports = {
     "application.fee.payable": 177,
     "application.fee.payable.VAT": 8,
   },
+  "a householder fee": {
+    "application.fee.calculated": 528,
+    "application.fee.serviceCharge": 40,
+    "application.fee.serviceCharge.VAT": 8,
+    "application.fee.payable": 576,
+    "application.fee.payable.VAT": 8,
+  },
+  "a fee of £600": {
+    "application.fee.calculated": 552,
+    "application.fee.serviceCharge": 40,
+    "application.fee.serviceCharge.VAT": 8,
+    "application.fee.payable": 600,
+    "application.fee.payable.VAT": 8,
+  },
 };
 
 export type FeeCase = keyof typeof feePassports;

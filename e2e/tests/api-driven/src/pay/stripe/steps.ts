@@ -11,6 +11,7 @@ import {
 import type { PaymentMetadata } from "@opensystemslab/planx-core/types";
 import type Stripe from "stripe";
 
+import { getStripeTestClient } from "../../../../shared/stripe/client.js";
 import { completeStripeCheckoutSession } from "../../../../shared/stripe/completeCheckoutSession.js";
 import {
   buildSessionWithFees,
@@ -119,6 +120,16 @@ When(
 
 When(
   "the applicant leaves Stripe Checkout without paying",
+  async function (this: CustomWorld) {
+    this.checkoutSessionId = await createCheckoutSession({
+      flowId: this.flowId!,
+      sessionId: this.sessionId!,
+    });
+  },
+);
+
+When(
+  "the applicant starts a Stripe Checkout",
   async function (this: CustomWorld) {
     this.checkoutSessionId = await createCheckoutSession({
       flowId: this.flowId!,
@@ -265,5 +276,20 @@ Then(
       this.paymentIntent!.id,
     );
     assert.deepEqual(destinationMetadata, this.paymentIntent!.metadata);
+  },
+);
+
+Then(
+  "the Checkout Session offers {string}",
+  async function (this: CustomWorld, methods: string) {
+    const { payment_method_types } =
+      await getStripeTestClient().checkout.sessions.retrieve(
+        this.checkoutSessionId!,
+      );
+
+    assert.deepEqual(
+      [...payment_method_types].sort(),
+      methods.split(", ").sort(),
+    );
   },
 );

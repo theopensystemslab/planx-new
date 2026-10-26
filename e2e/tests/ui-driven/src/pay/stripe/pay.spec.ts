@@ -36,6 +36,15 @@ let context: TestContext = {
 };
 
 const payNodeId = "NNdOGmxgfG";
+const feeCalculateNodeId = "KzuRf6vqc1";
+
+const largeFeePayFlow = {
+  ...payFlow,
+  [feeCalculateNodeId]: {
+    ...payFlow[feeCalculateNodeId],
+    data: { ...payFlow[feeCalculateNodeId].data, formula: "12000" },
+  },
+};
 
 const paymentCancelledWarning =
   "Your payment wasn't completed. You can try again when you're ready.";
@@ -270,5 +279,50 @@ test.describe("Stripe integration @regression", () => {
     await expect(page.getByText("Form sent", { exact: true })).toBeVisible();
 
     await expectPaymentReference({ sessionId, paymentIntent });
+  });
+});
+
+test.describe("Stripe integration, fee which cannot be paid online @regression", () => {
+  let largeFeeContext: TestContext = {
+    ...contextDefaults,
+    paymentProvider: "stripe",
+    flow: {
+      slug: "pay-test-large-fee",
+      name: "Pay test large fee",
+      data: largeFeePayFlow,
+      hasSendComponent: true,
+    },
+    sessionIds: [],
+  };
+
+  test.beforeAll(async () => {
+    try {
+      largeFeeContext = await setUpTestContext(largeFeeContext);
+    } catch (e) {
+      await tearDownTestContext();
+      throw e;
+    }
+  });
+
+  test.afterAll(async () => {
+    await tearDownTestContext();
+  });
+
+  test("a fee above the Pay by Bank limit", async ({ page }) => {
+    const sessionId = await navigateToPayComponent(page, largeFeeContext);
+    largeFeeContext.sessionIds!.push(sessionId);
+
+    await page.getByText("Pay now").click();
+
+    await expect(
+      page.getByText("This fee cannot be paid online"),
+    ).toBeVisible();
+    await expect(
+      page.getByText(
+        "Contact your local planning authority to arrange payment.",
+      ),
+    ).toBeVisible();
+    await expect(page.getByText(/something went wrong/i)).toBeHidden();
+    await expect(page.getByRole("button", { name: "Continue" })).toBeHidden();
   });
 });
