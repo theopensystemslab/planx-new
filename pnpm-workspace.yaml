@@ -10,7 +10,7 @@ packages:
 
 catalog:
   '@opensystemslab/map': 1.0.0-alpha.17
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#99c38b638b10fefcf64d707c762f647ad3dc6290
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#555f3aed51199b8a70bf4c14aae2bc5157519829
   '@types/jsdom': ^30.0.0
   '@types/node': ~24.10.15
   axios: ^1.20.0
@@ -55,14 +55,6 @@ catalogs:
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
-  - '@opensystemslab/map@1.0.0-alpha.17'
-  # Storybook bump needed to fix issues with new Tanstack Router dependency
-  - 'storybook@10.6.1'
-  - '@storybook/addon-a11y@10.6.1'
-  - '@storybook/addon-docs@10.6.1'
-  - '@storybook/addon-links@10.6.1'
-  - '@storybook/tanstack-react@10.6.1'
-  - '@storybook/react-dom-shim@10.6.1'
-  - '@storybook/react-vite@10.6.1'
-  - '@storybook/builder-vite@10.6.1'
-  - '@storybook/react@10.6.1'
+  - 'body-parser@2.4.0'
+  - 'fast-uri@4.2.3'
+  - 'multer@2.5.0'

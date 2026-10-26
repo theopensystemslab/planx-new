@@ -7,6 +7,7 @@ This directory contains Python scripts for load testing using [Locust](https://l
 We use `uv` to manage dependencies for this project. If you aren't already familiar with this Python project manager, [get set up](https://docs.astral.sh/uv/).
 
 Then:
+
 - run `uv sync` (`pyproject.toml` and `uv.lock` together completely determine the setup)
 - run `source .venv/bin/activate` to [activate the virtual environment](https://docs.astral.sh/uv/pip/environments/#using-a-virtual-environment)
 
@@ -30,7 +31,7 @@ The `OpenWorkloadBase` class in `base_workload.py` provides a base class which a
 
 Also note that this project uses [ruff](https://docs.astral.sh/ruff/) for linting and formatting. So before pushing up changes (and with the venv activated), run the following:
 
-```
+```sh
 ruff check
 ruff format
 ```
@@ -48,3 +49,39 @@ For example, I used [Unsplash](https://unsplash.com/s/photos/tree?license=free) 
 ### File scanning
 
 We automatically scan file uploads via [Scanii](https://scanii.com/). In order to ensure we don't use our credits scanning files during load testing, please disable the staging API key via the Scanii web console before commencing any testing.
+
+## Security
+
+Security vulnerabilities are typically flagged by Dependabot in the repository and can be verified locally using `uv`'s built-in audit tool. To scan the lockfile:
+
+```sh
+uv audit
+```
+
+If vulnerabilities are found, follow these steps to patch them:
+
+1. **Bypass the time-lock (if necessary):** This project uses `uv`'s `exclude-newer` feature to lock dependencies to a rolling timeframe (e.g., 7 days). If a security patch was released very recently, `uv` will ignore it. Allow the patch by adding the package to the `exclude-newer-package` map in `pyproject.toml`.
+
+   ```toml
+   [tool.uv]
+   exclude-newer-package = { vulnerable_package = false }
+   ```
+
+   While you have this file open, please clean up any older package exceptions. Once a patch is older than 7 days, the time-lock no longer restricts it, so old entries can be safely removed to keep the config tidy.
+
+2. **Update the lockfile:** Tell `uv` to explicitly bump the vulnerable package to the latest version in `uv.lock`:
+
+   ```sh
+   uv lock --upgrade-package vulnerable_package
+   ```
+
+3. **Sync the environment:** Install the newly patched version:
+
+   ```sh
+   uv sync
+   ```
+
+4. **Verify the fix**: Run the audit tool again to ensure the vulnerabilities have been resolved:
+   ```sh
+    uv audit
+   ```

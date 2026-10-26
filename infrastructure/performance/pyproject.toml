@@ -19,3 +19,4 @@ indent-width = 2
 
 [tool.uv]
 exclude-newer = "7d"
+exclude-newer-package = { brotli = false, certifi = false }
