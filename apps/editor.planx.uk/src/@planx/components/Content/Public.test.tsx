@@ -80,3 +80,31 @@ test("renders content headings below the title", async () => {
     "Subheading",
   );
 });
+
+test("renders as a notice when styleAsNotice is set", async () => {
+  const handleSubmit = vi.fn();
+
+  const { user } = await setup(
+    <Content
+      title="Important"
+      content="<p>Read this</p>"
+      color="#EFEFEF"
+      styleAsNotice
+      handleSubmit={handleSubmit}
+    />,
+  );
+
+  expect(screen.getByRole("region", { name: "Important" })).toBe(content());
+  expect(content()).toHaveStyle({ backgroundColor: "#EFEFEF" });
+
+  await user.click(screen.getByTestId("continue-button"));
+  expect(handleSubmit).toHaveBeenCalled();
+});
+
+it("should not have any accessibility violations when styled as a notice", async () => {
+  const { container } = await setup(
+    <Content title="Important" content="<p>Read this</p>" styleAsNotice />,
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});

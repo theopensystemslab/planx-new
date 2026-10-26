@@ -30,9 +30,6 @@ const createBaseComponent = async (
         await createComponentOptions(options, "Add option", page);
       }
       break;
-    case ComponentType.Notice:
-      await page.getByPlaceholder("Notice").fill(title || "");
-      break;
     case ComponentType.Checklist:
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
@@ -245,12 +242,16 @@ export const createNotice = async (
   locatingNode: Locator,
   noticeText: string,
 ) => {
-  await createBaseComponent(
-    page,
-    locatingNode,
-    ComponentType.Notice,
-    noticeText,
-  );
+  await locatingNode.click();
+  await page.getByTestId("add-component-modal").waitFor();
+  await page
+    .locator(`[data-component-type="${ComponentType.Content}"]`)
+    .click();
+  await page.getByRole("dialog").waitFor();
+  await page.getByPlaceholder("Title").fill(noticeText);
+  await page.getByLabel("Style content as a notice").click();
+  await page.locator('button[form="modal"][type="submit"]').click();
+  await page.getByRole("dialog").waitFor({ state: "detached" });
 };
 
 export const createChecklist = async (
