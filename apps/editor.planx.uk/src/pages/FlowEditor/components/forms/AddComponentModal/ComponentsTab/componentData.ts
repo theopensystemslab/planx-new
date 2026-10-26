@@ -168,12 +168,6 @@ export const ALL_CATEGORIES: Category[] = [
         description: "Display rich content",
       },
       {
-        type: TYPES.Notice,
-        slug: "notice",
-        title: title(TYPES.Notice),
-        description: "Show an important notice",
-      },
-      {
         type: TYPES.TaskList,
         slug: "task-list",
         title: title(TYPES.TaskList),
