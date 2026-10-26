@@ -66,7 +66,7 @@ export const CheckForChangesToPublishButton: React.FC<{
         //   while templated flows are being updated async (cautiously allow 30s per templated flow)
         const templatedFlowUpdateLagMS = args.templatedFlowIds.length * 30_000;
         toast.warning(
-          `Successfully published source template. It will take approximately ${millisecondsToMinutes(templatedFlowUpdateLagMS)} minutes to further update each templated flow. Please do not make changes during this time.`,
+          `Successfully published source template. It will take ${Math.ceil(millisecondsToMinutes(templatedFlowUpdateLagMS))} minutes to update templated flows. Please do not make further changes to this flow during this time.`,
           templatedFlowUpdateLagMS,
         );
       } else {
