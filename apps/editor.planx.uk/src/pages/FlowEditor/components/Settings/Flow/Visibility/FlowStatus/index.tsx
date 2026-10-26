@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { useLocation } from "react-use";
 import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
+import Permission from "ui/editor/Permission";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
@@ -109,12 +110,14 @@ const FlowStatus: React.FC = () => {
                 Contact the OSL team to upgrade.
               </WarningContainer>
             )}
-            {isTemplate && (
-              <WarningContainer icon={PendingActionsIcon}>
-                Source templates are discoverable from the "Add a new flow"
-                modal when they are online.
-              </WarningContainer>
-            )}
+            <Permission.IsPlatformAdmin>
+              {isTemplate && (
+                <WarningContainer icon={PendingActionsIcon}>
+                  Source templates are discoverable from the "Add a new flow"
+                  modal when they are online.
+                </WarningContainer>
+              )}
+            </Permission.IsPlatformAdmin>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <Typography
                 variant="body1"
