@@ -11,6 +11,13 @@ import type {
 } from "./types.js";
 
 /**
+ * Our own errors give a reason the Pay component can read (e.g. a refusal)
+ * Other errors (e.g. from Stripe) may hold internal details, so are not passed on
+ */
+const getReason = (error: unknown) =>
+  error instanceof ServerError ? `. Reason: ${error.message}` : "";
+
+/**
  * Create a Stripe Checkout Session and return the hosted checkout URL
  */
 export const createCheckoutSession: CreateCheckoutSessionController = async (
@@ -20,7 +27,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
 ) => {
   const { localAuthority } = res.locals.parsedReq.params;
   const { sessionId, flowId, metadata } = res.locals.parsedReq.body;
-  const { connectedAccountId, returnURL } = res.locals;
+  const { connectedAccountId, capabilities, returnURL } = res.locals;
 
   try {
     const result = await createStripeCheckoutSession({
@@ -29,6 +36,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
       returnURL,
       teamSlug: localAuthority,
       connectedAccountId,
+      capabilities,
       metadata,
     });
 
@@ -36,7 +44,7 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
   } catch (error) {
     return next(
       new ServerError({
-        message: `Failed to create Stripe Checkout Session for ${localAuthority}`,
+        message: `Failed to create Stripe Checkout Session for ${localAuthority}${getReason(error)}`,
         status: error instanceof ServerError ? error.status : 500,
         cause: error,
       }),
@@ -49,19 +57,20 @@ export const createCheckoutSession: CreateCheckoutSessionController = async (
  */
 export const createPaymentRequestCheckoutSession: CreatePaymentRequestCheckoutSessionController =
   async (_req, res, next) => {
-    const { paymentRequest, connectedAccountId } = res.locals;
+    const { paymentRequest, connectedAccountId, capabilities } = res.locals;
 
     try {
       const result = await createPaymentRequestStripeCheckoutSession({
         paymentRequest,
         connectedAccountId,
+        capabilities,
       });
 
       return res.json(result);
     } catch (error) {
       return next(
         new ServerError({
-          message: `Failed to create Stripe Checkout Session for payment request ${paymentRequest.id}`,
+          message: `Failed to create Stripe Checkout Session for payment request ${paymentRequest.id}${getReason(error)}`,
           status: error instanceof ServerError ? error.status : 500,
           cause: error,
         }),

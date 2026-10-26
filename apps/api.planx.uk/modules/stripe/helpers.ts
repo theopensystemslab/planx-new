@@ -5,6 +5,9 @@
 export const getStripeId = (ref: string | { id: string } | null | undefined) =>
   typeof ref === "string" ? ref : ref?.id;
 
+export const formatPence = (pence: number) =>
+  (pence / 100).toLocaleString("en-GB", { style: "currency", currency: "GBP" });
+
 /**
  * Go-live switch
  *

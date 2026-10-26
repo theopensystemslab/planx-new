@@ -18,7 +18,7 @@ import { getDefaultContent } from "../../model";
 import type { Props } from "../Pay";
 import type { StripeAction } from "../types";
 import { Action } from "../types";
-import { getStripeCheckoutURL } from "./stripeCheckout";
+import { getStripeCheckoutURL, isNoPaymentMethodError } from "./stripeCheckout";
 import { STRIPE_PASSPORT_KEY, type UsePaymentProviderResult } from "./types";
 
 // Payments are only taken on published services - never on /draft or /preview test links
@@ -142,6 +142,11 @@ export function useStripePay(
 
       if (isStripeNotConfiguredError(apiError.data)) {
         dispatch(Action.StartNewPaymentError);
+        return;
+      }
+
+      if (isNoPaymentMethodError(apiError.data)) {
+        dispatch(Action.NoPaymentMethod);
         return;
       }
 

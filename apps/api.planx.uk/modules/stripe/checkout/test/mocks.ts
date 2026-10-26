@@ -22,16 +22,21 @@ export const mockStripeModule = {
 
 export const mockGetTeamBySlug = vi.fn();
 export const mockGetStripeAccountId = vi.fn();
-export const mockIsAccountReadyForPayments = vi.fn();
+export const mockGetPaymentCapabilities = vi.fn();
 
 export const mockConnectServiceModule = {
   getTeamBySlug: (...args: unknown[]) => mockGetTeamBySlug(...args),
   getStripeAccountId: (...args: unknown[]) => mockGetStripeAccountId(...args),
-  isAccountReadyForPayments: (...args: unknown[]) =>
-    mockIsAccountReadyForPayments(...args),
+  getPaymentCapabilities: (...args: unknown[]) =>
+    mockGetPaymentCapabilities(...args),
 };
 
 export const STRIPE_ACCOUNT_ID = "acct_test_southwark";
+
+export const activeCapabilities = {
+  card_payments: "active",
+  pay_by_bank_payments: "active",
+};
 
 export const stripeTeam = {
   id: 1,
@@ -102,6 +107,13 @@ export const feeBreakdownPassport = {
   "application.fee.payable.VAT": 8,
 } satisfies Partial<PassportFeeFields>;
 
+// A £748 total - above the card limit
+export const largeFeeBreakdownPassport = {
+  ...feeBreakdownPassport,
+  "application.fee.calculated": 700,
+  "application.fee.payable": 748,
+} satisfies Partial<PassportFeeFields>;
+
 /**
  * A team ready to take Stripe payments, for a session with no previous Checkout Sessions
  */
@@ -115,7 +127,7 @@ export const mockCreateCheckoutSessionDefaults = () => {
   mockExpire.mockReset().mockResolvedValue({ status: "expired" });
   mockGetTeamBySlug.mockReset().mockResolvedValue(stripeTeam);
   mockGetStripeAccountId.mockReset().mockResolvedValue(STRIPE_ACCOUNT_ID);
-  mockIsAccountReadyForPayments.mockReset().mockResolvedValue(true);
+  mockGetPaymentCapabilities.mockReset().mockResolvedValue(activeCapabilities);
   mockPassportLookup(feeBreakdownPassport);
   mockReturnURLContext();
   mockPaymentStatusInsert();
@@ -145,6 +157,16 @@ export const paymentRequestFeeBreakdown = {
   },
   reductions: [],
   exemptions: [],
+};
+
+// A £748 total - above the card limit
+export const largePaymentRequestFeeBreakdown = {
+  ...paymentRequestFeeBreakdown,
+  amount: {
+    ...paymentRequestFeeBreakdown.amount,
+    calculated: 700,
+    payable: 748,
+  },
 };
 
 export const paymentRequestMetadataConfig = [
