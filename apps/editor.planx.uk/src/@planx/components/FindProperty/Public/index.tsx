@@ -50,6 +50,7 @@ function Component(props: Props) {
     localPlanningAuthorities,
     regions,
     wards,
+    parishes,
     developmentCorporations,
     titleBoundary,
     isPending,
@@ -112,8 +113,12 @@ function Component(props: Props) {
         newPassportData["property.ward"] = wards;
       }
 
-      // Unlike above datasets, `development-corporation-boundary` is not yet available for all of England via planning.data
+      // Unlike above datasets, `parish` and `development-corporation-boundary` do not cover all of England via planning.data
       //  So, we want to avoid writing `[]` to passport
+      if (parishes?.length) {
+        newPassportData["property.civilParish"] = parishes;
+      }
+
       if (developmentCorporations?.length) {
         newPassportData["property.developmentCorporation"] =
           developmentCorporations;

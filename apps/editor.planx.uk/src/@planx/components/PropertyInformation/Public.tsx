@@ -47,6 +47,11 @@ function Component(props: PublicProps<PropertyInformation>) {
       localPlanningAuthority={
         passport.data?.["property.localPlanningAuthority"]
       }
+      ward={passport.data?.["property.ward"]}
+      civilParish={passport.data?.["property.civilParish"]}
+      developmentCorporation={
+        passport.data?.["property.developmentCorporation"]
+      }
       titleBoundary={passport.data?.["property.boundary"]}
       blpuCodes={data?.blpuCodes}
       overrideAnswer={overrideAnswer}
@@ -80,6 +85,9 @@ export interface PresentationalProps extends PropertyInformation {
   propertyType?: string[];
   localAuthorityDistrict?: string[];
   localPlanningAuthority?: string[];
+  ward?: string[];
+  civilParish?: string[];
+  developmentCorporation?: string[];
   titleBoundary?: Feature;
   blpuCodes?: BLPUCode[];
   overrideAnswer: (fn: string) => void;
@@ -100,6 +108,9 @@ export function Presentational(props: PresentationalProps) {
     propertyType,
     localAuthorityDistrict,
     localPlanningAuthority,
+    ward,
+    civilParish,
+    developmentCorporation,
     titleBoundary,
     blpuCodes,
     overrideAnswer,
@@ -120,11 +131,7 @@ export function Presentational(props: PresentationalProps) {
   const propertyDetails: PropertyDetail[] = [
     {
       heading: "Address",
-      detail: address?.title,
-    },
-    {
-      heading: "Postcode",
-      detail: address?.postcode,
+      detail: address?.single_line_address || address?.title,
     },
     {
       heading: "Local authority district",
@@ -134,6 +141,26 @@ export function Presentational(props: PresentationalProps) {
       heading: "Local planning authority",
       detail: localPlanningAuthority?.join(", ") || "Unknown",
     },
+    {
+      heading: "Ward",
+      detail: ward?.join(", ") || "Unknown",
+    },
+    ...(civilParish
+      ? [
+          {
+            heading: "Civil parish",
+            detail: civilParish?.join(", ") || "Unknown",
+          },
+        ]
+      : []),
+    ...(developmentCorporation
+      ? [
+          {
+            heading: "Development corporation",
+            detail: developmentCorporation?.join(", ") || "Unknown",
+          },
+        ]
+      : []),
     ...(showPropertyTypeOverride
       ? [
           {
