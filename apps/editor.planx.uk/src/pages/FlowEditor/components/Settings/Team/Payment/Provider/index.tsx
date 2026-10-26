@@ -78,6 +78,8 @@ const Provider: React.FC = () => {
     useState<PaymentProvider | null>(null);
   const provider = migratedProvider ?? paymentProvider ?? null;
 
+  const isProduction = import.meta.env.VITE_APP_ENV === "production";
+
   const [dialogState, setDialogState] = useState<DialogState>({
     type: "closed",
   });
@@ -165,13 +167,20 @@ const Provider: React.FC = () => {
                   fees.
                 </p>
                 <p>
-                  PlanX is migrating from GOV.UK Pay to Stripe. Once migrated,
-                  all new payment sessions will be processed through Stripe.
+                  {isProduction
+                    ? `Switching payment providers on production is final and cannot be undone.`
+                    : `On staging, you can switch between GOV.UK Pay, if already setup, and Stripe sandbox accounts. All transactions use test details and no real money is taken.`}
                 </p>
                 <p>
-                  Migration requires that there are no active payment sessions
-                  in progress. If sessions are found, please wait for them to
-                  complete before trying again.
+                  If currently using GOV.UK Pay, migration to Stripe requires
+                  that there are no active GOV.UK payment sessions in progress.
+                  If sessions are found, please wait for them to complete before
+                  trying again (sessions expire within 90 minutes).
+                </p>
+                <p>
+                  Once migrated, all payments will automatically be processed
+                  through Stripe. You will not need to individually publish your
+                  fee-carrying services.
                 </p>
               </>
             ) : (
@@ -246,11 +255,12 @@ const Provider: React.FC = () => {
             <DialogContent dividers>
               <DialogContentText>
                 After checking that no active GOV.UK Pay sessions are underway,
-                the migration will start immediately.
+                the Stripe migration will start immediately.
               </DialogContentText>
               <DialogContentText sx={{ mt: 1 }}>
-                This action cannot be undone. All future payment sessions will
-                be processed through Stripe.
+                {isProduction
+                  ? `This action cannot be undone. All future payments will be processed through Stripe.`
+                  : `If you have GOV.UK Pay setup, you can continue to switch between providers on staging for thorough comparative testing. However, your production Stripe migration will be one-directional and cannot be undone once live with Stripe.`}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
