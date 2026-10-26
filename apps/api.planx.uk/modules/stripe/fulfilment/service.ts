@@ -4,7 +4,10 @@ import { gql } from "graphql-request";
 import { $api } from "../../../client/index.js";
 import { getPaymentRequest } from "../checkout/paymentRequest.js";
 import { stripe } from "../client.js";
-import { getStripeId } from "../helpers.js";
+import {
+  getStripeId,
+  postStripePaymentNotificationToSlack,
+} from "../helpers.js";
 import {
   type FulfilmentResult,
   paymentRequestCheckoutMetadataSchema,
@@ -89,6 +92,14 @@ export async function fulfilPaymentRequest(
       status: "alreadyFulfilled",
       stripePaymentId: paidRequest.stripePaymentId,
     };
+  } else {
+    // Send a "succeeded" ITP Slack notification when we mark a payment request as paid
+    await postStripePaymentNotificationToSlack(
+      paymentRequest.session.flow.team.slug,
+      stripePaymentId,
+      "succeeded",
+      true,
+    );
   }
 
   return { status: "fulfilled", stripePaymentId };
