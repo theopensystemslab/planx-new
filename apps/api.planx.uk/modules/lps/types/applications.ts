@@ -42,8 +42,8 @@ interface Failure {
 
 export const applicationsSchema = z.object({
   body: z.object({
-    email: z.string().email(),
-    token: z.string().uuid(),
+    email: z.email(),
+    token: z.uuid(),
   }),
 });
 

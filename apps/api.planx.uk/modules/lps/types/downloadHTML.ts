@@ -15,13 +15,13 @@ interface Failure {
 export const downloadHTMLSchema = z.object({
   headers: z.object({
     authorization: z
-      .string({ message: "Authorization headers are required" })
+      .string({ error: "Authorization headers are required" })
       .startsWith("Bearer ", "Invalid token format")
       .transform((val) => val.replace("Bearer ", "")),
   }),
   body: z.object({
-    email: z.string().email(),
-    sessionId: z.string().uuid(),
+    email: z.email(),
+    sessionId: z.uuid(),
   }),
 });
 

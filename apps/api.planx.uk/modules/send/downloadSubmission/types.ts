@@ -5,10 +5,10 @@ import type { ValidatedRequestHandler } from "../../../shared/middleware/validat
 export const useAccessTokenAuthSchema = z.object({
   headers: z.object({
     authorization: z
-      .string({ message: "Authorization headers are required" })
+      .string({ error: "Authorization headers are required" })
       .startsWith("Bearer ", "Invalid token format")
       .transform((val) => val.replace("Bearer ", ""))
-      .pipe(z.string().uuid("Invalid token format")),
+      .pipe(z.uuid("Invalid token format")),
   }),
 });
 

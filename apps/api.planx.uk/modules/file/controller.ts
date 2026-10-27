@@ -30,9 +30,10 @@ export const uploadFileSchema = z.object({
       .string()
       .trim()
       .min(1)
-      .refine(isAllowedExtension, (input) => ({
-        message: `Unsupported file type for given filename: ${getFileExtension(input)}`,
-      }))
+      .refine(isAllowedExtension, {
+        error: (issue) =>
+          `Unsupported file type for given filename: ${getFileExtension(String(issue.input))}`,
+      })
       .transform((filename) => encodeURIComponent(filename)),
   }),
 });

@@ -7,8 +7,8 @@ export const createSessionEmailEventSchema = z.object({
   body: z.object({
     createdAt: z.string().pipe(z.coerce.date()),
     payload: z.object({
-      sessionId: z.string().uuid(),
-      email: z.string().email(),
+      sessionId: z.uuid(),
+      email: z.email(),
     }),
   }),
 });
@@ -29,7 +29,7 @@ export const createSessionDeleteEventSchema = z.object({
       createdAt: z.string().pipe(z.coerce.date()).optional(),
       lockedAt: z.string().pipe(z.coerce.date()).optional(),
       payload: z.object({
-        sessionId: z.string().uuid(),
+        sessionId: z.uuid(),
       }),
     })
     .refine(

@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 
 const payloadSchema = z.object({
-  sessionId: z.string().uuid(),
+  sessionId: z.uuid(),
 });
 
 export type SendIntegrationPayload = z.infer<typeof payloadSchema>;

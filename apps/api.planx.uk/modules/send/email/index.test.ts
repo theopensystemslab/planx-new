@@ -236,7 +236,7 @@ describe(`sending an application by email to a planning office`, () => {
           },
         },
       },
-      variables: { flowId: "11111111-1111-1111-1111-111111111111" },
+      variables: { flowId: "11111111-1111-4111-8111-111111111111" },
     });
 
     queryMock.mockQuery({

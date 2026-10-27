@@ -10,7 +10,7 @@ interface SendEmailResponse {
 export const singleApplicationEmailSchema = z.object({
   body: z.object({
     payload: z.object({
-      email: z.string().email(),
+      email: z.email(),
       sessionId: z.string(),
     }),
   }),
@@ -65,7 +65,7 @@ export const confirmationEmailSchema = z.object({
     payload: z.object({
       sessionId: z.string(),
       lockedAt: z.string().or(z.null()),
-      email: z.string().email(),
+      email: z.email(),
     }),
   }),
   params: z.object({
@@ -82,7 +82,7 @@ export const resendEmailSchema = z.object({
   body: z.object({
     payload: z.object({
       userId: z.number(),
-      email: z.string().email(),
+      email: z.email(),
       firstName: z.string(),
       lastName: z.string(),
       defaultTeamId: z.number().nullable(),

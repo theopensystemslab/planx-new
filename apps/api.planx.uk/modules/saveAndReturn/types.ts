@@ -22,7 +22,7 @@ export const validateSessionSchema = z.object({
   body: z.object({
     payload: z.object({
       sessionId: z.string(),
-      email: z.string().email(),
+      email: z.email(),
     }),
   }),
 });

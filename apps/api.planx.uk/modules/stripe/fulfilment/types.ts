@@ -8,9 +8,9 @@ export const STRIPE_PASSPORT_KEY = "application.fee.reference.stripe";
  * Reserved metadata set by PlanX on an invite to pay Checkout Session
  */
 export const paymentRequestCheckoutMetadataSchema = z.object({
-  sessionId: z.string().uuid(),
+  sessionId: z.uuid(),
   origin: z.string(),
-  paymentRequestId: z.string().uuid(),
+  paymentRequestId: z.uuid(),
 });
 
 /**
@@ -34,7 +34,7 @@ export type FulfilmentResult =
 
 export const fulfilPaymentRequestSchema = z.object({
   params: z.object({
-    paymentRequestId: z.string().uuid(),
+    paymentRequestId: z.uuid(),
   }),
   body: z.object({
     checkoutSessionId: z.string().startsWith("cs_"),

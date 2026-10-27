@@ -8,7 +8,7 @@ interface LoginResponse {
 
 export const loginSchema = z.object({
   body: z.object({
-    email: z.string().email(),
+    email: z.email(),
   }),
 });
 

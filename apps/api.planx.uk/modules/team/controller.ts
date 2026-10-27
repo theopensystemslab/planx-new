@@ -13,7 +13,7 @@ export const upsertMemberSchema = z.object({
     teamSlug: z.string().toLowerCase(),
   }),
   body: z.object({
-    userEmail: z.string().email(),
+    userEmail: z.email(),
     role: z.enum(["teamEditor", "teamViewer"]),
   }),
 });
@@ -28,7 +28,7 @@ export const removeMemberSchema = z.object({
     teamSlug: z.string().toLowerCase(),
   }),
   body: z.object({
-    userEmail: z.string().email(),
+    userEmail: z.email(),
   }),
 });
 
