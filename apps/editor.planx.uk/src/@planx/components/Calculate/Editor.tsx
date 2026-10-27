@@ -1,33 +1,37 @@
-import { styled } from "@mui/material/styles";
+import Code from "@mui/icons-material/Code";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { makeData } from "@planx/components/shared/utils";
 import type { FormikErrors } from "formik";
+import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
 import { useMemo } from "react";
-import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import { Switch } from "ui/shared/Switch";
 
 import { baseNodeDataValidationSchema } from "../shared";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import type { Calculate } from "./model";
-import { evaluate, getVariables, parseCalculate } from "./model";
+import { evaluate, formatResult, getVariables, parseCalculate } from "./model";
 
 export type Props = EditorProps<TYPES.Calculate, Calculate>;
 
-const ConditionLabel = styled("span")(() => ({
-  alignSelf: "center",
-  margin: "auto 1rem",
-  textAlign: "center",
-}));
-
-const UNKNOWN = "unknown";
+// Evaluate the formula using the default values (or a placeholder of 0)
+const evaluateWithDefaults = ({ formula, defaults }: Calculate) => {
+  const variables = [...getVariables(formula)];
+  return evaluate(
+    formula,
+    {},
+    Object.fromEntries(
+      variables.map((variable) => [variable, defaults[variable] || 0]),
+    ),
+  );
+};
 
 export default function Component(props: Props) {
   const formik = useFormikWithRef<Calculate>(
@@ -41,26 +45,7 @@ export default function Component(props: Props) {
       validate: (values) => {
         const errors: FormikErrors<Calculate> = {};
         try {
-          // can parse formula
-          getVariables(formik.values.formula);
-
-          // Validate formula
-          const result = evaluate(
-            values.formula,
-            values.samples,
-            values.defaults,
-          );
-
-          if (Number.isNaN(Number(result))) {
-            errors.formula = "Enter a formula which outputs a number";
-          }
-          if (
-            typeof result === "boolean" &&
-            !values.formatOutputForAutomations
-          ) {
-            errors.formula =
-              "For Boolean functions, toggle on 'Format the output to automate a future Question or Checklist only'";
-          }
+          evaluateWithDefaults(values);
         } catch (error: any) {
           errors.formula = error.message;
         }
@@ -71,25 +56,13 @@ export default function Component(props: Props) {
     props.formikRef,
   );
 
-  const sampleResult = useMemo(() => {
+  const defaultResult = useMemo(() => {
     try {
-      const result = evaluate(
-        formik.values.formula,
-        formik.values.samples,
-        formik.values.defaults,
-      );
-      // Type guard as mathjs evaluates `m` to a "Unit" object for "meter"
-      if (!Number.isNaN(Number(result))) {
-        return String(result);
-      } else if (result === undefined) {
-        return "a number returned from the formula above";
-      } else {
-        return `'${result}' which is of the type: ${typeof result}`;
-      }
+      return formatResult(evaluateWithDefaults(formik.values));
     } catch (e) {
-      return UNKNOWN;
+      return;
     }
-  }, [formik.values.formula, formik.values.defaults, formik.values.samples]);
+  }, [formik.values]);
 
   /**
    * When the formula is updated, remove any defaults which are no longer used
@@ -142,29 +115,12 @@ export default function Component(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-        </ModalSectionContent>
-        <ModalSectionContent title="Output">
-          <InputRow>
-            <DataFieldAutocomplete
-              required
-              value={formik.values.fn}
-              onChange={(value) => formik.setFieldValue("fn", value)}
-              disabled={props.disabled}
-            />
-          </InputRow>
-          <InputRow>
-            <Switch
-              checked={formik.values.formatOutputForAutomations}
-              onChange={() =>
-                formik.setFieldValue(
-                  "formatOutputForAutomations",
-                  !formik.values.formatOutputForAutomations,
-                )
-              }
-              label="Format the output to automate a future Question or Checklist only"
-              disabled={props.disabled}
-            />
-          </InputRow>
+          <DataFieldAutocomplete
+            required
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
+            disabled={props.disabled}
+          />
         </ModalSectionContent>
         <ModalSectionContent title="Formula">
           <InputRow>
@@ -184,49 +140,42 @@ export default function Component(props: Props) {
             <p>No data fields found in formula.</p>
           ) : (
             variables.map((variable) => (
-              <InputGroup label={variable} key={variable}>
-                <InputRow>
-                  <Input
-                    name={`defaults['${variable}']`}
-                    value={formik.values.defaults[variable]}
-                    onChange={formik.handleChange}
-                    placeholder={"insert default value"}
-                    required
-                    disabled={props.disabled}
-                  />
-                </InputRow>
-              </InputGroup>
+              <InputRow key={variable}>
+                <Input value={variable} disabled />
+                <Input
+                  name={`defaults['${variable}']`}
+                  value={formik.values.defaults[variable]}
+                  onChange={formik.handleChange}
+                  placeholder="0"
+                  aria-label={`Default value for ${variable}`}
+                  required
+                  disabled={props.disabled}
+                />
+              </InputRow>
             ))
           )}
         </ModalSectionContent>
-        <ModalSectionContent title="Try">
-          {variables?.length ? (
-            <>
-              <p>If</p>
-              {variables.map((variable) => (
-                <InputRow key={variable}>
-                  <Input value={variable} disabled />
-                  <ConditionLabel>were</ConditionLabel>
-                  <Input
-                    name={`samples['${variable}']`}
-                    value={formik.values.samples[variable]}
-                    onChange={formik.handleChange}
-                    placeholder="empty"
-                    disabled={props.disabled}
-                  />
-                </InputRow>
-              ))}
-              <p>then</p>
-            </>
-          ) : (
-            <></>
-          )}
-          <p>
-            <strong>{formik.values.fn || "<data field>"}</strong> would be set
-            to <strong>{sampleResult}</strong>
-          </p>
-        </ModalSectionContent>
       </ModalSection>
+      {defaultResult !== undefined && (
+        <ModalSection>
+          <ModalSectionContent title="Output" Icon={Code}>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              This preview is based on your formula and its default values.
+            </Typography>
+            <FormattedResponse
+              expandAllLevels
+              hideRootName
+              response={
+                makeData(
+                  formik.values,
+                  defaultResult,
+                  formik.values.fn || "<data field>",
+                ).data ?? {}
+              }
+            />
+          </ModalSectionContent>
+        </ModalSection>
+      )}
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );

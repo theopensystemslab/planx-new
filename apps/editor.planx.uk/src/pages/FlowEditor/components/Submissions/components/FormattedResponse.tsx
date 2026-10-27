@@ -18,11 +18,13 @@ const InvalidJSONError = () => "Error parsing response";
 interface FormattedResponseProps {
   response: string | object | Record<string, unknown>;
   expandAllLevels?: boolean;
+  hideRootName?: boolean;
 }
 
 export const FormattedResponse: React.FC<FormattedResponseProps> = ({
   response,
   expandAllLevels,
+  hideRootName,
 }) => {
   let parsedResponse;
   try {
@@ -37,6 +39,7 @@ export const FormattedResponse: React.FC<FormattedResponseProps> = ({
       <AppErrorBoundary FallbackComponent={InvalidJSONError} disableReporting>
         <ReactJson
           src={parsedResponse}
+          name={hideRootName ? false : undefined}
           theme="monokai"
           collapsed={expandAllLevels ? false : 2}
           displayDataTypes={false}
