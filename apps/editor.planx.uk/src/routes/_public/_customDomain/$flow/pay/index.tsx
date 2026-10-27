@@ -1,18 +1,17 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import MakePayment from "pages/Pay/MakePayment";
 import { getPaymentRequest } from "utils/routeUtils/payQueries";
 import { z } from "zod";
 
 const paymentSearchSchema = z.object({
-  paymentRequestId: z.string().uuid(),
+  paymentRequestId: z.uuid(),
   // Stripe Checkout return URLs
   stripeSessionId: z.string().optional(),
   cancelled: z.coerce.boolean().optional(),
 });
 
 export const Route = createFileRoute("/_public/_customDomain/$flow/pay/")({
-  validateSearch: zodValidator(paymentSearchSchema),
+  validateSearch: paymentSearchSchema,
   onError: ({ params }) => {
     throw redirect({
       to: "/$flow/pay/not-found",

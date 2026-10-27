@@ -471,9 +471,6 @@ importers:
       '@tanstack/react-router-devtools':
         specifier: ^1.167.1
         version: 1.167.2(@tanstack/react-router@1.170.45(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@tanstack/router-core@1.171.38)(csstype@3.2.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@tanstack/zod-adapter':
-        specifier: ^1.167.0
-        version: 1.167.0(@tanstack/react-router@1.170.45(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(zod@3.25.76)
       '@tiptap/core':
         specifier: ^3.30.5
         version: 3.32.0(@tiptap/pm@3.32.0)
@@ -664,8 +661,8 @@ importers:
         specifier: ^0.32.11
         version: 0.32.11
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: 'catalog:'
+        version: 4.6.7
       zustand:
         specifier: ^4.5.7
         version: 4.5.7(@types/react@19.3.0)(immer@9.0.21)(react@19.3.1)
@@ -4359,13 +4356,6 @@ packages:
   '@tanstack/virtual-file-routes@1.162.0':
     resolution: {integrity: sha512-uhOeFyxLcU41HzvrxsGpiWdcMbScY1EDgbZ5K7DVRMYInbLYWAC0EA/kx9wXAoSM8q82bUG2hRl8+EAjE6XAbA==}
     engines: {node: '>=20.19'}
-
-  '@tanstack/zod-adapter@1.167.0':
-    resolution: {integrity: sha512-5Wlm5teSu+pz3KKhfa1ESsiOJXbvV6ITr1vKOQKi9yEdtozp6VefEzxzafLLida97mnL2tmauva/njokQrG5CA==}
-    engines: {node: '>=20.19'}
-    peerDependencies:
-      '@tanstack/react-router': '>=1.43.2'
-      zod: ^3.23.8
 
   '@teamwork/websocket-json-stream@2.0.0':
     resolution: {integrity: sha512-SCEM44hjNyxYwrtyJrjlHmeTd9RJlZr04BAMbHSBhdW0M2IXv0SC+4XeuRXPiY7U7pJ0W8TSUwVP/28MV/ds0w==}
@@ -14309,11 +14299,6 @@ snapshots:
   '@tanstack/store@0.11.2': {}
 
   '@tanstack/virtual-file-routes@1.162.0': {}
-
-  '@tanstack/zod-adapter@1.167.0(@tanstack/react-router@1.170.45(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(zod@3.25.76)':
-    dependencies:
-      '@tanstack/react-router': 1.170.45(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      zod: 3.25.76
 
   '@teamwork/websocket-json-stream@2.0.0': {}
 

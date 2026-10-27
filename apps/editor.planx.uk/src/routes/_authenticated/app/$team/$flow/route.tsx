@@ -3,19 +3,18 @@ import {
   Outlet,
   stripSearchParams,
 } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 import FlowSkeleton from "pages/FlowEditor/FlowSkeleton";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { flowsSearchSchema } from "../-flowsSearchSchema";
+import { partialFlowsSearchSchema } from "../-flowsSearchSchema";
 import { connectToFlowRoute } from "./-route.utils";
 
 export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
   staticData: { pageTitle: (match) => match.context.flowName },
   pendingComponent: FlowSkeleton,
-  validateSearch: zodValidator(flowsSearchSchema.partial()),
+  validateSearch: partialFlowsSearchSchema,
   search: {
     middlewares: [
       stripSearchParams([

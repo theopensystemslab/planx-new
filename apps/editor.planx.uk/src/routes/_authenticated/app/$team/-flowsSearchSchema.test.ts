@@ -1,4 +1,7 @@
-import { flowsSearchSchema } from "./-flowsSearchSchema";
+import {
+  flowsSearchSchema,
+  partialFlowsSearchSchema,
+} from "./-flowsSearchSchema";
 
 describe("flowsSearchSchema", () => {
   it("applies both sort defaults when neither param is set", () => {
@@ -26,6 +29,24 @@ describe("flowsSearchSchema", () => {
     expect(
       flowsSearchSchema.parse({ sort: "nonexistent", sortDirection: "up" }),
     ).toMatchObject({
+      sort: "last-edited",
+      sortDirection: "desc",
+    });
+  });
+});
+
+describe("partialFlowsSearchSchema", () => {
+  it("does not apply sort defaults when neither param is set", () => {
+    expect(partialFlowsSearchSchema.parse({})).toEqual({});
+  });
+
+  it("falls back to the default for invalid values", () => {
+    expect(
+      partialFlowsSearchSchema.parse({
+        sort: "nonexistent",
+        sortDirection: "up",
+      }),
+    ).toEqual({
       sort: "last-edited",
       sortDirection: "desc",
     });

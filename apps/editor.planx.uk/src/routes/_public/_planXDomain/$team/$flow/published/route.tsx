@@ -1,17 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import {
   createPublicRouteBeforeLoad,
   createPublicRouteErrorComponent,
   createPublicRouteHead,
   prefetchPublishedFlowData,
-  publicRouteSearchSchemas,
 } from "utils/routeUtils/publicRouteHelpers";
+import { publicRouteSearchSchemas } from "utils/routeUtils/publicRouteSearchSchemas";
 
 export const Route = createFileRoute(
   "/_public/_planXDomain/$team/$flow/published",
 )({
-  validateSearch: zodValidator(publicRouteSearchSchemas.published),
+  validateSearch: publicRouteSearchSchemas.published,
   beforeLoad: (args) =>
     createPublicRouteBeforeLoad("published", args.context)(args),
   loader: (args) => prefetchPublishedFlowData(args),

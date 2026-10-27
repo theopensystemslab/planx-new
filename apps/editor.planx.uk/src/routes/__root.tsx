@@ -4,7 +4,6 @@ import {
   Outlet,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { zodValidator } from "@tanstack/zod-adapter";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { CatchAllComponent } from "pages/ErrorPage/CatchAllComponent";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
@@ -18,7 +17,7 @@ const rootSearchSchema = z.object({
 });
 
 export const Route = createRootRouteWithContext()({
-  validateSearch: zodValidator(rootSearchSchema),
+  validateSearch: rootSearchSchema,
   pendingComponent: DelayedLoadingIndicator,
   errorComponent: ({ error }) => {
     if (!(error instanceof Error)) throw error;
