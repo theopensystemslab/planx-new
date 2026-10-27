@@ -23,6 +23,7 @@ describe("logging into LPS applications", () => {
     it("requires an email address", async () => {
       await supertest(app)
         .post(ENDPOINT)
+        .send({})
         .expect(400)
         .then((res) => {
           expect(res.body.issues).toContainEqual(

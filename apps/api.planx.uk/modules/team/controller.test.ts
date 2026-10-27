@@ -118,7 +118,7 @@ describe("Changing a user's role", () => {
         expect(res.body.issues).toContainEqual(
           expect.objectContaining({
             path: ["body", "role"],
-            code: "invalid_type",
+            code: "invalid_value",
           }),
         );
       });
