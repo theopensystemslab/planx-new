@@ -1,6 +1,5 @@
 import type { FormikConfig, FormikProps, FormikValues } from "formik";
 import { useFormik } from "formik";
-import type { MutableRefObject } from "react";
 import { useEffect } from "react";
 
 /**
@@ -31,6 +30,20 @@ export function useFormikWithRef<T extends FormikValues>(
       formikRef.onDirtyChange(formik.dirty);
     }
   }, [formik.dirty, formikRef]);
+
+  // Not every validation error is exhaustively mapped to a field in the UI
+  // This means a validation failure will blocked a save without visual feedback
+  // console.debug()ing these errors lets us diagnose easily outside local dev environments
+  useEffect(() => {
+    const hasFailedSubmit =
+      !formik.isSubmitting &&
+      formik.submitCount > 0 &&
+      Object.keys(formik.errors).length > 0;
+
+    if (hasFailedSubmit) {
+      console.debug("Form validation failed", formik.errors);
+    }
+  }, [formik.isSubmitting, formik.submitCount, formik.errors]);
 
   return formik;
 }
