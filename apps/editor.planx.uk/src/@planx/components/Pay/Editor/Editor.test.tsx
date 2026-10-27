@@ -20,6 +20,24 @@ describe("Pay component - Editor Modal", () => {
     expect(screen.getByPlaceholderText("Page title")).toBeInTheDocument();
   });
 
+  it("displays an error when a required title is empty", async () => {
+    const handleSubmit = vi.fn();
+
+    const { getByPlaceholderText, getByText, user, getByRole } = await setup(
+      <DndProvider backend={HTML5Backend}>
+        <PayComponent id="test" handleSubmit={handleSubmit} />
+      </DndProvider>,
+    );
+
+    await user.clear(getByPlaceholderText("Banner title"));
+    fireEvent.submit(getByRole("form"));
+
+    expect(handleSubmit).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(getByText(/bannerTitle is a required field/)).toBeVisible(),
+    );
+  });
+
   // Currently failing, Editor not a11y compliant
   it.skip("should not have any accessibility violations upon initial load", async () => {
     const { container } = await setup(

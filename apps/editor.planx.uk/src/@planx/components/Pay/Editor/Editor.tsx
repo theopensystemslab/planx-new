@@ -61,6 +61,7 @@ const Component: React.FC<Props> = (props: Props) => {
                 value={formik.values.title}
                 onChange={formik.handleChange}
                 disabled={props.disabled}
+                errorMessage={formik.errors.title}
               />
             </InputRow>
             <InputRow>
@@ -71,6 +72,7 @@ const Component: React.FC<Props> = (props: Props) => {
                 value={formik.values.bannerTitle}
                 onChange={formik.handleChange}
                 disabled={props.disabled}
+                errorMessage={formik.errors.bannerTitle}
               />
             </InputRow>
             <InputRow>
@@ -97,6 +99,7 @@ const Component: React.FC<Props> = (props: Props) => {
                 value={formik.values.instructionsTitle}
                 onChange={formik.handleChange}
                 disabled={props.disabled}
+                errorMessage={formik.errors.instructionsTitle}
               />
             </InputRow>
             <InputRow>
