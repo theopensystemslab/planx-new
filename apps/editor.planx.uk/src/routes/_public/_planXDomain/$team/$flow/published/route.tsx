@@ -4,8 +4,8 @@ import {
   createPublicRouteErrorComponent,
   createPublicRouteHead,
   prefetchPublishedFlowData,
-  publicRouteSearchSchemas,
 } from "utils/routeUtils/publicRouteHelpers";
+import { publicRouteSearchSchemas } from "utils/routeUtils/publicRouteSearchSchemas";
 
 export const Route = createFileRoute(
   "/_public/_planXDomain/$team/$flow/published",

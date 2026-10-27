@@ -4,8 +4,8 @@ import {
   createPublicRouteErrorComponent,
   createPublicRouteHead,
   prefetchPublishedFlowData,
-  publicRouteSearchSchemas,
 } from "utils/routeUtils/publicRouteHelpers";
+import { publicRouteSearchSchemas } from "utils/routeUtils/publicRouteSearchSchemas";
 
 // TODO: How much of this can live once at a higher level?
 export const Route = createFileRoute("/_public/_customDomain/$flow")({

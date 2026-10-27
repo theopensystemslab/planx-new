@@ -1,4 +1,4 @@
-import { publicRouteSearchSchemas } from "./publicRouteHelpers";
+import { publicRouteSearchSchemas } from "./publicRouteSearchSchemas";
 
 describe("publicRouteSearchSchemas", () => {
   describe.each(["preview", "draft"] as const)("%s", (route) => {
