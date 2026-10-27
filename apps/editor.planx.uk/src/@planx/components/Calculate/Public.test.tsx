@@ -10,9 +10,7 @@ describe("Calculate component", () => {
       <Calculate
         fn="testGroup"
         formula="pickRandom([1,2])"
-        formatOutputForAutomations={true}
         defaults={{}}
-        samples={{}}
         handleSubmit={handleSubmit}
       />,
     );
