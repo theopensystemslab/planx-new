@@ -86,21 +86,34 @@ describe("Create reminder event webhook", () => {
       payload: { email: "test@example.com" },
     };
 
-    const invalidRequestBodies = [
-      missingCreatedAt,
-      missingPayload,
-      missingEmail,
-      missingSessionId,
+    const cases = [
+      {
+        body: missingCreatedAt,
+        path: ["body", "createdAt"],
+        code: "invalid_type",
+      },
+      { body: missingPayload, path: ["body", "payload"], code: "invalid_type" },
+      {
+        body: missingEmail,
+        path: ["body", "payload", "email"],
+        code: "invalid_type",
+      },
+      {
+        body: missingSessionId,
+        path: ["body", "payload", "sessionId"],
+        code: "invalid_type",
+      },
     ];
 
-    for (const body of invalidRequestBodies) {
+    for (const { body, path, code } of cases) {
       await post(ENDPOINT)
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({ path, code }),
+          );
         });
     }
   });
@@ -205,14 +218,24 @@ describe("Create expiry event webhook", () => {
     const missingCreatedAt = { createdAt: null, payload: {} };
     const missingPayload = { createdAt: CREATED_AT_TIME, payload: null };
 
-    for (const body of [missingCreatedAt, missingPayload]) {
+    const cases = [
+      {
+        body: missingCreatedAt,
+        path: ["body", "createdAt"],
+        code: "invalid_type",
+      },
+      { body: missingPayload, path: ["body", "payload"], code: "invalid_type" },
+    ];
+
+    for (const { body, path, code } of cases) {
       await post(ENDPOINT)
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({ path, code }),
+          );
         });
     }
   });
@@ -306,15 +329,29 @@ describe("Create delete event webhook", () => {
       payload: { sessionId: MOCK_UUID },
     };
 
-    for (const body of [missingCreatedAt, missingPayload, invalidOperation]) {
+    const cases = [
+      {
+        body: missingCreatedAt,
+        path: ["body", "createdAt"],
+        code: "invalid_type",
+      },
+      { body: missingPayload, path: ["body", "payload"], code: "invalid_type" },
+      {
+        body: invalidOperation,
+        path: ["body", "operation"],
+        code: "invalid_value",
+      },
+    ];
+
+    for (const { body, path, code } of cases) {
       await post(ENDPOINT)
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("name", "ZodError");
-          expect(response.body).toHaveProperty("name", "ZodError");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({ path, code }),
+          );
         });
     }
   });

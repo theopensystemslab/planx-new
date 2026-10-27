@@ -22,8 +22,12 @@ describe("Logging analytics", () => {
       .query({})
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["query", "analyticsLogId"],
+            code: "invalid_type",
+          }),
+        );
       });
   });
 

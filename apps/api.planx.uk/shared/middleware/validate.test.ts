@@ -46,8 +46,7 @@ describe("validate middleware", () => {
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
-          name: "ZodError",
-          message: expect.stringContaining("→ at body.id"),
+          error: expect.stringContaining("→ at body.id"),
           issues: [
             expect.objectContaining({
               code: "invalid_format",

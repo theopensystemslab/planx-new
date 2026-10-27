@@ -15,8 +15,12 @@ describe("generating a download token", () => {
       .send({ sessionId: uuidV4() })
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "email"],
+            code: "invalid_type",
+          }),
+        );
       });
   });
 
@@ -26,8 +30,12 @@ describe("generating a download token", () => {
       .send({ email: NOTIFY_TEST_EMAIL })
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "sessionId"],
+            code: "invalid_type",
+          }),
+        );
       });
   });
 

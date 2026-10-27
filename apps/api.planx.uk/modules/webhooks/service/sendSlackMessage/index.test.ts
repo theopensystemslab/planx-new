@@ -50,8 +50,12 @@ describe("Generic send Slack message endpoint", () => {
         .send({ channel: "#planx-notifications-internal" })
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "message"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
 
@@ -61,8 +65,12 @@ describe("Generic send Slack message endpoint", () => {
         .send({ message: "Hello" })
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "channel"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
   });

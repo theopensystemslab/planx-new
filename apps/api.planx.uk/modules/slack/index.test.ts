@@ -45,8 +45,12 @@ it("returns an error if a message isn't provided in the request body", async () 
     .set(validAuth)
     .expect(400)
     .then((res) => {
-      expect(res.body).toHaveProperty("issues");
-      expect(res.body).toHaveProperty("name", "ZodError");
+      expect(res.body.issues).toContainEqual(
+        expect.objectContaining({
+          path: ["body", "message"],
+          code: "invalid_type",
+        }),
+      );
     });
 });
 

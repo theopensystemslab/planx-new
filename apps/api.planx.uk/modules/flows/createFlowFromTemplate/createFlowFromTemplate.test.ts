@@ -55,8 +55,24 @@ describe("validation and error handling", () => {
       .set(auth)
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "teamId"],
+            code: "invalid_type",
+          }),
+        );
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "name"],
+            code: "invalid_type",
+          }),
+        );
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "slug"],
+            code: "invalid_type",
+          }),
+        );
       });
   });
 

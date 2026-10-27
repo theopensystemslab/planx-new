@@ -36,8 +36,12 @@ describe("/ai/project-description/enhance", () => {
         .send({})
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "original"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
 
@@ -48,9 +52,13 @@ describe("/ai/project-description/enhance", () => {
         .send({ original: longDescription })
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
-          expect(res.body.issues[0].message).toMatch(/300/);
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "original"],
+              code: "too_big",
+              maximum: 300,
+            }),
+          );
         });
     });
 
@@ -63,9 +71,12 @@ describe("/ai/project-description/enhance", () => {
         })
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
-          expect(res.body.issues[0].path).toContain("flowId");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "flowId"],
+              code: "invalid_format",
+            }),
+          );
         });
     });
 
@@ -78,9 +89,12 @@ describe("/ai/project-description/enhance", () => {
         })
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
-          expect(res.body.issues[0].path).toContain("sessionId");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "sessionId"],
+              code: "invalid_format",
+            }),
+          );
         });
     });
 

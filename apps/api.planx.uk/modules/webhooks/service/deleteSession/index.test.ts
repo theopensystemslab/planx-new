@@ -31,14 +31,29 @@ describe("Soft delete lowcal session", () => {
     const missingSessionId = { payload: {} };
     const invalidSessionId = { payload: { sessionId: "123" } };
 
-    for (const body of [missingPayload, missingSessionId, invalidSessionId]) {
+    const cases = [
+      { body: missingPayload, path: ["body", "payload"], code: "invalid_type" },
+      {
+        body: missingSessionId,
+        path: ["body", "payload", "sessionId"],
+        code: "invalid_type",
+      },
+      {
+        body: invalidSessionId,
+        path: ["body", "payload", "sessionId"],
+        code: "invalid_format",
+      },
+    ];
+
+    for (const { body, path, code } of cases) {
       await post(ENDPOINT)
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("name", "ZodError");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({ path, code }),
+          );
         });
     }
   });

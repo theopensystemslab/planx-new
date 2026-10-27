@@ -209,8 +209,12 @@ describe("Invite to pay API route", () => {
         .send(invalidPostBody)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "payeeName"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
 
@@ -221,27 +225,36 @@ describe("Invite to pay API route", () => {
         .send(invalidPostBody)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "payeeEmail"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
 
     test.each([
-      ["missing", undefined],
-      ["empty", ""],
-      ["invalid", "not-an-email"],
-    ])("a %s applicant email address leads to a failure", async (_, email) => {
-      await supertest(app)
-        .post(validSessionURL)
-        .send({ ...validPostBody, email })
-        .expect(400)
-        .then((response) => {
-          expect(response.body).toHaveProperty("name", "ZodError");
-        });
+      ["missing", undefined, "invalid_type"],
+      ["empty", "", "invalid_format"],
+      ["invalid", "not-an-email", "invalid_format"],
+    ])(
+      "a %s applicant email address leads to a failure",
+      async (_, email, code) => {
+        await supertest(app)
+          .post(validSessionURL)
+          .send({ ...validPostBody, email })
+          .expect(400)
+          .then((response) => {
+            expect(response.body.issues).toContainEqual(
+              expect.objectContaining({ path: ["body", "email"], code }),
+            );
+          });
 
-      expect(callsTo("FindSessionForInvite")).toBe(0);
-      expect(callsTo("LockSession")).toBe(0);
-    });
+        expect(callsTo("FindSessionForInvite")).toBe(0);
+        expect(callsTo("LockSession")).toBe(0);
+      },
+    );
 
     test("an applicant email which does not match the session", async () => {
       const wrongEmail = "someone-else@opensystemslab.io";

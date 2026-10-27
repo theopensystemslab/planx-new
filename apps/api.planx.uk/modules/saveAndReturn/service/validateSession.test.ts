@@ -47,14 +47,21 @@ describe("Validate Session endpoint", () => {
     };
     const missingSessionId = { payload: { email: mockLowcalSession.email } };
 
-    for (const invalidBody of [missingEmail, missingSessionId]) {
+    for (const [invalidBody, missingField] of [
+      [missingEmail, "email"],
+      [missingSessionId, "sessionId"],
+    ] as const) {
       await supertest(app)
         .post(validateSessionPath)
         .send(invalidBody)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "payload", missingField],
+              code: "invalid_type",
+            }),
+          );
         });
     }
   });

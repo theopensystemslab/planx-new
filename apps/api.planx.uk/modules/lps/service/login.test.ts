@@ -25,8 +25,12 @@ describe("logging into LPS applications", () => {
         .post(ENDPOINT)
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "email"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
   });

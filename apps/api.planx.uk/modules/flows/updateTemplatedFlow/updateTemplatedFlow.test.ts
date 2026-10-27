@@ -61,8 +61,18 @@ describe("validation and error handling", () => {
       .send(invalidBody)
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "payload", "sourceFlowId"],
+            code: "invalid_type",
+          }),
+        );
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "payload", "templatedFlowId"],
+            code: "invalid_type",
+          }),
+        );
       });
   });
 });

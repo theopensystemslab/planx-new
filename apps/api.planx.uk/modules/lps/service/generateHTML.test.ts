@@ -37,8 +37,12 @@ describe("requesting HTML for a session ID", () => {
         .send({ sessionId: uuidV4() })
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "email"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
 
@@ -48,8 +52,12 @@ describe("requesting HTML for a session ID", () => {
         .send({ email: NOTIFY_TEST_EMAIL })
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "sessionId"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
 
@@ -59,8 +67,12 @@ describe("requesting HTML for a session ID", () => {
         .set({ some: "otherHeaders" })
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["headers", "authorization"],
+              code: "invalid_type",
+            }),
+          );
           expect(res.body.issues[0].message).toMatch(
             /Authorization headers are required/,
           );
@@ -74,8 +86,12 @@ describe("requesting HTML for a session ID", () => {
         .expect(400)
         .then((res) => {
           console.log(res.body);
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["headers", "authorization"],
+              code: "invalid_format",
+            }),
+          );
           expect(res.body.issues[0].message).toMatch(/Invalid token format/);
         });
     });

@@ -92,15 +92,19 @@ it("requires a user to have the 'teamEditor' role", async () => {
     .expect(403);
 });
 
-it("requires the summary query param to be present", async () => {
+it("requires a summary in the request body", async () => {
   await supertest(app)
     .post(mockEndpoint)
-    .send(undefined)
+    .send({})
     .set(auth)
     .expect(400)
     .then((res) => {
-      expect(res.body).toHaveProperty("issues");
-      expect(res.body).toHaveProperty("name", "ZodError");
+      expect(res.body.issues).toContainEqual(
+        expect.objectContaining({
+          path: ["body", "summary"],
+          code: "invalid_type",
+        }),
+      );
     });
 });
 

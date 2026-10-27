@@ -32,8 +32,7 @@ export const validate =
       console.error(message);
 
       return res.status(400).json({
-        name: "ZodError",
-        message,
+        error: message,
         issues: error.issues,
       });
     }

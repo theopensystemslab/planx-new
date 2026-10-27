@@ -25,8 +25,12 @@ describe("authentication", () => {
       .set(auth)
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["query", "find"],
+            code: "invalid_type",
+          }),
+        );
       });
   });
 });

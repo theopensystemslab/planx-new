@@ -38,14 +38,24 @@ describe("Create payment invitation events webhook", () => {
     const missingCreatedAt = { createdAt: null, payload: {} };
     const missingPayload = { createdAt: new Date(), payload: null };
 
-    for (const body of [missingCreatedAt, missingPayload]) {
+    const cases = [
+      {
+        body: missingCreatedAt,
+        path: ["body", "createdAt"],
+        code: "invalid_type",
+      },
+      { body: missingPayload, path: ["body", "payload"], code: "invalid_type" },
+    ];
+
+    for (const { body, path, code } of cases) {
       await post(ENDPOINT)
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({ path, code }),
+          );
         });
     }
   });
@@ -149,14 +159,24 @@ describe("Create payment reminder events webhook", () => {
     const missingCreatedAt = { createdAt: null, payload: {} };
     const missingPayload = { createdAt: new Date(), payload: null };
 
-    for (const body of [missingCreatedAt, missingPayload]) {
+    const cases = [
+      {
+        body: missingCreatedAt,
+        path: ["body", "createdAt"],
+        code: "invalid_type",
+      },
+      { body: missingPayload, path: ["body", "payload"], code: "invalid_type" },
+    ];
+
+    for (const { body, path, code } of cases) {
       await post(ENDPOINT)
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({ path, code }),
+          );
         });
     }
   });
@@ -282,14 +302,24 @@ describe("Create payment expiry events webhook", () => {
     const missingCreatedAt = { createdAt: null, payload: {} };
     const missingPayload = { createdAt: new Date(), payload: null };
 
-    for (const body of [missingCreatedAt, missingPayload]) {
+    const cases = [
+      {
+        body: missingCreatedAt,
+        path: ["body", "createdAt"],
+        code: "invalid_type",
+      },
+      { body: missingPayload, path: ["body", "payload"], code: "invalid_type" },
+    ];
+
+    for (const { body, path, code } of cases) {
       await post(ENDPOINT)
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({ path, code }),
+          );
         });
     }
   });

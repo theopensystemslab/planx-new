@@ -9,8 +9,18 @@ it("returns an error if required query parameters are missing", async () => {
     .query({})
     .expect(400)
     .then((res) => {
-      expect(res.body).toHaveProperty("issues");
-      expect(res.body).toHaveProperty("name", "ZodError");
+      expect(res.body.issues).toContainEqual(
+        expect.objectContaining({
+          path: ["query", "lon"],
+          code: "invalid_type",
+        }),
+      );
+      expect(res.body.issues).toContainEqual(
+        expect.objectContaining({
+          path: ["query", "lat"],
+          code: "invalid_type",
+        }),
+      );
     });
 });
 
@@ -20,8 +30,12 @@ it("returns an error if the given lat/lng falls outside of the UK", async () => 
     .query({ lon: -83, lat: 42 })
     .expect(400)
     .then((res) => {
-      expect(res.body).toHaveProperty("issues");
-      expect(res.body).toHaveProperty("name", "ZodError");
+      expect(res.body.issues).toContainEqual(
+        expect.objectContaining({ path: ["query", "lon"], code: "too_small" }),
+      );
+      expect(res.body.issues).toContainEqual(
+        expect.objectContaining({ path: ["query", "lat"], code: "too_small" }),
+      );
     });
 });
 

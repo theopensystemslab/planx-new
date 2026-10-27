@@ -32,8 +32,12 @@ describe("Removing a user from a team", () => {
       .send({})
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "userEmail"],
+            code: "invalid_type",
+          }),
+        );
       });
   });
 
@@ -93,8 +97,12 @@ describe("Changing a user's role", () => {
       })
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "userEmail"],
+            code: "invalid_type",
+          }),
+        );
       });
   });
 
@@ -107,8 +115,12 @@ describe("Changing a user's role", () => {
       })
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "role"],
+            code: "invalid_type",
+          }),
+        );
       });
   });
 
@@ -122,8 +134,12 @@ describe("Changing a user's role", () => {
       })
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "role"],
+            code: "invalid_value",
+          }),
+        );
       });
   });
 
