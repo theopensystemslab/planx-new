@@ -30,7 +30,8 @@ const Root = styled(Box, {
   position: "relative",
   width: "100%",
   minHeight: theme.spacing(10),
-  "& a": {
+  // Ensure the contrast text colour is applied for links
+  "&& a": {
     color: getContrastTextColor(
       bgcolor || theme.palette.background.paper,
       theme.palette.primary.main,

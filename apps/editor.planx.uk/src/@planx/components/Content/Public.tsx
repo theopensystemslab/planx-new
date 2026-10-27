@@ -34,7 +34,8 @@ const Content = styled(Box, {
         "#fff",
         theme.palette.text.primary,
       ])?.toHexString() || theme.palette.text.primary,
-    "& a": {
+    // Ensure the contrast text colour is applied for links
+    "&& a": {
       color: getContrastTextColor(color || "#fff", theme.palette.link.main),
     },
     "& *:nth-of-type(1)": {
