@@ -28,7 +28,6 @@ interface IsCleanJSONBRequest {
 
 type isCleanJSONBSchema = z.ZodType<
   IsCleanJSONBRequest,
-  z.ZodTypeDef,
   HasuraValidateInputRequest
 >;
 

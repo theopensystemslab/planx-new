@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const stripePaymentMetadataSchema = z.object({
-  sessionId: z.string().uuid(),
+  sessionId: z.uuid(),
   origin: z.string(),
 });
 

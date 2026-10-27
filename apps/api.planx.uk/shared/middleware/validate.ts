@@ -1,17 +1,12 @@
 import type { NextFunction, Request, RequestHandler, Response } from "express";
-import type { z } from "zod";
+import { z } from "zod";
 
 /**
  * Middleware to validate incoming requests to the API
- * Takes a ZodSchema and returns a validated, and typed, Request object
+ * Takes a Zod schema and returns a validated, and typed, Request object
  */
 export const validate =
-  (
-    schema:
-      | z.AnyZodObject
-      | z.ZodUnion<readonly [z.ZodTypeAny, ...z.ZodTypeAny[]]>
-      | z.ZodType<any, z.ZodTypeDef, any>,
-  ) =>
+  (schema: z.ZodType) =>
   async (
     req: Request<z.infer<typeof schema>>,
     res: Response,
@@ -31,8 +26,16 @@ export const validate =
 
       return next();
     } catch (error) {
-      console.error(error);
-      return res.status(400).json(error);
+      if (!(error instanceof z.ZodError)) return next(error);
+
+      const message = z.prettifyError(error);
+      console.error(message);
+
+      return res.status(400).json({
+        name: "ZodError",
+        message,
+        issues: error.issues,
+      });
     }
   };
 
@@ -43,7 +46,7 @@ export const validate =
  * @param TLocals Optional type to describe Locals - values passed down the middleware chain
  */
 export type ValidatedRequestHandler<
-  TSchema extends z.ZodSchema,
+  TSchema extends z.ZodType,
   TResponse,
   TLocals extends Record<string, unknown> = Record<string, never>,
 > = RequestHandler<

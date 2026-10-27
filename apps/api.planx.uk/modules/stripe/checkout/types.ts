@@ -23,8 +23,8 @@ export const createCheckoutSessionSchema = z.object({
     localAuthority: z.string(),
   }),
   body: z.object({
-    sessionId: z.string().uuid(),
-    flowId: z.string().uuid(),
+    sessionId: z.uuid(),
+    flowId: z.uuid(),
     metadata: z
       .object({
         flow: z.string(),
@@ -38,7 +38,7 @@ export const createCheckoutSessionSchema = z.object({
         (metadata) =>
           !RESERVED_PAYMENT_METADATA_KEYS.some((key) => key in metadata),
         {
-          message: `Metadata keys ${RESERVED_PAYMENT_METADATA_KEYS.join(", ")} are reserved by PlanX`,
+          error: `Metadata keys ${RESERVED_PAYMENT_METADATA_KEYS.join(", ")} are reserved by PlanX`,
         },
       ),
   }),
@@ -102,7 +102,7 @@ export type GetCheckoutSessionStatusController = ValidatedRequestHandler<
 
 export const createPaymentRequestCheckoutSessionSchema = z.object({
   params: z.object({
-    paymentRequestId: z.string().uuid(),
+    paymentRequestId: z.uuid(),
   }),
 });
 

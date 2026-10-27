@@ -5,8 +5,8 @@ import type { ValidatedRequestHandler } from "../../shared/middleware/validate.j
 
 export const paymentProxySchema = z.object({
   query: z.object({
-    flowId: z.string().uuid(),
-    sessionId: z.string().uuid(),
+    flowId: z.uuid(),
+    sessionId: z.uuid(),
   }),
   params: z.object({
     localAuthority: z.string(),
@@ -20,14 +20,14 @@ export type PaymentProxyController = ValidatedRequestHandler<
 
 export const inviteToPaySchema = z.object({
   body: z.object({
-    email: z.string().email(),
-    payeeEmail: z.string().email(),
+    email: z.email(),
+    payeeEmail: z.email(),
     payeeName: z.string(),
     applicantName: z.string(),
     sessionPreviewKeys: z.array(z.array(z.string())),
   }),
   params: z.object({
-    sessionId: z.string().uuid(),
+    sessionId: z.uuid(),
   }),
 });
 
@@ -38,8 +38,8 @@ export type InviteToPayController = ValidatedRequestHandler<
 
 export const paymentRequestProxySchema = z.object({
   query: z.object({
-    flowId: z.string().uuid(),
-    sessionId: z.string().uuid(),
+    flowId: z.uuid(),
+    sessionId: z.uuid(),
   }),
   params: z.object({
     paymentRequest: z.string(),

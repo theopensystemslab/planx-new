@@ -12,8 +12,8 @@ interface Error {
 
 export const generateDownloadTokenSchema = z.object({
   body: z.object({
-    email: z.string().email(),
-    sessionId: z.string().uuid(),
+    email: z.email(),
+    sessionId: z.uuid(),
   }),
 });
 

@@ -11,8 +11,8 @@ import {
 export const projectDescriptionSchema = z.object({
   body: z.object({
     original: z.string().trim().max(300),
-    flowId: z.string().uuid(),
-    sessionId: z.string().uuid().optional(),
+    flowId: z.uuid(),
+    sessionId: z.uuid().optional(),
   }),
 });
 

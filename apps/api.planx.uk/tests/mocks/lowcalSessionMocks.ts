@@ -1,4 +1,4 @@
-export const MOCK_UUID = "12345678-abcd-0def-9876-abcdef123456";
+export const MOCK_UUID = "12345678-abcd-4def-9876-abcdef123456";
 
 export const mockSoftDeleteLowcalSession = {
   name: "SoftDeleteLowcalSession",

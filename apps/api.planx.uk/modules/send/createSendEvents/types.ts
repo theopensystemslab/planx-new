@@ -10,7 +10,7 @@ import type { ValidatedRequestHandler } from "../../../shared/middleware/validat
 const eventSchema = z.object({
   localAuthority: z.string(),
   body: z.object({
-    sessionId: z.string().uuid(),
+    sessionId: z.uuid(),
   }),
 });
 
@@ -28,7 +28,7 @@ const bodySchema = z.object(
 export const combinedEventsPayloadSchema = z.object({
   body: bodySchema,
   params: z.object({
-    sessionId: z.string().uuid(),
+    sessionId: z.uuid(),
   }),
 });
 
