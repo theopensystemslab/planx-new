@@ -4,7 +4,7 @@ import { useToast } from "hooks/useToast";
 
 import type { Toast as ToastProps } from "./types";
 
-const Toast = ({ message, type = "success", id }: ToastProps) => {
+const Toast = ({ message, type = "success", id, hideDuration }: ToastProps) => {
   const toast = useToast();
 
   const handleCloseToast = () => {
@@ -18,7 +18,7 @@ const Toast = ({ message, type = "success", id }: ToastProps) => {
   return (
     <Snackbar
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      autoHideDuration={6000}
+      autoHideDuration={hideDuration ?? 6000}
       onClose={handleCloseToast}
       open={true}
     >
