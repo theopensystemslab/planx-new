@@ -2,7 +2,6 @@ import Typography from "@mui/material/Typography";
 import { useMutation } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import type { APIError } from "lib/api/client";
 import { downloadSubmission } from "lib/api/send/requests";
@@ -19,7 +18,7 @@ const searchSchema = z.object({
 export const Route = createFileRoute(
   "/_public/_planXDomain/download-submission/",
 )({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: searchSchema,
   gcTime: 0,
   component: function Wrapper() {
     const { token } = Route.useSearch();

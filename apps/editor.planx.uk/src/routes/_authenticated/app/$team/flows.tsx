@@ -3,7 +3,6 @@ import {
   notFound,
   stripSearchParams,
 } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
 import Flows from "pages/Flows";
@@ -16,7 +15,7 @@ import { flowsSearchSchema, searchDefaults } from "./-flowsSearchSchema";
 export const Route = createFileRoute("/_authenticated/app/$team/flows")({
   staticData: { pageTitle: "Flows" },
   beforeLoad: startNewRecentFlowsJourney,
-  validateSearch: zodValidator(flowsSearchSchema),
+  validateSearch: flowsSearchSchema,
   search: {
     middlewares: [stripSearchParams(searchDefaults)],
   },

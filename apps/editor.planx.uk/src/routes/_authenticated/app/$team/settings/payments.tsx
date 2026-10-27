@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import type { StripeConnectError } from "lib/api/stripe/types";
 import PaymentSettings from "pages/FlowEditor/components/Settings/Team/Payment";
 import { z } from "zod";
@@ -19,7 +18,7 @@ export const Route = createFileRoute(
   "/_authenticated/app/$team/settings/payments",
 )({
   staticData: { pageTitle: "Payments" },
-  validateSearch: zodValidator(paymentsSearchSchema),
+  validateSearch: paymentsSearchSchema,
   loaderDeps: ({ search }) => ({
     stripeConnected: search.stripeConnected,
     stripeError: search.stripeError,

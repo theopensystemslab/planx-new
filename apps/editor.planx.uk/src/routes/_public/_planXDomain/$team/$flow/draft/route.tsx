@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import { getFlattenedFlowData } from "lib/api/flow/requests";
 import { queryClient } from "lib/queryClient";
 import {
@@ -11,7 +10,7 @@ import {
 
 export const Route = createFileRoute("/_public/_planXDomain/$team/$flow/draft")(
   {
-    validateSearch: zodValidator(publicRouteSearchSchemas.draft),
+    validateSearch: publicRouteSearchSchemas.draft,
     beforeLoad: (args) =>
       createPublicRouteBeforeLoad("draft", args.context)(args),
     loader: ({ context }) => {

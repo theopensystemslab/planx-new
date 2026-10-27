@@ -3,7 +3,7 @@ import UserNotFound from "pages/ErrorPage/UserNotFound";
 import { z } from "zod";
 
 const searchSchema = z.object({
-  email: z.string().email().optional().catch(undefined),
+  email: z.email().optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/error-user-not-found")({

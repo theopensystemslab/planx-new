@@ -1,17 +1,16 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import InviteToPay from "pages/Pay/InviteToPay";
 import { getPaymentRequest } from "utils/routeUtils/payQueries";
 import { z } from "zod";
 
 const inviteSearchSchema = z.object({
-  paymentRequestId: z.string().uuid(),
+  paymentRequestId: z.uuid(),
 });
 
 export const Route = createFileRoute(
   "/_public/_planXDomain/$team/$flow/pay/invite/",
 )({
-  validateSearch: zodValidator(inviteSearchSchema),
+  validateSearch: inviteSearchSchema,
   onError: ({ params }) => {
     throw redirect({
       to: "/$team/$flow/pay/not-found",
