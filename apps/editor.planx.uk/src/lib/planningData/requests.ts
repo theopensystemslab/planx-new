@@ -48,6 +48,7 @@ export const getFindPropertyData = async (
       "local-planning-authority",
       "region",
       "ward",
+      "parish",
       "development-corporation-boundary",
       "title-boundary",
     ],

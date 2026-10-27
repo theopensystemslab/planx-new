@@ -41,7 +41,8 @@ export const usePlanningDataEntityNames = (fn: string) => {
     "property.localPlanningAuthority": "local-planning-authority",
     "property.region": "region",
     "property.developmentCorporation": "development-corporation",
-    // "property.ward": "ward" // only 'turn on' once we setup query pagination and if UI is okay (current PD API limit = 500, but there's ~7k wards)
+    // "property.ward": "ward" // only 'turn on' once we setup query pagination and if autocomplete UI is okay (current PD API limit = 500, but there's ~7k wards)
+    // "property.civilParish": "parish", // same as above, there are 10k+ total parishes across UK, so autocomplete would need to at least be scoped to team boundary??
   };
 
   const query = useQuery({

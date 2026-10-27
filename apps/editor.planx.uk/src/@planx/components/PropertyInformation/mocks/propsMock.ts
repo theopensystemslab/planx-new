@@ -8,6 +8,7 @@ export const presentationalPropsMock: Pick<
   | "propertyType"
   | "localAuthorityDistrict"
   | "localPlanningAuthority"
+  | "ward"
   | "titleBoundary"
 > = {
   title: "About the property",
@@ -34,6 +35,7 @@ export const presentationalPropsMock: Pick<
   propertyType: ["residential.HMO.parent"],
   localAuthorityDistrict: ["Southwark"],
   localPlanningAuthority: ["Southwark LPA"],
+  ward: ["Old Kent Road"],
   titleBoundary: {
     geometry: {
       type: "MultiPolygon",
