@@ -26,6 +26,8 @@ paths:
                 type: array
                 items:
                   type: object
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /gis/{localAuthority}:
     get:
       tags: ["gis"]
@@ -90,3 +92,5 @@ paths:
                 type: array
                 items:
                   type: string
+        "400":
+          $ref: "#/components/responses/ValidationError"

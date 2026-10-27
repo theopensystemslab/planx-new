@@ -41,6 +41,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /team/{teamSlug}/remove-member:
@@ -65,5 +67,7 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"

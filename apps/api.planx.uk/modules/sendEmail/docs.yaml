@@ -146,5 +146,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/responses/SendEmailResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"

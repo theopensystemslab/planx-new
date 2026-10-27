@@ -37,6 +37,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SessionPayload"
+      responses:
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /email-submission/{localAuthority}:
     post:
       summary: Sends an application by email using GOV.UK Notify
@@ -54,6 +57,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SessionPayload"
+      responses:
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /uniform/{localAuthority}:
     post:
       summary: Submits an application to Uniform
@@ -71,6 +77,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SessionPayload"
+      responses:
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /idox/{localAuthority}:
     post:
       summary: Submits an application to Idox Nexus (TEST)
@@ -93,6 +102,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SessionPayload"
+      responses:
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /upload-submission/{localAuthority}:
     post:
       summary: Submits an application to AWS S3 bucket
@@ -117,6 +129,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SessionPayload"
+      responses:
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /create-send-events/{sessionId}:
     post:
       summary: Create send events
@@ -153,6 +168,9 @@ paths:
           schema:
             type: string
             format: uuid
+      responses:
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /download-submission:
     get:
       summary: Download submission files
@@ -164,6 +182,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/DownloadFile"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "404":
           description: Unrecognised access token
           content:
@@ -200,6 +220,9 @@ paths:
             type: string
       security:
         - fileAPIKeyAuth: []
+      responses:
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /submission/{sessionId}/html:
     get:
       summary: Get an overview of a submission
@@ -224,6 +247,8 @@ paths:
                 format: HTML
           "500":
             $ref: "#/components/responses/ErrorMessage"
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /submission/{sessionId}/zip:
     get:
       summary: Get all files associated with a submission
@@ -248,3 +273,5 @@ paths:
                 format: zip
           "500":
             $ref: "#/components/responses/ErrorMessage"
+        "400":
+          $ref: "#/components/responses/ValidationError"

@@ -346,6 +346,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/SlackNotificationSuccessMessage"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/create-payment-invitation-events:
@@ -363,6 +365,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ScheduledEvent"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/create-payment-reminder-events:
@@ -380,6 +384,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ScheduledEvent"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/create-payment-expiry-events:
@@ -397,6 +403,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ScheduledEvent"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/create-reminder-event:
@@ -414,6 +422,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ScheduledEvent"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/create-expiry-event:
@@ -431,6 +441,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ScheduledEvent"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/create-delete-event:
@@ -448,6 +460,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ScheduledEvent"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/delete-session:
@@ -466,6 +480,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/sanitise-application-data:
@@ -501,6 +517,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/InputValidationSuccess"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/InputValidationFailure"
   /webhooks/hasura/update-templated-flow-edits:
@@ -519,6 +537,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UpdateTemplatedFlowEditsSuccess"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/send-vat-invoices:
@@ -537,5 +557,7 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"

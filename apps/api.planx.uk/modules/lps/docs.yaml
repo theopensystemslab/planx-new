@@ -201,6 +201,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/LoginResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /lps/applications:
@@ -219,6 +221,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/responses/ApplicationsResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "404":
           content:
             application/json:
@@ -246,6 +250,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/DownloadTokenResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /lps/download/html:
@@ -269,6 +275,8 @@ paths:
               schema:
                 type: string
                 format: HTML
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "404":
           content:
             application/json:

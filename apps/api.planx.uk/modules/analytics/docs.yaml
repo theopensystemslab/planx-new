@@ -39,6 +39,8 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/AnalyticsResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
 
   /analytics/log-user-resume:
     post:
@@ -49,3 +51,5 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/AnalyticsResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
