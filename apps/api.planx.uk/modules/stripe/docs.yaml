@@ -188,6 +188,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ConnectStatusResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "401":
           $ref: "#/components/responses/Unauthorised"
         "403":
@@ -215,6 +217,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/MigrateResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "409":
           $ref: "#/components/responses/MigrateResponse"
         "401":
@@ -249,6 +253,8 @@ paths:
         "302":
           description: >-
             Redirect to Stripe-hosted onboarding (staging) or Stripe's OAuth screen (production).
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "401":
           $ref: "#/components/responses/Unauthorised"
         "403":
@@ -281,6 +287,8 @@ paths:
             - `invalid_state` - no pending onboarding account for this team in the session
             - `onboarding_incomplete` - the user left onboarding before finishing it
             - `connect_failed` - checking the account or saving the account id failed
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "401":
           $ref: "#/components/responses/Unauthorised"
         "403":
@@ -322,6 +330,8 @@ paths:
             - `missing_code` - no authorisation code returned
             - `connect_failed` - exchanging the code or saving the account id failed
             - Stripe's OAuth `error` value, e.g. `access_denied`
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /stripe/checkout-session/{localAuthority}:
     post:
       summary: Create a Stripe Checkout Session
@@ -488,6 +498,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CheckoutSessionStatusResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /stripe/webhook:
     post:
       summary: Receive a Stripe webhook event

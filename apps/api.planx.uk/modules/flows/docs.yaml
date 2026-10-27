@@ -283,6 +283,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CreateFlow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/create-from-template/{templateId}:
@@ -302,6 +304,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CreateFlowFromTemplate"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/copy:
@@ -321,6 +325,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CopyFlow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/copy-portal/{portalNodeId}:
@@ -336,6 +342,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CopyFlowAsPortal"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/search:
@@ -358,6 +366,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/FindAndReplace"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/move/{teamSlug}:
@@ -373,6 +383,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/publish:
@@ -396,6 +408,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/PublishFlow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/diff:
@@ -410,6 +424,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ValidateAndDiff"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/download-schema:
@@ -427,6 +443,8 @@ paths:
             text/csv:
               schema:
                 type: string
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/flatten-data:
@@ -444,6 +462,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/FlattenData"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{sourceFlowId}/update-templated-flow/{templatedFlowId}:
@@ -463,5 +483,7 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UpdateTemplatedFlow"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"

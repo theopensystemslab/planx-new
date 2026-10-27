@@ -101,9 +101,13 @@ describe("authentication and error handling", () => {
       .expect(403);
   });
 
-  it("returns an error if required replacement characters are not provided in the request body", async () => {
+  it("returns an error if invalid replacement characters are provided in the request body", async () => {
     const invalidBody = {
       insert: false,
+      replaceValue: "abc",
+      teamId: 1,
+      name: "test (copy)",
+      slug: "test-copy",
     };
 
     await supertest(app)
@@ -112,8 +116,12 @@ describe("authentication and error handling", () => {
       .set(auth)
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["body", "replaceValue"],
+            code: "too_small",
+          }),
+        );
       });
   });
 

@@ -23,10 +23,15 @@ describe("logging into LPS applications", () => {
     it("requires an email address", async () => {
       await supertest(app)
         .post(ENDPOINT)
+        .send({})
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "email"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
   });

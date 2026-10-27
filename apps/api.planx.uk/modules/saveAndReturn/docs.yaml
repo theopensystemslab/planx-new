@@ -95,3 +95,5 @@ paths:
                 oneOf:
                   - $ref: "#/components/responses/ValidationResponse"
                   - $ref: "#/components/responses/LockedSessionResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"

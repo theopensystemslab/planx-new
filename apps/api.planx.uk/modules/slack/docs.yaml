@@ -33,5 +33,7 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/SendSlackNotificationDirect"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"

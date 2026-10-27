@@ -10,13 +10,11 @@ export const findLpaSchema = z.object({
     lon: z
       .string()
       .transform(Number)
-      .pipe(z.number())
-      .refine((lon) => lon >= UK_BBOX[0] && lon <= UK_BBOX[2]),
+      .pipe(z.number().min(UK_BBOX[0]).max(UK_BBOX[2])),
     lat: z
       .string()
       .transform(Number)
-      .pipe(z.number())
-      .refine((lat) => lat >= UK_BBOX[1] && lat <= UK_BBOX[3]),
+      .pipe(z.number().min(UK_BBOX[1]).max(UK_BBOX[3])),
   }),
 });
 

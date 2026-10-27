@@ -131,6 +131,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UploadFile"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "413":
           $ref: "#/components/responses/FileTooLarge"
         "415":
@@ -150,6 +152,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UploadFile"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "413":
           $ref: "#/components/responses/FileTooLarge"
         "415":
@@ -165,6 +169,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/DownloadFile"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "404":
           $ref: "#/components/responses/MissingFile"
         "500":
@@ -181,6 +187,8 @@ paths:
       responses:
         "204":
           description: Successful deletion
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "404":
           $ref: "#/components/responses/MissingFile"
         "500":
@@ -196,6 +204,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/DownloadFile"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "404":
           $ref: "#/components/responses/MissingFile"
         "500":

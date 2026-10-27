@@ -17,8 +17,12 @@ describe("fetching applications - validation", () => {
         .send({ token: uuidV4() })
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "email"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
 
@@ -28,8 +32,12 @@ describe("fetching applications - validation", () => {
         .send({ email: NOTIFY_TEST_EMAIL })
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "token"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
   });

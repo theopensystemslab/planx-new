@@ -79,8 +79,12 @@ describe("uploading an application to S3", () => {
         .send({ payload: null })
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "payload"],
+              code: "invalid_type",
+            }),
+          );
         });
     });
 

@@ -326,6 +326,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CreatePaymentResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /pay/{localAuthority}/{paymentId}:
     get:
       summary: Get payment status
@@ -343,6 +345,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/FetchPaymentResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /payment-request/{paymentRequest}/pay:
     post:
       summary: Create a request for an "invite to pay" payment
@@ -360,6 +364,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CreatePaymentResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /payment-request/{paymentRequest}/payment/{paymentId}:
     get:
       summary: Get status for an "invite to pay" payment
@@ -375,6 +381,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/FetchPaymentResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
   /invite-to-pay/{sessionId}:
     post:
       summary: Generate a payment request
@@ -387,6 +395,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CreatePaymentResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "404":
           $ref: "#/components/responses/ErrorMessage"
         "409":

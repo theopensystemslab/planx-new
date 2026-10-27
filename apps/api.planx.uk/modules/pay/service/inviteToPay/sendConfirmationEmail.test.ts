@@ -105,8 +105,12 @@ describe("Invite to pay confirmation templates cannot be sent individually", () 
         .send(data)
         .expect(400)
         .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["params", "template"],
+              code: "invalid_value",
+            }),
+          );
         });
     });
   }

@@ -85,8 +85,12 @@ describe("Send email endpoint for invite to pay templates", () => {
             .send(missingPaymentRequestId)
             .expect(400)
             .then((response) => {
-              expect(response.body).toHaveProperty("issues");
-              expect(response.body).toHaveProperty("name", "ZodError");
+              expect(response.body.issues).toContainEqual(
+                expect.objectContaining({
+                  path: ["body", "payload", "paymentRequestId"],
+                  code: "invalid_type",
+                }),
+              );
             });
         });
 

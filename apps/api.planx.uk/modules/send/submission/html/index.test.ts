@@ -36,8 +36,12 @@ describe("getting an application by ID", () => {
       .set(authHeader({ role: "teamEditor" }))
       .expect(400)
       .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
+        expect(res.body.issues).toContainEqual(
+          expect.objectContaining({
+            path: ["params", "sessionId"],
+            code: "invalid_format",
+          }),
+        );
       });
   });
 

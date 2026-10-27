@@ -76,6 +76,54 @@ const schemas = {
 };
 
 const responses = {
+  ValidationError: {
+    description:
+      "Invalid request - the body, params, query or headers did not match the expected schema",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          required: ["error", "issues"],
+          properties: {
+            error: {
+              type: "string",
+              description: "Human-readable summary of every issue",
+            },
+            issues: {
+              type: "array",
+              description:
+                "One entry per failed check, as reported by Zod. Further fields (e.g. `minimum`, `format`) depend on the `code`",
+              items: {
+                type: "object",
+                required: ["code", "path", "message"],
+                properties: {
+                  code: { type: "string", example: "invalid_type" },
+                  path: {
+                    type: "array",
+                    items: { type: ["string", "number"] },
+                    example: ["body", "payload", "sessionId"],
+                  },
+                  message: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+        example: {
+          error:
+            "✖ Invalid input: expected string, received undefined\n  → at body.payload.sessionId",
+          issues: [
+            {
+              code: "invalid_type",
+              expected: "string",
+              path: ["body", "payload", "sessionId"],
+              message: "Invalid input: expected string, received undefined",
+            },
+          ],
+        },
+      },
+    },
+  },
   Unauthorised: {
     description: "Unauthorised error",
     content: {

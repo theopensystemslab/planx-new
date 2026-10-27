@@ -260,8 +260,12 @@ describe("File upload", () => {
         .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "filename"],
+              code: "too_small",
+            }),
+          );
         });
     });
 
@@ -287,9 +291,12 @@ describe("File upload", () => {
         .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body).toHaveProperty("name", "ZodError");
-          expect(res.body.issues[0].message).toBe(
-            "Unsupported file type for given filename: .exe",
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "filename"],
+              code: "custom",
+              message: "Unsupported file type for given filename: .exe",
+            }),
           );
         });
     });
@@ -464,8 +471,12 @@ describe("File upload", () => {
         .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "filename"],
+              code: "too_small",
+            }),
+          );
         });
     });
 
@@ -493,8 +504,13 @@ describe("File upload", () => {
         .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "filename"],
+              code: "custom",
+              message: "Unsupported file type for given filename: .exe",
+            }),
+          );
         });
     });
 

@@ -83,8 +83,20 @@ describe("Send Slack notifications endpoint", () => {
         .send(body)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: [],
+              code: "invalid_union",
+              errors: expect.arrayContaining([
+                expect.arrayContaining([
+                  expect.objectContaining({
+                    path: ["query", "type"],
+                    code: "invalid_value",
+                  }),
+                ]),
+              ]),
+            }),
+          );
         });
     });
 
@@ -95,8 +107,20 @@ describe("Send Slack notifications endpoint", () => {
         .send(body)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: [],
+              code: "invalid_union",
+              errors: expect.arrayContaining([
+                expect.arrayContaining([
+                  expect.objectContaining({
+                    path: ["query", "type"],
+                    code: "invalid_value",
+                  }),
+                ]),
+              ]),
+            }),
+          );
         });
     });
 
@@ -105,8 +129,9 @@ describe("Send Slack notifications endpoint", () => {
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({ path: [], code: "invalid_union" }),
+          );
         });
     });
   });

@@ -32,14 +32,23 @@ describe("Send Email endpoint", () => {
       };
       const missingSessionId = { payload: { email: "test" } };
 
-      for (const invalidBody of [missingEmail, missingSessionId]) {
+      const cases = [
+        { invalidBody: missingEmail, missingField: "email" },
+        { invalidBody: missingSessionId, missingField: "sessionId" },
+      ];
+
+      for (const { invalidBody, missingField } of cases) {
         await supertest(app)
           .post(SAVE_ENDPOINT)
           .send(invalidBody)
           .expect(400)
           .then((response) => {
-            expect(response.body).toHaveProperty("issues");
-            expect(response.body).toHaveProperty("name", "ZodError");
+            expect(response.body.issues).toContainEqual(
+              expect.objectContaining({
+                path: ["body", "payload", missingField],
+                code: "invalid_type",
+              }),
+            );
           });
       }
     });
@@ -74,8 +83,12 @@ describe("Send Email endpoint", () => {
         .send(data)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("issues");
-          expect(response.body).toHaveProperty("name", "ZodError");
+          expect(response.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "payload", "email"],
+              code: "invalid_format",
+            }),
+          );
         });
     });
 
