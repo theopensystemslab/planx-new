@@ -5,6 +5,9 @@ object_relationships:
   - name: team
     using:
       foreign_key_constraint_on: team_id
+  - name: team_stripe_account
+    using:
+      foreign_key_constraint_on: team_stripe_account_id
 insert_permissions:
   - role: platformAdmin
     permission:
@@ -35,6 +38,7 @@ select_permissions:
         - county
         - email_address
         - postcode
+        - team_stripe_account_id
         - town_city
         - vat_number
       filter: {}
@@ -51,6 +55,7 @@ select_permissions:
         - county
         - email_address
         - postcode
+        - team_stripe_account_id
         - town_city
         - vat_number
       filter: {}

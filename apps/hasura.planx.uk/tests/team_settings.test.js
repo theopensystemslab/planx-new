@@ -1,4 +1,23 @@
-import { introspectAs } from "./utils.js";
+import { gqlWithRole, introspectAs } from "./utils.js";
+
+const queryFlag = `
+  query {
+    team_settings {
+      multiple_stripe_accounts_enabled
+    }
+  }
+`;
+
+const updateFlag = `
+  mutation {
+    update_team_settings(
+      where: { id: { _eq: -1 } }
+      _set: { multiple_stripe_accounts_enabled: false }
+    ) {
+      affected_rows
+    }
+  }
+`;
 
 describe("team_settings", () => {
   describe("public", () => {
@@ -9,6 +28,11 @@ describe("team_settings", () => {
 
     test("can query team_settings", () => {
       expect(i.queries).toContain("team_settings");
+    });
+
+    test("cannot see whether multiple Stripe accounts are enabled", async () => {
+      const res = await gqlWithRole("public")(queryFlag);
+      expect(res).toHaveProperty("errors");
     });
 
     test("cannot create, update, or delete team_settings", () => {
@@ -37,6 +61,12 @@ describe("team_settings", () => {
       expect(i.queries).toContain("team_settings");
     });
 
+    test("can see and set whether multiple Stripe accounts are enabled", async () => {
+      const gql = gqlWithRole("platformAdmin");
+      expect(await gql(queryFlag)).not.toHaveProperty("errors");
+      expect(await gql(updateFlag)).not.toHaveProperty("errors");
+    });
+
     test("cannot query insert team_settings", () => {
       expect(i.queries).not.toContain("insert_team_settings");
     });
@@ -63,6 +93,12 @@ describe("team_settings", () => {
 
     test("can query team_settings", () => {
       expect(i.queries).toContain("team_settings");
+    });
+
+    test("cannot see or set whether multiple Stripe accounts are enabled", async () => {
+      const gql = gqlWithRole("teamEditor");
+      expect(await gql(queryFlag)).toHaveProperty("errors");
+      expect(await gql(updateFlag)).toHaveProperty("errors");
     });
 
     test("can update team_settings", () => {
@@ -111,6 +147,12 @@ describe("team_settings", () => {
 
     test("can query team_settings", () => {
       expect(i.queries).toContain("team_settings");
+    });
+
+    test("can see, but not set, whether multiple Stripe accounts are enabled", async () => {
+      const gql = gqlWithRole("api");
+      expect(await gql(queryFlag)).not.toHaveProperty("errors");
+      expect(await gql(updateFlag)).toHaveProperty("errors");
     });
 
     test("can update (e.g. payment provider), but cannot create or delete team_settings", () => {

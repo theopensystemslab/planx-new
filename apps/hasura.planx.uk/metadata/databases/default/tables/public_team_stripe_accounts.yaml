@@ -1,0 +1,58 @@
+table:
+  name: team_stripe_accounts
+  schema: public
+object_relationships:
+  - name: invoice_details
+    using:
+      foreign_key_constraint_on:
+        column: team_stripe_account_id
+        table:
+          name: team_invoice_details
+          schema: public
+  - name: team
+    using:
+      foreign_key_constraint_on: team_id
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - name
+        - production_stripe_account_id
+        - staging_stripe_account_id
+        - team_id
+    comment: Team membership is enforced in the API layer (requireTeamMembership) before this role writes a connected Stripe account id
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - created_at
+        - id
+        - name
+        - production_stripe_account_id
+        - staging_stripe_account_id
+        - team_id
+        - updated_at
+      filter: {}
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - created_at
+        - id
+        - name
+        - production_stripe_account_id
+        - staging_stripe_account_id
+        - team_id
+        - updated_at
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - production_stripe_account_id
+        - staging_stripe_account_id
+      filter: {}
+      check: null
+    comment: Team membership is enforced in the API layer (requireTeamMembership) before this role writes a connected Stripe account id

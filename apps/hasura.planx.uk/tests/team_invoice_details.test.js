@@ -1,4 +1,12 @@
-import { introspectAs } from "./utils.js";
+import { gqlWithRole, introspectAs } from "./utils.js";
+
+const queryStripeAccountLink = `
+  query {
+    team_invoice_details {
+      team_stripe_account_id
+    }
+  }
+`;
 
 describe("team_invoice_details", () => {
   describe("public", () => {
@@ -37,6 +45,11 @@ describe("team_invoice_details", () => {
       expect(i.queries).toContain("team_invoice_details");
     });
 
+    test("can see which Stripe account invoice details belong to", async () => {
+      const res = await gqlWithRole("platformAdmin")(queryStripeAccountLink);
+      expect(res).not.toHaveProperty("errors");
+    });
+
     test("cannot query insert team_invoice_details", () => {
       expect(i.queries).not.toContain("insert_team_invoice_details");
     });
@@ -59,6 +72,11 @@ describe("team_invoice_details", () => {
 
     test("can query team_invoice_details", () => {
       expect(i.queries).toContain("team_invoice_details");
+    });
+
+    test("cannot see which Stripe account invoice details belong to", async () => {
+      const res = await gqlWithRole("teamEditor")(queryStripeAccountLink);
+      expect(res).toHaveProperty("errors");
     });
 
     test("can update team_invoice_details", () => {
@@ -104,6 +122,11 @@ describe("team_invoice_details", () => {
 
     test("can query team_invoice_details", () => {
       expect(i.queries).toContain("team_invoice_details");
+    });
+
+    test("can see which Stripe account invoice details belong to", async () => {
+      const res = await gqlWithRole("api")(queryStripeAccountLink);
+      expect(res).not.toHaveProperty("errors");
     });
 
     test("cannot create, update, or delete team_invoice_details", () => {
