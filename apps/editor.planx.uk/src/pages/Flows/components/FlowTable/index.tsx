@@ -135,6 +135,8 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     isTemplatedFlow,
     isService,
     isPattern,
+    usesAvailability,
+    isAvailable,
     statusVariant,
   } = useFlowMetadata(flow);
 
@@ -185,7 +187,10 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
         <>
           <FlowStatusCell>
             <Box sx={{ display: "inline-flex" }}>
-              {isService && (
+              {isAvailable && (
+                <FlowTag tagType={FlowTagType.Availability}>Available</FlowTag>
+              )}
+              {isService && !usesAvailability && (
                 <FlowTag
                   tagType={FlowTagType.Status}
                   statusVariant={statusVariant}
@@ -196,11 +201,14 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
             </Box>
           </FlowStatusCell>
           <FlowStatusCell>
-            {hasSendComponent && isService && (
-              <Box sx={{ display: "inline-flex" }}>
+            <Box sx={{ display: "inline-flex" }}>
+              {isService && isSourceTemplate && !hasSendComponent && (
+                <FlowTag tagType={FlowTagType.ServiceType}>Service</FlowTag>
+              )}
+              {hasSendComponent && isService && (
                 <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
-              </Box>
-            )}
+              )}
+            </Box>
           </FlowStatusCell>
           <FlowDateCell>
             <Box>

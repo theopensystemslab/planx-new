@@ -15,10 +15,11 @@ import {
 } from "../validationSchema";
 
 const Summary: React.FC = () => {
-  const [flowId, teamSlug, canUserEditTeam] = useStore((state) => [
+  const [flowId, teamSlug, canUserEditTeam, isPattern] = useStore((state) => [
     state.id,
     state.teamSlug,
     state.canUserEditTeam,
+    state.isPattern,
   ]);
   const isDisabled = !canUserEditTeam(teamSlug);
   const { url: lpsURL } = useLPS();
@@ -28,19 +29,23 @@ const Summary: React.FC = () => {
       query={GET_ABOUT_FLOW}
       mutation={UPDATE_ABOUT_FLOW}
       validationSchema={validationSchema.pick(["summary"])}
-      legend={"Service summary"}
+      legend={isPattern ? "Pattern summary" : "Service summary"}
       description={
-        <>
-          Summarise what the service does.
-          <br />
-          <br />
-          This is used on the entry page of online, published services and the{" "}
-          <Link href={lpsURL} target="_blank" rel="noopener noreferrer">
-            Find Local Planning Services (opens in a new tab)
-          </Link>{" "}
-          website. It's publicly visible, and should be short, clear and easy to
-          understand.
-        </>
+        isPattern ? (
+          "Summarise what the pattern does, so editors understand when to use it."
+        ) : (
+          <>
+            Summarise what the service does.
+            <br />
+            <br />
+            This is used on the entry page of online, published services and the{" "}
+            <Link href={lpsURL} target="_blank" rel="noopener noreferrer">
+              Find Local Planning Services (opens in a new tab)
+            </Link>{" "}
+            website. It's publicly visible, and should be short, clear and easy
+            to understand.
+          </>
+        )
       }
       defaultValues={defaultValues}
       getInitialValues={({ flow: { summary } }) => ({ summary: summary ?? "" })}
