@@ -22,6 +22,7 @@ insert_permissions:
         - is_trial
         - team_id
         - boundary_bbox
+        - multiple_stripe_accounts_enabled
         - payment_provider
         - reference_code
         - boundary_url
@@ -62,6 +63,7 @@ select_permissions:
         - is_trial
         - team_id
         - boundary_bbox
+        - multiple_stripe_accounts_enabled
         - payment_provider
         - reference_code
         - boundary_url
@@ -82,6 +84,7 @@ select_permissions:
         - id
         - is_guidance_only
         - is_trial
+        - multiple_stripe_accounts_enabled
         - payment_provider
         - production_payment_provider
         - reference_code
@@ -152,6 +155,7 @@ update_permissions:
         - id
         - is_guidance_only
         - is_trial
+        - multiple_stripe_accounts_enabled
         - payment_provider
         - reference_code
         - team_id

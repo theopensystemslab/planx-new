@@ -25,6 +25,7 @@ insert_permissions:
         - fee_breakdown
         - gov_pay_metadata
         - stripe_event_id
+        - stripe_account_id
         - stripe_metadata
         - stripe_payment_id
         - stripe_status
@@ -43,6 +44,7 @@ select_permissions:
         - fee_breakdown
         - gov_pay_metadata
         - stripe_event_id
+        - stripe_account_id
         - stripe_metadata
         - stripe_payment_id
         - stripe_status
