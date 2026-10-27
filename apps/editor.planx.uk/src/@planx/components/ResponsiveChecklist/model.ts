@@ -8,11 +8,11 @@ import type {
   FlatOptions,
   GroupedOptions,
 } from "../shared/BaseChecklist/model";
-import { uniqueChecklistLabelsOrDescriptionsTest } from "../shared/BaseChecklist/model";
 import {
   baseChecklistValidationSchema,
   parseBaseChecklist,
 } from "../shared/BaseChecklist/model";
+import { hasUniqueOptions, uniqueOptionsTest } from "../shared/helpers";
 import type { Rule } from "../shared/RuleBuilder/types";
 import { Condition } from "../shared/RuleBuilder/types";
 
@@ -42,16 +42,41 @@ export const DEFAULT_RULE: Rule = {
   condition: Condition.AlwaysRequired,
 };
 
-export const validationSchema = baseChecklistValidationSchema
-  .concat(
-    object({
-      groupedOptions: array(
-        object({
-          title: string().required("Section title is a required field").trim(),
-          children: array(optionValidationSchema).required(),
-        }).required(),
-      ).optional(),
-      options: array(optionValidationSchema).optional(),
-    }),
-  )
-  .test(uniqueChecklistLabelsOrDescriptionsTest as TestConfig<unknown>);
+const uniqueOptionsWithinGroupsTest: TestConfig<ResponsiveChecklistWithOptions> =
+  {
+    name: "uniqueOptionsWithinGroups",
+    test: function ({ groupedOptions }) {
+      if (!groupedOptions) return true;
+
+      for (const group of groupedOptions) {
+        if (!group.children) continue;
+
+        const allUnique = hasUniqueOptions(group.children);
+
+        if (!allUnique) {
+          return this.createError({
+            path: "options",
+            message: "Options within a single group must have unique labels",
+          });
+        }
+      }
+
+      return true;
+    },
+  };
+
+export const validationSchema = baseChecklistValidationSchema.concat(
+  object({
+    groupedOptions: array(
+      object({
+        title: string().required("Section title is a required field").trim(),
+        children: array(optionValidationSchema).required(),
+      })
+        .required()
+        .test(uniqueOptionsWithinGroupsTest as TestConfig<unknown>),
+    ).optional(),
+    options: array(optionValidationSchema)
+      .optional()
+      .test(uniqueOptionsTest as TestConfig<unknown>),
+  }),
+);

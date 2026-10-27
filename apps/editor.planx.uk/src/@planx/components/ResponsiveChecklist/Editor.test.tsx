@@ -550,7 +550,7 @@ describe("Responsive Checklist editor component", () => {
     await waitFor(() =>
       expect(
         screen.getByText(
-          /Options must have unique labels, or unique descriptions if labels are duplicated/,
+          /Options must have unique labels, or unique descriptions if labels are conditionally shown/,
         ),
       ).toBeInTheDocument(),
     );
