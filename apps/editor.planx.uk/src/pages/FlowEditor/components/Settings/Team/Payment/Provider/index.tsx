@@ -80,8 +80,6 @@ const Provider: React.FC = () => {
     useState<PaymentProvider | null>(null);
   const provider = migratedProvider ?? paymentProvider ?? null;
 
-  const isProduction = import.meta.env.VITE_APP_ENV === "production";
-
   const [dialogState, setDialogState] = useState<DialogState>({
     type: "closed",
   });
