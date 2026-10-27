@@ -55,7 +55,7 @@ describe("getActiveGovPaySessions", () => {
 describe("getStripeAccountId", () => {
   it("returns a stripe account when set", async () => {
     mockRequest.mockResolvedValueOnce({
-      teamIntegrations: [{ accountId: "acct_abc" }],
+      stripeAccounts: [{ accountId: "acct_abc" }],
     });
 
     const accountId = await getStripeAccountId(42);
@@ -65,7 +65,7 @@ describe("getStripeAccountId", () => {
 
   it("returns null if no account", async () => {
     vi.stubEnv("APP_ENVIRONMENT", "staging");
-    mockRequest.mockResolvedValueOnce({ teamIntegrations: [] });
+    mockRequest.mockResolvedValueOnce({ stripeAccounts: [] });
 
     const accountId = await getStripeAccountId(42);
 
