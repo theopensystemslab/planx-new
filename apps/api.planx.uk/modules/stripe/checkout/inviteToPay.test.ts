@@ -101,6 +101,13 @@ describe("creating a Stripe Checkout Session for an invite to pay request", () =
     );
   });
 
+  it("turns off Adaptive Pricing so the payer always pays in GBP", async () => {
+    await supertest(app).post(ENDPOINT).expect(200);
+
+    const { adaptive_pricing } = mockCreate.mock.calls[0][0];
+    expect(adaptive_pricing).toEqual({ enabled: false });
+  });
+
   it("offers Pay by Bank only for a total above £600", async () => {
     mockPaymentRequest(
       buildPaymentRequest({ feeBreakdown: largePaymentRequestFeeBreakdown }),

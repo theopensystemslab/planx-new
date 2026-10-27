@@ -142,6 +142,16 @@ describe("creating a Stripe Checkout Session", () => {
     expect(expires_at).toBeUndefined();
   });
 
+  it("turns off Adaptive Pricing so the applicant always pays in GBP", async () => {
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(validBody)
+      .expect(200);
+
+    const { adaptive_pricing } = mockCreate.mock.calls[0][0];
+    expect(adaptive_pricing).toEqual({ enabled: false });
+  });
+
   it("rejects a session locked for invite to pay", async () => {
     mockReturnURLContext({
       session: {
