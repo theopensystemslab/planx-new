@@ -26,6 +26,7 @@ tables=(
   team_members
   team_themes
   templated_flow_edits
+  service_charge_flow_exceptions
   # Optional tables
   # Please comment in if working on a feature and you require example data locally
   # You will need to manually grant select permissions to the github_actions on production, and update main.sql

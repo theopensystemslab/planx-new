@@ -1,0 +1,11 @@
+table:
+  name: service_charge_flow_exceptions
+  schema: public
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - created_at
+        - flow_id
+      filter: {}
+    comment: ""
