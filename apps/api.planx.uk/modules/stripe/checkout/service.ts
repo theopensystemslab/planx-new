@@ -187,6 +187,7 @@ const createDestinationChargeCheckoutSession = async ({
     customer_email: customerEmail,
     expires_at: expiresAt && getUnixTime(expiresAt),
     metadata,
+    adaptive_pricing: { enabled: false },
     payment_intent_data: {
       on_behalf_of: connectedAccountId,
       transfer_data: { destination: connectedAccountId },
