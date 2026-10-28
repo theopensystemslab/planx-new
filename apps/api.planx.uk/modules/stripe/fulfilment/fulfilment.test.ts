@@ -10,6 +10,7 @@ import {
   validBody,
 } from "../checkout/test/mocks.js";
 import { stripe } from "../client.js";
+import * as stripeHelpers from "../helpers.js";
 import { STRIPE_WEBHOOK_ENDPOINT } from "../routes.js";
 import { sign } from "../webhook/test/utils.js";
 
@@ -19,6 +20,9 @@ const PAYMENT_INTENT_ID = "pi_test_itp";
 const OTHER_PAYMENT_INTENT_ID = "pi_test_other_tab";
 const SESSION_ID = validBody.sessionId;
 const FULFIL_ENDPOINT = `/stripe/payment-request/${PAYMENT_REQUEST_ID}/fulfil`;
+
+/** Completed, but a delayed payment method (e.g. Bacs Direct Debit) hasn't confirmed yet */
+const PENDING = { status: "complete", payment_status: "unpaid" };
 
 const checkoutSession = (overrides: Record<string, unknown> = {}) => ({
   id: CHECKOUT_SESSION_ID,
@@ -163,6 +167,7 @@ describe("fulfilling an invite to pay request", () => {
   beforeEach(() => {
     mockRetrieve();
     vi.spyOn(payHelpers, "reportError");
+    vi.spyOn(stripeHelpers, "postStripePaymentNotificationToSlack");
   });
 
   afterEach(() => vi.restoreAllMocks());
@@ -193,6 +198,29 @@ describe("fulfilling an invite to pay request", () => {
           },
         },
       });
+    });
+
+    it("marks the payment request as paid when a delayed payment is authorised (complete + unpaid), and writes the payment reference", async () => {
+      mockRetrieve(PENDING);
+      mockPaymentRequestRow();
+
+      await postWebhook(
+        checkoutSessionEvent("checkout.session.completed", PENDING),
+      ).expect(200);
+
+      expect(getMarkAsPaidCalls()).toHaveLength(1);
+      expect(getMarkAsPaidCalls()[0].variables).toEqual(
+        expect.objectContaining({ stripePaymentId: PAYMENT_INTENT_ID }),
+      );
+      expect(
+        stripeHelpers.postStripePaymentNotificationToSlack,
+      ).toHaveBeenCalledWith(
+        "southwark",
+        PAYMENT_INTENT_ID,
+        "processing",
+        true,
+      );
+      expect(payHelpers.reportError).not.toHaveBeenCalled();
     });
 
     it("guards the update so the request is only paid once", async () => {
@@ -252,7 +280,7 @@ describe("fulfilling an invite to pay request", () => {
     });
 
     it("reports, and does not update, an unpaid Checkout Session", async () => {
-      mockRetrieve({ payment_status: "unpaid" });
+      mockRetrieve({ status: "open", payment_status: "unpaid" });
       mockPaymentRequestRow();
 
       await postWebhook(
@@ -416,6 +444,61 @@ describe("fulfilling an invite to pay request", () => {
         CHECKOUT_SESSION_ID,
       );
       expect(getMarkAsPaidCalls()).toHaveLength(1);
+      expect(
+        stripeHelpers.postStripePaymentNotificationToSlack,
+      ).toHaveBeenCalledWith("southwark", PAYMENT_INTENT_ID, "succeeded", true);
+    });
+
+    it("marks the payment request as paid when a delayed payment is authorised, and responds 'pending'", async () => {
+      mockRetrieve(PENDING);
+      mockPaymentRequestRow();
+
+      await postFulfil()
+        .expect(200)
+        .then((res) =>
+          expect(res.body).toEqual({
+            paymentStatus: "pending",
+            paymentIntentId: PAYMENT_INTENT_ID,
+          }),
+        );
+
+      expect(getMarkAsPaidCalls()).toHaveLength(1);
+    });
+
+    it("responds 'pending', without updating, when the webhook has already fulfilled this delayed payment", async () => {
+      mockRetrieve(PENDING);
+      mockPaymentRequestRow({
+        paidAt: new Date().toISOString(),
+        stripePaymentId: PAYMENT_INTENT_ID,
+      });
+
+      await postFulfil()
+        .expect(200)
+        .then((res) =>
+          expect(res.body).toEqual({
+            paymentStatus: "pending",
+            paymentIntentId: PAYMENT_INTENT_ID,
+          }),
+        );
+
+      expect(getMarkAsPaidCalls()).toHaveLength(0);
+    });
+
+    it("responds 'paid' when the request was already paid by another Checkout Session, even if this one is pending", async () => {
+      mockRetrieve(PENDING);
+      mockPaymentRequestRow({
+        paidAt: new Date().toISOString(),
+        stripePaymentId: OTHER_PAYMENT_INTENT_ID,
+      });
+
+      await postFulfil()
+        .expect(200)
+        .then((res) =>
+          expect(res.body).toEqual({
+            paymentStatus: "paid",
+            paymentIntentId: OTHER_PAYMENT_INTENT_ID,
+          }),
+        );
     });
 
     it("responds 'paid' with the stored payment reference, without updating, when the request has already been paid", async () => {
@@ -588,6 +671,20 @@ describe("fulfilling an invite to pay request", () => {
       expect(getPaymentReferenceLookups()).toHaveLength(1);
       expect(getMarkAsPaidCalls()).toHaveLength(1);
       expect(payHelpers.reportError).not.toHaveBeenCalled();
+    });
+
+    it("responds 'pending' when the concurrent call fulfilled this delayed payment", async () => {
+      mockRetrieve(PENDING);
+      mockPaidConcurrently({ stripePaymentId: PAYMENT_INTENT_ID });
+
+      await postFulfil()
+        .expect(200)
+        .then((res) =>
+          expect(res.body).toEqual({
+            paymentStatus: "pending",
+            paymentIntentId: PAYMENT_INTENT_ID,
+          }),
+        );
     });
 
     it("returns 404 when the payment request no longer exists", async () => {
