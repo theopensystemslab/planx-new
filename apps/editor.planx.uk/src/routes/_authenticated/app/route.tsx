@@ -24,6 +24,7 @@ export const Route = createFileRoute("/_authenticated/app")({
             settings: team_settings {
               isTrial: is_trial
               isGuidanceOnly: is_guidance_only
+              contract
             }
             theme {
               id

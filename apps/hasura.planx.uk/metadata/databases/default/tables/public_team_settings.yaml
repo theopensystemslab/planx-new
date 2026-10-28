@@ -10,115 +10,121 @@ insert_permissions:
     permission:
       check: {}
       columns:
-        - boundary_bbox
-        - boundary_url
-        - email_reply_to_id
         - has_article4_schema
+        - id
+        - contract
+        - homepage
         - help_email
         - help_opening_hours
         - help_phone
-        - homepage
-        - id
+        - email_reply_to_id
         - is_guidance_only
         - is_trial
+        - team_id
+        - boundary_bbox
         - payment_provider
         - reference_code
-        - team_id
+        - boundary_url
     comment: ""
 select_permissions:
   - role: analyst
     permission:
       columns:
-        - boundary_bbox
-        - boundary_url
-        - email_reply_to_id
         - has_article4_schema
+        - id
+        - contract
+        - homepage
         - help_email
         - help_opening_hours
         - help_phone
-        - homepage
-        - id
+        - email_reply_to_id
         - is_guidance_only
         - is_trial
+        - team_id
+        - boundary_bbox
         - payment_provider
         - reference_code
-        - team_id
+        - boundary_url
       filter: {}
     comment: ""
   - role: api
     permission:
       columns:
-        - boundary_bbox
-        - boundary_url
-        - email_reply_to_id
         - has_article4_schema
+        - id
+        - contract
+        - homepage
         - help_email
         - help_opening_hours
         - help_phone
-        - homepage
-        - id
+        - email_reply_to_id
         - is_guidance_only
         - is_trial
+        - team_id
+        - boundary_bbox
         - payment_provider
         - reference_code
-        - team_id
+        - boundary_url
       filter: {}
     comment: ""
   - role: platformAdmin
     permission:
       columns:
-        - boundary_bbox
-        - boundary_url
-        - email_reply_to_id
         - has_article4_schema
+        - id
+        - contract
+        - homepage
         - help_email
         - help_opening_hours
         - help_phone
-        - homepage
-        - id
+        - email_reply_to_id
         - is_guidance_only
         - is_trial
+        - team_id
+        - boundary_bbox
         - payment_provider
         - reference_code
-        - team_id
+        - boundary_url
       filter: {}
     comment: ""
   - role: public
     permission:
       columns:
-        - boundary_bbox
-        - boundary_url
-        - email_reply_to_id
         - has_article4_schema
+        - id
+        - contract
+        - homepage
         - help_email
         - help_opening_hours
         - help_phone
-        - homepage
-        - id
+        - email_reply_to_id
         - is_guidance_only
         - is_trial
+        - team_id
+        - boundary_bbox
         - payment_provider
         - reference_code
-        - team_id
+        - boundary_url
       filter: {}
     comment: ""
   - role: teamEditor
     permission:
       columns:
-        - boundary_bbox
-        - boundary_url
-        - email_reply_to_id
         - has_article4_schema
+        - id
+        - contract
+        - homepage
         - help_email
         - help_opening_hours
         - help_phone
-        - homepage
-        - id
+        - email_reply_to_id
         - is_guidance_only
         - is_trial
+        - team_id
+        - boundary_bbox
         - payment_provider
         - reference_code
-        - team_id
+        - boundary_url
       filter: {}
     comment: ""
 update_permissions:
@@ -134,6 +140,7 @@ update_permissions:
       columns:
         - boundary_bbox
         - boundary_url
+        - contract
         - email_reply_to_id
         - has_article4_schema
         - help_email

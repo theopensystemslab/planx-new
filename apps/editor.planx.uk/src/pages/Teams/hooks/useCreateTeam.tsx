@@ -1,5 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
 import type { TeamCategory } from "lib/teamCategories";
+import type { ContractType } from "pages/FlowEditor/components/Settings/Team/Advanced/ContractType/types";
 
 const CREATE_TEAM_MUTATION = gql`
   mutation CreateTeam(
@@ -35,6 +36,7 @@ export interface TeamPayload {
   settings: {
     isTrial: boolean;
     isGuidanceOnly: boolean;
+    contract: ContractType;
   };
 }
 
@@ -55,6 +57,7 @@ export const useCreateTeam = () => {
         settings: {
           is_trial: settings.isTrial,
           is_guidance_only: settings.isGuidanceOnly,
+          contract: settings.contract,
         },
         theme: {},
         invoice_details: {},
