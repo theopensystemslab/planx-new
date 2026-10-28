@@ -27,6 +27,28 @@ vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
   };
 });
 
+const mockSession = () =>
+  queryMock.mockQuery({
+    name: "GetSessionById",
+    matchOnVariables: false,
+    data: {
+      lowcal_sessions_by_pk: {
+        id: 123,
+        data: {
+          id: "cc1a89cb-c552-4a52-a3b5-5a32ecadf18e",
+          passport: {},
+          sessionId: "56841432-b654-4d64-ab54-5d23d007a034",
+          breadcrumbs: {},
+        },
+        flow: {
+          id: "cc1a89cb-c552-4a52-a3b5-5a32ecadf18e",
+          slug: "request-a-building-control-quote",
+          name: "Request a building control quote",
+        },
+      },
+    },
+  });
+
 describe("HTML data admin endpoint", () => {
   it("requires a user to be logged in", async () => {
     return supertest(app)
@@ -46,27 +68,21 @@ describe("HTML data admin endpoint", () => {
       .expect(403);
   });
 
+  it("returns an error if HTML generation fails", async () => {
+    mockSession();
+    mockGenerateHTMLData.mockRejectedValueOnce(
+      new Error("HTML generation failed!"),
+    );
+
+    await supertest(app)
+      .get(endpoint`123`)
+      .set(authHeader({ role: "platformAdmin" }))
+      .expect(500)
+      .then((res) => expect(res.body.error).toMatch(/Failed to build HTML/));
+  });
+
   it("returns a HTML-formatted payload", async () => {
-    queryMock.mockQuery({
-      name: "GetSessionById",
-      matchOnVariables: false,
-      data: {
-        lowcal_sessions_by_pk: {
-          id: 123,
-          data: {
-            id: "cc1a89cb-c552-4a52-a3b5-5a32ecadf18e",
-            passport: {},
-            sessionId: "56841432-b654-4d64-ab54-5d23d007a034",
-            breadcrumbs: {},
-          },
-          flow: {
-            id: "cc1a89cb-c552-4a52-a3b5-5a32ecadf18e",
-            slug: "request-a-building-control-quote",
-            name: "Request a building control quote",
-          },
-        },
-      },
-    });
+    mockSession();
 
     return supertest(app)
       .get(endpoint`123`)

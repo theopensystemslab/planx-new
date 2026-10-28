@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 import { $api } from "../../../client/index.js";
+import { ServerError } from "../../../errors/index.js";
 
 export const getDigitalPlanningApplicationPayload = async (
   req: Request,
@@ -22,8 +23,11 @@ export const getDigitalPlanningApplicationPayload = async (
     res.set("content-type", "application/json");
     return res.send(data);
   } catch (error) {
-    return next({
-      message: `Failed to make Digital Planning Application payload: ${error}. Stack: ${(error as Error).stack}`,
-    });
+    return next(
+      new ServerError({
+        message: `Failed to make Digital Planning Application payload: ${error}. Stack: ${(error as Error).stack}`,
+        cause: error,
+      }),
+    );
   }
 };

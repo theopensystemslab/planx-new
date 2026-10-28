@@ -170,6 +170,7 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
         message: `Failed to upload submission to S3 (${localAuthority}): ${
           (error as Error).message
         }`,
+        cause: error,
       }),
     );
   }

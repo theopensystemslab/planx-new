@@ -8,6 +8,7 @@ import { gql } from "graphql-request";
 import jwt from "jsonwebtoken";
 
 import { $api } from "../../../client/index.js";
+import { ServerError } from "../../../errors/index.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import type {
   SendIntegrationController,
@@ -140,10 +141,12 @@ export const sendToIdoxNexus: SendIntegrationController = async (
     const errorMessage = isAxiosError(error)
       ? JSON.stringify(error.response?.data)
       : (error as Error).message;
-    return next({
-      error,
-      message: `Failed to send to Idox Nexus (${payload.sessionId}): ${errorMessage}`,
-    });
+    return next(
+      new ServerError({
+        message: `Failed to send to Idox Nexus (${payload.sessionId}): ${errorMessage}`,
+        cause: error,
+      }),
+    );
   }
 };
 
