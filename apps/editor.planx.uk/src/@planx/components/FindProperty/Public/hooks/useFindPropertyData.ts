@@ -5,23 +5,8 @@ import {
   getBuildingSafetyLevyRates,
   getFindPropertyData,
 } from "lib/planningData/requests";
-import { useMemo } from "react";
 
 import type { SiteAddress } from "../../model";
-
-interface FindPropertyData {
-  localAuthorityDistricts?: string[];
-  localPlanningAuthorities?: string[];
-  regions?: string[];
-  wards?: string[];
-  parishes?: string[];
-  developmentCorporations?: string[];
-  titleBoundary?: Feature;
-  bslRate?: {
-    previouslyDevelopedLand: number;
-    nonPreviouslyDevelopedLand: number;
-  };
-}
 
 export const useFindPropertyData = (address?: SiteAddress) => {
   // Fetch data from planning.data.gov.uk
@@ -42,7 +27,7 @@ export const useFindPropertyData = (address?: SiteAddress) => {
   });
 
   // Calculate derived data required for component
-  const findPropertyData = useMemo<FindPropertyData>(() => {
+  const findPropertyData = (() => {
     if (!data) {
       return {
         localAuthorityDistricts: undefined,
@@ -94,8 +79,10 @@ export const useFindPropertyData = (address?: SiteAddress) => {
       }
     });
 
-    const localBSLRate = bslRates?.find((rate) =>
-      localAuthorityDistrictCodes.has(rate["local-authority-district"]),
+    const localBSLRate = bslRates?.find(
+      (rate) =>
+        rate["local-authority-district"] &&
+        localAuthorityDistrictCodes.has(rate["local-authority-district"]),
     );
 
     return {
@@ -107,15 +94,12 @@ export const useFindPropertyData = (address?: SiteAddress) => {
       developmentCorporations: Array.from(developmentCorporations),
       titleBoundary,
       bslRate: localBSLRate && {
-        previouslyDevelopedLand: Number(
-          localBSLRate["previously-developed-land-rate"],
-        ),
-        nonPreviouslyDevelopedLand: Number(
+        previouslyDevelopedLand: localBSLRate["previously-developed-land-rate"],
+        nonPreviouslyDevelopedLand:
           localBSLRate["non-previously-developed-land-rate"],
-        ),
       },
     };
-  }, [data, bslRates]);
+  })();
 
   // Side effect - As soon as we have a USR, pre-fetch classified roads data.
   // This is a long-running request, so prefetching in the background allows

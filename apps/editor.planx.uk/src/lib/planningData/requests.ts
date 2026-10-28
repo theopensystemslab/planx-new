@@ -1,11 +1,11 @@
 import axios from "axios";
 
 import type {
-  BuildingSafetyLevyRatesResponse,
   SearchEntityParams,
   SearchEntityResponse,
   SearchEntityResponseExcludeGeom,
 } from "./types";
+import { buildingSafetyLevyRatesResponseSchema } from "./types";
 import { type Entity } from "./types";
 
 const PLANNING_DATA_URL = "https://www.planning.data.gov.uk" as const;
@@ -93,19 +93,17 @@ export const getEntityNames = async (dataset: string) => {
  * Get Building Safety Levy rates for local authority districts
  */
 export const getBuildingSafetyLevyRates = async () => {
-  const { data } = await axios.get<BuildingSafetyLevyRatesResponse>(
-    `/entity.json`,
-    {
-      baseURL: PLANNING_DATA_URL,
-      params: {
-        limit: 500,
-        dataset: "building-safety-levy-rate",
-        exclude_field: "geometry,point",
-      },
+  const { data } = await axios.get(`/entity.json`, {
+    baseURL: PLANNING_DATA_URL,
+    params: {
+      limit: 500,
+      dataset: "building-safety-levy-rate",
+      period: "current", // exclude historic entities
+      exclude_field: "geometry,point",
     },
-  );
+  });
 
-  return data.entities;
+  return buildingSafetyLevyRatesResponseSchema.parse(data).entities;
 };
 
 /**
