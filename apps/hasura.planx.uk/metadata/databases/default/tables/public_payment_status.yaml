@@ -34,6 +34,7 @@ insert_permissions:
         - payment_id
         - status
         - amount
+        - payment_method
 select_permissions:
   - role: api
     permission:
@@ -50,6 +51,7 @@ select_permissions:
         - payment_id
         - status
         - amount
+        - payment_method
       filter: {}
 event_triggers:
   - name: send_vat_invoices

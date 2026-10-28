@@ -41,6 +41,9 @@ const post = (payload: string, signature?: string) => {
 const asCharge = (value: unknown) =>
   value as unknown as Stripe.Response<Stripe.Charge>;
 
+const asPaymentMethod = (value: unknown) =>
+  value as unknown as Stripe.Response<Stripe.PaymentMethod>;
+
 describe("receiving a Stripe webhook", () => {
   beforeEach(() => {
     vi.spyOn(stripe.charges, "retrieve").mockResolvedValue(
@@ -190,6 +193,7 @@ describe("receiving a Stripe webhook", () => {
         amount: 14500,
         feeBreakdown: null,
         metadata: paymentIntent.metadata,
+        paymentMethod: null,
       });
     });
 
@@ -221,6 +225,90 @@ describe("receiving a Stripe webhook", () => {
           stripeStatus: "payment_failed",
         }),
       );
+    });
+  });
+
+  describe("the recorded payment method", () => {
+    beforeEach(() => {
+      mockSessionLookup();
+      mockInsert();
+      vi.spyOn(stripe.paymentMethods, "retrieve").mockResolvedValue(
+        asPaymentMethod({ id: "pm_test_bacs", type: "bacs_debit" }),
+      );
+    });
+
+    it("is retrieved from Stripe when the event has a payment method id", async () => {
+      const { payload, signature } = processingEvent({
+        payment_method: "pm_test_bacs",
+      });
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.paymentMethods.retrieve).toHaveBeenCalledWith(
+        "pm_test_bacs",
+      );
+      expect(insertCall()?.variables).toEqual(
+        expect.objectContaining({ paymentMethod: "bacs_debit" }),
+      );
+    });
+
+    it("accepts an expanded payment method", async () => {
+      const { payload, signature } = succeededEvent({
+        payment_method: { id: "pm_test_bacs", type: "bacs_debit" },
+      });
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.paymentMethods.retrieve).toHaveBeenCalledWith(
+        "pm_test_bacs",
+      );
+      expect(insertCall()?.variables).toEqual(
+        expect.objectContaining({ paymentMethod: "bacs_debit" }),
+      );
+    });
+
+    it("is read from the last payment error when a failed payment has no payment method", async () => {
+      const { payload, signature } = failedEvent({
+        payment_method: null,
+        last_payment_error: {
+          code: "debit_not_authorized",
+          payment_method: { id: "pm_test_bacs", type: "bacs_debit" },
+        },
+      });
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.paymentMethods.retrieve).not.toHaveBeenCalled();
+      expect(insertCall()?.variables).toEqual(
+        expect.objectContaining({
+          stripeStatus: "payment_failed",
+          paymentMethod: "bacs_debit",
+        }),
+      );
+    });
+
+    it("is null when the PaymentIntent has no payment method yet", async () => {
+      const { payload, signature } = createdEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(stripe.paymentMethods.retrieve).not.toHaveBeenCalled();
+      expect(insertCall()?.variables).toEqual(
+        expect.objectContaining({ paymentMethod: null }),
+      );
+    });
+
+    it("returns 500 without recording when retrieving the payment method fails, so Stripe redelivers the event", async () => {
+      vi.spyOn(stripe.paymentMethods, "retrieve").mockRejectedValue(
+        new Error("Stripe is unreachable"),
+      );
+      const { payload, signature } = processingEvent({
+        payment_method: "pm_test_bacs",
+      });
+
+      await post(payload, signature).expect(500);
+
+      expect(insertCall()).toBeUndefined();
     });
   });
 
