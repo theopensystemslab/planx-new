@@ -1,3 +1,6 @@
+import { readability } from "@ctrl/tinycolor";
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 import { screen } from "@testing-library/react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
@@ -32,11 +35,26 @@ test("const { user } = setups correctly", async () => {
 });
 
 test("use light text color if color param is dark", async () => {
-  await setup(<Content title="Title" content="dark" color="#000" />);
+  // Render with a fresh emotion cache so style rules are inserted in the same order as a first page load
+  const cache = createCache({ key: "dark" });
+  await setup(
+    <CacheProvider value={cache}>
+      <Content
+        title="Title"
+        content={`<p>dark <a href="https://example.com">A link</a></p>`}
+        color="#000"
+      />
+    </CacheProvider>,
+  );
   expect(content()).toHaveStyle({
     backgroundColor: "#000",
     color: "#fff",
   });
+
+  const link = screen.getByRole("link", { name: /A link/ });
+  expect(
+    readability(getComputedStyle(link).color, "#000"),
+  ).toBeGreaterThanOrEqual(4.5);
 });
 
 it("should not have any accessibility violations", async () => {

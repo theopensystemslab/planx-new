@@ -26,6 +26,7 @@
     "@tiptap/core": "^3.30.5",
     "@tiptap/extension-emoji": "^3.30.5",
     "@tiptap/extension-image": "^3.30.5",
+    "@tiptap/extension-link": "^3.30.5",
     "@tiptap/extension-mention": "^3.30.5",
     "@tiptap/extensions": "^3.30.5",
     "@tiptap/pm": "^3.30.5",
@@ -90,6 +91,7 @@
     "zustand": "^4.5.7"
   },
   "devDependencies": {
+    "@emotion/cache": "^11.14.0",
     "@planx/eslint-config": "workspace:*",
     "@planx/prettier-config": "workspace:*",
     "@planx/typescript-config": "workspace:*",

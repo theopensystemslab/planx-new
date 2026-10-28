@@ -1,4 +1,4 @@
-import { modifyDeep } from "./utils";
+import { fromHtml, modifyDeep, toHtml } from "./utils";
 
 test("modifyDeep helper", () => {
   /**
@@ -21,4 +21,14 @@ test("modifyDeep helper", () => {
     b: { val: 3 },
     d: [1, 3, 3, 5],
   });
+});
+
+test("pasted links are stripped of classes and <u> wrappers", () => {
+  const pasted = `<p><u><a href="https://example.com" class="govuk-link external">Example</a></u></p>`;
+  const html = toHtml(fromHtml(pasted));
+
+  expect(html).not.toContain("class=");
+  expect(html).not.toContain("<u>");
+  expect(html).toContain(`href="https://example.com"`);
+  expect(html).toContain(">Example</a>");
 });
