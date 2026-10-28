@@ -35,9 +35,12 @@ type DialogState =
   | { type: "confirm" }
   | { type: "revert" };
 
-// Mirrors the API's go-live switch (`isStripePaymentsEnabled` in api.planx.uk/modules/stripe/helpers.ts) - delete both together
-const isStripePaymentsEnabled = () =>
-  import.meta.env.VITE_APP_ENV !== "production";
+// Mirrors the API's go-live switch (`isStripePaymentsEnabled` and `STRIPE_PAYMENTS_INTERNAL_TEAMS` in api.planx.uk/modules/stripe/helpers.ts) - delete both together
+const STRIPE_PAYMENTS_INTERNAL_TEAMS: readonly string[] = ["opensystemslab"];
+
+const isStripePaymentsEnabled = (teamSlug: string) =>
+  import.meta.env.VITE_APP_ENV !== "production" ||
+  STRIPE_PAYMENTS_INTERNAL_TEAMS.includes(teamSlug);
 
 const BLOCKER_MESSAGES: Record<
   MigrationBlockerReason,
@@ -129,7 +132,7 @@ const Provider: React.FC = () => {
   const handleClose = () => setDialogState({ type: "closed" });
 
   const isStripe = provider === "stripe";
-  const canUseStripe = isStripePaymentsEnabled();
+  const canUseStripe = isStripePaymentsEnabled(teamSlug);
   const { data: stripeConnectStatus, isLoading: isStripeStatusLoading } =
     useStripeConnectStatus(teamSlug);
 
@@ -148,7 +151,10 @@ const Provider: React.FC = () => {
       );
     }
 
-    if (isStripe && canUseStripe) {
+    // Reverting is staging-only - the API doesn't register the revert route in production
+    if (isStripe) {
+      if (isProduction) return null;
+
       return (
         <Box>
           <Button

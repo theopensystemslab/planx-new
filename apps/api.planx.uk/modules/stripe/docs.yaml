@@ -207,7 +207,8 @@ paths:
         If any of these checks fail, the migration is blocked and no changes are made.
         Otherwise, migrates the team's payment provider to Stripe.
 
-        Always blocked in production (`stripePaymentsNotEnabled`) until Stripe payments go live.
+        Always blocked in production (`stripePaymentsNotEnabled`) until Stripe payments go live,
+        except for internal teams (`STRIPE_PAYMENTS_INTERNAL_TEAMS` in modules/stripe/helpers.ts).
       tags:
         - stripe
       parameters:
@@ -378,7 +379,7 @@ paths:
         "409":
           description: |
             A payment cannot be taken, because either:
-            - Stripe payments are not yet enabled in this environment (blocked on prod until go-live)
+            - Stripe payments are not yet enabled for this team (blocked on prod until go-live, except for internal teams)
             - this LPA's payment provider is not Stripe
             - this LPA has not connected a Stripe account
             - this LPA's connected account is no longer connected to our platform
@@ -420,7 +421,7 @@ paths:
         "409":
           description: |
             A payment cannot be taken, because either:
-            - Stripe payments are not yet enabled in this environment (blocked on prod until go-live)
+            - Stripe payments are not yet enabled for this team (blocked on prod until go-live, except for internal teams)
             - the payment request has already been paid
             - the session is not locked, awaiting payment via invite to pay
             - a GOV.UK Pay payment has already been started for this request

@@ -1,5 +1,4 @@
 import { isBefore } from "date-fns";
-import type { RequestHandler } from "express";
 import type Stripe from "stripe";
 
 import {
@@ -31,6 +30,12 @@ type ConnectedAccountResult =
 const getConnectedAccount = async (
   teamSlug: string,
 ): Promise<ConnectedAccountResult> => {
+  if (!isStripePaymentsEnabled(teamSlug)) {
+    return {
+      refusal: { status: 409, message: "Stripe payments are not yet enabled" },
+    };
+  }
+
   const team = await getTeamBySlug(teamSlug);
   const { paymentProvider } = team.settings;
 
@@ -65,19 +70,6 @@ const getConnectedAccount = async (
   }
 
   return { connectedAccountId: stripeAccountId, capabilities };
-};
-
-export const requireStripePaymentsEnabled: RequestHandler = (
-  _req,
-  _res,
-  next,
-) => {
-  if (isStripePaymentsEnabled()) return next();
-
-  return next({
-    status: 409,
-    message: "Stripe payments are not yet enabled",
-  });
 };
 
 export const resolveTeamPaymentProvider: ResolveTeamPaymentProviderMiddleware =
