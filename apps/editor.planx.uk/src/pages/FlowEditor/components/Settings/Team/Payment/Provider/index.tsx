@@ -32,7 +32,8 @@ export type PaymentProvider = TeamSettings["paymentProvider"];
 type DialogState =
   | { type: "closed" }
   | { type: "blocked"; blockers: MigrationBlocker[] }
-  | { type: "confirm" };
+  | { type: "confirm" }
+  | { type: "revert" };
 
 // Mirrors the API's go-live switch (`isStripePaymentsEnabled` in api.planx.uk/modules/stripe/helpers.ts) - delete both together
 const isStripePaymentsEnabled = () =>
@@ -87,7 +88,7 @@ const Provider: React.FC = () => {
   const { mutate: migrate, isPending: isMigrating } = useMigrateToStripe();
   const { mutate: revert, isPending: isReverting } = useRevertToGovPay();
 
-  const handleMigrateClick = async () => {
+  const handleMigrateClick = () => {
     setDialogState({ type: "confirm" });
   };
 
@@ -108,10 +109,15 @@ const Provider: React.FC = () => {
     });
   };
 
+  const handleRevertClick = () => {
+    setDialogState({ type: "revert" });
+  };
+
   const handleRevert = async () => {
     revert(teamSlug, {
       onSuccess: () => {
         setMigratedProvider("govpay");
+        setDialogState({ type: "closed" });
         toast.success("Revert to GOV.UK Pay successful");
       },
       onError: () => {
@@ -142,11 +148,11 @@ const Provider: React.FC = () => {
       );
     }
 
-    if (isStripe) {
+    if (isStripe && canUseStripe) {
       return (
         <Box>
           <Button
-            onClick={handleRevert}
+            onClick={handleRevertClick}
             variant="contained"
             disabled={isReverting}
           >
@@ -298,6 +304,36 @@ const Provider: React.FC = () => {
                 disabled={isMigrating}
               >
                 Migrate to Stripe
+              </Button>
+            </DialogActions>
+          </>
+        )}
+
+        {dialogState.type === "revert" && (
+          <>
+            <DialogTitle component="h1" variant="h3">
+              Confirm revert to GOV.UK Pay
+            </DialogTitle>
+            <DialogContent dividers>
+              <DialogContentText>
+                Are you sure you want to revert to GOV.UK Pay to test payments
+                on Staging?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={handleClose}
+                color="secondary"
+                variant="contained"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleRevert}
+                variant="contained"
+                disabled={isReverting}
+              >
+                Revert to GOV.UK Pay
               </Button>
             </DialogActions>
           </>
