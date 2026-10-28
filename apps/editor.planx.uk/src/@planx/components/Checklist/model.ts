@@ -90,9 +90,7 @@ export const validationSchema = baseChecklistValidationSchema.concat(
       object({
         title: string().required("Section title is a required field").trim(),
         children: array(optionValidationSchema).required(),
-      })
-        .required()
-        .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>), // instead of reusing uniqueLabelsTest, this uses a different test to customise error message
+      }).required(),
     ).optional(),
     allRequired: boolean(),
     options: array(optionValidationSchema)
@@ -175,7 +173,7 @@ export const validationSchema = baseChecklistValidationSchema.concat(
         });
       },
     })
-    .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>),
+    .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>), // instead of reusing uniqueLabelsTest, this uses a different test to customise error message
 );
 
 export const parseChecklist = (

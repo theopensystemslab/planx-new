@@ -56,7 +56,8 @@ const uniqueOptionsWithinGroupsTest: TestConfig<ResponsiveChecklistWithOptions> 
         if (!allUnique) {
           return this.createError({
             path: "options",
-            message: "Options within a single group must have unique labels",
+            message:
+              "Options within a single group must have unique labels, or descriptions if conditionally shown",
           });
         }
       }
@@ -71,12 +72,10 @@ export const validationSchema = baseChecklistValidationSchema.concat(
       object({
         title: string().required("Section title is a required field").trim(),
         children: array(optionValidationSchema).required(),
-      })
-        .required()
-        .test(uniqueOptionsWithinGroupsTest as TestConfig<unknown>),
+      }).required(),
     ).optional(),
     options: array(optionValidationSchema)
       .optional()
       .test(uniqueOptionsTest as TestConfig<unknown>),
-  }),
+  }).test(uniqueOptionsWithinGroupsTest as TestConfig<unknown>),
 );
