@@ -10,7 +10,7 @@ import type { StripeWebhookController } from "./types.js";
 const inviteToPayMetadataSchema = z.object({ paymentRequestId: z.string() });
 
 /**
- * Fulfil an ITP request once its Checkout Session is paid
+ * Fulfil an ITP request once its Checkout Session is paid, or authorised by a delayed payment method
  */
 const handleCheckoutSessionPaid = async (
   checkoutSession: Stripe.Checkout.Session,
@@ -27,8 +27,12 @@ const handleCheckoutSessionPaid = async (
   const result = await fulfilPaymentRequest(id);
 
   switch (result.status) {
+    // A pending payment (e.g. Bacs Direct Debit) is fulfilled at authorisation - its result arrives later
     case "fulfilled":
     case "alreadyFulfilled":
+      return console.info(
+        `Stripe Checkout Session ${id} (${eventType}): ${result.status} (${result.paymentStatus})`,
+      );
     case "foreign":
       return console.info(
         `Stripe Checkout Session ${id} (${eventType}): ${result.status}`,

@@ -25,7 +25,7 @@ export const fulfilPaymentRequestController: FulfilPaymentRequestController =
         case "fulfilled":
         case "alreadyFulfilled":
           return res.json({
-            paymentStatus: "paid",
+            paymentStatus: result.paymentStatus,
             paymentIntentId: result.stripePaymentId,
           });
         case "unpaid":
