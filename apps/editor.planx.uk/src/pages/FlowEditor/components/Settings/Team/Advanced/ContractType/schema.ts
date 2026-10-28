@@ -1,6 +1,6 @@
 import { mixed, object, type SchemaOf } from "yup";
 
-import type {ContractFormValues, ContractType } from "./types";
+import type { ContractFormValues, ContractType } from "./types";
 import { CONTRACT_VALUES } from "./types";
 
 export const validationSchema: SchemaOf<ContractFormValues> = object().shape({

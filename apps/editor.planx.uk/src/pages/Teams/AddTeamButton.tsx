@@ -14,11 +14,10 @@ import {
   TEAM_CATEGORY_LABELS,
   type TeamCategory,
 } from "lib/teamCategories";
-import type {
-  ContractType} from "pages/FlowEditor/components/Settings/Team/Advanced/ContractType/types";
+import type { ContractType } from "pages/FlowEditor/components/Settings/Team/Advanced/ContractType/types";
 import {
   CONTRACT_LABELS,
-  CONTRACT_VALUES
+  CONTRACT_VALUES,
 } from "pages/FlowEditor/components/Settings/Team/Advanced/ContractType/types";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";

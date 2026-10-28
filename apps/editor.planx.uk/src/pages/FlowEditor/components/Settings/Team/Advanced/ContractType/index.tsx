@@ -8,11 +8,9 @@ import { defaultValues, validationSchema } from "./schema";
 import type {
   ContractFormValues,
   GetTeamSettingsData,
-  UpdateTeamSettingsVariables} from "./types";
-import {
-  CONTRACT_LABELS,
-  CONTRACT_VALUES
+  UpdateTeamSettingsVariables,
 } from "./types";
+import { CONTRACT_LABELS, CONTRACT_VALUES } from "./types";
 
 const ContractType: React.FC = () => {
   const [teamId, teamSlug] = useStore((state) => [
