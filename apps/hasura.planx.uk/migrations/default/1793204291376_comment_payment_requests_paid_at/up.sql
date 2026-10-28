@@ -1,0 +1,1 @@
+COMMENT ON COLUMN "public"."payment_requests"."paid_at" IS E'When the payment was authorised, not when funds were received. A delayed payment method (e.g. Bacs Direct Debit) sets this at authorisation, and confirms or fails days later. Setting this submits the application (event trigger setup_payment_send_events)';
