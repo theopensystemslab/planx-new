@@ -14,6 +14,7 @@ import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import FindProperty from ".";
+import buildingSafetyLevyRatesMock from "./mocks/buildingSafetyLevyRatesMock";
 import findAddressReturnMock from "./mocks/findAddressReturnMock";
 import localAuthorityMock from "./mocks/localAuthorityMock";
 
@@ -51,6 +52,8 @@ const osAddressProps = {
   "property.localPlanningAuthority": ["Southwark LPA"],
   "property.region": ["London"],
   "property.ward": ["Old Kent Road"],
+  "property.bsl.rate.previouslyDevelopedLand": 28.47,
+  "property.bsl.rate.nonPreviouslyDevelopedLand": 56.93,
   "property.boundary.area": 1232.22,
   "property.boundary.area.hectares": 0.123222,
   "property.boundary": {
@@ -104,6 +107,8 @@ const proposedAddressProps = {
   "property.region": ["London"],
   "property.type": ["unclassified"],
   "property.ward": ["Old Kent Road"],
+  "property.bsl.rate.previouslyDevelopedLand": 28.47,
+  "property.bsl.rate.nonPreviouslyDevelopedLand": 56.93,
   "property.boundary.area": 1232.22,
   "property.boundary.area.hectares": 0.123222,
   "property.boundary": {
@@ -143,6 +148,9 @@ const proposedAddressProps = {
 };
 
 const handlers: Array<HttpHandler | GraphQLHandler> = [
+  http.get("https://www.planning.data.gov.uk/entity.json", async () =>
+    HttpResponse.json(buildingSafetyLevyRatesMock, { status: 200 }),
+  ),
   http.get("https://www.planning.data.gov.uk/*", async () =>
     HttpResponse.json(localAuthorityMock, { status: 200 }),
   ),

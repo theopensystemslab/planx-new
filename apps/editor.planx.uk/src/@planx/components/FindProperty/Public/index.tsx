@@ -53,6 +53,7 @@ function Component(props: Props) {
     parishes,
     developmentCorporations,
     titleBoundary,
+    bslRate,
     isPending,
   } = useFindPropertyData(address);
 
@@ -131,6 +132,13 @@ function Component(props: Props) {
         newPassportData["property.boundary.area"] = areaSquareMetres;
         newPassportData["property.boundary.area.hectares"] =
           squareMetresToHectares(areaSquareMetres);
+      }
+
+      if (bslRate) {
+        newPassportData["property.bsl.rate.previouslyDevelopedLand"] =
+          bslRate.previouslyDevelopedLand;
+        newPassportData["property.bsl.rate.nonPreviouslyDevelopedLand"] =
+          bslRate.nonPreviouslyDevelopedLand;
       }
 
       newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
