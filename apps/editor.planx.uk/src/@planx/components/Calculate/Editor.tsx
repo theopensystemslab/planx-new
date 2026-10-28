@@ -165,13 +165,24 @@ export default function Component(props: Props) {
             <FormattedResponse
               expandAllLevels
               hideRootName
-              response={
-                makeData(
+              response={{
+                ...Object.fromEntries(
+                  variables.map((variable) => {
+                    const value = formik.values.defaults[variable] || 0;
+                    return [
+                      variable,
+                      formatResult(
+                        Number.isNaN(Number(value)) ? value : Number(value),
+                      ),
+                    ];
+                  }),
+                ),
+                ...makeData(
                   formik.values,
                   defaultResult,
                   formik.values.fn || "<data field>",
-                ).data ?? {}
-              }
+                ).data,
+              }}
             />
           </ModalSectionContent>
         </ModalSection>
