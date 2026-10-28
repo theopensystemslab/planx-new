@@ -23,6 +23,20 @@ test("modifyDeep helper", () => {
   });
 });
 
+test.each([
+  "<p></p>",
+  "<p> </p>",
+  "<p>&nbsp;</p>",
+  "<p> </p><p>   </p>",
+  "<p><br></p>",
+])("whitespace-only content %s is converted to an empty string", (input) => {
+  expect(toHtml(fromHtml(input))).toBe("");
+});
+
+test("content with text is preserved", () => {
+  expect(toHtml(fromHtml("<p> Hello </p>"))).toContain("Hello");
+});
+
 test("pasted links are stripped of classes and <u> wrappers", () => {
   const pasted = `<p><u><a href="https://example.com" class="govuk-link external">Example</a></u></p>`;
   const html = toHtml(fromHtml(pasted));

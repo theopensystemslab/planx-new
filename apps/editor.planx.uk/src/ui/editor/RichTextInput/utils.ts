@@ -54,9 +54,18 @@ export const useVariablesStore = create<VariablesState>()((set) => ({
 
 export const emptyContent = "<p></p>";
 
+const isBlankInline = (node: JSONContent) =>
+  node.type === "hardBreak" || (node.type === "text" && !node.text?.trim());
+
+const isBlankParagraph = (node: JSONContent) =>
+  node.type === "paragraph" && (node.content ?? []).every(isBlankInline);
+
+const isBlankDoc = (doc: JSONContent) =>
+  (doc.content ?? []).every(isBlankParagraph);
+
 export const toHtml = (doc: JSONContent) => {
-  const outgoingHtml = generateHTML(doc, conversionExtensions);
-  return outgoingHtml === emptyContent ? "" : outgoingHtml;
+  if (isBlankDoc(doc)) return "";
+  return generateHTML(doc, conversionExtensions);
 };
 
 export const fromHtml = (htmlString: string): JSONContent => {
