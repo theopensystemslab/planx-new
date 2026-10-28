@@ -110,7 +110,7 @@ async function getDefaultSubmissionEmail(teamId: number) {
     gql`
       query GetDefaultSubmissionEmail($teamId: Int!) {
         submissionEmails: submission_emails(
-          where: { team_id: { _eq: $teamId } }
+          where: { team_id: { _eq: $teamId }, is_default: { _eq: true } }
         ) {
           address: address
         }

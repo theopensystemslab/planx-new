@@ -228,29 +228,65 @@ describe(`sending an application by email to a planning office`, () => {
       });
   });
 
-  it("errors if this team does not have a 'submission_email'", async () => {
+  it("falls back to the team's default 'submission_email' if the flow does not have one", async () => {
     queryMock.mockQuery({
       name: "GetFlowSubmissionEmail",
       matchOnVariables: false,
       data: {
         flowsByPK: {
           submissionEmailId: null,
-          submissionEmail: {
-            address: null,
-          },
+          submissionEmail: null,
         },
       },
-      variables: { flowId: "11111111-1111-4111-8111-111111111111" },
     });
 
+    let defaultSubmissionEmailQuery = "";
+    queryMock.mockQuery({
+      name: "GetDefaultSubmissionEmail",
+      data: {},
+      variables: { teamId: 1 },
+      customHandler: (_req, { query }) => {
+        defaultSubmissionEmailQuery = query.replace(/\s+/g, " ");
+        return [
+          200,
+          {
+            data: {
+              submissionEmails: [{ address: "default@council.gov.uk" }],
+            },
+          },
+        ];
+      },
+    });
+
+    await supertest(app)
+      .post("/email-submission/southwark")
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
+      .expect(200)
+      .then((res) => {
+        expect(res.body.inbox).toEqual("default@council.gov.uk");
+      });
+
+    expect(defaultSubmissionEmailQuery).toContain("is_default: { _eq: true }");
+  });
+
+  it("errors if this team does not have a default 'submission_email'", async () => {
+    queryMock.mockQuery({
+      name: "GetFlowSubmissionEmail",
+      matchOnVariables: false,
+      data: {
+        flowsByPK: {
+          submissionEmailId: null,
+          submissionEmail: null,
+        },
+      },
+    });
+
+    // Hasura returns no rows when none of the team's submission emails is the default
     queryMock.mockQuery({
       name: "GetDefaultSubmissionEmail",
       data: {
-        submissionEmails: [
-          {
-            address: null,
-          },
-        ],
+        submissionEmails: [],
       },
       variables: { teamId: 1 },
     });
