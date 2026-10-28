@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
+import { ServerError } from "../../../errors/index.js";
 import { buildSubmissionExportZip } from "../../send/utils/exportZip.js";
 
 export async function generateZip(
@@ -19,8 +20,11 @@ export async function generateZip(
       zip.remove();
     });
   } catch (error) {
-    return next({
-      message: "Failed to make zip: " + (error as Error).message,
-    });
+    return next(
+      new ServerError({
+        message: "Failed to make zip: " + (error as Error).message,
+        cause: error,
+      }),
+    );
   }
 }

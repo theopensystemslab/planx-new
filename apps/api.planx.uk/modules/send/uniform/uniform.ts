@@ -145,6 +145,7 @@ export const sendToUniform: SendIntegrationController = async (
 
     throw Error(
       `Failed to send to Uniform (${localAuthority}): ${errorMessage}`,
+      { cause: error },
     );
   }
 };
