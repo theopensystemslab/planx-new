@@ -46,6 +46,7 @@ export const fetchDataForStandaloneView = async (
                 emailReplyToId: email_reply_to_id
                 boundaryBBox: boundary_bbox
                 paymentProvider: payment_provider
+                contract
               }
               slug
             }

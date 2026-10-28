@@ -56,6 +56,7 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
               isTrial: is_trial
               isGuidanceOnly: is_guidance_only
               paymentProvider: payment_provider
+              contract
             }
           }
         }

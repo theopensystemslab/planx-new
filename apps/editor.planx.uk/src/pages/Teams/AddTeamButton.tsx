@@ -14,6 +14,11 @@ import {
   TEAM_CATEGORY_LABELS,
   type TeamCategory,
 } from "lib/teamCategories";
+import type { ContractType } from "pages/FlowEditor/components/Settings/Team/Advanced/ContractType/types";
+import {
+  CONTRACT_LABELS,
+  CONTRACT_VALUES,
+} from "pages/FlowEditor/components/Settings/Team/Advanced/ContractType/types";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 import Permission from "ui/editor/Permission";
@@ -35,6 +40,7 @@ export interface CreateTeam {
   settings: {
     isTrial: boolean;
     isGuidanceOnly: boolean;
+    contract: ContractType;
   };
 }
 
@@ -47,6 +53,9 @@ const validationSchema: SchemaOf<CreateTeam> = object({
   settings: object({
     isTrial: boolean().required(),
     isGuidanceOnly: boolean().required(),
+    contract: mixed<ContractType>()
+      .oneOf([...CONTRACT_VALUES])
+      .required(),
   }),
 });
 
@@ -64,6 +73,7 @@ export const AddTeamButton: React.FC = () => {
     settings: {
       isTrial: false,
       isGuidanceOnly: false,
+      contract: "with_sc",
     },
   };
 
@@ -171,6 +181,23 @@ export const AddTeamButton: React.FC = () => {
                     Only local planning authorities are included in
                     platform-wide reporting.
                   </Typography>
+                  <InputLabel label="Contract type" htmlFor="contract">
+                    <SelectInput
+                      id="contract"
+                      name="contract"
+                      bordered
+                      value={values.settings.contract}
+                      onChange={(e) =>
+                        setFieldValue("settings.contract", e.target.value)
+                      }
+                    >
+                      {CONTRACT_VALUES.map((contract) => (
+                        <MenuItem key={contract} value={contract}>
+                          {CONTRACT_LABELS[contract]}
+                        </MenuItem>
+                      ))}
+                    </SelectInput>
+                  </InputLabel>
                   <Switch
                     name="isTrial"
                     checked={values.settings.isTrial}

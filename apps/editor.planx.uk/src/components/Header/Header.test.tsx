@@ -33,6 +33,7 @@ const mockTeam1: Team = {
     isTrial: false,
     isGuidanceOnly: false,
     paymentProvider: "govpay",
+    contract: "none",
   },
 };
 
@@ -57,6 +58,7 @@ const mockTeam2: Team = {
     isTrial: false,
     isGuidanceOnly: false,
     paymentProvider: null,
+    contract: "none",
   },
 };
 
