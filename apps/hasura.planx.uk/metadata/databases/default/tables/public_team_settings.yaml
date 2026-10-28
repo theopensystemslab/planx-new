@@ -21,6 +21,7 @@ insert_permissions:
         - id
         - is_guidance_only
         - is_trial
+        - multiple_stripe_accounts_enabled
         - payment_provider
         - reference_code
         - team_id
@@ -59,6 +60,7 @@ select_permissions:
         - id
         - is_guidance_only
         - is_trial
+        - multiple_stripe_accounts_enabled
         - payment_provider
         - reference_code
         - team_id
@@ -78,6 +80,7 @@ select_permissions:
         - id
         - is_guidance_only
         - is_trial
+        - multiple_stripe_accounts_enabled
         - payment_provider
         - reference_code
         - team_id
@@ -143,6 +146,7 @@ update_permissions:
         - id
         - is_guidance_only
         - is_trial
+        - multiple_stripe_accounts_enabled
         - payment_provider
         - reference_code
         - team_id

@@ -18,11 +18,17 @@ export async function setupStripe(
     await $admin.client.request(
       gql`
         mutation SetupStripe($team_id: Int, $stripe_account_id: String) {
-          update_team_integrations(
-            where: { team_id: { _eq: $team_id } }
-            _set: { staging_stripe_account_id: $stripe_account_id }
+          insert_team_stripe_accounts_one(
+            object: {
+              team_id: $team_id
+              staging_stripe_account_id: $stripe_account_id
+            }
+            on_conflict: {
+              constraint: team_stripe_accounts_team_id_name_key
+              update_columns: [staging_stripe_account_id]
+            }
           ) {
-            affected_rows
+            id
           }
           update_team_settings(
             where: { team_id: { _eq: $team_id } }

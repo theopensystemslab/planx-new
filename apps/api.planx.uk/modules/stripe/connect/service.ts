@@ -301,27 +301,37 @@ export const getStripeMode = (): "test" | "live" =>
   process.env.APP_ENVIRONMENT === "production" ? "live" : "test";
 
 /**
- * `team_integrations` stores separate columns per environment
+ * `team_stripe_accounts` stores separate columns per environment
  */
 const stripeAccountIdColumn = () =>
   getStripeMode() === "live"
     ? "production_stripe_account_id"
     : "staging_stripe_account_id";
 
+/**
+ * Accounts are identified by their name, which defaults to the team name
+ * Without a name, match all of the team's accounts (an empty comparison matches every row)
+ */
+const stripeAccountNameFilter = (name?: string) => (name ? { _eq: name } : {});
+
 export const saveStripeAccountId = async (
   teamId: number,
   accountId: string,
+  name?: string,
 ): Promise<void> => {
   const column = stripeAccountIdColumn();
 
   await $api.client.request(
     gql`
-      mutation SaveStripeAccountId($teamId: Int!, $accountId: String!) {
-        update_team_integrations(
-          where: { team_id: { _eq: $teamId } }
-          _set: { ${column}: $accountId }
+      mutation SaveStripeAccountId($teamId: Int!, $accountId: String!, $name: String) {
+        insert_team_stripe_accounts_one(
+          object: { team_id: $teamId, name: $name, ${column}: $accountId }
+          on_conflict: {
+            constraint: team_stripe_accounts_team_id_name_key
+            update_columns: [${column}]
+          }
         ) {
-          affected_rows
+          id
         }
         # Automatically populate team_settings.provider if currently empty
         # Migrations from GovPay are not automatic, and must be triggered by and Editor
@@ -336,29 +346,35 @@ export const saveStripeAccountId = async (
         }
       }
     `,
-    { teamId, accountId },
+    { teamId, accountId, name: name ?? null },
   );
 };
 
 export const getStripeAccountId = async (
   teamId: number,
+  name?: string,
 ): Promise<string | null> => {
   const column = stripeAccountIdColumn();
 
-  const { teamIntegrations } = await $api.client.request<{
-    teamIntegrations: { accountId: string | null }[];
+  const { stripeAccounts } = await $api.client.request<{
+    stripeAccounts: { accountId: string | null }[];
   }>(
     gql`
-      query GetStripeAccountId($teamId: Int!) {
-        teamIntegrations: team_integrations(where: { team_id: { _eq: $teamId } }) {
+      query GetStripeAccountId($teamId: Int!, $name: String_comparison_exp!) {
+        stripeAccounts: team_stripe_accounts(
+          where: { team_id: { _eq: $teamId }, name: $name }
+        ) {
           accountId: ${column}
         }
       }
     `,
-    { teamId },
+    { teamId, name: stripeAccountNameFilter(name) },
   );
 
-  return teamIntegrations[0]?.accountId ?? null;
+  // Without a name, only a team with a single account can be resolved
+  if (stripeAccounts.length !== 1) return null;
+
+  return stripeAccounts[0].accountId;
 };
 
 export const postStripeConnectedToSlack = async (

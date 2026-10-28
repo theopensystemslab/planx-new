@@ -548,13 +548,61 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
     expect(String(query)).toMatch(
       /update_team_settings\(\s*where: {\s*team_id: { _eq: \$teamId }\s*payment_provider: { _is_null: true }\s*}\s*_set: { payment_provider: "stripe" }/,
     );
-    expect(variables).toEqual({ teamId: 42, accountId: "acct_abc" });
+    expect(variables).toEqual({
+      teamId: 42,
+      accountId: "acct_abc",
+      name: null,
+    });
+  });
+
+  it("upserts the team's main account when no name is given", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "staging");
+    mockRequest.mockResolvedValue({});
+
+    await saveStripeAccountId(42, "acct_abc");
+
+    const [query, variables] = mockRequest.mock.calls[0];
+    expect(String(query)).toMatch(
+      /on_conflict: {\s*constraint: team_stripe_accounts_team_id_name_key\s*update_columns: \[staging_stripe_account_id\]\s*}/,
+    );
+    expect(variables).toMatchObject({ name: null });
+  });
+
+  it("saves a named account", async () => {
+    mockRequest.mockResolvedValue({});
+
+    await saveStripeAccountId(42, "acct_abc", "Worthing");
+
+    const [, variables] = mockRequest.mock.calls[0];
+    expect(variables).toEqual({
+      teamId: 42,
+      accountId: "acct_abc",
+      name: "Worthing",
+    });
+  });
+
+  it("reads all of the team's accounts when no name is given", async () => {
+    mockRequest.mockResolvedValue({ stripeAccounts: [] });
+
+    await getStripeAccountId(42);
+
+    const [, variables] = mockRequest.mock.calls[0];
+    expect(variables).toEqual({ teamId: 42, name: {} });
+  });
+
+  it("reads a named account", async () => {
+    mockRequest.mockResolvedValue({ stripeAccounts: [] });
+
+    await getStripeAccountId(42, "Worthing");
+
+    const [, variables] = mockRequest.mock.calls[0];
+    expect(variables).toEqual({ teamId: 42, name: { _eq: "Worthing" } });
   });
 
   it("reads back the account id for the current environment", async () => {
     vi.stubEnv("APP_ENVIRONMENT", "staging");
     mockRequest.mockResolvedValue({
-      teamIntegrations: [{ accountId: "acct_abc" }],
+      stripeAccounts: [{ accountId: "acct_abc" }],
     });
 
     const accountId = await getStripeAccountId(42);
@@ -562,8 +610,18 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
     expect(accountId).toBe("acct_abc");
   });
 
-  it("returns null when no team_integrations row exists", async () => {
-    mockRequest.mockResolvedValue({ teamIntegrations: [] });
+  it("returns null when the team has no Stripe account", async () => {
+    mockRequest.mockResolvedValue({ stripeAccounts: [] });
+
+    const accountId = await getStripeAccountId(42);
+
+    expect(accountId).toBeNull();
+  });
+
+  it("returns null when no name is given and the team has several accounts", async () => {
+    mockRequest.mockResolvedValue({
+      stripeAccounts: [{ accountId: "acct_abc" }, { accountId: "acct_def" }],
+    });
 
     const accountId = await getStripeAccountId(42);
 

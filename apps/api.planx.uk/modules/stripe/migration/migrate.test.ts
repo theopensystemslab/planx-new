@@ -27,7 +27,7 @@ const mockMigrationChecks = (accountId: string | null) => {
   queryMock.mockQuery({
     name: "GetStripeAccountId",
     matchOnVariables: false,
-    data: { teamIntegrations: [{ accountId }] },
+    data: { stripeAccounts: [{ accountId }] },
   });
   queryMock.mockQuery({
     name: "GetActiveGovPaySessions",
