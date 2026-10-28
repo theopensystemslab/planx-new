@@ -2,20 +2,18 @@
 CREATE TABLE "public"."team_stripe_accounts" (
   "id" serial NOT NULL,
   "team_id" integer NOT NULL,
-  "name" text NULL,
+  "name" text NOT NULL,
   "production_stripe_account_id" text NULL,
   "staging_stripe_account_id" text NULL,
   "created_at" timestamptz NOT NULL DEFAULT now(),
   "updated_at" timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY ("id"),
   FOREIGN KEY ("team_id") REFERENCES "public"."teams"("id") ON UPDATE CASCADE ON DELETE CASCADE,
-
-  -- NULLS NOT DISTINCT allows only one main (unnamed) account per team
-  CONSTRAINT "team_stripe_accounts_team_id_name_key" UNIQUE NULLS NOT DISTINCT ("team_id", "name")
+  CONSTRAINT "team_stripe_accounts_team_id_name_key" UNIQUE ("team_id", "name")
 );
 
-COMMENT ON TABLE "public"."team_stripe_accounts" IS E'Stripe Connect accounts linked to a team. A team has one main account (name is null), and can have additional named accounts';
-COMMENT ON COLUMN "public"."team_stripe_accounts"."name" IS E'use NULL name as the default - stripe accounts only need to be named to disambiguate when a team has multiple';
+COMMENT ON TABLE "public"."team_stripe_accounts" IS E'Stripe Connect accounts linked to a team. A team with a single account always uses it - a team with multiple accounts must specify which to use for each payment';
+COMMENT ON COLUMN "public"."team_stripe_accounts"."name" IS E'Identifies the account within its team, defaults to the team name';
 COMMENT ON COLUMN "public"."team_stripe_accounts"."production_stripe_account_id" IS E'Stripe Connect account id (acct_...) linked via OAuth for production payments';
 COMMENT ON COLUMN "public"."team_stripe_accounts"."staging_stripe_account_id" IS E'Stripe Connect account id (acct_...) linked via onboarding for staging payments';
 
@@ -25,7 +23,25 @@ FOR EACH ROW
 EXECUTE PROCEDURE "public"."set_current_timestamp_updated_at" ();
 COMMENT ON TRIGGER "set_public_team_stripe_accounts_updated_at" ON "public"."team_stripe_accounts" IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 
--- Move existing connected accounts across as each team's main account
+-- Default name to the team's name
+-- BEFORE INSERT triggers run ahead of ON CONFLICT checks, so upserts which omit the name still match the existing row
+CREATE OR REPLACE FUNCTION "public"."set_team_stripe_account_default_name"()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW."name" IS NULL THEN
+    SELECT "name" INTO NEW."name" FROM "public"."teams" WHERE "id" = NEW."team_id";
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER "set_public_team_stripe_accounts_default_name"
+BEFORE INSERT ON "public"."team_stripe_accounts"
+FOR EACH ROW
+EXECUTE PROCEDURE "public"."set_team_stripe_account_default_name" ();
+COMMENT ON TRIGGER "set_public_team_stripe_accounts_default_name" ON "public"."team_stripe_accounts" IS 'trigger to default "name" to the team name';
+
+-- Move existing connected accounts across, named after their team
 INSERT INTO "public"."team_stripe_accounts" ("team_id", "production_stripe_account_id", "staging_stripe_account_id")
 SELECT "team_id", "production_stripe_account_id", "staging_stripe_account_id"
 FROM "public"."team_integrations"
@@ -85,8 +101,8 @@ CREATE OR REPLACE VIEW "public"."teams_summary" AS
     ts.is_trial,
     ((ti.staging_file_api_key IS NOT NULL) AND (ti.staging_power_automate_api_key IS NOT NULL)) AS fme_enabled_staging,
     ((ti.production_file_api_key IS NOT NULL) AND (ti.production_power_automate_api_key IS NOT NULL)) AS fme_enabled_production,
-    tsa.staging_stripe_account_id AS stripe_connected_staging,
-    tsa.production_stripe_account_id AS stripe_connected_production,
+    stripe_account_data.stripe_connected_staging,
+    stripe_account_data.stripe_connected_production,
     ts.payment_provider,
     service_charge_data.total_service_charges_collected,
     ts.is_guidance_only
@@ -94,7 +110,12 @@ CREATE OR REPLACE VIEW "public"."teams_summary" AS
      JOIN team_integrations ti ON ti.team_id = t.id
      JOIN team_themes tt ON tt.team_id = t.id
      JOIN team_settings ts ON ts.team_id = t.id
-     LEFT JOIN team_stripe_accounts tsa ON ((tsa.team_id = t.id) AND (tsa.name IS NULL))
+     LEFT JOIN LATERAL (
+        SELECT string_agg(tsa.staging_stripe_account_id, ', ' ORDER BY tsa.name) AS stripe_connected_staging,
+          string_agg(tsa.production_stripe_account_id, ', ' ORDER BY tsa.name) AS stripe_connected_production
+        FROM team_stripe_accounts tsa
+        WHERE (tsa.team_id = t.id)
+     ) stripe_account_data ON (TRUE)
      LEFT JOIN LATERAL (
         SELECT SUM(service_charge_amount) AS total_service_charges_collected
         FROM service_charges sc
