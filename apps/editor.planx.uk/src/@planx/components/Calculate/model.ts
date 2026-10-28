@@ -8,8 +8,6 @@ export interface Calculate extends BaseNodeData {
   fn: string;
   defaults: Record<string, number>;
   formula: string;
-  samples: Record<string, number>;
-  formatOutputForAutomations?: boolean;
 }
 
 export interface Input {
@@ -24,8 +22,6 @@ export const parseCalculate = (
   fn: data?.fn || "",
   defaults: data?.defaults || {},
   formula: data?.formula || "",
-  samples: data?.samples || {},
-  formatOutputForAutomations: data?.formatOutputForAutomations || false,
   title: data?.title || "",
 });
 
@@ -59,8 +55,12 @@ export function getVariables(input: string): Set<string> {
 export function evaluate(input: string, scope = {}, defaults = {}): number {
   const ast = math.parse(input);
   const code = ast.transform(flattenVariables).compile();
-
-  return code.evaluate(serializeKeys(applyDefaults(scope, defaults)));
+  // Prevent any front-end Mathjs errors by falling back to NaN
+  try {
+    return code.evaluate(serializeKeys(applyDefaults(scope, defaults)));
+  } catch {
+    return NaN;
+  }
 
   function flattenVariables(node: any) {
     if (node instanceof math.AccessorNode) {
@@ -79,16 +79,42 @@ export function evaluate(input: string, scope = {}, defaults = {}): number {
     );
   }
 
+  // Allow "true" or "false" passport values (and defaults) to be used in calculations
+  function parseBoolean(value: unknown) {
+    if (value === "true") return true;
+    if (value === "false") return false;
+    return value;
+  }
+
   function applyDefaults(object: any, defaults: any) {
     const keys = new Set([...Object.keys(object), ...Object.keys(defaults)]);
     return Object.fromEntries(
-      // Ensure that value === 0 isn't incorrectly falling back to default
-      [...keys].map((key) => [
-        key,
-        object[key] === 0 ? object[key] : object[key] || defaults[key],
-      ]),
+      [...keys].map((key) => {
+        // Unwrap single-item lists
+        const value =
+          Array.isArray(object[key]) && object[key].length === 1
+            ? object[key][0]
+            : object[key];
+        // Ensure that value === 0 isn't incorrectly falling back to default
+        return [
+          key,
+          parseBoolean(value === 0 ? value : value || defaults[key]),
+        ];
+      }),
     );
   }
+}
+
+// Plain numbers are stored as numbers, everything else as lists of strings for future automation
+export function formatResult(result: any): number | string[] {
+  if (typeof result === "number" && Number.isFinite(result)) return result;
+  if (math.isMatrix(result)) return result.toArray().flat(Infinity).map(String);
+  if (math.isResultSet(result))
+    return formatResult(
+      result.entries.length === 1 ? result.entries[0] : result.entries,
+    );
+  if (Array.isArray(result)) return result.flat(Infinity).map(String);
+  return [String(result)];
 }
 
 // Serialization is only necessary internally.
