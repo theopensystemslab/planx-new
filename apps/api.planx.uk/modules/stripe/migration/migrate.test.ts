@@ -36,6 +36,14 @@ const mockMigrationChecks = (accountId: string | null) => {
   });
 };
 
+const mockUpdatePaymentProvider = (affectedRows = 1) => {
+  queryMock.mockQuery({
+    name: "UpdatePaymentProvider",
+    matchOnVariables: false,
+    data: { updateTeamPaymentProvider: { affectedRows } },
+  });
+};
+
 // Any unmocked request (e.g. a payment_provider mutation) fails the request, so these are the only calls made
 const READ_ONLY_OPERATIONS = [
   "IsTokenRevoked",
@@ -106,6 +114,7 @@ describe.each(["staging", "development"])(
 
     it("is not blocked by the go-live switch", async () => {
       mockMigrationChecks("acct_test_southwark");
+      mockUpdatePaymentProvider(1);
 
       await supertest(app)
         .post(ENDPOINT)
@@ -117,6 +126,7 @@ describe.each(["staging", "development"])(
 
     it("still reports the other blockers", async () => {
       mockMigrationChecks(null);
+      mockUpdatePaymentProvider(1);
 
       await supertest(app)
         .post(ENDPOINT)

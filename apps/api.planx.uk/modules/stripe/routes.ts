@@ -24,7 +24,7 @@ import { requireStripeConnectTeamAuth } from "./connect/middleware.js";
 import { connectCallbackSchema, connectSchema } from "./connect/types.js";
 import { fulfilPaymentRequestController } from "./fulfilment/controller.js";
 import { fulfilPaymentRequestSchema } from "./fulfilment/types.js";
-import { migrate } from "./migration/controller.js";
+import { migrate, revert } from "./migration/controller.js";
 import { migrateSchema } from "./migration/types.js";
 import { handleStripeWebhook } from "./webhook/controller.js";
 import { verifyStripeWebhook } from "./webhook/middleware.js";
@@ -102,6 +102,17 @@ router.post(
   requireStripeConnectTeamAuth,
   migrate,
 );
+
+const environment = process.env.APP_ENVIRONMENT;
+if (environment !== "production") {
+  router.post(
+    "/stripe/revert/:teamSlug",
+    useTeamEditorAuth,
+    validate(migrateSchema),
+    requireStripeConnectTeamAuth,
+    revert,
+  );
+}
 
 // Stripe authenticates via the `stripe-signature` header, and signature verification requires
 // the raw request body
