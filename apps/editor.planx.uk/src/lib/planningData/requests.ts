@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import type {
+  BuildingSafetyLevyRatesResponse,
   SearchEntityParams,
   SearchEntityResponse,
   SearchEntityResponseExcludeGeom,
@@ -86,6 +87,25 @@ export const getEntityNames = async (dataset: string) => {
   );
 
   return data.entities.map((entity) => entity.name).sort();
+};
+
+/**
+ * Get Building Safety Levy rates for local authority districts
+ */
+export const getBuildingSafetyLevyRates = async () => {
+  const { data } = await axios.get<BuildingSafetyLevyRatesResponse>(
+    `/entity.json`,
+    {
+      baseURL: PLANNING_DATA_URL,
+      params: {
+        limit: 500,
+        dataset: "building-safety-levy-rate",
+        exclude_field: "geometry,point",
+      },
+    },
+  );
+
+  return data.entities;
 };
 
 /**

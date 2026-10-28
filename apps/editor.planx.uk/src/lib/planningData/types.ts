@@ -14,7 +14,7 @@ export interface SearchEntityParams {
 
 export type SearchEntityResponse = FeatureCollection<
   Geometry,
-  { dataset: string; name: string }
+  { dataset: string; name: string; reference: string }
 >;
 
 export type Entity = Feature<Polygon | MultiPolygon, Record<string, unknown>>;
@@ -24,5 +24,13 @@ export interface SearchEntityResponseExcludeGeom {
     entity: number;
     name: string;
     dataset: string;
+  }[];
+}
+
+export interface BuildingSafetyLevyRatesResponse {
+  entities: {
+    "local-authority-district": string;
+    "previously-developed-land-rate": string;
+    "non-previously-developed-land-rate": string;
   }[];
 }
