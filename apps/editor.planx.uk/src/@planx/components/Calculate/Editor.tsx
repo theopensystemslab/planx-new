@@ -141,7 +141,7 @@ export default function Component(props: Props) {
           ) : (
             variables.map((variable) => (
               <InputRow key={variable}>
-                <Input value={variable} disabled />
+                <Input format="data" value={variable} disabled />
                 <Input
                   name={`defaults['${variable}']`}
                   value={formik.values.defaults[variable]}
