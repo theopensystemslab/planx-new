@@ -34,7 +34,12 @@ export default function ContactInputComponent(props: Props): FCReturn {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: contactValidationSchema(),
+    validationSchema: contactValidationSchema({
+      titleRequired: props.titleRequired,
+      organisationRequired: props.organisationRequired,
+      phoneRequired: props.phoneRequired,
+      emailRequired: props.emailRequired,
+    }),
   });
 
   const formatUserData = (values: Contact) => {
@@ -77,7 +82,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <InputLabel label="Title (optional)">
+      <InputLabel label={`Title${props.titleRequired ? "" : " (optional)"}`}>
         <InputRowItem width="40%">
           <Input
             autoComplete="honorific-prefix"
@@ -121,7 +126,9 @@ export default function ContactInputComponent(props: Props): FCReturn {
           }}
         />
       </InputLabel>
-      <InputLabel label="Organisation (optional)">
+      <InputLabel
+        label={`Organisation${props.organisationRequired ? "" : " (optional)"}`}
+      >
         <Input
           autoComplete="organization"
           name="organisation"
@@ -131,7 +138,9 @@ export default function ContactInputComponent(props: Props): FCReturn {
           onChange={formik.handleChange}
         />
       </InputLabel>
-      <InputLabel label="Phone number">
+      <InputLabel
+        label={`Phone number${props.phoneRequired ? "" : " (optional)"}`}
+      >
         <Input
           autoComplete="tel"
           name="phone"
@@ -148,7 +157,9 @@ export default function ContactInputComponent(props: Props): FCReturn {
           }}
         />
       </InputLabel>
-      <InputLabel label="Email address">
+      <InputLabel
+        label={`Email address${props.emailRequired ? "" : " (optional)"}`}
+      >
         <InputRowItem>
           <Input
             autoComplete="email"
