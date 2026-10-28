@@ -309,10 +309,10 @@ const stripeAccountIdColumn = () =>
     : "staging_stripe_account_id";
 
 /**
- * A team's main account has no name - additional accounts are identified by their name
+ * Accounts are identified by their name, which defaults to the team name
+ * Without a name, match all of the team's accounts (an empty comparison matches every row)
  */
-const stripeAccountNameFilter = (name?: string) =>
-  name ? { _eq: name } : { _is_null: true };
+const stripeAccountNameFilter = (name?: string) => (name ? { _eq: name } : {});
 
 export const saveStripeAccountId = async (
   teamId: number,
@@ -371,7 +371,10 @@ export const getStripeAccountId = async (
     { teamId, name: stripeAccountNameFilter(name) },
   );
 
-  return stripeAccounts[0]?.accountId ?? null;
+  // Without a name, only a team with a single account can be resolved
+  if (stripeAccounts.length !== 1) return null;
+
+  return stripeAccounts[0].accountId;
 };
 
 export const postStripeConnectedToSlack = async (

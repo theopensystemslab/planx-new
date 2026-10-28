@@ -581,13 +581,13 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
     });
   });
 
-  it("reads the team's main account when no name is given", async () => {
+  it("reads all of the team's accounts when no name is given", async () => {
     mockRequest.mockResolvedValue({ stripeAccounts: [] });
 
     await getStripeAccountId(42);
 
     const [, variables] = mockRequest.mock.calls[0];
-    expect(variables).toEqual({ teamId: 42, name: { _is_null: true } });
+    expect(variables).toEqual({ teamId: 42, name: {} });
   });
 
   it("reads a named account", async () => {
@@ -612,6 +612,16 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
 
   it("returns null when the team has no Stripe account", async () => {
     mockRequest.mockResolvedValue({ stripeAccounts: [] });
+
+    const accountId = await getStripeAccountId(42);
+
+    expect(accountId).toBeNull();
+  });
+
+  it("returns null when no name is given and the team has several accounts", async () => {
+    mockRequest.mockResolvedValue({
+      stripeAccounts: [{ accountId: "acct_abc" }, { accountId: "acct_def" }],
+    });
 
     const accountId = await getStripeAccountId(42);
 
