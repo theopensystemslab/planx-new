@@ -6,7 +6,11 @@ import type Stripe from "stripe";
 import { $api } from "../../../../client/index.js";
 import type { StripePaymentStatus } from "../../../../types.js";
 import { reportError } from "../../../pay/helpers.js";
-import { postStripePaymentNotificationToSlack } from "../../helpers.js";
+import { stripe } from "../../client.js";
+import {
+  getStripeId,
+  postStripePaymentNotificationToSlack,
+} from "../../helpers.js";
 import { getOwnedPaymentIntent } from "../ownership/service.js";
 import { hasuraClientErrorSchema } from "./types.js";
 
@@ -19,6 +23,7 @@ interface InsertStripePaymentStatusArgs {
   amount: number;
   feeBreakdown?: FeeBreakdown | null;
   metadata: Stripe.Metadata;
+  paymentMethod?: Stripe.PaymentMethod.Type | null;
 }
 
 export async function recordStripePaymentIntentStatus(
@@ -35,6 +40,7 @@ export async function recordStripePaymentIntentStatus(
 
   const { sessionId, flowId, teamSlug, passportData } = ownedPaymentIntent;
   const feeBreakdown = deriveFeeBreakdown(sessionId, passportData);
+  const paymentMethod = await getPaymentMethodType(paymentIntent);
 
   try {
     await insertStripePaymentStatus({
@@ -46,6 +52,7 @@ export async function recordStripePaymentIntentStatus(
       amount,
       feeBreakdown,
       metadata,
+      paymentMethod,
     });
 
     if (stripeStatus !== "created") {
@@ -72,6 +79,19 @@ const isForeignKeyViolation = (error: unknown): boolean => {
       message.startsWith("Foreign key violation"),
   );
 };
+
+async function getPaymentMethodType(
+  paymentIntent: Stripe.PaymentIntent,
+): Promise<Stripe.PaymentMethod.Type | null> {
+  const paymentMethodId = getStripeId(paymentIntent.payment_method);
+  if (paymentMethodId) {
+    const { type } = await stripe.paymentMethods.retrieve(paymentMethodId);
+    return type;
+  }
+
+  const failedPaymentMethod = paymentIntent.last_payment_error?.payment_method;
+  return failedPaymentMethod?.type ?? null;
+}
 
 function deriveFeeBreakdown(
   sessionId: string,
@@ -105,6 +125,7 @@ export async function insertStripePaymentStatus({
   amount,
   feeBreakdown,
   metadata,
+  paymentMethod,
 }: InsertStripePaymentStatusArgs): Promise<void> {
   await $api.client.request(
     gql`
@@ -117,6 +138,7 @@ export async function insertStripePaymentStatus({
         $amount: Int
         $feeBreakdown: jsonb
         $metadata: jsonb
+        $paymentMethod: String
       ) {
         insert_payment_status(
           objects: {
@@ -128,6 +150,7 @@ export async function insertStripePaymentStatus({
             amount: $amount
             fee_breakdown: $feeBreakdown
             stripe_metadata: $metadata
+            payment_method: $paymentMethod
           }
         ) {
           affected_rows
@@ -143,6 +166,7 @@ export async function insertStripePaymentStatus({
       amount,
       feeBreakdown,
       metadata,
+      paymentMethod,
     },
   );
 }

@@ -20,11 +20,17 @@ export const succeededEvent = (objectOverrides: Record<string, unknown> = {}) =>
     },
   });
 
-export const failedEvent = () =>
+export const failedEvent = (objectOverrides: Record<string, unknown> = {}) =>
   sign({
     id: "evt_failed",
     type: "payment_intent.payment_failed",
-    data: { object: { ...paymentIntent, status: "requires_payment_method" } },
+    data: {
+      object: {
+        ...paymentIntent,
+        status: "requires_payment_method",
+        ...objectOverrides,
+      },
+    },
   });
 
 export const createdEvent = () =>
@@ -35,12 +41,16 @@ export const createdEvent = () =>
     data: { object: { ...paymentIntent, status: "requires_payment_method" } },
   });
 
-export const processingEvent = () =>
+export const processingEvent = (
+  objectOverrides: Record<string, unknown> = {},
+) =>
   sign({
     id: "evt_processing",
     type: "payment_intent.processing",
     // Fired for async methods (Bacs, bank transfer)
-    data: { object: { ...paymentIntent, status: "processing" } },
+    data: {
+      object: { ...paymentIntent, status: "processing", ...objectOverrides },
+    },
   });
 
 export const transferCreatedEvent = (
