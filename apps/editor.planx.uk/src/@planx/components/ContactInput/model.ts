@@ -1,7 +1,7 @@
 import { richText } from "lib/yupExtensions";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import type { SchemaOf } from "yup";
-import { object, string } from "yup";
+import { boolean, object, string } from "yup";
 
 import type { BaseNodeData } from "../shared";
 import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
@@ -11,13 +11,20 @@ export type Contact = {
   firstName: string;
   lastName: string;
   organisation?: string;
-  phone: string;
-  email: string;
+  phone?: string;
+  email?: string;
 };
 
-export const contactValidationSchema = (): SchemaOf<Contact> =>
+export const contactValidationSchema = (
+  fieldsRequired: Pick<
+    ContactInput,
+    "titleRequired" | "organisationRequired" | "phoneRequired" | "emailRequired"
+  >,
+): SchemaOf<Contact> =>
   object({
-    title: string(),
+    title: fieldsRequired.titleRequired
+      ? string().trim().required("Enter a title")
+      : string(),
     firstName: string()
       .trim()
       .required("Enter a first name")
@@ -26,20 +33,36 @@ export const contactValidationSchema = (): SchemaOf<Contact> =>
       .trim()
       .required("Enter a last name")
       .min(2, "Last name must have more than one character"),
-    organisation: string(),
-    phone: string()
-      .trim()
-      .required("Enter a phone number")
-      .test("valid-phone", "Enter a valid phone number", (val) => {
-        if (val == undefined) return true;
-        return isValidPhoneNumber(val, "GB");
-      }),
-    email: string()
-      .trim()
-      .email(
-        "Enter an email address in the correct format, like name@example.com",
-      )
-      .required("Enter an email address"),
+    organisation: fieldsRequired.organisationRequired
+      ? string().required()
+      : string(),
+    phone: fieldsRequired.phoneRequired
+      ? string()
+          .trim()
+          .required("Enter a phone number")
+          .test("valid-phone", "Enter a valid phone number", (val) => {
+            if (val == undefined) return true;
+            return isValidPhoneNumber(val, "GB");
+          })
+      : string()
+          .optional()
+          .trim()
+          .test("valid-phone", "Enter a valid phone number", (val) => {
+            if (!val) return true;
+            return isValidPhoneNumber(val, "GB");
+          }),
+    email: fieldsRequired.emailRequired
+      ? string()
+          .trim()
+          .email(
+            "Enter an email address in the correct format, like name@example.com",
+          )
+          .required("Enter an email address")
+      : string()
+          .trim()
+          .email(
+            "Enter an email address in the correct format, like name@example.com",
+          ),
   }).test({
     name: "Test Test is not used for applications",
     test: ({ firstName, lastName }, context) => {
@@ -62,6 +85,10 @@ export interface ContactInput extends BaseNodeData {
   title: string;
   description?: string;
   fn?: string;
+  titleRequired?: boolean;
+  organisationRequired?: boolean;
+  phoneRequired?: boolean;
+  emailRequired?: boolean;
 }
 
 export const parseContactInput = (
@@ -70,6 +97,10 @@ export const parseContactInput = (
   title: data?.title || "",
   description: data?.description,
   fn: data?.fn || "",
+  titleRequired: data?.titleRequired ?? false,
+  organisationRequired: data?.organisationRequired ?? false,
+  phoneRequired: data?.phoneRequired ?? true,
+  emailRequired: data?.emailRequired ?? true,
   ...parseBaseNodeData(data),
 });
 
@@ -79,5 +110,9 @@ export const editorValidationSchema: SchemaOf<ContactInput> =
       title: string().required(),
       description: richText(),
       fn: string().nullable().required(),
+      titleRequired: boolean().required(),
+      organisationRequired: boolean().required(),
+      phoneRequired: boolean().required(),
+      emailRequired: boolean().required(),
     }),
   );

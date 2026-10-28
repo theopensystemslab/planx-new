@@ -14,6 +14,11 @@ import { contactValidationSchema } from "./model";
 export type Props = PublicProps<ContactInput> & { autoAnswer?: Contact };
 
 export default function ContactInputComponent(props: Props): FCReturn {
+  const titleRequired = props.titleRequired ?? false; // fallback to what was previously the default config for this component
+  const organisationRequired = props.organisationRequired ?? false;
+  const phoneRequired = props.phoneRequired ?? true;
+  const emailRequired = props.emailRequired ?? true;
+
   const previouslySubmittedData =
     props.fn &&
     props.previouslySubmittedData?.data?.[`_contact.${props.fn}`]?.[props.fn];
@@ -34,7 +39,12 @@ export default function ContactInputComponent(props: Props): FCReturn {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: contactValidationSchema(),
+    validationSchema: contactValidationSchema({
+      titleRequired,
+      organisationRequired,
+      phoneRequired,
+      emailRequired,
+    }),
   });
 
   const formatUserData = (values: Contact) => {
@@ -77,7 +87,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <InputLabel label="Title (optional)">
+      <InputLabel label={`Title${titleRequired ? "" : " (optional)"}`}>
         <InputRowItem width="40%">
           <Input
             autoComplete="honorific-prefix"
@@ -121,7 +131,9 @@ export default function ContactInputComponent(props: Props): FCReturn {
           }}
         />
       </InputLabel>
-      <InputLabel label="Organisation (optional)">
+      <InputLabel
+        label={`Organisation${organisationRequired ? "" : " (optional)"}`}
+      >
         <Input
           autoComplete="organization"
           name="organisation"
@@ -131,7 +143,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
           onChange={formik.handleChange}
         />
       </InputLabel>
-      <InputLabel label="Phone number">
+      <InputLabel label={`Phone number${phoneRequired ? "" : " (optional)"}`}>
         <Input
           autoComplete="tel"
           name="phone"
@@ -148,7 +160,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
           }}
         />
       </InputLabel>
-      <InputLabel label="Email address">
+      <InputLabel label={`Email address${emailRequired ? "" : " (optional)"}`}>
         <InputRowItem>
           <Input
             autoComplete="email"
