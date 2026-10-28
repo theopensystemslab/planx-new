@@ -57,13 +57,19 @@ ALTER TABLE "public"."team_invoice_details" DROP COLUMN "team_stripe_account_id"
 
 ALTER TABLE "public"."team_invoice_details" ALTER COLUMN "team_id" SET NOT NULL;
 
--- Copy main accounts back, so accounts connected since the up migration aren't lost
+-- Copy accounts back, so accounts connected since the up migration aren't lost
+-- team_integrations only holds one account per team, so take each team's oldest
 UPDATE "public"."team_integrations" ti
 SET
   "production_stripe_account_id" = tsa."production_stripe_account_id",
   "staging_stripe_account_id" = tsa."staging_stripe_account_id"
-FROM "public"."team_stripe_accounts" tsa
-WHERE tsa."team_id" = ti."team_id"
-  AND tsa."name" IS NULL;
+FROM (
+  SELECT DISTINCT ON ("team_id") *
+  FROM "public"."team_stripe_accounts"
+  ORDER BY "team_id", "id"
+) tsa
+WHERE tsa."team_id" = ti."team_id";
 
 DROP TABLE "public"."team_stripe_accounts";
+
+DROP FUNCTION "public"."set_team_stripe_account_default_name"();
