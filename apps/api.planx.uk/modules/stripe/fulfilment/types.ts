@@ -14,13 +14,28 @@ export const paymentRequestCheckoutMetadataSchema = z.object({
 });
 
 /**
+ * The status of a payment which has fulfilled a payment request
+ *  - paid: Stripe has confirmed the payment
+ *  - pending: authorised, but a delayed payment method (e.g. Bacs Direct Debit) hasn't confirmed yet
+ */
+export type FulfilledPaymentStatus = "paid" | "pending";
+
+/**
  * The outcome of a fulfilment attempt
  */
 export type FulfilmentResult =
   /** This call marked the payment request as paid */
-  | { status: "fulfilled"; stripePaymentId: string }
+  | {
+      status: "fulfilled";
+      stripePaymentId: string;
+      paymentStatus: FulfilledPaymentStatus;
+    }
   /** The payment request was already paid, nothing changed */
-  | { status: "alreadyFulfilled"; stripePaymentId: string | null }
+  | {
+      status: "alreadyFulfilled";
+      stripePaymentId: string | null;
+      paymentStatus: FulfilledPaymentStatus;
+    }
   /** Stripe hasn't taken payment for this Checkout Session */
   | { status: "unpaid" }
   /** Not an invite to pay Checkout Session (e.g. self-pay) */
@@ -42,7 +57,7 @@ export const fulfilPaymentRequestSchema = z.object({
 });
 
 export interface FulfilPaymentRequestResponse {
-  paymentStatus: "paid";
+  paymentStatus: FulfilledPaymentStatus;
   paymentIntentId: string | null;
 }
 

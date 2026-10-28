@@ -1,5 +1,6 @@
 import type { Passport } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
+import type Stripe from "stripe";
 
 import { $api } from "../../../client/index.js";
 import { getPaymentRequest } from "../checkout/paymentRequest.js";
@@ -9,13 +10,19 @@ import {
   postStripePaymentNotificationToSlack,
 } from "../helpers.js";
 import {
+  type FulfilledPaymentStatus,
   type FulfilmentResult,
   paymentRequestCheckoutMetadataSchema,
   STRIPE_PASSPORT_KEY,
 } from "./types.js";
 
 /**
- * Mark an ITP request as paid, once Stripe confirms its Checkout Session has been paid
+ * Mark an ITP request as paid, once Stripe confirms its Checkout Session has been paid or authorised
+ *
+ * paid_at means "payment authorised", not "funds received".
+ *
+ * A delayed payment method (e.g. Bacs Direct Debit) completes Checkout as "unpaid", and confirms or
+ * fails days later. The application submits at authorisation, and the council chases a failed payment.
  *
  * Called from both the webhook and the payer's return page, so it must be safe to run any number of
  * times, concurrently. The Checkout Session is always re-read from Stripe, never trusted from the caller.
@@ -60,19 +67,22 @@ export async function fulfilPaymentRequest(
     return {
       status: "alreadyFulfilled",
       stripePaymentId: paymentRequest.stripePaymentId,
+      paymentStatus: getStoredPaymentStatus(
+        checkoutSession,
+        paymentRequest.stripePaymentId,
+      ),
     };
   }
 
+  const paymentStatus = getFulfilledPaymentStatus(checkoutSession);
   // Checkout hasn't been completed
-  if (checkoutSession.payment_status !== "paid") {
-    return { status: "unpaid" };
-  }
+  if (!paymentStatus) return { status: "unpaid" };
 
   const stripePaymentId = getStripeId(checkoutSession.payment_intent);
-  // Should not happen - a paid Checkout Session in "payment" mode always has a PaymentIntent
+  // Should not happen - a completed Checkout Session in "payment" mode always has a PaymentIntent
   if (!stripePaymentId) {
     throw new Error(
-      `Paid Checkout Session ${checkoutSessionId} has no PaymentIntent`,
+      `Completed Checkout Session ${checkoutSessionId} has no PaymentIntent`,
     );
   }
 
@@ -91,19 +101,57 @@ export async function fulfilPaymentRequest(
     return {
       status: "alreadyFulfilled",
       stripePaymentId: paidRequest.stripePaymentId,
+      paymentStatus: getStoredPaymentStatus(
+        checkoutSession,
+        paidRequest.stripePaymentId,
+      ),
     };
   } else {
-    // Send a "succeeded" ITP Slack notification when we mark a payment request as paid
+    // Send an ITP Slack notification when we mark a payment request as paid
     await postStripePaymentNotificationToSlack(
       paymentRequest.session.flow.team.slug,
       stripePaymentId,
-      "succeeded",
+      paymentStatus === "paid" ? "succeeded" : "processing",
       true,
     );
   }
 
-  return { status: "fulfilled", stripePaymentId };
+  return { status: "fulfilled", stripePaymentId, paymentStatus };
 }
+
+/**
+ * A completed Checkout Session is "paid", or "pending" (complete + unpaid) while a delayed payment method confirms
+ *
+ * @docs https://docs.stripe.com/checkout/fulfillment
+ */
+const getFulfilledPaymentStatus = (
+  checkoutSession: Stripe.Checkout.Session,
+): FulfilledPaymentStatus | undefined => {
+  if (checkoutSession.payment_status === "paid") return "paid";
+  if (
+    checkoutSession.status === "complete" &&
+    checkoutSession.payment_status === "unpaid"
+  ) {
+    return "pending";
+  }
+};
+
+const getStoredPaymentStatus = (
+  checkoutSession: Stripe.Checkout.Session,
+  storedPaymentId: string | null,
+): FulfilledPaymentStatus => {
+  const checkoutPaymentId = getStripeId(checkoutSession.payment_intent);
+
+  // The request was paid by another Checkout Session (e.g. in a second tab)
+  // We only know the status of this Checkout Session, so report the request as paid
+  const isPaidByAnotherCheckoutSession = checkoutPaymentId !== storedPaymentId;
+  if (isPaidByAnotherCheckoutSession) return "paid";
+
+  const checkoutPaymentStatus = getFulfilledPaymentStatus(checkoutSession);
+  if (checkoutPaymentStatus === "pending") return "pending";
+
+  return "paid";
+};
 
 /**
  * Read only the payment reference, without the session data getPaymentRequest returns
@@ -134,6 +182,8 @@ interface MarkPaymentRequestAsPaidResponse {
 /**
  * Set paid_at and write the payment reference into the session in one transaction,
  * so the reference is in place before the paid_at trigger submits the application
+ *
+ * paid_at means "payment authorised" - it is set for a pending payment too
  */
 async function markPaymentRequestAsPaid({
   paymentRequestId,
