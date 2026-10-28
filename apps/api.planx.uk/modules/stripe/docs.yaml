@@ -472,7 +472,10 @@ paths:
                   description: The `stripeSessionId` query parameter on the return URL
       responses:
         "200":
-          description: The payment request has been paid.
+          description: |
+            The payment request has been paid (or authorised).
+            - `paid`: Stripe has confirmed the payment
+            - `pending`: a delayed payment method (e.g. Bacs Direct Debit) has been authorised, and will confirm or fail later. The application is submitted at authorisation
           content:
             application/json:
               schema:
@@ -483,7 +486,7 @@ paths:
                 properties:
                   paymentStatus:
                     type: string
-                    enum: [paid]
+                    enum: [paid, pending]
                   paymentIntentId:
                     type: string
                     nullable: true
@@ -497,7 +500,7 @@ paths:
         "404":
           description: The payment request, its session, or the Checkout Session was not found.
         "409":
-          description: The Checkout Session has not been paid (e.g. Checkout was not completed).
+          description: The Checkout Session has not been paid or authorised (e.g. Checkout was not completed).
         "500":
           description: Failed to retrieve the Checkout Session from Stripe, or to update the payment request.
   /stripe/checkout-session/{localAuthority}/{checkoutSessionId}:
