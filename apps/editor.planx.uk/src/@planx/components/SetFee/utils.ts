@@ -1,9 +1,10 @@
 import { getCalculatedReductionOrExemption } from "@opensystemslab/planx-core";
 import type { PassportFeeFields } from "@opensystemslab/planx-core/types";
-import type { Store } from "pages/FlowEditor/lib/store";
+import { type Store } from "pages/FlowEditor/lib/store";
 import type { ConditionalPick } from "type-fest";
 
 import { PAY_FN } from "../Pay/model";
+import type { ServiceChargeMode } from "./hooks";
 import {
   DEFAULT_SERVICE_CHARGE_AMOUNT,
   DEFAULT_SERVICE_CHARGE_THRESHOLD,
@@ -15,6 +16,7 @@ type HandleSetFees = (params: {
   applyCalculatedVAT: boolean;
   fastTrackFeeAmount: number;
   applyServiceCharge: boolean;
+  serviceChargeMode: ServiceChargeMode;
 }) => Store.Passport["data"];
 
 // SetFee outputs a partial subset of any `number` type PassportFeeFields, never `boolean` ones
@@ -25,6 +27,7 @@ export const handleSetFees: HandleSetFees = ({
   applyCalculatedVAT,
   fastTrackFeeAmount,
   applyServiceCharge,
+  serviceChargeMode,
 }): OutputFees => {
   // Calculated is base application fee exclusive of VAT
   //   Any exemptions or reductions will have already set `application.fee.payable`
@@ -99,13 +102,16 @@ export const handleSetFees: HandleSetFees = ({
       fees[payable] = fees[payable] + fastTrackFeeAmount + fastTrackVAT;
       fees[payableVAT] = fees[payableVAT] + fastTrackVAT;
     } else {
-      // If a fastTrackFeeAmount is set, but `application.fastTrack` does not apply, still capture 0 for Gov Pay metadata reporting
+      // If a fastTrackFeeAmount is set, but `application.fastTrack` does not apply, still capture 0 for pay provider metadata reporting
       fees["application.fee.fastTrack"] = 0;
       fees["application.fee.fastTrack.VAT"] = 0;
     }
   }
 
-  if (applyServiceCharge) {
+  // `autoEnable` is computed live at runtime based on teamSettings and flow exceptions,
+  //   whereas applyServiceCharge is a publish-dependent node prop.
+  //   Service charges can uniquely be added based on either
+  if (serviceChargeMode === "autoEnable" || applyServiceCharge) {
     if (fees[payable] >= DEFAULT_SERVICE_CHARGE_THRESHOLD) {
       // When payable inclusive of VAT after FT before payment processing fees is >= treshold,
       //   then apply the default service charge amount plus VAT and re-calculate payable
@@ -117,7 +123,7 @@ export const handleSetFees: HandleSetFees = ({
       fees[payable] = fees[payable] + serviceChargeAmount + serviceChargeVAT;
       fees[payableVAT] = fees[payableVAT] + serviceChargeVAT;
     } else {
-      // If toggled `on` but below threshold, still capture 0 for Gov Pay metadata reporting
+      // If toggled `on` but below threshold, still capture 0 for pay provider metadata reporting
       fees["application.fee.serviceCharge"] = 0;
       fees["application.fee.serviceCharge.VAT"] = 0;
     }
