@@ -58,10 +58,11 @@
   },
   "notice": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "The End",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   }
 }

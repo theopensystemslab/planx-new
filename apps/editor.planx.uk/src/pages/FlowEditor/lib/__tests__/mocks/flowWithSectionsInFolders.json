@@ -42,11 +42,12 @@
   },
   "Notice": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "End of test",
       "resetButton": true
     },
-    "type": 8
+    "type": 250
   },
   "Question": {
     "data": {

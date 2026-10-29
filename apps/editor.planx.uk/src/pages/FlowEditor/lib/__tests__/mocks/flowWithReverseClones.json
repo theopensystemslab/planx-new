@@ -11,19 +11,21 @@
   },
   "rightNotice": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "This branch is different",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   },
   "finalNode": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "Great!",
       "resetButton": true
     },
-    "type": 8
+    "type": 250
   },
   "question": {
     "data": {
@@ -41,10 +43,11 @@
   },
   "clone": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "This is a clone",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   }
 }

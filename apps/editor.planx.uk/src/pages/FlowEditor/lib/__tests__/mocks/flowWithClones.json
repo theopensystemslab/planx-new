@@ -4,35 +4,39 @@
   },
   "clone": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "I am a clone",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   },
   "leftNotice": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "Left!",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   },
   "rightConfirmation": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "I am still the right branch",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   },
   "rightNotice": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "Right!",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   },
   "leftChoice": {
     "data": {
@@ -50,11 +54,12 @@
   },
   "leftConfirmation": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "I am still the left branch",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   },
   "question": {
     "data": {
