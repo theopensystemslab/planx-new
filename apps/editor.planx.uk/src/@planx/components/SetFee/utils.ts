@@ -1,41 +1,15 @@
 import { getCalculatedReductionOrExemption } from "@opensystemslab/planx-core";
 import type { PassportFeeFields } from "@opensystemslab/planx-core/types";
-import type { ServiceChargeFlowException } from "hooks/data/useServiceChargeFlowExceptions";
-import type { ContractType } from "pages/FlowEditor/components/Settings/Team/Advanced/ContractType/types";
-import type { PaymentProvider } from "pages/FlowEditor/components/Settings/Team/Payment/Provider";
 import { type Store } from "pages/FlowEditor/lib/store";
 import type { ConditionalPick } from "type-fest";
 
 import { PAY_FN } from "../Pay/model";
+import type { ServiceChargeMode } from "./hooks";
 import {
   DEFAULT_SERVICE_CHARGE_AMOUNT,
   DEFAULT_SERVICE_CHARGE_THRESHOLD,
   VAT_PERCENTAGE,
 } from "./model";
-
-export type ServiceChargeMode = "autoEnable" | "autoDisable" | "edit";
-
-/**
- * As part of the migration to Stripe, we want service charges to be "automatically applied" (_not_ publish dependent) for applicable teams + flows
- *   Teams still using Gov Pay, or internal teams without any contract, should still be able to edit service charges via Set Fees and publish changes
- */
-export const getServiceChargeMode = (
-  flowId: string,
-  paymentProvider: PaymentProvider,
-  contract: ContractType,
-  flowExceptions: { exceptions: ServiceChargeFlowException[] } | undefined,
-): ServiceChargeMode => {
-  if (
-    contract === "opt_out_sc" ||
-    flowExceptions?.exceptions?.some((exception) => exception.flowId === flowId)
-  ) {
-    return "autoDisable";
-  } else if (paymentProvider === "stripe" && contract === "with_sc") {
-    return "autoEnable";
-  } else {
-    return "edit";
-  }
-};
 
 type HandleSetFees = (params: {
   passport: Store.Passport;
