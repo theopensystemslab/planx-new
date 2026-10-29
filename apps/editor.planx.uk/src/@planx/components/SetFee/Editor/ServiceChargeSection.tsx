@@ -5,9 +5,9 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
+import type { ServiceChargeMode } from "../hooks";
 import type { SetFee } from "../model";
 import { DEFAULT_SERVICE_CHARGE_THRESHOLD, VAT_PERCENTAGE } from "../model";
-import type { ServiceChargeMode } from "../utils";
 import type { Props } from "./Editor";
 
 interface ServiceChargeSection {
