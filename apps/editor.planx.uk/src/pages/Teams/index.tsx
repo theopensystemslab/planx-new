@@ -86,7 +86,13 @@ const Teams: React.FC<Props> = ({ teams }) => {
             <Box sx={{ display: "flex", gap: 1 }}>
               {team.settings.isTrial && <InfoChip label="Trial account" />}
               {isPlatformAdmin && team.settings.isGuidanceOnly && (
-                <InfoChip label="Guidance only" />
+                <InfoChip
+                  label="Guidance only"
+                  sx={{
+                    backgroundColor: "info.main",
+                    color: "info.contrastText",
+                  }}
+                />
               )}
             </Box>
           </TeamCard>
