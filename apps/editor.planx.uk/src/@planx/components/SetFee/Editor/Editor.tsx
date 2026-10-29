@@ -3,9 +3,8 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import { useServiceChargeFlowExceptions } from "hooks/data/useServiceChargeFlowExceptions";
 import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
-import { type Store,useStore } from "pages/FlowEditor/lib/store";
+import { type Store } from "pages/FlowEditor/lib/store";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -16,9 +15,10 @@ import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
 import { Switch } from "ui/shared/Switch";
 
+import { useServiceChargeMode } from "../hooks";
 import type { SetFee } from "../model";
 import { parseSetFee, validationSchema, VAT_PERCENTAGE } from "../model";
-import { getServiceChargeMode, handleSetFees } from "../utils";
+import { handleSetFees } from "../utils";
 import { SERVICE_CHARGE_SECTION_VARIANTS } from "./ServiceChargeSection";
 
 export type Props = EditorProps<TYPES.SetFee, SetFee>;
@@ -47,20 +47,8 @@ function SetFeeComponent(props: Props) {
     props.formikRef,
   );
 
-  const [flowId, { paymentProvider, contract }] = useStore((state) => [
-    state.id,
-    state.teamSettings,
-  ]);
-
-  const { data } = useServiceChargeFlowExceptions();
-
   // Conditionally render Service Charges section based on various conditions: payment provider, contract type, flow exceptions
-  const serviceChargeMode = getServiceChargeMode(
-    flowId,
-    paymentProvider,
-    contract,
-    data,
-  );
+  const serviceChargeMode = useServiceChargeMode();
   const ServiceChargeSection =
     SERVICE_CHARGE_SECTION_VARIANTS[serviceChargeMode];
 
