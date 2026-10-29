@@ -10,7 +10,7 @@ catalogs:
       specifier: 1.0.0-alpha.17
       version: 1.0.0-alpha.17
     '@opensystemslab/planx-core':
-      specifier: github:theopensystemslab/planx-core#3b04c1d47cfeae793d140f420807b173a0ccaa90
+      specifier: github:theopensystemslab/planx-core#162e66b503ae1af2a10ea97de8ff828700764e3a
       version: 1.0.0
     '@types/jsdom':
       specifier: ^30.0.0
