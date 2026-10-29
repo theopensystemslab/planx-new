@@ -122,7 +122,6 @@ const presentationalComponents: {
   [TYPES.MapAndLabel]: MapAndLabel,
   [TYPES.NextSteps]: undefined,
   [TYPES.Note]: undefined,
-  [TYPES.Notice]: undefined,
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Page]: Page,
   [TYPES.Pay]: undefined,
@@ -184,7 +183,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     const isAutoAnswered = userData.auto;
 
     // If FileUploadAndLabel was presented for info-only without a dropzone,
-    //  then omit like Content and Notice component types
+    //  then omit like Content component types
     const isInfoOnlyMode =
       node.type === TYPES.FileUploadAndLabel && node.data?.hideDropZone;
 

@@ -23,7 +23,6 @@ import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
 import PlaylistAddCheck from "@mui/icons-material/PlaylistAddCheck";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
-import ReportProblemOutlined from "@mui/icons-material/ReportProblemOutlined";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import Send from "@mui/icons-material/Send";
 import ShapeLine from "@mui/icons-material/ShapeLine";
@@ -68,7 +67,6 @@ export const ICONS: {
   [TYPES.MapAndLabel]: ShapeLine,
   [TYPES.NextSteps]: ArrowForwardIcon,
   [TYPES.Note]: StickyNote2Icon,
-  [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NumberInput]: Pin,
   [TYPES.Page]: Article,
   [TYPES.Pay]: PaymentOutlined,
