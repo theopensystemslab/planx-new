@@ -361,6 +361,38 @@ export const getStripeAccountId = async (
   return teamIntegrations[0]?.accountId ?? null;
 };
 
+const govPaySecretColumn = () =>
+  getStripeMode() === "live"
+    ? "production_govpay_secret"
+    : "staging_govpay_secret";
+
+/**
+ * Check whether the team was using GovPay before Stripe (i.e. do they have the secret configured)
+ */
+export const hasGovPayConfigured = async (teamId: number): Promise<boolean> => {
+  const column = govPaySecretColumn();
+
+  const { teamIntegrations } = await $api.client.request<{
+    teamIntegrations: { id: number }[];
+  }>(
+    gql`
+      query HasGovPayConfigured($teamId: Int!) {
+        teamIntegrations: team_integrations(
+          where: {
+            team_id: { _eq: $teamId }
+            ${column}: { _is_null: false }
+          }
+        ) {
+          id
+        }
+      }
+    `,
+    { teamId },
+  );
+
+  return teamIntegrations.length > 0;
+};
+
 export const postStripeConnectedToSlack = async (
   teamSlug: string,
   accountId: string,

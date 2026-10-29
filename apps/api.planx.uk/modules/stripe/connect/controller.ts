@@ -109,7 +109,10 @@ export const getConnectStatus: ConnectStatusController = async (
 ) => {
   try {
     const { team } = res.locals;
-    const accountId = await Service.getStripeAccountId(team.id);
+    const [accountId, govPayConfigured] = await Promise.all([
+      Service.getStripeAccountId(team.id),
+      Service.hasGovPayConfigured(team.id),
+    ]);
     const accountStatus = accountId
       ? await Service.getAccountStatus(accountId)
       : null;
@@ -119,6 +122,7 @@ export const getConnectStatus: ConnectStatusController = async (
       accountId,
       accountStatus,
       mode: Service.getStripeMode(),
+      govPayConfigured,
     });
   } catch (error) {
     return next(

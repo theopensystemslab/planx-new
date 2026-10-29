@@ -52,6 +52,22 @@ describe("getActiveGovPaySessions", () => {
   });
 });
 
+describe("hasGovPayConfigured", () => {
+  afterEach(() => mockRequest.mockReset());
+
+  it("returns true when the team has a GOV.UK Pay secret", async () => {
+    mockRequest.mockResolvedValueOnce({ teamIntegrations: [{ id: 1 }] });
+
+    await expect(connectService.hasGovPayConfigured(1)).resolves.toBe(true);
+  });
+
+  it("returns false when the team has no GOV.UK Pay secret", async () => {
+    mockRequest.mockResolvedValueOnce({ teamIntegrations: [] });
+
+    await expect(connectService.hasGovPayConfigured(1)).resolves.toBe(false);
+  });
+});
+
 describe("getStripeAccountId", () => {
   it("returns a stripe account when set", async () => {
     mockRequest.mockResolvedValueOnce({
@@ -172,11 +188,37 @@ describe("migrateToStripe", () => {
 });
 
 describe("revert to GOV.UK pay", async () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+    mockRequest.mockReset();
+  });
+
   it("throws an error if called on production", async () => {
     vi.stubEnv("APP_ENVIRONMENT", "production");
 
     await expect(migrationService.revertToGovPay(1)).rejects.toThrow(
       "Cannot revert to GovPay on production",
     );
+  });
+
+  it("throws an error if the team does not have GOV.UK Pay configured", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "staging");
+    vi.spyOn(connectService, "hasGovPayConfigured").mockResolvedValue(false);
+
+    await expect(migrationService.revertToGovPay(1)).rejects.toThrow(
+      "does not have GOV.UK Pay configured",
+    );
+    expect(mockRequest).not.toHaveBeenCalled();
+  });
+
+  it("reverts when the team has GOV.UK Pay configured", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "staging");
+    vi.spyOn(connectService, "hasGovPayConfigured").mockResolvedValue(true);
+    mockRequest.mockResolvedValueOnce({
+      updateTeamPaymentProvider: { affectedRows: 1 },
+    });
+
+    await expect(migrationService.revertToGovPay(1)).resolves.toBe("govpay");
   });
 });

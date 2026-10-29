@@ -140,6 +140,11 @@ export const revertToGovPay = async (
     throw new Error("Cannot revert to GovPay on production");
   }
 
+  const hasGovPay = await connectionService.hasGovPayConfigured(teamId);
+  if (!hasGovPay) {
+    throw new Error(`Team ${teamId} does not have GOV.UK Pay configured`);
+  }
+
   const affectedRows = await updatePaymentProvider(teamId, "govpay");
   if (affectedRows === 0) {
     throw new Error(`Could not revert to Gov Pay for ${teamId}`);

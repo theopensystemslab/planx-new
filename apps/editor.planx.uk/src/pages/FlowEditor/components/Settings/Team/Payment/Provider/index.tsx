@@ -136,6 +136,10 @@ const Provider: React.FC = () => {
   const { data: stripeConnectStatus, isLoading: isStripeStatusLoading } =
     useStripeConnectStatus(teamSlug);
 
+  // Revert is only available outside of production, for teams which had previously set up GovPay
+  const canRevert =
+    !isProduction && Boolean(stripeConnectStatus?.govPayConfigured);
+
   const renderProviderAction = () => {
     if (!canUseStripe) {
       return isStripe ? (
@@ -153,7 +157,7 @@ const Provider: React.FC = () => {
 
     // Reverting is staging-only - the API doesn't register the revert route in production
     if (isStripe) {
-      if (isProduction) return null;
+      if (!canRevert) return null;
 
       return (
         <Box>
