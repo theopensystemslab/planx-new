@@ -3,8 +3,9 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { useServiceChargeFlowExceptions } from "hooks/data/useServiceChargeFlowExceptions";
 import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
-import type { Store } from "pages/FlowEditor/lib/store";
+import { type Store,useStore } from "pages/FlowEditor/lib/store";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -15,16 +16,12 @@ import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
 import { Switch } from "ui/shared/Switch";
 
-import type { SetFee } from "./model";
-import {
-  DEFAULT_SERVICE_CHARGE_THRESHOLD,
-  parseSetFee,
-  validationSchema,
-  VAT_PERCENTAGE,
-} from "./model";
-import { handleSetFees } from "./utils";
+import type { SetFee } from "../model";
+import { parseSetFee, validationSchema, VAT_PERCENTAGE } from "../model";
+import { getServiceChargeMode, handleSetFees } from "../utils";
+import { SERVICE_CHARGE_SECTION_VARIANTS } from "./ServiceChargeSection";
 
-type Props = EditorProps<TYPES.SetFee, SetFee>;
+export type Props = EditorProps<TYPES.SetFee, SetFee>;
 
 export default SetFeeComponent;
 
@@ -49,6 +46,23 @@ function SetFeeComponent(props: Props) {
     },
     props.formikRef,
   );
+
+  const [flowId, { paymentProvider, contract }] = useStore((state) => [
+    state.id,
+    state.teamSettings,
+  ]);
+
+  const { data } = useServiceChargeFlowExceptions();
+
+  // Conditionally render Service Charges section based on various conditions: payment provider, contract type, flow exceptions
+  const serviceChargeMode = getServiceChargeMode(
+    flowId,
+    paymentProvider,
+    contract,
+    data,
+  );
+  const ServiceChargeSection =
+    SERVICE_CHARGE_SECTION_VARIANTS[serviceChargeMode];
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -108,39 +122,7 @@ function SetFeeComponent(props: Props) {
           </ErrorWrapper>
         </ModalSectionContent>
       </ModalSection>
-      <ModalSection>
-        <ModalSectionContent title="Plan✕ service charge">
-          <InputRow>
-            <Switch
-              checked={formik.values.applyServiceCharge}
-              onChange={() =>
-                formik.setFieldValue(
-                  "applyServiceCharge",
-                  !formik.values.applyServiceCharge,
-                )
-              }
-              label="Apply Plan✕ service charge"
-              disabled={props.disabled}
-            />
-          </InputRow>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            A £{formik.values.serviceChargeAmount} service charge plus{" "}
-            {VAT_PERCENTAGE * 100}% VAT will be added unless{" "}
-            <strong>application.fee.payable</strong> is less than £
-            {DEFAULT_SERVICE_CHARGE_THRESHOLD} (after any Fast Track fees,
-            exemptions, reductions or increases, inclusive of VAT).
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            Open Systems Lab invoices quarterly to collect the service charge.
-            If you'd like to charge a higher fee than £
-            {formik.values.serviceChargeAmount}, please contact{" "}
-            <a href="mailto:finance@opensystemslab.io" target="_self">
-              finance@opensystemslab.io
-            </a>
-            .
-          </Typography>
-        </ModalSectionContent>
-      </ModalSection>
+      <ServiceChargeSection formik={formik} props={props} />
       <ModalSection>
         <ModalSectionContent title="Example" Icon={Code}>
           <Typography variant="body2" sx={{ mb: 2 }}>
@@ -158,6 +140,7 @@ function SetFeeComponent(props: Props) {
                   applyCalculatedVAT: formik.values.applyCalculatedVAT,
                   fastTrackFeeAmount: formik.values.fastTrackFeeAmount,
                   applyServiceCharge: formik.values.applyServiceCharge,
+                  serviceChargeMode: serviceChargeMode,
                 }),
               },
             })}

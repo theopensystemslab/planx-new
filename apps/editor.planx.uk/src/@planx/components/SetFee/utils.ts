@@ -1,6 +1,9 @@
 import { getCalculatedReductionOrExemption } from "@opensystemslab/planx-core";
 import type { PassportFeeFields } from "@opensystemslab/planx-core/types";
-import type { Store } from "pages/FlowEditor/lib/store";
+import type { ServiceChargeFlowException } from "hooks/data/useServiceChargeFlowExceptions";
+import type { ContractType } from "pages/FlowEditor/components/Settings/Team/Advanced/ContractType/types";
+import type { PaymentProvider } from "pages/FlowEditor/components/Settings/Team/Payment/Provider";
+import { type Store } from "pages/FlowEditor/lib/store";
 import type { ConditionalPick } from "type-fest";
 
 import { PAY_FN } from "../Pay/model";
@@ -10,11 +13,36 @@ import {
   VAT_PERCENTAGE,
 } from "./model";
 
+export type ServiceChargeMode = "autoEnable" | "autoDisable" | "edit";
+
+/**
+ * As part of the migration to Stripe, we want service charges to be "automatically applied" (_not_ publish dependent) for applicable teams + flows
+ *   Teams still using Gov Pay, or internal teams without any contract, should still be able to edit service charges via Set Fees and publish changes
+ */
+export const getServiceChargeMode = (
+  flowId: string,
+  paymentProvider: PaymentProvider,
+  contract: ContractType,
+  flowExceptions: { exceptions: ServiceChargeFlowException[] } | undefined,
+): ServiceChargeMode => {
+  if (
+    contract === "opt_out_sc" ||
+    flowExceptions?.exceptions?.some((exception) => exception.flowId === flowId)
+  ) {
+    return "autoDisable";
+  } else if (paymentProvider === "stripe" && contract === "with_sc") {
+    return "autoEnable";
+  } else {
+    return "edit";
+  }
+};
+
 type HandleSetFees = (params: {
   passport: Store.Passport;
   applyCalculatedVAT: boolean;
   fastTrackFeeAmount: number;
   applyServiceCharge: boolean;
+  serviceChargeMode: ServiceChargeMode;
 }) => Store.Passport["data"];
 
 // SetFee outputs a partial subset of any `number` type PassportFeeFields, never `boolean` ones
@@ -25,6 +53,7 @@ export const handleSetFees: HandleSetFees = ({
   applyCalculatedVAT,
   fastTrackFeeAmount,
   applyServiceCharge,
+  serviceChargeMode,
 }): OutputFees => {
   // Calculated is base application fee exclusive of VAT
   //   Any exemptions or reductions will have already set `application.fee.payable`
@@ -99,13 +128,16 @@ export const handleSetFees: HandleSetFees = ({
       fees[payable] = fees[payable] + fastTrackFeeAmount + fastTrackVAT;
       fees[payableVAT] = fees[payableVAT] + fastTrackVAT;
     } else {
-      // If a fastTrackFeeAmount is set, but `application.fastTrack` does not apply, still capture 0 for Gov Pay metadata reporting
+      // If a fastTrackFeeAmount is set, but `application.fastTrack` does not apply, still capture 0 for pay provider metadata reporting
       fees["application.fee.fastTrack"] = 0;
       fees["application.fee.fastTrack.VAT"] = 0;
     }
   }
 
-  if (applyServiceCharge) {
+  // `autoEnable` is computed live at runtime based on teamSettings and flow exceptions,
+  //   whereas applyServiceCharge is a publish-dependent node prop.
+  //   Service charges can uniquely be added based on either
+  if (serviceChargeMode === "autoEnable" || applyServiceCharge) {
     if (fees[payable] >= DEFAULT_SERVICE_CHARGE_THRESHOLD) {
       // When payable inclusive of VAT after FT before payment processing fees is >= treshold,
       //   then apply the default service charge amount plus VAT and re-calculate payable
@@ -117,7 +149,7 @@ export const handleSetFees: HandleSetFees = ({
       fees[payable] = fees[payable] + serviceChargeAmount + serviceChargeVAT;
       fees[payableVAT] = fees[payableVAT] + serviceChargeVAT;
     } else {
-      // If toggled `on` but below threshold, still capture 0 for Gov Pay metadata reporting
+      // If toggled `on` but below threshold, still capture 0 for pay provider metadata reporting
       fees["application.fee.serviceCharge"] = 0;
       fees["application.fee.serviceCharge.VAT"] = 0;
     }
