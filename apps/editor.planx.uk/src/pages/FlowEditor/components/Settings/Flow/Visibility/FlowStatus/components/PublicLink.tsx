@@ -1,36 +1,10 @@
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import type { FlowStatus } from "@opensystemslab/planx-core/types";
-import React, { useState } from "react";
+import React from "react";
+import { CopyButton } from "ui/editor/CopyButton";
 import SettingsDescription from "ui/editor/SettingsDescription";
-
-export const CopyButton = (props: { link: string; isActive: boolean }) => {
-  const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
-  return (
-    <Button
-      disabled={!props.isActive}
-      variant="help"
-      onMouseLeave={() => {
-        setTimeout(() => {
-          setCopyMessage("copy");
-        }, 500);
-      }}
-      onClick={() => {
-        setCopyMessage("copied");
-        navigator.clipboard.writeText(props.link);
-      }}
-      sx={{ marginLeft: 0.5 }}
-    >
-      <ContentCopyIcon style={{ width: "18px", height: "18px" }} />
-      <Typography sx={{ ml: 0.5 }} variant="body3">
-        {copyMessage}
-      </Typography>
-    </Button>
-  );
-};
 
 const TitledLink: React.FC<{
   link: string;
@@ -41,7 +15,7 @@ const TitledLink: React.FC<{
     <Box sx={{ paddingBottom: 0.5, mt: 1 }}>
       <Typography sx={{ mb: 0.5 }} variant="h4">
         Your public link
-        <CopyButton isActive={isActive} link={link} />
+        <CopyButton isActive={isActive} value={link} />
       </Typography>
       <SettingsDescription>
         <Typography variant="body2">{helpText}</Typography>

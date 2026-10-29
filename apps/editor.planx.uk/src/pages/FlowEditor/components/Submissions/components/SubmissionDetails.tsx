@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { CopyButton } from "ui/editor/CopyButton";
 import type { DescriptionListItem } from "ui/public/DescriptionList";
 import { DescriptionList } from "ui/public/DescriptionList";
 
@@ -30,7 +31,12 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
     },
     {
       term: "Reference",
-      details: props.sessionId,
+      details: (
+        <Box sx={{ display: "flex", alignItems: "flex-start" }}>
+          {props.sessionId}
+          <CopyButton value={props.sessionId} isActive />
+        </Box>
+      ),
     },
     {
       term: "Submitted on",

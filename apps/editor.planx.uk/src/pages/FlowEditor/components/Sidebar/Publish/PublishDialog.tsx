@@ -24,12 +24,12 @@ import type {
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
+import { CopyButton } from "ui/editor/CopyButton";
 import InputLabel from "ui/editor/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
-import { CopyButton } from "../../Settings/Flow/Visibility/FlowStatus/components/PublicLink";
 import { AlteredNodesSummaryContent } from "./AlteredNodes";
 import { ValidationChecks } from "./ValidationChecks";
 
@@ -179,7 +179,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         <DialogContent sx={{ display: "flex", flexDirection: "column", p: 3 }}>
           <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
             {`Your preview link`}
-            <CopyButton link={previewURL} isActive={true} />
+            <CopyButton value={previewURL} isActive={true} />
           </Typography>
           <Typography variant="body2" sx={{ mb: 2 }}>
             <Link href={previewURL} target="_blank">
