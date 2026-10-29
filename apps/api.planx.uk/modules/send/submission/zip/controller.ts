@@ -1,4 +1,5 @@
 import { getClient } from "../../../../client/index.js";
+import { ServerError } from "../../../../errors/index.js";
 import { logDuration } from "../../../../lib/performance.js";
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 import { buildSubmissionExportZip } from "../../utils/exportZip.js";
@@ -37,8 +38,12 @@ export const submissionZipController: SubmissionController = async (
     // Clean up the local zip file
     zip.remove();
   } catch (error) {
-    return next({
-      message: "Failed to download submission zip: " + (error as Error).message,
-    });
+    return next(
+      new ServerError({
+        message:
+          "Failed to download submission zip: " + (error as Error).message,
+        cause: error,
+      }),
+    );
   }
 };

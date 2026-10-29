@@ -51,6 +51,14 @@ export const noTokenHandler: ErrorRequestHandler = (
 };
 
 /**
+ * Convert a chain of Error causes to plain data
+ */
+const serializeCause = (cause: unknown): unknown =>
+  cause instanceof Error
+    ? { message: cause.message, cause: serializeCause(cause.cause) }
+    : cause;
+
+/**
  * Fallback error handler
  * Must be final Express middleware
  */
@@ -65,13 +73,19 @@ export const errorHandler: ErrorRequestHandler = (
       airbrake &&
       (errorObject instanceof Error || errorObject instanceof ServerError)
     ) {
-      airbrake.notify(errorObject);
+      // Airbrake ignores Error.cause, so report it as context
+      airbrake.notify({
+        error: errorObject,
+        context: { cause: serializeCause(errorObject.cause) },
+      });
       return {
         ...errorObject,
         message: errorObject.message.concat(", this error has been logged"),
       };
     } else {
       console.log(errorObject);
+      // Log the full cause - console.log truncates nested objects
+      if (errorObject?.cause) console.dir(errorObject.cause, { depth: null });
       return errorObject;
     }
   })();

@@ -1,3 +1,4 @@
+import { ServerError } from "../../../errors/index.js";
 import { logDuration } from "../../../lib/performance.js";
 import { buildSubmissionExportZip } from "../utils/exportZip.js";
 import type { DownloadSubmission } from "./types.js";
@@ -28,9 +29,11 @@ export const downloadSubmission: DownloadSubmission = async (
     // Clean up the local zip file
     zip.remove();
   } catch (error) {
-    return next({
-      error,
-      message: `Failed to download application files. ${error}`,
-    });
+    return next(
+      new ServerError({
+        message: `Failed to download application files. ${error}`,
+        cause: error,
+      }),
+    );
   }
 };
