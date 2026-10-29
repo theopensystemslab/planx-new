@@ -219,20 +219,6 @@ const atLeastOneDataFieldTest: TestConfig<AnyChecklist> = {
   },
 };
 
-const uniqueLabelsTest: TestConfig<AnyChecklist> = {
-  name: "uniqueLabels",
-  test: function ({ options }) {
-    if (!options) return true;
-    const uniqueLabels = new Set(options.map(({ data: { text } }) => text));
-    const allUnique = uniqueLabels.size === options.length;
-    if (allUnique) return true;
-    return this.createError({
-      path: "options",
-      message: "Options must have unique labels",
-    });
-  },
-};
-
 const atLeastOneOption: TestConfig<AnyChecklist> = {
   name: "atLeastOneOption",
   test: function ({ options, groupedOptions }) {
@@ -246,31 +232,6 @@ const atLeastOneOption: TestConfig<AnyChecklist> = {
       path: "options",
       message: "Add at least one option",
     });
-  },
-};
-
-const uniqueLabelsWithinGroupsTest: TestConfig<AnyChecklist> = {
-  name: "uniqueLabelsWithinGroups",
-  test: function ({ groupedOptions }) {
-    if (!groupedOptions) return true;
-
-    for (const group of groupedOptions) {
-      if (!group.children) continue;
-
-      const uniqueLabels = new Set(
-        group.children.map(({ data: { text } }) => text),
-      );
-      const allUnique = uniqueLabels.size === group.children.length;
-
-      if (!allUnique) {
-        return this.createError({
-          path: "options",
-          message: "Options within a single group must have unique labels",
-        });
-      }
-    }
-
-    return true;
   },
 };
 
@@ -312,8 +273,6 @@ export const baseChecklistValidationSchema =
       // Casting is required for Yup, tests themselves are correctly typed
       .test(onlyOneExclusiveOptionTest as TestConfig<unknown>)
       .test(atLeastOneDataFieldTest as TestConfig<unknown>)
-      .test(uniqueLabelsTest as TestConfig<unknown>)
-      .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>)
       .test(uniqueGroupTitlesTest as TestConfig<unknown>)
       .test(atLeastOneOption as TestConfig<unknown>),
   );

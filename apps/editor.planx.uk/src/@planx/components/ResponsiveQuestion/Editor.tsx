@@ -5,16 +5,13 @@ import type { FormikErrors, FormikValues } from "formik";
 
 import type { ConditionalOption } from "../Option/model";
 import BaseQuestionComponent from "../shared/BaseQuestion/Editor";
-import {
-  baseQuestionValidationSchema,
-  buildChildren,
-} from "../shared/BaseQuestion/model";
+import { buildChildren } from "../shared/BaseQuestion/model";
 import type { EditorProps } from "../shared/types";
 import type {
   ResponsiveQuestion,
   ResponsiveQuestionWithOptions,
 } from "./model";
-import { parseResponsiveQuestion } from "./model";
+import { parseResponsiveQuestion, validationSchema } from "./model";
 
 export type Props = EditorProps<
   TYPES.ResponsiveQuestion,
@@ -52,7 +49,7 @@ function ResponsiveQuestionComponent(props: Props) {
         }
         return errors;
       },
-      validationSchema: baseQuestionValidationSchema,
+      validationSchema,
     },
     props.formikRef,
   );

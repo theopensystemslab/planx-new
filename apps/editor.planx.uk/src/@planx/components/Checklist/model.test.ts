@@ -152,7 +152,7 @@ describe("Editor validation", () => {
   });
 
   test("checklists - data fields can be set for each option", async () => {
-    const result = validationSchema.validate({
+    const result = await validationSchema.validate({
       text: "Test",
       allRequired: false,
       neverAutoAnswer: false,
@@ -189,7 +189,7 @@ describe("Editor validation", () => {
   });
 
   test("grouped checklists - data fields can be set for each option", async () => {
-    const result = validationSchema.validate({
+    const result = await validationSchema.validate({
       text: "Test",
       alwaysAutoAnswerBlank: false,
       fn: "test",
@@ -302,6 +302,24 @@ describe("Editor validation", () => {
         ).rejects.toThrow("Options must have unique labels");
       });
 
+      test("checklists - unique labels must be used for each option (even if descriptions differ)", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            text: "Test",
+            options: [
+              {
+                id: "a",
+                data: { text: "Non-unique label", description: "A" },
+              },
+              {
+                id: "b",
+                data: { text: "Non-unique label", description: "B" },
+              },
+            ],
+          }),
+        ).rejects.toThrow("Options must have unique labels");
+      });
+
       test("grouped checklists - labels must be unique within groups", async () => {
         await expect(() =>
           validationSchema.validate({
@@ -353,7 +371,7 @@ describe("Editor validation", () => {
       });
 
       test("grouped checklists - labels can be repeated across groups", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
@@ -389,7 +407,7 @@ describe("Editor validation", () => {
       });
 
       test("grouped checklists - labels can be repeated across groups (inc. whitespace)", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
@@ -445,7 +463,7 @@ describe("Editor validation", () => {
       });
 
       test("checklists - repeated data values are allowed", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           options: [
             {
@@ -488,7 +506,7 @@ describe("Editor validation", () => {
       });
 
       test("grouped checklists - data values can be repeated within groups", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
@@ -511,7 +529,7 @@ describe("Editor validation", () => {
       });
 
       test("grouped checklists - labels can be repeated across groups", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
@@ -550,7 +568,7 @@ describe("Editor validation", () => {
       });
 
       test("grouped checklists - data values can be repeated across groups", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
