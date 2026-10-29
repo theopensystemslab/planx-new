@@ -134,4 +134,33 @@ describe("Provider", () => {
       ).not.toBeInTheDocument();
     });
   });
+
+  describe("in production, for an internal team", () => {
+    beforeEach(() => {
+      vi.stubEnv("VITE_APP_ENV", "production");
+      setState({ teamSlug: "opensystemslab" });
+    });
+
+    it("shows the migrate button for a GOV.UK Pay team", async () => {
+      server.use(providerHandler("govpay"), stripeStatusHandler(true));
+
+      await setup(<Provider />);
+
+      expect(
+        await screen.findByRole("button", { name: "Migrate to Stripe" }),
+      ).toBeEnabled();
+    });
+
+    it("does not show the Stripe warning or the revert button when the team is on Stripe", async () => {
+      server.use(providerHandler("stripe"), stripeStatusHandler(true));
+
+      await setup(<Provider />);
+
+      expect(await screen.findByText("Stripe")).toBeInTheDocument();
+      expect(screen.queryByText(STRIPE_WARNING)).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: "Revert to GOV.UK Pay" }),
+      ).not.toBeInTheDocument();
+    });
+  });
 });

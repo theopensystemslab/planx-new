@@ -90,7 +90,7 @@ export const getMigrationBlockers = async (
     migrationService.getActiveGovPaySessions(teamSlug),
   ]);
 
-  if (!isStripePaymentsEnabled()) {
+  if (!isStripePaymentsEnabled(teamSlug)) {
     blockers.push({ reason: "stripePaymentsNotEnabled" });
   }
   if (!accountId) blockers.push({ reason: "stripeNotConnected" });
