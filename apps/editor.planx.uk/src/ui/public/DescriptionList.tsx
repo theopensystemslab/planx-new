@@ -4,7 +4,7 @@ import { FONT_WEIGHT_BOLD } from "theme";
 
 export interface DescriptionListItem {
   term: string;
-  details: string;
+  details: React.ReactNode;
 }
 
 interface DescriptionListProps {
@@ -46,8 +46,8 @@ export const DescriptionList: React.FC<DescriptionListProps> = ({
   <List hideLastBorder={hideLastBorder}>
     {data.map(({ term, details }, index) => (
       <Fragment key={index}>
-        <Term key={term}>{term}</Term>
-        <Details key={details}>{details}</Details>
+        <Term>{term}</Term>
+        <Details>{details}</Details>
       </Fragment>
     ))}
   </List>
