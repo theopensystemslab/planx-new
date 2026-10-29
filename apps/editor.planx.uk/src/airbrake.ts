@@ -28,6 +28,7 @@ function getEnvForAllowedHosts(host: string) {
     case "planningservices.maidstone.gov.uk":
     case "planningservices.medway.gov.uk":
     case "planningservices.newcastle.gov.uk":
+    case "planningservices.northtyneside.gov.uk":
     case "planningservices.northumberland.gov.uk":
     case "planningservices.southglos.gov.uk":
     case "planningservices.southwark.gov.uk":
