@@ -102,8 +102,9 @@ const flow: FlowGraph = {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: TYPES.Notice,
+    type: TYPES.Content,
   },
   QJeTHUDzfz: {
     data: {

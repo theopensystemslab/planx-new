@@ -311,11 +311,12 @@ const flow: FlowGraph = {
       tags: [],
       color: "#9bb0d4",
       title: "End of test",
-      description:
+      content:
         '<p>Check the "Console" tab in the side panel to inspect which data fields the <code>passport</code>&nbsp;has captured.</p><p></p><p>Curious about doing further automations <em>using</em> the number or text answers captured here? See <strong>[201] Calculator uses </strong>next.</p>',
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   GhRomJidTi: {
     data: {

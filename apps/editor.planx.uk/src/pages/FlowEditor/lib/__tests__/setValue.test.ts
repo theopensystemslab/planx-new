@@ -20,11 +20,12 @@ const baseFlow: Store.Flow = {
     type: TYPES.SetValue,
   },
   middleOfService: {
-    type: TYPES.Notice,
+    type: TYPES.Content,
     data: {
       title: "Middle of service",
       color: "#EFEFEF",
       resetButton: false,
+      styleAsNotice: true,
     },
   },
   setValue2: {
@@ -36,11 +37,12 @@ const baseFlow: Store.Flow = {
     type: TYPES.SetValue,
   },
   endOfService: {
-    type: TYPES.Notice,
+    type: TYPES.Content,
     data: {
       title: "End of service",
       color: "#EFEFEF",
       resetButton: true,
+      styleAsNotice: true,
     },
   },
 };

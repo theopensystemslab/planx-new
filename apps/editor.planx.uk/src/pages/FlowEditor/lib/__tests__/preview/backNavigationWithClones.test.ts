@@ -223,11 +223,12 @@ const flow: Store.Flow = {
     edges: ["ClonedContent"],
   },
   FinalNotice: {
-    type: ComponentType.Notice,
+    type: ComponentType.Content,
     data: {
       title: "End of test",
       color: "#EFEFEF",
       resetButton: true,
+      styleAsNotice: true,
     },
   },
 };

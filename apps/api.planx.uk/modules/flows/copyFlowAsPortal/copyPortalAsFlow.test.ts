@@ -88,11 +88,12 @@ const mockFlowData: Flow["data"] = {
     edges: ["5nFnUmawC4"],
   },
   y5gQKVzLaj: {
-    type: 8,
+    type: 250,
     data: {
       title: "You've reached the end",
       color: "#EFEFEF",
       resetButton: true,
+      styleAsNotice: true,
     },
   },
   "5nFnUmawC4": {

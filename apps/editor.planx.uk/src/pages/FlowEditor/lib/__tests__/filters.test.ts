@@ -272,8 +272,9 @@ const flowWithFilters: Store.Flow = {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   RootFilterNoFlagResult: {
     data: {

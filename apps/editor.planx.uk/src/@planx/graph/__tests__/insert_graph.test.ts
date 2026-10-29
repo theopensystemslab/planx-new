@@ -19,7 +19,7 @@ const pattern: Graph = {
   question: { type: 100, data: { text: "Question?" }, edges: ["yes", "no"] },
   yes: { type: 200, data: { text: "Yes" } },
   no: { type: 200, data: { text: "No" } },
-  notice: { type: 8, data: { title: "Notice" } },
+  notice: { type: 250, data: { title: "Notice" } },
 };
 
 describe("inserting a graph", () => {
@@ -38,7 +38,7 @@ describe("inserting a graph", () => {
         },
         ID_1: { type: 200, data: { text: "Yes" } },
         ID_2: { type: 200, data: { text: "No" } },
-        ID_3: { type: 8, data: { title: "Notice" } },
+        ID_3: { type: 250, data: { title: "Notice" } },
       });
     });
 
@@ -66,7 +66,7 @@ describe("inserting a graph", () => {
       const existing: Graph = {
         _root: { edges: ["folder"] },
         folder: { type: 300, edges: ["existingChild"] },
-        existingChild: { type: 8 },
+        existingChild: { type: 250 },
       };
 
       const [graph] = insertGraph(pattern, {
@@ -76,14 +76,14 @@ describe("inserting a graph", () => {
 
       expect(graph["folder"].edges).toEqual(["existingChild", "ID_0", "ID_3"]);
       expect(graph["_root"]).toEqual({ edges: ["folder"] });
-      expect(graph["existingChild"]).toEqual({ type: 8 });
+      expect(graph["existingChild"]).toEqual({ type: 250 });
     });
 
     test("inserts before a given sibling, in source order", () => {
       const existing: Graph = {
         _root: { edges: ["first", "last"] },
-        first: { type: 8 },
-        last: { type: 8 },
+        first: { type: 250 },
+        last: { type: 250 },
       };
 
       const [graph] = insertGraph(pattern, {
@@ -154,7 +154,7 @@ describe("inserting a graph", () => {
       question: { type: 100, edges: ["optionA", "optionB"] },
       optionA: { type: 200, edges: ["clone"] },
       optionB: { type: 200, edges: ["clone"] },
-      clone: { type: 8, data: { title: "clone!" } },
+      clone: { type: 250, data: { title: "clone!" } },
     };
 
     /** Follows both of a question's options, asserting they still meet at one node */

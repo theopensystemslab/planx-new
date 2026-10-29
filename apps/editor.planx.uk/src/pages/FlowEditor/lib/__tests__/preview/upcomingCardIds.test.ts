@@ -112,8 +112,9 @@ const flowWithoutPortal: Store.Flow = {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   FruitChecklist: {
     data: {
@@ -165,8 +166,9 @@ const flowWithInternalPortal: Store.Flow = {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   StartContent: {
     data: {

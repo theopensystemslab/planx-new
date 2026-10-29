@@ -83,10 +83,11 @@ export const flowWithSections = {
     },
   },
   notice: {
-    type: 8,
+    type: 250,
     data: {
       color: "#EFEFEF",
       resetButton: true,
+      styleAsNotice: true,
     },
   },
 };

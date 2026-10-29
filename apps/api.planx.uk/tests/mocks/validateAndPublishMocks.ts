@@ -109,11 +109,12 @@ export const draftParentFlow: FlowGraph = {
     },
   },
   NoticeNode: {
-    type: 8,
+    type: 250,
     data: {
       title: "End of test",
       color: "#EFEFEF",
       resetButton: true,
+      styleAsNotice: true,
     },
   },
   ExternalPortalNode: {
@@ -139,8 +140,9 @@ export const flattenedParentFlow: FlowGraph = {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   ExternalPortalNode: {
     type: 300,

@@ -53,8 +53,9 @@ const flowWithAutomation: Store.Flow = {
       color: "#EFEFEF",
       title: "You are Group 2",
       resetButton: false,
+      styleAsNotice: true,
     },
-    type: TYPES.Notice,
+    type: TYPES.Content,
   },
   Calculate: {
     data: {
@@ -68,8 +69,9 @@ const flowWithAutomation: Store.Flow = {
       color: "#EFEFEF",
       title: "You are Group 1",
       resetButton: false,
+      styleAsNotice: true,
     },
-    type: TYPES.Notice,
+    type: TYPES.Content,
   },
   Group1Response: {
     data: {
@@ -106,8 +108,9 @@ const flowWithoutAutomation: Store.Flow = {
       color: "#EFEFEF",
       title: "You are Group 2",
       resetButton: false,
+      styleAsNotice: true,
     },
-    type: TYPES.Notice,
+    type: TYPES.Content,
   },
   Calculate: {
     data: {
@@ -121,8 +124,9 @@ const flowWithoutAutomation: Store.Flow = {
       color: "#EFEFEF",
       title: "You are Group 1",
       resetButton: false,
+      styleAsNotice: true,
     },
-    type: TYPES.Notice,
+    type: TYPES.Content,
   },
   Group1Response: {
     data: {

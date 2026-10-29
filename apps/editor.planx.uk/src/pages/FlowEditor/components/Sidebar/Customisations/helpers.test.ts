@@ -222,7 +222,7 @@ const mockTemplatedFlow: FlowGraph = {
     data: {
       text: "Notice inside a customisable folder not on root branch",
     },
-    type: ComponentType.Notice,
+    type: ComponentType.Content,
   },
 };
 
@@ -247,7 +247,7 @@ const mockNestedFolderFlow: FlowGraph = {
     edges: ["NestedNotice"],
   },
   NestedNotice: {
-    type: ComponentType.Notice,
+    type: ComponentType.Content,
     data: {
       text: "Notice inside a folder inside a folder",
     },

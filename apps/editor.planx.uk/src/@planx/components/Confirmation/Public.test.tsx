@@ -83,7 +83,7 @@ describe("Confirmation component", () => {
           Send: { type: TYPES.Send },
           Confirmation: { type: TYPES.Confirmation },
           Feedback: { type: TYPES.Feedback },
-          Notice: { type: TYPES.Notice },
+          Notice: { type: TYPES.Content },
         },
         breadcrumbs: { Send: { auto: false } },
       }),
