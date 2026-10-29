@@ -17,7 +17,7 @@
   },
   "FolderContent": {
     "data": {
-      "content": "<h1>Folder content</h1>"
+      "title": "Folder content"
     },
     "type": 250
   },

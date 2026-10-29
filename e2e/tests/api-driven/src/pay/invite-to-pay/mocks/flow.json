@@ -16361,7 +16361,8 @@
     "6A1ptNsDrK": {
       "data": {
         "info": "<p>The project selected needs to be accurate so that your planning officer can assess the application.</p>",
-        "content": "<h2>Go back a few steps<br></h2><p><br>Select all the changes that apply to the project.</p><p>If you continue, based on your answers the:</p><ul><li><p>project selected is incorrect</p></li><li><p>your result won&apos;t be accurate</p></li></ul>"
+        "content": "<p><br>Select all the changes that apply to the project.</p><p>If you continue, based on your answers the:</p><ul><li><p>project selected is incorrect</p></li><li><p>your result won&apos;t be accurate</p></li></ul>",
+        "title": "Go back a few steps"
       },
       "type": 250
     },
@@ -16782,8 +16783,9 @@
     "6JzQie828W": {
       "data": {
         "color": "#006360",
-        "content": "<h1>The fee for this application is £0</h1>\n<p>Based on the information you have provided, it looks like this application qualifies for a fee exemption because it relates solely to works that are being made for the purpose of providing access to a building for disabled people, or for improving their safety, health or comfort.</p>\n<p>Your planning officer will assess your application and contact you if they think that this exemption may not apply.</p>",
-        "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012, Regulation 4.</a></p>"
+        "content": "\n<p>Based on the information you have provided, it looks like this application qualifies for a fee exemption because it relates solely to works that are being made for the purpose of providing access to a building for disabled people, or for improving their safety, health or comfort.</p>\n<p>Your planning officer will assess your application and contact you if they think that this exemption may not apply.</p>",
+        "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/1\" target=\"_self\">The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012, Regulation 4.</a></p>",
+        "title": "The fee for this application is £0"
       },
       "type": 250
     },
@@ -28409,7 +28411,8 @@
     "B2pB3CUnXw": {
       "data": {
         "info": "<p>The project selected needs to be accurate so that your planning officer can assess the application.</p>",
-        "content": "<h2>Go back a few steps<br></h2><p><br>Select &apos;Change the use of a property&apos;.</p><p>If you continue instead, based on your answers the:</p><ul><li><p>project selected is incorrect</p></li><li><p>your application won&apos;t be accurate</p></li></ul>"
+        "content": "<p><br>Select &apos;Change the use of a property&apos;.</p><p>If you continue instead, based on your answers the:</p><ul><li><p>project selected is incorrect</p></li><li><p>your application won&apos;t be accurate</p></li></ul>",
+        "title": "Go back a few steps"
       },
       "type": 250
     },
@@ -68696,7 +68699,8 @@
     "PORSNxygK9": {
       "data": {
         "color": "#ffffff",
-        "content": "<h1>Ready to submit?</h1>\n<p>You will not be able to make any further changes.</p>"
+        "content": "\n<p>You will not be able to make any further changes.</p>",
+        "title": "Ready to submit?"
       },
       "type": 250
     },
@@ -76213,8 +76217,9 @@
     "SEcKGVWnww": {
       "data": {
         "color": "#ffffa3",
-        "content": "<h1>You will also need to apply for a dropped kerb</h1><p>Even if your dropped kerb does not require planning permission, you will still need to apply to your local council to come and do the work. You cannot install a dropped kerb yourself.</p><p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://www.gov.uk/apply-dropped-kerb\">Find out how to apply for a dropped kerb (opens a new tab)</a></p>",
-        "policyRef": "<p><a href=\"https://www.legislation.gov.uk/ukpga/1980/66/contents\" target=\"_self\">Highways Act 1980</a></p>\n<p><a href=\"https://www.legislation.gov.uk/ukpga/1991/22/contents\" target=\"_self\">New Roads and Street Works Act 1991</a> (multiple parts are relevant)</p>\n<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/2/crossheading/class-b-means-of-access-to-a-highway\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 2, Class B</a></p>"
+        "content": "<p>Even if your dropped kerb does not require planning permission, you will still need to apply to your local council to come and do the work. You cannot install a dropped kerb yourself.</p><p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://www.gov.uk/apply-dropped-kerb\">Find out how to apply for a dropped kerb (opens a new tab)</a></p>",
+        "policyRef": "<p><a href=\"https://www.legislation.gov.uk/ukpga/1980/66/contents\" target=\"_self\">Highways Act 1980</a></p>\n<p><a href=\"https://www.legislation.gov.uk/ukpga/1991/22/contents\" target=\"_self\">New Roads and Street Works Act 1991</a> (multiple parts are relevant)</p>\n<p><a href=\"https://www.legislation.gov.uk/uksi/2015/596/schedule/2/part/2/crossheading/class-b-means-of-access-to-a-highway\" target=\"_self\">The Town and Country Planning (General Permitted Development) (England) Order 2015 Schedule 2, Part 2, Class B</a></p>",
+        "title": "You will also need to apply for a dropped kerb"
       },
       "type": 250
     },
@@ -89631,7 +89636,8 @@
     "XKQ38K8PKY": {
       "data": {
         "info": "<p>The project selected needs to be accurate so that your planning officer can assess the application.</p>",
-        "content": "<h2>Go back a few steps<br><br></h2><p>Select &apos;Change the use of land&apos;.<br><br>If you continue instead, based on your answers the: </p><ul><li><p>project selected is incorrect</p></li><li><p>your application won&apos;t be accurate</p></li></ul>"
+        "content": "<p>Select &apos;Change the use of land&apos;.<br><br>If you continue instead, based on your answers the: </p><ul><li><p>project selected is incorrect</p></li><li><p>your application won&apos;t be accurate</p></li></ul>",
+        "title": "Go back a few steps"
       },
       "type": 250
     },
@@ -117341,7 +117347,8 @@
     "hd6UgDqKzj": {
       "data": {
         "info": "<p>The project selected needs to be accurate so that your planning officer can assess the application.</p>",
-        "content": "<h2>Go back a few steps<br><br></h2><p><br>If you continue, based on your answers the:</p><ul><li><p>project selected is incorrect</p></li><li><p>your application won&apos;t be accurate</p></li></ul>"
+        "content": "<p><br>If you continue, based on your answers the:</p><ul><li><p>project selected is incorrect</p></li><li><p>your application won&apos;t be accurate</p></li></ul>",
+        "title": "Go back a few steps"
       },
       "type": 250
     },
@@ -141607,7 +141614,8 @@
     "qWGuuIpSL4": {
       "data": {
         "info": "<p>The project selected needs to be accurate so that your planning officer can assess the application.</p>",
-        "content": "<h2>Go back a few steps<br></h2><p><br>Select all the changes that apply to the project.</p><p>If you continue instead, based on your answers the:</p><ul><li><p>project selected is incorrect</p></li><li><p>your application won&apos;t be accurate</p></li></ul>"
+        "content": "<p><br>Select all the changes that apply to the project.</p><p>If you continue instead, based on your answers the:</p><ul><li><p>project selected is incorrect</p></li><li><p>your application won&apos;t be accurate</p></li></ul>",
+        "title": "Go back a few steps"
       },
       "type": 250
     },
@@ -144830,7 +144838,8 @@
     "rn8v5ckAu1": {
       "data": {
         "color": "#ffffff",
-        "content": "<h1>Ready to submit?</h1>\n<p>You will not be able to make any further changes.</p>"
+        "content": "\n<p>You will not be able to make any further changes.</p>",
+        "title": "Ready to submit?"
       },
       "type": 250
     },
@@ -151040,7 +151049,8 @@
     "uAQbvp1lHM": {
       "data": {
         "info": "<p>The project selected needs to be accurate so that the service can give you the right advice.</p>",
-        "content": "<h2>Go back a few steps<br></h2><p><br>Select &apos;Change the use of a property&apos; and all the physical works that apply to the project.</p><p>If you continue, based on your answers the:</p><ul><li><p>project selected is incorrect</p></li><li><p>the result won&apos;t be accurate</p></li></ul>"
+        "content": "<p><br>Select &apos;Change the use of a property&apos; and all the physical works that apply to the project.</p><p>If you continue, based on your answers the:</p><ul><li><p>project selected is incorrect</p></li><li><p>the result won&apos;t be accurate</p></li></ul>",
+        "title": "Go back a few steps"
       },
       "type": 250
     },
@@ -154702,8 +154712,9 @@
     "vbNU2WAEQu": {
       "data": {
         "color": "#006360",
-        "content": "<h1>The fee for this application is £0</h1>\n<p>Based on the information you have provided, it looks like this application qualifies for a fee exemption because it is a resubmission that relates to similar proposals on the same site.&nbsp;</p>\n<p></p>\n<p>Your planning officer will assess your application and contact you if they think that this exemption may not apply.</p>",
-        "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2012/2920/regulation/8\" target=\"_self\">UK Statutory Instruments 2012 No. 2920 Regulation 8</a></p>"
+        "content": "\n<p>Based on the information you have provided, it looks like this application qualifies for a fee exemption because it is a resubmission that relates to similar proposals on the same site.&nbsp;</p>\n<p></p>\n<p>Your planning officer will assess your application and contact you if they think that this exemption may not apply.</p>",
+        "policyRef": "<p><a href=\"https://www.legislation.gov.uk/uksi/2012/2920/regulation/8\" target=\"_self\">UK Statutory Instruments 2012 No. 2920 Regulation 8</a></p>",
+        "title": "The fee for this application is £0"
       },
       "type": 250
     },
@@ -156767,7 +156778,8 @@
     "wF7xSwRE0x": {
       "data": {
         "color": "#ebffdc",
-        "content": "<h1>Works to Trees</h1><p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://beta.lambeth.gov.uk/planning-building-control/trees\">Read guidance about trees and hedges (opens in new tab)</a></p><p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://beta.lambeth.gov.uk/planning-building-control/trees/apply-permission-work-tree\">Apply for Works to Trees Consent (opens in new tab).</a></p>"
+        "content": "<p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://beta.lambeth.gov.uk/planning-building-control/trees\">Read guidance about trees and hedges (opens in new tab)</a></p><p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://beta.lambeth.gov.uk/planning-building-control/trees/apply-permission-work-tree\">Apply for Works to Trees Consent (opens in new tab).</a></p>",
+        "title": "Works to Trees"
       },
       "type": 250
     },
@@ -163581,7 +163593,8 @@
     "yzAND59txC": {
       "data": {
         "info": "<p>The project selected needs to be accurate so that your planning officer can assess the application.</p>",
-        "content": "<h2>Go back a few steps<br></h2><p><br>Select all the changes that apply to the project.</p>"
+        "content": "<p><br>Select all the changes that apply to the project.</p>",
+        "title": "Go back a few steps"
       },
       "type": 250
     },
