@@ -135,8 +135,8 @@ describe("Auto-answering inputs", () => {
 
     // Both contact inputs are currently queued up in upcoming card IDs now, as well as final notice
     expect(upcomingCardIds()).toEqual([
-      "tRHstVXhAW",
       "08O3PaGYjv",
+      "tRHstVXhAW",
       "FVS36zZVbf",
     ]);
 
