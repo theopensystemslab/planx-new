@@ -24,21 +24,20 @@ const AutoEnabled: React.FC<ServiceChargeSection> = ({
       <InputRow>
         <Switch
           checked={true}
-          onChange={() => console.log("auto enabled")}
           label="Apply Plan✕ service charge"
           disabled={true}
         />
       </InputRow>
       <Typography variant="body2" sx={{ mb: 2 }}>
-        Service charges are automatically enabled based on your payment provider
-        (Stripe) and workspace contract.
+        Service charges are enabled automatically based on your contract.
       </Typography>
       <Typography variant="body2" sx={{ mb: 2 }}>
         A £{formik.values.serviceChargeAmount} service charge plus{" "}
         {VAT_PERCENTAGE * 100}% VAT will be added unless{" "}
         <strong>application.fee.payable</strong> is less than £
         {DEFAULT_SERVICE_CHARGE_THRESHOLD} (after any Fast Track fees,
-        exemptions, reductions or increases, inclusive of VAT).
+        exemptions, reductions or increases, inclusive of VAT). Contact the
+        Plan✕ team to request an exemption.
       </Typography>
     </ModalSectionContent>
   </ModalSection>
@@ -53,14 +52,14 @@ const AutoDisabled: React.FC<ServiceChargeSection> = ({
       <InputRow>
         <Switch
           checked={false}
-          onChange={() => console.log("auto disabled")}
           label="Apply Plan✕ service charge"
           disabled={true}
         />
       </InputRow>
       <Typography variant="body2" sx={{ mb: 2 }}>
-        Service charges are automatically disabled based on your workspace
-        contract or a specific flow-level exception.
+        Service charges are automatically off for this service, either because
+        of your contract or because a service-level exemption has been agreed.
+        Contact the Plan✕ team to enable them.
       </Typography>
     </ModalSectionContent>
   </ModalSection>
@@ -88,15 +87,6 @@ const Editable: React.FC<ServiceChargeSection> = ({ formik, props }) => (
         <strong>application.fee.payable</strong> is less than £
         {DEFAULT_SERVICE_CHARGE_THRESHOLD} (after any Fast Track fees,
         exemptions, reductions or increases, inclusive of VAT).
-      </Typography>
-      <Typography variant="body2" sx={{ mb: 2 }}>
-        Open Systems Lab invoices quarterly to collect the service charge. If
-        you'd like to charge a higher fee than £
-        {formik.values.serviceChargeAmount}, please contact{" "}
-        <a href="mailto:finance@opensystemslab.io" target="_self">
-          finance@opensystemslab.io
-        </a>
-        .
       </Typography>
     </ModalSectionContent>
   </ModalSection>

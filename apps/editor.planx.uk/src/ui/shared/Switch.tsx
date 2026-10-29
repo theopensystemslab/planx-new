@@ -12,7 +12,7 @@ import ErrorWrapper from "./ErrorWrapper";
 
 interface Props {
   checked?: boolean;
-  onChange: MuiSwitchProps["onChange"];
+  onChange?: MuiSwitchProps["onChange"];
   label: ReactNode;
   name?: string;
   variant?: "editorPage" | "editorModal";
