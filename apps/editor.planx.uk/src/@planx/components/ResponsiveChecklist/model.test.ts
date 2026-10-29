@@ -186,7 +186,7 @@ describe("ResponsiveChecklist - validation", () => {
       });
 
       test("grouped responsive checklists - labels can be duplicated if descriptions differ within groups", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
@@ -215,7 +215,7 @@ describe("ResponsiveChecklist - validation", () => {
       });
 
       test("grouped responsive checklists - options can be repeated across groups", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
@@ -257,7 +257,7 @@ describe("ResponsiveChecklist - validation", () => {
       });
 
       test("grouped responsive checklists - options can be repeated across groups (inc. whitespace)", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
@@ -301,7 +301,7 @@ describe("ResponsiveChecklist - validation", () => {
 
     describe("options with data values", () => {
       test("responsive checklists - unique options must be used", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           options: [
             {
@@ -319,7 +319,7 @@ describe("ResponsiveChecklist - validation", () => {
       });
 
       test("responsive checklists - repeated data values are allowed", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           options: [
             {
@@ -337,7 +337,7 @@ describe("ResponsiveChecklist - validation", () => {
       });
 
       test("grouped responsive checklists - data values can be repeated within groups", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
@@ -360,7 +360,7 @@ describe("ResponsiveChecklist - validation", () => {
       });
 
       test("grouped responsive checklists - labels can be repeated across groups", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
@@ -399,7 +399,7 @@ describe("ResponsiveChecklist - validation", () => {
       });
 
       test("grouped responsive checklists - data values can be repeated across groups", async () => {
-        const result = validationSchema.validate({
+        const result = await validationSchema.validate({
           text: "Test",
           groupedOptions: [
             {
