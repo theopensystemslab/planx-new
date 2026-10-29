@@ -29,8 +29,10 @@ const mockCreateOnboardingLink = vi.fn();
 const mockIsOnboardingComplete = vi.fn();
 const mockIsInvalidRequestError = vi.fn();
 const mockGetAccountStatus = vi.fn();
+const mockHasGovPayConfigured = vi.fn();
 const mockPostStripeConnectedToSlack = vi.fn();
 vi.mock("./service.js", () => ({
+  hasGovPayConfigured: (...args: unknown[]) => mockHasGovPayConfigured(...args),
   createPrefilledTestAccount: (...args: unknown[]) =>
     mockCreatePrefilledTestAccount(...args),
   createOnboardingLink: (...args: unknown[]) =>
@@ -351,6 +353,7 @@ describe("getConnectStatus", () => {
       mockGetStripeAccountId.mockResolvedValue("acct_123");
       mockGetAccountStatus.mockResolvedValue(accountStatus);
       mockGetStripeMode.mockReturnValue("test");
+      mockHasGovPayConfigured.mockResolvedValue(true);
 
       const res = buildRes({ team: { id: 1, slug: "lambeth" } });
       const next = vi.fn();
@@ -364,6 +367,7 @@ describe("getConnectStatus", () => {
         accountId: "acct_123",
         accountStatus,
         mode: "test",
+        govPayConfigured: true,
       };
 
       expect(res.send).toHaveBeenCalledWith(expected);
@@ -374,6 +378,7 @@ describe("getConnectStatus", () => {
   it("returns 'not connected' when no account id is stored", async () => {
     mockGetStripeAccountId.mockResolvedValue(null);
     mockGetStripeMode.mockReturnValue("live");
+    mockHasGovPayConfigured.mockResolvedValue(false);
 
     const res = buildRes({ team: { id: 1, slug: "lambeth" } });
     const next = vi.fn();
@@ -385,6 +390,7 @@ describe("getConnectStatus", () => {
       accountId: null,
       accountStatus: null,
       mode: "live",
+      govPayConfigured: false,
     };
     expect(res.send).toHaveBeenCalledWith(expected);
     expect(mockGetAccountStatus).not.toHaveBeenCalled();

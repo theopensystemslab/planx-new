@@ -67,6 +67,7 @@ export interface ConnectStatusResponse {
   /** null if no account is connected */
   accountStatus: StripeAccountStatus | null;
   mode: "test" | "live";
+  govPayConfigured: boolean;
 }
 
 export const connectCallbackSchema = z.object({
