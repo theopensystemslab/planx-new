@@ -25,7 +25,7 @@ export const getDigitalPlanningApplicationPayload = async (
   } catch (error) {
     return next(
       new ServerError({
-        message: `Failed to make Digital Planning Application payload: ${error}. Stack: ${(error as Error).stack}`,
+        message: `Failed to make Digital Planning Application payload: ${(error as Error).message}`,
         cause: error,
       }),
     );
