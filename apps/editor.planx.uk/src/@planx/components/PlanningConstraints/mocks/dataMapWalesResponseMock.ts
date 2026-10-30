@@ -194,6 +194,7 @@ export default {
       category: "Ecology",
     },
     designated: {
+      fn: "designated",
       value: true,
     },
   },
