@@ -1,0 +1,3 @@
+table:
+  name: analytics_ai_audit_log
+  schema: public
