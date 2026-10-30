@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "@tanstack/react-router";
@@ -24,28 +23,23 @@ const SubmissionDetailModal: React.FC<SubmissionDetailModalProps> = ({
   return (
     <Dialog
       open
+      onClose={handleClose}
+      fullWidth
+      maxWidth={false}
       slotProps={{
         paper: {
-          sx: {
-            width: { xs: "90%", md: "66.67%" },
-            maxWidth: { xs: "90%", md: "66.67%" },
-            margin: "auto",
-          },
+          sx: (theme) => ({ maxWidth: theme.breakpoints.values.lg }),
         },
       }}
-      onClose={handleClose}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          marginX: 1,
-        }}
+      <DialogTitle
+        variant="h3"
+        component="h2"
+        sx={{ display: "flex", alignItems: "center" }}
       >
-        <DialogTitle variant="h2">Submission details</DialogTitle>
+        Submission details
         <CloseButton onClick={handleClose} />
-      </Box>
+      </DialogTitle>
 
       <SubmissionDetailContent sessionId={sessionId} />
     </Dialog>

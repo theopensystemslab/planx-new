@@ -11,7 +11,7 @@ export const DownloadSubmissionButton = (props: Props) => {
 
   return (
     <Button
-      color="primary"
+      color="secondary"
       variant="contained"
       onClick={() => window.open(zipUrl, "_blank")}
       disabled={!props.submittedAt}
