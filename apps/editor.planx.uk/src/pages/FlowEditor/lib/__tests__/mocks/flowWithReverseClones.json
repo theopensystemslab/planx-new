@@ -7,9 +7,9 @@
       "text": "Right"
     },
     "type": 200,
-    "edges": ["rightNotice", "clone"]
+    "edges": ["rightContent", "clone"]
   },
-  "rightNotice": {
+  "rightContent": {
     "data": {
       "styleAsNotice": true,
       "color": "#EFEFEF",

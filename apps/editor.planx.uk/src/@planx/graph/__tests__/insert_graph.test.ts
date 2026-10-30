@@ -15,11 +15,11 @@ const nodeIds = (graph: Graph) =>
 const emptyFlow = (): Graph => ({ _root: { edges: [] } });
 
 const pattern: Graph = {
-  _root: { edges: ["question", "notice"] },
+  _root: { edges: ["question", "content"] },
   question: { type: 100, data: { text: "Question?" }, edges: ["yes", "no"] },
   yes: { type: 200, data: { text: "Yes" } },
   no: { type: 200, data: { text: "No" } },
-  notice: { type: 250, data: { title: "Notice" } },
+  content: { type: 250, data: { title: "Content" } },
 };
 
 describe("inserting a graph", () => {
@@ -38,7 +38,7 @@ describe("inserting a graph", () => {
         },
         ID_1: { type: 200, data: { text: "Yes" } },
         ID_2: { type: 200, data: { text: "No" } },
-        ID_3: { type: 250, data: { title: "Notice" } },
+        ID_3: { type: 250, data: { title: "Content" } },
       });
     });
 
@@ -59,7 +59,7 @@ describe("inserting a graph", () => {
       const [firstId, secondId] = graph["_root"].edges!;
 
       expect(graph[firstId].data).toEqual({ text: "Question?" });
-      expect(graph[secondId].data).toEqual({ title: "Notice" });
+      expect(graph[secondId].data).toEqual({ title: "Content" });
     });
 
     test("inserts into a given parent, leaving the rest of the graph alone", () => {
@@ -120,7 +120,7 @@ describe("inserting a graph", () => {
 
       insertGraph(pattern, { idFn: deterministicId, onInsert })(emptyFlow());
 
-      // question then notice, matching pattern._root.edges - not their new ids' sort order
+      // question then content, matching pattern._root.edges - not their new ids' sort order
       expect(onInsert).toHaveBeenCalledWith(["ID_0", "ID_3"], expect.any(Map));
     });
 

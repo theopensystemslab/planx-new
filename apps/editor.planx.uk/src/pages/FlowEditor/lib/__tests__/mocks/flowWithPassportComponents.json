@@ -7,7 +7,7 @@
       "planningConstraints",
       "mapAndLabel",
       "text2",
-      "notice"
+      "content"
     ]
   },
   "mapAndLabel": {
@@ -56,7 +56,7 @@
     },
     "type": 9
   },
-  "notice": {
+  "content": {
     "data": {
       "styleAsNotice": true,
       "color": "#EFEFEF",

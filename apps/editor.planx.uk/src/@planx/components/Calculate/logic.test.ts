@@ -48,7 +48,7 @@ const flowWithAutomation: Store.Flow = {
   _root: {
     edges: ["Calculate", "Question"],
   },
-  Group2Notice: {
+  Group2Content: {
     data: {
       color: "#EFEFEF",
       title: "You are Group 2",
@@ -64,7 +64,7 @@ const flowWithAutomation: Store.Flow = {
     },
     type: TYPES.Calculate,
   },
-  Group1Notice: {
+  Group1Content: {
     data: {
       color: "#EFEFEF",
       title: "You are Group 1",
@@ -79,7 +79,7 @@ const flowWithAutomation: Store.Flow = {
       text: "No",
     },
     type: TYPES.Answer,
-    edges: ["Group1Notice"],
+    edges: ["Group1Content"],
   },
   Question: {
     data: {
@@ -95,7 +95,7 @@ const flowWithAutomation: Store.Flow = {
       text: "Yes",
     },
     type: TYPES.Answer,
-    edges: ["Group2Notice"],
+    edges: ["Group2Content"],
   },
 };
 
@@ -103,7 +103,7 @@ const flowWithoutAutomation: Store.Flow = {
   _root: {
     edges: ["Calculate", "Question"],
   },
-  Group2Notice: {
+  Group2Content: {
     data: {
       color: "#EFEFEF",
       title: "You are Group 2",
@@ -119,7 +119,7 @@ const flowWithoutAutomation: Store.Flow = {
     },
     type: TYPES.Calculate,
   },
-  Group1Notice: {
+  Group1Content: {
     data: {
       color: "#EFEFEF",
       title: "You are Group 1",
@@ -134,7 +134,7 @@ const flowWithoutAutomation: Store.Flow = {
       text: "1",
     },
     type: TYPES.Answer,
-    edges: ["Group1Notice"],
+    edges: ["Group1Content"],
   },
   Question: {
     data: {
@@ -150,6 +150,6 @@ const flowWithoutAutomation: Store.Flow = {
       text: "2",
     },
     type: TYPES.Answer,
-    edges: ["Group2Notice"],
+    edges: ["Group2Content"],
   },
 };

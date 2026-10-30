@@ -8,7 +8,7 @@ export const flowWithSections = {
       "question1",
       "question2",
       "review",
-      "notice",
+      "content",
     ],
   },
   section1: {
@@ -82,7 +82,7 @@ export const flowWithSections = {
       title: "Check your answers before sending your form",
     },
   },
-  notice: {
+  content: {
     type: 250,
     data: {
       color: "#EFEFEF",

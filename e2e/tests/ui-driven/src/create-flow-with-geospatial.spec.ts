@@ -188,7 +188,7 @@ test.describe("Flow creation, publish and preview", () => {
     await clickContinue({ page });
 
     await expect(
-      page.locator("h1", { hasText: "A notice inside a portal!" }),
+      page.locator("h1", { hasText: "Content inside a portal!" }),
     ).toBeVisible();
     await clickContinue({ page });
 

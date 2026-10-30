@@ -16,7 +16,6 @@ import {
   createInternalPortal,
   createList,
   createNextSteps,
-  createNotice,
   createNumberInput,
   createPlanningConstraints,
   createPropertyInformation,
@@ -39,8 +38,8 @@ export class PlaywrightEditor {
   readonly nodeList: Locator;
   readonly answers: {
     questionText: string;
-    yesBranchNoticeText: string;
-    noBranchNoticeText: string;
+    yesBranchContentText: string;
+    noBranchContentText: string;
   };
 
   constructor(page: Page) {
@@ -52,8 +51,8 @@ export class PlaywrightEditor {
 
     this.answers = {
       questionText: "Is this a test?",
-      yesBranchNoticeText: "Yes! this is a test",
-      noBranchNoticeText: "Sorry, this is a test",
+      yesBranchContentText: "Yes! this is a test",
+      noBranchContentText: "Sorry, this is a test",
     };
   }
 
@@ -152,18 +151,18 @@ export class PlaywrightEditor {
     ).toBeVisible();
   }
 
-  async createNoticeOnEachBranch() {
-    // Add a notice to the "Yes" path
-    await createNotice(
+  async createContentOnEachBranch() {
+    // Add Content to the "Yes" path
+    await createContent(
       this.page,
       this.yesBranch.locator(".hanger > :is(a, button)"),
-      this.answers.yesBranchNoticeText,
+      this.answers.yesBranchContentText,
     );
-    // Add a notice to the "No" path
-    await createNotice(
+    // Add Content to the "No" path
+    await createContent(
       this.page,
       this.noBranch.locator(".hanger > :is(a, button)"),
-      this.answers.noBranchNoticeText,
+      this.answers.noBranchContentText,
     );
 
     await expect(
@@ -325,11 +324,11 @@ export class PlaywrightEditor {
     });
     await internalPortalButton.click();
 
-    // create a notice inside the portal
-    await createNotice(
+    // Add Content inside the portal
+    await createContent(
       this.page,
       this.page.locator(".hanger > :is(a, button)").last(),
-      "A notice inside a portal!",
+      "Content inside a portal!",
     );
   }
 

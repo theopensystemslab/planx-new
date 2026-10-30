@@ -79,11 +79,11 @@ describe("Confirmation component", () => {
     act(() =>
       setState({
         flow: {
-          _root: { edges: ["Send", "Confirmation", "Feedback", "Notice"] },
+          _root: { edges: ["Send", "Confirmation", "Feedback", "Content"] },
           Send: { type: TYPES.Send },
           Confirmation: { type: TYPES.Confirmation },
           Feedback: { type: TYPES.Feedback },
-          Notice: { type: TYPES.Content },
+          Content: { type: TYPES.Content },
         },
         breadcrumbs: { Send: { auto: false } },
       }),
@@ -92,7 +92,7 @@ describe("Confirmation component", () => {
     expect(getState().upcomingCardIds()).toEqual([
       "Confirmation",
       "Feedback",
-      "Notice",
+      "Content",
     ]);
     expect(getState().isFinalCard()).toEqual(false);
 

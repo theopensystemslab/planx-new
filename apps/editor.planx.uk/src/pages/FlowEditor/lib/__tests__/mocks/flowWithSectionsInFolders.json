@@ -5,7 +5,7 @@
       "Question",
       "FolderOnRoot",
       "FinalSection",
-      "Notice"
+      "Content"
     ]
   },
   "MiddleSectionInFolder": {
@@ -40,7 +40,7 @@
     },
     "type": 360
   },
-  "Notice": {
+  "Content": {
     "data": {
       "styleAsNotice": true,
       "color": "#EFEFEF",

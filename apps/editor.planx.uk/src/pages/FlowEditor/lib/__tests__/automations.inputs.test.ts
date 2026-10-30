@@ -24,7 +24,7 @@ describe("Auto-answering inputs", () => {
       auto: false,
     });
 
-    // Both date inputs are currently queued up in upcoming card IDs now, as well as the final notice
+    // Both date inputs are currently queued up in upcoming card IDs now, as well as the final content
     expect(upcomingCardIds()).toEqual([
       "9PHIhY2j7Y",
       "5QVNvkoYfj",
@@ -104,7 +104,7 @@ describe("Auto-answering inputs", () => {
     });
     clickContinue("4bQvIflW6R", { auto: true });
 
-    // Both text inputs are currently queued up in upcoming card IDs now, as well as final notice
+    // Both text inputs are currently queued up in upcoming card IDs now, as well as final content
     expect(upcomingCardIds()).toEqual([
       "6zqtH8xLH9",
       "KvyDAcvmO4",
@@ -133,7 +133,7 @@ describe("Auto-answering inputs", () => {
     });
     clickContinue("E2Q1IVRqtZ", { auto: true });
 
-    // Both contact inputs are currently queued up in upcoming card IDs now, as well as final notice
+    // Both contact inputs are currently queued up in upcoming card IDs now, as well as final content
     expect(upcomingCardIds()).toEqual([
       "tRHstVXhAW",
       "08O3PaGYjv",

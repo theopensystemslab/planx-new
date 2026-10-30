@@ -237,23 +237,6 @@ export const createQuestionWithDataFieldOptions = async (
   await page.locator('button[form="modal"][type="submit"]').click();
 };
 
-export const createNotice = async (
-  page: Page,
-  locatingNode: Locator,
-  noticeText: string,
-) => {
-  await locatingNode.click();
-  await page.getByTestId("add-component-modal").waitFor();
-  await page
-    .locator(`[data-component-type="${ComponentType.Content}"]`)
-    .click();
-  await page.getByRole("dialog").waitFor();
-  await page.getByPlaceholder("Title").fill(noticeText);
-  await page.getByLabel("Style content as a notice").click();
-  await page.locator('button[form="modal"][type="submit"]').click();
-  await page.getByRole("dialog").waitFor({ state: "detached" });
-};
-
 export const createChecklist = async (
   page: Page,
   locatingNode: Locator,

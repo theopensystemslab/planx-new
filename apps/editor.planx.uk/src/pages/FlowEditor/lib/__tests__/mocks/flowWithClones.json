@@ -11,7 +11,7 @@
     },
     "type": 250
   },
-  "leftNotice": {
+  "leftContent": {
     "data": {
       "styleAsNotice": true,
       "color": "#EFEFEF",
@@ -29,7 +29,7 @@
     },
     "type": 250
   },
-  "rightNotice": {
+  "rightContent": {
     "data": {
       "styleAsNotice": true,
       "color": "#EFEFEF",
@@ -43,14 +43,14 @@
       "text": "Left"
     },
     "type": 200,
-    "edges": ["leftNotice", "clone", "leftConfirmation"]
+    "edges": ["leftContent", "clone", "leftConfirmation"]
   },
   "rightChoice": {
     "data": {
       "text": "Right"
     },
     "type": 200,
-    "edges": ["rightNotice", "clone", "rightConfirmation"]
+    "edges": ["rightContent", "clone", "rightConfirmation"]
   },
   "leftConfirmation": {
     "data": {

@@ -16,7 +16,7 @@ describe("getEditedFolderIds", () => {
 
   it("returns every folder containing an edited node nested within folders", () => {
     const editedFolderIds = getEditedFolderIds(
-      { NestedNotice: { data: { text: "Updated" } } },
+      { NestedContent: { data: { text: "Updated" } } },
       sortFlow(mockNestedFolderFlow),
     );
     expect(editedFolderIds).toEqual(new Set(["FolderA", "FolderB"]));
@@ -77,7 +77,7 @@ describe("hasNodeBeenUpdated", () => {
 
   it("returns true for a folder if a node has been added to a folder nested within it", () => {
     const flowEdits: FlowEdits = {
-      NestedNotice: { data: { text: "Updated" } },
+      NestedContent: { data: { text: "Updated" } },
     };
     const isComplete = hasNodeBeenUpdated(
       "FolderA",
@@ -121,7 +121,7 @@ const mockFlowEdits: FlowEdits = {
       notes: "Added a note",
     },
   },
-  Notice: {
+  FolderContent: {
     // "Completes" Folder
     data: {
       tags: ["toReview"],
@@ -210,7 +210,7 @@ const mockTemplatedFlow: FlowGraph = {
       text: "Yes",
     },
     type: ComponentType.Answer,
-    edges: ["Notice"],
+    edges: ["FolderContent"],
   },
   ChecklistOptionB: {
     data: {
@@ -218,9 +218,9 @@ const mockTemplatedFlow: FlowGraph = {
     },
     type: ComponentType.Answer,
   },
-  Notice: {
+  FolderContent: {
     data: {
-      text: "Notice inside a customisable folder not on root branch",
+      text: "Content inside a customisable folder not on root branch",
     },
     type: ComponentType.Content,
   },
@@ -244,12 +244,12 @@ const mockNestedFolderFlow: FlowGraph = {
     data: {
       text: "Inner folder",
     },
-    edges: ["NestedNotice"],
+    edges: ["NestedContent"],
   },
-  NestedNotice: {
+  NestedContent: {
     type: ComponentType.Content,
     data: {
-      text: "Notice inside a folder inside a folder",
+      text: "Content inside a folder inside a folder",
     },
   },
 };

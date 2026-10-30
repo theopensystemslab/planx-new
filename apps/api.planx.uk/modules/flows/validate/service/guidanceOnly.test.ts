@@ -12,8 +12,8 @@ const flowWithSend: FlowGraph = {
 };
 
 const flowWithoutSend: FlowGraph = {
-  _root: { edges: ["notice"] },
-  notice: { type: 250, data: { title: "Guidance" } },
+  _root: { edges: ["content"] },
+  content: { type: 250, data: { title: "Guidance" } },
 };
 
 const mockFlowStatus = (

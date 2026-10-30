@@ -22,7 +22,7 @@ describe("A filter on the root of the graph", () => {
       "SecondQuestion",
       "RootFilter",
       "BranchingQuestion",
-      "EndNotice",
+      "EndContent",
     ]);
     clickContinue("FirstQuestion", {
       answers: ["FirstQuestionYesAnswer"],
@@ -43,7 +43,7 @@ describe("A filter on the root of the graph", () => {
       "SecondQuestion",
       "RootFilter",
       "BranchingQuestion",
-      "EndNotice",
+      "EndContent",
     ]);
     clickContinue("FirstQuestion", {
       answers: ["FirstQuestionNoAnswer"],
@@ -64,7 +64,7 @@ describe("A filter on the root of the graph", () => {
       "SecondQuestion",
       "RootFilter",
       "BranchingQuestion",
-      "EndNotice",
+      "EndContent",
     ]);
     clickContinue("FirstQuestion", {
       answers: ["FirstQuestionIdkAnswer"],
@@ -225,7 +225,7 @@ const flowWithFilters: Store.Flow = {
       "SecondQuestion",
       "RootFilter",
       "BranchingQuestion",
-      "EndNotice",
+      "EndContent",
     ],
   },
   SecondQuestionYesAnswer: {
@@ -267,7 +267,7 @@ const flowWithFilters: Store.Flow = {
     type: 100,
     edges: ["GoToBranchAnswer", "SkipBranchAnswer"],
   },
-  EndNotice: {
+  EndContent: {
     data: {
       color: "#EFEFEF",
       title: "End of test",

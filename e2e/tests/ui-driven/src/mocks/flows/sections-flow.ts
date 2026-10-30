@@ -8,7 +8,7 @@ export const flow: FlowGraph = {
       "Question1",
       "Section2",
       "Question2",
-      "EndOfSection2Notice",
+      "EndOfSection2Content",
       "Section3",
       "PreSendContent",
       "Send",
@@ -18,7 +18,7 @@ export const flow: FlowGraph = {
   ChecklistOptionC: {
     data: { text: "C" },
     type: ComponentType.Answer,
-    edges: ["NoticeC"],
+    edges: ["ContentC"],
   },
   Question1: {
     data: { text: "Question 1" },
@@ -27,12 +27,11 @@ export const flow: FlowGraph = {
   },
   Section2: { data: { title: "Section Two" }, type: ComponentType.Section },
   Question1AnswerB: { data: { text: "B" }, type: ComponentType.Answer },
-  NoticeC: {
+  ContentC: {
     data: {
       title: "Reached C",
       color: "#EFEFEF",
       resetButton: false,
-      styleAsNotice: true,
     },
     type: ComponentType.Content,
   },
@@ -41,12 +40,11 @@ export const flow: FlowGraph = {
     type: ComponentType.Content,
   },
   Question1AnswerC: { data: { text: "C" }, type: ComponentType.Answer },
-  NoticeB: {
+  ContentB: {
     data: {
       title: "Reached B",
       color: "#EFEFEF",
       resetButton: false,
-      styleAsNotice: true,
     },
     type: ComponentType.Content,
   },
@@ -54,28 +52,26 @@ export const flow: FlowGraph = {
     data: { title: "Send", destinations: ["email"] },
     type: ComponentType.Send,
   },
-  NoticeD: {
+  ContentD: {
     data: {
       title: "Reached D",
       color: "#EFEFEF",
       resetButton: false,
-      styleAsNotice: true,
     },
     type: ComponentType.Content,
   },
-  NoticeA: {
+  ContentA: {
     data: {
       title: "Reached A",
       color: "#EFEFEF",
       resetButton: false,
-      styleAsNotice: true,
     },
     type: ComponentType.Content,
   },
   ChecklistOptionB: {
     data: { text: "B" },
     type: ComponentType.Answer,
-    edges: ["NoticeB"],
+    edges: ["ContentB"],
   },
   Checklist1: {
     data: { text: "Multi-select", allRequired: false },
@@ -91,7 +87,7 @@ export const flow: FlowGraph = {
   ChecklistOptionD: {
     data: { text: "D" },
     type: ComponentType.Answer,
-    edges: ["NoticeD"],
+    edges: ["ContentD"],
   },
   Section1: { data: { title: "Section One" }, type: ComponentType.Section },
   Question2: {
@@ -108,7 +104,7 @@ export const flow: FlowGraph = {
   ChecklistOptionA: {
     data: { text: "A" },
     type: ComponentType.Answer,
-    edges: ["NoticeA"],
+    edges: ["ContentA"],
   },
   Section3: { data: { title: "Section Three" }, type: ComponentType.Section },
   Confirmation: {
@@ -119,12 +115,11 @@ export const flow: FlowGraph = {
     },
     type: ComponentType.Confirmation,
   },
-  EndOfSection2Notice: {
+  EndOfSection2Content: {
     data: {
       title: "Reached the end of section two",
       color: "#EFEFEF",
       resetButton: false,
-      styleAsNotice: true,
     },
     type: ComponentType.Content,
   },
