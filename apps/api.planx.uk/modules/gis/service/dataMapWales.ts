@@ -40,6 +40,46 @@ const getRequiredProperties = (
   ...(ADDITIONAL_PROPERTIES[key] || []),
 ];
 
+// Granular passport values, matching how `digitalLand` sets them - these have no `text` so are not listed separately to applicants
+const GRANULAR_VALUES: Record<
+  string,
+  { property: string; values: Record<string, string> }
+> = {
+  listed: {
+    property: "Grade",
+    values: {
+      I: "listed.gradeOne",
+      II: "listed.gradeTwo",
+      "II*": "listed.gradeTwoStar",
+    },
+  },
+  flood: {
+    property: "risk",
+    values: {
+      "Flood Zone 2": "flood.zoneTwo",
+      "Flood Zone 3": "flood.zoneThree",
+    },
+  },
+};
+
+const addGranularValues = (
+  formattedResult: Record<string, Constraint>,
+  key: string,
+  entities: Record<string, any>[],
+) => {
+  const granular = GRANULAR_VALUES[key];
+  if (!granular) return;
+
+  Object.entries(granular.values).forEach(([sourceValue, fn]) => {
+    formattedResult[fn] = {
+      fn,
+      value: entities.some(
+        (entity) => entity[granular.property] === sourceValue,
+      ),
+    };
+  });
+};
+
 // Query DataMapWales
 async function queryWFSLayer(
   constraint: DataMapWalesConstraint,
@@ -242,74 +282,7 @@ async function go(
           category: constraint.category,
         };
 
-        // listed buildings; check Grade attribute
-        if (key === "listed") {
-          const gradeOneEntities = entities.filter((e) => e.Grade === "I");
-          const gradeTwoEntities = entities.filter((e) => e.Grade === "II");
-          const gradeTwoStarEntities = entities.filter(
-            (e) => e.Grade === "II*",
-          );
-
-          if (gradeOneEntities.length > 0) {
-            formattedResult["listed.gradeOne"] = {
-              fn: "listed.gradeOne",
-              value: true,
-              text: "is a Grade I Listed Building",
-              data: gradeOneEntities,
-              category: constraint.category,
-            };
-          }
-
-          if (gradeTwoEntities.length > 0) {
-            formattedResult["listed.gradeTwo"] = {
-              fn: "listed.gradeTwo",
-              value: true,
-              text: "is a Grade II Listed Building",
-              data: gradeTwoEntities,
-              category: constraint.category,
-            };
-          }
-
-          if (gradeTwoStarEntities.length > 0) {
-            formattedResult["listed.gradeTwoStar"] = {
-              fn: "listed.gradeTwoStar",
-              value: true,
-              text: "is a Grade II* Listed Building",
-              data: gradeTwoStarEntities,
-              category: constraint.category,
-            };
-          }
-        }
-
-        // flooding; split by zone
-        if (key === "flood") {
-          const zoneTwoEntities = entities.filter(
-            (e) => e.risk === "Flood Zone 2",
-          );
-          const zoneThreeEntities = entities.filter(
-            (e) => e.risk === "Flood Zone 3",
-          );
-
-          if (zoneTwoEntities.length > 0) {
-            formattedResult["flood.zoneTwo"] = {
-              fn: "flood.zoneTwo",
-              value: true,
-              text: "is in Flood Zone 2",
-              data: zoneTwoEntities,
-              category: constraint.category,
-            };
-          }
-
-          if (zoneThreeEntities.length > 0) {
-            formattedResult["flood.zoneThree"] = {
-              fn: "flood.zoneThree",
-              value: true,
-              text: "is in Flood Zone 3",
-              data: zoneThreeEntities,
-              category: constraint.category,
-            };
-          }
-        }
+        addGranularValues(formattedResult, key, entities);
       }
     }
   });
@@ -346,37 +319,6 @@ async function go(
       };
     }
   });
-
-  // Copy metadata to child constraints with specific names
-  if (metadata["flood"]) {
-    metadata["flood.zoneTwo"] = {
-      ...metadata["flood"],
-      name: "Flood Zone 2",
-      plural: "Flood Zone 2",
-    };
-    metadata["flood.zoneThree"] = {
-      ...metadata["flood"],
-      name: "Flood Zone 3",
-      plural: "Flood Zone 3",
-    };
-  }
-  if (metadata["listed"]) {
-    metadata["listed.gradeOne"] = {
-      ...metadata["listed"],
-      name: "Grade I Listed Building",
-      plural: "Grade I Listed Buildings",
-    };
-    metadata["listed.gradeTwo"] = {
-      ...metadata["listed"],
-      name: "Grade II Listed Building",
-      plural: "Grade II Listed Buildings",
-    };
-    metadata["listed.gradeTwoStar"] = {
-      ...metadata["listed"],
-      name: "Grade II* Listed Building",
-      plural: "Grade II* Listed Buildings",
-    };
-  }
 
   // If analytics are "on", store an audit record of the raw response
   if (extras?.analytics !== "false") {
