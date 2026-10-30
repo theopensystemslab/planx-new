@@ -1,4 +1,5 @@
 import { getClient } from "../../../../client/index.js";
+import { ServerError } from "../../../../errors/index.js";
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 import { generateHTMLForSession } from "../../../lps/service/generateHTML.js";
 import type { submissionSchema } from "./../schema.js";
@@ -24,8 +25,11 @@ export const submissionHTMLController: SubmissionController = async (
     res.header("Content-type", "text/html");
     res.send(html);
   } catch (error) {
-    return next({
-      message: "Failed to build HTML: " + (error as Error).message,
-    });
+    return next(
+      new ServerError({
+        message: "Failed to build HTML: " + (error as Error).message,
+        cause: error,
+      }),
+    );
   }
 };

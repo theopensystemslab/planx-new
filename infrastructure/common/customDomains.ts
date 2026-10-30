@@ -157,7 +157,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "north-tyneside",
           domain: "planningservices.northtyneside.gov.uk",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
         {
           name: "kensington-and-chelsea",

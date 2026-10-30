@@ -90,7 +90,7 @@ export const getMigrationBlockers = async (
     migrationService.getActiveGovPaySessions(teamSlug),
   ]);
 
-  if (!isStripePaymentsEnabled()) {
+  if (!isStripePaymentsEnabled(teamSlug)) {
     blockers.push({ reason: "stripePaymentsNotEnabled" });
   }
   if (!accountId) blockers.push({ reason: "stripeNotConnected" });
@@ -138,6 +138,11 @@ export const revertToGovPay = async (
   const environment = process.env.APP_ENVIRONMENT;
   if (environment === "production") {
     throw new Error("Cannot revert to GovPay on production");
+  }
+
+  const hasGovPay = await connectionService.hasGovPayConfigured(teamId);
+  if (!hasGovPay) {
+    throw new Error(`Team ${teamId} does not have GOV.UK Pay configured`);
   }
 
   const affectedRows = await updatePaymentProvider(teamId, "govpay");

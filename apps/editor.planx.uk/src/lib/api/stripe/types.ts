@@ -13,6 +13,7 @@ export interface StripeConnectStatus {
   /** null if no account is connected */
   accountStatus: StripeAccountStatus | null;
   mode: "test" | "live";
+  govPayConfigured: boolean;
 }
 
 export interface CreateStripeCheckoutSession {

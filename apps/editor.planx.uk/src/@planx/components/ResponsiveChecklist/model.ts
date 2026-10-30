@@ -1,3 +1,4 @@
+import type { TestConfig } from "yup";
 import { array, object, string } from "yup";
 
 import type { ConditionalOption } from "../Option/model";
@@ -11,6 +12,7 @@ import {
   baseChecklistValidationSchema,
   parseBaseChecklist,
 } from "../shared/BaseChecklist/model";
+import { hasUniqueOptions, uniqueOptionsTest } from "../shared/helpers";
 import type { Rule } from "../shared/RuleBuilder/types";
 import { Condition } from "../shared/RuleBuilder/types";
 
@@ -40,6 +42,30 @@ export const DEFAULT_RULE: Rule = {
   condition: Condition.AlwaysRequired,
 };
 
+const uniqueOptionsWithinGroupsTest: TestConfig<ResponsiveChecklistWithOptions> =
+  {
+    name: "uniqueOptionsWithinGroups",
+    test: function ({ groupedOptions }) {
+      if (!groupedOptions) return true;
+
+      for (const group of groupedOptions) {
+        if (!group.children) continue;
+
+        const allUnique = hasUniqueOptions(group.children);
+
+        if (!allUnique) {
+          return this.createError({
+            path: "options",
+            message:
+              "Options within a single group must have unique labels, or descriptions if conditionally shown",
+          });
+        }
+      }
+
+      return true;
+    },
+  };
+
 export const validationSchema = baseChecklistValidationSchema.concat(
   object({
     groupedOptions: array(
@@ -48,6 +74,8 @@ export const validationSchema = baseChecklistValidationSchema.concat(
         children: array(optionValidationSchema).required(),
       }).required(),
     ).optional(),
-    options: array(optionValidationSchema).optional(),
-  }),
+    options: array(optionValidationSchema)
+      .optional()
+      .test(uniqueOptionsTest as TestConfig<unknown>),
+  }).test(uniqueOptionsWithinGroupsTest as TestConfig<unknown>),
 );

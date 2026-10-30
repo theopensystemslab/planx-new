@@ -93,6 +93,7 @@ export async function buildSubmissionExportZip({
     } catch (error) {
       throw new Error(
         `Failed to generate OneApp XML for ${sessionId} zip. Error - ${error}`,
+        { cause: error },
       );
     }
   }

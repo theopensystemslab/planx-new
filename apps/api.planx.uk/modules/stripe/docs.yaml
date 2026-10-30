@@ -110,6 +110,7 @@ components:
               - accountId
               - accountStatus
               - mode
+              - govPayConfigured
             properties:
               connected:
                 type: boolean
@@ -134,6 +135,10 @@ components:
                 enum: [test, live]
                 description: The Stripe mode this environment runs in
                 example: live
+              govPayConfigured:
+                type: boolean
+                description: Whether the team has GOV.UK Pay set up in this environment
+                example: false
     MigrateResponse:
       description: >-
         Result of attempting to migrate a team's payment provider to Stripe.
@@ -207,7 +212,8 @@ paths:
         If any of these checks fail, the migration is blocked and no changes are made.
         Otherwise, migrates the team's payment provider to Stripe.
 
-        Always blocked in production (`stripePaymentsNotEnabled`) until Stripe payments go live.
+        Always blocked in production (`stripePaymentsNotEnabled`) until Stripe payments go live,
+        except for internal teams (`STRIPE_PAYMENTS_INTERNAL_TEAMS` in modules/stripe/helpers.ts).
       tags:
         - stripe
       parameters:
@@ -234,7 +240,8 @@ paths:
       summary: Revert a team's payment provider back to GOV.UK Pay, _only_ in test environments!
       description: |
         Non-production only (route is not registered in production). Reverts the
-        team's payment provider back to GOV.UK Pay.
+        team's payment provider back to GOV.UK Pay. Fails if the team does not have
+        GOV.UK Pay configured.
       tags:
         - stripe
       parameters:
@@ -378,7 +385,7 @@ paths:
         "409":
           description: |
             A payment cannot be taken, because either:
-            - Stripe payments are not yet enabled in this environment (blocked on prod until go-live)
+            - Stripe payments are not yet enabled for this team (blocked on prod until go-live, except for internal teams)
             - this LPA's payment provider is not Stripe
             - this LPA has not connected a Stripe account
             - this LPA's connected account is no longer connected to our platform
@@ -420,7 +427,7 @@ paths:
         "409":
           description: |
             A payment cannot be taken, because either:
-            - Stripe payments are not yet enabled in this environment (blocked on prod until go-live)
+            - Stripe payments are not yet enabled for this team (blocked on prod until go-live, except for internal teams)
             - the payment request has already been paid
             - the session is not locked, awaiting payment via invite to pay
             - a GOV.UK Pay payment has already been started for this request

@@ -1,6 +1,7 @@
 import type { RequestHandler } from "express";
 
 import { $api } from "../../../client/index.js";
+import { ServerError } from "../../../errors/index.js";
 import { generateHTMLForSession } from "../../lps/service/generateHTML.js";
 
 type HTMLExportHandler = RequestHandler<{ sessionId: string }, string>;
@@ -15,8 +16,11 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
     res.header("Content-type", "text/html");
     res.send(html);
   } catch (error) {
-    return next({
-      message: "Failed to build HTML: " + (error as Error).message,
-    });
+    return next(
+      new ServerError({
+        message: "Failed to build HTML: " + (error as Error).message,
+        cause: error,
+      }),
+    );
   }
 };

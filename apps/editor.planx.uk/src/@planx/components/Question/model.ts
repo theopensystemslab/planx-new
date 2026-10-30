@@ -1,11 +1,14 @@
-import { boolean, object } from "yup";
+import type { TestConfig } from "yup";
+import { array, boolean, object } from "yup";
 
 import type { Option } from "../Option/model";
+import { optionValidationSchema } from "../Option/model";
 import type { BaseQuestion } from "../shared/BaseQuestion/model";
 import {
   baseQuestionValidationSchema,
   parseBaseQuestion,
 } from "../shared/BaseQuestion/model";
+import { uniqueLabelsTest } from "../shared/helpers";
 
 /**
  * Database representation of a Question component
@@ -25,6 +28,9 @@ export const validationSchema = baseQuestionValidationSchema.concat(
   object({
     neverAutoAnswer: boolean(),
     alwaysAutoAnswerBlank: boolean(),
+    options: array(optionValidationSchema)
+      .required()
+      .test(uniqueLabelsTest as TestConfig<unknown>),
   }),
 );
 

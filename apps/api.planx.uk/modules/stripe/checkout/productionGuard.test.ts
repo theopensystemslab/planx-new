@@ -2,12 +2,16 @@ import supertest from "supertest";
 
 import app from "../../../server.js";
 import {
+  buildPaymentRequest,
   mockCreate,
   mockCreateCheckoutSessionDefaults,
   mockCreatePaymentRequestCheckoutSessionDefaults,
   mockExpire,
   mockGetTeamBySlug,
+  mockPaymentRequest,
+  mockReturnURLContext,
   PAYMENT_REQUEST_ID,
+  stripeTeam,
   validBody,
 } from "./test/mocks.js";
 
@@ -60,6 +64,48 @@ describe("creating Checkout Sessions in production, before Stripe payments go li
     expect(mockGetTeamBySlug).not.toHaveBeenCalled();
     expect(mockExpire).not.toHaveBeenCalled();
     expect(mockCreate).not.toHaveBeenCalled();
+  });
+});
+
+describe("creating Checkout Sessions in production for an internal team", () => {
+  const internalTeam = {
+    slug: "apply",
+    team: { slug: "opensystemslab", domain: null },
+  };
+
+  beforeEach(() => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+  });
+
+  it("creates a self-pay Checkout Session", async () => {
+    mockCreateCheckoutSessionDefaults();
+    mockGetTeamBySlug.mockResolvedValue({
+      ...stripeTeam,
+      slug: "opensystemslab",
+    });
+    mockReturnURLContext({ flow: internalTeam });
+
+    await supertest(app)
+      .post("/stripe/checkout-session/opensystemslab")
+      .send(validBody)
+      .expect(200);
+
+    expect(mockGetTeamBySlug).toHaveBeenCalledWith("opensystemslab");
+    expect(mockCreate).toHaveBeenCalledTimes(1);
+  });
+
+  it("creates an invite to pay Checkout Session", async () => {
+    mockCreatePaymentRequestCheckoutSessionDefaults();
+    mockGetTeamBySlug.mockResolvedValue({
+      ...stripeTeam,
+      slug: "opensystemslab",
+    });
+    mockPaymentRequest(buildPaymentRequest({}, { flow: internalTeam }));
+
+    await supertest(app).post(INVITE_TO_PAY_ENDPOINT).expect(200);
+
+    expect(mockGetTeamBySlug).toHaveBeenCalledWith("opensystemslab");
+    expect(mockCreate).toHaveBeenCalledTimes(1);
   });
 });
 

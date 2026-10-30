@@ -12,12 +12,20 @@ export const formatPence = (pence: number) =>
   (pence / 100).toLocaleString("en-GB", { style: "currency", currency: "GBP" });
 
 /**
+ * Teams which can take real Stripe payments in production ahead of release
+ */
+export const STRIPE_PAYMENTS_INTERNAL_TEAMS: readonly string[] = [
+  "opensystemslab",
+];
+
+/**
  * Go-live switch
  *
- * Stripe payments are off in production, so teams can connect a Stripe account ahead of time but can't migrate from GOV.UK Pay or take payments
+ * Stripe payments are off in production (except for internal teams), so teams can connect a Stripe account ahead of time but can't migrate from GOV.UK Pay or take payments
  */
-export const isStripePaymentsEnabled = (): boolean =>
-  process.env.APP_ENVIRONMENT !== "production";
+export const isStripePaymentsEnabled = (teamSlug: string): boolean =>
+  process.env.APP_ENVIRONMENT !== "production" ||
+  STRIPE_PAYMENTS_INTERNAL_TEAMS.includes(teamSlug);
 
 /**
  * On production, notify #planx-notifications of Stripe payments
@@ -30,7 +38,7 @@ export async function postStripePaymentNotificationToSlack(
   isInviteToPay?: boolean,
 ) {
   if (process.env.APP_ENVIRONMENT === "production") {
-    const payMessage = `:coin: New Stripe payment ${isInviteToPay ? `(invite to pay)` : undefined} *${paymentId}* with status *${status}* [${teamSlug}]`;
+    const payMessage = `:coin: New Stripe payment ${isInviteToPay ? `(invite to pay) ` : ""}*${paymentId}* with status *${status}* [${teamSlug}]`;
     await sendSlackMessage(payMessage);
     console.log("Payment notification posted to Slack");
   } else {

@@ -14,6 +14,7 @@ import { dateFormatter } from "ui/shared/DataTable/utils";
 import { submissionStatusOptions } from "../submissionFilterOptions";
 import type { EventsLogProps, SubmissionSummary } from "../types";
 import { getConsolidatedStatus } from "../utils";
+import { SessionIdCell } from "./SessionIdCell";
 import { StatusChipCell } from "./StatusChip";
 
 const EventsLog: React.FC<EventsLogProps> = ({
@@ -108,7 +109,13 @@ const EventsLog: React.FC<EventsLogProps> = ({
       },
       type: ColumnFilterType.DATE,
     },
-    { field: "id", headerName: "Session ID", width: 400 },
+    {
+      field: "id",
+      headerName: "Session ID",
+      width: 400,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: SessionIdCell,
+    },
   ];
   return (
     <AppErrorBoundary>

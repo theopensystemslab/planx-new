@@ -49,6 +49,7 @@ describe("Onboarding", () => {
           accountId: null,
           accountStatus: null,
           mode: "test",
+          govPayConfigured: false,
         } satisfies MockStatus);
       }),
     );
@@ -67,6 +68,7 @@ describe("Onboarding", () => {
         accountId: null,
         accountStatus: null,
         mode: "test",
+        govPayConfigured: false,
       }),
     );
 
@@ -87,6 +89,7 @@ describe("Onboarding", () => {
         accountId: null,
         accountStatus: null,
         mode: "test",
+        govPayConfigured: false,
       }),
     );
     const { user } = await setup(<Onboarding />);
@@ -126,6 +129,7 @@ describe("Onboarding", () => {
           accountId: null,
           accountStatus: null,
           mode,
+          govPayConfigured: false,
         }),
       );
 
@@ -164,6 +168,7 @@ describe("Onboarding", () => {
         accountId: null,
         accountStatus: null,
         mode: "test",
+        govPayConfigured: false,
       }),
     );
     const originalLocation = window.location;
@@ -202,6 +207,7 @@ describe("Onboarding", () => {
         accountId: "acct_123",
         accountStatus: "active",
         mode: "test",
+        govPayConfigured: false,
       }),
     );
 
@@ -219,6 +225,7 @@ describe("Onboarding", () => {
         accountId: "acct_123",
         accountStatus: "active",
         mode: "test",
+        govPayConfigured: false,
       }),
     );
 
@@ -241,6 +248,7 @@ describe("Onboarding", () => {
         accountId: "acct_456",
         accountStatus: "active",
         mode: "live",
+        govPayConfigured: false,
       }),
     );
 
@@ -262,6 +270,7 @@ describe("Onboarding", () => {
         accountId: null,
         accountStatus: null,
         mode: "test",
+        govPayConfigured: false,
       }),
     );
 
@@ -280,6 +289,7 @@ describe("Onboarding", () => {
         accountId: "acct_456",
         accountStatus: "active",
         mode: "live",
+        govPayConfigured: false,
       }),
     );
 
@@ -308,6 +318,7 @@ describe("Onboarding", () => {
           accountId: "acct_789",
           accountStatus,
           mode: "live",
+          govPayConfigured: false,
         }),
       );
 
@@ -333,6 +344,7 @@ describe("Onboarding", () => {
         accountId: "acct_789",
         accountStatus: "incomplete",
         mode: "live",
+        govPayConfigured: false,
       }),
     );
 
@@ -352,6 +364,7 @@ describe("Onboarding", () => {
         accountId: "acct_789",
         accountStatus: "unavailable",
         mode: "live",
+        govPayConfigured: false,
       }),
     );
 
@@ -373,6 +386,7 @@ describe("Onboarding", () => {
         accountId: "acct_123",
         accountStatus: "active",
         mode: "test",
+        govPayConfigured: false,
       }),
     );
 
@@ -393,6 +407,7 @@ describe("Onboarding", () => {
         accountId: null,
         accountStatus: null,
         mode: "test",
+        govPayConfigured: false,
       }),
     );
 
@@ -420,6 +435,7 @@ describe("Onboarding", () => {
         accountId: null,
         accountStatus: null,
         mode: "test",
+        govPayConfigured: false,
       }),
     );
 
