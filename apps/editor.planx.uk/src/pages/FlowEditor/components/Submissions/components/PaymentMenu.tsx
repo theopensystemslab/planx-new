@@ -43,7 +43,7 @@ export const PaymentMenu = ({ sessionId, paymentEvent }: Props) => {
   return (
     <>
       <Button
-        color="primary"
+        color="secondary"
         variant="contained"
         onClick={(event) => setAnchorEl(event.currentTarget)}
         startIcon={<PaymentIcon />}

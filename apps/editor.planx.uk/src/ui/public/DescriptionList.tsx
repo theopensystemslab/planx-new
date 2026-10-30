@@ -1,3 +1,4 @@
+import type { SxProps, Theme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import React, { Fragment } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
@@ -9,27 +10,21 @@ export interface DescriptionListItem {
 
 interface DescriptionListProps {
   data: DescriptionListItem[];
-  hideLastBorder?: boolean;
+  sx?: SxProps<Theme>;
 }
 
-const List = styled("dl")<{ hideLastBorder?: boolean }>(
-  ({ theme, hideLastBorder }) => ({
-    display: "grid",
-    gridTemplateColumns: "1fr 2fr",
-    "& > *": {
-      borderBottom: "1px solid lightgrey",
-      paddingBottom: theme.spacing(2),
-      paddingTop: theme.spacing(2),
-      verticalAlign: "top",
-      margin: 0,
-    },
-    ...(hideLastBorder && {
-      "& > *:nth-last-of-type(-n+1)": {
-        borderBottom: "none",
-      },
-    }),
-  }),
-);
+const List = styled("dl")(({ theme }) => ({
+  display: "grid",
+  gridTemplateColumns: "1fr 2fr",
+  "& > *": {
+    borderBottom: "1px solid",
+    borderColor: theme.palette.divider,
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    verticalAlign: "top",
+    margin: 0,
+  },
+}));
 
 const Term = styled("dt")(() => ({
   fontWeight: FONT_WEIGHT_BOLD,
@@ -41,9 +36,9 @@ const Details = styled("dd")(() => ({
 
 export const DescriptionList: React.FC<DescriptionListProps> = ({
   data,
-  hideLastBorder,
+  sx,
 }) => (
-  <List hideLastBorder={hideLastBorder}>
+  <List sx={sx}>
     {data.map(({ term, details }, index) => (
       <Fragment key={index}>
         <Term>{term}</Term>
