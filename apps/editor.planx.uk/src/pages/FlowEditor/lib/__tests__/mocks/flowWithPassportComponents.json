@@ -7,7 +7,7 @@
       "planningConstraints",
       "mapAndLabel",
       "text2",
-      "notice"
+      "content"
     ]
   },
   "mapAndLabel": {
@@ -56,12 +56,13 @@
     },
     "type": 9
   },
-  "notice": {
+  "content": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "The End",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   }
 }

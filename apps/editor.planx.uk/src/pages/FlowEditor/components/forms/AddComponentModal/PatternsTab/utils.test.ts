@@ -14,7 +14,7 @@ describe("getPatternCounts", () => {
     const graph: Graph = {
       _root: { edges: ["a", "b"] },
       a: { type: ComponentType.Question },
-      b: { type: ComponentType.Notice },
+      b: { type: ComponentType.Content },
     };
 
     expect(getPatternCounts(graph)).toEqual({ components: 2, nestedFlows: 0 });
@@ -56,7 +56,7 @@ describe("getPatternCounts", () => {
       _root: { edges: ["a", "ip"] },
       a: { type: ComponentType.Question },
       ip: { type: ComponentType.InternalPortal, edges: ["b"] },
-      b: { type: ComponentType.Notice },
+      b: { type: ComponentType.Content },
     };
 
     expect(getPatternCounts(graph)).toEqual({ components: 3, nestedFlows: 0 });
@@ -67,7 +67,7 @@ describe("getPatternCounts", () => {
       _root: { edges: ["q1", "q2"] },
       q1: { type: ComponentType.Question, edges: ["shared"] },
       q2: { type: ComponentType.Question, edges: ["shared"] },
-      shared: { type: ComponentType.Notice },
+      shared: { type: ComponentType.Content },
     };
 
     expect(getPatternCounts(graph)).toEqual({ components: 4, nestedFlows: 0 });
@@ -88,13 +88,13 @@ describe("getPatternComponentTypes", () => {
       a1: { type: ComponentType.Answer, edges: ["tf"] },
       a2: { type: ComponentType.Answer },
       tf: { type: ComponentType.TextInput },
-      n: { type: ComponentType.Notice },
+      n: { type: ComponentType.Content },
     };
 
     expect(getPatternComponentTypes(graph, 6)).toEqual([
       ComponentType.Question,
       ComponentType.TextInput,
-      ComponentType.Notice,
+      ComponentType.Content,
     ]);
   });
 
@@ -128,13 +128,13 @@ describe("getPatternComponentTypes", () => {
   it("stops at the given limit", () => {
     const graph: Graph = {
       _root: { edges: ["a", "b", "c"] },
-      a: { type: ComponentType.Notice },
+      a: { type: ComponentType.Content },
       b: { type: ComponentType.Content },
       c: { type: ComponentType.Question },
     };
 
     expect(getPatternComponentTypes(graph, 2)).toEqual([
-      ComponentType.Notice,
+      ComponentType.Content,
       ComponentType.Content,
     ]);
   });

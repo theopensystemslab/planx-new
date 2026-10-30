@@ -78,7 +78,7 @@ test.describe("Flow creation, publish and preview", () => {
     context.flow = { ...serviceProps };
 
     await editor.createQuestion();
-    await editor.createNoticeOnEachBranch();
+    await editor.createContentOnEachBranch();
     await editor.createChecklist();
     await editor.createTextInput();
     await editor.createNumberInput();

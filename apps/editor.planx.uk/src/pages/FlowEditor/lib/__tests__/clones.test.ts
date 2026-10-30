@@ -14,14 +14,14 @@ describe("Clone order in flow (forwards)", () => {
   test("Left branch is ordered correctly", () => {
     setState({ flow: forwardsFlow });
     record("question", { answers: ["leftChoice"] });
-    record("leftChoice", { answers: ["leftNotice"] });
+    record("leftChoice", { answers: ["leftContent"] });
     // Left branch is structure as expected
     expect(upcomingCardIds()).toEqual([
-      "leftNotice",
+      "leftContent",
       "clone",
       "leftConfirmation",
     ]);
-    record("leftNotice", { answers: ["clone"] });
+    record("leftContent", { answers: ["clone"] });
     record("clone", { answers: ["leftConfirmation"] });
     record("leftConfirmation", { answers: ["finalNode"] });
     expect(upcomingCardIds()).toHaveLength(0);
@@ -30,14 +30,14 @@ describe("Clone order in flow (forwards)", () => {
   test.skip("Right branch is ordered correctly", () => {
     setState({ flow: forwardsFlow });
     record("question", { answers: ["rightChoice"] });
-    record("rightChoice", { answers: ["rightNotice"] });
+    record("rightChoice", { answers: ["rightContent"] });
     // Right branch is structured as expected
     expect(upcomingCardIds()).toEqual([
-      "rightNotice",
+      "rightContent",
       "clone",
       "rightConfirmation",
     ]);
-    record("rightNotice", { answers: ["clone"] });
+    record("rightContent", { answers: ["clone"] });
     record("clone", { answers: ["rightConfirmation"] });
     record("rightConfirmation", { answers: ["finalNode"] });
     expect(upcomingCardIds()).toHaveLength(0);
@@ -77,7 +77,7 @@ describe("Clone order in flow (backwards)", () => {
 
     // Traverse forward to final node
     record("question", { answers: ["rightChoice"] });
-    record("rightNotice", { answers: ["clone"] });
+    record("rightContent", { answers: ["clone"] });
     record("clone", { answers: ["finalNode"] });
     expect(getCurrentCard()?.id).toBe("finalNode");
 
@@ -87,7 +87,7 @@ describe("Clone order in flow (backwards)", () => {
     record(previous!);
 
     previous = previousCard(getCurrentCard());
-    expect(previous).toBe("rightNotice");
+    expect(previous).toBe("rightContent");
     record(previous!);
 
     previous = previousCard(getCurrentCard());

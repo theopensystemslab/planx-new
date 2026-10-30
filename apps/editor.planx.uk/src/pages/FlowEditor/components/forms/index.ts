@@ -19,7 +19,6 @@ import List from "@planx/components/List/Editor";
 import MapAndLabel from "@planx/components/MapAndLabel/Editor";
 import NextSteps from "@planx/components/NextSteps/Editor";
 import Note from "@planx/components/Note/Editor";
-import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import Page from "@planx/components/Page/Editor";
 import Pay from "@planx/components/Pay/Editor/Editor";
@@ -66,7 +65,6 @@ const components: {
   "map-and-label": MapAndLabel,
   "next-steps": NextSteps,
   note: Note,
-  notice: Notice,
   "number-input": NumberInput,
   page: Page,
   pay: Pay,

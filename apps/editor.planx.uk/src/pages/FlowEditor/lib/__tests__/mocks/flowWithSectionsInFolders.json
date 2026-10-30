@@ -5,7 +5,7 @@
       "Question",
       "FolderOnRoot",
       "FinalSection",
-      "Notice"
+      "Content"
     ]
   },
   "MiddleSectionInFolder": {
@@ -17,7 +17,7 @@
   },
   "FolderContent": {
     "data": {
-      "content": "<h1>Folder content</h1>"
+      "title": "Folder content"
     },
     "type": 250
   },
@@ -40,13 +40,14 @@
     },
     "type": 360
   },
-  "Notice": {
+  "Content": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "End of test",
       "resetButton": true
     },
-    "type": 8
+    "type": 250
   },
   "Question": {
     "data": {

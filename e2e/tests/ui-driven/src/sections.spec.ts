@@ -15,7 +15,7 @@ import {
   clickBack,
   clickContinue,
   expectConfirmation,
-  expectNotice,
+  expectContent,
   expectSections,
   fillInEmail,
   returnToSession,
@@ -121,16 +121,19 @@ test.describe("Section statuses", () => {
       });
       await clickContinue({ page, waitForNextCard: true });
 
-      await expectNotice({ page, text: "Reached B" });
+      await expectContent({ page, text: "Reached B" });
       await clickContinue({ page, waitForNextCard: true });
 
-      await expectNotice({ page, text: "Reached C" });
+      await expectContent({ page, text: "Reached C" });
       await clickContinue({ page, waitForNextCard: true });
 
-      await expectNotice({ page, text: "Reached D" });
+      await expectContent({ page, text: "Reached D" });
       await clickContinue({ page, waitForNextCard: true });
 
-      await expectNotice({ page, text: "Reached the end of section two" });
+      await expectContent({
+        page,
+        text: "Reached the end of section two",
+      });
       await clickContinue({ page, waitForNextCard: true });
 
       await expectSections({
@@ -234,7 +237,7 @@ test.describe("Section statuses", () => {
       // skip Question 2
       await clickContinue({ page, waitForNextCard: true });
 
-      // skip end of section 2 notice
+      // skip end of section 2 content
       await clickContinue({ page, waitForNextCard: true });
 
       await expectSections({
@@ -259,7 +262,7 @@ test.describe("Section statuses", () => {
       // back to Section Three Overview
       await clickBack({ page });
 
-      // back to end of section 2 notice
+      // back to end of section 2 content
       await clickBack({ page });
 
       // back to Question 2

@@ -24,7 +24,6 @@ export const SLUGS: {
   [TYPES.MapAndLabel]: "map-and-label",
   [TYPES.NextSteps]: "next-steps",
   [TYPES.Note]: "note",
-  [TYPES.Notice]: "notice",
   [TYPES.NumberInput]: "number-input",
   [TYPES.Page]: "page",
   [TYPES.Pay]: "pay",

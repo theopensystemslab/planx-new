@@ -32,20 +32,22 @@
   },
   "finalNode": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "This is the end",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   },
   "withinExternalPortal": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "This is inside the portal",
-      "description": "<p>Hello there 👋</p>",
+      "content": "<p>Hello there 👋</p>",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   },
   "option1": {
     "data": {

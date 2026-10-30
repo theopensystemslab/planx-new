@@ -10,11 +10,12 @@
   },
   "finalNode": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "End of the line",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   },
   "externalPortal": {
     "type": 300,
@@ -36,12 +37,13 @@
   },
   "withinExternalPortal": {
     "data": {
+      "styleAsNotice": true,
       "color": "#EFEFEF",
       "title": "This is an external portal",
-      "description": "<p>Hello! 👋</p>",
+      "content": "<p>Hello! 👋</p>",
       "resetButton": false
     },
-    "type": 8
+    "type": 250
   },
   "externalFlowId": {
     "data": {

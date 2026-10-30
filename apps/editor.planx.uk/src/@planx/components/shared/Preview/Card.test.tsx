@@ -57,11 +57,11 @@ describe("Card component", () => {
       setState({
         path: ApplicationPath.SaveAndReturn,
         flow: {
-          _root: { edges: ["Send", "Confirmation", "Feedback", "Notice"] },
+          _root: { edges: ["Send", "Confirmation", "Feedback", "Content"] },
           Send: { type: TYPES.Send },
           Confirmation: { type: TYPES.Confirmation },
           Feedback: { type: TYPES.Feedback },
-          Notice: { type: TYPES.Notice },
+          Content: { type: TYPES.Content },
         },
         breadcrumbs: { Send: { auto: false } },
       }),

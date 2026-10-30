@@ -14,8 +14,8 @@ export const mockPatterns: Pattern[] = [
 ];
 
 export const mockPatternData: Graph = {
-  _root: { edges: ["question", "notice"] },
+  _root: { edges: ["question", "content"] },
   question: { type: 100, data: { text: "A question" }, edges: ["answer"] },
   answer: { type: 200, data: { text: "An answer" } },
-  notice: { type: 8, data: { title: "A notice" } },
+  content: { type: 250, data: { title: "Some content" } },
 };

@@ -24,8 +24,9 @@ export const flowWithDuplicatePassportVars: Store.Flow = {
       color: "#EFEFEF",
       title: "The end",
       resetButton: false,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   XZlpeuJt9o: {
     data: {

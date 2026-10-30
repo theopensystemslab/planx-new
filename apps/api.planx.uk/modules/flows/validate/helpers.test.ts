@@ -75,7 +75,7 @@ describe("numberOfComponentType", () => {
 
 const flow: FlowGraph = {
   _root: {
-    edges: ["FindProperty", "QuestionOne", "Result", "Notice"],
+    edges: ["FindProperty", "QuestionOne", "Result", "Content"],
   },
   "4jSYMB7hBJ": {
     data: {
@@ -97,13 +97,14 @@ const flow: FlowGraph = {
     },
     type: TYPES.FindProperty,
   },
-  Notice: {
+  Content: {
     data: {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: TYPES.Notice,
+    type: TYPES.Content,
   },
   QJeTHUDzfz: {
     data: {

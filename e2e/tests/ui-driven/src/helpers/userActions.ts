@@ -140,15 +140,15 @@ export async function answerChecklist({
   }
 }
 
-export async function expectNotice({
+export async function expectContent({
   page,
   text,
 }: {
   page: Page;
   text: string;
 }) {
-  const notice = page.locator("h1", { hasText: text });
-  await expect(notice).toBeVisible();
+  const content = page.locator("h1", { hasText: text });
+  await expect(content).toBeVisible();
 }
 
 export async function expectConfirmation({

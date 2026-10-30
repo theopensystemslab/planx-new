@@ -21,7 +21,6 @@ export const COMPONENT_TITLES: Partial<Record<ComponentType, string>> = {
   [ComponentType.MapAndLabel]: "Map and label",
   [ComponentType.NextSteps]: "Next steps",
   [ComponentType.Note]: "Note",
-  [ComponentType.Notice]: "Notice",
   [ComponentType.NumberInput]: "Number input",
   [ComponentType.Page]: "Page",
   [ComponentType.Pay]: "Pay",

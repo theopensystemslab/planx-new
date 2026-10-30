@@ -15,7 +15,7 @@ test("Root nodes are always queued up", () => {
   expect(upcomingCardIds()).toEqual([
     "StartContent",
     "FruitChecklist",
-    "EndNotice",
+    "EndContent",
   ]);
 });
 
@@ -39,7 +39,7 @@ test("The children of selected answers are queued up", () => {
   expect(upcomingCardIds()).toEqual([
     "AppleFollowup",
     "BananaFollowup",
-    "EndNotice",
+    "EndContent",
   ]);
   expect(upcomingCardIds()).not.toContain("OrangeFollowup");
 });
@@ -50,7 +50,7 @@ test("Root nodes nested within internal portals are queued up", () => {
   expect(upcomingCardIds()).toEqual([
     "StartContent",
     "FruitChecklistInPortal",
-    "EndNotice",
+    "EndContent",
   ]);
   expect(upcomingCardIds()).not.toContain("InternalPortal");
 });
@@ -75,23 +75,23 @@ test("The children of selected answers within an internal portal are queued up",
   expect(upcomingCardIds()).toEqual([
     "AppleFollowup",
     "BananaFollowup",
-    "EndNotice",
+    "EndContent",
   ]);
   expect(upcomingCardIds()).not.toContain("OrangeFollowup");
 
   // Step through followup Contents within portal and navigate back into main flow
   clickContinue("AppleFollowup", { auto: false });
   clickContinue("BananaFollowup", { auto: false });
-  expect(upcomingCardIds()?.[0]).toEqual("EndNotice");
+  expect(upcomingCardIds()?.[0]).toEqual("EndContent");
 
-  // There should be no remaining upcoming cards after final Notice
-  clickContinue("EndNotice", { auto: false });
+  // There should be no remaining upcoming cards after final Content
+  clickContinue("EndContent", { auto: false });
   expect(upcomingCardIds()).toHaveLength(0);
 });
 
 const flowWithoutPortal: Store.Flow = {
   _root: {
-    edges: ["StartContent", "FruitChecklist", "EndNotice"],
+    edges: ["StartContent", "FruitChecklist", "EndContent"],
   },
   BananaOption: {
     data: {
@@ -107,13 +107,14 @@ const flowWithoutPortal: Store.Flow = {
     type: 200,
     edges: ["AppleFollowup"],
   },
-  EndNotice: {
+  EndContent: {
     data: {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   FruitChecklist: {
     data: {
@@ -158,15 +159,16 @@ const flowWithoutPortal: Store.Flow = {
 
 const flowWithInternalPortal: Store.Flow = {
   _root: {
-    edges: ["StartContent", "InternalPortal", "EndNotice"],
+    edges: ["StartContent", "InternalPortal", "EndContent"],
   },
-  EndNotice: {
+  EndContent: {
     data: {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   StartContent: {
     data: {

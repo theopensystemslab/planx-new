@@ -144,7 +144,7 @@ describe("section state on forwards navigation", () => {
     expect(currentSectionTitle).toBeUndefined();
 
     record("question", { answers: ["leftChoice"] });
-    record("leftChoice", { answers: ["leftNotice"] });
+    record("leftChoice", { answers: ["leftContent"] });
 
     ({ currentSectionTitle, currentSectionIndex } = getSectionState());
     expect(currentSectionIndex).toBe(1);

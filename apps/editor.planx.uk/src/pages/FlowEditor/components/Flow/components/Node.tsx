@@ -107,8 +107,6 @@ const Node: React.FC<any> = (props) => {
         <Question {...allProps} text={node?.data?.text ?? "Note"} />
       ) : null;
     }
-    case TYPES.Notice:
-      return <Question {...allProps} text={node?.data?.title ?? "Notice"} />;
     case TYPES.NumberInput:
       return <Question {...allProps} text={node?.data?.title ?? "Number"} />;
     case TYPES.Page:

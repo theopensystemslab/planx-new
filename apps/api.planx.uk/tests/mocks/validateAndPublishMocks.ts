@@ -100,7 +100,7 @@ export const mockFlowData: FlowGraph = {
 
 export const draftParentFlow: FlowGraph = {
   _root: {
-    edges: ["ContentNode", "ExternalPortalNode", "NoticeNode"],
+    edges: ["ContentNode", "ExternalPortalNode", "FinalContentNode"],
   },
   ContentNode: {
     type: 250,
@@ -108,12 +108,13 @@ export const draftParentFlow: FlowGraph = {
       content: "<p>This is a test flow with external portal content</p>",
     },
   },
-  NoticeNode: {
-    type: 8,
+  FinalContentNode: {
+    type: 250,
     data: {
       title: "End of test",
       color: "#EFEFEF",
       resetButton: true,
+      styleAsNotice: true,
     },
   },
   ExternalPortalNode: {
@@ -126,7 +127,7 @@ export const draftParentFlow: FlowGraph = {
 
 export const flattenedParentFlow: FlowGraph = {
   _root: {
-    edges: ["ContentNode", "ExternalPortalNode", "NoticeNode"],
+    edges: ["ContentNode", "ExternalPortalNode", "FinalContentNode"],
   },
   ContentNode: {
     data: {
@@ -134,13 +135,14 @@ export const flattenedParentFlow: FlowGraph = {
     },
     type: 250,
   },
-  NoticeNode: {
+  FinalContentNode: {
     data: {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   ExternalPortalNode: {
     type: 300,

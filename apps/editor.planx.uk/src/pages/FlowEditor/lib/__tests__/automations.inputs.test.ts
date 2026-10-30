@@ -24,7 +24,7 @@ describe("Auto-answering inputs", () => {
       auto: false,
     });
 
-    // Both date inputs are currently queued up in upcoming card IDs now, as well as the final notice
+    // Both date inputs are currently queued up in upcoming card IDs now, as well as the final content
     expect(upcomingCardIds()).toEqual([
       "9PHIhY2j7Y",
       "5QVNvkoYfj",
@@ -104,7 +104,7 @@ describe("Auto-answering inputs", () => {
     });
     clickContinue("4bQvIflW6R", { auto: true });
 
-    // Both text inputs are currently queued up in upcoming card IDs now, as well as final notice
+    // Both text inputs are currently queued up in upcoming card IDs now, as well as final content
     expect(upcomingCardIds()).toEqual([
       "6zqtH8xLH9",
       "KvyDAcvmO4",
@@ -133,7 +133,7 @@ describe("Auto-answering inputs", () => {
     });
     clickContinue("E2Q1IVRqtZ", { auto: true });
 
-    // Both contact inputs are currently queued up in upcoming card IDs now, as well as final notice
+    // Both contact inputs are currently queued up in upcoming card IDs now, as well as final content
     expect(upcomingCardIds()).toEqual([
       "tRHstVXhAW",
       "08O3PaGYjv",
@@ -311,11 +311,12 @@ const flow: FlowGraph = {
       tags: [],
       color: "#9bb0d4",
       title: "End of test",
-      description:
+      content:
         '<p>Check the "Console" tab in the side panel to inspect which data fields the <code>passport</code>&nbsp;has captured.</p><p></p><p>Curious about doing further automations <em>using</em> the number or text answers captured here? See <strong>[201] Calculator uses </strong>next.</p>',
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   GhRomJidTi: {
     data: {

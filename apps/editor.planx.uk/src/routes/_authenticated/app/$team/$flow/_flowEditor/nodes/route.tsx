@@ -20,7 +20,6 @@ export const nodeSearchSchema = z.object({
       "feedback",
       "task-list",
       "note",
-      "notice",
       "result",
       "content",
       "review",

@@ -36,8 +36,9 @@ export const mockDraftParent: FlowGraph = {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   T0iJIxbOIn: {
     data: {
@@ -89,8 +90,9 @@ export const mockPublishedParent: FlowGraph = {
       color: "#EFEFEF",
       title: "End of test",
       resetButton: true,
+      styleAsNotice: true,
     },
-    type: 8,
+    type: 250,
   },
   T0iJIxbOIn: {
     type: 300,

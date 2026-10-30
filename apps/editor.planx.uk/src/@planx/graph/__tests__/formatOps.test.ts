@@ -64,18 +64,19 @@ describe("Insert operations", () => {
       {
         p: ["ubCTG9OtFw"],
         oi: {
-          type: 8,
+          type: 250,
           data: {
             title: "This is a test",
             color: "#c81bcb",
             resetButton: false,
+            styleAsNotice: true,
           },
         },
       },
     ];
 
     expect(formatOps(emptyFlow, ops)).toEqual([
-      'Added Notice "This is a test"',
+      'Added Content "This is a test"',
     ]);
   });
 

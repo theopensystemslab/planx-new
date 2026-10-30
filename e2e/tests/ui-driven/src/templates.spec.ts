@@ -2,7 +2,7 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 import { expect, test } from "@playwright/test";
 
 import {
-  createNotice,
+  createContent,
   createTemplatedComponent,
 } from "./helpers/addComponent.js";
 import {
@@ -180,7 +180,7 @@ test.describe("Templates", () => {
 
       const editor = new PlaywrightEditor(page);
 
-      await createNotice(page, editor.getNextNode(), NON_TEMPLATED_NODE_TITLE);
+      await createContent(page, editor.getNextNode(), NON_TEMPLATED_NODE_TITLE);
 
       // Non-templated nodes have no template-card wrapper
       const nonTemplatedNode = await editor.checkNodeExists(
@@ -222,12 +222,12 @@ test.describe("Templates", () => {
       await page.getByRole("link", { name: TEMPLATED_FOLDER_NAME }).click();
       await page.locator("li.hanger > button").first().waitFor();
 
-      await createNotice(
+      await createContent(
         page,
         page.locator("li.hanger > button").first(),
         FIRST_NODE_IN_FOLDER,
       );
-      await createNotice(
+      await createContent(
         page,
         page.locator(".hanger > button").last(),
         SECOND_NODE_IN_FOLDER,

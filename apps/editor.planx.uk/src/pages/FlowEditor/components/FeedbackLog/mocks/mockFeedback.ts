@@ -69,7 +69,7 @@ export const mockFeedback: Feedback[] = [
     flowName: "Report a planning breach",
     id: 992,
     nodeTitle: "Not development",
-    nodeType: "Notice",
+    nodeType: "Content",
     type: "issue",
     userComment: "couldn't find a place to report the tree damage",
     userContext:
@@ -100,7 +100,7 @@ export const mockFeedback: Feedback[] = [
     flowName: "Find out if you need planning permission",
     id: 991,
     nodeTitle: "Tell us what we need to add",
-    nodeType: "Notice",
+    nodeType: "Content",
     type: "unhelpful",
     userComment:
       "I would like to change the existing sign board at the front of the building. ",
@@ -133,7 +133,7 @@ export const mockFeedback: Feedback[] = [
     flowName: "Find out if you need planning permission",
     id: 990,
     nodeTitle: "Tell us what we need to add",
-    nodeType: "Notice",
+    nodeType: "Content",
     type: "comment",
     userComment:
       "I want to highlight a front step in to a dental practice. Can we do this on a building that is grade 2 listed.",
@@ -166,7 +166,7 @@ export const mockFeedback: Feedback[] = [
     flowName: "Find out if you need planning permission",
     id: 988,
     nodeTitle: "If you can't find your project",
-    nodeType: "Notice",
+    nodeType: "Content",
     type: "idea",
     userComment: "add external wall insulation works",
     userContext: null,
