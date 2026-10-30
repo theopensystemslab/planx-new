@@ -8,6 +8,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
+import { z } from "zod";
 
 import { $api } from "../../../client/index.js";
 import { addDesignatedVariable } from "./helpers.js";
@@ -65,7 +66,7 @@ const GRANULAR_VALUES: Record<
 const addGranularValues = (
   formattedResult: Record<string, Constraint>,
   key: string,
-  entities: Record<string, any>[],
+  entities: Record<string, unknown>[],
 ) => {
   const granular = GRANULAR_VALUES[key];
   if (!granular) return;
@@ -80,13 +81,32 @@ const addGranularValues = (
   });
 };
 
+const wfsResponseSchema = z.object({
+  features: z.array(
+    z.object({
+      id: z.union([z.string(), z.number()]).optional(),
+      properties: z.record(z.string(), z.unknown()),
+    }),
+  ),
+});
+
+type WFSResponse = z.infer<typeof wfsResponseSchema>;
+
+const getEntityName = (
+  properties: Record<string, unknown>,
+  nameField?: string,
+): string | undefined => {
+  const name = nameField && properties[nameField];
+  return typeof name === "string" ? name.trim() : undefined;
+};
+
 // Query DataMapWales
 async function queryWFSLayer(
   constraint: DataMapWalesConstraint,
   geometry: string,
   geometryField: string,
   propertyNames: string[],
-): Promise<{ features: any[] }> {
+): Promise<WFSResponse> {
   // parse WKT
   const isPoint = geometry.startsWith("POINT");
 
@@ -147,7 +167,7 @@ async function queryWFSLayer(
     typeNames: constraint["dmw-layer"],
     outputFormat: "application/json",
     filter: filterXml,
-    ...(propertyNames.length && { propertyName: propertyNames.join(",") }),
+    propertyName: propertyNames.join(","),
   };
 
   const url = `https://datamap.gov.wales/geoserver/wfs?${new URLSearchParams(
@@ -172,12 +192,17 @@ async function queryWFSLayer(
       return { features: [] };
     }
 
-    const data = await response.json();
-    return data;
-  } catch (error: any) {
-    console.error(
-      `Error querying ${constraint["dmw-layer"]}: ${error.message}`,
-    );
+    const parsed = wfsResponseSchema.safeParse(await response.json());
+    if (!parsed.success) {
+      console.error(
+        `WFS returned unexpected response for ${constraint["dmw-layer"]}: ${parsed.error.message}`,
+      );
+      return { features: [] };
+    }
+
+    return parsed.data;
+  } catch (error) {
+    console.error(`Error querying ${constraint["dmw-layer"]}:`, error);
     return { features: [] };
   }
 }
@@ -207,7 +232,7 @@ async function go(
   // Generate list of Wales datasets and constraints we should query
   const activeDatasets: string[] = [];
   let activeDataValues: string[] = [];
-  if (extras?.vals) {
+  if (extras.vals) {
     // If the editor selected constraints, prioritise their selection
     //   Nodes copied from English flows can carry Planning Data values with no Welsh equivalent
     activeDataValues = extras.vals
@@ -246,33 +271,22 @@ async function go(
   // Check for & add any 'positive' constraints to the formattedResult
   let formattedResult: Record<string, Constraint> = {};
   queryResults.forEach(({ key, constraint, result }) => {
-    if (result?.features?.length > 0) {
+    if (result.features.length > 0) {
       // ASNW: filter on category_name
       let features = result.features;
       if (key === "nature.ASNW") {
         features = result.features.filter(
-          (f: any) =>
-            f.properties.category_name === "Ancient Semi Natural Woodland",
+          (f) => f.properties.category_name === "Ancient Semi Natural Woodland",
         );
       }
 
       if (features.length > 0) {
-        const entities = features.map((feature: any) => {
-          const entity: Record<string, any> = {
-            ...feature.properties,
-          };
-
-          // Add name field if specified
-          if (constraint["dmw-name-field"]) {
-            entity.name =
-              feature.properties[constraint["dmw-name-field"]]?.trim();
-          }
-
+        const entities = features.map((feature) => ({
+          ...feature.properties,
+          name: getEntityName(feature.properties, constraint["dmw-name-field"]),
           // Use feature id as entity identifier
-          entity.entity = feature.id || feature.properties.id;
-
-          return entity;
-        });
+          entity: feature.id,
+        }));
 
         formattedResult[key] = {
           fn: key,
@@ -308,20 +322,18 @@ async function go(
   // --- METADATA ---
   // Generate basic metadata with DataMapWales layer links
   const metadata: Record<string, Metadata> = {};
-  Object.entries(baseSchema).forEach(([key, constraint]) => {
-    if (activeDataValues.includes(key) || formattedResult[key]) {
-      const layerName = constraint["dmw-layer"];
-      metadata[key] = {
-        name: constraint.name,
-        plural: constraint.name,
-        dataset: layerName,
-        text: `For more information about this dataset, visit [DataMapWales](https://datamap.gov.wales/layers/${layerName}).`,
-      };
-    }
+  constraintsToQuery.forEach(([key, constraint]) => {
+    const layerName = constraint["dmw-layer"];
+    metadata[key] = {
+      name: constraint.name,
+      plural: constraint.name,
+      dataset: layerName,
+      text: `For more information about this dataset, visit [DataMapWales](https://datamap.gov.wales/layers/${layerName}).`,
+    };
   });
 
   // If analytics are "on", store an audit record of the raw response
-  if (extras?.analytics !== "false") {
+  if (extras.analytics !== "false") {
     await $api.client.request(
       gql`
         mutation CreatePlanningConstraintsRequest(
@@ -343,7 +355,7 @@ async function go(
       {
         destination_url: activeDatasets.join(", "),
         response: { queryResults: queryResults.map((r) => r.result) },
-        session_id: extras?.sessionId,
+        session_id: extras.sessionId,
       },
     );
   }
