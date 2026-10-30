@@ -100,13 +100,13 @@ const getEntityName = (
   return typeof name === "string" ? name.trim() : undefined;
 };
 
-// Query DataMapWales
+// Query DataMapWales - returns `undefined` if the layer could not be queried
 async function queryWFSLayer(
   constraint: DataMapWalesConstraint,
   geometry: string,
   geometryField: string,
   propertyNames: string[],
-): Promise<WFSResponse> {
+): Promise<WFSResponse | undefined> {
   // parse WKT
   const isPoint = geometry.startsWith("POINT");
 
@@ -189,7 +189,7 @@ async function queryWFSLayer(
       console.error(
         `WFS returned XML error for ${constraint["dmw-layer"]}:\n${xmlText.substring(0, 500)}`,
       );
-      return { features: [] };
+      return undefined;
     }
 
     const parsed = wfsResponseSchema.safeParse(await response.json());
@@ -197,13 +197,13 @@ async function queryWFSLayer(
       console.error(
         `WFS returned unexpected response for ${constraint["dmw-layer"]}: ${parsed.error.message}`,
       );
-      return { features: [] };
+      return undefined;
     }
 
     return parsed.data;
   } catch (error) {
     console.error(`Error querying ${constraint["dmw-layer"]}:`, error);
-    return { features: [] };
+    return undefined;
   }
 }
 
@@ -271,7 +271,7 @@ async function go(
   // Check for & add any 'positive' constraints to the formattedResult
   let formattedResult: Record<string, Constraint> = {};
   queryResults.forEach(({ key, constraint, result }) => {
-    if (result.features.length > 0) {
+    if (result && result.features.length > 0) {
       // ASNW: filter on category_name
       let features = result.features;
       if (key === "nature.ASNW") {
@@ -303,9 +303,10 @@ async function go(
 
   // --- NOTS ---
   // Add active, non-intersecting planning constraints to the formattedResult
-  const nots = activeDataValues.filter(
-    (key) => !Object.keys(formattedResult).includes(key),
-  );
+  //   Layers which failed are omitted, not marked as non-intersecting, so `addDesignatedVariable` does not set "designated" from partial data
+  const nots = queryResults
+    .filter(({ key, result }) => result && !formattedResult[key])
+    .map(({ key }) => key);
   nots.forEach((not) => {
     formattedResult[not] = {
       fn: not,

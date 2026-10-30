@@ -306,13 +306,14 @@ describe("GET /gis/:localAuthority for Welsh teams", () => {
       reply: [200, { type: "FeatureCollection" }],
     },
   ] satisfies { reason: string; reply: WFSReply }[])(
-    "treats a layer as not intersecting when DataMapWales returns $reason",
+    "omits a layer when DataMapWales returns $reason",
     async ({ reply }) => {
       mockDataMapWales({ [getLayer("monument")]: reply });
 
-      const res = await getWalesGIS({ vals: "monument" }).expect(200);
+      const res = await getWalesGIS({ vals: "monument,listed" }).expect(200);
 
-      expect(res.body.constraints["monument"].value).toBe(false);
+      expect(res.body.constraints).not.toHaveProperty("monument");
+      expect(res.body.constraints["listed"].value).toBe(false);
     },
   );
 
@@ -333,7 +334,7 @@ describe("GET /gis/:localAuthority for Welsh teams", () => {
     expect(res.body.constraints["monument"].value).toBe(true);
   });
 
-  it("treats a layer as not intersecting when the request to DataMapWales fails", async () => {
+  it("omits a layer when the request to DataMapWales fails", async () => {
     nock(DATAMAP_WALES)
       .get("/geoserver/wfs")
       .query(true)
@@ -341,7 +342,21 @@ describe("GET /gis/:localAuthority for Welsh teams", () => {
 
     const res = await getWalesGIS({ vals: "monument" }).expect(200);
 
-    expect(res.body.constraints["monument"].value).toBe(false);
+    expect(res.body.constraints).not.toHaveProperty("monument");
+  });
+
+  it("does not set 'designated' when a designated layer fails, so it cannot be wrongly auto-answered as false", async () => {
+    mockDataMapWales({
+      [getLayer("designated.nationalPark")]: [500, "Internal Server Error"],
+    });
+
+    const res = await getWalesGIS({
+      vals: "designated.AONB,designated.conservationArea,designated.nationalPark,designated.WHS",
+    }).expect(200);
+
+    expect(res.body.constraints).not.toHaveProperty("designated.nationalPark");
+    expect(res.body.constraints).not.toHaveProperty("designated");
+    expect(res.body.constraints["designated.AONB"].value).toBe(false);
   });
 
   it("stores an audit record of the DataMapWales responses when analytics are on", async () => {
