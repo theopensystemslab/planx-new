@@ -99,7 +99,7 @@ export default function Component(props: Props) {
       <ModalSection>
         <ModalSectionContent>
           <Typography variant="body2" sx={{ mb: 2 }}>
-            This component does math! Write formulas using{" "}
+            This component does maths! Write formulas using{" "}
             <a href="https://mathjs.org/index.html" target="_blank">
               Math.js
             </a>
