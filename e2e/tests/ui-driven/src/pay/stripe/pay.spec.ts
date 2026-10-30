@@ -42,7 +42,7 @@ const largeFeePayFlow = {
   ...payFlow,
   [feeCalculateNodeId]: {
     ...payFlow[feeCalculateNodeId],
-    data: { ...payFlow[feeCalculateNodeId].data, formula: "12000" },
+    data: { ...payFlow[feeCalculateNodeId].data, formula: "30000" },
   },
 };
 
