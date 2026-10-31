@@ -1,3 +1,8 @@
+import type {
+  PaymentConfirmedCouncilTemplate,
+  PaymentFailedCouncilTemplate,
+  PaymentFailedPayerTemplate,
+} from "./paymentOutcome.js";
 import type { SubmitTemplate } from "./submit.js";
 import type {
   VatInvoiceCouncilTemplate,
@@ -18,6 +23,9 @@ export interface TemplateRegistry {
   submit: SubmitTemplate;
   "vat-invoice-council": VatInvoiceCouncilTemplate;
   "vat-invoice-planx": VatInvoicePlanXTemplate;
+  "payment-confirmed-council": PaymentConfirmedCouncilTemplate;
+  "payment-failed-council": PaymentFailedCouncilTemplate;
+  "payment-failed-payer": PaymentFailedPayerTemplate;
 }
 
 export type ResendTemplate = keyof TemplateRegistry;
