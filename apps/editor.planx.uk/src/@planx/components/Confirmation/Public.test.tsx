@@ -146,4 +146,78 @@ describe("Confirmation component", () => {
     expect(screen.getByText("Payment reference")).toBeInTheDocument();
     expect(screen.getByText("pi_test_123")).toBeInTheDocument();
   });
+
+  describe("Direct Debit notice", () => {
+    const flowWithPay = {
+      _root: { edges: ["Pay", "Send", "Confirmation"] },
+      Pay: { type: TYPES.Pay },
+      Send: { type: TYPES.Send },
+      Confirmation: { type: TYPES.Confirmation },
+    };
+
+    const defaultDescription =
+      "<p>A payment receipt has been emailed to you.</p>";
+
+    it("tells the applicant the payment is processing when the bank takes it later", async () => {
+      act(() =>
+        setState({
+          flow: flowWithPay,
+          breadcrumbs: {
+            Pay: {
+              auto: false,
+              data: {
+                "application.fee.reference.stripe": "pi_test_123",
+                _paymentProcessing: true,
+              },
+            },
+            Send: { auto: false },
+          },
+        }),
+      );
+
+      await setup(
+        <ConfirmationComponent
+          heading="heading"
+          description={defaultDescription}
+          nextSteps={[]}
+        />,
+      );
+
+      expect(
+        screen.getByText(/Your Direct Debit is set up/),
+      ).toBeInTheDocument();
+
+      // Council content is unchanged
+      expect(
+        screen.getByText("A payment receipt has been emailed to you."),
+      ).toBeInTheDocument();
+    });
+
+    it("does not show the notice for a paid payment", async () => {
+      act(() =>
+        setState({
+          flow: flowWithPay,
+          breadcrumbs: {
+            Pay: {
+              auto: false,
+              data: { "application.fee.reference.stripe": "pi_test_123" },
+            },
+            Send: { auto: false },
+          },
+        }),
+      );
+
+      await setup(
+        <ConfirmationComponent
+          heading="heading"
+          description={defaultDescription}
+          nextSteps={[]}
+        />,
+      );
+
+      expect(
+        screen.queryByText(/Your Direct Debit is set up/),
+      ).not.toBeInTheDocument();
+    });
+  });
 });
