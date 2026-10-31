@@ -5,6 +5,11 @@ import type {
 
 export const STRIPE_PASSPORT_KEY = "application.fee.reference.stripe";
 
+/**
+ * Set when the applicant has completed an async payment (e.g. Bacs Direct Debit)
+ */
+export const PAYMENT_PROCESSING_PASSPORT_KEY = "_paymentProcessing";
+
 export interface PaymentActions {
   startNewPayment: () => Promise<void>;
   refetchPayment: () => Promise<void>;
