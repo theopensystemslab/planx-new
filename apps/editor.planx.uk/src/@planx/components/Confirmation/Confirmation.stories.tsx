@@ -65,7 +65,7 @@ export const Basic = {
   ],
 } satisfies Story;
 
-export const DirectDebitProcessing = {
+export const PaymentProcessing = {
   args: Basic.args,
   decorators: [
     (Story) => {

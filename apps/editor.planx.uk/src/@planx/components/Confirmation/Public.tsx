@@ -16,14 +16,11 @@ import type { Confirmation } from "./model";
 
 export type Props = PublicProps<Confirmation>;
 
-/**
- * Corrects the default "A payment receipt has been emailed to you" text without changing council content directly
- */
 const PaymentProcessingNotice = () => (
-  <Box sx={{ maxWidth: "formWrap" }}>
+  <Box sx={{ mt: 2, maxWidth: "formWrap" }}>
     <Typography variant="body1">
-      Your Direct Debit is set up. Your bank takes the payment in up to 7
-      working days. You get a receipt when the payment is complete.
+      Your payment is being processed. This can take several working days. You
+      will receive an email to confirm when your form has been received.
     </Typography>
   </Box>
 );
@@ -47,12 +44,18 @@ export default function ConfirmationComponent(props: Props) {
         Icon={Check}
         iconTitle={"Success"}
       >
-        {props.description && (
-          <Box sx={{ mt: 2, maxWidth: "formWrap" }}>
-            <ReactMarkdownOrHtml source={props.description} openLinksOnNewTab />
-          </Box>
+        {isPaymentProcessing ? (
+          <PaymentProcessingNotice />
+        ) : (
+          props.description && (
+            <Box sx={{ mt: 2, maxWidth: "formWrap" }}>
+              <ReactMarkdownOrHtml
+                source={props.description}
+                openLinksOnNewTab
+              />
+            </Box>
+          )
         )}
-        {isPaymentProcessing && <PaymentProcessingNotice />}
       </Banner>
       <Card handleSubmit={isFinalCard ? undefined : props.handleSubmit}>
         <ApplicationSummary titleId={headingId} />
