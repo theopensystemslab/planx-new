@@ -3,7 +3,7 @@ import type Stripe from "stripe";
 import { reportError } from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
 import { getStripeId } from "../../helpers.js";
-import { getOwnedPaymentIntent } from "../ownership/service.js";
+import { getSessionForPayment } from "../ownership/service.js";
 
 /**
  * Copy the PaymentIntent metadata onto the transferred (destination) payment
@@ -33,11 +33,11 @@ export async function propagateMetadataToDestinationPayment(
   }
 
   // Only the environment which owns the payment should update it on Stripe
-  const ownedPaymentIntent = await getOwnedPaymentIntent(
+  const paymentSession = await getSessionForPayment(
     paymentIntent,
     "transfer.created",
   );
-  if (!ownedPaymentIntent) return;
+  if (!paymentSession) return;
 
   const destinationPaymentId = getStripeId(transfer.destination_payment);
   const connectedAccountId = getStripeId(transfer.destination);

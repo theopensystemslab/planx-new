@@ -1,5 +1,5 @@
 import { stripe } from "../../../stripe/client.js";
-import { getOwnedPaymentIntent } from "../../../stripe/webhook/ownership/service.js";
+import { getSessionForPayment } from "../../../stripe/webhook/ownership/service.js";
 import { sendVatInvoices } from "../../../stripe/webhook/vatInvoice/service.js";
 
 /**
@@ -13,11 +13,8 @@ export const sendVatInvoicesForPaymentIntent = async (
 ): Promise<void> => {
   const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
-  const ownedPaymentIntent = await getOwnedPaymentIntent(
-    paymentIntent,
-    "succeeded",
-  );
-  if (!ownedPaymentIntent) return;
+  const paymentSession = await getSessionForPayment(paymentIntent, "succeeded");
+  if (!paymentSession) return;
 
-  await sendVatInvoices(paymentIntent, ownedPaymentIntent);
+  await sendVatInvoices(paymentIntent, paymentSession);
 };
