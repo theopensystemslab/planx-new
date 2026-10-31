@@ -116,24 +116,26 @@ export function useStripePay(
       hasPaymentOutcome(query.state.data) ? false : 3000,
   });
 
-  const handleSuccess = () => {
-    dispatch(Action.Success);
-    // TODO: Store full payload
-    props.handleSubmit &&
-      props.handleSubmit(
-        makeData(props, checkoutStatus?.paymentIntentId, STRIPE_PASSPORT_KEY),
-      );
+  const getPaymentData = () => {
+    // TODO: Store full payload - do we need anything more than this?
+    const paymentData = makeData(
+      props,
+      checkoutStatus?.paymentIntentId,
+      STRIPE_PASSPORT_KEY,
+    );
+
+    if (isPaymentProcessing(checkoutStatus)) {
+      return {
+        data: { ...paymentData.data, [PAYMENT_PROCESSING_PASSPORT_KEY]: true },
+      };
+    }
+
+    return paymentData;
   };
 
-  // Continue the flow as for a paid payment, so the application submits now
-  const handleProcessing = () => {
+  const handleSuccess = () => {
     dispatch(Action.Success);
-    props.handleSubmit?.({
-      data: {
-        [STRIPE_PASSPORT_KEY]: checkoutStatus?.paymentIntentId,
-        [PAYMENT_PROCESSING_PASSPORT_KEY]: true,
-      },
-    });
+    props.handleSubmit && props.handleSubmit(getPaymentData());
   };
 
   const startNewPayment = async () => {
@@ -200,13 +202,8 @@ export function useStripePay(
   useEffect(() => {
     if (!checkoutStatus) return;
 
-    if (checkoutStatus.paymentStatus === "paid") {
+    if (hasPaymentOutcome(checkoutStatus)) {
       handleSuccess();
-      return;
-    }
-
-    if (isPaymentProcessing(checkoutStatus)) {
-      handleProcessing();
       return;
     }
 
