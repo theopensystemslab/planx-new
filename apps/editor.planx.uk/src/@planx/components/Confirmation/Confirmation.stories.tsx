@@ -1,5 +1,9 @@
 import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
+import {
+  PAYMENT_PROCESSING_PASSPORT_KEY,
+  STRIPE_PASSPORT_KEY,
+} from "@planx/components/Pay/Public/providers/types";
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 
@@ -52,6 +56,31 @@ export const Basic = {
               title: "45, Greenfield Road, London SE22 7FF",
             },
             "application.type": "ldc.proposed",
+          },
+        }),
+      });
+
+      return <Story />;
+    },
+  ],
+} satisfies Story;
+
+export const DirectDebitProcessing = {
+  args: Basic.args,
+  decorators: [
+    (Story) => {
+      useStore.setState({
+        sessionId: "123-t3st-456",
+        flowName: "Apply for a Certificate of Lawfulness",
+        govUkPayment: undefined,
+        computePassport: () => ({
+          data: {
+            _address: {
+              title: "45, Greenfield Road, London SE22 7FF",
+            },
+            "application.type": "ldc.proposed",
+            [STRIPE_PASSPORT_KEY]: "pi_3QxYz2AbCdEfGh1234567890",
+            [PAYMENT_PROCESSING_PASSPORT_KEY]: true,
           },
         }),
       });
