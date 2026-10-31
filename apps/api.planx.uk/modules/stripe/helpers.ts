@@ -45,3 +45,22 @@ export async function postStripePaymentNotificationToSlack(
     console.log("Not production, skipping Slack payment notification");
   }
 }
+
+/**
+ * Something has gone wrong and needs intervention
+ * Notify PlanX team to handle this manually
+ *
+ * Over time, we can hopefully handle all / most of these edge cases automatically
+ */
+export async function alertPlanX(text: string): Promise<void> {
+  if (process.env.APP_ENVIRONMENT !== "production") {
+    console.log(`Skipping Slack notification on non-production:\n${text}`);
+    return;
+  }
+
+  await sendSlackMessage({
+    channel: "#planx-notifications-internal",
+    text,
+    username: "Stripe webhook",
+  });
+}

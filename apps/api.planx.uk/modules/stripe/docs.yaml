@@ -549,6 +549,8 @@ paths:
         (`checkout.session.async_payment_succeeded` and `checkout.session.async_payment_failed` events).
         The application has already been submitted, so these events are not responsible for submission.
 
+        Alerts PlanX on Slack when a payment is disputed (`charge.dispute.created` events), for every payment method.
+
         Docs: [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
       tags:
         - stripe
