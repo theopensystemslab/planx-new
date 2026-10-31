@@ -93,6 +93,9 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
     // Only sent internally (Stripe webhook) - never via /send-email
     case "vat-invoice-council":
     case "vat-invoice-planx":
+    case "payment-confirmed-council":
+    case "payment-failed-council":
+    case "payment-failed-payer":
       return handleInvalidTemplate();
     default: {
       return handleInvalidTemplate(template);

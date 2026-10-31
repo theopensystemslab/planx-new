@@ -3,6 +3,10 @@ import { z } from "zod";
 
 import { reportError } from "../../pay/helpers.js";
 import { fulfilPaymentRequest } from "../fulfilment/service.js";
+import {
+  sendPaymentConfirmedEmail,
+  sendPaymentFailedEmails,
+} from "./asyncPayment/service.js";
 import { propagateMetadataToDestinationPayment } from "./destinationPayment/service.js";
 import { recordStripePaymentIntentStatus } from "./paymentStatus/service.js";
 import type { StripeWebhookController } from "./types.js";
@@ -85,6 +89,12 @@ export const handleStripeWebhook: StripeWebhookController = async (
         break;
       case "checkout.session.completed":
         await handleCheckoutSessionPaid(event.data.object, event.type);
+        break;
+      case "checkout.session.async_payment_succeeded":
+        await sendPaymentConfirmedEmail(event.data.object, event);
+        break;
+      case "checkout.session.async_payment_failed":
+        await sendPaymentFailedEmails(event.data.object, event);
         break;
       default:
         console.log(

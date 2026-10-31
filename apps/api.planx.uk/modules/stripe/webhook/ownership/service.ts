@@ -18,25 +18,22 @@ export interface PaymentSession {
 }
 
 /**
- * Get the PlanX session a Stripe PaymentIntent belongs to
+ * Get the PlanX session a Stripe payment (PaymentIntent or Checkout Session) belongs to
  *
  * Returns null if the payment belongs to another environment
  * Non-prod environments share a Stripe sandbox, so every environment receives every event
  * A foreign event is expected traffic, not an error - we return null so the caller can skip it
  */
 export async function getSessionForPayment(
-  payment: Stripe.PaymentIntent,
+  { id, metadata }: { id: string; metadata: Stripe.Metadata | null },
   eventLabel: string,
 ): Promise<PaymentSession | null> {
-  const { id, metadata } = payment;
-
   const parsedMetadata = stripePaymentMetadataSchema.safeParse(metadata);
   if (!parsedMetadata.success) {
     reportError({
-      error:
-        "Could not handle Stripe event: PaymentIntent metadata is invalid or missing",
+      error: "Could not handle Stripe event: metadata is invalid or missing",
       context: {
-        paymentIntentId: id,
+        stripeId: id,
         eventLabel,
         issues: parsedMetadata.error.issues,
       },
@@ -48,7 +45,7 @@ export async function getSessionForPayment(
 
   if (origin !== process.env.API_URL_EXT) {
     console.info(
-      `Ignoring Stripe event for PaymentIntent ${id} (${eventLabel}): created by ${origin}`,
+      `Ignoring Stripe event for ${id} (${eventLabel}): created by ${origin}`,
     );
     return null;
   }
@@ -57,7 +54,7 @@ export async function getSessionForPayment(
   const { session } = await getSession(sessionId);
   if (!session) {
     console.info(
-      `Ignoring Stripe event for PaymentIntent ${id} (${eventLabel}): session ${sessionId} not found in this environment`,
+      `Ignoring Stripe event for ${id} (${eventLabel}): session ${sessionId} not found in this environment`,
     );
     return null;
   }
@@ -65,7 +62,7 @@ export async function getSessionForPayment(
   // Should not happen - type narrowing
   if (!session.flow) {
     throw new Error(
-      `Could not find flow ${session.flowId} for session ${sessionId} (PaymentIntent ${id})`,
+      `Could not find flow ${session.flowId} for session ${sessionId} (${id})`,
     );
   }
 

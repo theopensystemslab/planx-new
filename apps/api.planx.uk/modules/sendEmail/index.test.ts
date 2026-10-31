@@ -147,6 +147,25 @@ describe("Send Email endpoint", () => {
           expect(response.body).toHaveProperty("error", "Invalid template");
         });
     });
+
+    it.each([
+      "vat-invoice-council",
+      "vat-invoice-planx",
+      "payment-confirmed-council",
+      "payment-failed-council",
+      "payment-failed-payer",
+    ])(
+      "rejects '%s', which is only sent internally by the Stripe webhook",
+      async (template) => {
+        await supertest(app)
+          .post(`/send-email/${template}`)
+          .send({ payload: { sessionId: "123", email: NOTIFY_TEST_EMAIL } })
+          .expect(400)
+          .then((response) => {
+            expect(response.body).toHaveProperty("error", "Invalid template");
+          });
+      },
+    );
   });
 
   describe("'Welcome' template (Resend)", () => {

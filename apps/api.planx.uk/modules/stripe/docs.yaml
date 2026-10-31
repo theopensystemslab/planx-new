@@ -545,6 +545,10 @@ paths:
         Fulfils invite to pay requests once their Checkout Session is paid
         (`checkout.session.completed` events with a `paymentRequestId` in their metadata). Self-pay Checkout Sessions are ignored.
 
+        Emails the result of a delayed payment, e.g. Bacs Direct Debit
+        (`checkout.session.async_payment_succeeded` and `checkout.session.async_payment_failed` events).
+        The application has already been submitted, so these events are not responsible for submission.
+
         Docs: [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
       tags:
         - stripe
