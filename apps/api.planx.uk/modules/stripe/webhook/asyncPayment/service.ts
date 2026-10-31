@@ -6,9 +6,8 @@ import { z } from "zod";
 import { $api } from "../../../../client/index.js";
 import { sendEmail } from "../../../../lib/resend/index.js";
 import { reportError } from "../../../pay/helpers.js";
-import { sendSlackMessage } from "../../../slack/utils.js";
 import { stripe } from "../../client.js";
-import { formatPence, getStripeId } from "../../helpers.js";
+import { alertPlanX, formatPence, getStripeId } from "../../helpers.js";
 import { getSessionForPayment } from "../ownership/service.js";
 
 type AsyncPaymentEvent = Pick<Stripe.Event, "id" | "type" | "created">;
@@ -235,23 +234,4 @@ async function getPaymentFailure(
       paymentIntent.last_payment_error?.message ??
       "",
   };
-}
-
-/**
- * Something has gone wrong and needs intervention
- * Notify PlanX team to handle this manually
- *
- * Over time, we can hopefully handle all / most of these edge cases automatically
- */
-async function alertPlanX(text: string): Promise<void> {
-  if (process.env.APP_ENVIRONMENT !== "production") {
-    console.log(`Skipping Slack notification on non-production:\n${text}`);
-    return;
-  }
-
-  await sendSlackMessage({
-    channel: "#planx-notifications-internal",
-    text,
-    username: "Stripe payment outcome",
-  });
 }

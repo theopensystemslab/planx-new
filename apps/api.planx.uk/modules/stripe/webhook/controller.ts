@@ -8,6 +8,7 @@ import {
   sendPaymentFailedEmails,
 } from "./asyncPayment/service.js";
 import { propagateMetadataToDestinationPayment } from "./destinationPayment/service.js";
+import { alertDisputeCreated } from "./dispute/service.js";
 import { recordStripePaymentIntentStatus } from "./paymentStatus/service.js";
 import type { StripeWebhookController } from "./types.js";
 
@@ -95,6 +96,9 @@ export const handleStripeWebhook: StripeWebhookController = async (
         break;
       case "checkout.session.async_payment_failed":
         await sendPaymentFailedEmails(event.data.object, event);
+        break;
+      case "charge.dispute.created":
+        await alertDisputeCreated(event.data.object, event.type);
         break;
       default:
         console.log(
