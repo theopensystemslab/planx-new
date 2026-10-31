@@ -33,7 +33,7 @@ export async function getSessionForPayment(
     reportError({
       error: "Could not handle Stripe event: metadata is invalid or missing",
       context: {
-        paymentIntentId: id,
+        stripeId: id,
         eventLabel,
         issues: parsedMetadata.error.issues,
       },
