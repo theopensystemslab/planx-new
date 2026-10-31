@@ -1,7 +1,7 @@
 import type Stripe from "stripe";
 
 import type { FeeLine } from "../../feeLines.js";
-import type { OwnedPaymentIntent } from "../ownership/service.js";
+import type { PaymentSession } from "../ownership/service.js";
 import type {
   VatInvoiceBranding,
   VatInvoiceData,
@@ -37,7 +37,7 @@ export const sumLineItems = (lineItems: VatInvoiceLineItem[]) =>
 interface BuildVatInvoiceDataArgs {
   issuer: VatInvoiceIssuer;
   paymentIntent: Stripe.PaymentIntent;
-  recorded: OwnedPaymentIntent;
+  recorded: PaymentSession;
   customerEmail: string;
   seller: VatInvoiceSeller;
   branding: VatInvoiceBranding | null;

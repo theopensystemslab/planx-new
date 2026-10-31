@@ -1,7 +1,7 @@
 import type Stripe from "stripe";
 
 import type { FeeLine } from "../../feeLines.js";
-import type { OwnedPaymentIntent } from "../ownership/service.js";
+import type { PaymentSession } from "../ownership/service.js";
 import {
   FLOW_ID,
   FLOW_NAME,
@@ -67,7 +67,7 @@ describe("groupFeeLinesByIssuer", () => {
 });
 
 describe("buildVatInvoiceData", () => {
-  const recorded: OwnedPaymentIntent = {
+  const recorded: PaymentSession = {
     sessionId: paymentIntent.metadata.sessionId,
     flowId: FLOW_ID,
     flowName: FLOW_NAME,

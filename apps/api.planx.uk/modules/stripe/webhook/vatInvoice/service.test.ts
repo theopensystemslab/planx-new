@@ -4,7 +4,7 @@ import { sendEmail } from "../../../../lib/resend/index.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import * as payHelpers from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
-import type { OwnedPaymentIntent } from "../ownership/service.js";
+import type { PaymentSession } from "../ownership/service.js";
 import {
   FLOW_ID,
   FLOW_NAME,
@@ -40,7 +40,7 @@ const succeededPaymentIntent = (overrides: Record<string, unknown> = {}) =>
     ...overrides,
   }) as unknown as Stripe.PaymentIntent;
 
-const recorded: OwnedPaymentIntent = {
+const recorded: PaymentSession = {
   sessionId: paymentIntent.metadata.sessionId,
   flowId: FLOW_ID,
   flowName: FLOW_NAME,

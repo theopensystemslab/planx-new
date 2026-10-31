@@ -11,7 +11,7 @@ import {
   getStripeId,
   postStripePaymentNotificationToSlack,
 } from "../../helpers.js";
-import { getOwnedPaymentIntent } from "../ownership/service.js";
+import { getSessionForPayment } from "../ownership/service.js";
 import { hasuraClientErrorSchema } from "./types.js";
 
 interface InsertStripePaymentStatusArgs {
@@ -32,13 +32,13 @@ export async function recordStripePaymentIntentStatus(
 ): Promise<void> {
   const { id, amount, metadata } = paymentIntent;
 
-  const ownedPaymentIntent = await getOwnedPaymentIntent(
+  const paymentSession = await getSessionForPayment(
     paymentIntent,
     stripeStatus,
   );
-  if (!ownedPaymentIntent) return;
+  if (!paymentSession) return;
 
-  const { sessionId, flowId, teamSlug, passportData } = ownedPaymentIntent;
+  const { sessionId, flowId, teamSlug, passportData } = paymentSession;
   const feeBreakdown = deriveFeeBreakdown(sessionId, passportData);
   const paymentMethod = await getPaymentMethodType(paymentIntent);
 

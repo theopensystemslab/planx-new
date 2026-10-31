@@ -8,7 +8,7 @@ import { stripePaymentMetadataSchema } from "../paymentStatus/types.js";
 
 type PassportData = Session["data"]["passport"]["data"];
 
-export interface OwnedPaymentIntent {
+export interface PaymentSession {
   sessionId: string;
   flowId: string;
   flowName: string;
@@ -18,16 +18,17 @@ export interface OwnedPaymentIntent {
 }
 
 /**
- * Check that a PaymentIntent belongs to this environment
+ * Get the PlanX session a Stripe PaymentIntent belongs to
  *
+ * Returns null if the payment belongs to another environment
  * Non-prod environments share a Stripe sandbox, so every environment receives every event
  * A foreign event is expected traffic, not an error - we return null so the caller can skip it
  */
-export async function getOwnedPaymentIntent(
-  paymentIntent: Stripe.PaymentIntent,
+export async function getSessionForPayment(
+  payment: Stripe.PaymentIntent,
   eventLabel: string,
-): Promise<OwnedPaymentIntent | null> {
-  const { id, metadata } = paymentIntent;
+): Promise<PaymentSession | null> {
+  const { id, metadata } = payment;
 
   const parsedMetadata = stripePaymentMetadataSchema.safeParse(metadata);
   if (!parsedMetadata.success) {

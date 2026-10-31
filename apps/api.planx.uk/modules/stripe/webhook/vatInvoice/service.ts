@@ -10,7 +10,7 @@ import { reportError } from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
 import { getFeeLines } from "../../feeLines.js";
 import { formatPence } from "../../helpers.js";
-import type { OwnedPaymentIntent } from "../ownership/service.js";
+import type { PaymentSession } from "../ownership/service.js";
 import { buildVatInvoiceData, groupFeeLinesByIssuer } from "./data.js";
 import { generateVatInvoicePdf } from "./pdf.js";
 import { getCouncilInvoiceDetails, PLANX_SELLER } from "./seller.js";
@@ -87,7 +87,7 @@ export const getChargedFeeBreakdown = async (
  */
 export async function sendVatInvoices(
   paymentIntent: Stripe.PaymentIntent,
-  recorded: OwnedPaymentIntent,
+  recorded: PaymentSession,
 ): Promise<void> {
   const context = {
     paymentIntentId: paymentIntent.id,
