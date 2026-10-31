@@ -8,13 +8,14 @@ import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import classifiedRoadsResponseMock from "../mocks/classifiedRoadsResponseMock";
+import dataMapWalesResponseMock from "../mocks/dataMapWalesResponseMock";
 import digitalLandResponseMock from "../mocks/digitalLandResponseMock";
 import {
   breadcrumbsWithoutUSRN,
   simpleBreadcrumbs,
   simpleFlow,
 } from "../mocks/simpleFlow";
-import { availableDatasets } from "../model";
+import { getAvailableDatasets } from "../model";
 import PlanningConstraints from ".";
 
 const { setState } = useStore;
@@ -293,7 +294,7 @@ describe("selectable datasets in editor", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-        dataValues={availableDatasets
+        dataValues={getAvailableDatasets(undefined)
           .filter((d) => d.val !== "road.classified")
           .map((d) => d.val)}
       />,
@@ -335,5 +336,141 @@ describe("selectable datasets in editor", () => {
     expect(
       await findByRole("button", { name: /Classified roads/ }),
     ).toBeVisible();
+  });
+});
+
+describe("for a Welsh team", () => {
+  const WALES_TEAM = "bannau-brycheiniog";
+  const walesDataValues = getAvailableDatasets(WALES_TEAM).map((d) => d.val);
+  const initialTeamSlug = useStore.getState().teamSlug;
+  let gisRequestURL: URL | undefined;
+
+  beforeEach(() => {
+    gisRequestURL = undefined;
+    server.use(
+      http.get(`${API_URL}/gis/*`, ({ request }) => {
+        gisRequestURL = new URL(request.url);
+        return HttpResponse.json(dataMapWalesResponseMock);
+      }),
+    );
+    act(() =>
+      setState({
+        teamSlug: WALES_TEAM,
+        breadcrumbs: simpleBreadcrumbs,
+        flow: simpleFlow,
+      }),
+    );
+  });
+
+  afterEach(() => act(() => setState({ teamSlug: initialTeamSlug })));
+
+  const renderWelshConstraints = () =>
+    setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+        handleSubmit={vi.fn()}
+        dataValues={walesDataValues}
+      />,
+    );
+
+  it("offers Welsh constraints to Editors", () => {
+    expect(walesDataValues).toContain("nature.priorityHabitat");
+    expect(walesDataValues).not.toContain("articleFour");
+    expect(getAvailableDatasets(WALES_TEAM)).toContainEqual(
+      expect.objectContaining({
+        val: "flood",
+        source: "DataMapWales",
+        datasets: ["inspire-nrw:NRW_FLOODZONE_RIVERS_SEAS_MERGED"],
+      }),
+    );
+  });
+
+  it("requests constraints for the team's selected values", async () => {
+    const { findByRole } = await renderWelshConstraints();
+
+    expect(await findByRole("button", { name: /Flood risk/ })).toBeVisible();
+
+    expect(gisRequestURL?.pathname).toMatch(/\/gis\/bannau-brycheiniog$/);
+    expect(gisRequestURL?.searchParams.get("vals")?.split(",")).toEqual(
+      walesDataValues,
+    );
+  });
+
+  it("groups flood zones and listed building grades under a single constraint", async () => {
+    const { findByRole, queryByRole } = await renderWelshConstraints();
+
+    expect(await findByRole("button", { name: /Flood risk/ })).toBeVisible();
+    expect(
+      queryByRole("button", { name: /Flood Zone/ }),
+    ).not.toBeInTheDocument();
+
+    expect(
+      await findByRole("button", { name: /Listed buildings/ }),
+    ).toBeVisible();
+    expect(
+      queryByRole("button", { name: /Grade II Listed/ }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("lists DataMapWales entities by name, without linking to Planning Data", async () => {
+    const {
+      user,
+      findByRole,
+      getByText,
+      getAllByRole,
+      queryByText,
+      queryByRole,
+    } = await renderWelshConstraints();
+
+    await user.click(await findByRole("button", { name: /Listed buildings/ }));
+
+    expect(getByText("11 Ship Street")).toBeVisible();
+    expect(
+      queryByRole("link", { name: "11 Ship Street" }),
+    ).not.toBeInTheDocument();
+    expect(queryByText(/Planning Data map/)).not.toBeInTheDocument();
+    const dataMapWalesLinks = getAllByRole("link", { name: "DataMapWales" });
+    expect(
+      dataMapWalesLinks.map((link) => link.getAttribute("href")),
+    ).toContain(
+      "https://datamap.gov.wales/layers/inspire-wg:Cadw_ListedBuildings",
+    );
+  });
+
+  it("passes granular values to the passport", async () => {
+    const handleSubmit = vi.fn();
+    const { user, findByRole, getByTestId } = await setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+        handleSubmit={handleSubmit}
+        dataValues={walesDataValues}
+      />,
+    );
+
+    await findByRole("button", { name: /Flood risk/ });
+    await user.click(getByTestId("continue-button"));
+
+    const passport = handleSubmit.mock.calls[0][0].data;
+    expect(passport["property.constraints.planning"]).toEqual(
+      expect.arrayContaining(["flood", "flood.zoneTwo", "listed.gradeTwo"]),
+    );
+    expect(passport._nots["property.constraints.planning"]).toEqual(
+      expect.arrayContaining(["listed.gradeOne", "designated.AONB"]),
+    );
+  });
+
+  it("should not have any accessibility violations", async () => {
+    const { container, findByRole } = await renderWelshConstraints();
+
+    expect(await findByRole("button", { name: /Flood risk/ })).toBeVisible();
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

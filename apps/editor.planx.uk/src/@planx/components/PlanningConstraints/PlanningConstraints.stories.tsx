@@ -5,6 +5,7 @@ import type { Meta } from "@storybook/tanstack-react";
 import Editor from "./Editor";
 import classifiedRoadsNegativeResponseMock from "./mocks/classifiedRoadsNegativeResponseMock";
 import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
+import dataMapWalesResponseMock from "./mocks/dataMapWalesResponseMock";
 import digitalLandNegativeResponseMock from "./mocks/digitalLandNegativeResponseMock";
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
 import Public from "./Public";
@@ -13,6 +14,7 @@ import { Presentational } from "./Public/Presentational";
 
 /**
  * PlanningConstraints fetches data about constraints from DLUHC's planning.data.gov.uk & data about classified roads from the Ordnance Survey Features API.
+ * Welsh teams fetch constraints from DataMapWales (datamap.gov.wales) instead of planning.data.gov.uk.
  *
  * We do a spatial query to find constraints that overlap with the red-line site boundary polygon drawn using DrawBoundary.
  * If an applicant uploads a PDF location plan or skips drawing, then we fallback to checking for constraints that intersect with the address point selected using FindProperty.
@@ -20,6 +22,7 @@ import { Presentational } from "./Public/Presentational";
  * Example sites:
  * - "With Intersections" is based on a site boundary around LAMBETH PALACE, LAMBETH PALACE ROAD, LONDON, SE1 7JU in April 2026
  * - "Without Intersections" is based on a site boundary around 2, WALLER ROAD, BEACONSFIELD, BUCKINGHAMSHIRE, HP9 2HE in July 2023
+ * - "Welsh Team With Intersections" is based on a site boundary around WATERGATE, BRECON in October 2026
  */
 export default {
   title: "PlanX Components/PlanningConstraints",
@@ -68,12 +71,28 @@ const propsWithoutIntersections: PresentationalProps = {
   setInaccurateConstraints: () => {},
 };
 
+const propsWelshTeamWithIntersections: PresentationalProps = {
+  ...propsWithIntersections,
+  constraints: {
+    ...dataMapWalesResponseMock["constraints"],
+    ...classifiedRoadsResponseMock["constraints"],
+  },
+  metadata: {
+    ...dataMapWalesResponseMock["metadata"],
+    ...classifiedRoadsResponseMock["metadata"],
+  },
+};
+
 export const WithIntersections = {
   render: () => <Presentational {...propsWithIntersections} />,
 };
 
 export const WithoutIntersections = {
   render: () => <Presentational {...propsWithoutIntersections} />,
+};
+
+export const WelshTeamWithIntersections = {
+  render: () => <Presentational {...propsWelshTeamWithIntersections} />,
 };
 
 export const WithEditor = () => (
