@@ -8,6 +8,7 @@ import {
   markDelayedPaymentPending,
 } from "./delayedPayment/service.js";
 import { propagateMetadataToDestinationPayment } from "./destinationPayment/service.js";
+import { alertDisputeCreated } from "./dispute/service.js";
 import { recordStripePaymentIntentStatus } from "./paymentStatus/service.js";
 import type { StripeWebhookController } from "./types.js";
 
@@ -109,6 +110,9 @@ export const handleStripeWebhook: StripeWebhookController = async (
       case "checkout.session.completed":
       case "checkout.session.async_payment_succeeded":
         await handleCheckoutSession(event.data.object, event.type);
+        break;
+      case "charge.dispute.created":
+        await alertDisputeCreated(event.data.object, event.type);
         break;
       default:
         console.log(
