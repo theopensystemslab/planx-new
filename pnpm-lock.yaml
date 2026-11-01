@@ -562,8 +562,8 @@ importers:
         specifier: ^8.0.3
         version: 8.0.4
       immer:
-        specifier: ^9.0.21
-        version: 9.0.21
+        specifier: ^11.0.1
+        version: 11.0.1
       js-cookie:
         specifier: ^3.0.8
         version: 3.0.8
@@ -671,7 +671,7 @@ importers:
         version: 4.6.7
       zustand:
         specifier: ^4.5.7
-        version: 4.5.7(@types/react@19.3.0)(immer@9.0.21)(react@19.3.1)
+        version: 4.5.7(@types/react@19.3.0)(immer@11.0.1)(react@19.3.1)
     devDependencies:
       '@emotion/cache':
         specifier: ^11.14.0
@@ -4048,6 +4048,7 @@ packages:
   '@smithy/core@3.36.0':
     resolution: {integrity: sha512-3hJiwG1F5t1SoXqp/yOCmYXziyx7ZVqF63S5W6YU201e/qwVaHPex+E/3vvyY9a3ORq/b+BydeNZpP2saQ9X2g==}
     engines: {node: '>=18.0.0'}
+    deprecated: Deprecated due to a bug in custom logger data redaction. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -7241,8 +7242,8 @@ packages:
     resolution: {integrity: sha512-/8UvqAPU9DGTI9k4mxtf49U37Isfwr8Uts96+SBHIkFxPJnHS0Ew4f00sM4Scd8V8EjM0jUNtVDdv1kPdt35lg==}
     engines: {node: '>= 4'}
 
-  immer@9.0.21:
-    resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
+  immer@11.0.1:
+    resolution: {integrity: sha512-naDCyggtcBWANtIrjQEajhhBEuL9b0Zg4zmlWK2CzS6xCWSE39/vvf4LqnMjUAWHBhot4m9MHCM/Z+mfWhUkiA==}
 
   immutable@5.1.9:
     resolution: {integrity: sha512-m8nVez3rwrgmWxtLMt1ZYXB2Lv7OKYn/disyxAlSDYAlKSlFoPPfIAmAM/M5xqL4m4C/wAPw7S2/CNaUii1Hxg==}
@@ -18023,7 +18024,7 @@ snapshots:
 
   ignore@7.0.12: {}
 
-  immer@9.0.21: {}
+  immer@11.0.1: {}
 
   immutable@5.1.9: {}
 
@@ -22688,12 +22689,12 @@ snapshots:
 
   zstddec@0.2.0: {}
 
-  zustand@4.5.7(@types/react@19.3.0)(immer@9.0.21)(react@19.3.1):
+  zustand@4.5.7(@types/react@19.3.0)(immer@11.0.1)(react@19.3.1):
     dependencies:
       use-sync-external-store: 1.7.0(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
-      immer: 9.0.21
+      immer: 11.0.1
       react: 19.3.1
 
   zwitch@2.0.4: {}
