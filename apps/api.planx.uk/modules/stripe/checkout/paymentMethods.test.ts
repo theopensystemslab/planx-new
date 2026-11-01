@@ -1,77 +1,65 @@
 import {
+  BACS_DEBIT_LIMIT,
   CARD_LIMIT,
   getPaymentMethodTypes,
   PAY_BY_BANK_LIMIT,
 } from "./paymentMethods.js";
 import { activeCapabilities } from "./test/mocks.js";
 
+// £100 - within every method's limit
+const SMALL_TOTAL = 100_00;
+
+describe.each([
+  { method: "card", capability: "card_payments", highestTotal: CARD_LIMIT - 1 },
+  {
+    method: "pay_by_bank",
+    capability: "pay_by_bank_payments",
+    highestTotal: PAY_BY_BANK_LIMIT,
+  },
+  {
+    method: "bacs_debit",
+    capability: "bacs_debit_payments",
+    highestTotal: BACS_DEBIT_LIMIT,
+  },
+] as const)(
+  "getPaymentMethodTypes - $method",
+  ({ method, capability, highestTotal }) => {
+    it("is offered up to its limit", () => {
+      expect(
+        getPaymentMethodTypes({
+          amount: highestTotal,
+          capabilities: activeCapabilities,
+        }),
+      ).toContain(method);
+    });
+
+    it("is refused above its limit when it is the only method the council account can take", () => {
+      expect(() =>
+        getPaymentMethodTypes({
+          amount: highestTotal + 1,
+          capabilities: { [capability]: "active" },
+        }),
+      ).toThrow(expect.objectContaining({ status: 409 }));
+    });
+
+    it.each(["inactive", "pending", undefined])(
+      "is not offered when its capability is %s",
+      (status) => {
+        expect(
+          getPaymentMethodTypes({
+            amount: SMALL_TOTAL,
+            capabilities: { ...activeCapabilities, [capability]: status },
+          }),
+        ).not.toContain(method);
+      },
+    );
+  },
+);
+
 describe("getPaymentMethodTypes", () => {
-  it.each([
-    { amount: CARD_LIMIT - 1, expected: ["card", "pay_by_bank"] },
-    { amount: CARD_LIMIT, expected: ["pay_by_bank"] },
-    { amount: PAY_BY_BANK_LIMIT, expected: ["pay_by_bank"] },
-  ])(
-    "offers $expected for a total of $amount pence",
-    ({ amount, expected }) => {
-      expect(
-        getPaymentMethodTypes({ amount, capabilities: activeCapabilities }),
-      ).toEqual(expected);
-    },
-  );
-
-  it.each(["inactive", "pending", undefined])(
-    "removes Pay by Bank when its capability is %s",
-    (status) => {
-      expect(
-        getPaymentMethodTypes({
-          amount: CARD_LIMIT - 1,
-          capabilities: {
-            card_payments: "active",
-            pay_by_bank_payments: status,
-          },
-        }),
-      ).toEqual(["card"]);
-    },
-  );
-
-  it.each(["inactive", "pending", undefined])(
-    "removes card when its capability is %s",
-    (status) => {
-      expect(
-        getPaymentMethodTypes({
-          amount: CARD_LIMIT - 1,
-          capabilities: {
-            card_payments: status,
-            pay_by_bank_payments: "active",
-          },
-        }),
-      ).toEqual(["pay_by_bank"]);
-    },
-  );
-
-  it.each([
-    { amount: CARD_LIMIT - 1, capabilities: {} },
-    {
-      amount: CARD_LIMIT,
-      capabilities: {
-        card_payments: "active",
-        pay_by_bank_payments: "inactive",
-      },
-    },
-    {
-      amount: PAY_BY_BANK_LIMIT,
-      capabilities: {
-        card_payments: "active",
-        pay_by_bank_payments: "pending",
-      },
-    },
-    { amount: PAY_BY_BANK_LIMIT + 1, capabilities: activeCapabilities },
-  ])(
-    "refuses a total of $amount pence when no method remains, never falling back to card",
-    ({ amount, capabilities }) => {
-      expect(() => getPaymentMethodTypes({ amount, capabilities })).toThrow(
-        expect.objectContaining({ status: 409 }),
-      );
-    },
-  );
+  it("refuses a total when the council account can take no method", () => {
+    expect(() =>
+      getPaymentMethodTypes({ amount: SMALL_TOTAL, capabilities: {} }),
+    ).toThrow(expect.objectContaining({ status: 409 }));
+  });
 });
