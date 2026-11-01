@@ -3,24 +3,31 @@ import type Stripe from "stripe";
 import { ServerError } from "../../../errors/index.js";
 import { formatPence } from "../helpers.js";
 
-type PaymentMethodType = "card" | "pay_by_bank";
+type PaymentMethodType = "card" | "pay_by_bank" | "bacs_debit";
 
 type PaymentCapabilities = Pick<
   Stripe.Account.Capabilities,
-  "card_payments" | "pay_by_bank_payments"
+  "card_payments" | "pay_by_bank_payments" | "bacs_debit_payments"
 >;
 
 /**
  * Card payments above this amount are blocked due to high fees
  */
-export const CARD_LIMIT = 60_000;
+export const CARD_LIMIT = 600_00;
 
 /**
  * Stripe's default Pay by Bank limit (£10k in pence)
  *
  * @docs https://docs.stripe.com/payments/pay-by-bank
  */
-export const PAY_BY_BANK_LIMIT = 1_000_000;
+export const PAY_BY_BANK_LIMIT = 10_000_00;
+
+/**
+ * Stripe's default Bacs Direct Debit limit per payment (£10k in pence)
+ *
+ * @docs https://docs.stripe.com/payments/bacs-debit
+ */
+export const BACS_DEBIT_LIMIT = 10_000_00;
 
 const CAPABILITY_FOR_METHOD: Record<
   PaymentMethodType,
@@ -28,13 +35,24 @@ const CAPABILITY_FOR_METHOD: Record<
 > = {
   card: "card_payments",
   pay_by_bank: "pay_by_bank_payments",
+  bacs_debit: "bacs_debit_payments",
 };
 
-const getMethodsForAmount = (amount: number): PaymentMethodType[] => {
-  if (amount < CARD_LIMIT) return ["card", "pay_by_bank"];
-  if (amount <= PAY_BY_BANK_LIMIT) return ["pay_by_bank"];
-  return [];
-};
+const IS_WITHIN_LIMIT: Record<PaymentMethodType, (amount: number) => boolean> =
+  {
+    card: (amount) => amount < CARD_LIMIT,
+    pay_by_bank: (amount) => amount <= PAY_BY_BANK_LIMIT,
+    bacs_debit: (amount) => amount <= BACS_DEBIT_LIMIT,
+  };
+
+const PAYMENT_METHODS: PaymentMethodType[] = [
+  "card",
+  "pay_by_bank",
+  "bacs_debit",
+];
+
+const getMethodsForAmount = (amount: number): PaymentMethodType[] =>
+  PAYMENT_METHODS.filter((method) => IS_WITHIN_LIMIT[method](amount));
 
 const isActiveFor =
   (capabilities: PaymentCapabilities) =>
