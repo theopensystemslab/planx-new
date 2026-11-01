@@ -10,6 +10,6 @@ Feature: Stripe payment methods by amount
     Then the Checkout Session offers "<methods>"
 
     Examples:
-      | fee               | total | methods           |
-      | a householder fee | £576  | card, pay_by_bank |
-      | a fee of £600     | £600  | pay_by_bank       |
+      | fee               | total | methods                       |
+      | a householder fee | £576  | card, pay_by_bank, bacs_debit |
+      | a fee of £600     | £600  | pay_by_bank, bacs_debit       |
