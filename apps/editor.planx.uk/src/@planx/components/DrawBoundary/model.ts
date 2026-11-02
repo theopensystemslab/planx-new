@@ -1,3 +1,4 @@
+import type { Feature } from "geojson";
 import { richText } from "lib/yupExtensions";
 import type { SchemaOf } from "yup";
 import { object, string } from "yup";
@@ -40,6 +41,16 @@ export const parseDrawBoundary = (
 
 export const PASSPORT_UPLOAD_KEY = "locationPlan" as const; // not added to editor yet
 export const PASSPORT_COMPONENT_ACTION_KEY = "drawBoundary.action" as const; // internal use only
+
+// The Planning Data request URL fails at around 320 boundary points, so this sets a safe limit for boundaries
+export const MAX_BOUNDARY_POINTS = 270;
+
+export const countBoundaryPoints = ({ geometry }: Feature): number => {
+  if (geometry.type === "Polygon") return geometry.coordinates.flat().length;
+  if (geometry.type === "MultiPolygon")
+    return geometry.coordinates.flat(2).length;
+  return 0;
+};
 
 // Default content as of February 2026
 //   Rather than editing HTML directly here, try updating component directly via editor rich text inputs then running

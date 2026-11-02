@@ -27,7 +27,9 @@ import { array } from "yup";
 
 import type { DrawBoundary } from "../model";
 import {
+  countBoundaryPoints,
   DrawBoundaryUserAction,
+  MAX_BOUNDARY_POINTS,
   PASSPORT_COMPONENT_ACTION_KEY,
   PASSPORT_UPLOAD_KEY,
 } from "../model";
@@ -35,6 +37,8 @@ import {
 export type Props = PublicProps<DrawBoundary>;
 
 export type Boundary = Feature | undefined;
+
+const TOO_MANY_POINTS_ERROR = `Draw a boundary with ${MAX_BOUNDARY_POINTS} points or fewer`;
 
 const slotsSchema = array()
   .required()
@@ -68,8 +72,17 @@ export default function Component(props: Props) {
     props.previouslySubmittedData?.data?.[`${props.fn}.area`] ||
     passport.data?.["property.boundary.area"];
 
-  const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
-  const [area, setArea] = useState<number | undefined>(previousArea);
+  // Don't pre-populate boundaries too complex for our planning constraints lookup
+  const isBoundaryTooComplex =
+    previousBoundary &&
+    countBoundaryPoints(previousBoundary) > MAX_BOUNDARY_POINTS;
+
+  const [boundary, setBoundary] = useState<Boundary>(
+    isBoundaryTooComplex ? undefined : previousBoundary,
+  );
+  const [area, setArea] = useState<number | undefined>(
+    isBoundaryTooComplex ? undefined : previousArea,
+  );
   const [mapValidationError, setMapValidationError] = useState<string>();
 
   // Buffer applied to the address point to clip this map extent
@@ -148,17 +161,28 @@ export default function Component(props: Props) {
     mapValidationErrorRef.current = mapValidationError;
   }, [mapValidationError]);
 
+  // Boundaries too complex for our planning constraints lookup can't be submitted
+  const isCurrentBoundaryTooComplex =
+    boundary && countBoundaryPoints(boundary) > MAX_BOUNDARY_POINTS;
+
   useEffect(() => {
-    if (mapValidationErrorRef.current) {
+    if (isCurrentBoundaryTooComplex) {
+      setMapValidationError(TOO_MANY_POINTS_ERROR);
+    } else if (mapValidationErrorRef.current) {
       setMapValidationError(undefined);
     }
-  }, [boundary]);
+  }, [boundary, isCurrentBoundaryTooComplex]);
 
   const validateAndSubmit = () => {
     const newPassportData: Store.UserData["data"] = {};
 
     // Used the map
     if (page === "draw") {
+      if (isCurrentBoundaryTooComplex) {
+        setMapValidationError(TOO_MANY_POINTS_ERROR);
+        return;
+      }
+
       if (isSubmissionService && !boundary) {
         setMapValidationError("Draw a boundary");
       }
