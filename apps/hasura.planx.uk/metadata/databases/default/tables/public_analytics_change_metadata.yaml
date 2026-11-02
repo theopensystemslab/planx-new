@@ -1,0 +1,3 @@
+table:
+  name: analytics_change_metadata
+  schema: public
