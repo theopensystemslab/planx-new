@@ -5,8 +5,9 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-const FOLDER_BACKGROUND = "#b5d1f7";
-const FOLDER_BORDER = "#2c4b88";
+// Match flow graph portal styles (see floweditor.scss)
+const FOLDER_BACKGROUND = "var(--flow-folder-background)";
+const FOLDER_BORDER = "var(--flow-folder-border)";
 
 interface Props {
   types: ComponentType[];
@@ -33,13 +34,13 @@ const getPortalStyles = (type: ComponentType) => {
       return {
         backgroundColor: FOLDER_BACKGROUND,
         borderColor: FOLDER_BORDER,
-        color: "common.black",
+        color: "var(--flow-text)",
       };
     case ComponentType.ExternalPortal:
       return {
-        backgroundColor: "common.black",
-        borderColor: "common.black",
-        color: "common.white",
+        backgroundColor: "var(--flow-inverse-background)",
+        borderColor: "var(--flow-inverse-background)",
+        color: "var(--flow-inverse-text)",
       };
     default:
       return {};

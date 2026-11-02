@@ -24,7 +24,7 @@ export interface NotificationCardProps {
 const NotificationCard = styled("li")(({ theme }) => ({
   listStyle: "none",
   position: "relative",
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: theme.palette.background.default,
   borderBottom: `1px solid ${theme.palette.border.main}`,
   "&:hover": { backgroundColor: theme.palette.background.paper },
   "&:hover button": { backgroundColor: theme.palette.background.default },

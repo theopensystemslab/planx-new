@@ -10,7 +10,7 @@ const StyledButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== "lightFontStyle",
 })<{ lightFontStyle: boolean }>(({ theme, lightFontStyle }) => ({
   boxShadow: "none",
-  color: lightFontStyle ? theme.palette.grey[600] : "black",
+  color: lightFontStyle ? theme.palette.grey[600] : theme.palette.text.primary,
   fontSize: lightFontStyle ? "1rem" : "1.125rem",
   fontWeight: lightFontStyle ? "inherit" : FONT_WEIGHT_SEMI_BOLD,
   width: "100%",

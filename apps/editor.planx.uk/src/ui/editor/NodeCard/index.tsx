@@ -35,7 +35,7 @@ const HeaderRoot = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   backgroundColor: theme.palette.text.primary,
-  color: theme.palette.common.white,
+  color: theme.palette.background.default,
   width: "100%",
   borderColor: theme.palette.text.primary,
   borderWidth: 4,

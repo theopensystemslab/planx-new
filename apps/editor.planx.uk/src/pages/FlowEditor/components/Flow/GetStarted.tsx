@@ -22,7 +22,7 @@ const Root = styled(Box)(({ theme }) => ({
     left: `calc(50% - 1px)`,
     width: "2px",
     height: theme.spacing(1),
-    background: "#D0D0D0",
+    background: "var(--flow-line)",
   },
 }));
 

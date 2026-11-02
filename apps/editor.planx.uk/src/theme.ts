@@ -414,7 +414,7 @@ const getThemeOptions = ({
             borderWidth: "2px",
             borderColor: palette.prompt.main,
             color: palette.text.primary,
-            backgroundColor: palette.common.white,
+            backgroundColor: palette.background.default,
             boxShadow: "none",
             "&:hover": {
               borderWidth: "2px",
@@ -742,7 +742,7 @@ const getThemeOptions = ({
               color: palette.text.primary,
               border: "2px solid currentcolor",
               borderRadius: "50%",
-              backgroundColor: "#FFF",
+              backgroundColor: palette.background.default,
             },
             "&::after": {
               // Styles for radio icon dot

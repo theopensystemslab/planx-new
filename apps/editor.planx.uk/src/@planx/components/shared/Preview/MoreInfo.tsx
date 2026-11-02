@@ -42,7 +42,7 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
         color="inherit"
       />
     </CloseButtonWrapper>
-    <Container maxWidth={false} sx={{ bgcolor: "white" }}>
+    <Container maxWidth={false} sx={{ bgcolor: "background.default" }}>
       <Typography variant="h1" sx={visuallyHidden}>
         More information
       </Typography>

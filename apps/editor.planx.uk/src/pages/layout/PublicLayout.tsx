@@ -32,7 +32,7 @@ const MainContainer = styled(Main)(({ theme }) => ({
   flex: "1 0 auto",
   flexDirection: "column",
   alignItems: "center",
-  backgroundColor: "white",
+  backgroundColor: theme.palette.background.default,
   position: "relative",
   overflow: "hidden",
 }));

@@ -44,7 +44,7 @@ const StyledInputBase = styled(InputBase, {
   shouldForwardProp: (prop) =>
     !["format", "bordered"].includes(prop.toString()),
 })<StyledInputBase>(({ theme, format, bordered }) => ({
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: theme.palette.background.default,
   // Maintain 16px minimum input size to prevent zoom on iOS
   fontSize: "1rem",
   width: "100%",

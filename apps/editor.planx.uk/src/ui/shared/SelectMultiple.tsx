@@ -46,7 +46,7 @@ export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
   "&:focus-within": {
     "& svg": {
-      color: "black",
+      color: theme.palette.text.primary,
     },
   },
 })) as typeof Autocomplete;

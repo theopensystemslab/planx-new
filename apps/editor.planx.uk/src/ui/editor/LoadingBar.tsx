@@ -20,15 +20,15 @@ const loadFollow = keyframes`
 const StyledBar = styled(LinearProgress)(({ theme }) => ({
   width: 48,
   height: 6,
-  backgroundColor: theme.palette.grey[300],
+  backgroundColor: theme.palette.border.light,
   [`& .${linearProgressClasses.bar1}`]: {
     width: "100%",
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.palette.text.primary,
     animation: `${loadFill} 1.6s ease-in-out infinite`,
   },
   [`& .${linearProgressClasses.bar2}`]: {
     width: "100%",
-    backgroundColor: theme.palette.grey[300],
+    backgroundColor: theme.palette.border.light,
     animation: `${loadFollow} 1.6s ease-in-out infinite`,
   },
 }));

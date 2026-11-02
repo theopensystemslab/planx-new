@@ -10,7 +10,6 @@ export enum TagType {
 
 const BG_ALERT = "#FAFF00";
 const BG_ACTIVE = "#E5F1EB";
-const BG_NOTICE = "#F3F2F1";
 
 const Root = styled("span", {
   shouldForwardProp: (prop) => prop !== "tagType",
@@ -33,7 +32,7 @@ const Root = styled("span", {
     color: theme.palette.success.dark,
   }),
   ...(tagType === TagType.Notice && {
-    backgroundColor: BG_NOTICE,
+    backgroundColor: theme.palette.secondary.main,
     color: theme.palette.text.secondary,
   }),
   ...(tagType === TagType.Success && {

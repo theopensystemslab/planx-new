@@ -40,7 +40,7 @@ export const RecentFlowItem = styled(Box)<{ indent?: number }>(
     whiteSpace: "nowrap",
     paddingLeft: indent > 0 ? theme.spacing(5.5 + indent) : theme.spacing(1),
     paddingRight: theme.spacing(1.5),
-    color: theme.palette.common.white,
+    color: theme.palette.background.default,
     height: RECENT_ROW_HEIGHT,
   }),
 );
@@ -52,7 +52,7 @@ export const ToggleWrap = styled(Box)(() => ({
 }));
 
 export const ToggleButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.common.white,
+  color: theme.palette.background.default,
   padding: theme.spacing(0.1, 1),
   borderLeft: `1px solid ${theme.palette.border.main}`,
   alignSelf: "stretch",

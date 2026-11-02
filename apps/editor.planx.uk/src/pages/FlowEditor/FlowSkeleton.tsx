@@ -19,48 +19,19 @@ const Container: React.FC<PropsWithChildren> = ({ children }) => (
 );
 
 const TerminalNode = () => (
-  <Skeleton
-    variant="circular"
-    width={50}
-    height={50}
-    sx={{ bgcolor: "rgba(0,0,0,0.11)" }}
-  />
+  <Skeleton variant="circular" width={50} height={50} />
 );
 
-const Hanger = () => (
-  <Skeleton
-    variant="circular"
-    width={15}
-    height={15}
-    sx={{ bgcolor: "rgba(0,0,0,0.11)" }}
-  />
-);
+const Hanger = () => <Skeleton variant="circular" width={15} height={15} />;
 
-const Node = () => (
-  <Skeleton
-    variant="rectangular"
-    width={150}
-    height={30}
-    sx={{ bgcolor: "rgba(0,0,0,0.11)" }}
-  />
-);
+const Node = () => <Skeleton variant="rectangular" width={150} height={30} />;
 
 const VerticalConnector = () => (
-  <Skeleton
-    variant="rectangular"
-    width={4}
-    height={10}
-    sx={{ bgcolor: "rgba(0,0,0,0.11)" }}
-  />
+  <Skeleton variant="rectangular" width={4} height={10} />
 );
 
 const HorizontalConnector = () => (
-  <Skeleton
-    variant="rectangular"
-    width={234}
-    height={4}
-    sx={{ bgcolor: "rgba(0,0,0,0.11)" }}
-  />
+  <Skeleton variant="rectangular" width={234} height={4} />
 );
 
 const FlowSkeleton = () => {

@@ -13,7 +13,7 @@ const Root = styled(Box)(({ theme }) => ({
 }));
 
 const ReportButton = styled(Button)(({ theme }) => ({
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: theme.palette.background.default,
   color: theme.palette.primary.main,
   padding: "0.7em 1em",
   "@media print": {

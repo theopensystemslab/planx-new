@@ -36,7 +36,7 @@ const ListCard = styled(Box)(({ theme }) => ({
 
 const CardButton = styled(Button)(({ theme }) => ({
   gap: theme.spacing(1),
-  background: theme.palette.common.white,
+  background: theme.palette.background.default,
 }));
 
 const AddListItemButton = styled(Button)(({ theme }) => ({

@@ -40,7 +40,7 @@ const StyledContainer = styled(Box, {
   let backgroundColor;
   if (showStatus) {
     if (isComplete) {
-      backgroundColor = theme.palette.common.white;
+      backgroundColor = theme.palette.background.default;
     } else if (areTemplatedNodeInstructionsRequired) {
       backgroundColor = theme.palette.template.dark;
     } else {

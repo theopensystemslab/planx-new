@@ -1,18 +1,50 @@
-$black: #0b0c0c;
+// Colours are CSS custom properties so they can be shared with components outside the flow graph
+:root {
+  --flow-text: #0b0c0c;
+  --flow-line: #d0d0d0;
+  --flow-surface: #fff;
+  --flow-inverse-background: #0b0c0c;
+  --flow-inverse-text: #fff;
+  --flow-inverse-muted: #555;
+  --flow-option-border: #b1b4b6;
+  --flow-hanger-background: #f2f2f2;
+  --flow-focus: #ffdd00;
+  --flow-visited: #8cc485;
+  --flow-error: red;
+  --flow-locked-flow-background: rgba(0, 0, 0, 0.07);
+  --flow-locked-node-background: #eee;
+  --flow-locked-border: #888;
+  --flow-data-background: #f0f0f0;
+  --flow-locked-data-background: #e2e2e2;
+  --flow-folder-background: #b5d1f7;
+  --flow-folder-border: #2c4b88;
+  --flow-locked-folder-background: #e2edf5;
+  --flow-note-background: #fffdb0;
+  --flow-locked-note-background: #f5f4d2;
+  --flow-page-border: #aaa;
+  --flow-page-background: rgba(0, 0, 0, 0.07);
+  --flow-category-background: #d0d0d0;
+  --flow-shadow: rgba(0, 0, 0, 0.1);
+}
+
+$black: var(--flow-text);
 $nodeBorder: $black;
-$optionBorder: #b1b4b6;
-$hangerBackground: #f2f2f2;
-$focus: #ffdd00;
-$lockedFlowBackground: rgba(0, 0, 0, 0.07);
-$lockedNodeBackground: #eee;
-$lockedBorder: #888;
-$dataBackground: #f0f0f0;
-$lockedDataBackground: #e2e2e2;
-$folderBackground: #b5d1f7;
-$folderBorder: #2c4b88;
-$primaryAction: #0010a4;
-$noteBackground: #fffdb0;
-$lockedNoteBackground: #f5f4d2;
+$optionBorder: var(--flow-option-border);
+$hangerBackground: var(--flow-hanger-background);
+$focus: var(--flow-focus);
+$lockedFlowBackground: var(--flow-locked-flow-background);
+$lockedNodeBackground: var(--flow-locked-node-background);
+$lockedBorder: var(--flow-locked-border);
+$dataBackground: var(--flow-data-background);
+$lockedDataBackground: var(--flow-locked-data-background);
+$folderBackground: var(--flow-folder-background);
+$folderBorder: var(--flow-folder-border);
+$noteBackground: var(--flow-note-background);
+$lockedNoteBackground: var(--flow-locked-note-background);
+$surface: var(--flow-surface);
+$inverseBackground: var(--flow-inverse-background);
+$inverseText: var(--flow-inverse-text);
+$inverseMuted: var(--flow-inverse-muted);
 
 $endpointWidth: 50px;
 $hangerWidth: 16px;
@@ -21,7 +53,8 @@ $nodeBorderWidth: 1px;
 $nodeMaxWidth: 240px;
 $padding: 10px;
 $editorPadding: 30px;
-$pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAADElEQVQImWO4cOECAATkAnFXdNPtAAAAAElFTkSuQmCC);
+// Gradients have no intrinsic size, so background-size must always specify both dimensions
+$pixel: linear-gradient(var(--flow-line), var(--flow-line));
 
 $fontMonospace: "Source Code Pro", monospace;
 
@@ -69,7 +102,7 @@ $fontMonospace: "Source Code Pro", monospace;
   bottom: -5px;
   width: 100%;
   height: 100%;
-  background: white;
+  background: $surface;
   border: $lineWidth dashed $nodeBorder;
   z-index: -1;
   .flow-locked & {
@@ -156,7 +189,7 @@ $fontMonospace: "Source Code Pro", monospace;
       flex-direction: column;
     }
     &.template-card > a {
-      background: #fff;
+      background: $surface;
       border-color: $nodeBorder;
     }
   }
@@ -171,10 +204,10 @@ $fontMonospace: "Source Code Pro", monospace;
       flex-direction: row;
     }
     &.template-card a {
-      background: $black;
+      background: $inverseBackground;
     }
     .flow-locked & {
-      background: #555;
+      background: $inverseMuted;
     }
   }
   &.portal.internal-portal .card-wrapper.template-card a {
@@ -226,7 +259,7 @@ $fontMonospace: "Source Code Pro", monospace;
     span {
       opacity: 1;
     }
-    outline: 4px solid #8cc485;
+    outline: 4px solid var(--flow-visited);
     outline-offset: 0;
   }
 
@@ -246,7 +279,7 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 
   &.hasFailed {
-    border: $nodeBorderWidth dashed red;
+    border: $nodeBorderWidth dashed var(--flow-error);
   }
 
   // Allow nodes to expand to width of data when toggled
@@ -263,7 +296,7 @@ $fontMonospace: "Source Code Pro", monospace;
     cursor: pointer;
     color: $black;
     border: $nodeBorderWidth solid $nodeBorder;
-    background: white;
+    background: $surface;
     user-select: none;
     padding: 6px;
     overflow-wrap: break-word;
@@ -303,14 +336,14 @@ $fontMonospace: "Source Code Pro", monospace;
       height: 20px;
       margin-top: -2px;
       border-radius: 50%;
-      color: white;
-      background: $black;
+      color: $inverseText;
+      background: $inverseBackground;
       font-size: 13px;
       font-weight: bold;
       line-height: 1;
 
       .flow-locked & {
-        background: #555;
+        background: $inverseMuted;
       }
     }
   }
@@ -425,8 +458,8 @@ $fontMonospace: "Source Code Pro", monospace;
 }
 
 .page {
-  border: 1px solid #aaa;
-  background: rgba(0, 0, 0, 0.07);
+  border: 1px solid var(--flow-page-border);
+  background: var(--flow-page-background);
   text-align: center;
   > a {
     border: none;
@@ -440,8 +473,8 @@ $fontMonospace: "Source Code Pro", monospace;
   @include circle($endpointWidth);
   display: block;
   line-height: $endpointWidth;
-  color: white;
-  background: $black;
+  color: $inverseText;
+  background: $inverseBackground;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
@@ -450,7 +483,7 @@ $fontMonospace: "Source Code Pro", monospace;
 .root-node-link {
   background-image: $pixel;
   background-position: top center;
-  background-size: $lineWidth;
+  background-size: $lineWidth $lineWidth;
   background-repeat: repeat-y;
   padding-top: ($padding * 2) !important;
   &--end {
@@ -462,10 +495,10 @@ $fontMonospace: "Source Code Pro", monospace;
     cursor: pointer;
     padding: $padding;
     color: $black;
-    background: white;
+    background: $surface;
     border-radius: 3px;
     border: 1px solid $optionBorder;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px 0 var(--flow-shadow);
     font-weight: 600;
     font-size: 14px;
   }
@@ -489,7 +522,7 @@ $fontMonospace: "Source Code Pro", monospace;
 .hanger {
   align-self: center;
   background-image: $pixel;
-  background-size: $lineWidth;
+  background-size: $lineWidth $lineWidth;
   line-height: 0;
 
   [data-layout="left-right"] & {
@@ -557,7 +590,7 @@ $fontMonospace: "Source Code Pro", monospace;
     > button {
       position: relative;
       width: $hangerWidth;
-      background-color: white;
+      background-color: $surface;
       transform: scale($dropTargetScale);
       border-style: dashed;
       width: 60px;
@@ -598,17 +631,17 @@ $fontMonospace: "Source Code Pro", monospace;
 .portal {
   display: flex;
   flex-direction: column;
-  background: $black;
+  background: $inverseBackground;
   > div {
     display: flex;
   }
   > div a {
-    background: $black;
-    color: white;
+    background: $inverseBackground;
+    color: $inverseText;
     border: none;
 
     .flow-locked & {
-      background: #555;
+      background: $inverseMuted;
     }
     // Smaller icon for portal nodes
     svg {
@@ -673,7 +706,7 @@ $fontMonospace: "Source Code Pro", monospace;
     }
     .flow-locked & {
       .card-wrapper:not(.template-card) div a {
-        background: #e2edf5;
+        background: var(--flow-locked-folder-background);
         border-color: $lockedBorder;
       }
     }
@@ -698,7 +731,7 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 
   .portalMenu {
-    border-left: $nodeBorderWidth solid #aaa;
+    border-left: $nodeBorderWidth solid var(--flow-page-border);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -728,7 +761,7 @@ $fontMonospace: "Source Code Pro", monospace;
 
 .category > a {
   padding: 6px 12px;
-  background: #d0d0d0;
+  background: var(--flow-category-background);
 }
 
 .decision,
@@ -803,8 +836,8 @@ $fontMonospace: "Source Code Pro", monospace;
           bottom center;
         background-size:
           $lineWidth $padding,
-          $lineWidth,
-          $lineWidth;
+          $lineWidth $lineWidth,
+          $lineWidth $lineWidth;
         background-repeat: no-repeat, repeat-x, repeat-x;
 
         &:nth-of-type(1) {
