@@ -210,7 +210,7 @@ export const deleteSessionController: DeleteSessionController = async (
   } catch (error) {
     return next(
       new ServerError({
-        message: "Failed to delete session",
+        message: `Failed to delete session ${sessionId}`,
         cause: error,
       }),
     );
