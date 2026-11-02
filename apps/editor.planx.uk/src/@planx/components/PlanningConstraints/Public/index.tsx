@@ -83,10 +83,13 @@ function Component(props: Props) {
   } = useClassifiedRoads(dataValues);
 
   // Merge Planning Data and Roads responses for a unified list of constraints
-  const constraints: GISResponse["constraints"] = {
-    ...data?.constraints,
-    ...roads?.constraints,
-  };
+  //   and show error state (rather than a partial list) if Planning Data lookup failed
+  const constraints: GISResponse["constraints"] = isGISError
+    ? {}
+    : {
+        ...data?.constraints,
+        ...roads?.constraints,
+      };
   const metadata: GISResponse["metadata"] = {
     ...data?.metadata,
     ...roads?.metadata,

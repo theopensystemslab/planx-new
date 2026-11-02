@@ -105,6 +105,11 @@ async function go(
     );
   }
 
+  // a failed lookup must not be reported as no constraints found
+  if (typeof res?.count !== "number") {
+    throw new Error(`Failed to fetch planning constraints from ${url}`);
+  }
+
   // --- INTERSECTIONS ---
   // check for & add any 'positive' constraints to the formattedResult
   let formattedResult: Record<string, Constraint> = {};
