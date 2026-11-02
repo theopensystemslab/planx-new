@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
@@ -16,9 +17,12 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error }) => {
         </Typography>
         <Typography>
           {(error as Error).message && (
-            <pre style={{ color: "#E91B0C", whiteSpace: "pre-line" }}>
+            <Box
+              component="pre"
+              sx={{ color: "error.main", whiteSpace: "pre-line" }}
+            >
               {(error as Error).message}
-            </pre>
+            </Box>
           )}
         </Typography>
         <Typography variant="body2">

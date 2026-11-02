@@ -10,8 +10,8 @@ import AnalyticsChart from "ui/icons/AnalyticsChart";
 
 const AnalyticsWarning = styled(Box)(({ theme }) => ({
   display: "flex",
-  backgroundColor: "#FFFB00",
-  color: "#070707",
+  backgroundColor: theme.palette.action.focus,
+  color: theme.palette.text.primary,
   justifyContent: "space-between",
   alignItems: "center",
   padding: "0.2em 0",

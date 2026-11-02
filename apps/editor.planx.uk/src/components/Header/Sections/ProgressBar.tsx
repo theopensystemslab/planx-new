@@ -22,7 +22,7 @@ const Root = styled(LinearProgress)(({ theme }) => ({
   [`& .${linearProgressClasses.bar1}`]: {
     backgroundColor: theme.palette.common.white,
     "@media print": {
-      backgroundColor: "#888",
+      backgroundColor: theme.palette.grey[500],
     },
   },
   // Current

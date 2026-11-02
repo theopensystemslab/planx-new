@@ -20,14 +20,14 @@ const Wrapper = styled(Box)(({ theme }) => ({
   position: "relative",
 }));
 
-const LoginContainer = styled(Container)(() => ({
+const LoginContainer = styled(Container)(({ theme }) => ({
   position: "relative",
   zIndex: 1,
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  color: "#FFF",
+  color: theme.palette.common.white,
 }));
 
 const LoginPanel = styled(Box)(({ theme }) => ({
@@ -57,7 +57,7 @@ const LoginButton = styled(Button)(({ theme }) => ({
     gap: theme.spacing(0.75),
   },
   "&.Mui-disabled": {
-    color: "#eee",
+    color: theme.palette.background.disabled,
     backgroundColor: `rgba(0, 0, 0, 0.25)`,
   },
 }));

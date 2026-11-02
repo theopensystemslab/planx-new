@@ -74,7 +74,7 @@ export default function PhaseBanner(props: Props): FCReturn {
             <BetaFlag
               sx={{
                 bgcolor: "primary.dark",
-                color: "white",
+                color: "common.white",
                 display: "flex",
                 alignItems: "flex-start",
                 flexBasis: 0,

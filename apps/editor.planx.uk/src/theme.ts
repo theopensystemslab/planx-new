@@ -1,4 +1,5 @@
 import { buttonClasses } from "@mui/material/Button";
+import { common } from "@mui/material/colors";
 import { radioClasses } from "@mui/material/Radio";
 import type { Theme as MUITheme, ThemeOptions } from "@mui/material/styles";
 import type { PaletteOptions } from "@mui/material/styles";
@@ -184,7 +185,7 @@ const getThemeOptions = ({
       main: actionColour,
       light: lighten(actionColour, DEFAULT_TONAL_OFFSET),
       dark: darken(actionColour, DEFAULT_TONAL_OFFSET),
-      contrastText: getContrastTextColor(actionColour, "#FFF")!,
+      contrastText: getContrastTextColor(actionColour, common.white)!,
     },
   };
   const palette = createTheme({
@@ -503,7 +504,7 @@ const getThemeOptions = ({
             // a11y: Ensure images are visible in Windows high contrast mode
             "@media (forced-colors: active)": {
               forcedColorAdjust: "none",
-              backgroundColor: "white",
+              backgroundColor: palette.common.white,
             },
           },
         },

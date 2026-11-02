@@ -1,6 +1,6 @@
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import { getContrastTextColor } from "styleUtils";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
 
@@ -40,6 +40,7 @@ const Initial = styled("span", {
 }));
 
 export const Badge: React.FC<BadgeProps> = (props) => {
+  const theme = useTheme();
   const { size = "default" } = props;
 
   if (props.variant === BadgeVariant.SourceTemplate) {
@@ -88,7 +89,10 @@ export const Badge: React.FC<BadgeProps> = (props) => {
     );
   }
 
-  const textColour = getContrastTextColor(backgroundColour, "#FFFFFF");
+  const textColour = getContrastTextColor(
+    backgroundColour,
+    theme.palette.common.white,
+  );
 
   return (
     <Root

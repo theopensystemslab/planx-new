@@ -154,7 +154,7 @@ const TeamBrand: React.FC = () => {
         display: "flex",
         alignItems: "center",
         textDecoration: "none",
-        color: "#FFF",
+        color: "common.white",
       }}
     >
       {teamDisplayName}
@@ -230,7 +230,7 @@ const PublicToolbar: React.FC<{
                   aria-label="Restart Application"
                   size="large"
                   aria-describedby="restart-application-description"
-                  sx={{ "@media print": { color: "black" } }}
+                  sx={{ "@media print": { color: "common.black" } }}
                 >
                   <Reset color="inherit" />
                   <Typography
@@ -347,7 +347,10 @@ const Header: React.FC = () => {
         sx={(theme) => ({
           backgroundColor:
             teamTheme?.primaryColour || theme.palette.background.dark,
-          "@media print": { backgroundColor: "white", color: "black" },
+          "@media print": {
+            backgroundColor: theme.palette.common.white,
+            color: theme.palette.common.black,
+          },
         })}
       >
         <Toolbar />

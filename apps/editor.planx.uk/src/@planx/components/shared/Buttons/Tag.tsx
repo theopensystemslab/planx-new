@@ -37,7 +37,7 @@ const Root = styled("span", {
   }),
   ...(tagType === TagType.Success && {
     backgroundColor: theme.palette.success.dark,
-    color: "#FFFFFF",
+    color: theme.palette.common.white,
   }),
 }));
 

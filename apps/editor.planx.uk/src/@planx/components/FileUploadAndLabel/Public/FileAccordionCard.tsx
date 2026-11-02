@@ -123,9 +123,10 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
                       data-testid="uploaded-file-chip"
                       icon={<CheckCircleIcon />}
                       sx={{
-                        backgroundColor: "#E6F3E6",
+                        backgroundColor: "success.light",
                         color: "text.primary",
-                        border: "1px solid rgba(0, 0, 0, 0.25)",
+                        border: 1,
+                        borderColor: "success.main",
                         [`& .${chipClasses.icon}`]: {
                           color: "success.main",
                         },

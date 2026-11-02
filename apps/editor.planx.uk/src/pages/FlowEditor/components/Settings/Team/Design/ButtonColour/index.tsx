@@ -34,14 +34,17 @@ const ButtonColour: React.FC = () => {
       validationSchema={validationSchema.pick(["actionColour"])}
       legend="Button colour"
       preview={(formik) => [
-        <DesignPreview sx={{ bgcolor: "white" }}>
+        <DesignPreview sx={{ bgcolor: "common.white" }}>
           <Button
             variant="contained"
             sx={{
               backgroundColor: formik.values.actionColour,
               color: formik.values.actionColour
-                ? getContrastTextColor(formik.values.actionColour, "#FFF")
-                : "#FFF",
+                ? getContrastTextColor(
+                    formik.values.actionColour,
+                    muiTheme.palette.common.white,
+                  )
+                : muiTheme.palette.common.white,
               "&:hover": {
                 backgroundColor: formik.values.actionColour
                   ? darken(formik.values.actionColour, 0.2)

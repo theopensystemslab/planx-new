@@ -85,7 +85,7 @@ const UploadButton = styled("button", {
     border: `2px dashed ${theme.palette.primary.dark}`,
   }),
   ...(variant === "tooltip" && {
-    color: "#757575",
+    color: theme.palette.text.placeholder,
     height: "fitContent",
     width: "fitContent",
     background: "transparent",

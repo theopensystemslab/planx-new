@@ -1,7 +1,7 @@
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import Box from "@mui/material/Box";
 import type { Palette } from "@mui/material/styles";
-import { useTheme } from "@mui/material/styles";
+import { alpha, useTheme } from "@mui/material/styles";
 import type { NodeTag, Role } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { getContrastTextColor } from "styleUtils";
@@ -42,13 +42,14 @@ export const Tag: React.FC<{ tag: NodeTag }> = ({ tag }) => {
       className={`card-tag ${tag}`}
       sx={{
         bgcolor: tagBgColor,
-        border: `1px solid rgba(0, 0, 0, 0.2)`,
+        border: 1,
+        borderColor: alpha(theme.palette.text.primary, 0.2),
         padding: "4px 12px",
         borderRadius: "50px",
         textAlign: "center",
         fontSize: "12px",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
-        color: getContrastTextColor(tagBgColor, "#FFF"),
+        color: getContrastTextColor(tagBgColor, theme.palette.common.white),
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

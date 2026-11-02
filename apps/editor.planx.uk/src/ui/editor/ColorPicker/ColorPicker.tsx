@@ -39,7 +39,7 @@ const Root = styled(Box, {
 }));
 
 const Swatch = styled(Box)(({ theme }) => ({
-  background: "#fff",
+  background: theme.palette.common.white,
   display: "inline-block",
   cursor: "pointer",
   marginRight: theme.spacing(1),
