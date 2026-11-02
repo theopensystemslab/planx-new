@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { cardBoxShadow, FONT_WEIGHT_BOLD } from "theme";
 import Permission from "ui/editor/Permission";
 
 import type { Attempt, GroupedEvent, SessionEvent, Submission } from "../types";
@@ -7,7 +8,7 @@ import { canResubmit } from "../utils";
 import { OpenResponseButton } from "./OpenResponseButton";
 import { ResubmitButton } from "./ResubmitButton";
 import { StatusChip } from "./StatusChip";
-import { StatusIcon } from "./StatusIcon";
+import { STATUS_ICON_SIZE, StatusIcon } from "./StatusIcon";
 
 const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
   if (submissions.length === 0) return [];
@@ -74,20 +75,27 @@ export const SubmissionEventsHistory: React.FC<{
       sx={{
         background: "background",
         border: 1,
-        margin: 1,
-        borderColor: "lightgrey",
+        borderColor: (theme) => theme.palette.border.light,
+        boxShadow: cardBoxShadow,
+        borderRadius: "3px",
       }}
     >
       <Box
         sx={{
-          padding: 1,
-          margin: 1,
+          px: 2,
+          py: 1,
           "& > *": {
-            borderBottom: 1,
-            borderColor: "lightgrey",
+            position: "relative",
           },
-          "& > *:last-child": {
-            borderBottom: 0,
+          // Dashed connector from each status icon down to the next one
+          "& > *:not(:last-child)::after": {
+            content: '""',
+            position: "absolute",
+            left: STATUS_ICON_SIZE / 2 - 1,
+            top: EVENT_PADDING + ICON_BOTTOM_OFFSET + CONNECTOR_GAP,
+            bottom: -(EVENT_PADDING + ICON_TOP_OFFSET - CONNECTOR_GAP),
+            borderLeft: "2px dashed",
+            borderColor: (theme) => theme.palette.border.main,
           },
         }}
       >
@@ -103,6 +111,16 @@ export const SubmissionEventsHistory: React.FC<{
     </Box>
   );
 };
+
+// Matches the height of the IconButton in OpenResponseButton, so the status
+// icon and title stay aligned whether or not the button is shown
+const TITLE_ROW_HEIGHT = 40;
+
+// Positions used to draw the connector between status icons
+const EVENT_PADDING = 10;
+const ICON_TOP_OFFSET = (TITLE_ROW_HEIGHT - STATUS_ICON_SIZE) / 2;
+const ICON_BOTTOM_OFFSET = ICON_TOP_OFFSET + STATUS_ICON_SIZE;
+const CONNECTOR_GAP = 4;
 
 const SubmissionEvent: React.FC<{
   groupedEvent: GroupedEvent;
@@ -123,10 +141,12 @@ const SubmissionEvent: React.FC<{
         display: "flex",
         width: "100%",
         alignItems: "flex-start",
-        mb: 1,
+        py: `${EVENT_PADDING}px`,
       }}
     >
-      <Box>
+      <Box
+        sx={{ display: "flex", alignItems: "center", height: TITLE_ROW_HEIGHT }}
+      >
         <StatusIcon status={status} />
       </Box>
 
@@ -134,12 +154,30 @@ const SubmissionEvent: React.FC<{
         sx={{
           flex: 1,
           paddingLeft: 2,
-          gap: 1,
           display: "flex",
           flexDirection: "column",
         }}
       >
-        <Typography sx={{ fontWeight: "bold" }}>{eventType}</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            minHeight: TITLE_ROW_HEIGHT,
+          }}
+        >
+          <Typography variant="body1" sx={{ fontWeight: FONT_WEIGHT_BOLD }}>
+            {eventType}
+          </Typography>
+          {attempts.length === 1 && (
+            <Box sx={{ marginLeft: "auto" }}>
+              <OpenResponseButton
+                attempt={attempts[0]}
+                sessionId={sessionId}
+                disabled={hideResponse}
+              />
+            </Box>
+          )}
+        </Box>
 
         <Permission.IsPlatformAdmin>
           {canResubmit(
@@ -151,18 +189,9 @@ const SubmissionEvent: React.FC<{
         </Permission.IsPlatformAdmin>
 
         {attempts.length === 1 ? (
-          <>
-            <Box sx={{ display: "flex", alignItems: "center", pb: 1 }}>
-              <Typography>{new Date(createdAt).toLocaleString()}</Typography>
-              <Box sx={{ marginLeft: "auto" }}>
-                <OpenResponseButton
-                  attempt={attempts[0]}
-                  sessionId={sessionId}
-                  disabled={hideResponse}
-                />
-              </Box>
-            </Box>
-          </>
+          <Typography variant="body2">
+            {new Date(createdAt).toLocaleString()}
+          </Typography>
         ) : (
           <SubmissionAttempts
             attempts={attempts}

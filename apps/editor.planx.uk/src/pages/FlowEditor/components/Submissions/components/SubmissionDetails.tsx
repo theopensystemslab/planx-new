@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { cardBoxShadow } from "theme";
 import { CopyButton } from "ui/editor/CopyButton";
 import type { DescriptionListItem } from "ui/public/DescriptionList";
 import { DescriptionList } from "ui/public/DescriptionList";
@@ -65,11 +66,12 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
       sx={{
         background: "background",
         border: 1,
-        margin: 1,
-        borderColor: "border.main",
+        borderColor: (theme) => theme.palette.border.light,
+        boxShadow: cardBoxShadow,
+        borderRadius: "3px",
       }}
     >
-      <Box sx={{ padding: 1, margin: 1 }}>
+      <Box sx={{ p: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 1 }}>
           <Badge
             variant={BadgeVariant.Team}
@@ -86,7 +88,10 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = (props) => {
         <Typography variant="h3" sx={{ mb: 2 }}>
           {props.latestEvent?.flowName}
         </Typography>
-        <DescriptionList data={submissionData} hideLastBorder={true} />
+        <DescriptionList
+          data={submissionData}
+          sx={{ "& > *:nth-last-of-type(1)": { borderBottom: "none" } }}
+        />
       </Box>
 
       {(showSubmissionActions || showPaymentActions) && (

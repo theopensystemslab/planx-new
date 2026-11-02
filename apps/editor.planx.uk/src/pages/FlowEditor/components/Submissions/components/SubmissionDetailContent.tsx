@@ -55,9 +55,9 @@ const SubmissionDetailContent: React.FC<SubmissionDetailContentProps> = ({
 
   return (
     <DialogContent>
-      <Grid container>
+      <Grid container columns={20} spacing={2}>
         <Grid
-          size={{ xs: 12, md: 6 }}
+          size={{ xs: 20, md: 11 }}
           sx={{
             position: { md: "sticky" },
             top: 0,
@@ -75,7 +75,7 @@ const SubmissionDetailContent: React.FC<SubmissionDetailContentProps> = ({
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 20, md: 9 }}>
           <SubmissionEventsHistory
             events={events}
             isSubmissionAvailable={isSubmissionAvailable}
