@@ -1,6 +1,10 @@
 import { getContrastRatio } from "@mui/material/styles";
 import type { TeamTheme } from "@opensystemslab/planx-core/types";
-import { DEFAULT_CONTRAST_THRESHOLD } from "theme";
+import {
+  DEFAULT_CONTRAST_THRESHOLD,
+  DEFAULT_PRIMARY_COLOR,
+  defaultTheme,
+} from "theme";
 import { object, string } from "yup";
 
 export const validationSchema = object({
@@ -40,12 +44,13 @@ export const validationSchema = object({
   });
 
 export const defaultValues: TeamTheme = {
-  primaryColour: "#0010A4",
+  primaryColour: DEFAULT_PRIMARY_COLOR,
   logo: null,
   favicon: null,
-  linkColour: "#0010A4",
-  actionColour: "#0010A4",
+  linkColour: DEFAULT_PRIMARY_COLOR,
+  actionColour: DEFAULT_PRIMARY_COLOR,
 };
 
 const isContrastThresholdMet = (color: string) =>
-  getContrastRatio("#f9f8f8", color) > DEFAULT_CONTRAST_THRESHOLD;
+  getContrastRatio(defaultTheme.palette.background.paper, color) >
+  DEFAULT_CONTRAST_THRESHOLD;

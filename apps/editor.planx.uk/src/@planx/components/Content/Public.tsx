@@ -30,13 +30,16 @@ const Content = styled(Box, {
   ({ theme, color = "#ffffff", styleAsNotice }) => ({
     backgroundColor: color,
     color:
-      mostReadable(color || "#fff", [
-        "#fff",
+      mostReadable(color || theme.palette.common.white, [
+        theme.palette.common.white,
         theme.palette.text.primary,
       ])?.toHexString() || theme.palette.text.primary,
     // Ensure the contrast text colour is applied for links
     "&& a": {
-      color: getContrastTextColor(color || "#fff", theme.palette.link.main),
+      color: getContrastTextColor(
+        color || theme.palette.common.white,
+        theme.palette.link.main,
+      ),
     },
     "& *:nth-of-type(1)": {
       marginTop: 0,

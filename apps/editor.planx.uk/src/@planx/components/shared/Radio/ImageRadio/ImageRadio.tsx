@@ -17,9 +17,9 @@ interface TextLabelProps extends Props {
   inputId: string;
 }
 
-const FallbackImage = styled(Box)({
+const FallbackImage = styled(Box)(({ theme }) => ({
   alignItems: "center",
-  backgroundColor: "white",
+  backgroundColor: theme.palette.common.white,
   display: "flex",
   height: "100%",
   justifyContent: "center",
@@ -28,11 +28,11 @@ const FallbackImage = styled(Box)({
   position: "absolute",
   top: 0,
   width: "100%",
-});
+}));
 
-const Image = styled("img")({
+const Image = styled("img")(({ theme }) => ({
   alignItems: "center",
-  backgroundColor: "white",
+  backgroundColor: theme.palette.common.white,
   display: "flex",
   height: "100%",
   justifyContent: "center",
@@ -41,7 +41,7 @@ const Image = styled("img")({
   position: "absolute",
   top: 0,
   width: "100%",
-});
+}));
 
 const ImageLabelRoot = styled(Box)(() => ({
   width: "100%",

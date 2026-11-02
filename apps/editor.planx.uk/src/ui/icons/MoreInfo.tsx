@@ -13,7 +13,7 @@ export default function MoreInfoIcon() {
     position: "relative",
     "&:hover": {
       backgroundColor: theme.palette.primary.main,
-      color: "white",
+      color: theme.palette.primary.contrastText,
       borderColor: theme.palette.primary.main,
     },
   }));

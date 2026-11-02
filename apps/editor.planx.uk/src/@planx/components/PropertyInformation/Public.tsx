@@ -13,6 +13,7 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { HandleSubmit } from "pages/Preview/Node";
 import React, { useCallback } from "react";
+import { DEFAULT_PRIMARY_COLOR } from "theme";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { MapContainer } from "../shared/Preview/MapContainer";
@@ -210,10 +211,10 @@ export function Presentational(props: PresentationalProps) {
           markerLongitude={address?.longitude}
           // markerColor={team?.settings?.design?.color} // defaults to black
           geojsonData={titleBoundary}
-          geojsonColor="#0010A4"
+          geojsonColor={DEFAULT_PRIMARY_COLOR}
           geojsonBuffer={30}
           osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`}
-          geojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary (opens in a new tab)</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
+          geojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:${DEFAULT_PRIMARY_COLOR};">Title boundary (opens in a new tab)</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
           collapseAttributions={window.innerWidth < 500 ? true : undefined}
         />
       </MapContainer>

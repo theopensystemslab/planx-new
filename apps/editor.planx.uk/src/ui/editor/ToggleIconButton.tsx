@@ -34,7 +34,7 @@ const ToggleIconButton: React.FC<ToggleIconButtonProps> = ({
             : theme.palette.text.disabled,
 
           "&:hover": {
-            background: theme.palette.common.white,
+            background: theme.palette.background.default,
           },
         })}
       >

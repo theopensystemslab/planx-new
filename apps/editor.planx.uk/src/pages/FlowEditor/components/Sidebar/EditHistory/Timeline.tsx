@@ -121,7 +121,7 @@ export const EditHistoryTimeline = ({
                 bgcolor: (theme) =>
                   inUndoScope(i) && isUndoType(op.type)
                     ? theme.palette.grey[300]
-                    : theme.palette.grey[900],
+                    : theme.palette.text.primary,
               }}
             />
             {i < events?.length - 1 && (

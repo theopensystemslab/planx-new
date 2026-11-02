@@ -41,7 +41,7 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
       disablePadding
       sx={{
         backgroundColor: "border.input",
-        color: "common.white",
+        color: "background.default",
         px: 1.5,
         py: 0.7,
         margin: 0,
@@ -55,7 +55,7 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
       }}
     >
       <ListItemText
-        sx={{ color: "common.white" }}
+        sx={{ color: "background.default" }}
         primary={
           useStore.getState().canUserEditTeam(text.split("/")[0]) ? (
             <Link href={`../${text}`} target="_blank" color="inherit">
@@ -79,7 +79,7 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
                   display: "flex",
                   alignItems: "flex-start",
                   pt: 0.5,
-                  color: "common.white",
+                  color: "background.default",
                 }}
               >
                 <BlockQuote>{summary}</BlockQuote>

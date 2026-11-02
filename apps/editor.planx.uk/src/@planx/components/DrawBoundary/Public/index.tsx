@@ -20,7 +20,7 @@ import type { GeoJSONChangeEvent } from "lib/gis";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { DEFAULT_PRIMARY_COLOR, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { array } from "yup";
@@ -302,7 +302,7 @@ export default function Component(props: Props) {
                     import.meta.env.VITE_APP_API_URL
                   }/proxy/ordnance-survey`}
                   osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`}
-                  drawGeojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary (opens in a new tab)</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
+                  drawGeojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:${DEFAULT_PRIMARY_COLOR};">Title boundary (opens in a new tab)</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
                   collapseAttributions={
                     self.innerWidth < 500 ? true : undefined
                   }

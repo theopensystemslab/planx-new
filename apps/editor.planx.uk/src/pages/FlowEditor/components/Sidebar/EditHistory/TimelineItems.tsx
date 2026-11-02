@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { formatOps } from "@planx/graph";
@@ -24,7 +24,7 @@ import { isAutoComment } from "../utils";
 
 const TimeLineItem = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  border: `1px solid rgba(0,0,0,0.08)`,
+  border: `1px solid ${alpha(theme.palette.text.primary, 0.08)}`,
 }));
 
 const EditHistoryListItem = styled("li")(() => ({
@@ -141,7 +141,9 @@ interface PublishTimelineItemProps {
 }
 
 export const PublishTimelineItem = ({ event }: PublishTimelineItemProps) => (
-  <TimeLineItem sx={{ color: "white", bgcolor: "background.dark", p: 1 }}>
+  <TimeLineItem
+    sx={{ color: "common.white", bgcolor: "background.dark", p: 1 }}
+  >
     <BlockQuote>{event.comment || ""}</BlockQuote>
   </TimeLineItem>
 );

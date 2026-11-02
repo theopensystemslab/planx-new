@@ -62,7 +62,7 @@ const renderValue = (
           backgroundColor: theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
           color: getContrastTextColor(
             theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
-            "#FFF",
+            theme.palette.common.white,
           ),
         })}
         onDelete={

@@ -22,7 +22,7 @@ const Root = styled(MuiButtonBase)<RootProps>(({ theme, selected }) => ({
   height: "100%",
   "&:hover": {
     backgroundColor: theme.palette.grey[800],
-    color: "white",
+    color: theme.palette.common.white,
   },
 }));
 

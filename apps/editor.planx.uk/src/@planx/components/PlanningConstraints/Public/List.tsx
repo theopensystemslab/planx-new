@@ -9,7 +9,7 @@ import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type {
   Constraint,
@@ -211,7 +211,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
     <ListItem
       key={`${props.fn}-li`}
       disablePadding
-      sx={{ backgroundColor: "white" }}
+      sx={{ backgroundColor: "background.default" }}
     >
       <StyledAccordion {...props} disableGutters>
         <AccordionSummary
@@ -219,7 +219,10 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           aria-controls={`${props.fn}-panel`}
           classes={{ content: classes.content }}
           expandIcon={<Caret />}
-          sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
+          sx={{
+            pr: 1.5,
+            background: (theme) => alpha(theme.palette.background.default, 0.8),
+          }}
         >
           <Box
             sx={{

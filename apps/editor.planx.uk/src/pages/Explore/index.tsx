@@ -22,7 +22,7 @@ const SearchBarButton = styled(ButtonBase)(({ theme }) => ({
   justifyContent: "flex-start",
   border: `1px solid ${theme.palette.border.main}`,
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: theme.palette.background.default,
   "&:hover, &:focus-visible": {
     backgroundColor: theme.palette.background.paper,
   },

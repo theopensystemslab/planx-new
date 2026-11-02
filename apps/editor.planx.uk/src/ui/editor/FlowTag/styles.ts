@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import type { FlowTagProps } from "./types";
@@ -17,7 +17,7 @@ export const Root = styled(Box, {
   gap: theme.spacing(0.5),
   borderRadius: "50px",
   textTransform: "capitalize",
-  border: "1px solid rgba(0, 0, 0, 0.2)",
+  border: `1px solid ${alpha(theme.palette.text.primary, 0.2)}`,
   ...(tagType === FlowTagType.Status && {
     backgroundColor:
       statusVariant === StatusVariant.Online

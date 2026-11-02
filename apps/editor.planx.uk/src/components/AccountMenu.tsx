@@ -77,7 +77,7 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ compact = false }) => {
             component="span"
             sx={{
               bgcolor: grey[900],
-              color: "#fff",
+              color: "common.white",
               fontSize: "1rem",
               fontWeight: FONT_WEIGHT_SEMI_BOLD,
               width: 33,

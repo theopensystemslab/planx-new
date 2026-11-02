@@ -39,7 +39,7 @@ const Root = styled(Box, {
 }));
 
 const Swatch = styled(Box)(({ theme }) => ({
-  background: "#fff",
+  background: theme.palette.common.white,
   display: "inline-block",
   cursor: "pointer",
   marginRight: theme.spacing(1),
@@ -76,7 +76,7 @@ const StyledButtonBase = styled(ButtonBase, {
   whiteSpace: "nowrap",
   backgroundColor: disabled
     ? theme.palette.background.disabled
-    : theme.palette.common.white,
+    : theme.palette.background.default,
   color: disabled ? theme.palette.text.disabled : theme.palette.text.primary,
   border: `1px solid ${theme.palette.border.main}`,
   ...(show && {

@@ -16,7 +16,7 @@ const Root = styled(Button, {
   shouldForwardProp: (prop) =>
     !["fullWidth", "format", "Icon", "showArrow"].includes(prop.toString()),
 })<Props>(({ theme, showArrow, format }) => ({
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: theme.palette.background.default,
   color: theme.palette.text.primary,
   padding: "0.75em",
   margin: theme.spacing(0.75, 0.75, 0.75, 0),

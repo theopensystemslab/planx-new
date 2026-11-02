@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { inputFocusStyle } from "theme";
@@ -8,7 +8,7 @@ import { inputFocusStyle } from "theme";
 export const RichContentContainer = styled(Box)(({ theme }) => ({
   "& .ProseMirror": {
     padding: "12px 15px",
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.background.default,
     minHeight: "50px",
     border: `1px solid ${theme.palette.border.main}`,
     display: "flex",
@@ -85,7 +85,7 @@ export const StyledBubbleMenu = styled(BubbleMenu)(({ theme }) => ({
 }));
 
 export const MentionItems = styled(Box)(({ theme }) => ({
-  background: theme.palette.common.white,
+  background: theme.palette.background.default,
   fontSize: "0.875em",
   boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
   borderRadius: "4px",
@@ -103,7 +103,7 @@ export const MentionItemsButton = styled(Button)(({ theme }) => ({
   width: "100%",
   textAlign: "left",
   "&.mention-item-selected": {
-    background: `rgba(0, 0, 0, 0.03)`,
+    background: alpha(theme.palette.text.primary, 0.03),
   },
 }));
 

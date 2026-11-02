@@ -134,7 +134,7 @@ export const MembersTable = ({
                   <Chip
                     label={getRoleLabel(member.role)}
                     size="small"
-                    sx={{ background: "#ddd" }}
+                    sx={{ bgcolor: "secondary.dark" }}
                   />
                 </TableCell>
                 <TableCell>{member.email}</TableCell>

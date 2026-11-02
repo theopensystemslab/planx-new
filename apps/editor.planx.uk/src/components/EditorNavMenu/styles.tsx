@@ -99,7 +99,7 @@ export const TeamCard = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   boxShadow: cardBoxShadow,
   overflow: "hidden",
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: theme.palette.background.default,
 }));
 
 export const TeamSectionGroup = styled(Box, {

@@ -3,7 +3,7 @@ import DragHandle from "@mui/icons-material/DragHandle";
 import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { PropsWithChildren } from "react";
 import React, { useRef, useState } from "react";
@@ -63,7 +63,7 @@ const Drag = styled(Box)(({ theme }) => ({
   transition: "opacity 0.2s ease",
   "&:hover, &:focus": {
     opacity: 1,
-    backgroundColor: "rgba(0,0,0,0.1)",
+    backgroundColor: alpha(theme.palette.text.primary, 0.1),
   },
 }));
 

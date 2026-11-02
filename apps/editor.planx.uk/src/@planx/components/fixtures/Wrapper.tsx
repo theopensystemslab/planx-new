@@ -4,6 +4,7 @@ import type { ComponentType } from "@opensystemslab/planx-core/types";
 import type { EditorProps, PublicProps } from "@planx/components/shared/types";
 import { nanoid } from "nanoid";
 import React, { useState } from "react";
+import { defaultTheme } from "theme";
 import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 
 import type { Option } from "../Option/model";
@@ -47,7 +48,7 @@ function Wrapper<
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div
         style={{
-          backgroundColor: "#f9f8f8",
+          backgroundColor: defaultTheme.palette.background.paper,
           boxShadow: "10px 5px 5px grey",
           margin: "1em",
         }}

@@ -3,7 +3,7 @@ import Error from "@mui/icons-material/Error";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Image } from "@tiptap/extension-image";
 import type { NodeViewProps } from "@tiptap/react";
@@ -29,8 +29,8 @@ const AltTextIndicator = styled(Box)(({ theme }) => ({
   left: theme.spacing(1),
   maxWidth: `calc(100% - ${theme.spacing(2)})`,
   padding: "0 0.5em",
-  border: "1px solid #242424",
-  backgroundColor: "rgba(255, 255, 255, 0.8)",
+  border: `1px solid ${theme.palette.border.input}`,
+  backgroundColor: alpha(theme.palette.background.default, 0.8),
   display: "inline-flex",
   alignItems: "center",
   overflow: "hidden",

@@ -4,8 +4,8 @@ import Typography from "@mui/material/Typography";
 import type { PropsWithChildren } from "react";
 
 const Root = styled(Box)(({ theme }) => ({
-  backgroundColor: "#fff",
-  color: theme.palette.background.dark,
+  backgroundColor: theme.palette.background.default,
+  color: theme.palette.text.primary,
   width: "100%",
   flex: 1,
   justifyContent: "flex-start",
@@ -13,8 +13,8 @@ const Root = styled(Box)(({ theme }) => ({
 }));
 
 const Dashboard = styled(Box)(({ theme }) => ({
-  backgroundColor: "#fff",
-  color: theme.palette.background.dark,
+  backgroundColor: theme.palette.background.default,
+  color: theme.palette.text.primary,
   width: "100%",
   maxWidth: 600,
   margin: "auto",

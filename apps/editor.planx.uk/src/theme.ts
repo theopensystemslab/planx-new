@@ -1,4 +1,5 @@
 import { buttonClasses } from "@mui/material/Button";
+import { common } from "@mui/material/colors";
 import { radioClasses } from "@mui/material/Radio";
 import type { Theme as MUITheme, ThemeOptions } from "@mui/material/styles";
 import type { PaletteOptions } from "@mui/material/styles";
@@ -184,7 +185,7 @@ const getThemeOptions = ({
       main: actionColour,
       light: lighten(actionColour, DEFAULT_TONAL_OFFSET),
       dark: darken(actionColour, DEFAULT_TONAL_OFFSET),
-      contrastText: getContrastTextColor(actionColour, "#FFF")!,
+      contrastText: getContrastTextColor(actionColour, common.white)!,
     },
   };
   const palette = createTheme({
@@ -414,7 +415,7 @@ const getThemeOptions = ({
             borderWidth: "2px",
             borderColor: palette.prompt.main,
             color: palette.text.primary,
-            backgroundColor: palette.common.white,
+            backgroundColor: palette.background.default,
             boxShadow: "none",
             "&:hover": {
               borderWidth: "2px",
@@ -503,7 +504,7 @@ const getThemeOptions = ({
             // a11y: Ensure images are visible in Windows high contrast mode
             "@media (forced-colors: active)": {
               forcedColorAdjust: "none",
-              backgroundColor: "white",
+              backgroundColor: palette.common.white,
             },
           },
         },
@@ -742,7 +743,7 @@ const getThemeOptions = ({
               color: palette.text.primary,
               border: "2px solid currentcolor",
               borderRadius: "50%",
-              backgroundColor: "#FFF",
+              backgroundColor: palette.background.default,
             },
             "&::after": {
               // Styles for radio icon dot

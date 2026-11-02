@@ -45,7 +45,7 @@ const innerStyle = (theme: Theme) => ({
   },
   "&:focus > .arrowButton": {
     backgroundColor: theme.palette.text.primary,
-    color: theme.palette.common.white,
+    color: theme.palette.background.default,
   },
 });
 

@@ -2,7 +2,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import type { SxProps, Theme } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import { FlowCardLink } from "pages/Flows/components/FlowCard/styles";
@@ -24,7 +24,7 @@ export interface NotificationCardProps {
 const NotificationCard = styled("li")(({ theme }) => ({
   listStyle: "none",
   position: "relative",
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: theme.palette.background.default,
   borderBottom: `1px solid ${theme.palette.border.main}`,
   "&:hover": { backgroundColor: theme.palette.background.paper },
   "&:hover button": { backgroundColor: theme.palette.background.default },
@@ -45,7 +45,7 @@ const TemplateChip = styled(Box)(({ theme }) => ({
   gap: theme.spacing(0.5),
   borderRadius: "50px",
   padding: "2px 8px",
-  border: "1px solid rgba(0, 0, 0, 0.2)",
+  border: `1px solid ${alpha(theme.palette.text.primary, 0.2)}`,
   backgroundColor: theme.palette.template.main,
 }));
 

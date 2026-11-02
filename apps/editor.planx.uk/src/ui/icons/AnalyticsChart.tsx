@@ -11,9 +11,9 @@ export default function AnalyticsChart(props: SvgIconProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect x="9" y="17" width="5" height="14" fill="black" />
-      <rect x="17" y="9" width="5" height="20" fill="black" />
-      <rect x="25" y="13" width="5" height="12" fill="black" />
+      <rect x="9" y="17" width="5" height="14" fill="currentColor" />
+      <rect x="17" y="9" width="5" height="20" fill="currentColor" />
+      <rect x="25" y="13" width="5" height="12" fill="currentColor" />
     </SvgIcon>
   );
 }

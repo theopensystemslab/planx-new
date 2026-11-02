@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { AlteredNode, HistoryItem } from "lib/api/publishFlow/types";
@@ -34,7 +34,7 @@ const HistoryComment = styled(Box, {
       : theme.palette.secondary.dark,
     color: theme.palette.text.primary,
     borderRadius: theme.shape.borderRadius,
-    border: `1px solid rgba(0,0,0,0.08)`,
+    border: `1px solid ${alpha(theme.palette.text.primary, 0.08)}`,
   }),
 );
 
