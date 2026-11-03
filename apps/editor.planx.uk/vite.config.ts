@@ -29,6 +29,11 @@ export default defineConfig({
       protocol: "ws",
     },
   },
+  optimizeDeps: {
+    // Lazily imported, so not discovered by Vite's initial dependency scan
+    // Prevents "Failed to fetch dynamically imported module" on first load in dev
+    include: ["react-notion-x"],
+  },
   build: {
     commonjsOptions: { transformMixedEsModules: true },
     outDir: "build",

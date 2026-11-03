@@ -32,6 +32,7 @@ import { SLUGS } from "../../../data/types";
 import { useStore } from "../../../lib/store";
 import ChangeComponentHeader from "./ChangeComponentHeader";
 import ComponentHistory from "./ComponentHistory";
+import Resources from "./Resources";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
@@ -393,10 +394,10 @@ const FormModal: React.FC<FormModalProps> = ({
             </Box>
           )}
           {activeTab === "resources" && (
-            <Box sx={{ p: 2.5 }}>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                Resources coming soon.
-              </Typography>
+            <Box
+              sx={{ p: 2.5, minHeight: "100%", bgcolor: "background.default" }}
+            >
+              <Resources type={type} />
             </Box>
           )}
         </DialogContent>
