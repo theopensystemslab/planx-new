@@ -73,6 +73,15 @@ export const slotsSchema = array()
         !slots.some((slot) => slot.status === "error"),
       );
     },
+  })
+  .test({
+    name: "fileLength",
+    message: "Please ensure your file name is under 75 characters long",
+    test: (slots?: Array<FileUploadSlot>) => {
+      return Boolean(
+        slots && slots.every((slot) => (slot.file?.path?.length ?? 0) < 75),
+      );
+    },
   });
 
 export const validationSchema: SchemaOf<FileUpload> =
