@@ -33,7 +33,6 @@ export const COMPONENT_GUIDANCE_PAGES: Partial<Record<TYPES, string>> = {
   [TYPES.FileUpload]: "3ac35d469ad180799e8dc87358e2a8f6",
   [TYPES.FileUploadAndLabel]: "3ac35d469ad1800b9361dab796a98785",
   [TYPES.Content]: "3ac35d469ad180ab970ff548bffd28c0",
-  [TYPES.Notice]: "3ac35d469ad180f593efdd0f11355176",
   [TYPES.TaskList]: "3ac35d469ad1804e94f9e05381ecb1c1",
   [TYPES.Review]: "3ac35d469ad1804ea05efa79537a3f9d",
   [TYPES.Result]: "3ac35d469ad180778326c2de077957d0",
