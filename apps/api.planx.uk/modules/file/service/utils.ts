@@ -61,13 +61,22 @@ export function getS3KeyFromURL(fileURL: string): string {
 export const convertObjectToMulterJSONFile = (
   data: Record<string, unknown>,
   fileName: string,
-): Express.Multer.File => {
-  const buffer = Buffer.from(JSON.stringify(data));
+): Express.Multer.File =>
+  convertBufferToMulterFile(
+    Buffer.from(JSON.stringify(data)),
+    fileName,
+    "application/json",
+  );
 
+export const convertBufferToMulterFile = (
+  buffer: Buffer,
+  fileName: string,
+  mimetype: string,
+): Express.Multer.File => {
   return {
     buffer: buffer,
     originalname: fileName,
-    mimetype: "application/json",
+    mimetype,
     size: buffer.length,
     fieldname: "file",
     encoding: "7bit",
