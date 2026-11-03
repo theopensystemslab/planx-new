@@ -269,6 +269,25 @@ describe("File upload", () => {
         });
     });
 
+    it("should not upload when filename exceeds 75 characters", async () => {
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field(
+          "filename",
+          "hereisanextremelylongfilenamehereisanextremelylongfilenamehereisanextremelylongfilename.jpg",
+        )
+        .attach(
+          "file",
+          Buffer.from("some data"),
+          "hereisanextremelylongfilenamehereisanextremelylongfilenamehereisanextremelylongfilename.jpg",
+        )
+        .expect(400)
+        .then((res) => {
+          expect(mockPutObject).not.toHaveBeenCalled();
+          expect(res.body.error).toMatch(/File name too long/);
+        });
+    });
+
     it("should not upload without file", async () => {
       await supertest(app)
         .post(PRIVATE_ENDPOINT)
