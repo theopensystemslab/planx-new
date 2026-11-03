@@ -55,6 +55,8 @@ export const privateUploadController: UploadController = async (
     const fileResponse = await uploadPrivateFile(req.file, filename);
     res.json(fileResponse);
   } catch (error) {
+    if (error instanceof ServerError) return next(error);
+
     return next(
       new ServerError({ message: `Failed to upload private file: ${error}` }),
     );
@@ -72,6 +74,8 @@ export const publicUploadController: UploadController = async (
     const fileResponse = await uploadPublicFile(req.file, filename);
     res.json(fileResponse);
   } catch (error) {
+    if (error instanceof ServerError) return next(error);
+
     return next(
       new ServerError({
         message: `Failed to upload public file: ${(error as Error).message}`,
