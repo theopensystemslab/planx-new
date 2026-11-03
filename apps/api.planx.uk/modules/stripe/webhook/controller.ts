@@ -66,18 +66,31 @@ export const handleStripeWebhook: StripeWebhookController = async (
   try {
     switch (event.type) {
       case "payment_intent.created":
-        await recordStripePaymentIntentStatus(event.data.object, "created");
+        await recordStripePaymentIntentStatus(
+          event.data.object,
+          "created",
+          event.id,
+        );
         break;
       case "payment_intent.processing":
-        await recordStripePaymentIntentStatus(event.data.object, "processing");
+        await recordStripePaymentIntentStatus(
+          event.data.object,
+          "processing",
+          event.id,
+        );
         break;
       case "payment_intent.succeeded":
-        await recordStripePaymentIntentStatus(event.data.object, "succeeded");
+        await recordStripePaymentIntentStatus(
+          event.data.object,
+          "succeeded",
+          event.id,
+        );
         break;
       case "payment_intent.payment_failed":
         await recordStripePaymentIntentStatus(
           event.data.object,
           "payment_failed",
+          event.id,
         );
         break;
       case "transfer.created":

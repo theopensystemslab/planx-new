@@ -7,6 +7,7 @@ import supertest from "supertest";
 import app from "../../../server.js";
 import * as payHelpers from "../../pay/helpers.js";
 import { stripe } from "../client.js";
+import * as stripeHelpers from "../helpers.js";
 import { STRIPE_WEBHOOK_ENDPOINT } from "../routes.js";
 import {
   CONNECTED_ACCOUNT_ID,
@@ -190,6 +191,7 @@ describe("receiving a Stripe webhook", () => {
         teamSlug: TEAM_SLUG,
         stripePaymentId: "pi_test_123",
         stripeStatus: "succeeded",
+        stripeEventId: "evt_succeeded",
         amount: 14500,
         feeBreakdown: null,
         metadata: paymentIntent.metadata,
@@ -593,6 +595,41 @@ describe("receiving a Stripe webhook", () => {
       await post(payload, signature).expect(200);
 
       expect(payHelpers.reportError).not.toHaveBeenCalled();
+    });
+
+    it("notifies Slack when a new status is recorded", async () => {
+      vi.spyOn(
+        stripeHelpers,
+        "postStripePaymentNotificationToSlack",
+      ).mockResolvedValue();
+      mockSessionLookup();
+      mockInsert();
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(
+        stripeHelpers.postStripePaymentNotificationToSlack,
+      ).toHaveBeenCalledWith(TEAM_SLUG, "pi_test_123", "succeeded");
+    });
+
+    it("returns 200 without notifying Slack when Stripe redelivers an event that has already been recorded", async () => {
+      vi.spyOn(
+        stripeHelpers,
+        "postStripePaymentNotificationToSlack",
+      ).mockResolvedValue();
+      mockSessionLookup();
+      mockInsert("alreadyRecorded");
+      const { payload, signature } = succeededEvent();
+
+      await post(payload, signature).expect(200);
+
+      expect(insertCall()?.variables).toEqual(
+        expect.objectContaining({ stripeEventId: "evt_succeeded" }),
+      );
+      expect(
+        stripeHelpers.postStripePaymentNotificationToSlack,
+      ).not.toHaveBeenCalled();
     });
 
     it("returns 500 for a non-FK constraint violation, so Stripe redelivers the event", async () => {

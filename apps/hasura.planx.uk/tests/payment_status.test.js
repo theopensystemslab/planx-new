@@ -96,6 +96,15 @@ describe("payment_status", () => {
       expect(i.mutations).toContain("insert_payment_status");
     });
 
+    test("can query the Stripe event id, used to skip redelivered webhook events", () => {
+      const paymentStatus = i.types.find(
+        (type) => type.name === "payment_status",
+      );
+      expect(paymentStatus.fields.map((field) => field.name)).toContain(
+        "stripe_event_id",
+      );
+    });
+
     test("cannot delete or update payment_status", () => {
       expect(i.mutations).not.toContain("update_payment_status");
       expect(i.mutations).not.toContain("delete_payment_status");

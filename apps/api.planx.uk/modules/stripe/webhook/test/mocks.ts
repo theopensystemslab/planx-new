@@ -89,9 +89,21 @@ const constraintViolation = (message: string) => ({
 });
 
 export const mockPaymentStatusInsert = (
-  outcome: "success" | "fail" | "fkViolation" | "uniqueViolation" = "success",
+  outcome:
+    | "success"
+    | "alreadyRecorded"
+    | "fail"
+    | "fkViolation"
+    | "uniqueViolation" = "success",
 ) => {
   switch (outcome) {
+    // on_conflict do nothing - the event id has already been recorded
+    case "alreadyRecorded":
+      return queryMock.mockQuery({
+        name: "InsertStripePaymentStatus",
+        matchOnVariables: false,
+        data: { insert_payment_status: { affected_rows: 0 } },
+      });
     case "fail":
       return queryMock.mockQuery({
         name: "InsertStripePaymentStatus",
