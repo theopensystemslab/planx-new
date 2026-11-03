@@ -64,7 +64,7 @@ async function go(
     geometry: geom,
     geometry_relation: "intersects",
     exclude_field: "geometry,point",
-    limit: "100", // TODO handle pagination in future for large polygons & many datasets, but should be well within this limit now
+    limit: "500", // TODO handle pagination in future for large polygons & many datasets, but should be well within this limit now
   };
   // 'dataset' param is not array[string] per docs, instead re-specify param name per unique dataset
   const datasets = `&dataset=${[...new Set(activeDatasets)].join(`&dataset=`)}`;
@@ -103,6 +103,11 @@ async function go(
         session_id: extras?.sessionId,
       },
     );
+  }
+
+  // a failed lookup must not be reported as no constraints found
+  if (typeof res?.count !== "number") {
+    throw new Error(`Failed to fetch planning constraints from ${url}`);
   }
 
   // --- INTERSECTIONS ---

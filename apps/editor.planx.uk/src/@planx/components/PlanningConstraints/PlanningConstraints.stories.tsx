@@ -23,6 +23,7 @@ import { Presentational } from "./Public/Presentational";
  * - "With Intersections" is based on a site boundary around LAMBETH PALACE, LAMBETH PALACE ROAD, LONDON, SE1 7JU in April 2026
  * - "Without Intersections" is based on a site boundary around 2, WALLER ROAD, BEACONSFIELD, BUCKINGHAMSHIRE, HP9 2HE in July 2023
  * - "Welsh Team With Intersections" is based on a site boundary around WATERGATE, BRECON in October 2026
+ * - "With Failed Planning Data Lookup" is based on a scenario where our spatial query to planning.data.gov.uk fails
  */
 export default {
   title: "PlanX Components/PlanningConstraints",
@@ -83,6 +84,12 @@ const propsWelshTeamWithIntersections: PresentationalProps = {
   },
 };
 
+const propsWithFailedPlanningDataLookup: PresentationalProps = {
+  ...propsWithIntersections,
+  constraints: {},
+  metadata: {},
+};
+
 export const WithIntersections = {
   render: () => <Presentational {...propsWithIntersections} />,
 };
@@ -93,6 +100,10 @@ export const WithoutIntersections = {
 
 export const WelshTeamWithIntersections = {
   render: () => <Presentational {...propsWelshTeamWithIntersections} />,
+};
+
+export const WithFailedPlanningDataLookup = {
+  render: () => <Presentational {...propsWithFailedPlanningDataLookup} />,
 };
 
 export const WithEditor = () => (
