@@ -1,0 +1,41 @@
+table:
+  name: payment_invoices
+  schema: public
+object_relationships:
+  - name: team
+    using:
+      foreign_key_constraint_on: team_id
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - kind
+        - stripe_payment_intent_id
+        - session_id
+        - flow_id
+        - team_id
+        - invoice_number
+        - issued_at
+        - net
+        - vat
+        - total
+        - file_key
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - kind
+        - stripe_payment_intent_id
+        - session_id
+        - flow_id
+        - team_id
+        - invoice_number
+        - issued_at
+        - net
+        - vat
+        - total
+        - file_key
+        - created_at
+      filter: {}
