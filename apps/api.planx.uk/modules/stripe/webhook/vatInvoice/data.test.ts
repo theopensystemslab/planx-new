@@ -214,6 +214,7 @@ describe("buildVatInvoiceData", () => {
 
     expect(invoice).toEqual({
       kind: "payer_invoice",
+      isTest: true,
       invoiceNumber: "PX-2026-INV-BNE-00001",
       issuedAt,
       customer,
@@ -232,5 +233,24 @@ describe("buildVatInvoiceData", () => {
         { rate: 0, net: 10000, vat: 0 },
       ],
     });
+  });
+
+  it("is only a real invoice for a live mode payment", () => {
+    const invoice = buildVatInvoiceData({
+      kind: "payer_invoice",
+      invoiceNumber: "PX-2026-INV-BNE-00001",
+      paymentIntent: {
+        ...paymentIntent,
+        livemode: true,
+      } as unknown as Stripe.PaymentIntent,
+      recorded,
+      issuedAt: new Date("2026-10-07T12:00:00Z"),
+      customer,
+      seller: PLANX_SELLER,
+      branding: null,
+      lineItems: getInvoiceLineItems(feeLines, "payer_invoice"),
+    });
+
+    expect(invoice.isTest).toBe(false);
   });
 });

@@ -12,6 +12,7 @@ const isChromiumInstalled = existsSync(executablePath);
 
 const invoice: VatInvoiceData = {
   kind: "payer_invoice",
+  isTest: true,
   invoiceNumber: "pi_test_123",
   issuedAt: new Date("2026-10-07T12:00:00Z"),
   customer: { email: "payer@example.com", name: null, addressLines: [] },

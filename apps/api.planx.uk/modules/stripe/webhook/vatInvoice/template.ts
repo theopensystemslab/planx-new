@@ -52,8 +52,15 @@ const renderCustomer = (customer: VatInvoiceCustomer) =>
     .map(escape)
     .join("<br />");
 
+/**
+ * Issued after payment, so titled a receipt
+ */
+const getTitle = ({ isTest }: VatInvoiceData) =>
+  isTest ? "TEST VAT receipt" : "VAT receipt";
+
 export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
   const { seller, branding, lineItems, totals, vatSummary } = invoice;
+  const title = getTitle(invoice);
   const primaryColour = getPrimaryColour(branding?.primaryColour);
   const logoUrl = getLogoUrl(branding?.logo);
 
@@ -85,7 +92,7 @@ export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>VAT invoice ${escape(invoice.invoiceNumber)}</title>
+    <title>${title} ${escape(invoice.invoiceNumber)}</title>
     <style>
       @page { size: A4; margin: 20mm; }
       * { box-sizing: border-box; }
@@ -128,11 +135,23 @@ export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
       .amount { text-align: right; white-space: nowrap; }
       tfoot td { font-weight: bold; border-bottom: none; }
       .vat-summary { width: 50%; margin-left: auto; }
+      .test-banner {
+        margin-bottom: 6mm;
+        padding: 3mm 4mm;
+        border: 0.7mm solid #D4351C;
+        color: #D4351C;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
+    ${
+      invoice.isTest
+        ? `<div class="test-banner">TEST - this was paid in Stripe test mode and is not a valid VAT receipt</div>`
+        : ""
+    }
     <header>
-      <h1>VAT invoice</h1>
+      <h1>${title}</h1>
       ${logoUrl ? `<img src="${escape(logoUrl)}" alt="${escape(seller.name)}" />` : ""}
     </header>
 

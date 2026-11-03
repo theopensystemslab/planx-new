@@ -3,6 +3,7 @@ import type { VatInvoiceData } from "./types.js";
 
 const invoice = (overrides: Partial<VatInvoiceData> = {}): VatInvoiceData => ({
   kind: "payer_invoice",
+  isTest: false,
   invoiceNumber: "pi_test_123",
   issuedAt: new Date("2026-10-07T12:00:00Z"),
   customer: {
@@ -41,6 +42,20 @@ const invoice = (overrides: Partial<VatInvoiceData> = {}): VatInvoiceData => ({
 });
 
 describe("renderVatInvoiceHtml", () => {
+  it("is titled a VAT receipt", () => {
+    const html = renderVatInvoiceHtml(invoice());
+
+    expect(html).toContain("<h1>VAT receipt</h1>");
+    expect(html).not.toContain("TEST");
+  });
+
+  it("is clearly marked as a test when paid in Stripe test mode", () => {
+    const html = renderVatInvoiceHtml(invoice({ isTest: true }));
+
+    expect(html).toContain("<h1>TEST VAT receipt</h1>");
+    expect(html).toContain("is not a valid VAT receipt");
+  });
+
   it("includes the invoice, seller and payment details", () => {
     const html = renderVatInvoiceHtml(invoice());
 

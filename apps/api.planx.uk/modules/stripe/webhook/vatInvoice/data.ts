@@ -139,6 +139,7 @@ export const buildVatInvoiceData = ({
   lineItems,
 }: BuildVatInvoiceDataArgs): VatInvoiceData => ({
   kind,
+  isTest: !paymentIntent.livemode,
   invoiceNumber,
   issuedAt,
   customer,
