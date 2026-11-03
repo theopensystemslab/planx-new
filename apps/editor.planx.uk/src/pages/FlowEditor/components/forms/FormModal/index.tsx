@@ -15,7 +15,7 @@ import { ROOT_NODE_KEY } from "@planx/graph";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import type { FormikProps } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
+import { type FeatureFlag, hasFeatureFlag } from "lib/featureFlags";
 import { selectIndexedNode } from "pages/FlowEditor/lib/store/selectors";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -55,25 +55,21 @@ const TabList = styled(Box)(() => ({
   },
 }));
 
-type ModalTab = "edit" | "preview" | "history" | "resources";
+type ModalTab = "edit" | "history" | "resources";
 
-// TODO simplify to single list of tabs when no longer feature-flagged
+// TODO remove featureFlag properties when no longer feature-flagged
 const MODAL_TABS: {
   label: string;
   value: ModalTab;
+  featureFlag?: FeatureFlag;
 }[] = [
   { label: "Edit", value: "edit" },
   { label: "History", value: "history" },
-];
-
-const FEATURE_FLAGGED_MODAL_TABS: {
-  label: string;
-  value: ModalTab;
-}[] = [
-  { label: "Edit", value: "edit" },
-  { label: "Preview", value: "preview" },
-  { label: "History", value: "history" },
-  { label: "How to use this component", value: "resources" },
+  {
+    label: "About this component",
+    value: "resources",
+    featureFlag: "COMPONENT_RESOURCES",
+  },
 ];
 
 /**
@@ -254,8 +250,13 @@ const FormModal: React.FC<FormModalProps> = ({
     ? !canUserEditTemplatedNode
     : !canUserEditNode(teamSlug);
 
+  // Don't allow modal actions when the resources tab is active
+  const isViewingResources = activeTab === "resources";
+
   const isSubmitDisabled =
-    userCannotEdit || (isEditingExistingNode && !isFormDirty);
+    userCannotEdit ||
+    (isEditingExistingNode && !isFormDirty) ||
+    isViewingResources;
 
   const showDeleteButton = id && !isDisabledTemplatedNode;
 
@@ -317,9 +318,8 @@ const FormModal: React.FC<FormModalProps> = ({
             value={activeTab}
             aria-label="Component editor tabs"
           >
-            {(hasFeatureFlag("MODAL_TABS")
-              ? FEATURE_FLAGGED_MODAL_TABS
-              : MODAL_TABS
+            {MODAL_TABS.filter(
+              ({ featureFlag }) => !featureFlag || hasFeatureFlag(featureFlag),
             ).map(({ label, value }) => (
               <StyledTab key={value} value={value} label={label} />
             ))}
@@ -381,13 +381,6 @@ const FormModal: React.FC<FormModalProps> = ({
               />
             </AppErrorBoundary>
           </Box>
-          {activeTab === "preview" && (
-            <Box sx={{ p: 2.5 }}>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                Preview coming soon.
-              </Typography>
-            </Box>
-          )}
           {activeTab === "history" && (
             <Box sx={{ p: 2.5 }}>
               {id ? (
@@ -425,7 +418,7 @@ const FormModal: React.FC<FormModalProps> = ({
                   },
                 });
               }}
-              disabled={disabled}
+              disabled={disabled || isViewingResources}
               sx={{ gap: 1 }}
             >
               <DeleteIcon sx={{ color: "warning.dark" }} fontSize="medium" />
