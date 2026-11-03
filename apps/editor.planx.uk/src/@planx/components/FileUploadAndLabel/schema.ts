@@ -147,6 +147,15 @@ export const slotsSchema = array()
         message: `Upload and label files containing: ${missingRequiredNames.join(", ")}`,
       });
     },
+  })
+  .test({
+    name: "fileLength",
+    message: "Please ensure all file names are under 75 characters long",
+    test: (slots?: Array<FileUploadAndLabelSlot>) => {
+      return Boolean(
+        slots && slots.every((slot) => (slot.file?.path?.length ?? 0) < 75),
+      );
+    },
   });
 
 /**
