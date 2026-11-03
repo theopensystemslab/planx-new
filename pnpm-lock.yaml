@@ -266,6 +266,12 @@ importers:
       notifications-node-client:
         specifier: ^8.4.0
         version: 8.5.0
+      notion-client:
+        specifier: ^8.0.8
+        version: 8.0.8
+      notion-types:
+        specifier: ^8.0.8
+        version: 8.0.8
       openid-client:
         specifier: ^5.7.1
         version: 5.7.1
@@ -7510,6 +7516,10 @@ packages:
   is-unsafe@2.0.2:
     resolution: {integrity: sha512-HgbIHPBH0KHHCcjLfGsCvhtPTVxjaAZlXjwdz7/GQC40SjSe4sfQsar8J5VFo8JOSbarkpV0OLG95bbaNd9aAQ==}
 
+  is-url-superb@6.1.0:
+    resolution: {integrity: sha512-LXdhGlYqUPdvEyIhWPEEwYYK3yrUiPcBjmFGlZNv1u5GtIL5qQRf7ddDyPNAvsMFqdzS923FROpTQU97tLe3JQ==}
+    engines: {node: '>=12'}
+
   is-weakmap@2.0.2:
     resolution: {integrity: sha512-K5pXYOm9wqY1RgjpL3YTkF39tni1XajUIkawTLUo9EZEVUFga5gSQJF8nNS7ZwJQ02y+1YCNYcMh+HIf1ZqE+w==}
     engines: {node: '>= 0.4'}
@@ -8137,6 +8147,10 @@ packages:
     resolution: {integrity: sha512-yz3xRaG20c6/BOzvYoDaGtPmGscs7YivItZEEqe6GbwNfHuxu9YNmvnEkMzKldAGY4/80pRcQRZSEnhquk9XuQ==}
     engines: {node: '>= 0.8'}
 
+  memoize@11.0.0:
+    resolution: {integrity: sha512-cjsfZaC9b1clqPeIVMbb5dLHSXgdgGWGxdAU3oTUUkHiwWTKTBNnSmcqWJncNjYtBi3S8Rp0c5GIiyGztR8TRA==}
+    engines: {node: '>=22'}
+
   merge-descriptors@1.0.3:
     resolution: {integrity: sha512-gaNvAS7TZ897/rVaZ0nMtAyxNyi/pdbjbAwUpFQpN70GqnVfOiXpeUUMKRBmzXaSQ8DdTX4/0ms62r2K+hE6mQ==}
 
@@ -8308,6 +8322,10 @@ packages:
   mimic-fn@2.1.0:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}
     engines: {node: '>=6'}
+
+  mimic-function@5.0.1:
+    resolution: {integrity: sha512-VP79XUPxV2CigYP3jWwAUFSku2aKqBH7uTAapFWCBqutsbmDo96KY5o8uh6U+/YSIn5OxJnXp73beVkpqMIGhA==}
+    engines: {node: '>=18'}
 
   min-indent@1.0.1:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
@@ -8530,9 +8548,25 @@ packages:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
 
+  normalize-url@9.0.1:
+    resolution: {integrity: sha512-ARftfC5HdUNu9jJeL8pHj8debUIHA2b91FizCoMzY4lG6dDX13jdvTK0TBe24IBDRf2HvJSzzwEPvmbkQWHRSg==}
+    engines: {node: '>=20'}
+
   notifications-node-client@8.5.0:
     resolution: {integrity: sha512-BLwK+9GDuBECVgGz6GoBxEGbVJYVn6JAsyTgEOQCIbBmd6+3RjnweqSqf5jJow9jxhCCy6u6BF9COwoGvxwt+A==}
     engines: {node: '>=14.17.3', npm: '>=6.14.13'}
+
+  notion-client@8.0.8:
+    resolution: {integrity: sha512-5oRaef3lxsaM7KOIKcTTlhnAI8KSj5FQH7uA0tmgLxjBMLmE40/+orwIzwIBi8PvTeTsx+Gj8k9CBAOg5XB7fg==}
+    engines: {node: '>=18'}
+
+  notion-types@8.0.8:
+    resolution: {integrity: sha512-crMgFadWAa1XSOMBAKfgy1eB9RW9e1v7j61lm0/ksalz91tCJwbu1sYbkbjvB1UWjC3jHhuKfwsT4FkUZh8z9w==}
+    engines: {node: '>=18'}
+
+  notion-utils@8.0.8:
+    resolution: {integrity: sha512-TGOmuJqOjOXeBhi1Tab8OyuAUSDrNi8C4skRpIwRGrBGZCKtql2WB9BwcAgNQCt+bwUlyQfmPmEnI7DwibythQ==}
+    engines: {node: '>=18'}
 
   npm-bundled@5.0.0:
     resolution: {integrity: sha512-JLSpbzh6UUXIEoqPsYBvVNVmyrjVZ1fzEFbqxKkTJQkWBO3xFzFT+KDnSKQWwOQNbuWRwt5LSD6HOTLGIWzfrw==}
@@ -18251,6 +18285,8 @@ snapshots:
 
   is-unsafe@2.0.2: {}
 
+  is-url-superb@6.1.0: {}
+
   is-weakmap@2.0.2: {}
 
   is-weakref@1.1.1:
@@ -18971,6 +19007,10 @@ snapshots:
 
   media-typer@1.1.1: {}
 
+  memoize@11.0.0:
+    dependencies:
+      mimic-function: 5.0.1
+
   merge-descriptors@1.0.3: {}
 
   merge-stream@2.0.0: {}
@@ -19285,6 +19325,8 @@ snapshots:
 
   mimic-fn@2.1.0: {}
 
+  mimic-function@5.0.1: {}
+
   min-indent@1.0.1: {}
 
   minimalistic-assert@1.0.1: {}
@@ -19535,6 +19577,8 @@ snapshots:
 
   normalize-path@3.0.0: {}
 
+  normalize-url@9.0.1: {}
+
   notifications-node-client@8.5.0:
     dependencies:
       axios: 1.20.0
@@ -19542,6 +19586,23 @@ snapshots:
     transitivePeerDependencies:
       - debug
       - supports-color
+
+  notion-client@8.0.8:
+    dependencies:
+      notion-types: 8.0.8
+      notion-utils: 8.0.8
+      ofetch: 1.5.1
+      p-map: 7.1.1
+
+  notion-types@8.0.8: {}
+
+  notion-utils@8.0.8:
+    dependencies:
+      is-url-superb: 6.1.0
+      memoize: 11.0.0
+      normalize-url: 9.0.1
+      notion-types: 8.0.8
+      p-queue: 9.3.5
 
   npm-bundled@5.0.0:
     dependencies:
