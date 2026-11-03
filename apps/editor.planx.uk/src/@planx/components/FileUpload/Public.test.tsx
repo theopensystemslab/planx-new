@@ -68,7 +68,6 @@ test("recovers previously submitted files when clicking the back button", async 
   );
 
   await user.click(screen.getByTestId("continue-button"));
-
   expect(handleSubmit).toHaveBeenCalledWith(uploadedFile);
 });
 
@@ -137,6 +136,57 @@ const dummyFile = {
     url: "http://localhost:7002/file/private/y2uubi9x/placeholder.png",
   },
 };
+
+test("errors if filename is too long", async () => {
+  const handleSubmit = vi.fn();
+  const dataField = "data-field";
+  const longFileName =
+    "hereisanextremelylongfilenamehereisanextremelylongfilenamehereisanextremelylongfilename.png";
+
+  const fileWithLongName = {
+    url: "http://localhost:7002/file/private/y2uubi9x/" + longFileName,
+    filename: longFileName,
+    cachedSlot: {
+      file: {
+        name: longFileName,
+        path: `./${longFileName}`,
+        type: "image/png",
+        size: 6146,
+      },
+      status: "success",
+      progress: 1,
+      id: "oPd5GUV_T-bWZWJb0wGs8",
+      url: "http://localhost:7002/file/private/y2uubi9x/" + longFileName,
+    },
+  };
+
+  const { user } = await setup(
+    <FileUpload
+      title="Please upload your files"
+      fn={dataField}
+      id={dataField}
+      handleSubmit={handleSubmit}
+      previouslySubmittedData={{
+        data: {
+          [dataField]: [fileWithLongName],
+          [PASSPORT_REQUESTED_FILES_KEY]: {
+            required: [dataField],
+            recommended: [],
+            optional: [],
+          },
+        },
+      }}
+    />,
+  );
+
+  await user.click(screen.getByTestId("continue-button"));
+  expect(
+    screen.getByText(
+      /Please ensure your file name is under 75 characters long/,
+    ),
+  ).toBeInTheDocument();
+  expect(handleSubmit).toHaveBeenCalledTimes(0);
+});
 
 it("should not have any accessibility violations", async () => {
   const handleSubmit = vi.fn();

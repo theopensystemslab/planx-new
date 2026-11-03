@@ -588,6 +588,30 @@ describe("Error handling", () => {
     // Error message is cleared
     expect(fileLabelError).toBeEmptyDOMElement();
   });
+
+  test("errors if filename is too long", async () => {
+    const handleSubmit = vi.fn();
+    const longFileName =
+      "hereisanextremelylongfilenamehereisanextremelylongfilenamehereisanextremelylongfilename.jpg";
+    const file = new File(["test"], longFileName, { type: "image/jpg" });
+
+    const { getByTestId, user } = await setup(
+      <FileUploadAndLabelComponent
+        handleSubmit={handleSubmit}
+        title="Test title"
+        fileTypes={mockFileTypesUniqueKeys}
+      />,
+    );
+    const input = getByTestId("upload-input");
+    await user.upload(input, file);
+    await user.click(screen.getByTestId("continue-button"));
+    expect(
+      screen.getByText(
+        /Please ensure all file names are under 75 characters long/,
+      ),
+    ).toBeInTheDocument();
+    expect(handleSubmit).toHaveBeenCalledTimes(0);
+  });
 });
 
 describe("Submitting data", () => {
