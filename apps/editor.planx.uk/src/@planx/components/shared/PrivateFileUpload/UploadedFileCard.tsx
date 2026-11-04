@@ -75,6 +75,11 @@ const ProgressBar = styled(Box)(({ theme }) => ({
   top: 0,
   backgroundColor: theme.palette.border.input,
   zIndex: 0,
+  // Width is driven by upload progress state - hide visually but keep the
+  // progressbar role and value available to assistive technology
+  "@media (prefers-reduced-motion: reduce)": {
+    opacity: 0,
+  },
 }));
 
 const FileSize = styled(Typography)(({ theme }) => ({
