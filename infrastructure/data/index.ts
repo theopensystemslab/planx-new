@@ -109,4 +109,28 @@ new aws.s3.BucketPublicAccessBlock("user-data-public-access-block", {
   blockPublicPolicy: true,
 });
 
+// we keep private payment invoice files that we generate in a separate bucket, with the same CORS policies as user-data
+const apiInvoicesBucket = new aws.s3.Bucket("invoices");
+
+new aws.s3.BucketCorsConfiguration("invoices-cors", {
+  bucket: apiInvoicesBucket.id,
+  corsRules: [
+    {
+      allowedHeaders: ["*"],
+      allowedMethods: ["PUT", "POST", "GET", "HEAD"],
+      // TODO: Narrow down allowed origin to the domain we're using
+      allowedOrigins: ["*"],
+      exposeHeaders: ["ETag"],
+      maxAgeSeconds: 3000,
+    },
+  ],
+});
+
+new aws.s3.BucketPublicAccessBlock("invoices-public-access-block", {
+  bucket: apiInvoicesBucket.id,
+  blockPublicAcls: true,
+  blockPublicPolicy: true,
+});
+
 export const apiBucketId = apiBucket.id;
+export const apiInvoicesBucketId = apiInvoicesBucket.id;

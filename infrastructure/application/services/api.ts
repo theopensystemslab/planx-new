@@ -39,6 +39,11 @@ export const createApiService = async ({
     "bucket",
     data.requireOutput("apiBucketId"),
   );
+  const apiInvoicesBucket = aws.s3.Bucket.get(
+    "bucket",
+    data.requireOutput("apiInvoicesBucketId"),
+  );
+
   const apiUser = new aws.iam.User("api-user");
   const apiUserAccessKey = new aws.iam.AccessKey("api-user-access-key", {
     user: apiUser.name,
@@ -52,7 +57,7 @@ export const createApiService = async ({
         {
           Effect: "Allow",
           Action: "s3:*",
-          Resource: apiBucket.arn,
+          Resource: [apiBucket.arn, apiInvoicesBucket.arn],
         },
       ],
     },
@@ -69,6 +74,22 @@ export const createApiService = async ({
           // XXX: We could narrow this down to the action `PutObject`
           Action: ["s3:*"],
           Resource: [pulumi.interpolate`${apiBucket.arn}/*`],
+        },
+      ],
+    },
+  });
+  new aws.s3.BucketPolicy("api-invoices-bucket-policy", {
+    bucket: apiInvoicesBucket.id,
+    policy: {
+      Version: "2012-10-17",
+      Statement: [
+        {
+          Sid: "ApiWriteObject",
+          Effect: "Allow",
+          Principal: { AWS: [apiUser.arn] },
+          // XXX: We could narrow this down to the action `PutObject`
+          Action: ["s3:*"],
+          Resource: [pulumi.interpolate`${apiInvoicesBucket.arn}/*`],
         },
       ],
     },
