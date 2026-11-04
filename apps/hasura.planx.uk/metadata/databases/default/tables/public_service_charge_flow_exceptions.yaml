@@ -1,6 +1,10 @@
 table:
   name: service_charge_flow_exceptions
   schema: public
+object_relationships:
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
 select_permissions:
   - role: public
     permission:
