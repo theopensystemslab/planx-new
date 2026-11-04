@@ -28,6 +28,7 @@ export interface GetFlowDataResponse {
         publisherId: number;
       }[]
     | [];
+  submissionEmailId?: string | null;
 }
 
 // Get a flow's data (unflattened)
@@ -62,13 +63,13 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
             summary
             publisherId: publisher_id
           }
+          submissionEmailId: submission_email_id
         }
       }
     `,
     { id },
   );
   if (!flow) throw Error(`Unable to get flow with id ${id}`);
-
   return flow;
 };
 
@@ -87,6 +88,7 @@ const createFlow = async ({
   isService,
   isPattern,
   settings,
+  submissionEmailId,
   $apiClient,
 }: {
   teamId: number;
@@ -102,6 +104,7 @@ const createFlow = async ({
   isService?: boolean;
   isPattern?: boolean;
   settings?: GetFlowDataResponse["settings"];
+  submissionEmailId?: string | null;
   $apiClient?: ReturnType<typeof getClient>["client"];
 }) => {
   const { client: $userClient } = getClient();
@@ -130,6 +133,7 @@ const createFlow = async ({
           $is_pattern: Boolean
           $settings: jsonb
           $creator_id: Int
+          $submission_email_id: uuid
         ) {
           insertFlow: insert_flows_one(
             object: {
@@ -148,6 +152,7 @@ const createFlow = async ({
               is_pattern: $is_pattern
               settings: $settings
               creator_id: $creator_id
+              submission_email_id: $submission_email_id
             }
           ) {
             id
@@ -168,6 +173,7 @@ const createFlow = async ({
         is_service: isService,
         is_pattern: isPattern,
         settings: settings,
+        submission_email_id: submissionEmailId,
         creator_id: userId,
       },
     );

@@ -11,6 +11,8 @@ const copyFlow = async ({
 }: CopyFlowRequest) => {
   // Fetch the original flow
   const flow = await getFlowData(flowId);
+  const isInternalCopy = flow.teamId === teamId;
+  const submissionEmailId = isInternalCopy ? flow.submissionEmailId : null;
 
   // Generate new flow data which is an exact "content" copy of the original but with unique nodeIds
   const uniqueFlowData = makeUniqueFlow(flow.data, replaceValue);
@@ -27,6 +29,7 @@ const copyFlow = async ({
       copiedFrom: flowId,
       isService: flow.isService,
       isPattern: flow.isPattern,
+      submissionEmailId,
     });
   }
 
