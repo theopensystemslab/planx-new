@@ -25,16 +25,6 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
             name
             slug
             domain
-            flows(order_by: { updated_at: desc }) {
-              slug
-              updated_at
-              operations(limit: 1, order_by: { id: desc }) {
-                actor {
-                  first_name
-                  last_name
-                }
-              }
-            }
             theme {
               id
               primaryColour: primary_colour
