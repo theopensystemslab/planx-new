@@ -93,12 +93,7 @@ export function Presentational(props: PresentationalProps) {
       {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
         <>
           <Typography variant="h3" component="h2" gutterBottom sx={{ mt: 3 }}>
-            It looks like there are no constraints on this property
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            Based on the information you've given it looks like there are no
-            planning constraints on your property that might limit what you can
-            do.
+            We did not find any planning constraints that apply to this property
           </Typography>
           <SimpleExpand
             id="negative-constraints-list"
