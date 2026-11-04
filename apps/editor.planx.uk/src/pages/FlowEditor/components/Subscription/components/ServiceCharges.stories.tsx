@@ -117,17 +117,27 @@ type Story = StoryObj<typeof meta>;
 export const SingleYear: Story = {
   args: {
     serviceCharges: serviceCharges.filter((sc) => sc.fiscalYear === 2025),
+    contract: "with_sc",
   },
 };
 
 export const MultipleYears: Story = {
   args: {
     serviceCharges,
+    contract: "with_sc",
   },
 };
 
-export const Empty: Story = {
+export const ZeroCollected: Story = {
   args: {
     serviceCharges: [],
+    contract: "with_sc",
+  },
+};
+
+export const OptOutContract: Story = {
+  args: {
+    serviceCharges: [],
+    contract: "opt_out_sc",
   },
 };
