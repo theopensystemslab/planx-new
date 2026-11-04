@@ -25,6 +25,7 @@ import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 
 import { useStripeConnectStatus } from "../Onboarding/hooks/useStripeConnectStatus";
 import { useMigrateToStripe } from "./hooks/useMigrateToStripe";
+import { useProductionPaymentProvider } from "./hooks/useProductionPaymentProvider";
 import { useRevertToGovPay } from "./hooks/useRevertToGovPay";
 
 export type PaymentProvider = TeamSettings["paymentProvider"];
@@ -135,10 +136,14 @@ const Provider: React.FC = () => {
   const canUseStripe = isStripePaymentsEnabled(teamSlug);
   const { data: stripeConnectStatus, isLoading: isStripeStatusLoading } =
     useStripeConnectStatus(teamSlug);
+  const isProductionProviderStripe =
+    useProductionPaymentProvider().productionPaymentProvider === "stripe";
 
-  // Revert is only available outside of production, for teams which had previously set up GovPay
+  // Revert is only available outside of production, for teams which had previously set up GovPay and who _have not yet_ migrated to Stripe on prod
   const canRevert =
-    !isProduction && Boolean(stripeConnectStatus?.govPayConfigured);
+    !isProduction &&
+    Boolean(stripeConnectStatus?.govPayConfigured) &&
+    !isProductionProviderStripe;
 
   const renderProviderAction = () => {
     if (!canUseStripe) {

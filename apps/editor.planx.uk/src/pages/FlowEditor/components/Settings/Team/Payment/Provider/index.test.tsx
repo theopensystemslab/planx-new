@@ -19,6 +19,11 @@ const providerHandler = (paymentProvider: PaymentProvider) =>
     HttpResponse.json({ data: { teamSettings: [{ paymentProvider }] } }),
   );
 
+const productionProviderHandler = (paymentProvider: PaymentProvider) =>
+  graphql.query("GetProductionPaymentProvider", () =>
+    HttpResponse.json({ data: { teamSettings: [{ paymentProvider }] } }),
+  );
+
 let stripeStatusRequested = false;
 
 const stripeStatusHandler = (connected: boolean, govPayConfigured = false) =>
@@ -84,9 +89,12 @@ describe("Provider", () => {
     ).toBeDisabled();
   });
 
-  it("shows the revert button for a Stripe team with GOV.UK Pay configured", async () => {
-    server.use(providerHandler("stripe"), stripeStatusHandler(true, true));
-
+  it("shows the revert button for a Stripe team with GOV.UK Pay configured and Stripe connected, and that hasn't migrated to Stripe on production", async () => {
+    server.use(
+      providerHandler("stripe"),
+      stripeStatusHandler(true, true),
+      productionProviderHandler("govpay"),
+    );
     await setup(<Provider />);
 
     expect(
@@ -95,12 +103,31 @@ describe("Provider", () => {
   });
 
   it("hides the revert button for a Stripe team without GOV.UK Pay configured", async () => {
-    server.use(providerHandler("stripe"), stripeStatusHandler(true, false));
+    server.use(
+      providerHandler("stripe"),
+      stripeStatusHandler(true, false),
+      productionProviderHandler(null),
+    );
 
     await setup(<Provider />);
 
     expect(await screen.findByText("Stripe")).toBeInTheDocument();
     await waitFor(() => expect(stripeStatusRequested).toBe(true));
+    expect(
+      screen.queryByRole("button", { name: "Revert to GOV.UK Pay" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("hides the revert button on staging when a team has migrated to Stripe on production", async () => {
+    server.use(
+      providerHandler("stripe"),
+      stripeStatusHandler(true, true),
+      productionProviderHandler("stripe"),
+    );
+
+    await setup(<Provider />);
+
+    expect(await screen.findByText("Stripe")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Revert to GOV.UK Pay" }),
     ).not.toBeInTheDocument();

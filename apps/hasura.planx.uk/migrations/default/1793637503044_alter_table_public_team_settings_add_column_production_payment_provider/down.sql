@@ -1,0 +1,1 @@
+alter table "public"."team_settings" drop column "production_payment_provider";

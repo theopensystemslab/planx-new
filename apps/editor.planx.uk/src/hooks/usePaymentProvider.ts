@@ -11,11 +11,11 @@ export const GET_PAYMENT_PROVIDER = gql`
   }
 `;
 
-type PaymentProviderResult = {
+export type PaymentProviderResult = {
   teamSettings: { paymentProvider: PaymentProvider }[];
 };
 
-type PaymentProviderVariables = {
+export type PaymentProviderVariables = {
   teamId: number;
 };
 

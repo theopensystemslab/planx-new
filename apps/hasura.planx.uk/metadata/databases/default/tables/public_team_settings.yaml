@@ -70,21 +70,22 @@ select_permissions:
   - role: platformAdmin
     permission:
       columns:
-        - has_article4_schema
-        - id
+        - boundary_bbox
+        - boundary_url
         - contract
-        - homepage
+        - email_reply_to_id
+        - has_article4_schema
         - help_email
         - help_opening_hours
         - help_phone
-        - email_reply_to_id
+        - homepage
+        - id
         - is_guidance_only
         - is_trial
-        - team_id
-        - boundary_bbox
         - payment_provider
+        - production_payment_provider
         - reference_code
-        - boundary_url
+        - team_id
       filter: {}
     comment: ""
   - role: public
@@ -110,21 +111,22 @@ select_permissions:
   - role: teamEditor
     permission:
       columns:
-        - has_article4_schema
-        - id
+        - boundary_bbox
+        - boundary_url
         - contract
-        - homepage
+        - email_reply_to_id
+        - has_article4_schema
         - help_email
         - help_opening_hours
         - help_phone
-        - email_reply_to_id
+        - homepage
+        - id
         - is_guidance_only
         - is_trial
-        - team_id
-        - boundary_bbox
         - payment_provider
+        - production_payment_provider
         - reference_code
-        - boundary_url
+        - team_id
       filter: {}
     comment: ""
 update_permissions:
