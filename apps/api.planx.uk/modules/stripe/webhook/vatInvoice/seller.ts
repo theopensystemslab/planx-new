@@ -16,6 +16,7 @@ export const PLANX_SELLER: VatInvoiceSeller = {
 
 interface GetCouncilInvoiceDetailsResponse {
   teams: {
+    id: number;
     name: string;
     invoiceDetails: {
       organisationName: string | null;
@@ -32,21 +33,26 @@ interface GetCouncilInvoiceDetailsResponse {
   }[];
 }
 
-/**
- * Fetch the details a council has configured to appear on invoices PlanX issues on their behalf
- *
- * Returns null if the council has not configured any invoice details
- */
-export async function getCouncilInvoiceDetails(teamSlug: string): Promise<{
+export interface CouncilInvoiceDetails {
+  teamId: number;
   seller: VatInvoiceSeller;
   branding: VatInvoiceBranding | null;
-} | null> {
+  hasInvoiceDetails: boolean;
+}
+
+/**
+ * Fetch the details a council has configured to appear on invoices - as the seller to the payer, and as the customer of OSL
+ */
+export async function getCouncilInvoiceDetails(
+  teamSlug: string,
+): Promise<CouncilInvoiceDetails> {
   const {
     teams: [team],
   } = await $api.client.request<GetCouncilInvoiceDetailsResponse>(
     gql`
       query GetCouncilInvoiceDetails($teamSlug: String!) {
         teams(where: { slug: { _eq: $teamSlug } }) {
+          id
           name
           invoiceDetails: invoice_details {
             organisationName: organisation_name
@@ -69,11 +75,25 @@ export async function getCouncilInvoiceDetails(teamSlug: string): Promise<{
     { teamSlug },
   );
 
-  if (!team?.invoiceDetails) return null;
-
   const { invoiceDetails: details, theme } = team;
 
+  if (!details) {
+    return {
+      teamId: team.id,
+      seller: {
+        name: team.name,
+        addressLines: [],
+        vatNumber: null,
+        companyRegistration: null,
+        email: null,
+      },
+      branding: theme,
+      hasInvoiceDetails: false,
+    };
+  }
+
   return {
+    teamId: team.id,
     seller: {
       name: details.organisationName || team.name,
       addressLines: [
@@ -88,5 +108,6 @@ export async function getCouncilInvoiceDetails(teamSlug: string): Promise<{
       email: details.emailAddress,
     },
     branding: theme,
+    hasInvoiceDetails: true,
   };
 }

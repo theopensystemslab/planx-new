@@ -546,8 +546,8 @@ paths:
       tags: ["webhooks"]
       security:
         - hasuraAuth: []
-      summary: Send VAT invoices
-      description: Triggered by a `payment_status` insert - emails VAT invoices to the payer when a Stripe payment has succeeded, and skips all other rows
+      summary: Create VAT invoices
+      description: Triggered by a `payment_status` insert - generates and stores the customer and council VAT invoices when a Stripe payment has succeeded, and skips all other rows
       requestBody:
         required: true
         content:

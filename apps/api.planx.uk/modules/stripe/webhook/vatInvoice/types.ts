@@ -1,9 +1,5 @@
-import type { FeeLine, FeePayee } from "../../feeLines.js";
-
-/**
- * Each payment has a council portion and a PlanX portion, so we invoice separately
- */
-export type VatInvoiceIssuer = FeePayee;
+import type { FeeLine } from "../../feeLines.js";
+import type { InvoiceKind } from "./storage.js";
 
 /**
  * All monetary values are in pence
@@ -23,7 +19,7 @@ export interface VatInvoiceSeller {
 
 export interface VatInvoiceBranding {
   logo: string | null;
-  primaryColour: string;
+  primaryColour: string | null;
 }
 
 /**
@@ -42,11 +38,10 @@ export interface VatInvoiceVatSummary {
 }
 
 export interface VatInvoiceData {
-  issuer: VatInvoiceIssuer;
-  /** The Stripe PaymentIntent ID */
+  kind: InvoiceKind;
   invoiceNumber: string;
   issuedAt: Date;
-  customerEmail: string;
+  customer: VatInvoiceCustomer;
   sessionId: string;
   flowId: string;
   flowName: string;
@@ -56,4 +51,5 @@ export interface VatInvoiceData {
   branding: VatInvoiceBranding | null;
   lineItems: VatInvoiceLineItem[];
   totals: Omit<VatInvoiceLineItem, "description" | "vatRate">;
+  vatSummary: VatInvoiceVatSummary[];
 }

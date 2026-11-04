@@ -12,13 +12,13 @@ import {
   TEAM_NAME,
   TEAM_SLUG,
 } from "../../../stripe/webhook/test/mocks.js";
-import { sendVatInvoices } from "../../../stripe/webhook/vatInvoice/service.js";
+import { createInvoices } from "../../../stripe/webhook/vatInvoice/service.js";
 
 vi.mock(
   "../../../stripe/webhook/vatInvoice/service.js",
   async (importOriginal) => ({
     ...(await importOriginal()),
-    sendVatInvoices: vi.fn(),
+    createInvoices: vi.fn(),
   }),
 );
 
@@ -53,26 +53,26 @@ describe("Send VAT invoices endpoint", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
-    vi.mocked(sendVatInvoices).mockReset();
+    vi.mocked(createInvoices).mockReset();
   });
 
   describe("authentication and validation", () => {
     it("fails without correct authentication", async () => {
       await post(ENDPOINT).send(event()).expect(401);
 
-      expect(sendVatInvoices).not.toHaveBeenCalled();
+      expect(createInvoices).not.toHaveBeenCalled();
     });
 
     it("returns a 400 if the payload is missing", async () => {
       await post(ENDPOINT).set(AUTH).send({}).expect(400);
 
-      expect(sendVatInvoices).not.toHaveBeenCalled();
+      expect(createInvoices).not.toHaveBeenCalled();
     });
   });
 
   describe("skipping", () => {
     it.each(["initiated", "created", "processing", "payment_failed"])(
-      "returns 200 without sending for a '%s' row",
+      "returns 200 without creating invoices for a '%s' row",
       async (stripeStatus) => {
         await post(ENDPOINT)
           .set(AUTH)
@@ -80,20 +80,20 @@ describe("Send VAT invoices endpoint", () => {
           .expect(200);
 
         expect(stripe.paymentIntents.retrieve).not.toHaveBeenCalled();
-        expect(sendVatInvoices).not.toHaveBeenCalled();
+        expect(createInvoices).not.toHaveBeenCalled();
       },
     );
 
-    it("returns 200 without sending for a GOV.UK Pay row", async () => {
+    it("returns 200 without creating invoices for a GOV.UK Pay row", async () => {
       await post(ENDPOINT)
         .set(AUTH)
         .send(event({ stripePaymentId: null, stripeStatus: null }))
         .expect(200);
 
-      expect(sendVatInvoices).not.toHaveBeenCalled();
+      expect(createInvoices).not.toHaveBeenCalled();
     });
 
-    it("returns 200 without sending when the PaymentIntent belongs to another environment", async () => {
+    it("returns 200 without creating invoices when the PaymentIntent belongs to another environment", async () => {
       mockRetrievePaymentIntent({
         ...paymentIntent,
         metadata: {
@@ -104,18 +104,18 @@ describe("Send VAT invoices endpoint", () => {
 
       await post(ENDPOINT).set(AUTH).send(event()).expect(200);
 
-      expect(sendVatInvoices).not.toHaveBeenCalled();
+      expect(createInvoices).not.toHaveBeenCalled();
     });
   });
 
-  describe("sending", () => {
-    it("sends VAT invoices for a succeeded PaymentIntent", async () => {
+  describe("creating invoices", () => {
+    it("creates VAT invoices for a succeeded PaymentIntent", async () => {
       await post(ENDPOINT).set(AUTH).send(event()).expect(200);
 
       expect(stripe.paymentIntents.retrieve).toHaveBeenCalledWith(
         paymentIntent.id,
       );
-      expect(sendVatInvoices).toHaveBeenCalledWith(paymentIntent, {
+      expect(createInvoices).toHaveBeenCalledWith(paymentIntent, {
         sessionId: paymentIntent.metadata.sessionId,
         flowId: FLOW_ID,
         flowName: FLOW_NAME,
@@ -134,7 +134,7 @@ describe("Send VAT invoices endpoint", () => {
 
       await post(ENDPOINT).set(AUTH).send(event()).expect(500);
 
-      expect(sendVatInvoices).not.toHaveBeenCalled();
+      expect(createInvoices).not.toHaveBeenCalled();
     });
 
     it("returns 500 when the session lookup fails, so Hasura retries the event", async () => {
@@ -142,17 +142,17 @@ describe("Send VAT invoices endpoint", () => {
 
       await post(ENDPOINT).set(AUTH).send(event()).expect(500);
 
-      expect(sendVatInvoices).not.toHaveBeenCalled();
+      expect(createInvoices).not.toHaveBeenCalled();
     });
 
     it("returns 500 when sending fails, so Hasura retries the event", async () => {
-      vi.mocked(sendVatInvoices).mockRejectedValue(
+      vi.mocked(createInvoices).mockRejectedValue(
         new Error("PDF render failed"),
       );
 
       await post(ENDPOINT).set(AUTH).send(event()).expect(500);
 
-      expect(sendVatInvoices).toHaveBeenCalledOnce();
+      expect(createInvoices).toHaveBeenCalledOnce();
     });
   });
 });
