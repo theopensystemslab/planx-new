@@ -9,5 +9,5 @@ export function getStripeTestClient(): Stripe {
     throw Error("STRIPE_SECRET_KEY must be set to a Stripe test mode key");
   }
 
-  return new Stripe(secretKey, { apiVersion: "2026-08-26.dahlia" });
+  return new Stripe(secretKey, { apiVersion: "2026-09-30.endive" });
 }
