@@ -252,7 +252,13 @@ describe("sendVatInvoices", () => {
 
     const [[invoice]] = vi.mocked(generateVatInvoicePdf).mock.calls;
     expect(invoice.lineItems).toEqual([
-      { description: "Application fee", net: 10000, vat: 2000, total: 12000 },
+      {
+        description: "Application fee",
+        net: 10000,
+        vat: 2000,
+        total: 12000,
+        vatRate: 20,
+      },
     ]);
     expect(invoice.totals).toEqual({ net: 10000, vat: 2000, total: 12000 });
   });

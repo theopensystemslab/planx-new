@@ -2,13 +2,52 @@ import type Stripe from "stripe";
 
 import type { FeeLine } from "../../feeLines.js";
 import type { PaymentSession } from "../ownership/service.js";
+import type { InvoiceKind } from "./storage.js";
 import type {
   VatInvoiceBranding,
+  VatInvoiceCustomer,
   VatInvoiceData,
   VatInvoiceIssuer,
   VatInvoiceLineItem,
   VatInvoiceSeller,
+  VatInvoiceVatSummary,
 } from "./types.js";
+
+/**
+ * VAT rate as a whole percentage, derived from a line's net and VAT amounts
+ */
+export const getVatRate = ({ net, vat }: Pick<FeeLine, "net" | "vat">) =>
+  net > 0 ? Math.round((vat / net) * 100) : 0;
+
+/**
+ * Whether a payment needs each kind of invoice
+ *  - payer_invoice: when there's VAT on any fee, or a service charge
+ *  - council_invoice: when there's a service charge
+ */
+export const isInvoiceRequired = (feeLines: FeeLine[], kind: InvoiceKind) =>
+  feeLines.some(
+    ({ payee, vat, total }) =>
+      total > 0 && (payee === "planx" || (kind === "payer_invoice" && vat > 0)),
+  );
+
+/**
+ * The fee lines which appear on each kind of invoice, dropping any zero-value lines
+ *  - payer_invoice: every line of the payment
+ *  - council_invoice: only the service charge, which OSL keeps
+ */
+export const getInvoiceLineItems = (
+  feeLines: FeeLine[],
+  kind: InvoiceKind,
+): VatInvoiceLineItem[] =>
+  feeLines
+    .filter(
+      ({ payee, total }) =>
+        total > 0 && (kind === "payer_invoice" || payee === "planx"),
+    )
+    .map(({ payee: _payee, ...lineItem }) => ({
+      ...lineItem,
+      vatRate: getVatRate(lineItem),
+    }));
 
 /**
  * Split fee lines between the council and PlanX invoices, dropping any zero-value lines
@@ -19,7 +58,10 @@ export const groupFeeLinesByIssuer = (
   const linesFor = (issuer: VatInvoiceIssuer) =>
     feeLines
       .filter(({ payee, total }) => payee === issuer && total > 0)
-      .map(({ payee: _payee, ...lineItem }) => lineItem);
+      .map(({ payee: _payee, ...lineItem }) => ({
+        ...lineItem,
+        vatRate: getVatRate(lineItem),
+      }));
 
   return { council: linesFor("council"), planx: linesFor("planx") };
 };
@@ -33,6 +75,57 @@ export const sumLineItems = (lineItems: VatInvoiceLineItem[]) =>
     }),
     { net: 0, vat: 0, total: 0 },
   );
+
+/**
+ * Net and VAT totals for each VAT rate on the invoice, highest rate first
+ */
+export const summariseVat = (
+  lineItems: VatInvoiceLineItem[],
+): VatInvoiceVatSummary[] => {
+  const byRate = new Map<number, VatInvoiceVatSummary>();
+
+  for (const { vatRate, net, vat } of lineItems) {
+    const summary = byRate.get(vatRate) ?? { rate: vatRate, net: 0, vat: 0 };
+    byRate.set(vatRate, {
+      ...summary,
+      net: summary.net + net,
+      vat: summary.vat + vat,
+    });
+  }
+
+  return [...byRate.values()].sort((a, b) => b.rate - a.rate);
+};
+
+/**
+ * The payer's name and address, if they were entered on Stripe Checkout
+ */
+export const getInvoiceCustomer = (
+  email: string,
+  customerDetails: Stripe.Checkout.Session.CustomerDetails | null,
+): VatInvoiceCustomer => {
+  const address = customerDetails?.address;
+
+  return {
+    email,
+    name: customerDetails?.name || null,
+    addressLines: [
+      address?.line1,
+      address?.line2,
+      address?.city,
+      address?.state,
+      address?.postal_code,
+    ].filter((line): line is string => Boolean(line)),
+  };
+};
+
+/**
+ * The council, as billed for the service charge, using the details it has configured for invoices
+ */
+export const getCouncilCustomer = ({
+  name,
+  addressLines,
+  email,
+}: VatInvoiceSeller): VatInvoiceCustomer => ({ name, addressLines, email });
 
 interface BuildVatInvoiceDataArgs {
   issuer: VatInvoiceIssuer;
