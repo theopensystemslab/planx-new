@@ -75,6 +75,22 @@ describe("sendEmail (Resend wrapper)", () => {
     );
   });
 
+  it("forwards a reply-to address to Resend", async () => {
+    mockSend.mockResolvedValue({ data: { id: "resend-id" }, error: null });
+
+    await sendEmail(
+      "submit",
+      "planning.office@council.gov.uk",
+      submitVariables,
+      { replyTo: "planning@council.gov.uk" },
+    );
+
+    expect(mockSend).toHaveBeenCalledWith(
+      expect.objectContaining({ replyTo: "planning@council.gov.uk" }),
+      expect.any(Object),
+    );
+  });
+
   it("throws a classified error and logs a transient failure", async () => {
     const consoleError = vi
       .spyOn(console, "error")
