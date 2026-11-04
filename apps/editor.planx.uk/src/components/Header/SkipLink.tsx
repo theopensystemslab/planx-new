@@ -1,5 +1,6 @@
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
+import { getScrollBehavior } from "lib/reducedMotion";
 import type { SyntheticEvent } from "react";
 import { focusStyle } from "theme";
 
@@ -35,7 +36,7 @@ const SkipLink: React.FC = () => {
       { once: true },
     );
     targetElement.focus();
-    targetElement.scrollIntoView({ behavior: "smooth" });
+    targetElement.scrollIntoView({ behavior: getScrollBehavior() });
   };
 
   return (

@@ -40,6 +40,17 @@ const Loader = styled("span")(({ theme }) => ({
   "&::after": {
     animationDelay: "1s",
   },
+  // Static dot in place of the pulse
+  "@media (prefers-reduced-motion: reduce)": {
+    "&::before": {
+      animation: "none",
+      opacity: 1,
+      transform: "scale(0.5)",
+    },
+    "&::after": {
+      display: "none",
+    },
+  },
 }));
 
 const LoadingStage = styled(Box)(({ theme }) => ({

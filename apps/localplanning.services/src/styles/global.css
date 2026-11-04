@@ -59,6 +59,20 @@
   --input-focus-box-shadow: 0px 0px 0px 2px inset;
 }
 
+@layer base {
+  /* a11y: Remove non-essential motion (Astro's ClientRouter handles its own view transitions) */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
 @layer components {
   /*
   / Fluid type styles

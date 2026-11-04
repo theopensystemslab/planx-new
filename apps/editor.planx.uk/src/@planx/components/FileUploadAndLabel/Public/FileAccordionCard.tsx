@@ -6,6 +6,7 @@ import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
+import { getScrollBehavior } from "lib/reducedMotion";
 import React, { useRef } from "react";
 import CheckCircleIcon from "ui/icons/CheckCircle";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -61,7 +62,7 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
 
   const handleEntered = () => {
     ref.current?.scrollIntoView({
-      behavior: "smooth",
+      behavior: getScrollBehavior(),
       block: "start",
     });
     // Move focus into the newly revealed "Edit labels" section

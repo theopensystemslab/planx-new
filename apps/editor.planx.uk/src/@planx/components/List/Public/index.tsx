@@ -8,6 +8,7 @@ import { formatTitle } from "@planx/components/shared/Schema/InputFields";
 import { isMapFieldResponse } from "@planx/components/shared/Schema/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import type { PublicProps } from "@planx/components/shared/types";
+import { getScrollBehavior } from "lib/reducedMotion";
 import React, { useEffect, useRef } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -73,7 +74,7 @@ const ActiveListCard: React.FC<{
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
+      ref.current.scrollIntoView({ behavior: getScrollBehavior() });
     }
   }, []);
 
