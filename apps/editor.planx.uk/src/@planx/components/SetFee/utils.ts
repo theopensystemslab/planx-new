@@ -109,9 +109,14 @@ export const handleSetFees: HandleSetFees = ({
   }
 
   // `autoEnable` is computed live at runtime based on teamSettings and flow exceptions,
-  //   whereas applyServiceCharge is a publish-dependent node prop.
+  //   whereas applyServiceCharge is still an `edit`-able, publish-dependent node prop.
   //   Service charges can uniquely be added based on either
-  if (serviceChargeMode === "autoEnable" || applyServiceCharge) {
+  const addServiceCharge =
+    serviceChargeMode === "edit"
+      ? applyServiceCharge
+      : serviceChargeMode === "autoEnable";
+
+  if (addServiceCharge) {
     if (fees[payable] >= DEFAULT_SERVICE_CHARGE_THRESHOLD) {
       // When payable inclusive of VAT after FT before payment processing fees is >= treshold,
       //   then apply the default service charge amount plus VAT and re-calculate payable

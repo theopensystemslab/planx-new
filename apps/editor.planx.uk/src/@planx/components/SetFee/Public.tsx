@@ -27,7 +27,7 @@ export default function Component(props: Props) {
       data: newValues,
       auto: true,
     });
-  }, [props, passport]);
+  }, [props, passport, serviceChargeMode]);
 
   return null;
 }

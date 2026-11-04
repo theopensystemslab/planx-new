@@ -15,11 +15,12 @@ export const useServiceChargeMode = (): ServiceChargeMode => {
     state.teamSettings,
   ]);
 
-  const { data } = useServiceChargeFlowExceptions();
+  const { data, loading } = useServiceChargeFlowExceptions();
 
   if (
     contract === "opt_out_sc" ||
-    data?.exceptions?.some((exception) => exception.flowId === flowId)
+    (!loading &&
+      data?.exceptions?.some((exception) => exception.flowId === flowId))
   ) {
     return "autoDisable";
   } else if (paymentProvider === "stripe" && contract === "with_sc") {
