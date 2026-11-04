@@ -2,6 +2,7 @@ import type Stripe from "stripe";
 import supertest from "supertest";
 
 import app from "../../../../server.js";
+import { sendSlackMessage } from "../../../slack/utils.js";
 import { stripe } from "../../../stripe/client.js";
 import {
   FLOW_ID,
@@ -14,6 +15,10 @@ import {
 } from "../../../stripe/webhook/test/mocks.js";
 import { createInvoices } from "../../../stripe/webhook/vatInvoice/service.js";
 
+vi.mock("../../../slack/utils.js", () => ({
+  sendSlackMessage: vi.fn(),
+}));
+
 vi.mock(
   "../../../stripe/webhook/vatInvoice/service.js",
   async (importOriginal) => ({
@@ -24,7 +29,7 @@ vi.mock(
 
 const { post } = supertest(app);
 
-const ENDPOINT = "/webhooks/hasura/send-vat-invoices";
+const ENDPOINT = "/webhooks/hasura/payment-status-events";
 const AUTH = { Authorization: process.env.HASURA_PLANX_API_KEY! };
 
 const event = (
@@ -32,20 +37,31 @@ const event = (
     stripePaymentId: string | null;
     stripeStatus: string | null;
   }> = {},
+  currentRetry = 0,
 ) => ({
   payload: {
     stripePaymentId: paymentIntent.id,
     stripeStatus: "succeeded",
     ...payload,
   },
+  deliveryInfo: { currentRetry, maxRetries: 10 },
 });
+
+const RECORDED_SESSION = {
+  sessionId: paymentIntent.metadata.sessionId,
+  flowId: FLOW_ID,
+  flowName: FLOW_NAME,
+  teamSlug: TEAM_SLUG,
+  teamName: TEAM_NAME,
+  passportData: null,
+};
 
 const mockRetrievePaymentIntent = (value: unknown = paymentIntent) =>
   vi
     .spyOn(stripe.paymentIntents, "retrieve")
     .mockResolvedValue(value as Stripe.Response<Stripe.PaymentIntent>);
 
-describe("Send VAT invoices endpoint", () => {
+describe("Payment status events endpoint", () => {
   beforeEach(() => {
     mockRetrievePaymentIntent();
     mockSessionLookup();
@@ -54,6 +70,7 @@ describe("Send VAT invoices endpoint", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.mocked(createInvoices).mockReset();
+    vi.mocked(sendSlackMessage).mockReset();
   });
 
   describe("authentication and validation", () => {
@@ -68,11 +85,19 @@ describe("Send VAT invoices endpoint", () => {
 
       expect(createInvoices).not.toHaveBeenCalled();
     });
+
+    it("returns a 400 if the delivery info is missing", async () => {
+      const { payload } = event();
+
+      await post(ENDPOINT).set(AUTH).send({ payload }).expect(400);
+
+      expect(createInvoices).not.toHaveBeenCalled();
+    });
   });
 
   describe("skipping", () => {
     it.each(["initiated", "created", "processing", "payment_failed"])(
-      "returns 200 without creating invoices for a '%s' row",
+      "returns 200 without creating documents for a '%s' row",
       async (stripeStatus) => {
         await post(ENDPOINT)
           .set(AUTH)
@@ -84,7 +109,7 @@ describe("Send VAT invoices endpoint", () => {
       },
     );
 
-    it("returns 200 without creating invoices for a GOV.UK Pay row", async () => {
+    it("returns 200 without creating documents for a GOV.UK Pay row", async () => {
       await post(ENDPOINT)
         .set(AUTH)
         .send(event({ stripePaymentId: null, stripeStatus: null }))
@@ -93,7 +118,7 @@ describe("Send VAT invoices endpoint", () => {
       expect(createInvoices).not.toHaveBeenCalled();
     });
 
-    it("returns 200 without creating invoices when the PaymentIntent belongs to another environment", async () => {
+    it("returns 200 without creating documents when the PaymentIntent belongs to another environment", async () => {
       mockRetrievePaymentIntent({
         ...paymentIntent,
         metadata: {
@@ -108,21 +133,17 @@ describe("Send VAT invoices endpoint", () => {
     });
   });
 
-  describe("creating invoices", () => {
-    it("creates VAT invoices for a succeeded PaymentIntent", async () => {
+  describe("succeeded payments", () => {
+    it("creates the VAT documents for a succeeded PaymentIntent", async () => {
       await post(ENDPOINT).set(AUTH).send(event()).expect(200);
 
       expect(stripe.paymentIntents.retrieve).toHaveBeenCalledWith(
         paymentIntent.id,
       );
-      expect(createInvoices).toHaveBeenCalledWith(paymentIntent, {
-        sessionId: paymentIntent.metadata.sessionId,
-        flowId: FLOW_ID,
-        flowName: FLOW_NAME,
-        teamSlug: TEAM_SLUG,
-        teamName: TEAM_NAME,
-        passportData: null,
-      });
+      expect(createInvoices).toHaveBeenCalledWith(
+        paymentIntent,
+        RECORDED_SESSION,
+      );
     });
   });
 
@@ -145,14 +166,45 @@ describe("Send VAT invoices endpoint", () => {
       expect(createInvoices).not.toHaveBeenCalled();
     });
 
-    it("returns 500 when sending fails, so Hasura retries the event", async () => {
+    it("returns 500 when creating the documents fails, so Hasura retries the event", async () => {
       vi.mocked(createInvoices).mockRejectedValue(
         new Error("PDF render failed"),
       );
 
-      await post(ENDPOINT).set(AUTH).send(event()).expect(500);
+      await post(ENDPOINT).set(AUTH).send(event({}, 9)).expect(500);
 
-      expect(createInvoices).toHaveBeenCalledOnce();
+      expect(sendSlackMessage).not.toHaveBeenCalled();
+    });
+
+    it("returns 200 and alerts PlanX when the final attempt fails, so Hasura stops retrying", async () => {
+      vi.stubEnv("APP_ENVIRONMENT", "production");
+      vi.mocked(createInvoices).mockRejectedValue(
+        new Error("PDF render failed"),
+      );
+
+      await post(ENDPOINT).set(AUTH).send(event({}, 10)).expect(200);
+
+      expect(sendSlackMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          channel: "#planx-notifications-internal",
+          text: expect.stringContaining(paymentIntent.id),
+        }),
+      );
+      vi.unstubAllEnvs();
+    });
+
+    it("does not post to Slack outside production on the final attempt", async () => {
+      vi.mocked(createInvoices).mockRejectedValue(
+        new Error("PDF render failed"),
+      );
+      const consoleLog = vi
+        .spyOn(console, "log")
+        .mockImplementation(() => undefined);
+
+      await post(ENDPOINT).set(AUTH).send(event({}, 10)).expect(200);
+
+      expect(sendSlackMessage).not.toHaveBeenCalled();
+      consoleLog.mockRestore();
     });
   });
 });

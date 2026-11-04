@@ -23,6 +23,11 @@ import {
   createPaymentReminderEvents,
 } from "./service/paymentRequestEvents/index.js";
 import type { CreatePaymentEventController } from "./service/paymentRequestEvents/schema.js";
+import {
+  alertPaymentSucceededFailed,
+  handlePaymentSucceeded,
+} from "./service/paymentStatusEvents/index.js";
+import type { PaymentStatusEventsController } from "./service/paymentStatusEvents/schema.js";
 import { reconcilePayments } from "./service/reconcilePayments/index.js";
 import type { ReconcilePaymentsController } from "./service/reconcilePayments/types.js";
 import { sanitiseApplicationData } from "./service/sanitiseApplicationData/index.js";
@@ -30,8 +35,6 @@ import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/
 import { sendSlackNotification } from "./service/sendNotification/index.js";
 import type { SendSlackNotification } from "./service/sendNotification/types.js";
 import type { SendSlackMessageController } from "./service/sendSlackMessage/schema.js";
-import { createInvoicesForPaymentIntent } from "./service/sendVatInvoices/index.js";
-import type { SendVatInvoicesController } from "./service/sendVatInvoices/schema.js";
 import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
 import type { UpdateTemplatedFlowEditsController } from "./service/updateTemplatedFlowEdits/schema.js";
 import type { IsCleanJSONBController } from "./service/validateInput/schema.js";
@@ -351,30 +354,36 @@ export const reconcilePaymentsController: ReconcilePaymentsController = async (
   }
 };
 
-export const sendVatInvoicesController: SendVatInvoicesController = async (
-  _req,
-  res,
-  next,
-) => {
-  const { stripePaymentId, stripeStatus } = res.locals.parsedReq.body.payload;
+export const paymentStatusEventsController: PaymentStatusEventsController =
+  async (_req, res, next) => {
+    const { payload, deliveryInfo } = res.locals.parsedReq.body;
+    const { stripePaymentId, stripeStatus } = payload;
 
-  if (stripeStatus !== "succeeded" || !stripePaymentId) {
-    return res.status(200).send({
-      message: "Not a succeeded Stripe payment, skipping VAT invoices",
-    });
-  }
+    if (stripeStatus !== "succeeded" || !stripePaymentId) {
+      return res.status(200).send({
+        message: "Not a succeeded Stripe payment, skipping",
+      });
+    }
 
-  try {
-    await createInvoicesForPaymentIntent(stripePaymentId);
-    return res.status(200).send({
-      message: `Processed VAT invoices for PaymentIntent ${stripePaymentId}`,
-    });
-  } catch (error) {
-    return next(
-      new ServerError({
-        message: `Failed to create VAT invoices for PaymentIntent ${stripePaymentId}`,
-        cause: error,
-      }),
-    );
-  }
-};
+    try {
+      await handlePaymentSucceeded(stripePaymentId);
+      return res.status(200).send({
+        message: `Processed succeeded payment for PaymentIntent ${stripePaymentId}`,
+      });
+    } catch (error) {
+      // Hasura won't retry again - alert, and return 200 so the event is marked as delivered
+      if (deliveryInfo.currentRetry >= deliveryInfo.maxRetries) {
+        await alertPaymentSucceededFailed(stripePaymentId, error);
+        return res.status(200).send({
+          message: `Failed to process succeeded payment for PaymentIntent ${stripePaymentId} on the final attempt - PlanX alerted`,
+        });
+      }
+
+      return next(
+        new ServerError({
+          message: `Failed to process succeeded payment for PaymentIntent ${stripePaymentId}`,
+          cause: error,
+        }),
+      );
+    }
+  };
