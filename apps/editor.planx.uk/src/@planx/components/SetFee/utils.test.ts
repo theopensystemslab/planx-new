@@ -16,6 +16,7 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
+        serviceChargeMode: "edit",
       });
 
       expect(result).toEqual({
@@ -39,6 +40,7 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
+        serviceChargeMode: "edit",
       });
 
       expect(result).toEqual({
@@ -63,6 +65,7 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: true,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
+        serviceChargeMode: "edit",
       });
 
       expect(result).toEqual({
@@ -87,6 +90,7 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 150,
         applyServiceCharge: false,
+        serviceChargeMode: "edit",
       });
 
       expect(result).toEqual({
@@ -111,6 +115,7 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
+        serviceChargeMode: "edit",
       });
 
       expect(result).toEqual({
@@ -133,6 +138,7 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 150,
         applyServiceCharge: false,
+        serviceChargeMode: "edit",
       });
 
       expect(result).toEqual({
@@ -158,6 +164,7 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: true,
         fastTrackFeeAmount: 183,
         applyServiceCharge: false,
+        serviceChargeMode: "edit",
       });
 
       expect(result).toEqual({
@@ -171,7 +178,7 @@ describe("handleSetFees() function", () => {
     });
   });
 
-  describe("adding service charge", () => {
+  describe("adding service charge in 'edit' mode", () => {
     it("does not add service charge if the SetFee toggle is `off`", () => {
       const incomingPassport: Store.Passport = {
         data: {
@@ -184,6 +191,7 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
+        serviceChargeMode: "edit",
       });
 
       expect(result).toEqual({
@@ -208,6 +216,7 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 50,
         applyServiceCharge: true,
+        serviceChargeMode: "edit",
       });
 
       expect(result).toEqual({
@@ -233,6 +242,7 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: true,
+        serviceChargeMode: "edit",
       });
 
       expect(result).toEqual({
@@ -241,6 +251,78 @@ describe("handleSetFees() function", () => {
         "application.fee.payable.VAT": 8,
         "application.fee.serviceCharge": 40,
         "application.fee.serviceCharge.VAT": 8,
+      });
+    });
+  });
+
+  describe("automatically enabling and disabling service charge", () => {
+    it("does not add service charge in 'autoDisable' mode", () => {
+      const incomingPassport: Store.Passport = {
+        data: {
+          "application.fee.calculated": 200,
+        },
+      };
+
+      const result = handleSetFees({
+        passport: incomingPassport,
+        applyCalculatedVAT: false,
+        fastTrackFeeAmount: 0,
+        applyServiceCharge: false,
+        serviceChargeMode: "autoDisable",
+      });
+
+      expect(result).toEqual({
+        "application.fee.calculated": 200,
+        "application.fee.payable": 200,
+        "application.fee.payable.VAT": 0,
+      });
+    });
+
+    it("adds service charge in 'autoEnable' mode even if formik toggle value is default false", () => {
+      const incomingPassport: Store.Passport = {
+        data: {
+          "application.fee.calculated": 200,
+        },
+      };
+
+      const result = handleSetFees({
+        passport: incomingPassport,
+        applyCalculatedVAT: false,
+        fastTrackFeeAmount: 0,
+        applyServiceCharge: false,
+        serviceChargeMode: "autoEnable",
+      });
+
+      expect(result).toEqual({
+        "application.fee.calculated": 200,
+        "application.fee.payable": 248,
+        "application.fee.payable.VAT": 8,
+        "application.fee.serviceCharge": 40,
+        "application.fee.serviceCharge.VAT": 8,
+      });
+    });
+
+    it("does not add service charge in 'autoEnable' mode when calculated amount is below threshold", () => {
+      const incomingPassport: Store.Passport = {
+        data: {
+          "application.fee.calculated": 20,
+        },
+      };
+
+      const result = handleSetFees({
+        passport: incomingPassport,
+        applyCalculatedVAT: false,
+        fastTrackFeeAmount: 0,
+        applyServiceCharge: false,
+        serviceChargeMode: "autoEnable",
+      });
+
+      expect(result).toEqual({
+        "application.fee.calculated": 20,
+        "application.fee.payable": 20,
+        "application.fee.payable.VAT": 0,
+        "application.fee.serviceCharge": 0,
+        "application.fee.serviceCharge.VAT": 0,
       });
     });
   });
