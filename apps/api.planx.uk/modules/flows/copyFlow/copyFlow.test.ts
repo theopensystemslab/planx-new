@@ -1,5 +1,6 @@
 import supertest from "supertest";
 
+import type { GetFlowDataResponse } from "../../../helpers.js";
 import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import { authHeader } from "../../../tests/mockJWT.js";
@@ -212,7 +213,7 @@ it("inserts copied unique flow data", async () => {
     });
 });
 
-it("throws an error if the a GraphQL operation fails", async () => {
+it("throws an error if the GraphQL operation fails", async () => {
   const body = {
     insert: true,
     replaceValue: "T3ST1",
@@ -266,6 +267,8 @@ it("throws an error if user details are missing", async () => {
     .then((res) => {
       expect(res.body.error).toMatch(/Failed to copy flow/);
     });
+
+  getStoreMock.mockRestore();
 });
 
 // the original flow
@@ -299,6 +302,23 @@ const mockFlowData: Flow["data"] = {
       type: "short",
     },
   },
+};
+
+const mockGetFlowDataResponse: GetFlowDataResponse = {
+  slug: "test-copy",
+  name: "Test copy",
+  data: {},
+  summary: null,
+  description: null,
+  isService: false,
+  isPattern: false,
+  limitations: null,
+  settings: null,
+  teamId: 1,
+  team: { slug: "test-team" },
+  templatedFrom: null,
+  publishedFlows: [],
+  submissionEmailId: "submission-email-id-1111",
 };
 
 // the copied flow data with unique nodeIds using the replaceValue
@@ -347,3 +367,53 @@ const mockCopyFlowResponseInserted = {
   replaceValue: "T3ST1",
   data: mockCopiedFlowData,
 };
+
+describe("submission email IDs", async () => {
+  beforeEach(() => {
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: mockGetFlowDataResponse,
+      },
+    });
+  });
+
+  it("copies the submission email ID if copying from within team", async () => {
+    const body = {
+      insert: true,
+      replaceValue: "T3ST1",
+      teamId: 1, // same team ID as in mocked GetFlowData response
+      name: "test (copy)",
+      slug: "test-copy",
+    };
+
+    await supertest(app).post("/flows/1/copy").send(body).set(auth).expect(200);
+
+    const insertFlowCall = queryMock
+      .getCalls()
+      .find((call) => call.id === "InsertFlow");
+
+    expect(insertFlowCall?.variables?.submission_email_id).toEqual(
+      "submission-email-id-1111",
+    );
+  });
+
+  it("does not copy the submission email ID if copying from a different team", async () => {
+    const body = {
+      insert: true,
+      replaceValue: "T3ST1",
+      teamId: 2, // different team ID as in mocked GetFlowData response
+      name: "test (copy)",
+      slug: "test-copy",
+    };
+
+    await supertest(app).post("/flows/1/copy").send(body).set(auth).expect(200);
+
+    const insertFlowCall = queryMock
+      .getCalls()
+      .find((call) => call.id === "InsertFlow");
+
+    expect(insertFlowCall?.variables?.submission_email_id).toBeNull();
+  });
+});
