@@ -10,8 +10,8 @@ import {
 
 /**
  * Each successful payment has (at most) one invoice of each kind
- *  - customer_invoice: covers every line of the payment, emailed to the payer
- *  - council_invoice: covers the council portion only, downloadable in the editor
+ *  - customer_invoice: issued by the council to the payer, covering every line of the payment
+ *  - council_invoice: issued by OSL to the council, covering the service charge
  */
 export type InvoiceKind = "customer_invoice" | "council_invoice";
 
@@ -30,15 +30,15 @@ export interface StoredInvoice {
   net: number;
   vat: number;
   total: number;
-  fileKey: string;
+  /** Null until the PDF has been generated and stored */
+  fileKey: string | null;
 }
 
-export type StoreInvoiceArgs = Omit<
+export type ReserveInvoiceArgs = Omit<
   StoredInvoice,
-  "id" | "issuedAt" | "fileKey"
+  "id" | "invoiceNumber" | "issuedAt" | "fileKey"
 > & {
   issuedAt: Date;
-  pdf: Buffer;
 };
 
 /**
@@ -88,35 +88,22 @@ export async function getStoredInvoice(
 }
 
 /**
- * Upload an invoice PDF to S3 and record it in payment_invoices
+ * Record an invoice in payment_invoices, which allocates its invoice number at DB level (see set_payment_invoice_number)
  *
- * Callers should check getStoredInvoice() first, to avoid rendering a PDF which already exists
+ * Numbers are sequential, so they're allocated before the PDF is rendered - attach the PDF afterwards with storeInvoicePdf()
  *
- * Safe to retry - the S3 key is derived from the PaymentIntent and kind, so a retry overwrites the file rather
- * than leaving an orphan. If the invoice has already been recorded, the existing record is returned
+ * Safe to retry - if the invoice has already been recorded, the existing record (and its number) is returned
  */
-export async function storeInvoice({
-  pdf,
+export async function reserveInvoice({
   issuedAt,
   ...invoice
-}: StoreInvoiceArgs): Promise<StoredInvoice> {
-  const folder = `${INVOICE_KEY_PREFIX}/${invoice.stripePaymentIntentId}`;
-  const filename = `${invoice.kind}.pdf`;
-
-  // We generate invoices ourselves from database and Stripe data, so they don't need a malware scan
-  await uploadPrivateFile(
-    convertBufferToMulterFile(pdf, filename, "application/pdf"),
-    filename,
-    folder,
-    { dangerouslySkipMalwareScan: true },
-  );
-
-  const { stored } = await $api.client.request<{
-    stored: StoredInvoice | null;
+}: ReserveInvoiceArgs): Promise<StoredInvoice> {
+  const { reserved } = await $api.client.request<{
+    reserved: StoredInvoice | null;
   }>(
     gql`
-      mutation InsertPaymentInvoice($invoice: payment_invoices_insert_input!) {
-        stored: insert_payment_invoices_one(
+      mutation ReservePaymentInvoice($invoice: payment_invoices_insert_input!) {
+        reserved: insert_payment_invoices_one(
           object: $invoice
           on_conflict: {
             constraint: payment_invoices_stripe_payment_intent_id_kind_key
@@ -134,19 +121,19 @@ export async function storeInvoice({
         session_id: invoice.sessionId,
         flow_id: invoice.flowId,
         team_id: invoice.teamId,
-        invoice_number: invoice.invoiceNumber,
         issued_at: issuedAt.toISOString(),
         net: invoice.net,
         vat: invoice.vat,
         total: invoice.total,
-        file_key: buildFilePath(folder, filename),
       },
     },
   );
 
-  if (stored) return stored;
+  // newly created invoice row - return it
+  if (reserved) return reserved;
 
-  // Already recorded (e.g. a concurrent retry got there first)
+  // row already exists so fetch it - this path is an unlikely race condition
+  // existing row not returned by prev query because of ON CONFLICT DO NOTHING
   const existing = await getStoredInvoice(
     invoice.stripePaymentIntentId,
     invoice.kind,
@@ -158,6 +145,52 @@ export async function storeInvoice({
   }
 
   return existing;
+}
+
+/**
+ * Upload an invoice PDF to S3 and attach it to the invoice's record
+ *
+ * Safe to retry - the S3 key is derived from the PaymentIntent and kind, so a retry overwrites the file rather
+ * than leaving an orphan. A PDF can only be attached once
+ */
+export async function storeInvoicePdf(
+  invoice: StoredInvoice,
+  pdf: Buffer,
+): Promise<StoredInvoice> {
+  const folder = `${INVOICE_KEY_PREFIX}/${invoice.stripePaymentIntentId}`;
+  const filename = `${invoice.kind}.pdf`;
+
+  // We generate invoices ourselves from database and Stripe data, so they don't need a malware scan
+  await uploadPrivateFile(
+    convertBufferToMulterFile(pdf, filename, "application/pdf"),
+    filename,
+    folder,
+    { dangerouslySkipMalwareScan: true },
+  );
+
+  const { stored } = await $api.client.request<{
+    stored: StoredInvoice | null;
+  }>(
+    gql`
+      mutation AttachPaymentInvoicePdf($id: uuid!, $fileKey: String!) {
+        stored: update_payment_invoices_by_pk(
+          pk_columns: { id: $id }
+          _set: { file_key: $fileKey }
+        ) {
+          ${STORED_INVOICE_FIELDS}
+        }
+      }
+    `,
+    { id: invoice.id, fileKey: buildFilePath(folder, filename) },
+  );
+
+  if (!stored) {
+    throw new Error(
+      `Could not attach PDF to ${invoice.kind} ${invoice.invoiceNumber} - it may already have one`,
+    );
+  }
+
+  return stored;
 }
 
 /**
