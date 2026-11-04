@@ -66,9 +66,19 @@ describe("payment_invoices", () => {
       expect(i.mutations).toContain("insert_payment_invoices");
     });
 
-    test("cannot update or delete payment_invoices", () => {
-      expect(i.mutations).not.toContain("update_payment_invoices");
+    // To attach the PDF once it's generated
+    test("can update payment_invoices", () => {
+      expect(i.mutations).toContain("update_payment_invoices");
+    });
+
+    test("cannot delete payment_invoices", () => {
       expect(i.mutations).not.toContain("delete_payment_invoices");
+    });
+
+    // Allocated by the set_payment_invoice_number trigger
+    test("cannot query or mutate invoice_number_sequences", () => {
+      expect(i.queries).not.toContain("invoice_number_sequences");
+      expect(i).toHaveNoMutationsFor("invoice_number_sequences");
     });
   });
 });

@@ -15,12 +15,10 @@ insert_permissions:
         - session_id
         - flow_id
         - team_id
-        - invoice_number
         - issued_at
         - net
         - vat
         - total
-        - file_key
 select_permissions:
   - role: api
     permission:
@@ -39,3 +37,12 @@ select_permissions:
         - file_key
         - created_at
       filter: {}
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - file_key
+      filter:
+        file_key:
+          _is_null: true
+      check: {}
