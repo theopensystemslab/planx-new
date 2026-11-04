@@ -74,7 +74,8 @@ $fontMonospace: "Source Code Pro", monospace;
   pointer-events: none;
   user-select: none;
 
-  > a {
+  > a,
+  > button {
     visibility: hidden !important;
     font-size: 0;
   }

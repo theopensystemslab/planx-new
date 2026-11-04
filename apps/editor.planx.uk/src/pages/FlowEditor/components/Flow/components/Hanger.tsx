@@ -54,9 +54,9 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   );
 
   // Hiding the hanger is a proxy for disabling a 'view-only' user from adding, moving, cloning nodes
-  const hideHangerFromUser = isTemplatedFrom
-    ? hideHangerInTemplatedFlow
-    : !useStore.getState().canUserEditTeam(teamSlug);
+  const canUserEditTeam = useStore((state) => state.canUserEditTeam(teamSlug));
+  const hideHangerFromUser =
+    !canUserEditTeam || (isTemplatedFrom && hideHangerInTemplatedFlow);
 
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DROPPABLE_TYPES,
