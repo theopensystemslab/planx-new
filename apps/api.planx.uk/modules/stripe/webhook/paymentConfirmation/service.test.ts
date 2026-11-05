@@ -174,20 +174,20 @@ describe("sendPaymentConfirmationEmails", () => {
         }),
       );
       expect(sentEmail("payment-confirmed-payer")).toBeUndefined();
-      expect(sentEmail("payment-invoices-council")).toBeDefined();
+      expect(sentEmail("payment-confirmed-council")).toBeDefined();
     });
   });
 
   describe("council", () => {
-    it("sends a single email with every VAT document attached to the invoice email address", async () => {
+    it("sends a payment confirmation to the invoice email address, with every VAT document attached", async () => {
       await send();
 
       expect(sendEmail).toHaveBeenCalledWith(
-        "payment-invoices-council",
+        "payment-confirmed-council",
         "finance@southwark.gov.uk",
         expect.objectContaining({ paymentReference: paymentIntent.id }),
         {
-          idempotencyKey: `payment-invoices-council-${paymentIntent.id}`,
+          idempotencyKey: `payment-confirmed-council-${paymentIntent.id}`,
           attachments: [
             {
               filename: "PX-2026-INV-SWK-00003.pdf",
@@ -202,12 +202,14 @@ describe("sendPaymentConfirmationEmails", () => {
       );
     });
 
-    it("is not sent when the payment has no VAT documents", async () => {
+    it("is still sent, without attachments, when the payment has no VAT documents", async () => {
       vi.mocked(getStoredInvoices).mockResolvedValue([]);
 
       await send();
 
-      expect(sentEmail("payment-invoices-council")).toBeUndefined();
+      expect(sentEmail("payment-confirmed-council")?.[3]?.attachments).toBe(
+        undefined,
+      );
     });
 
     it("reports an error without throwing when the council has no invoice email address", async () => {
@@ -222,7 +224,7 @@ describe("sendPaymentConfirmationEmails", () => {
           context: expect.objectContaining({ teamSlug: TEAM_SLUG }),
         }),
       );
-      expect(sentEmail("payment-invoices-council")).toBeUndefined();
+      expect(sentEmail("payment-confirmed-council")).toBeUndefined();
     });
   });
 

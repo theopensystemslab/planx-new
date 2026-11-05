@@ -27,11 +27,11 @@ export type PaymentConfirmedPayerTemplate = EmailTemplate<
 >;
 
 /**
- * Sent to the council with the VAT documents for a succeeded payment attached
- *  - A copy of the payer's VAT receipt
+ * Sent to the council for every succeeded payment, with whichever VAT documents the payment has attached
+ *  - A copy of the payer's VAT receipt, if the payment had any VAT or a service charge
  *  - OSL's invoice to the council for the service charge, if there was one
  */
-export type PaymentInvoicesCouncilTemplate = EmailTemplate<
-  "payment-invoices-council",
+export type PaymentConfirmedCouncilTemplate = EmailTemplate<
+  "payment-confirmed-council",
   PaymentConfirmedVariables
 >;

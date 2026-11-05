@@ -92,7 +92,7 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
       return next();
     // Only sent internally (payment_status event trigger) - never via /send-email
     case "payment-confirmed-payer":
-    case "payment-invoices-council":
+    case "payment-confirmed-council":
       return handleInvalidTemplate();
     default: {
       return handleInvalidTemplate(template);

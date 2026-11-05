@@ -78,7 +78,7 @@ const toAttachment = async ({
 /**
  * Email the payer and the council once a Stripe payment has succeeded (for Bacs, once it has cleared)
  *  - payer: payment confirmation, with their VAT receipt attached if there is one
- *  - council: a single email with all of the payment's VAT documents attached, if there are any
+ *  - council: payment confirmation, with all of the payment's VAT documents attached
  *
  * Runs after createInvoices(), so the documents are already stored
  * Throws errors to make Hasura retry the event - idempotency keys stop a retry sending duplicates
@@ -134,18 +134,23 @@ export async function sendPaymentConfirmationEmails(
     );
   }
 
-  if (!invoices.length) return;
-
   if (!council.invoiceEmail) {
     return reportError({
       error:
-        "Could not email VAT documents to the council: no invoice email address configured",
+        "Could not send payment confirmation to the council: no invoice email address configured",
       context: { ...context, teamSlug: recorded.teamSlug },
     });
   }
 
-  await sendEmail("payment-invoices-council", council.invoiceEmail, variables, {
-    idempotencyKey: `payment-invoices-council-${paymentIntent.id}`,
-    attachments: await Promise.all(invoices.map(toAttachment)),
-  });
+  await sendEmail(
+    "payment-confirmed-council",
+    council.invoiceEmail,
+    variables,
+    {
+      idempotencyKey: `payment-confirmed-council-${paymentIntent.id}`,
+      attachments: invoices.length
+        ? await Promise.all(invoices.map(toAttachment))
+        : undefined,
+    },
+  );
 }
