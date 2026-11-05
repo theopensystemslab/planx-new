@@ -27,14 +27,8 @@ const RootContainer = styled(Box)(() => ({
 }));
 
 const MainContainer = styled(Main)(({ theme }) => ({
-  borderTop: `1px solid ${theme.palette.border.light}`,
-  display: "flex",
-  flex: "1 0 auto",
-  flexDirection: "column",
-  alignItems: "center",
   backgroundColor: theme.palette.background.default,
-  position: "relative",
-  overflow: "hidden",
+  color: theme.palette.text.primary,
 }));
 
 const OglLogo = styled("img")(({ theme }) => ({
