@@ -5,7 +5,7 @@ import type { PaymentSession } from "../ownership/service.js";
 import type { InvoiceKind } from "./storage.js";
 import type {
   VatInvoiceBranding,
-  VatInvoiceCustomer,
+  VatInvoiceContactDetails,
   VatInvoiceData,
   VatInvoiceIssuer,
   VatInvoiceLineItem,
@@ -97,12 +97,13 @@ export const summariseVat = (
 };
 
 /**
- * The payer's name and address, if they were entered on Stripe Checkout
+ * Contact details for the payer, billed on the payer_invoice
+ * Name and address are only present if they were entered on Stripe Checkout
  */
-export const getInvoiceCustomer = (
+export const getPayerContactDetails = (
   email: string,
   customerDetails: Stripe.Checkout.Session.CustomerDetails | null,
-): VatInvoiceCustomer => {
+): VatInvoiceContactDetails => {
   const address = customerDetails?.address;
 
   return {
@@ -119,13 +120,18 @@ export const getInvoiceCustomer = (
 };
 
 /**
- * The council, as billed for the service charge, using the details it has configured for invoices
+ * Contact details for the council, billed for the service charge on the council_invoice
+ * Uses the details the council has configured for invoices
  */
-export const getCouncilCustomer = ({
+export const getCouncilContactDetails = ({
   name,
   addressLines,
   email,
-}: VatInvoiceSeller): VatInvoiceCustomer => ({ name, addressLines, email });
+}: VatInvoiceSeller): VatInvoiceContactDetails => ({
+  name,
+  addressLines,
+  email,
+});
 
 interface BuildVatInvoiceDataArgs {
   issuer: VatInvoiceIssuer;

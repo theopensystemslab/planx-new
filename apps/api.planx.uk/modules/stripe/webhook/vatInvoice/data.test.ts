@@ -11,9 +11,9 @@ import {
 } from "../test/mocks.js";
 import {
   buildVatInvoiceData,
-  getCouncilCustomer,
-  getInvoiceCustomer,
+  getCouncilContactDetails,
   getInvoiceLineItems,
+  getPayerContactDetails,
   getVatRate,
   groupFeeLinesByIssuer,
   isInvoiceRequired,
@@ -134,10 +134,10 @@ describe("summariseVat", () => {
   });
 });
 
-describe("getInvoiceCustomer", () => {
+describe("getPayerContactDetails", () => {
   it("includes the payer's name and address from Checkout", () => {
     expect(
-      getInvoiceCustomer("payer@example.com", {
+      getPayerContactDetails("payer@example.com", {
         name: "Jo Bloggs",
         address: {
           line1: "1 High Street",
@@ -156,7 +156,7 @@ describe("getInvoiceCustomer", () => {
   });
 
   it("falls back to just the email when Checkout has no other details", () => {
-    expect(getInvoiceCustomer("payer@example.com", null)).toEqual({
+    expect(getPayerContactDetails("payer@example.com", null)).toEqual({
       email: "payer@example.com",
       name: null,
       addressLines: [],
@@ -164,10 +164,10 @@ describe("getInvoiceCustomer", () => {
   });
 });
 
-describe("getCouncilCustomer", () => {
+describe("getCouncilContactDetails", () => {
   it("bills the council using its invoice details", () => {
     expect(
-      getCouncilCustomer({
+      getCouncilContactDetails({
         name: "London Borough of Southwark",
         addressLines: ["160 Tooley Street", "London", "SE1 2QH"],
         vatNumber: "GB123456789",

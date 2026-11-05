@@ -27,9 +27,9 @@ export interface VatInvoiceBranding {
 }
 
 /**
- * Who the invoice is billed to - the payer, or the council
+ * Who the invoice is billed to - the payer (payer_invoice), or the council (council_invoice)
  */
-export interface VatInvoiceCustomer {
+export interface VatInvoiceContactDetails {
   email: string | null;
   name: string | null;
   addressLines: string[];
