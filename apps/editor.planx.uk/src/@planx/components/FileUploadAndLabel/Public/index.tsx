@@ -8,6 +8,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { PublicProps } from "@planx/components/shared/types";
 import { PrintButton } from "components/PrintButton";
+import { getScrollBehavior } from "lib/reducedMotion";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { type SetStateAction, useEffect, useReducer, useState } from "react";
@@ -154,7 +155,10 @@ export default function Component(props: Props) {
     if (errorEl) {
       errorEl.setAttribute("tabindex", "-1");
       errorEl.focus();
-      errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      errorEl.scrollIntoView({
+        behavior: getScrollBehavior(),
+        block: "center",
+      });
     }
   }, [failedSubmitCount]);
 

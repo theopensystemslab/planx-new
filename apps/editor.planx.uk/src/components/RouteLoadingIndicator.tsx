@@ -18,6 +18,10 @@ const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
   [`& .${linearProgressClasses.bar}`]: {
     backgroundColor: theme.palette.secondary.dark,
   },
+  // Progress is driven by JS state, so CSS can't freeze it - hide the bar entirely
+  "@media (prefers-reduced-motion: reduce)": {
+    display: "none",
+  },
 }));
 
 const RouteLoadingIndicator: React.FC = () => {

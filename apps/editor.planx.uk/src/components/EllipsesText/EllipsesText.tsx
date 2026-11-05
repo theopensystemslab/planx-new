@@ -6,6 +6,10 @@ export const EllipsesText = styled(Typography)(() => ({
     display: "inline-block",
     animation: "ellipsis steps(1,end) 1s infinite",
     content: '""',
+    "@media (prefers-reduced-motion: reduce)": {
+      animation: "none",
+      content: '"..."',
+    },
   },
   "@keyframes ellipsis": {
     "0%": { content: '""' },

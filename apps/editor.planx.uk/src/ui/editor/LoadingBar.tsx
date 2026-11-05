@@ -31,6 +31,17 @@ const StyledBar = styled(LinearProgress)(({ theme }) => ({
     backgroundColor: theme.palette.border.light,
     animation: `${loadFollow} 1.6s ease-in-out infinite`,
   },
+  // Static half-filled bar in place of the loop
+  "@media (prefers-reduced-motion: reduce)": {
+    [`& .${linearProgressClasses.bar1}`]: {
+      animation: "none",
+      transform: "scaleX(0.5)",
+      transformOrigin: "left",
+    },
+    [`& .${linearProgressClasses.bar2}`]: {
+      display: "none",
+    },
+  },
 }));
 
 interface LoadingBarProps {

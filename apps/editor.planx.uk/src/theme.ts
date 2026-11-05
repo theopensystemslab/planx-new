@@ -507,6 +507,16 @@ const getThemeOptions = ({
               backgroundColor: palette.common.white,
             },
           },
+          // a11y: Remove non-essential motion (MUI transitions, ripples, toasts, custom styles)
+          // Looping loaders provide their own static fallback under this query
+          "@media (prefers-reduced-motion: reduce)": {
+            "*, *::before, *::after": {
+              animationDuration: "0.01ms !important",
+              animationIterationCount: "1 !important",
+              transitionDuration: "0.01ms !important",
+              scrollBehavior: "auto !important",
+            },
+          },
         },
       },
       MuiDataGrid: {

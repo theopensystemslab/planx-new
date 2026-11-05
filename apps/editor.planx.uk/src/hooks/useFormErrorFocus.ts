@@ -1,4 +1,5 @@
 import { type FormikErrors, getIn } from "formik";
+import { getScrollBehavior } from "lib/reducedMotion";
 import {
   useCallback,
   useEffect,
@@ -75,7 +76,7 @@ export function useFormErrorFocus<T>({
 
       if (typeof elementToFocus.scrollIntoView === "function") {
         elementToFocus.scrollIntoView({
-          behavior: "smooth",
+          behavior: getScrollBehavior(),
           block: "center",
         });
       }

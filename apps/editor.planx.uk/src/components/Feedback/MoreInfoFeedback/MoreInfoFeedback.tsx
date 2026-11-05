@@ -7,6 +7,7 @@ import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
+import { getScrollBehavior } from "lib/reducedMotion";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { useEffect, useRef, useState } from "react";
 import CheckCircleIcon from "ui/icons/CheckCircle";
@@ -36,7 +37,7 @@ const MoreInfoFeedbackComponent: React.FC = () => {
   useEffect(() => {
     if (currentFeedbackView === "input") {
       feedbackComponentRef.current?.scrollIntoView({
-        behavior: "smooth",
+        behavior: getScrollBehavior(),
         block: "start",
       });
     }
