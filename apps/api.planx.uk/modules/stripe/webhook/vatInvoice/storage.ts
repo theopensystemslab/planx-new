@@ -93,7 +93,7 @@ export async function getStoredInvoice(
 }
 
 /**
- * Every invoice recorded for a payment, customer invoice first
+ * Every invoice recorded for a payment, payer invoice first
  */
 export async function getStoredInvoices(
   stripePaymentIntentId: string,
