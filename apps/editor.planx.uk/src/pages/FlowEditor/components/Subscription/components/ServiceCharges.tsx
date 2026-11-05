@@ -21,6 +21,7 @@ import { EmptyState } from "ui/editor/EmptyState";
 import SettingsSection from "ui/editor/SettingsSection";
 import Caret from "ui/icons/Caret";
 
+import type { ContractType } from "../../Settings/Team/Advanced/ContractType/types";
 import type { SubscriptionProps } from "../types";
 import {
   downloadServiceChargesCsv,
@@ -31,7 +32,30 @@ import {
   sumServiceCharges,
 } from "../utils";
 
-export const ServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
+export const ServiceCharges = ({
+  serviceCharges,
+  contract,
+}: SubscriptionProps & { contract: ContractType }) => {
+  if (contract === "opt_out_sc") {
+    return (
+      <SettingsSection background>
+        <Typography variant="h3" component="h4" gutterBottom>
+          Service charges
+        </Typography>
+        <Typography
+          variant="body2"
+          gutterBottom
+          sx={{
+            color: "text.secondary",
+          }}
+        >
+          Service charges are automatically disabled in this workspace based on
+          your contract. Contact the Plan✕ team to enable them
+        </Typography>
+      </SettingsSection>
+    );
+  }
+
   return (
     <SettingsSection background>
       <Typography variant="h3" component="h4" gutterBottom>
@@ -44,8 +68,7 @@ export const ServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
           color: "text.secondary",
         }}
       >
-        Summary of service charges collected by your team on behalf of OSL.
-        Service charges are transferred to OSL quarterly.
+        Summary of service charges collected
       </Typography>
       {serviceCharges.length > 0 ? (
         <ActiveServiceCharges serviceCharges={serviceCharges} />
@@ -68,7 +91,7 @@ const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
   return (
     <>
       <Typography variant="h4" component="h5" sx={{ mt: 2 }} gutterBottom>
-        Service charges due this quarter
+        Service charges this quarter
       </Typography>
       <ThisQuarterServiceChargeCard serviceCharges={serviceCharges} />
       <Typography variant="h4" component="h5" sx={{ mt: 2 }} gutterBottom>
