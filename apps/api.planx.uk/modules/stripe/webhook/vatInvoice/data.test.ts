@@ -57,7 +57,7 @@ describe("getVatRate", () => {
 });
 
 describe("getInvoiceLineItems", () => {
-  it("includes every line on the customer invoice", () => {
+  it("includes every line on the payer invoice", () => {
     expect(getInvoiceLineItems(feeLines, "payer_invoice")).toEqual([
       {
         description: "Application fee",

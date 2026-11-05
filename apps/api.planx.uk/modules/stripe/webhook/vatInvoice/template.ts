@@ -3,7 +3,7 @@ import he from "he";
 
 import { formatPence } from "../../helpers.js";
 import type {
-  VatInvoiceCustomer,
+  VatInvoiceContactDetails,
   VatInvoiceData,
   VatInvoiceSeller,
 } from "./types.js";
@@ -46,7 +46,7 @@ const renderSeller = (seller: VatInvoiceSeller) =>
     .filter(Boolean)
     .join("<br />");
 
-const renderCustomer = (customer: VatInvoiceCustomer) =>
+const renderContactDetails = (customer: VatInvoiceContactDetails) =>
   [customer.name, ...customer.addressLines, customer.email]
     .filter((line): line is string => Boolean(line))
     .map(escape)
@@ -163,7 +163,7 @@ export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
       </div>
       <div>
         <h2 class="label">Billed to</h2>
-        <p>${renderCustomer(invoice.customer)}</p>
+        <p>${renderContactDetails(invoice.customer)}</p>
       </div>
     </section>
 

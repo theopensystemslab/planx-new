@@ -124,7 +124,7 @@ describe("createInvoices", () => {
     });
   });
 
-  it("records a customer invoice for every line, and a council invoice for the service charge", async () => {
+  it("records a payer invoice for every line, and a council invoice for the service charge", async () => {
     await createInvoices(succeededPaymentIntent(), recorded);
 
     expect(reserveInvoice).toHaveBeenCalledTimes(2);
@@ -166,7 +166,7 @@ describe("createInvoices", () => {
     expect(storedKinds()).toEqual(["payer_invoice", "council_invoice"]);
   });
 
-  it("renders the customer invoice from the council to the payer, and the council invoice from OSL to the council", async () => {
+  it("renders the payer invoice from the council to the payer, and the council invoice from OSL to the council", async () => {
     await createInvoices(succeededPaymentIntent(), recorded);
 
     expect(
@@ -265,7 +265,7 @@ describe("createInvoices", () => {
     expect(storedKinds()).toEqual(["council_invoice"]);
   });
 
-  it("only stores a customer invoice when there's VAT but no service charge", async () => {
+  it("only stores a payer invoice when there's VAT but no service charge", async () => {
     mockChargedFeeBreakdown(
       mockFeeBreakdown({
         calculated: 100,
