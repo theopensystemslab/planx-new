@@ -15,6 +15,7 @@ import { uploadPrivateFile, uploadPublicFile } from "./service/uploadFile.js";
 import { buildFilePath, safeDecode } from "./service/utils.js";
 
 assert(process.env.AWS_S3_BUCKET);
+assert(process.env.AWS_S3_BUCKET_PAY);
 assert(process.env.AWS_S3_REGION);
 assert(process.env.AWS_ACCESS_KEY);
 assert(process.env.AWS_SECRET_KEY);
