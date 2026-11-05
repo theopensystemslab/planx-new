@@ -130,6 +130,8 @@ new aws.s3.BucketPublicAccessBlock("payment-data-public-access-block", {
   bucket: apiPaymentDataBucket.id,
   blockPublicAcls: true,
   blockPublicPolicy: true,
+  ignorePublicAcls: true,
+  restrictPublicBuckets: true,
 });
 
 export const apiBucketId = apiBucket.id;

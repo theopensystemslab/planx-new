@@ -40,7 +40,7 @@ export const createApiService = async ({
     data.requireOutput("apiBucketId"),
   );
   const apiPaymentDataBucket = aws.s3.Bucket.get(
-    "bucket",
+    "payment-data",
     data.requireOutput("apiPaymentDataBucketId"),
   );
 
