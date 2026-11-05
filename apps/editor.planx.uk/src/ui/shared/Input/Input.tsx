@@ -4,9 +4,9 @@ import { lighten, styled } from "@mui/material/styles";
 import type { ChangeEvent } from "react";
 import { forwardRef } from "react";
 import {
-  borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
-  inputFocusStyle,
+  getBorderedFocusStyle,
+  getInputFocusStyle,
 } from "theme";
 
 import ErrorWrapper from "../ErrorWrapper";
@@ -84,8 +84,8 @@ const StyledInputBase = styled(InputBase, {
     },
   },
   [`&.${classes.focused}`]: {
-    ...inputFocusStyle,
-    ...(bordered && borderedFocusStyle),
+    ...getInputFocusStyle(theme),
+    ...(bordered && getBorderedFocusStyle(theme)),
   },
 }));
 

@@ -6,12 +6,13 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import React, { useState } from "react";
+import { DARK_TEXT_COLOR } from "theme";
 import AnalyticsChart from "ui/icons/AnalyticsChart";
 
 const AnalyticsWarning = styled(Box)(({ theme }) => ({
   display: "flex",
   backgroundColor: theme.palette.action.focus,
-  color: theme.palette.text.primary,
+  color: DARK_TEXT_COLOR,
   justifyContent: "space-between",
   alignItems: "center",
   padding: "0.2em 0",

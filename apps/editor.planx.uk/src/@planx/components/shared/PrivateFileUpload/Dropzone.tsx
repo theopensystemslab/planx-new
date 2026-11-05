@@ -17,7 +17,7 @@ import { nanoid } from "nanoid";
 import React, { useCallback } from "react";
 import type { FileWithPath } from "react-dropzone";
 import { useDropzone } from "react-dropzone";
-import { borderedFocusStyle } from "theme";
+import { getBorderedFocusStyle } from "theme";
 
 interface Props<T extends FileUploadSlot = FileUploadSlot> {
   setSlots: React.Dispatch<React.SetStateAction<T[]>>;
@@ -80,7 +80,7 @@ const Root = styled(Box, {
     ],
   },
   "&:focus-within": {
-    ...borderedFocusStyle,
+    ...getBorderedFocusStyle(theme),
     boxShadow: "none",
     borderStyle: "solid",
   },

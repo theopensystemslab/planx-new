@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { DARK_TEXT_COLOR, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export enum TagType {
   Alert = "alert",
@@ -24,7 +24,7 @@ const Root = styled("span", {
   display: "inline-block",
   textAlign: "center",
   ...(tagType === TagType.Alert && {
-    color: theme.palette.text.primary,
+    color: DARK_TEXT_COLOR,
     backgroundColor: BG_ALERT,
   }),
   ...(tagType === TagType.Active && {

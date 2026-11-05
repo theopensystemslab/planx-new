@@ -20,7 +20,7 @@ import groupBy from "lodash/groupBy";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { ReactNode } from "react";
 import React, { useState } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { DARK_TEXT_COLOR, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
@@ -121,7 +121,7 @@ export default function ConstraintsList({
                   px: 2,
                   pl: 2.5,
                   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-                  color: (theme) => theme.palette.text.primary,
+                  color: DARK_TEXT_COLOR,
                 }}
               >
                 {category}

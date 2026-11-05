@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { BubbleMenu } from "@tiptap/react/menus";
-import { inputFocusStyle } from "theme";
+import { getInputFocusStyle } from "theme";
 
 export const RichContentContainer = styled(Box)(({ theme }) => ({
   "& .ProseMirror": {
@@ -49,7 +49,7 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
     },
     // Focus styles
     "&.ProseMirror-focused": {
-      ...inputFocusStyle,
+      ...getInputFocusStyle(theme),
       zIndex: 0,
     },
     // Styles for injected passport/mention
