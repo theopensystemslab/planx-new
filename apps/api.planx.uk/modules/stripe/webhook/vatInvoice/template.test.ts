@@ -12,6 +12,7 @@ const invoice = (overrides: Partial<VatInvoiceData> = {}): VatInvoiceData => ({
     addressLines: ["1 High Street", "London", "SE1 2QH"],
   },
   sessionId: "session-123",
+  paymentId: "pi_test_123",
   flowId: "flow-123",
   flowName: "Apply for a lawful development certificate",
   teamSlug: "southwark",
@@ -67,6 +68,14 @@ describe("renderVatInvoiceHtml", () => {
     expect(html).toContain("160 Tooley Street");
     expect(html).toContain("VAT registration number: GB123456789");
     expect(html).not.toContain("Company registration number");
+  });
+
+  it("includes the session and payment IDs as footer metadata, for internal use", () => {
+    const html = renderVatInvoiceHtml(invoice());
+
+    expect(html).toMatch(
+      /<footer class="metadata">\s*Session ID: session-123<br \/>\s*Payment ID: pi_test_123\s*<\/footer>/,
+    );
   });
 
   it("includes the customer's details", () => {

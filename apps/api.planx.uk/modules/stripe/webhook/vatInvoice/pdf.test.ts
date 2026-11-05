@@ -17,6 +17,7 @@ const invoice: VatInvoiceData = {
   issuedAt: new Date("2026-10-07T12:00:00Z"),
   customer: { email: "payer@example.com", name: null, addressLines: [] },
   sessionId: "session-123",
+  paymentId: "pi_test_123",
   flowId: "flow-123",
   flowName: "Apply for a lawful development certificate",
   teamSlug: "southwark",

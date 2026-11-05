@@ -135,6 +135,7 @@ export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
       .amount { text-align: right; white-space: nowrap; }
       tfoot td { font-weight: bold; border-bottom: none; }
       .vat-summary { width: 50%; margin-left: auto; }
+      .metadata { margin-top: 12mm; font-size: 8pt; color: ${LABEL_COLOUR}; }
       .test-banner {
         margin-bottom: 6mm;
         padding: 3mm 4mm;
@@ -180,10 +181,6 @@ export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
           <dt class="label">Service</dt>
           <dd>${escape(invoice.flowName)}</dd>
         </div>
-        <div>
-          <dt class="label">Reference</dt>
-          <dd>${escape(invoice.sessionId)}</dd>
-        </div>
       </dl>
     </section>
 
@@ -226,6 +223,12 @@ export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
         </tbody>
       </table>
     </section>
+
+    <!-- For PlanX and council staff to trace the payment -->
+    <footer class="metadata">
+      Session ID: ${escape(invoice.sessionId)}<br />
+      Payment ID: ${escape(invoice.paymentId)}
+    </footer>
   </body>
 </html>`;
 };
