@@ -226,6 +226,7 @@ export async function createInvoices(
     const invoice = buildVatInvoiceData({
       kind,
       invoiceNumber: reserved.invoiceNumber,
+      paymentIntent,
       recorded,
       issuedAt,
       ...parties[kind],

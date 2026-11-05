@@ -203,6 +203,7 @@ describe("buildVatInvoiceData", () => {
     const invoice = buildVatInvoiceData({
       kind: "payer_invoice",
       invoiceNumber: "PX-2026-INV-BNE-00001",
+      paymentIntent: paymentIntent as unknown as Stripe.PaymentIntent,
       recorded,
       issuedAt,
       customer,
@@ -217,6 +218,7 @@ describe("buildVatInvoiceData", () => {
       issuedAt,
       customer,
       sessionId: recorded.sessionId,
+      paymentId: "pi_test_123",
       flowId: FLOW_ID,
       flowName: FLOW_NAME,
       teamSlug: TEAM_SLUG,

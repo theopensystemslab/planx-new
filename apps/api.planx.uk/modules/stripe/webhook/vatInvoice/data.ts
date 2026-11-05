@@ -118,6 +118,7 @@ export const getCouncilContactDetails = ({
 interface BuildVatInvoiceDataArgs {
   kind: InvoiceKind;
   invoiceNumber: string;
+  paymentIntent: Stripe.PaymentIntent;
   recorded: PaymentSession;
   issuedAt: Date;
   customer: VatInvoiceCustomer;
@@ -129,6 +130,7 @@ interface BuildVatInvoiceDataArgs {
 export const buildVatInvoiceData = ({
   kind,
   invoiceNumber,
+  paymentIntent,
   recorded,
   issuedAt,
   customer,
@@ -141,6 +143,7 @@ export const buildVatInvoiceData = ({
   issuedAt,
   customer,
   sessionId: recorded.sessionId,
+  paymentId: paymentIntent.id,
   flowId: recorded.flowId,
   flowName: recorded.flowName,
   teamSlug: recorded.teamSlug,

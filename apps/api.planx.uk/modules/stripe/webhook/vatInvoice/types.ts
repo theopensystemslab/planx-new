@@ -43,6 +43,7 @@ export interface VatInvoiceData {
   issuedAt: Date;
   customer: VatInvoiceCustomer;
   sessionId: string;
+  paymentId: string; // stripe payment intent ID
   flowId: string;
   flowName: string;
   teamSlug: string;
