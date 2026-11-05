@@ -1,7 +1,7 @@
 import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import { borderedFocusStyle } from "theme";
+import { getBorderedFocusStyle } from "theme";
 
 const Root = styled(Box, {
   shouldForwardProp: (prop) =>
@@ -18,7 +18,7 @@ const Root = styled(Box, {
     border: "2px solid",
     backgroundColor: theme.palette.background.default,
     "&:focus-within": {
-      ...borderedFocusStyle,
+      ...getBorderedFocusStyle(theme),
       background: theme.palette.background.default,
     },
     ...(disabled && {

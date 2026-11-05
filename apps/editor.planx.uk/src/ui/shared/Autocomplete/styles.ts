@@ -3,7 +3,7 @@ import { inputLabelClasses } from "@mui/material/InputLabel";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import { borderedFocusStyle } from "theme";
+import { getBorderedFocusStyle } from "theme";
 
 export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   maxHeight: "50px",
@@ -19,7 +19,7 @@ export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({
   "&:focus-within": {
-    ...borderedFocusStyle,
+    ...getBorderedFocusStyle(theme),
     [`& .${outlinedInputClasses.notchedOutline}`]: {
       border: "1px solid transparent !important",
     },

@@ -23,6 +23,8 @@ import { getContrastTextColor } from "styleUtils";
 export const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_TONAL_OFFSET = 0.1;
 export const DEFAULT_CONTRAST_THRESHOLD = 4.5;
+// Text colour for use on fixed light backgrounds (e.g. focus yellow, tags), regardless of palette mode
+export const DARK_TEXT_COLOR = "#0B0C0C";
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
@@ -48,7 +50,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     dark: "#E3E3E3",
   },
   text: {
-    primary: "#0B0C0C",
+    primary: DARK_TEXT_COLOR,
     secondary: "#505A5F",
     placeholder: "#68787D",
     disabled: "#68787D",
@@ -129,27 +131,27 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
 // https://design-system.service.gov.uk/get-started/focus-states/
 // https://github.com/alphagov/govuk-frontend/blob/main/src/govuk/helpers/_focused.scss
 export const focusStyle = {
-  color: DEFAULT_PALETTE.text?.primary,
+  color: DARK_TEXT_COLOR,
   backgroundColor: DEFAULT_PALETTE.action?.focus,
-  boxShadow: `0 -2px ${DEFAULT_PALETTE.action?.focus}, 0 4px ${DEFAULT_PALETTE.text?.primary}`,
+  boxShadow: `0 -2px ${DEFAULT_PALETTE.action?.focus}, 0 4px ${DARK_TEXT_COLOR}`,
   textDecoration: "none",
   outline: "3px solid transparent",
 };
 
 // Default focus style for input
-export const inputFocusStyle = {
-  outline: `3px solid ${DEFAULT_PALETTE.action?.focus}`,
+export const getInputFocusStyle = ({ palette }: Pick<MUITheme, "palette">) => ({
+  outline: `3px solid ${palette.action.focus}`,
   outlineOffset: -1,
   zIndex: 1,
-  boxShadow: `inset 0 0 0 2px ${DEFAULT_PALETTE.text?.primary}`,
-};
+  boxShadow: `inset 0 0 0 2px ${palette.border.input}`,
+});
 
 // Ensure that if the element already has a border, the border gets thicker
-export const borderedFocusStyle = {
-  ...inputFocusStyle,
+export const getBorderedFocusStyle = (theme: Pick<MUITheme, "palette">) => ({
+  ...getInputFocusStyle(theme),
   outlineOffset: 0,
   background: "transparent",
-};
+});
 
 // Subtle elevation shadow used for cards and menu items throughout the editor
 export const cardBoxShadow = "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)";
@@ -438,7 +440,7 @@ const getThemeOptions = ({
             "&:focus-visible": {
               ...focusStyle,
               // !important is required here as setting disableElevation = true removes boxShadow
-              boxShadow: `inset 0 -4px 0 ${DEFAULT_PALETTE.text?.primary} !important`,
+              boxShadow: `inset 0 -4px 0 ${DARK_TEXT_COLOR} !important`,
               // Hover should not overwrite focus
               "&:hover": focusStyle,
             },
@@ -529,7 +531,7 @@ const getThemeOptions = ({
               display: "flex",
               alignItems: "flex-start",
               "&:focus": {
-                ...inputFocusStyle,
+                ...getInputFocusStyle({ palette }),
                 boxShadow: "none",
               },
             },
@@ -568,7 +570,7 @@ const getThemeOptions = ({
             },
             [`& .${gridClasses.columnHeader}`]: {
               "&:focus": {
-                ...inputFocusStyle,
+                ...getInputFocusStyle({ palette }),
                 boxShadow: "none",
               },
               // Hide right-side border for final column header

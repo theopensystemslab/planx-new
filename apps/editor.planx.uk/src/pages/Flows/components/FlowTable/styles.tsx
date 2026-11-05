@@ -4,7 +4,7 @@ import Table from "@mui/material/Table";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { inputFocusStyle } from "theme";
+import { getInputFocusStyle } from "theme";
 
 import { CustomLink } from "../../../../ui/shared/CustomLink/CustomLink";
 
@@ -104,7 +104,7 @@ export const StyledTableRow = styled(TableRow, {
   };
 });
 
-export const FlowRowLink = styled(CustomLink)(() => ({
+export const FlowRowLink = styled(CustomLink)(({ theme }) => ({
   position: "absolute",
   left: 0,
   top: 0,
@@ -112,7 +112,7 @@ export const FlowRowLink = styled(CustomLink)(() => ({
   height: "100%",
   zIndex: 1,
   "&:focus": {
-    ...inputFocusStyle,
+    ...getInputFocusStyle(theme),
   },
   "&:focus-visible": {
     backgroundColor: "transparent",

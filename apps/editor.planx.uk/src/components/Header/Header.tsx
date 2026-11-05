@@ -16,8 +16,8 @@ import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { useRef, useState } from "react";
 import {
-  borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
+  getBorderedFocusStyle,
   LINE_HEIGHT_BASE,
 } from "theme";
 import { ApplicationPath } from "types";
@@ -121,12 +121,12 @@ const TeamBrand: React.FC = () => {
         to={teamSettings.homepage}
         target="_blank"
         rel="noopener noreferrer"
-        sx={{
+        sx={(theme) => ({
           display: "flex",
           alignItems: "center",
           textDecoration: "none",
-          "&:focus-visible": borderedFocusStyle,
-        }}
+          "&:focus-visible": getBorderedFocusStyle(theme),
+        })}
       >
         {logo}
       </CustomLink>

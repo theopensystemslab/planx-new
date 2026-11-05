@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import { cardBoxShadow, inputFocusStyle } from "theme";
+import { cardBoxShadow, getInputFocusStyle } from "theme";
 
 import { CustomLink } from "../../../../ui/shared/CustomLink/CustomLink";
 
@@ -52,7 +52,7 @@ export const CardContent = styled(Box)(({ theme }) => ({
   width: "100%",
 }));
 
-export const FlowCardLink = styled(CustomLink)(() => ({
+export const FlowCardLink = styled(CustomLink)(({ theme }) => ({
   position: "absolute",
   left: 0,
   top: 0,
@@ -60,7 +60,7 @@ export const FlowCardLink = styled(CustomLink)(() => ({
   height: "100%",
   zIndex: 1,
   "&:focus": {
-    ...inputFocusStyle,
+    ...getInputFocusStyle(theme),
   },
   "&:focus-visible": {
     backgroundColor: "transparent",

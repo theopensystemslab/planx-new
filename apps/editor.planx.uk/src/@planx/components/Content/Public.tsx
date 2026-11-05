@@ -14,7 +14,7 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useId, useState } from "react";
 import { getContrastTextColor } from "styleUtils";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { DARK_TEXT_COLOR, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
@@ -32,7 +32,7 @@ const Content = styled(Box, {
     color:
       mostReadable(color || theme.palette.common.white, [
         theme.palette.common.white,
-        theme.palette.text.primary,
+        DARK_TEXT_COLOR,
       ])?.toHexString() || theme.palette.text.primary,
     // Ensure the contrast text colour is applied for links
     "&& a": {
