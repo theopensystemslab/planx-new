@@ -46,7 +46,6 @@ export const uploadPrivateFile = async (
   file: Express.Multer.File,
   filename: string,
   filekey?: string,
-  bucket?: BucketTypes,
   /**
    * Mark the file as exempt from Scanii checks, so it can be served without ever having
    * been scanned. Only ever pass this for files the API generates itself from trusted
@@ -56,6 +55,7 @@ export const uploadPrivateFile = async (
   {
     dangerouslySkipMalwareScan = false,
   }: { dangerouslySkipMalwareScan?: boolean } = {},
+  bucket?: BucketTypes,
 ) => {
   const s3 = s3Factory();
 
