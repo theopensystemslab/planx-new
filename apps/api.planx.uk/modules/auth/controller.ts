@@ -44,9 +44,8 @@ export const handleSuccess = (req: Request, res: Response) => {
 function setJWTCookie(returnTo: string, res: Response, req: Request) {
   const defaultCookieOptions: CookieOptions = {
     domain: `.${new URL(returnTo).host}`,
-    maxAge: new Date(
-      new Date().setFullYear(new Date().getFullYear() + 1),
-    ).getTime(),
+    // set jwt/auth cookies to expire after 24hrs, in line with JWT expiration (see `./service/jwt.ts`)
+    maxAge: 24 * 60 * 60 * 1000,
     // pizzas rely on staging API for auth (due to static redirect URIs), so we have to allow cross-site
     sameSite: "none",
     secure: true,
