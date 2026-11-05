@@ -10,9 +10,9 @@ import { getFeeLines } from "../../feeLines.js";
 import type { PaymentSession } from "../ownership/service.js";
 import {
   buildVatInvoiceData,
-  getCouncilCustomer,
-  getInvoiceCustomer,
+  getCouncilContactDetails,
   getInvoiceLineItems,
+  getPayerContactDetails,
   isInvoiceRequired,
   sumLineItems,
 } from "./data.js";
@@ -192,7 +192,7 @@ export async function createInvoices(
     payer_invoice: {
       seller: council.seller,
       branding: council.branding,
-      customer: getInvoiceCustomer(
+      customer: getPayerContactDetails(
         customerEmail,
         checkoutSession.customer_details,
       ),
@@ -200,7 +200,7 @@ export async function createInvoices(
     council_invoice: {
       seller: PLANX_SELLER,
       branding: null,
-      customer: getCouncilCustomer(council.seller),
+      customer: getCouncilContactDetails(council.seller),
     },
   };
 

@@ -121,7 +121,7 @@ interface BuildVatInvoiceDataArgs {
   paymentIntent: Stripe.PaymentIntent;
   recorded: PaymentSession;
   issuedAt: Date;
-  customer: VatInvoiceCustomer;
+  customer: VatInvoiceContactDetails;
   seller: VatInvoiceSeller;
   branding: VatInvoiceBranding | null;
   lineItems: VatInvoiceLineItem[];

@@ -41,7 +41,7 @@ export interface VatInvoiceData {
   kind: InvoiceKind;
   invoiceNumber: string;
   issuedAt: Date;
-  customer: VatInvoiceCustomer;
+  customer: VatInvoiceContactDetails;
   sessionId: string;
   paymentId: string; // stripe payment intent ID
   flowId: string;
