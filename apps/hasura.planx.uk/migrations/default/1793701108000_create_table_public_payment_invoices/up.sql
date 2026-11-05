@@ -15,14 +15,14 @@ CREATE TABLE "public"."payment_invoices" (
   PRIMARY KEY ("id"),
   UNIQUE ("stripe_payment_intent_id", "kind"),
   UNIQUE ("invoice_number"),
-  CHECK ("kind" IN ('customer_invoice', 'council_invoice')),
+  CHECK ("kind" IN ('payer_invoice', 'council_invoice')),
   FOREIGN KEY ("team_id") REFERENCES "public"."teams" ("id") ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE INDEX "payment_invoices_session_id_idx" ON "public"."payment_invoices" ("session_id");
 
 COMMENT ON TABLE "public"."payment_invoices" IS E'Invoices generated for successful Stripe payments, stored as PDFs in S3. Kept separately from session data, which has a shorter retention period';
-COMMENT ON COLUMN "public"."payment_invoices"."kind" IS E'customer_invoice: VAT receipt from the council to the payer, covering every line of the payment, attached to the payment confirmation email. council_invoice: VAT invoice from OSL to the council for the service charge, downloadable in the editor, never emailed';
+COMMENT ON COLUMN "public"."payment_invoices"."kind" IS E'payer_invoice: VAT receipt from the council to the payer, covering every line of the payment, attached to the payment confirmation email. council_invoice: VAT invoice from OSL to the council for the service charge, downloadable in the editor, never emailed';
 COMMENT ON COLUMN "public"."payment_invoices"."session_id" IS E'No foreign key - invoices must outlive session sanitisation';
 COMMENT ON COLUMN "public"."payment_invoices"."flow_id" IS E'No foreign key - invoices must outlive the flow';
 COMMENT ON COLUMN "public"."payment_invoices"."invoice_number" IS E'Set by the set_payment_invoice_number trigger, e.g. PX-2026-INV-BNE-00001';
@@ -42,7 +42,7 @@ COMMENT ON TABLE "public"."invoice_number_sequences" IS E'The last invoice numbe
 
 -- Invoice numbers must be sequential with no gaps, so they are allocated here rather than by the API
 --   <PX|OSL>-<year>-INV-<team reference code>-<5+ digit number>
---   e.g. PX-2026-INV-BNE-00001 (customer_invoice), OSL-2026-INV-BNE-00001 (council_invoice)
+--   e.g. PX-2026-INV-BNE-00001 (payer_invoice), OSL-2026-INV-BNE-00001 (council_invoice)
 -- Each kind has its own sequence, so the numbers for a payment's two invoices won't necessarily match
 CREATE FUNCTION "public"."set_payment_invoice_number"() RETURNS TRIGGER
 LANGUAGE plpgsql AS $$
@@ -59,7 +59,7 @@ BEGIN
   LEFT JOIN "public"."team_settings" ts ON ts.team_id = t.id
   WHERE t.id = NEW.team_id;
 
-  _prefix := CASE NEW.kind WHEN 'customer_invoice' THEN 'PX' ELSE 'OSL' END
+  _prefix := CASE NEW.kind WHEN 'payer_invoice' THEN 'PX' ELSE 'OSL' END
     || '-' || EXTRACT(YEAR FROM NEW.issued_at AT TIME ZONE 'Europe/London')::TEXT
     || '-INV-' || _reference;
 

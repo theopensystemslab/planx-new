@@ -10,10 +10,10 @@ import {
 
 /**
  * Each successful payment has (at most) one invoice of each kind
- *  - customer_invoice: issued by the council to the payer, covering every line of the payment
+ *  - payer_invoice: issued by the council to the payer, covering every line of the payment
  *  - council_invoice: issued by OSL to the council, covering the service charge
  */
-export type InvoiceKind = "customer_invoice" | "council_invoice";
+export type InvoiceKind = "payer_invoice" | "council_invoice";
 
 /**
  * All monetary values are in pence
