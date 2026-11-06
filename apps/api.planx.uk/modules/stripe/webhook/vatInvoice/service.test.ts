@@ -160,6 +160,7 @@ describe("createInvoices", () => {
         id: "payer_invoice-id",
         invoiceNumber: "PX-2026-INV-SWK-00003",
       }),
+      TEAM_SLUG,
       PDF,
     );
     expect(storedKinds()).toEqual(["payer_invoice", "council_invoice"]);

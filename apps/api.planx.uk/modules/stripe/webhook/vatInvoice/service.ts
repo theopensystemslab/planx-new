@@ -235,6 +235,6 @@ export async function createInvoices(
 
     const pdf = await generateVatInvoicePdf(invoice);
 
-    await storeInvoicePdf(reserved, pdf);
+    await storeInvoicePdf(reserved, recorded.teamSlug, pdf);
   }
 }
