@@ -2,72 +2,77 @@ import FormatBold from "@mui/icons-material/FormatBold";
 import FormatItalic from "@mui/icons-material/FormatItalic";
 import FormatListBulleted from "@mui/icons-material/FormatListBulleted";
 import FormatListNumbered from "@mui/icons-material/FormatListNumbered";
-import IconButton from "@mui/material/IconButton";
+import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import { type Editor } from "@tiptap/core";
-import type { ReactElement } from "react";
+import type { ReactNode } from "react";
 
-const RichTextInputButton = ({
-  editor,
-  type,
-  onClick,
-  icon,
+/**
+ * Labelled icon button used within the rich text toolbar
+ * Shows a tooltip on hover and exposes the same label to assistive technology
+ */
+export const ToolbarButton = ({
+  label,
+  isActive,
+  children,
+  ...props
 }: {
-  editor: Editor;
-  type: string;
-  onClick: () => void;
-  icon: ReactElement;
-}) => {
-  return (
-    <IconButton
-      size="small"
-      color={editor.isActive(type) ? "primary" : undefined}
-      onClick={onClick}
-    >
-      {icon}
-    </IconButton>
-  );
-};
+  label: string;
+  isActive?: boolean;
+  children: ReactNode;
+} & Omit<IconButtonProps, "children" | "color">) => (
+  <Tooltip title={label} placement="top" describeChild>
+    {/* span keeps tooltip working when the button is disabled */}
+    <span>
+      <IconButton
+        size="small"
+        aria-label={label}
+        aria-pressed={isActive}
+        color={isActive ? "primary" : undefined}
+        {...props}
+      >
+        {children}
+      </IconButton>
+    </span>
+  </Tooltip>
+);
 
 export const BoldButton = ({ editor }: { editor: Editor }) => (
-  <RichTextInputButton
-    editor={editor}
-    type="bold"
-    icon={<FormatBold />}
-    onClick={() => {
-      editor.chain().focus().toggleBold().run();
-    }}
-  />
+  <ToolbarButton
+    label="Bold"
+    isActive={editor.isActive("bold")}
+    onClick={() => editor.chain().focus().toggleBold().run()}
+  >
+    <FormatBold />
+  </ToolbarButton>
 );
 
 export const ItalicButton = ({ editor }: { editor: Editor }) => (
-  <RichTextInputButton
-    editor={editor}
-    type="italic"
-    icon={<FormatItalic />}
-    onClick={() => {
-      editor.chain().focus().toggleItalic().run();
-    }}
-  />
+  <ToolbarButton
+    label="Italic"
+    isActive={editor.isActive("italic")}
+    onClick={() => editor.chain().focus().toggleItalic().run()}
+  >
+    <FormatItalic />
+  </ToolbarButton>
 );
 
 export const BulletListButton = ({ editor }: { editor: Editor }) => (
-  <RichTextInputButton
-    editor={editor}
-    type="bulletList"
-    icon={<FormatListBulleted />}
-    onClick={() => {
-      editor.chain().focus().toggleBulletList().run();
-    }}
-  />
+  <ToolbarButton
+    label="Bulleted list"
+    isActive={editor.isActive("bulletList")}
+    onClick={() => editor.chain().focus().toggleBulletList().run()}
+  >
+    <FormatListBulleted />
+  </ToolbarButton>
 );
 
 export const OrderedListButton = ({ editor }: { editor: Editor }) => (
-  <RichTextInputButton
-    editor={editor}
-    type="orderedList"
-    icon={<FormatListNumbered />}
-    onClick={() => {
-      editor.chain().focus().toggleOrderedList().run();
-    }}
-  />
+  <ToolbarButton
+    label="Numbered list"
+    isActive={editor.isActive("orderedList")}
+    onClick={() => editor.chain().focus().toggleOrderedList().run()}
+  >
+    <FormatListNumbered />
+  </ToolbarButton>
 );

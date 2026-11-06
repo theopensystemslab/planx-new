@@ -83,3 +83,41 @@ export const Basic = () => {
     </Grid>
   );
 };
+
+/**
+ * Formatting toolbar only appears on the focused field, keeping forms with many rich text inputs uncluttered
+ */
+export const MultipleFields = () => {
+  const [values, setValues] = useState<string[]>([
+    "<p>First field</p>",
+    "",
+    "<p>Third field with a <a href='https://opensystemslab.org'>link</a></p>",
+    "",
+  ]);
+
+  return (
+    <Stack spacing={2} sx={{ maxWidth: 600 }}>
+      {values.map((value, i) => (
+        <RichTextInput
+          key={i}
+          name={`field-${i}`}
+          placeholder={`Field ${i + 1}`}
+          value={value}
+          errorMessage={undefined}
+          variant={i === 1 ? "paragraphContent" : "default"}
+          onChange={(ev) =>
+            setValues((prev) =>
+              prev.map((v, j) => (j === i ? ev.target.value : v)),
+            )
+          }
+        />
+      ))}
+      <RichTextInput
+        name="disabled"
+        value="<p>Disabled field</p>"
+        errorMessage={undefined}
+        disabled
+      />
+    </Stack>
+  );
+};
