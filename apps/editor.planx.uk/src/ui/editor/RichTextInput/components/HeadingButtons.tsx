@@ -1,24 +1,25 @@
-import IconButton from "@mui/material/IconButton";
 import { type Editor } from "@tiptap/core";
+
+import { ToolbarButton } from "./RichTextInputButtons";
 
 const HeadingButton = ({
   editor,
   level,
   label,
+  tooltip,
 }: {
   editor: Editor;
   level: 1 | 2 | 3 | 4 | 5 | 6;
   label: React.ReactNode;
+  tooltip: string;
 }) => (
-  <IconButton
-    size="small"
-    color={editor.isActive("heading", { level }) ? "primary" : undefined}
-    onClick={() => {
-      editor.chain().focus().toggleHeading({ level }).run();
-    }}
+  <ToolbarButton
+    label={tooltip}
+    isActive={editor.isActive("heading", { level })}
+    onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
   >
     {label}
-  </IconButton>
+  </ToolbarButton>
 );
 
 export const H1Button = ({
@@ -28,7 +29,9 @@ export const H1Button = ({
   editor: Editor;
   label: React.ReactNode;
 }) => {
-  return <HeadingButton editor={editor} level={1} label={label} />;
+  return (
+    <HeadingButton editor={editor} level={1} label={label} tooltip="Heading" />
+  );
 };
 
 export const H2Button = ({
@@ -38,5 +41,12 @@ export const H2Button = ({
   editor: Editor;
   label: React.ReactNode;
 }) => {
-  return <HeadingButton editor={editor} level={2} label={label} />;
+  return (
+    <HeadingButton
+      editor={editor}
+      level={2}
+      label={label}
+      tooltip="Subheading"
+    />
+  );
 };

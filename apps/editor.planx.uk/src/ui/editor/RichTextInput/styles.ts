@@ -2,15 +2,51 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { BubbleMenu } from "@tiptap/react/menus";
 import { getInputFocusStyle } from "theme";
 
+/**
+ * Maximum height of the editable area before it scrolls internally
+ * Keeps the formatting toolbar in view when editing long content, even within tall modals
+ */
+export const RICH_TEXT_MAX_HEIGHT = "50vh";
+
 export const RichContentContainer = styled(Box)(({ theme }) => ({
+  position: "relative",
+  // Toolbar and "rich text" marker are swapped via :focus-within, rather than React state
+  // This guarantees only the focused field shows a toolbar, and the toolbar stays visible
+  // whilst interacting with its own controls (e.g. the link URL input)
+  "&:focus-within .rte-toolbar": {
+    display: "flex",
+  },
+  "&:focus-within .rte-marker": {
+    display: "none",
+  },
+  // Focus ring wraps both the toolbar and the editable area, so they read as one control
+  "&:focus-within::after": {
+    content: '""',
+    position: "absolute",
+    inset: 0,
+    pointerEvents: "none",
+    ...getInputFocusStyle(theme),
+    zIndex: 3,
+  },
+  "& .rte-field": {
+    position: "relative",
+  },
+  // Scroll container for the editable area
+  "& .rte-content": {
+    maxHeight: RICH_TEXT_MAX_HEIGHT,
+    overflowY: "auto",
+    backgroundColor: theme.palette.background.default,
+    border: `1px solid ${theme.palette.border.main}`,
+  },
   "& .ProseMirror": {
     padding: "12px 15px",
+    // Leave space for the "rich text" marker
+    paddingRight: "45px",
     backgroundColor: theme.palette.background.default,
-    minHeight: "50px",
-    border: `1px solid ${theme.palette.border.main}`,
+    // 50px total height, including the .rte-content border
+    minHeight: "48px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -47,10 +83,8 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
       height: 0,
       pointerEvents: "none",
     },
-    // Focus styles
-    "&.ProseMirror-focused": {
-      ...getInputFocusStyle(theme),
-      zIndex: 0,
+    "&:focus-visible": {
+      outline: "none",
     },
     // Styles for injected passport/mention
     "& .passport": {
@@ -75,13 +109,51 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const StyledBubbleMenu = styled(BubbleMenu)(({ theme }) => ({
-  background: theme.palette.background.default,
-  boxShadow: "0 2px 6px 0 rgba(0, 0, 0, 0.2)",
+export const Toolbar = styled(Box)(({ theme }) => ({
+  display: "none",
+  alignItems: "center",
+  flexWrap: "wrap",
+  gap: theme.spacing(0.25),
+  padding: theme.spacing(0.25, 0.5),
+  // Stay in view when scrolling through long content within a modal
+  position: "sticky",
+  top: 0,
+  zIndex: 2,
+  backgroundColor: theme.palette.background.default,
+  border: `1px solid ${theme.palette.border.main}`,
+  borderBottom: 0,
+}));
+
+export const ToolbarDivider = styled("span")(({ theme }) => ({
+  width: "1px",
+  height: "20px",
+  margin: theme.spacing(0, 0.5),
+  backgroundColor: theme.palette.border.light,
+}));
+
+/** Indicates that a field supports rich text, shown whilst the field is not focused */
+export const RichTextMarker = styled("span")(({ theme }) => ({
+  position: "absolute",
+  top: "13px",
+  right: "13px",
+  zIndex: 1,
+  height: "1lh",
   display: "flex",
   alignItems: "center",
-  padding: theme.spacing(0.25),
-  zIndex: theme.zIndex.tooltip,
+  gap: "1px",
+  color: theme.palette.text.placeholder,
+  cursor: "text",
+  userSelect: "none",
+  letterSpacing: "-0.05em",
+  "& > span": {
+    lineHeight: 1,
+  },
+  "& .rte-marker-bold": {
+    fontWeight: "bold",
+  },
+  "& .rte-marker-italic": {
+    fontStyle: "italic",
+  },
 }));
 
 export const MentionItems = styled(Box)(({ theme }) => ({
