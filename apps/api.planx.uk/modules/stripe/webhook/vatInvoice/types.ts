@@ -8,7 +8,10 @@ export type VatInvoiceIssuer = FeePayee;
 /**
  * All monetary values are in pence
  */
-export type VatInvoiceLineItem = Omit<FeeLine, "payee">;
+export type VatInvoiceLineItem = Omit<FeeLine, "payee"> & {
+  /** Whole percentage, e.g. 20 */
+  vatRate: number;
+};
 
 export interface VatInvoiceSeller {
   name: string;
@@ -21,6 +24,21 @@ export interface VatInvoiceSeller {
 export interface VatInvoiceBranding {
   logo: string | null;
   primaryColour: string;
+}
+
+/**
+ * Who the invoice is billed to - the payer (payer_invoice), or the council (council_invoice)
+ */
+export interface VatInvoiceContactDetails {
+  email: string | null;
+  name: string | null;
+  addressLines: string[];
+}
+
+export interface VatInvoiceVatSummary {
+  rate: number;
+  net: number;
+  vat: number;
 }
 
 export interface VatInvoiceData {
@@ -37,5 +55,5 @@ export interface VatInvoiceData {
   seller: VatInvoiceSeller;
   branding: VatInvoiceBranding | null;
   lineItems: VatInvoiceLineItem[];
-  totals: Omit<VatInvoiceLineItem, "description">;
+  totals: Omit<VatInvoiceLineItem, "description" | "vatRate">;
 }
