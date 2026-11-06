@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
-import { graphql, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import MakePayment from "./MakePayment";
@@ -84,5 +84,32 @@ export const Paid = {
     ...Unpaid.args,
     paidAt: "2025-12-12",
     govPayPaymentId: "qe817o3kds9474rfkfldfHSK874JB",
+  },
+} satisfies Story;
+
+export const StripePaymentProcessing = {
+  beforeEach({ msw }) {
+    msw.use(
+      http.post("*/stripe/payment-request/:paymentRequestId/fulfil", () =>
+        HttpResponse.json({
+          paymentStatus: "pending",
+          paymentIntentId: "pi_3QxYz2AbCdEfGh1234567890",
+        }),
+      ),
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The nominee has returned from Stripe Checkout after setting up a Bacs Direct Debit. The bank takes the payment later, so the page does not say the payment has been received.",
+      },
+    },
+  },
+  args: {
+    ...Unpaid.args,
+    paidAt: "2025-12-12",
+    stripePaymentId: "pi_3QxYz2AbCdEfGh1234567890",
+    stripeSessionId: "cs_test_123",
   },
 } satisfies Story;
