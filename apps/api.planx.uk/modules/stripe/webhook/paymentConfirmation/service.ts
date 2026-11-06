@@ -1,3 +1,4 @@
+import type { SiteAddress } from "@opensystemslab/planx-core/types";
 import { format } from "date-fns";
 import { gql } from "graphql-request";
 import type { Attachment } from "resend";
@@ -8,6 +9,7 @@ import { sendEmail } from "../../../../lib/resend/index.js";
 import { reportError } from "../../../pay/helpers.js";
 import { formatPence } from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
+import { getPaymentMethodType } from "../paymentStatus/service.js";
 import { getCheckoutSession, getSucceededAt } from "../vatInvoice/service.js";
 import type { StoredInvoice } from "../vatInvoice/storage.js";
 import { getInvoicePdf, getStoredInvoices } from "../vatInvoice/storage.js";
@@ -61,6 +63,30 @@ export async function getCouncilEmailDetails(
     primaryColour: team.theme?.primaryColour || null,
   };
 }
+
+const PAYMENT_METHOD_LABELS: Partial<
+  Record<Stripe.PaymentMethod.Type, string>
+> = {
+  card: "Card",
+  pay_by_bank: "Pay by bank",
+  bacs_debit: "Bacs Direct Debit",
+};
+
+export const formatPaymentMethod = (
+  type: Stripe.PaymentMethod.Type | null,
+): string => {
+  if (!type) return "Unknown";
+  return PAYMENT_METHOD_LABELS[type] ?? type.replaceAll("_", " ");
+};
+
+export const formatSiteAddress = (
+  passportData: PaymentSession["passportData"],
+): string => {
+  const address = passportData?._address as SiteAddress | undefined;
+  return (
+    address?.single_line_address || address?.title || "Address not submitted"
+  );
+};
 
 const toAttachment = async ({
   invoiceNumber,
@@ -142,10 +168,16 @@ export async function sendPaymentConfirmationEmails(
     });
   }
 
+  const paymentMethod = await getPaymentMethodType(paymentIntent);
+
   await sendEmail(
     "payment-confirmed-council",
     council.invoiceEmail,
-    variables,
+    {
+      ...variables,
+      address: formatSiteAddress(recorded.passportData),
+      paymentMethod: formatPaymentMethod(paymentMethod),
+    },
     {
       idempotencyKey: `payment-confirmed-council-${paymentIntent.id}`,
       attachments: invoices.length
