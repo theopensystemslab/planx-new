@@ -56,14 +56,14 @@ select_permissions:
         - payment_method
       filter: {}
 event_triggers:
-  - name: send_vat_invoices
+  - name: payment_status_events
     definition:
       enable_manual: false
       insert:
         columns: '*'
     retry_conf:
-      interval_sec: 60
-      num_retries: 3
+      interval_sec: 300
+      num_retries: 10
       timeout_sec: 120
     webhook_from_env: HASURA_PLANX_API_URL
     headers:
@@ -77,10 +77,14 @@ event_triggers:
             "payload": {
               "stripePaymentId": {{$body.event.data.new.stripe_payment_id}},
               "stripeStatus": {{$body.event.data.new.stripe_status}}
+            },
+            "deliveryInfo": {
+              "currentRetry": {{$body.delivery_info.current_retry}},
+              "maxRetries": {{$body.delivery_info.max_retries}}
             }
           }
       method: POST
       query_params: {}
       template_engine: Kriti
-      url: '{{$base_url}}/webhooks/hasura/send-vat-invoices'
+      url: '{{$base_url}}/webhooks/hasura/payment-status-events'
       version: 2

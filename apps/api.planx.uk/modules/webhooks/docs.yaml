@@ -191,7 +191,7 @@ components:
               type: string
             data:
               type: object
-    SendVatInvoicesEvent:
+    PaymentStatusEvent:
       type: object
       properties:
         payload:
@@ -204,6 +204,14 @@ components:
             stripeStatus:
               type: string
               nullable: true
+        deliveryInfo:
+          required: true
+          type: object
+          properties:
+            currentRetry:
+              type: number
+            maxRetries:
+              type: number
   requests:
     ValidateInputRequest:
       description: |
@@ -541,19 +549,19 @@ paths:
           $ref: "#/components/responses/ValidationError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
-  /webhooks/hasura/send-vat-invoices:
+  /webhooks/hasura/payment-status-events:
     post:
       tags: ["webhooks"]
       security:
         - hasuraAuth: []
-      summary: Create VAT invoices
-      description: Triggered by a `payment_status` insert - generates and stores the payer and council VAT invoices when a Stripe payment has succeeded, and skips all other rows
+      summary: Handle a payment status event
+      description: Triggered by a `payment_status` insert. When a Stripe payment has succeeded, creates and stores its payer and council VAT invoices. Skips all other rows. On Hasura's final retry, a failure alerts PlanX and returns 200
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SendVatInvoicesEvent"
+              $ref: "#/components/schemas/PaymentStatusEvent"
       responses:
         "200":
           $ref: "#/components/responses/SuccessMessage"

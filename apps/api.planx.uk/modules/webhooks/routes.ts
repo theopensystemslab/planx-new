@@ -14,11 +14,11 @@ import {
   deleteSessionController,
   failedSubmissionsController,
   isCleanJSONBController,
+  paymentStatusEventsController,
   reconcilePaymentsController,
   sanitiseApplicationDataController,
   sendSlackMessageController,
   sendSlackNotificationController,
-  sendVatInvoicesController,
   updateTemplatedFlowEditsController,
 } from "./controller.js";
 import { deleteSessionSchema } from "./service/deleteSession/schema.js";
@@ -27,9 +27,9 @@ import {
   createSessionEmailEventSchema,
 } from "./service/lowcalSessionEvents/schema.js";
 import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema.js";
+import { paymentStatusEventSchema } from "./service/paymentStatusEvents/schema.js";
 import { sendSlackNotificationSchema } from "./service/sendNotification/schema.js";
 import { sendSlackMessageSchema } from "./service/sendSlackMessage/schema.js";
-import { sendVatInvoicesEventSchema } from "./service/sendVatInvoices/schema.js";
 import { updateTemplatedFlowEditsEventSchema } from "./service/updateTemplatedFlowEdits/schema.js";
 import { isCleanJSONBSchema } from "./service/validateInput/schema.js";
 
@@ -99,9 +99,9 @@ router.post(
 router.post("/webhooks/hasura/failed-submissions", failedSubmissionsController);
 router.post("/webhooks/hasura/reconcile-payments", reconcilePaymentsController);
 router.post(
-  "/webhooks/hasura/send-vat-invoices",
-  validate(sendVatInvoicesEventSchema),
-  sendVatInvoicesController,
+  "/webhooks/hasura/payment-status-events",
+  validate(paymentStatusEventSchema),
+  paymentStatusEventsController,
 );
 
 // TODO: Convert to the new API module structure
