@@ -14,6 +14,7 @@ export const NOTION_SITE_URL = "https://opensystemslab.notion.site";
  * Pages must be published to the web via Notion
  */
 export const COMPONENT_GUIDANCE_PAGES: Partial<Record<TYPES, string>> = {
+  [TYPES.Note]: "40c35d469ad180f5958fd3a5754d1b93",
   [TYPES.Section]: "3ac35d469ad180ce9382d6bd7acd6774",
   [TYPES.InternalPortal]: "3ac35d469ad1804e9a15e88b51405a45",
   [TYPES.ExternalPortal]: "3ac35d469ad18068ac6fe81b676a6a51",
