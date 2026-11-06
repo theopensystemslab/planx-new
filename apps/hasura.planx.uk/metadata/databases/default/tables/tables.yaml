@@ -42,6 +42,7 @@
 - "!include public_notification_type_enum.yaml"
 - "!include public_notifications.yaml"
 - "!include public_operations.yaml"
+- "!include public_payment_invoices.yaml"
 - "!include public_payment_requests.yaml"
 - "!include public_payment_status.yaml"
 - "!include public_payment_status_enum.yaml"

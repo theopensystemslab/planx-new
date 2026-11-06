@@ -51,6 +51,7 @@ export const getScanStatus = async (
   s3: S3,
   key: string,
   file: ScannableObject,
+  bucketName = process.env.AWS_S3_BUCKET,
 ): Promise<ScanStatus> => {
   // API-generated files (e.g. the ODP payload JSON) contain no user inputs and are handed to
   // councils immediately after upload - too soon for a scan to have landed - so we exempt them
@@ -74,7 +75,7 @@ export const getScanStatus = async (
 
   // at this point we have to make a further request to get the actual tags
   const { TagSet } = await s3.getObjectTagging({
-    Bucket: process.env.AWS_S3_BUCKET,
+    Bucket: bucketName,
     Key: key,
   });
   const tags = Object.fromEntries(
