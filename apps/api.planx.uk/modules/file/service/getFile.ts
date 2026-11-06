@@ -3,6 +3,7 @@ import { NoSuchKey, NotFound, S3ServiceException } from "@aws-sdk/client-s3";
 import { Readable } from "stream";
 
 import { getScanStatus } from "./scanStatus.js";
+import type { BucketTypes } from "./uploadFile.js";
 import { s3Factory } from "./utils.js";
 
 /**
@@ -64,23 +65,30 @@ export type GetFileResult =
   | { outcome: "error"; cause: unknown };
 
 /**
- * Fetch a file from the user-data bucket, refusing to hand back bytes unless it's been scanned.
- * This is the only place object bytes are read from that bucket - the submission zip builder
+ * Fetch a file from S3 (the user-data bucket by default), refusing to hand back bytes unless it's been scanned.
+ * This is the only place object bytes are read from S3 - the submission zip builder
  * resolves S3 keys straight from passport URLs and never passes through Express.
  */
-export const getFileFromS3 = async (fileId: string): Promise<GetFileResult> => {
+export const getFileFromS3 = async (
+  fileId: string,
+  bucket: BucketTypes = "user-data",
+): Promise<GetFileResult> => {
   const s3 = s3Factory();
+  const bucketName =
+    bucket === "payment-data"
+      ? process.env.AWS_S3_BUCKET_PAY
+      : process.env.AWS_S3_BUCKET;
 
   try {
     const file = await s3.getObject({
       Key: fileId,
-      Bucket: process.env.AWS_S3_BUCKET,
+      Bucket: bucketName,
     });
 
     if (!file.Body) throw Error(`Missing body from S3 file ${fileId}`);
 
     // decide before touching the stream, so unscanned bytes never reach memory
-    const scan = await getScanStatus(s3, fileId, file);
+    const scan = await getScanStatus(s3, fileId, file, bucketName);
 
     if (scan.status !== "clean") {
       discardBody(file);

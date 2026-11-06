@@ -42,9 +42,14 @@ export type ReserveInvoiceArgs = Omit<
 };
 
 /**
- * Invoices are kept under their own prefix, so they can have a separate retention period from other files
+ * Invoices live in the dedicated payment-data bucket, so retention and access are managed there rather than by prefix
+ *
+ * Keys are scoped by team first (see ADR 0012), so access can later be limited per-team, e.g. for integrations
  */
-const INVOICE_KEY_PREFIX = "invoices";
+const INVOICE_BUCKET = "payment-data";
+
+const getInvoiceFolder = (teamSlug: string, stripePaymentIntentId: string) =>
+  `${teamSlug}/${stripePaymentIntentId}`;
 
 const STORED_INVOICE_FIELDS = `
   id
@@ -148,16 +153,19 @@ export async function reserveInvoice({
 }
 
 /**
- * Upload an invoice PDF to S3 and attach it to the invoice's record
+ * Upload an invoice PDF to the payment-data bucket and attach it to the invoice's record
  *
- * Safe to retry - the S3 key is derived from the PaymentIntent and kind, so a retry overwrites the file rather
+ * Stored at `{teamSlug}/{stripePaymentIntentId}/{kind}.pdf`
+ *
+ * Safe to retry - the S3 key is derived from the team, PaymentIntent and kind, so a retry overwrites the file rather
  * than leaving an orphan. A PDF can only be attached once
  */
 export async function storeInvoicePdf(
   invoice: StoredInvoice,
+  teamSlug: string,
   pdf: Buffer,
 ): Promise<StoredInvoice> {
-  const folder = `${INVOICE_KEY_PREFIX}/${invoice.stripePaymentIntentId}`;
+  const folder = getInvoiceFolder(teamSlug, invoice.stripePaymentIntentId);
   const filename = `${invoice.kind}.pdf`;
 
   // We generate invoices ourselves from database and Stripe data, so they don't need a malware scan
@@ -166,6 +174,7 @@ export async function storeInvoicePdf(
     filename,
     folder,
     { dangerouslySkipMalwareScan: true },
+    INVOICE_BUCKET,
   );
 
   const { stored } = await $api.client.request<{
@@ -194,10 +203,10 @@ export async function storeInvoicePdf(
 }
 
 /**
- * Fetch a stored invoice PDF from S3
+ * Fetch a stored invoice PDF from the payment-data bucket
  */
 export async function getInvoicePdf(fileKey: string): Promise<Buffer> {
-  const file = await getFileFromS3(fileKey);
+  const file = await getFileFromS3(fileKey, INVOICE_BUCKET);
 
   if (file.outcome !== "ok") {
     throw new Error(

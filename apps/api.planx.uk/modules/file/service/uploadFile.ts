@@ -11,7 +11,7 @@ import { isLiveEnv } from "../../../helpers.js";
 import { SCAN_EXEMPT_METADATA_KEY } from "./scanStatus.js";
 import { s3Factory } from "./utils.js";
 
-type BucketTypes = "user-data" | "payment-data";
+export type BucketTypes = "user-data" | "payment-data";
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 8);
 
 export const uploadPublicFile = async (

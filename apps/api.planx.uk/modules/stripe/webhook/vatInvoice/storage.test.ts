@@ -19,6 +19,7 @@ vi.mock("../../../file/service/getFile.js", () => ({
 
 const PDF = Buffer.from("%PDF-test");
 const PAYMENT_INTENT_ID = "pi_test_123";
+const TEAM_SLUG = "barnet";
 
 const STORED_INVOICE: StoredInvoice = {
   id: "8f1c2d3e-0000-0000-0000-000000000000",
@@ -32,7 +33,7 @@ const STORED_INVOICE: StoredInvoice = {
   net: 10000,
   vat: 0,
   total: 10000,
-  fileKey: `invoices/${PAYMENT_INTENT_ID}/council_invoice.pdf`,
+  fileKey: `${TEAM_SLUG}/${PAYMENT_INTENT_ID}/council_invoice.pdf`,
 };
 
 const RESERVED_INVOICE: StoredInvoice = { ...STORED_INVOICE, fileKey: null };
@@ -140,36 +141,39 @@ describe("reserveInvoice", () => {
 });
 
 describe("storeInvoicePdf", () => {
-  it("uploads the PDF to S3 under the invoices prefix, exempt from malware scanning", async () => {
+  it("uploads the PDF to the payment-data bucket under the team and PaymentIntent, exempt from malware scanning", async () => {
     mockAttachPaymentInvoicePdf(STORED_INVOICE);
 
-    await storeInvoicePdf(RESERVED_INVOICE, PDF);
+    await storeInvoicePdf(RESERVED_INVOICE, TEAM_SLUG, PDF);
 
     expect(uploadPrivateFile).toHaveBeenCalledWith(
       expect.objectContaining({ buffer: PDF, mimetype: "application/pdf" }),
       "council_invoice.pdf",
-      `invoices/${PAYMENT_INTENT_ID}`,
+      `${TEAM_SLUG}/${PAYMENT_INTENT_ID}`,
       { dangerouslySkipMalwareScan: true },
+      "payment-data",
     );
   });
 
   it("attaches the PDF to the invoice and returns it", async () => {
     mockAttachPaymentInvoicePdf(STORED_INVOICE);
 
-    await expect(storeInvoicePdf(RESERVED_INVOICE, PDF)).resolves.toEqual(
-      STORED_INVOICE,
-    );
+    await expect(
+      storeInvoicePdf(RESERVED_INVOICE, TEAM_SLUG, PDF),
+    ).resolves.toEqual(STORED_INVOICE);
 
     expect(getCall("AttachPaymentInvoicePdf")?.variables).toEqual({
       id: STORED_INVOICE.id,
-      fileKey: `invoices/${PAYMENT_INTENT_ID}/council_invoice.pdf`,
+      fileKey: `${TEAM_SLUG}/${PAYMENT_INTENT_ID}/council_invoice.pdf`,
     });
   });
 
   it("throws when the invoice already has a PDF", async () => {
     mockAttachPaymentInvoicePdf(null);
 
-    await expect(storeInvoicePdf(RESERVED_INVOICE, PDF)).rejects.toThrow(
+    await expect(
+      storeInvoicePdf(RESERVED_INVOICE, TEAM_SLUG, PDF),
+    ).rejects.toThrow(
       "Could not attach PDF to council_invoice OSL-2026-INV-BNE-00001",
     );
   });
@@ -178,9 +182,9 @@ describe("storeInvoicePdf", () => {
     vi.mocked(uploadPrivateFile).mockRejectedValueOnce(new Error("S3 down"));
     mockAttachPaymentInvoicePdf(STORED_INVOICE);
 
-    await expect(storeInvoicePdf(RESERVED_INVOICE, PDF)).rejects.toThrow(
-      "S3 down",
-    );
+    await expect(
+      storeInvoicePdf(RESERVED_INVOICE, TEAM_SLUG, PDF),
+    ).rejects.toThrow("S3 down");
 
     expect(getCall("AttachPaymentInvoicePdf")).toBeUndefined();
   });
@@ -197,6 +201,10 @@ describe("getInvoicePdf", () => {
     });
 
     await expect(getInvoicePdf(STORED_INVOICE.fileKey!)).resolves.toEqual(PDF);
+    expect(getFileFromS3).toHaveBeenCalledWith(
+      STORED_INVOICE.fileKey,
+      "payment-data",
+    );
   });
 
   it("throws when the PDF cannot be fetched", async () => {
