@@ -3,7 +3,7 @@ import { chromium } from "playwright-core";
 import { renderVatInvoiceHtml } from "./template.js";
 import type { VatInvoiceData } from "./types.js";
 
-const RENDER_TIMEOUT_MS = 30_000;
+export const RENDER_TIMEOUT_MS = 30_000;
 
 /**
  * Render a VAT invoice as a PDF

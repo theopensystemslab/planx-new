@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 
 import { chromium } from "playwright-core";
 
-import { generateVatInvoicePdf } from "./pdf.js";
+import { generateVatInvoicePdf, RENDER_TIMEOUT_MS } from "./pdf.js";
 import type { VatInvoiceData } from "./types.js";
 
 const executablePath =
@@ -45,9 +45,13 @@ const invoice: VatInvoiceData = {
 
 // Requires a Chromium binary - skipped in environments without one
 describe.skipIf(!isChromiumInstalled)("generateVatInvoicePdf", () => {
-  it("renders a PDF", async () => {
-    const pdf = await generateVatInvoicePdf(invoice);
+  it(
+    "renders a PDF",
+    async () => {
+      const pdf = await generateVatInvoicePdf(invoice);
 
-    expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
-  }, 30_000);
+      expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
+    },
+    RENDER_TIMEOUT_MS,
+  );
 });
