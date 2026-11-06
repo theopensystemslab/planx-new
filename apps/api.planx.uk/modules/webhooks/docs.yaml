@@ -547,7 +547,7 @@ paths:
       security:
         - hasuraAuth: []
       summary: Create VAT invoices
-      description: Triggered by a `payment_status` insert - generates and stores the customer and council VAT invoices when a Stripe payment has succeeded, and skips all other rows
+      description: Triggered by a `payment_status` insert - generates and stores the payer and council VAT invoices when a Stripe payment has succeeded, and skips all other rows
       requestBody:
         required: true
         content:

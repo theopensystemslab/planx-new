@@ -11,6 +11,7 @@ export const TEAM_ID = 1;
 export const paymentIntent = {
   id: "pi_test_123",
   amount: 14500,
+  livemode: false,
   metadata: {
     sessionId: "f2d8ca1d-a43b-43ec-b3d9-a9fec63ff19c",
     origin: "https://api.example.com",

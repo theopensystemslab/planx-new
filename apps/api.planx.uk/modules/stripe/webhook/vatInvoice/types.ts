@@ -39,6 +39,8 @@ export interface VatInvoiceVatSummary {
 
 export interface VatInvoiceData {
   kind: InvoiceKind;
+  /** Paid in Stripe test mode (e.g. on staging) - marked so it can't be mistaken for a real invoice */
+  isTest: boolean;
   invoiceNumber: string;
   issuedAt: Date;
   customer: VatInvoiceContactDetails;
