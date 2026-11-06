@@ -3,6 +3,7 @@ import type Stripe from "stripe";
 import { sendEmail } from "../../../../lib/resend/index.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import * as payHelpers from "../../../pay/helpers.js";
+import { stripe } from "../../client.js";
 import type { PaymentSession } from "../ownership/service.js";
 import {
   FLOW_ID,
@@ -15,7 +16,11 @@ import {
 import { getCheckoutSession, getSucceededAt } from "../vatInvoice/service.js";
 import type { StoredInvoice } from "../vatInvoice/storage.js";
 import { getInvoicePdf, getStoredInvoices } from "../vatInvoice/storage.js";
-import { sendPaymentConfirmationEmails } from "./service.js";
+import {
+  formatPaymentMethod,
+  formatSiteAddress,
+  sendPaymentConfirmationEmails,
+} from "./service.js";
 
 vi.mock("../../../../lib/resend/index.js", () => ({
   sendEmail: vi.fn(),
@@ -202,6 +207,46 @@ describe("sendPaymentConfirmationEmails", () => {
       );
     });
 
+    it("includes the site address and the payment method used", async () => {
+      vi.spyOn(stripe.paymentMethods, "retrieve").mockResolvedValue({
+        type: "pay_by_bank",
+      } as Stripe.Response<Stripe.PaymentMethod>);
+
+      await sendPaymentConfirmationEmails(
+        {
+          ...paymentIntent,
+          payment_method: "pm_test_123",
+        } as unknown as Stripe.PaymentIntent,
+        {
+          ...recorded,
+          passportData: {
+            _address: { single_line_address: "1 High Street, London" },
+          },
+        },
+      );
+
+      expect(stripe.paymentMethods.retrieve).toHaveBeenCalledWith(
+        "pm_test_123",
+      );
+      expect(sentEmail("payment-confirmed-council")?.[2]).toEqual(
+        expect.objectContaining({
+          address: "1 High Street, London",
+          paymentMethod: "Pay by bank",
+        }),
+      );
+    });
+
+    it("falls back to placeholders when the address and payment method are unknown", async () => {
+      await send();
+
+      expect(sentEmail("payment-confirmed-council")?.[2]).toEqual(
+        expect.objectContaining({
+          address: "Address not submitted",
+          paymentMethod: "Unknown",
+        }),
+      );
+    });
+
     it("is still sent, without attachments, when the payment has no VAT documents", async () => {
       vi.mocked(getStoredInvoices).mockResolvedValue([]);
 
@@ -232,6 +277,36 @@ describe("sendPaymentConfirmationEmails", () => {
     vi.mocked(sendEmail).mockRejectedValue(new Error("Resend is down"));
 
     await expect(send()).rejects.toThrow("Resend is down");
+  });
+
+  describe("formatPaymentMethod", () => {
+    it.each([
+      ["card", "Card"],
+      ["pay_by_bank", "Pay by bank"],
+      ["bacs_debit", "Bacs Direct Debit"],
+      ["sepa_debit", "sepa debit"],
+      [null, "Unknown"],
+    ] as const)("formats %s as '%s'", (type, label) => {
+      expect(formatPaymentMethod(type)).toBe(label);
+    });
+  });
+
+  describe("formatSiteAddress", () => {
+    it("prefers the single line address, then the title", () => {
+      expect(
+        formatSiteAddress({
+          _address: { single_line_address: "1 High St", title: "1, High St" },
+        }),
+      ).toBe("1 High St");
+      expect(formatSiteAddress({ _address: { title: "1, High St" } })).toBe(
+        "1, High St",
+      );
+    });
+
+    it("falls back to a placeholder when there's no address", () => {
+      expect(formatSiteAddress(undefined)).toBe("Address not submitted");
+      expect(formatSiteAddress({})).toBe("Address not submitted");
+    });
   });
 
   it("throws when a stored invoice has no PDF", async () => {

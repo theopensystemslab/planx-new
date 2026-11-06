@@ -33,5 +33,8 @@ export type PaymentConfirmedPayerTemplate = EmailTemplate<
  */
 export type PaymentConfirmedCouncilTemplate = EmailTemplate<
   "payment-confirmed-council",
-  PaymentConfirmedVariables
+  PaymentConfirmedVariables & {
+    address: string;
+    paymentMethod: string;
+  }
 >;
