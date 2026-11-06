@@ -93,6 +93,31 @@ export async function getStoredInvoice(
 }
 
 /**
+ * Every invoice recorded for a payment, payer invoice first
+ */
+export async function getStoredInvoices(
+  stripePaymentIntentId: string,
+): Promise<StoredInvoice[]> {
+  const { invoices } = await $api.client.request<{
+    invoices: StoredInvoice[];
+  }>(
+    gql`
+      query GetStoredInvoices($stripePaymentIntentId: String!) {
+        invoices: payment_invoices(
+          where: { stripe_payment_intent_id: { _eq: $stripePaymentIntentId } }
+          order_by: { kind: desc }
+        ) {
+          ${STORED_INVOICE_FIELDS}
+        }
+      }
+    `,
+    { stripePaymentIntentId },
+  );
+
+  return invoices;
+}
+
+/**
  * Record an invoice in payment_invoices, which allocates its invoice number at DB level (see set_payment_invoice_number)
  *
  * Numbers are sequential, so they're allocated before the PDF is rendered - attach the PDF afterwards with storeInvoicePdf()

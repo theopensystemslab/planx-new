@@ -2,11 +2,13 @@ import { reportError } from "../../../pay/helpers.js";
 import { sendSlackMessage } from "../../../slack/utils.js";
 import { stripe } from "../../../stripe/client.js";
 import { getSessionForPayment } from "../../../stripe/webhook/ownership/service.js";
+import { sendPaymentConfirmationEmails } from "../../../stripe/webhook/paymentConfirmation/service.js";
 import { createInvoices } from "../../../stripe/webhook/vatInvoice/service.js";
 
 /**
  * Side effects of a PaymentIntent recorded as succeeded in payment_status - for Bacs, once it has cleared
- *  - Create and store the VAT documents
+ *  1. Create and store the VAT documents
+ *  2. Email the payer and the council, attaching the documents
  *
  * The event trigger only carries the payment_status row, so we re-fetch the PaymentIntent from Stripe
  * Throws errors to make Hasura retry the event - each step is safe to retry
@@ -20,6 +22,7 @@ export const handlePaymentSucceeded = async (
   if (!paymentSession) return;
 
   await createInvoices(paymentIntent, paymentSession);
+  await sendPaymentConfirmationEmails(paymentIntent, paymentSession);
 };
 
 /**
@@ -31,7 +34,7 @@ export const alertPaymentSucceededFailed = async (
 ): Promise<void> => {
   reportError({ error, context: { paymentIntentId } });
 
-  const text = `:warning: Could not create VAT documents for Stripe payment *${paymentIntentId}* - Hasura has stopped retrying. Needs following up manually.`;
+  const text = `:warning: Could not create VAT documents or send payment emails for Stripe payment *${paymentIntentId}* - Hasura has stopped retrying. Needs following up manually.`;
 
   if (process.env.APP_ENVIRONMENT !== "production") {
     console.log(`Skipping Slack notification on non-production:\n${text}`);

@@ -24,7 +24,12 @@ export const sendEmail = async <T extends ResendTemplate>(
   {
     idempotencyKey,
     attachments,
-  }: { idempotencyKey?: string; attachments?: Attachment[] } = {},
+    replyTo,
+  }: {
+    idempotencyKey?: string;
+    attachments?: Attachment[];
+    replyTo?: string;
+  } = {},
 ): Promise<{ message: string }> => {
   const { error } = await resend.emails.send(
     {
@@ -35,6 +40,7 @@ export const sendEmail = async <T extends ResendTemplate>(
         variables,
       },
       attachments,
+      replyTo,
     },
     { idempotencyKey },
   );

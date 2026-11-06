@@ -5,6 +5,7 @@ import type { StoredInvoice } from "./storage.js";
 import {
   getInvoicePdf,
   getStoredInvoice,
+  getStoredInvoices,
   reserveInvoice,
   storeInvoicePdf,
 } from "./storage.js";
@@ -97,6 +98,24 @@ describe("getStoredInvoice", () => {
     await expect(
       getStoredInvoice(PAYMENT_INTENT_ID, "council_invoice"),
     ).resolves.toBeNull();
+  });
+});
+
+describe("getStoredInvoices", () => {
+  it("returns every invoice recorded for a PaymentIntent", async () => {
+    queryMock.mockQuery({
+      name: "GetStoredInvoices",
+      matchOnVariables: false,
+      data: { invoices: [STORED_INVOICE] },
+    });
+
+    await expect(getStoredInvoices(PAYMENT_INTENT_ID)).resolves.toEqual([
+      STORED_INVOICE,
+    ]);
+
+    expect(getCall("GetStoredInvoices")?.variables).toEqual({
+      stripePaymentIntentId: PAYMENT_INTENT_ID,
+    });
   });
 });
 

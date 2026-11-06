@@ -4,6 +4,7 @@ import supertest from "supertest";
 import app from "../../../../server.js";
 import { sendSlackMessage } from "../../../slack/utils.js";
 import { stripe } from "../../../stripe/client.js";
+import { sendPaymentConfirmationEmails } from "../../../stripe/webhook/paymentConfirmation/service.js";
 import {
   FLOW_ID,
   FLOW_NAME,
@@ -17,6 +18,10 @@ import { createInvoices } from "../../../stripe/webhook/vatInvoice/service.js";
 
 vi.mock("../../../slack/utils.js", () => ({
   sendSlackMessage: vi.fn(),
+}));
+
+vi.mock("../../../stripe/webhook/paymentConfirmation/service.js", () => ({
+  sendPaymentConfirmationEmails: vi.fn(),
 }));
 
 vi.mock(
@@ -70,6 +75,7 @@ describe("Payment status events endpoint", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.mocked(createInvoices).mockReset();
+    vi.mocked(sendPaymentConfirmationEmails).mockReset();
     vi.mocked(sendSlackMessage).mockReset();
   });
 
@@ -134,7 +140,7 @@ describe("Payment status events endpoint", () => {
   });
 
   describe("succeeded payments", () => {
-    it("creates the VAT documents for a succeeded PaymentIntent", async () => {
+    it("creates the VAT documents, then sends the payment emails", async () => {
       await post(ENDPOINT).set(AUTH).send(event()).expect(200);
 
       expect(stripe.paymentIntents.retrieve).toHaveBeenCalledWith(
@@ -144,6 +150,25 @@ describe("Payment status events endpoint", () => {
         paymentIntent,
         RECORDED_SESSION,
       );
+      expect(sendPaymentConfirmationEmails).toHaveBeenCalledWith(
+        paymentIntent,
+        RECORDED_SESSION,
+      );
+      expect(
+        vi.mocked(createInvoices).mock.invocationCallOrder[0],
+      ).toBeLessThan(
+        vi.mocked(sendPaymentConfirmationEmails).mock.invocationCallOrder[0],
+      );
+    });
+
+    it("does not send the payment emails when creating the documents fails", async () => {
+      vi.mocked(createInvoices).mockRejectedValue(
+        new Error("PDF render failed"),
+      );
+
+      await post(ENDPOINT).set(AUTH).send(event()).expect(500);
+
+      expect(sendPaymentConfirmationEmails).not.toHaveBeenCalled();
     });
   });
 
@@ -166,9 +191,9 @@ describe("Payment status events endpoint", () => {
       expect(createInvoices).not.toHaveBeenCalled();
     });
 
-    it("returns 500 when creating the documents fails, so Hasura retries the event", async () => {
-      vi.mocked(createInvoices).mockRejectedValue(
-        new Error("PDF render failed"),
+    it("returns 500 when sending the emails fails, so Hasura retries the event", async () => {
+      vi.mocked(sendPaymentConfirmationEmails).mockRejectedValue(
+        new Error("Resend is down"),
       );
 
       await post(ENDPOINT).set(AUTH).send(event({}, 9)).expect(500);
@@ -178,8 +203,8 @@ describe("Payment status events endpoint", () => {
 
     it("returns 200 and alerts PlanX when the final attempt fails, so Hasura stops retrying", async () => {
       vi.stubEnv("APP_ENVIRONMENT", "production");
-      vi.mocked(createInvoices).mockRejectedValue(
-        new Error("PDF render failed"),
+      vi.mocked(sendPaymentConfirmationEmails).mockRejectedValue(
+        new Error("Resend is down"),
       );
 
       await post(ENDPOINT).set(AUTH).send(event({}, 10)).expect(200);

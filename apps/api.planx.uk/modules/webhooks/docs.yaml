@@ -555,7 +555,7 @@ paths:
       security:
         - hasuraAuth: []
       summary: Handle a payment status event
-      description: Triggered by a `payment_status` insert. When a Stripe payment has succeeded, creates and stores its payer and council VAT invoices. Skips all other rows. On Hasura's final retry, a failure alerts PlanX and returns 200
+      description: Triggered by a `payment_status` insert. When a Stripe payment has succeeded, creates and stores its payer and council VAT invoices, then emails the payer (with their VAT receipt) and the council (with all of the documents) a payment confirmation. Skips all other rows. On Hasura's final retry, a failure alerts PlanX and returns 200
       requestBody:
         required: true
         content:
