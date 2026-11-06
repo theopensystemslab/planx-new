@@ -4,6 +4,12 @@ import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { getInputFocusStyle } from "theme";
 
+/**
+ * Maximum height of the editable area before it scrolls internally
+ * Keeps the formatting toolbar in view when editing long content, even within tall modals
+ */
+export const RICH_TEXT_MAX_HEIGHT = "50vh";
+
 export const RichContentContainer = styled(Box)(({ theme }) => ({
   position: "relative",
   // Toolbar and "rich text" marker are swapped via :focus-within, rather than React state
@@ -27,13 +33,20 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
   "& .rte-field": {
     position: "relative",
   },
+  // Scroll container for the editable area
+  "& .rte-content": {
+    maxHeight: RICH_TEXT_MAX_HEIGHT,
+    overflowY: "auto",
+    backgroundColor: theme.palette.background.default,
+    border: `1px solid ${theme.palette.border.main}`,
+  },
   "& .ProseMirror": {
     padding: "12px 15px",
     // Leave space for the "rich text" marker
     paddingRight: "45px",
     backgroundColor: theme.palette.background.default,
-    minHeight: "50px",
-    border: `1px solid ${theme.palette.border.main}`,
+    // 50px total height, including the .rte-content border
+    minHeight: "48px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
