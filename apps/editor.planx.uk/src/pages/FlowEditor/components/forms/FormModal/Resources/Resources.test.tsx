@@ -116,7 +116,7 @@ describe("Resources tab", () => {
   });
 
   it("shows a placeholder for a component without a guidance page", async () => {
-    const { getByText } = await setup(<Resources type="note" />);
+    const { getByText } = await setup(<Resources type="flow" />);
 
     expect(getByText("Guidance coming soon.")).toBeInTheDocument();
   });
