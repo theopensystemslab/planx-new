@@ -6,6 +6,7 @@ export const FLOW_ID = "7cd1c4b4-4229-424f-8d04-c9fdc958ef4e";
 export const FLOW_NAME = "Apply for a lawful development certificate";
 export const TEAM_SLUG = "southwark";
 export const TEAM_NAME = "Southwark";
+export const TEAM_ID = 1;
 
 export const paymentIntent = {
   id: "pi_test_123",
@@ -165,6 +166,7 @@ export const mockCouncilInvoiceDetails = ({
     data: {
       teams: [
         {
+          id: TEAM_ID,
           name: TEAM_NAME,
           invoiceDetails,
           theme,

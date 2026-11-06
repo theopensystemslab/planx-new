@@ -90,10 +90,6 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
     case "submit":
     case "lps-login":
       return next();
-    // Only sent internally (Stripe webhook) - never via /send-email
-    case "vat-invoice-council":
-    case "vat-invoice-planx":
-      return handleInvalidTemplate();
     default: {
       return handleInvalidTemplate(template);
     }

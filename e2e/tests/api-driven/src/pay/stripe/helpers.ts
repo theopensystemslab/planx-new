@@ -384,5 +384,18 @@ export async function cleanup({
   if (sessionId) await $admin.session._destroy(sessionId);
   if (flowId) await $admin.flow._destroy(flowId);
   if (userId) await $admin.user._destroy(userId);
-  if (teamId) await $admin.team._destroy(teamId);
+  if (teamId) {
+    // Invoices must outlive their team, so payment_invoices blocks deleting it - remove any created by the tests first
+    await $admin.client.request(
+      gql`
+        mutation DeleteTeamPaymentInvoices($teamId: Int!) {
+          delete_payment_invoices(where: { team_id: { _eq: $teamId } }) {
+            affected_rows
+          }
+        }
+      `,
+      { teamId },
+    );
+    await $admin.team._destroy(teamId);
+  }
 }

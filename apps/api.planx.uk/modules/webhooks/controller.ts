@@ -30,7 +30,7 @@ import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/
 import { sendSlackNotification } from "./service/sendNotification/index.js";
 import type { SendSlackNotification } from "./service/sendNotification/types.js";
 import type { SendSlackMessageController } from "./service/sendSlackMessage/schema.js";
-import { sendVatInvoicesForPaymentIntent } from "./service/sendVatInvoices/index.js";
+import { createInvoicesForPaymentIntent } from "./service/sendVatInvoices/index.js";
 import type { SendVatInvoicesController } from "./service/sendVatInvoices/schema.js";
 import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
 import type { UpdateTemplatedFlowEditsController } from "./service/updateTemplatedFlowEdits/schema.js";
@@ -365,14 +365,14 @@ export const sendVatInvoicesController: SendVatInvoicesController = async (
   }
 
   try {
-    await sendVatInvoicesForPaymentIntent(stripePaymentId);
+    await createInvoicesForPaymentIntent(stripePaymentId);
     return res.status(200).send({
       message: `Processed VAT invoices for PaymentIntent ${stripePaymentId}`,
     });
   } catch (error) {
     return next(
       new ServerError({
-        message: `Failed to send VAT invoices for PaymentIntent ${stripePaymentId}`,
+        message: `Failed to create VAT invoices for PaymentIntent ${stripePaymentId}`,
         cause: error,
       }),
     );

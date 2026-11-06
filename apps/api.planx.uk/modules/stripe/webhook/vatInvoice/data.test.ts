@@ -15,7 +15,6 @@ import {
   getInvoiceLineItems,
   getPayerContactDetails,
   getVatRate,
-  groupFeeLinesByIssuer,
   isInvoiceRequired,
   summariseVat,
 } from "./data.js";
@@ -182,49 +181,6 @@ describe("getCouncilContactDetails", () => {
   });
 });
 
-describe("groupFeeLinesByIssuer", () => {
-  it("groups fee lines by who receives them", () => {
-    expect(groupFeeLinesByIssuer(feeLines)).toEqual({
-      council: [
-        {
-          description: "Application fee",
-          net: 10000,
-          vat: 0,
-          total: 10000,
-          vatRate: 0,
-        },
-        {
-          description: "Fast Track fee",
-          net: 5000,
-          vat: 1000,
-          total: 6000,
-          vatRate: 20,
-        },
-      ],
-      planx: [
-        {
-          description: "PlanX service charge",
-          net: 2500,
-          vat: 500,
-          total: 3000,
-          vatRate: 20,
-        },
-      ],
-    });
-  });
-
-  it("drops zero-value lines", () => {
-    const { council } = groupFeeLinesByIssuer([
-      { ...feeLines[0], net: 0, vat: 0, total: 0 },
-      feeLines[1],
-    ]);
-
-    expect(council.map(({ description }) => description)).toEqual([
-      "Fast Track fee",
-    ]);
-  });
-});
-
 describe("buildVatInvoiceData", () => {
   const recorded: PaymentSession = {
     sessionId: paymentIntent.metadata.sessionId,
@@ -234,36 +190,35 @@ describe("buildVatInvoiceData", () => {
     teamName: TEAM_NAME,
   };
 
-  it("builds invoice data with totals summed from the line items", () => {
-    const lineItems = [
-      {
-        description: "PlanX service charge",
-        net: 2500,
-        vat: 500,
-        total: 3000,
-        vatRate: 20,
-      },
-    ];
+  const customer = {
+    email: "payer@example.com",
+    name: null,
+    addressLines: [],
+  };
+
+  it("builds invoice data with totals and a VAT summary from the line items", () => {
+    const lineItems = getInvoiceLineItems(feeLines, "payer_invoice");
+    const issuedAt = new Date("2026-10-07T12:00:00Z");
 
     const invoice = buildVatInvoiceData({
-      issuer: "planx",
-      paymentIntent: {
-        ...paymentIntent,
-        created: 1791374400,
-      } as unknown as Stripe.PaymentIntent,
+      kind: "payer_invoice",
+      invoiceNumber: "PX-2026-INV-BNE-00001",
+      paymentIntent: paymentIntent as unknown as Stripe.PaymentIntent,
       recorded,
-      customerEmail: "payer@example.com",
+      issuedAt,
+      customer,
       seller: PLANX_SELLER,
       branding: null,
       lineItems,
     });
 
     expect(invoice).toEqual({
-      issuer: "planx",
-      invoiceNumber: "pi_test_123",
-      issuedAt: new Date("2026-10-07T12:00:00Z"),
-      customerEmail: "payer@example.com",
+      kind: "payer_invoice",
+      invoiceNumber: "PX-2026-INV-BNE-00001",
+      issuedAt,
+      customer,
       sessionId: recorded.sessionId,
+      paymentId: "pi_test_123",
       flowId: FLOW_ID,
       flowName: FLOW_NAME,
       teamSlug: TEAM_SLUG,
@@ -271,7 +226,11 @@ describe("buildVatInvoiceData", () => {
       seller: PLANX_SELLER,
       branding: null,
       lineItems,
-      totals: { net: 2500, vat: 500, total: 3000 },
+      totals: { net: 17500, vat: 1500, total: 19000 },
+      vatSummary: [
+        { rate: 20, net: 7500, vat: 1500 },
+        { rate: 0, net: 10000, vat: 0 },
+      ],
     });
   });
 });

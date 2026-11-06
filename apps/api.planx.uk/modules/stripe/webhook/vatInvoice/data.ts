@@ -7,7 +7,6 @@ import type {
   VatInvoiceBranding,
   VatInvoiceContactDetails,
   VatInvoiceData,
-  VatInvoiceIssuer,
   VatInvoiceLineItem,
   VatInvoiceSeller,
   VatInvoiceVatSummary,
@@ -48,23 +47,6 @@ export const getInvoiceLineItems = (
       ...lineItem,
       vatRate: getVatRate(lineItem),
     }));
-
-/**
- * Split fee lines between the council and PlanX invoices, dropping any zero-value lines
- */
-export const groupFeeLinesByIssuer = (
-  feeLines: FeeLine[],
-): Record<VatInvoiceIssuer, VatInvoiceLineItem[]> => {
-  const linesFor = (issuer: VatInvoiceIssuer) =>
-    feeLines
-      .filter(({ payee, total }) => payee === issuer && total > 0)
-      .map(({ payee: _payee, ...lineItem }) => ({
-        ...lineItem,
-        vatRate: getVatRate(lineItem),
-      }));
-
-  return { council: linesFor("council"), planx: linesFor("planx") };
-};
 
 export const sumLineItems = (lineItems: VatInvoiceLineItem[]) =>
   lineItems.reduce(
@@ -134,30 +116,34 @@ export const getCouncilContactDetails = ({
 });
 
 interface BuildVatInvoiceDataArgs {
-  issuer: VatInvoiceIssuer;
+  kind: InvoiceKind;
+  invoiceNumber: string;
   paymentIntent: Stripe.PaymentIntent;
   recorded: PaymentSession;
-  customerEmail: string;
+  issuedAt: Date;
+  customer: VatInvoiceContactDetails;
   seller: VatInvoiceSeller;
   branding: VatInvoiceBranding | null;
   lineItems: VatInvoiceLineItem[];
 }
 
 export const buildVatInvoiceData = ({
-  issuer,
+  kind,
+  invoiceNumber,
   paymentIntent,
   recorded,
-  customerEmail,
+  issuedAt,
+  customer,
   seller,
   branding,
   lineItems,
 }: BuildVatInvoiceDataArgs): VatInvoiceData => ({
-  issuer,
-  invoiceNumber: paymentIntent.id,
-  // Stripe timestamps are in seconds
-  issuedAt: new Date(paymentIntent.created * 1000),
-  customerEmail,
+  kind,
+  invoiceNumber,
+  issuedAt,
+  customer,
   sessionId: recorded.sessionId,
+  paymentId: paymentIntent.id,
   flowId: recorded.flowId,
   flowName: recorded.flowName,
   teamSlug: recorded.teamSlug,
@@ -166,4 +152,5 @@ export const buildVatInvoiceData = ({
   branding,
   lineItems,
   totals: sumLineItems(lineItems),
+  vatSummary: summariseVat(lineItems),
 });

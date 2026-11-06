@@ -1,30 +1,28 @@
 import type { FeeBreakdown } from "@opensystemslab/planx-core/types";
-import { format } from "date-fns";
+import { fromUnixTime } from "date-fns";
 import { gql } from "graphql-request";
-import escape from "lodash/escape.js";
 import type Stripe from "stripe";
 
 import { $api } from "../../../../client/index.js";
-import { sendEmail } from "../../../../lib/resend/index.js";
 import { reportError } from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
 import { getFeeLines } from "../../feeLines.js";
-import { formatPence } from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
-import { buildVatInvoiceData, groupFeeLinesByIssuer } from "./data.js";
+import {
+  buildVatInvoiceData,
+  getCouncilContactDetails,
+  getInvoiceLineItems,
+  getPayerContactDetails,
+  isInvoiceRequired,
+  sumLineItems,
+} from "./data.js";
 import { generateVatInvoicePdf } from "./pdf.js";
 import { getCouncilInvoiceDetails, PLANX_SELLER } from "./seller.js";
-import type { VatInvoiceBranding, VatInvoiceData } from "./types.js";
+import type { InvoiceKind } from "./storage.js";
+import { reserveInvoice, storeInvoicePdf } from "./storage.js";
+import type { VatInvoiceData } from "./types.js";
 
-const DEFAULT_PRIMARY_COLOUR = "#0010A4";
-
-export const buildCouncilEmailHeader = (
-  councilName: string,
-  branding: VatInvoiceBranding | null,
-): string =>
-  branding?.logo
-    ? `<img src="${escape(branding.logo)}" alt="${escape(councilName)}" height="40" />`
-    : escape(councilName);
+const INVOICE_KINDS: InvoiceKind[] = ["payer_invoice", "council_invoice"];
 
 /**
  * The Checkout Session which created a PaymentIntent
@@ -76,16 +74,47 @@ export const getChargedFeeBreakdown = async (
 };
 
 /**
- * Email VAT invoices to the payer of a successful Stripe payment
+ * When the payment succeeded, as recorded from the Stripe webhook
  *
- * A payment results in up to two invoices, sent as separate emails
- *  - council: for the portion transferred to the council, with the council's branding
- *  - planx: for the PlanX service charge, only if one was charged
+ * For delayed payment methods (e.g. Bacs Direct Debit) this is days after the PaymentIntent was created
+ * Falls back to when the PaymentIntent was created, which should not happen as this runs after the row is recorded
+ */
+export const getSucceededAt = async (
+  paymentIntent: Stripe.PaymentIntent,
+): Promise<Date> => {
+  const { paymentStatus } = await $api.client.request<{
+    paymentStatus: { createdAt: string }[];
+  }>(
+    gql`
+      query GetPaymentSucceededAt($paymentIntentId: String!) {
+        paymentStatus: payment_status(
+          where: {
+            stripe_payment_id: { _eq: $paymentIntentId }
+            stripe_status: { _eq: succeeded }
+          }
+          order_by: { created_at: asc }
+          limit: 1
+        ) {
+          createdAt: created_at
+        }
+      }
+    `,
+    { paymentIntentId: paymentIntent.id },
+  );
+
+  const createdAt = paymentStatus[0]?.createdAt;
+  return createdAt ? new Date(createdAt) : fromUnixTime(paymentIntent.created);
+};
+
+/**
+ * Generate and store the invoices for a successful Stripe payment
+ *  - payer_invoice: the council bills the payer for every line, when there's any VAT or a service charge
+ *  - council_invoice: OSL bills the council for the service charge, when there is one
  *
  * Called from the payment_status event trigger - throws errors to make Hasura retry the event
- * Uses idempotency keys to prevent duplicate emails being sent
+ * Safe to retry - a retry reuses each invoice's number, and skips any invoice whose PDF has already been stored
  */
-export async function sendVatInvoices(
+export async function createInvoices(
   paymentIntent: Stripe.PaymentIntent,
   recorded: PaymentSession,
 ): Promise<void> {
@@ -98,7 +127,7 @@ export async function sendVatInvoices(
   if (!checkoutSession) {
     return reportError({
       error:
-        "Could not send VAT invoices: no Checkout Session found for the PaymentIntent",
+        "Could not create invoices: no Checkout Session found for the PaymentIntent",
       context,
     });
   }
@@ -107,7 +136,7 @@ export async function sendVatInvoices(
   if (!customerEmail) {
     return reportError({
       error:
-        "Could not send VAT invoices: no customer email found on the Checkout Session",
+        "Could not create invoices: no customer email found on the Checkout Session",
       context,
     });
   }
@@ -120,7 +149,7 @@ export async function sendVatInvoices(
   if (!feeBreakdown) {
     return reportError({
       error:
-        "Could not send VAT invoices: no fee breakdown recorded for the Checkout Session",
+        "Could not create invoices: no fee breakdown recorded for the Checkout Session",
       context: { ...context, checkoutSessionId: checkoutSession.id },
     });
   }
@@ -129,7 +158,7 @@ export async function sendVatInvoices(
   if (feeBreakdown.amount.paymentProcessing > 0) {
     return reportError({
       error:
-        "Could not send VAT invoices: session has a legacy payment processing fee",
+        "Could not create invoices: session has a legacy payment processing fee",
       context,
     });
   }
@@ -140,83 +169,72 @@ export async function sendVatInvoices(
   );
   if (!feeLines || hasInvalidVATSplit) {
     return reportError({
-      error: "Could not send VAT invoices: fee breakdown is inconsistent",
+      error: "Could not create invoices: fee breakdown is inconsistent",
       context,
     });
   }
 
-  const lineItems = groupFeeLinesByIssuer(feeLines);
-
-  const invoiceArgs = { paymentIntent, recorded, customerEmail };
-
-  if (lineItems.council.length) {
-    const councilDetails = await getCouncilInvoiceDetails(recorded.teamSlug);
-    if (councilDetails) {
-      const councilInvoice = buildVatInvoiceData({
-        ...invoiceArgs,
-        ...councilDetails,
-        issuer: "council",
-        lineItems: lineItems.council,
-      });
-
-      await sendVatInvoiceEmail(councilInvoice);
-    } else {
-      reportError({
-        error:
-          "Could not send council VAT invoice: team has no invoice details configured",
-        context: { ...context, teamSlug: recorded.teamSlug },
-      });
-    }
+  const council = await getCouncilInvoiceDetails(recorded.teamSlug);
+  if (!council.hasInvoiceDetails) {
+    reportError({
+      error:
+        "Council has no invoice details configured - invoicing under the team name",
+      context: { ...context, teamSlug: recorded.teamSlug },
+    });
   }
 
-  if (lineItems.planx.length) {
-    const planXInvoice = buildVatInvoiceData({
-      ...invoiceArgs,
-      issuer: "planx",
+  const issuedAt = await getSucceededAt(paymentIntent);
+
+  const parties: Record<
+    InvoiceKind,
+    Pick<VatInvoiceData, "seller" | "branding" | "customer">
+  > = {
+    payer_invoice: {
+      seller: council.seller,
+      branding: council.branding,
+      customer: getPayerContactDetails(
+        customerEmail,
+        checkoutSession.customer_details,
+      ),
+    },
+    council_invoice: {
       seller: PLANX_SELLER,
       branding: null,
-      lineItems: lineItems.planx,
+      customer: getCouncilContactDetails(council.seller),
+    },
+  };
+
+  for (const kind of INVOICE_KINDS) {
+    if (!isInvoiceRequired(feeLines, kind)) continue;
+
+    const lineItems = getInvoiceLineItems(feeLines, kind);
+
+    // Allocates the invoice number - or returns the invoice recorded by a previous attempt, with its number
+    const reserved = await reserveInvoice({
+      kind,
+      stripePaymentIntentId: paymentIntent.id,
+      sessionId: recorded.sessionId,
+      flowId: recorded.flowId,
+      teamId: council.teamId,
+      issuedAt,
+      ...sumLineItems(lineItems),
     });
 
-    await sendVatInvoiceEmail(planXInvoice);
-  }
-}
+    // PDF already stored by a previous attempt
+    if (reserved.fileKey) continue;
 
-async function sendVatInvoiceEmail(invoice: VatInvoiceData): Promise<void> {
-  const { issuer, invoiceNumber, customerEmail } = invoice;
-  const pdf = await generateVatInvoicePdf(invoice);
+    const invoice = buildVatInvoiceData({
+      kind,
+      invoiceNumber: reserved.invoiceNumber,
+      paymentIntent,
+      recorded,
+      issuedAt,
+      ...parties[kind],
+      lineItems,
+    });
 
-  const variables = {
-    serviceName: invoice.flowName,
-    invoiceNumber,
-    amount: formatPence(invoice.totals.total),
-    paymentDate: format(invoice.issuedAt, "d MMMM yyyy"),
-  };
+    const pdf = await generateVatInvoicePdf(invoice);
 
-  const options = {
-    idempotencyKey: `vat-invoice-${issuer}-${invoiceNumber}`,
-    attachments: [
-      {
-        filename: `invoice-${issuer}-${invoiceNumber}.pdf`,
-        content: pdf,
-      },
-    ],
-  };
-
-  if (issuer === "council") {
-    await sendEmail(
-      "vat-invoice-council",
-      customerEmail,
-      {
-        ...variables,
-        councilName: invoice.seller.name,
-        header: buildCouncilEmailHeader(invoice.seller.name, invoice.branding),
-        primaryColour:
-          invoice.branding?.primaryColour ?? DEFAULT_PRIMARY_COLOUR,
-      },
-      options,
-    );
-  } else {
-    await sendEmail("vat-invoice-planx", customerEmail, variables, options);
+    await storeInvoicePdf(reserved, recorded.teamSlug, pdf);
   }
 }
