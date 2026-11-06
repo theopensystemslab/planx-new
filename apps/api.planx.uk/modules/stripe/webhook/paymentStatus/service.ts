@@ -20,6 +20,7 @@ interface InsertStripePaymentStatusArgs {
   teamSlug: string;
   stripePaymentId: string;
   stripeStatus: StripePaymentStatus;
+  stripeEventId?: string;
   amount: number;
   feeBreakdown?: FeeBreakdown | null;
   metadata: Stripe.Metadata;
@@ -29,6 +30,7 @@ interface InsertStripePaymentStatusArgs {
 export async function recordStripePaymentIntentStatus(
   paymentIntent: Stripe.PaymentIntent,
   stripeStatus: Exclude<StripePaymentStatus, "initiated">,
+  stripeEventId: string,
 ): Promise<void> {
   const { id, amount, metadata } = paymentIntent;
 
@@ -43,17 +45,26 @@ export async function recordStripePaymentIntentStatus(
   const paymentMethod = await getPaymentMethodType(paymentIntent);
 
   try {
-    await insertStripePaymentStatus({
+    const isRecorded = await insertStripePaymentStatus({
       flowId,
       sessionId,
       teamSlug,
       stripePaymentId: id,
       stripeStatus,
+      stripeEventId,
       amount,
       feeBreakdown,
       metadata,
       paymentMethod,
     });
+
+    // Stripe redelivered an event we have already recorded
+    if (!isRecorded) {
+      console.info(
+        `Ignoring Stripe event ${stripeEventId} for PaymentIntent ${id} (${stripeStatus}): already recorded`,
+      );
+      return;
+    }
 
     if (stripeStatus !== "created") {
       await postStripePaymentNotificationToSlack(teamSlug, id, stripeStatus);
@@ -115,6 +126,9 @@ function deriveFeeBreakdown(
  *
  * For the synthetic "initiated" records, this will be the Checkout Session ID (cs_)
  * For all other webhook-driven events, this will be the PaymentIntent ID (pi_)
+ *
+ * Webhook-driven rows are unique by Stripe event id, so a redelivered event is not recorded twice
+ * Returns false if the event had already been recorded
  */
 export async function insertStripePaymentStatus({
   flowId,
@@ -122,12 +136,17 @@ export async function insertStripePaymentStatus({
   teamSlug,
   stripePaymentId,
   stripeStatus,
+  stripeEventId,
   amount,
   feeBreakdown,
   metadata,
   paymentMethod,
-}: InsertStripePaymentStatusArgs): Promise<void> {
-  await $api.client.request(
+}: InsertStripePaymentStatusArgs): Promise<boolean> {
+  const {
+    insert_payment_status: { affected_rows },
+  } = await $api.client.request<{
+    insert_payment_status: { affected_rows: number };
+  }>(
     gql`
       mutation InsertStripePaymentStatus(
         $flowId: uuid!
@@ -135,6 +154,7 @@ export async function insertStripePaymentStatus({
         $teamSlug: String!
         $stripePaymentId: String!
         $stripeStatus: stripe_payment_status_enum_enum!
+        $stripeEventId: String
         $amount: Int
         $feeBreakdown: jsonb
         $metadata: jsonb
@@ -147,10 +167,15 @@ export async function insertStripePaymentStatus({
             team_slug: $teamSlug
             stripe_payment_id: $stripePaymentId
             stripe_status: $stripeStatus
+            stripe_event_id: $stripeEventId
             amount: $amount
             fee_breakdown: $feeBreakdown
             stripe_metadata: $metadata
             payment_method: $paymentMethod
+          }
+          on_conflict: {
+            constraint: payment_status_stripe_event_id_key
+            update_columns: []
           }
         ) {
           affected_rows
@@ -163,10 +188,13 @@ export async function insertStripePaymentStatus({
       teamSlug,
       stripePaymentId,
       stripeStatus,
+      stripeEventId,
       amount,
       feeBreakdown,
       metadata,
       paymentMethod,
     },
   );
+
+  return affected_rows > 0;
 }
