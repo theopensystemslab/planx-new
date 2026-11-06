@@ -142,6 +142,10 @@ export const createApiService = async ({
           value: pulumi.interpolate`${apiBucket.bucket}`,
         },
         {
+          name: "AWS_S3_BUCKET_PAY",
+          value: pulumi.interpolate`${apiPaymentDataBucket.bucket}`,
+        },
+        {
           name: "AI_GATEWAY_API_KEY",
           value: config.requireSecret("ai-gateway-api-key"),
         },

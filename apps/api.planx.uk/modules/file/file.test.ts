@@ -304,6 +304,7 @@ describe("File upload", () => {
     it("should upload JPG", async () => {
       vi.stubEnv("API_URL_EXT", "https://api.editor.planx.dev");
       vi.stubEnv("AWS_S3_BUCKET", "myBucketName");
+      vi.stubEnv("AWS_S3_BUCKET_PAY", "my-pay-bucket-name");
 
       await supertest(app)
         .post(PRIVATE_ENDPOINT)
@@ -324,6 +325,7 @@ describe("File upload", () => {
     it("should upload PDF", async () => {
       vi.stubEnv("API_URL_EXT", "https://api.editor.planx.dev");
       vi.stubEnv("AWS_S3_BUCKET", "myBucketName");
+      vi.stubEnv("AWS_S3_BUCKET_PAY", "my-pay-bucket-name");
 
       await supertest(app)
         .post(PRIVATE_ENDPOINT)
@@ -344,6 +346,7 @@ describe("File upload", () => {
     it("should upload SVG", async () => {
       vi.stubEnv("API_URL_EXT", "https://api.editor.planx.dev");
       vi.stubEnv("AWS_S3_BUCKET", "myBucketName");
+      vi.stubEnv("AWS_S3_BUCKET_PAY", "my-pay-bucket-name");
 
       await supertest(app)
         .post(PRIVATE_ENDPOINT)

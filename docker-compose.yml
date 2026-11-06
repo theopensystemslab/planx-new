@@ -129,6 +129,7 @@ services:
       APP_ENVIRONMENT: ${APP_ENVIRONMENT}
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
       AWS_S3_BUCKET: ${AWS_S3_BUCKET}
+      AWS_S3_BUCKET_PAY: ${AWS_S3_BUCKET_PAY}
       AWS_S3_REGION: ${AWS_S3_REGION}
       AWS_SECRET_KEY: ${AWS_SECRET_KEY}
       # This is controlled via generateCORSAllowList() in staging and production
@@ -242,6 +243,7 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_KEY}
       S3_BUCKET: ${AWS_S3_BUCKET}
+      S3_BUCKET_PAY: ${AWS_S3_BUCKET_PAY}
     command: ["mini", "-s3.port=${S3_MOCK_PORT:-8333}"]
     restart: on-failure
     healthcheck:
