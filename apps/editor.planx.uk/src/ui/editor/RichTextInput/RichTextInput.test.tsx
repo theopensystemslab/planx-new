@@ -95,7 +95,7 @@ describe("formatting toolbar", () => {
     const { container } = await setup(
       <RichTextInput value="" errorMessage={undefined} />,
     );
-    expect(container.querySelector(".rte-marker")).toHaveTextContent("AA");
+    expect(container.querySelector(".rte-marker")).toHaveTextContent("Aa");
   });
 
   it("does not render a toolbar or marker when disabled", async () => {

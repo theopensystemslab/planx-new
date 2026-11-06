@@ -129,7 +129,7 @@ const RichTextInput: FC<Props> = (props) => {
           <RichTextToolbar editor={editor} showHeadings={!isParagraph} />
         )}
         <div className="rte-field">
-          <EditorContent editor={editor} />
+          <EditorContent editor={editor} className="rte-content" />
           {isEditable && (
             <Tooltip title="Rich text" placement="top">
               <RichTextMarker
