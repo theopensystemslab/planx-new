@@ -182,3 +182,23 @@ it("should not have any accessibility violations whilst in the error state", asy
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
+
+test("marks each date field as invalid when an error is displayed", async () => {
+  const { user } = await setup(
+    <DateInput id="date" title="Pizza Day" handleSubmit={vi.fn()} />,
+  );
+
+  const fields = ["Day", "Month", "Year"].map((label) =>
+    screen.getByLabelText(label),
+  );
+  fields.forEach((field) => expect(field).not.toHaveAttribute("aria-invalid"));
+
+  await user.click(screen.getByTestId("continue-button"));
+
+  await waitFor(() =>
+    fields.forEach((field) => {
+      expect(field).toHaveAttribute("aria-invalid", "true");
+      expect(field).toHaveAccessibleDescription(/Error:/);
+    }),
+  );
+});

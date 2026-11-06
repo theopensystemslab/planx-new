@@ -90,9 +90,9 @@ describe("ErrorWrapper aria-invalid", () => {
     expect(screen.getByLabelText("Yes")).not.toHaveAttribute("aria-invalid");
   });
 
-  it("does not mark inputs owned by a nested ErrorWrapper", async () => {
+  it("marks inputs within a nested ErrorWrapper which has no error", async () => {
     await setup(
-      <ErrorWrapper error="Outer error">
+      <ErrorWrapper id="outer" error="Outer error">
         <div>
           <input aria-label="Outer" />
           <ErrorWrapper error={undefined}>
@@ -101,11 +101,30 @@ describe("ErrorWrapper aria-invalid", () => {
         </div>
       </ErrorWrapper>,
     );
+    const inner = screen.getByLabelText("Inner");
     expect(screen.getByLabelText("Outer")).toHaveAttribute(
       "aria-invalid",
       "true",
     );
-    expect(screen.getByLabelText("Inner")).not.toHaveAttribute("aria-invalid");
+    expect(inner).toHaveAttribute("aria-invalid", "true");
+    expect(inner).toHaveAttribute("aria-describedby", "error-message-outer");
+  });
+
+  it("does not mark inputs owned by a nested ErrorWrapper with its own error", async () => {
+    await setup(
+      <ErrorWrapper id="outer" error="Outer error">
+        <div>
+          <input aria-label="Outer" />
+          <ErrorWrapper id="inner" error="Inner error">
+            <input aria-label="Inner" />
+          </ErrorWrapper>
+        </div>
+      </ErrorWrapper>,
+    );
+    expect(screen.getByLabelText("Inner")).toHaveAttribute(
+      "aria-describedby",
+      "error-message-inner",
+    );
   });
 });
 

@@ -65,13 +65,19 @@ const INVALIDATABLE_SELECTOR = [
   "[contenteditable='true']",
 ].join(",");
 
+const getControls = (root: HTMLElement): HTMLElement[] =>
+  Array.from(root.querySelectorAll<HTMLElement>(INVALIDATABLE_SELECTOR));
+
 /**
  * Get controls owned by this ErrorWrapper, excluding those within a nested ErrorWrapper
- * Nested wrappers manage the validity of their own controls
+ * which is itself displaying an error - that wrapper manages the validity of its own controls
+ *
+ * Nested wrappers without an error are transparent, as composite components (e.g. DateInput)
+ * render an outer ErrorWrapper around several <Input />s, which each render their own ErrorWrapper
  */
 const getOwnedControls = (root: HTMLElement): HTMLElement[] =>
-  Array.from(root.querySelectorAll<HTMLElement>(INVALIDATABLE_SELECTOR)).filter(
-    (el) => el.parentElement?.closest('[data-testid="error-wrapper"]') === root,
+  getControls(root).filter(
+    (el) => el.parentElement?.closest(ACTIVE_ERROR_SELECTOR) === root,
   );
 
 const getDescribedByIds = (el: HTMLElement): string[] =>
@@ -182,10 +188,12 @@ export default function ErrorWrapper({ id, error, children }: Props): FCReturn {
 
     return () => {
       observer.disconnect();
-      getOwnedControls(root).forEach((el) => {
-        el.removeAttribute("aria-invalid");
-        removeDescribedBy(el, errorMessageId);
-      });
+      getOwnedControls(root).forEach((el) =>
+        el.removeAttribute("aria-invalid"),
+      );
+      // Ownership may have moved to a nested wrapper since marking, so clear
+      // this wrapper's message id from every control it could have marked
+      getControls(root).forEach((el) => removeDescribedBy(el, errorMessageId));
     };
   }, [error, errorMessageId]);
 
