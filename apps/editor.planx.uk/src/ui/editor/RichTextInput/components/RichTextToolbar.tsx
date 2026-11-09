@@ -5,7 +5,7 @@ import LinkIcon from "@mui/icons-material/Link";
 import Box from "@mui/material/Box";
 import { type Editor } from "@tiptap/core";
 import { useEditorState } from "@tiptap/react";
-import { type FC, useEffect, useRef, useState } from "react";
+import { type FC, type MouseEvent, useEffect, useRef, useState } from "react";
 
 import Input from "../../../shared/Input/Input";
 import PublicFileUploadButton from "../../../shared/PublicFileUploadButton";
@@ -19,6 +19,19 @@ import {
   OrderedListButton,
   ToolbarButton,
 } from "./RichTextInputButtons";
+
+const FOCUSABLE_ELEMENTS =
+  "a[href], button:not(:disabled), input:not(:disabled), select, textarea";
+
+/**
+ * Pressing on a non-focusable part of the toolbar (padding, dividers, disabled buttons) would
+ * otherwise move focus to <body>, which closes the toolbar via :focus-within
+ * Cancelling the mousedown keeps focus on whatever currently has it (editor or URL input)
+ */
+const keepFocusWithinField = (ev: MouseEvent<HTMLDivElement>) => {
+  const target = ev.target as Element;
+  if (!target.closest(FOCUSABLE_ELEMENTS)) ev.preventDefault();
+};
 
 interface Props {
   editor: Editor;
@@ -114,6 +127,7 @@ export const RichTextToolbar: FC<Props> = ({ editor, showHeadings }) => {
       className="rte-toolbar"
       role="toolbar"
       aria-label="Text formatting"
+      onMouseDown={keepFocusWithinField}
     >
       {isAddingLink ? (
         <Box sx={{ display: "flex", alignItems: "center", flex: 1, gap: 0.5 }}>
