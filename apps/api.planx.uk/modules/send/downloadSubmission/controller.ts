@@ -31,7 +31,7 @@ export const downloadSubmission: DownloadSubmission = async (
   } catch (error) {
     return next(
       new ServerError({
-        message: `Failed to download application files. ${error}`,
+        message: `Failed to download application files for session ${sessionId}. ${error}`,
         cause: error,
       }),
     );
