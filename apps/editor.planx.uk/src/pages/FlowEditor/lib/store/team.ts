@@ -11,8 +11,8 @@ import type { StateCreator } from "zustand";
 import type { SharedStore } from "./shared";
 
 export type TeamSummary = Pick<Team, "id" | "name" | "slug"> & {
-  settings: Pick<TeamSettings, "isTrial" | "isGuidanceOnly">;
-} & { theme: Pick<TeamTheme, "primaryColour" | "logo"> };
+  settings: Pick<TeamSettings, "isTrial" | "isGuidanceOnly"> | null;
+} & { theme: Pick<TeamTheme, "primaryColour" | "logo"> | null };
 
 export interface TeamStore {
   teamId: number;

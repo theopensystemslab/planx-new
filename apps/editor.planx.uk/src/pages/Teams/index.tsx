@@ -78,14 +78,14 @@ const Teams: React.FC<Props> = ({ teams }) => {
         >
           <TeamCard>
             <Box sx={{ display: "flex" }}>
-              <TeamColourBand sx={{ bgcolor: team.theme.primaryColour }} />
+              <TeamColourBand sx={{ bgcolor: team.theme?.primaryColour }} />
               <Typography sx={{ p: 2 }} variant="h3">
                 {team.name}
               </Typography>
             </Box>
             <Box sx={{ display: "flex", gap: 1 }}>
-              {team.settings.isTrial && <InfoChip label="Trial account" />}
-              {isPlatformAdmin && team.settings.isGuidanceOnly && (
+              {team.settings?.isTrial && <InfoChip label="Trial account" />}
+              {isPlatformAdmin && team.settings?.isGuidanceOnly && (
                 <InfoChip
                   label="Guidance only"
                   sx={{
