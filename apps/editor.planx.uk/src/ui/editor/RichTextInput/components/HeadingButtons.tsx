@@ -7,15 +7,17 @@ const HeadingButton = ({
   level,
   label,
   tooltip,
+  isActive,
 }: {
   editor: Editor;
   level: 1 | 2 | 3 | 4 | 5 | 6;
+  isActive: boolean;
   label: React.ReactNode;
   tooltip: string;
 }) => (
   <ToolbarButton
     label={tooltip}
-    isActive={editor.isActive("heading", { level })}
+    isActive={isActive}
     onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
   >
     {label}
@@ -25,26 +27,37 @@ const HeadingButton = ({
 export const H1Button = ({
   editor,
   label,
+  isActive,
 }: {
   editor: Editor;
   label: React.ReactNode;
+  isActive: boolean;
 }) => {
   return (
-    <HeadingButton editor={editor} level={1} label={label} tooltip="Heading" />
+    <HeadingButton
+      editor={editor}
+      isActive={isActive}
+      level={1}
+      label={label}
+      tooltip="Heading"
+    />
   );
 };
 
 export const H2Button = ({
   editor,
   label,
+  isActive,
 }: {
   editor: Editor;
   label: React.ReactNode;
+  isActive: boolean;
 }) => {
   return (
     <HeadingButton
       editor={editor}
       level={2}
+      isActive={isActive}
       label={label}
       tooltip="Subheading"
     />

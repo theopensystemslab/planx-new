@@ -37,40 +37,54 @@ export const ToolbarButton = ({
   </Tooltip>
 );
 
-export const BoldButton = ({ editor }: { editor: Editor }) => (
+/**
+ * Active state is passed in (from useEditorState) rather than read via editor.isActive() during render
+ * The editor instance is a stable reference, so the React Compiler would otherwise memoise a stale value
+ */
+interface FormatButtonProps {
+  editor: Editor;
+  isActive: boolean;
+}
+
+export const BoldButton = ({
+  editor,
+  isActive,
+  disabled,
+}: FormatButtonProps & { disabled?: boolean }) => (
   <ToolbarButton
-    label="Bold"
-    isActive={editor.isActive("bold")}
+    label={disabled ? "Bold (not available in headings)" : "Bold"}
+    isActive={isActive && !disabled}
+    disabled={disabled}
     onClick={() => editor.chain().focus().toggleBold().run()}
   >
     <FormatBold />
   </ToolbarButton>
 );
 
-export const ItalicButton = ({ editor }: { editor: Editor }) => (
+export const ItalicButton = ({ editor, isActive }: FormatButtonProps) => (
   <ToolbarButton
     label="Italic"
-    isActive={editor.isActive("italic")}
+    isActive={isActive}
     onClick={() => editor.chain().focus().toggleItalic().run()}
   >
     <FormatItalic />
   </ToolbarButton>
 );
 
-export const BulletListButton = ({ editor }: { editor: Editor }) => (
+export const BulletListButton = ({ editor, isActive }: FormatButtonProps) => (
   <ToolbarButton
     label="Bulleted list"
-    isActive={editor.isActive("bulletList")}
+    isActive={isActive}
     onClick={() => editor.chain().focus().toggleBulletList().run()}
   >
     <FormatListBulleted />
   </ToolbarButton>
 );
 
-export const OrderedListButton = ({ editor }: { editor: Editor }) => (
+export const OrderedListButton = ({ editor, isActive }: FormatButtonProps) => (
   <ToolbarButton
     label="Numbered list"
-    isActive={editor.isActive("orderedList")}
+    isActive={isActive}
     onClick={() => editor.chain().focus().toggleOrderedList().run()}
   >
     <FormatListNumbered />

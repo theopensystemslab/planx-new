@@ -1,5 +1,8 @@
-import { screen, within } from "@testing-library/react";
+import { act, screen, within } from "@testing-library/react";
+import type { Editor } from "@tiptap/core";
 import { setup } from "test/utils";
+import InputLabel from "ui/editor/InputLabel";
+import { vi } from "vitest";
 
 import RichTextInput from "./RichTextInput";
 import { fromHtml, modifyDeep, toHtml } from "./utils";
@@ -116,5 +119,101 @@ describe("formatting toolbar", () => {
       </>,
     );
     expect(screen.getAllByRole("toolbar", { hidden: true })).toHaveLength(2);
+  });
+});
+
+describe("when wrapped in a <label>", () => {
+  // Clicking non-interactive content within a <label> forwards the click to the first labelable
+  // descendant - this must not be a toolbar button
+  it("does not apply formatting when clicking into the field", async () => {
+    const onChange = vi.fn();
+    const { user, getByText } = await setup(
+      <InputLabel label="Description">
+        <RichTextInput
+          value="<p>Hello world</p>"
+          errorMessage={undefined}
+          onChange={onChange}
+        />
+      </InputLabel>,
+    );
+
+    // Click into the field, then click again whilst it's focused and the toolbar is visible
+    await user.click(getByText("Hello world"));
+    await user.click(getByText("Hello world"));
+
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("does not apply formatting when clicking the rich text marker", async () => {
+    const onChange = vi.fn();
+    const { user, container } = await setup(
+      <InputLabel label="Description">
+        <RichTextInput
+          value="<p>Hello world</p>"
+          errorMessage={undefined}
+          onChange={onChange}
+        />
+      </InputLabel>,
+    );
+
+    await user.click(container.querySelector(".rte-marker")!);
+
+    expect(onChange).not.toHaveBeenCalled();
+  });
+});
+
+describe("toolbar active state", () => {
+  it("tracks the formatting at the cursor position", async () => {
+    const { container } = await setup(
+      <RichTextInput
+        value="<h1>Title</h1><p>Body</p>"
+        errorMessage={undefined}
+        onChange={vi.fn()}
+      />,
+    );
+    // Tiptap exposes the editor instance on its root DOM node
+    const editor = (
+      container.querySelector(".ProseMirror") as unknown as {
+        editor: Editor;
+      }
+    ).editor;
+    const headingButton = () =>
+      container.querySelector('button[aria-label="Heading"]');
+
+    act(() => {
+      editor.commands.setTextSelection(2);
+    });
+    expect(headingButton()).toHaveAttribute("aria-pressed", "true");
+
+    // Move cursor into the paragraph
+    act(() => {
+      editor.commands.setTextSelection(10);
+    });
+    expect(headingButton()).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("disables the bold button within headings", async () => {
+    const { container } = await setup(
+      <RichTextInput
+        value="<h1>Title</h1><p>Body</p>"
+        errorMessage={undefined}
+        onChange={vi.fn()}
+      />,
+    );
+    const editor = (
+      container.querySelector(".ProseMirror") as unknown as { editor: Editor }
+    ).editor;
+    const boldButton = () =>
+      container.querySelector('button[aria-label^="Bold"]');
+
+    act(() => {
+      editor.commands.setTextSelection(2);
+    });
+    expect(boldButton()).toBeDisabled();
+
+    act(() => {
+      editor.commands.setTextSelection(10);
+    });
+    expect(boldButton()).toBeEnabled();
   });
 });

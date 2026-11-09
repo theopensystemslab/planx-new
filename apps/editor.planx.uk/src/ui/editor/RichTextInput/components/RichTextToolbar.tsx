@@ -31,18 +31,21 @@ interface Props {
  * currently focused field ever displays a toolbar
  */
 export const RichTextToolbar: FC<Props> = ({ editor, showHeadings }) => {
-  // Re-render on selection changes so that "active" button states track the cursor position
-  // (useEditor does not re-render on transactions by default in Tiptap v3)
-  useEditorState({
+  // Track "active" formatting at the cursor position, updating on every transaction
+  // These values must be passed down as props - calling editor.isActive() during render is unsafe
+  // as `editor` is a stable reference, so the React Compiler will memoise the first result
+  const active = useEditorState({
     editor,
     selector: ({ editor }) => ({
-      bold: editor?.isActive("bold"),
-      italic: editor?.isActive("italic"),
-      bulletList: editor?.isActive("bulletList"),
-      orderedList: editor?.isActive("orderedList"),
-      h1: editor?.isActive("heading", { level: 1 }),
-      h2: editor?.isActive("heading", { level: 2 }),
-      link: editor?.isActive("link"),
+      bold: Boolean(editor?.isActive("bold")),
+      italic: Boolean(editor?.isActive("italic")),
+      bulletList: Boolean(editor?.isActive("bulletList")),
+      orderedList: Boolean(editor?.isActive("orderedList")),
+      h1: Boolean(editor?.isActive("heading", { level: 1 })),
+      h2: Boolean(editor?.isActive("heading", { level: 2 })),
+      // Any heading level, including those from pasted content
+      heading: Boolean(editor?.isActive("heading")),
+      link: Boolean(editor?.isActive("link")),
     }),
   });
 
@@ -137,7 +140,7 @@ export const RichTextToolbar: FC<Props> = ({ editor, showHeadings }) => {
           </ToolbarButton>
           <ToolbarButton
             label="Remove link"
-            disabled={!editor.isActive("link")}
+            disabled={!active.link}
             onClick={removeLink}
           >
             <Delete />
@@ -150,16 +153,29 @@ export const RichTextToolbar: FC<Props> = ({ editor, showHeadings }) => {
         <>
           {showHeadings && (
             <>
-              <H1Button editor={editor} label={<strong>H2</strong>} />
-              <H2Button editor={editor} label={<strong>H3</strong>} />
+              <H1Button
+                editor={editor}
+                isActive={active.h1}
+                label={<strong>H2</strong>}
+              />
+              <H2Button
+                editor={editor}
+                isActive={active.h2}
+                label={<strong>H3</strong>}
+              />
               <ToolbarDivider />
             </>
           )}
-          <BoldButton editor={editor} />
-          <ItalicButton editor={editor} />
+          {/* Headings are already bold */}
+          <BoldButton
+            editor={editor}
+            isActive={active.bold}
+            disabled={active.heading}
+          />
+          <ItalicButton editor={editor} isActive={active.italic} />
           <ToolbarDivider />
-          <BulletListButton editor={editor} />
-          <OrderedListButton editor={editor} />
+          <BulletListButton editor={editor} isActive={active.bulletList} />
+          <OrderedListButton editor={editor} isActive={active.orderedList} />
           <ToolbarDivider />
           <PublicFileUploadButton
             variant="tooltip"
@@ -168,8 +184,8 @@ export const RichTextToolbar: FC<Props> = ({ editor, showHeadings }) => {
             onChange={(src) => editor.chain().focus().setImage({ src }).run()}
           />
           <ToolbarButton
-            label={editor.isActive("link") ? "Edit link" : "Add link"}
-            isActive={editor.isActive("link")}
+            label={active.link ? "Edit link" : "Add link"}
+            isActive={active.link}
             onClick={openLinkForm}
           >
             <LinkIcon />
