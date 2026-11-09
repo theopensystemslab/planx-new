@@ -148,7 +148,7 @@ const TeamSelect: React.FC<Props> = ({ currentTeamSlug, onTeamSelect }) => {
       <StyledButtonBase
         onClick={handleOpen}
         selected={false}
-        teamcolor={currentTeam?.theme.primaryColour}
+        teamcolor={currentTeam?.theme?.primaryColour}
       >
         <Box
           sx={{
@@ -242,7 +242,7 @@ const TeamSelect: React.FC<Props> = ({ currentTeamSlug, onTeamSelect }) => {
                       selected={team.slug === currentTeamSlug}
                       onClick={() => handleTeamClick(team.slug)}
                       onKeyDown={(e) => handleKeyDown(e, team.slug)}
-                      teamcolor={team.theme.primaryColour}
+                      teamcolor={team.theme?.primaryColour}
                       tabIndex={0}
                       role="button"
                       aria-label={`Select ${team.name}`}
@@ -277,7 +277,7 @@ const TeamSelect: React.FC<Props> = ({ currentTeamSlug, onTeamSelect }) => {
                       key={team.slug}
                       onClick={() => handleTeamClick(team.slug)}
                       onKeyDown={(e) => handleKeyDown(e, team.slug)}
-                      teamcolor={team.theme.primaryColour}
+                      teamcolor={team.theme?.primaryColour}
                       tabIndex={0}
                       role="button"
                       aria-label={`Select ${team.name}`}
