@@ -4,7 +4,7 @@ import { type Editor } from "@tiptap/core";
 import Mention from "@tiptap/extension-mention";
 import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, MouseEvent } from "react";
 import { type FC, useCallback, useEffect, useRef } from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -16,6 +16,8 @@ import type { Props } from "./types";
 import { fromHtml, toHtml } from "./utils";
 
 const LINE_HEIGHT_REM = 1.5;
+
+const INTERACTIVE_ELEMENTS = "a[href], button, input, select, textarea";
 
 const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
@@ -122,9 +124,20 @@ const RichTextInput: FC<Props> = (props) => {
 
   const isEditable = Boolean(editor) && !props.disabled;
 
+  // Fields are often wrapped in a <label> (e.g. ui/editor/InputLabel). Clicking non-interactive
+  // content within a label forwards the click to its first labelable descendant - here, a toolbar
+  // button - which would apply formatting. Cancel this activation for any click not on a control.
+  const preventLabelActivation = (ev: MouseEvent<HTMLDivElement>) => {
+    const target = ev.target as Element;
+    if (!target.closest(INTERACTIVE_ELEMENTS)) ev.preventDefault();
+  };
+
   return (
     <ErrorWrapper id={props.name} error={props.errorMessage}>
-      <RichContentContainer className="rich-text-editor">
+      <RichContentContainer
+        className="rich-text-editor"
+        onClick={preventLabelActivation}
+      >
         {editor && isEditable && (
           <RichTextToolbar editor={editor} showHeadings={!isParagraph} />
         )}
