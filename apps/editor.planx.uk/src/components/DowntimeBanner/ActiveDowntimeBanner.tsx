@@ -17,7 +17,11 @@ const ActiveDowntimeBanner: React.FC<{ variant: DowntimeBannerVariant }> = ({
   if (!banner?.isVisible) return null;
 
   return (
-    <DowntimeBanner title={banner.title} description={banner.description} />
+    <DowntimeBanner
+      title={banner.title}
+      description={banner.description}
+      centred={variant === "editor"}
+    />
   );
 };
 
