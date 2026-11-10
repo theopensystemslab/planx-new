@@ -1,5 +1,5 @@
 import ArticleIcon from "@mui/icons-material/Article";
-import BrokenImageIcon from "@mui/icons-material/BrokenImage";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import type { PropsWithChildren } from "react";
 
 import SettingsLayout, {
@@ -12,7 +12,7 @@ const GlobalSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
     {
       label: "Downtime banner",
       path: "/downtime-banner",
-      icon: BrokenImageIcon,
+      icon: ErrorOutlineOutlined,
     },
   ];
 

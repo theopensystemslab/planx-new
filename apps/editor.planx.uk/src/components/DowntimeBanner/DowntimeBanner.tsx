@@ -1,4 +1,4 @@
-import BrokenImageIcon from "@mui/icons-material/BrokenImage";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
@@ -12,13 +12,12 @@ import { useId, useState } from "react";
 import { CloseButton } from "ui/shared/CloseButton";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
+/** Matches the colours of ui/shared/WarningContainer */
 const DowntimeBannerWrapper = styled(Box)(({ theme }) => ({
-  display: "flex",
-  backgroundColor: theme.palette.error.main,
-  color: theme.palette.error.contrastText,
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "0.5em 0",
+  backgroundColor: theme.palette.warning.light,
+  borderBottom: `solid 2px ${theme.palette.warning.dark}`,
+  color: theme.palette.text.primary,
+  padding: theme.spacing(1, 0),
   position: "relative",
   zIndex: theme.zIndex.appBar,
 }));
@@ -51,21 +50,17 @@ const DowntimeBanner: React.FC<DowntimeBannerProps> = ({
 
   return (
     <DowntimeBannerWrapper data-testid="downtime-banner">
-      <Container
-        maxWidth="contentWrap"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <Container maxWidth="contentWrap">
         <Box
           role={isPreview ? undefined : "alert"}
           aria-live={isPreview ? undefined : "assertive"}
-          sx={{ display: "flex", alignItems: "center" }}
+          sx={{ display: "flex", alignItems: "flex-start", gap: 1.25 }}
         >
-          <BrokenImageIcon />
-          <Typography variant="body2" sx={{ ml: 1 }}>
+          <ErrorOutlineOutlined
+            sx={{ color: "warning.dark" }}
+            aria-hidden="true"
+          />
+          <Typography variant="body2" component="div" sx={{ pt: 0.25 }}>
             <strong>{displayTitle}</strong>
             {trimmedDescription && (
               <>
@@ -75,7 +70,11 @@ const DowntimeBanner: React.FC<DowntimeBannerProps> = ({
                   variant="body2"
                   color="inherit"
                   onClick={() => setIsModalOpen(true)}
-                  sx={{ verticalAlign: "baseline", fontWeight: "bold" }}
+                  sx={{
+                    verticalAlign: "baseline",
+                    fontWeight: "bold",
+                    ml: 0.5,
+                  }}
                 >
                   More information{" "}
                   <Box component="span" sx={visuallyHidden}>
