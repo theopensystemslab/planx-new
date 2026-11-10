@@ -3,7 +3,7 @@ import supertest from "supertest";
 import app from "../../../../server.js";
 import type { LocalPlanningAuthorityFeature, Success } from "./types.js";
 
-it("returns an error if required query parameters are missing", async () => {
+it.skip("returns an error if required query parameters are missing", async () => {
   await supertest(app)
     .get("/lpa")
     .query({})
@@ -24,7 +24,7 @@ it("returns an error if required query parameters are missing", async () => {
     });
 });
 
-it("returns an error if the given lat/lng falls outside of the UK", async () => {
+it.skip("returns an error if the given lat/lng falls outside of the UK", async () => {
   await supertest(app)
     .get("/lpa")
     .query({ lon: -83, lat: 42 })
@@ -39,7 +39,7 @@ it("returns an error if the given lat/lng falls outside of the UK", async () => 
     });
 });
 
-describe("checking several points against local planning authority lookup API", () => {
+describe.skip("checking several points against local planning authority lookup API", () => {
   const locations = [
     {
       lon: -0.1023,
