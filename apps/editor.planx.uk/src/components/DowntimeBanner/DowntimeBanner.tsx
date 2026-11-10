@@ -1,7 +1,9 @@
 import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
@@ -9,7 +11,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { useId, useState } from "react";
-import { CloseButton } from "ui/shared/CloseButton";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 /** Matches the colours of ui/shared/WarningContainer */
@@ -90,25 +91,27 @@ const DowntimeBanner: React.FC<DowntimeBannerProps> = ({
         <Dialog
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          maxWidth="md"
-          fullWidth
+          maxWidth="sm"
           aria-labelledby={modalTitleId}
         >
-          <Box sx={{ display: "flex", alignItems: "center", marginX: 1 }}>
-            <DialogTitle id={modalTitleId} variant="h3" component="h2">
-              {displayTitle}
-            </DialogTitle>
-            <CloseButton
-              title="Close more information"
-              onClick={() => setIsModalOpen(false)}
-            />
-          </Box>
-          <DialogContent dividers>
+          <DialogTitle id={modalTitleId} variant="h3" component="h1">
+            {displayTitle}
+          </DialogTitle>
+          <DialogContent dividers sx={{ "& > * > :first-child": { mt: 0 } }}>
             <ReactMarkdownOrHtml
               source={trimmedDescription}
               openLinksOnNewTab
             />
           </DialogContent>
+          <DialogActions>
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Close
+            </Button>
+          </DialogActions>
         </Dialog>
       )}
     </DowntimeBannerWrapper>

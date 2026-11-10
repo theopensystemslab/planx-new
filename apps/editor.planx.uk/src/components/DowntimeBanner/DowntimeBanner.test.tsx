@@ -50,9 +50,7 @@ describe("DowntimeBanner", () => {
       "Any applications in progress will be saved.",
     );
 
-    await user.click(
-      within(dialog).getByRole("button", { name: "Close more information" }),
-    );
+    await user.click(within(dialog).getByRole("button", { name: "Close" }));
     await waitFor(() =>
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
     );
