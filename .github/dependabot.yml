@@ -1,7 +1,7 @@
 # NB. this file configures dependabot's approach to general version updates of dependencies
 # fixes for vulnerabilities/CVEs (i.e. security updates) are handled automatically as per repo settings
 #
-# Every entry carries a "[skip pizza]" commit-message prefix - we rarely need these environments for 
+# Every entry carries a "[skip pizza]" commit-message prefix - we rarely need these environments for
 # a package update. CI linting, testing, and building (via E2E) should be sufficient here
 
 version: 2
