@@ -7,6 +7,20 @@ import { vi } from "vitest";
 import RichTextInput from "./RichTextInput";
 import { fromHtml, modifyDeep, toHtml } from "./utils";
 
+// jsdom does not implement document.elementFromPoint, which ProseMirror calls on mousedown
+beforeAll(() => {
+  Object.defineProperty(document, "elementFromPoint", {
+    value: vi.fn(() => null),
+    writable: true,
+    configurable: true,
+  });
+});
+
+afterAll(() => {
+  // @ts-expect-error - removing the stub restores jsdom's default (unimplemented) state
+  delete document.elementFromPoint;
+});
+
 test("modifyDeep helper", () => {
   /**
    * This example traverses a nested structure and increments every even number. The modifier function
