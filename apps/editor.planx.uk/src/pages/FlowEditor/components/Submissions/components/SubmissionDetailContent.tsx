@@ -45,13 +45,12 @@ const SubmissionDetailContent: React.FC<SubmissionDetailContentProps> = ({
     : false;
   const succeededPayment = getSucceededPayment(events);
 
-  const submissionExpirationDate = submittedAt
-    ? addDays(new Date(submittedAt), DAYS_UNTIL_EXPIRY)
-    : null;
+  const mostRecentEventDate = latestEvent.createdAt;
 
-  const isSubmissionAvailable = submissionExpirationDate
-    ? isBefore(new Date(), submissionExpirationDate)
-    : false;
+  const isSubmissionAvailable = isBefore(
+    new Date(),
+    addDays(new Date(mostRecentEventDate), DAYS_UNTIL_EXPIRY),
+  );
 
   return (
     <DialogContent>
