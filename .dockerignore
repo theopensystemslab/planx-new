@@ -6,6 +6,9 @@ node_modules
 e2e
 infrastructure
 
+# output of a local `turbo prune` - stale files are copied into image and can break the build
+out
+
 apps/editor.planx.uk/*
 !apps/editor.planx.uk/package.json
 apps/hasura.planx.uk/*
