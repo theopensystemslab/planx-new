@@ -54,7 +54,7 @@ beforeEach(() => {
     graphql.query("GetTeamBySlug", () =>
       HttpResponse.json({
         data: {
-          teams: [{ id: 1, name: "Test team", slug: TEAM_SLUG, flows: [] }],
+          teams: [{ id: 1, name: "Test team", slug: TEAM_SLUG }],
         },
       }),
     ),

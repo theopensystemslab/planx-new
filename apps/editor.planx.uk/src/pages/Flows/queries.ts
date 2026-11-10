@@ -10,7 +10,7 @@ export const FLOW_SUMMARY_FIELDS = gql`
     summary
     updatedAt: updated_at
     isListedOnLPS: is_listed_on_lps
-    operations(limit: 1, order_by: { created_at: desc }) {
+    operations(limit: 1, order_by: { version: desc }) {
       createdAt: created_at
       actor {
         firstName: first_name
