@@ -15,6 +15,7 @@ import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 import Main from "ui/shared/Main";
 
+import ActiveDowntimeBanner from "../../components/DowntimeBanner/ActiveDowntimeBanner";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { FOOTER_ITEMS } from "../../types";
@@ -100,6 +101,7 @@ const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={teamMUITheme}>
         <RootContainer data-testid="document-start">
+          <ActiveDowntimeBanner variant="public" />
           <Header />
           <MainContainer>
             <AppErrorBoundary>{children}</AppErrorBoundary>

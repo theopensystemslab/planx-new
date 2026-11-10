@@ -38,6 +38,7 @@ import { Route as AuthenticatedAppTeamSubmissionsRouteRouteImport } from './rout
 import { Route as AuthenticatedAppTeamSubscriptionRouteImport } from './routes/_authenticated/app/$team/subscription'
 import { Route as AuthenticatedAppTeamTutorialsRouteImport } from './routes/_authenticated/app/$team/tutorials'
 import { Route as AuthenticatedAppGlobalSettingsIndexRouteImport } from './routes/_authenticated/app/global-settings/index'
+import { Route as AuthenticatedAppGlobalSettingsDowntimeBannerRouteImport } from './routes/_authenticated/app/global-settings/downtime-banner'
 import { Route as AuthenticatedAppGlobalSettingsFooterRouteImport } from './routes/_authenticated/app/global-settings/footer'
 import { Route as PublicCustomDomainFlowIndexRouteImport } from './routes/_public/_customDomain/$flow/index'
 import { Route as PublicCustomDomainFlowPayRouteRouteImport } from './routes/_public/_customDomain/$flow/pay/route'
@@ -267,6 +268,12 @@ const AuthenticatedAppGlobalSettingsIndexRoute =
   AuthenticatedAppGlobalSettingsIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AuthenticatedAppGlobalSettingsRouteRoute,
+  } as any)
+const AuthenticatedAppGlobalSettingsDowntimeBannerRoute =
+  AuthenticatedAppGlobalSettingsDowntimeBannerRouteImport.update({
+    id: '/downtime-banner',
+    path: '/downtime-banner',
     getParentRoute: () => AuthenticatedAppGlobalSettingsRouteRoute,
   } as any)
 const AuthenticatedAppGlobalSettingsFooterRoute =
@@ -710,6 +717,7 @@ export interface FileRoutesByFullPath {
   '/app/$team/resources': typeof AuthenticatedAppTeamResourcesRoute
   '/app/$team/subscription': typeof AuthenticatedAppTeamSubscriptionRoute
   '/app/$team/tutorials': typeof AuthenticatedAppTeamTutorialsRoute
+  '/app/global-settings/downtime-banner': typeof AuthenticatedAppGlobalSettingsDowntimeBannerRoute
   '/app/global-settings/footer': typeof AuthenticatedAppGlobalSettingsFooterRoute
   '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/app/$team/': typeof AuthenticatedAppTeamIndexRoute
@@ -798,6 +806,7 @@ export interface FileRoutesByTo {
   '/app/$team/resources': typeof AuthenticatedAppTeamResourcesRoute
   '/app/$team/subscription': typeof AuthenticatedAppTeamSubscriptionRoute
   '/app/$team/tutorials': typeof AuthenticatedAppTeamTutorialsRoute
+  '/app/global-settings/downtime-banner': typeof AuthenticatedAppGlobalSettingsDowntimeBannerRoute
   '/app/global-settings/footer': typeof AuthenticatedAppGlobalSettingsFooterRoute
   '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/app/$team': typeof AuthenticatedAppTeamIndexRoute
@@ -890,6 +899,7 @@ export interface FileRoutesById {
   '/_authenticated/app/$team/resources': typeof AuthenticatedAppTeamResourcesRoute
   '/_authenticated/app/$team/subscription': typeof AuthenticatedAppTeamSubscriptionRoute
   '/_authenticated/app/$team/tutorials': typeof AuthenticatedAppTeamTutorialsRoute
+  '/_authenticated/app/global-settings/downtime-banner': typeof AuthenticatedAppGlobalSettingsDowntimeBannerRoute
   '/_authenticated/app/global-settings/footer': typeof AuthenticatedAppGlobalSettingsFooterRoute
   '/_public/_customDomain/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/_authenticated/app/$team/': typeof AuthenticatedAppTeamIndexRoute
@@ -989,6 +999,7 @@ export interface FileRouteTypes {
     | '/app/$team/resources'
     | '/app/$team/subscription'
     | '/app/$team/tutorials'
+    | '/app/global-settings/downtime-banner'
     | '/app/global-settings/footer'
     | '/$flow/view-application'
     | '/app/$team/'
@@ -1077,6 +1088,7 @@ export interface FileRouteTypes {
     | '/app/$team/resources'
     | '/app/$team/subscription'
     | '/app/$team/tutorials'
+    | '/app/global-settings/downtime-banner'
     | '/app/global-settings/footer'
     | '/$flow/view-application'
     | '/app/$team'
@@ -1168,6 +1180,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/$team/resources'
     | '/_authenticated/app/$team/subscription'
     | '/_authenticated/app/$team/tutorials'
+    | '/_authenticated/app/global-settings/downtime-banner'
     | '/_authenticated/app/global-settings/footer'
     | '/_public/_customDomain/$flow/view-application'
     | '/_authenticated/app/$team/'
@@ -1453,6 +1466,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/app/global-settings/'
       preLoaderRoute: typeof AuthenticatedAppGlobalSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedAppGlobalSettingsRouteRoute
+    }
+    '/_authenticated/app/global-settings/downtime-banner': {
+      id: '/_authenticated/app/global-settings/downtime-banner'
+      path: '/downtime-banner'
+      fullPath: '/app/global-settings/downtime-banner'
+      preLoaderRoute: typeof AuthenticatedAppGlobalSettingsDowntimeBannerRouteImport
       parentRoute: typeof AuthenticatedAppGlobalSettingsRouteRoute
     }
     '/_authenticated/app/global-settings/footer': {
@@ -2187,12 +2207,15 @@ const AuthenticatedAppTeamRouteRouteWithChildren =
   )
 
 interface AuthenticatedAppGlobalSettingsRouteRouteChildren {
+  AuthenticatedAppGlobalSettingsDowntimeBannerRoute: typeof AuthenticatedAppGlobalSettingsDowntimeBannerRoute
   AuthenticatedAppGlobalSettingsFooterRoute: typeof AuthenticatedAppGlobalSettingsFooterRoute
   AuthenticatedAppGlobalSettingsIndexRoute: typeof AuthenticatedAppGlobalSettingsIndexRoute
 }
 
 const AuthenticatedAppGlobalSettingsRouteRouteChildren: AuthenticatedAppGlobalSettingsRouteRouteChildren =
   {
+    AuthenticatedAppGlobalSettingsDowntimeBannerRoute:
+      AuthenticatedAppGlobalSettingsDowntimeBannerRoute,
     AuthenticatedAppGlobalSettingsFooterRoute:
       AuthenticatedAppGlobalSettingsFooterRoute,
     AuthenticatedAppGlobalSettingsIndexRoute:

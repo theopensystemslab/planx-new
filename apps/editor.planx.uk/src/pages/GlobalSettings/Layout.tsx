@@ -1,4 +1,5 @@
 import ArticleIcon from "@mui/icons-material/Article";
+import BrokenImageIcon from "@mui/icons-material/BrokenImage";
 import type { PropsWithChildren } from "react";
 
 import SettingsLayout, {
@@ -8,6 +9,11 @@ import SettingsLayout, {
 const GlobalSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const settingsLinks: SettingsLink[] = [
     { label: "Footer elements", path: "/footer", icon: ArticleIcon },
+    {
+      label: "Downtime banner",
+      path: "/downtime-banner",
+      icon: BrokenImageIcon,
+    },
   ];
 
   return (
