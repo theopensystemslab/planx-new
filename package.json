@@ -44,9 +44,9 @@
   "devDependencies": {
     "eslint": "catalog:",
     "husky": "^9.1.7",
-    "lint-staged": "^17.5.1",
+    "lint-staged": "^17.6.0",
     "prettier": "catalog:",
-    "turbo": "^2.10.12",
+    "turbo": "^2.11.10",
     "typescript": "catalog:typescript"
   },
   "packageManager": "pnpm@10.30.2",
@@ -78,12 +78,6 @@
     ],
     "ignoredBuiltDependencies": [
       "msw"
-    ],
-    "overrides": {
-      "body-parser@<1.20.9": ">=1.20.9",
-      "fast-uri@<3.1.9": ">=3.1.9",
-      "fast-uri@<4.0.0": ">=4.2.3",
-      "compression@<1.8.2": ">=1.8.2"
-    }
+    ]
   }
 }

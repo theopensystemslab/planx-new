@@ -7,13 +7,13 @@
   },
   "type": "module",
   "dependencies": {
-    "@cucumber/cucumber": "^13.2.1",
+    "@cucumber/cucumber": "^13.3.0",
     "@opensystemslab/planx-core": "catalog:",
     "axios": "catalog:",
-    "dotenv-expand": "^1000.0.0",
     "dotenv": "catalog:",
-    "graphql-tag": "catalog:graphql",
+    "dotenv-expand": "^1000.0.0",
     "graphql": "catalog:graphql",
+    "graphql-tag": "catalog:graphql",
     "jsonwebtoken": "catalog:jwt"
   },
   "devDependencies": {
