@@ -87,6 +87,7 @@ const DowntimeBanner: React.FC<DowntimeBannerProps> = ({
                 {" "}
                 <Link
                   component="button"
+                  type="button"
                   variant="body2"
                   color="inherit"
                   onClick={() => setIsModalOpen(true)}
@@ -120,6 +121,7 @@ const DowntimeBanner: React.FC<DowntimeBannerProps> = ({
           </DialogContent>
           <DialogActions>
             <Button
+              type="button"
               color="secondary"
               variant="contained"
               onClick={() => setIsModalOpen(false)}
