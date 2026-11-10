@@ -1,5 +1,6 @@
 import type Stripe from "stripe";
 
+import type * as resend from "../../../../lib/resend/index.js";
 import { sendEmail } from "../../../../lib/resend/index.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import * as payHelpers from "../../../pay/helpers.js";
@@ -22,7 +23,8 @@ import {
   sendPaymentConfirmationEmails,
 } from "./service.js";
 
-vi.mock("../../../../lib/resend/index.js", () => ({
+vi.mock("../../../../lib/resend/index.js", async (importOriginal) => ({
+  ...(await importOriginal<typeof resend>()),
   sendEmail: vi.fn(),
 }));
 
@@ -123,7 +125,7 @@ describe("sendPaymentConfirmationEmails", () => {
   });
 
   describe("payer", () => {
-    it("sends a council-branded payment confirmation, replying to the council", async () => {
+    it("sends a council-branded payment confirmation from Local Planning Services, replying to the council", async () => {
       await send();
 
       expect(sendEmail).toHaveBeenCalledWith(
@@ -141,6 +143,7 @@ describe("sendPaymentConfirmationEmails", () => {
         },
         expect.objectContaining({
           idempotencyKey: `payment-confirmed-payer-${paymentIntent.id}`,
+          from: `${TEAM_NAME} <noreply@notifications.localplanning.services>`,
           replyTo: "help@southwark.gov.uk",
         }),
       );
