@@ -298,5 +298,28 @@ describe("SubmissionDetailModal", () => {
         ).toBeInTheDocument();
       });
     });
+
+    it("renders when no Send events have succeeded", async () => {
+      mockUser = mockUserWithRole("platformAdmin", mockTeamSlug);
+
+      server.use(
+        graphql.query("GetSubmissionEvents", () =>
+          HttpResponse.json({
+            data: { submissions: mockSubmissionFailureEvents },
+          }),
+        ),
+      );
+
+      await setup(
+        <SubmissionDetailModal sessionId="6fcb873f-cc7f-4fc0-ad9d-b4148de7a3b5" />,
+      );
+
+      await waitFor(() => {
+        expect(screen.queryByText("Submission details")).toBeInTheDocument();
+      });
+
+      const resubmitButtons = await screen.findAllByText(/Resubmit/i);
+      expect(resubmitButtons.length).toEqual(2);
+    });
   });
 });
