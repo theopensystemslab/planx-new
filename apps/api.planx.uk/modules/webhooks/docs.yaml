@@ -154,7 +154,7 @@ components:
                   type: string
           additionalProperties: false
         - type: object
-          required: ["lockedAt", "operation", "payload"]
+          required: ["operation", "payload"]
           properties:
             operation:
               type: string
@@ -162,6 +162,13 @@ components:
             lockedAt:
               type: string
               format: date-time
+              nullable: true
+              description: Null when the session has been unlocked, which leaves the existing delete event in place
+            delayedPaymentStartedAt:
+              type: string
+              format: date-time
+              nullable: true
+              description: When set, the delete event is scheduled from this date instead of lockedAt
             payload:
               type: object
               properties:
