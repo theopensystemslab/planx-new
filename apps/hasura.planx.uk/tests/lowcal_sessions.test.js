@@ -20,13 +20,13 @@ describe("lowcal_sessions", () => {
       expect(i.mutations).toContain("insert_lowcal_sessions_one");
     });
 
-    test("cannot query when a delayed payment was started", () => {
+    test("cannot query delayed payment details", () => {
       const lowcalSessions = i.types.find(
         (type) => type.name === "lowcal_sessions",
       );
-      expect(lowcalSessions.fields.map((field) => field.name)).not.toContain(
-        "delayed_payment_started_at",
-      );
+      const fields = lowcalSessions.fields.map((field) => field.name);
+      expect(fields).not.toContain("delayed_payment_started_at");
+      expect(fields).not.toContain("paid_at");
     });
   });
 
@@ -609,13 +609,13 @@ describe("lowcal_sessions", () => {
       expect(i.mutations).not.toContain("delete_lowcal_sessions");
     });
 
-    test("can query when a delayed payment was started, which starts the window to pay again", () => {
+    test("can query when a delayed payment was started, and when it succeeded", () => {
       const lowcalSessions = i.types.find(
         (type) => type.name === "lowcal_sessions",
       );
-      expect(lowcalSessions.fields.map((field) => field.name)).toContain(
-        "delayed_payment_started_at",
-      );
+      const fields = lowcalSessions.fields.map((field) => field.name);
+      expect(fields).toContain("delayed_payment_started_at");
+      expect(fields).toContain("paid_at");
     });
   });
 });

@@ -60,6 +60,7 @@ select_permissions:
         - deleted_at
         - locked_at
         - delayed_payment_started_at
+        - paid_at
         - submitted_at
         - updated_at
         - flow_id
@@ -80,6 +81,7 @@ select_permissions:
         - deleted_at
         - locked_at
         - delayed_payment_started_at
+        - paid_at
         - submitted_at
         - updated_at
         - flow_id
@@ -125,6 +127,7 @@ select_permissions:
         - deleted_at
         - locked_at
         - delayed_payment_started_at
+        - paid_at
         - submitted_at
         - updated_at
         - flow_id
@@ -157,6 +160,7 @@ update_permissions:
         - has_user_saved
         - id
         - locked_at
+        - paid_at
         - sanitised_at
         - submitted_at
         - updated_at
@@ -330,4 +334,33 @@ event_triggers:
       query_params: {}
       template_engine: Kriti
       url: '{{$base_url}}/webhooks/hasura/create-reminder-event'
+      version: 2
+  - name: setup_session_payment_send_events
+    definition:
+      enable_manual: false
+      update:
+        columns:
+          - paid_at
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook_from_env: HASURA_PLANX_API_URL
+    headers:
+      - name: authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "createdAt": {{$body.event.data.new.created_at}},
+            "payload": {
+              "sessionId": {{$body.event.data.new.id}}
+            }
+          }
+      method: POST
+      query_params: {}
+      template_engine: Kriti
+      url: '{{$base_url}}/webhooks/hasura/create-payment-send-events'
       version: 2
