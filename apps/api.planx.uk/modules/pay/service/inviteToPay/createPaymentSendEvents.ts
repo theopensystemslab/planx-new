@@ -9,7 +9,9 @@ import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
 import type { CombinedResponse } from "../../../../lib/hasura/metadata/types.js";
 import type { Flow, Node } from "../../../../types.js";
 
-// Create "One-off Scheduled Events" in Hasura when a payment request is paid
+// Create "One-off Scheduled Events" in Hasura when a session is paid server-side
+//   - an invite to pay request is paid (payment_requests.paid_at)
+//   - a delayed payment (e.g. Bacs) succeeds (lowcal_sessions.paid_at)
 const createPaymentSendEvents = async (
   req: Request,
   res: Response,
@@ -48,7 +50,14 @@ const createPaymentSendEvents = async (
     const sendNode: [string, Node] | undefined = Object.entries(
       publishedFlowData,
     ).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
-    const destinations: SendIntegration[] = sendNode?.[1]?.data?.destinations;
+    const destinations: SendIntegration[] | undefined =
+      sendNode?.[1]?.data?.destinations;
+    if (!destinations) {
+      return next({
+        status: 400,
+        message: `Cannot create payment send events: flow ${session.flow.id} has no Send component`,
+      });
+    }
 
     const teamSlug = await getTeamSlugByFlowId(session.flow.id);
     const eventPayload = { sessionId: payload.sessionId };
