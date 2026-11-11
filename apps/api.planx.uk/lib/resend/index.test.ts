@@ -8,7 +8,7 @@ vi.mock("resend", () => ({
   },
 }));
 
-const { sendEmail } = await import("./index.js");
+const { sendEmail, getCouncilFromAddress } = await import("./index.js");
 
 const submitVariables: TemplateRegistry["submit"]["variables"] = {
   serviceName: "Report a planning breach",
@@ -87,6 +87,23 @@ describe("sendEmail (Resend wrapper)", () => {
 
     expect(mockSend).toHaveBeenCalledWith(
       expect.objectContaining({ replyTo: "planning@council.gov.uk" }),
+      expect.any(Object),
+    );
+  });
+
+  it("forwards a custom from address to Resend", async () => {
+    mockSend.mockResolvedValue({ data: { id: "resend-id" }, error: null });
+    const from = getCouncilFromAddress("Southwark Council");
+
+    await sendEmail(
+      "submit",
+      "planning.office@council.gov.uk",
+      submitVariables,
+      { from },
+    );
+
+    expect(mockSend).toHaveBeenCalledWith(
+      expect.objectContaining({ from }),
       expect.any(Object),
     );
   });

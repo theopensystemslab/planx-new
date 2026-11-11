@@ -8,6 +8,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_ADDRESS =
   process.env.RESEND_FROM_ADDRESS || "PlanX <no-reply@opensystemslab.io>";
 
+const LPS_FROM_EMAIL = "noreply@notifications.localplanning.services";
+
+export const getCouncilFromAddress = (councilName: string): string =>
+  `${councilName} <${LPS_FROM_EMAIL}>`;
+
 // Retrying on these errors can still succeed
 // Any other errors will need a dev intervention somewhere before a retry
 // Docs: https://resend.com/docs/api-reference/errors
@@ -25,15 +30,17 @@ export const sendEmail = async <T extends ResendTemplate>(
     idempotencyKey,
     attachments,
     replyTo,
+    from = FROM_ADDRESS,
   }: {
     idempotencyKey?: string;
     attachments?: Attachment[];
     replyTo?: string;
+    from?: string;
   } = {},
 ): Promise<{ message: string }> => {
   const { error } = await resend.emails.send(
     {
-      from: FROM_ADDRESS,
+      from,
       to,
       template: {
         id: templateName,

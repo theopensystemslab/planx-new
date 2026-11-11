@@ -5,7 +5,10 @@ import type { Attachment } from "resend";
 import type Stripe from "stripe";
 
 import { $api } from "../../../../client/index.js";
-import { sendEmail } from "../../../../lib/resend/index.js";
+import {
+  getCouncilFromAddress,
+  sendEmail,
+} from "../../../../lib/resend/index.js";
 import { reportError } from "../../../pay/helpers.js";
 import { formatPence } from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
@@ -104,6 +107,7 @@ const toAttachment = async ({
 /**
  * Email the payer and the council once a Stripe payment has succeeded (for Bacs, once it has cleared)
  *  - payer: payment confirmation, with their VAT receipt attached if there is one
+ *    Sent from the Local Planning Services domain in the council's name, replying to the council
  *  - council: payment confirmation, with all of the payment's VAT documents attached
  *
  * Runs after createInvoices(), so the documents are already stored
@@ -154,6 +158,7 @@ export async function sendPaymentConfirmationEmails(
       },
       {
         idempotencyKey: `payment-confirmed-payer-${paymentIntent.id}`,
+        from: getCouncilFromAddress(recorded.teamName),
         replyTo: council.helpEmail ?? undefined,
         attachments: receipt ? [await toAttachment(receipt)] : undefined,
       },
