@@ -125,7 +125,11 @@ describe("tracking Checkout Sessions for a PlanX session", () => {
 
   describe("expiring previous Checkout Sessions for the session", () => {
     const mockPreviousSessions = (
-      sessions: { id: string; status: string | null }[],
+      sessions: {
+        id: string;
+        status: string | null;
+        payment_intent?: { id: string; status: string } | null;
+      }[],
     ) => {
       mockInitiatedCheckoutSessions(sessions.map(({ id }) => id));
       mockRetrieve.mockImplementation(async (id: string) =>
@@ -164,7 +168,9 @@ describe("tracking Checkout Sessions for a PlanX session", () => {
           });
         });
 
-      expect(mockRetrieve).toHaveBeenCalledWith("cs_test_previous");
+      expect(mockRetrieve).toHaveBeenCalledWith("cs_test_previous", {
+        expand: ["payment_intent"],
+      });
       expect(mockExpire).toHaveBeenCalledTimes(1);
       expect(mockExpire).toHaveBeenCalledWith("cs_test_previous");
       expect(mockExpire.mock.invocationCallOrder[0]).toBeLessThan(
@@ -201,6 +207,47 @@ describe("tracking Checkout Sessions for a PlanX session", () => {
       expect(mockCreate).not.toHaveBeenCalled();
       expect(getPaymentStatusInsert()).toBeUndefined();
     });
+
+    it("does not create a new Checkout Session while a previous delayed payment (e.g. Bacs) is processing", async () => {
+      mockPreviousSessions([
+        {
+          id: "cs_test_processing",
+          status: "complete",
+          payment_intent: { id: "pi_test_processing", status: "processing" },
+        },
+      ]);
+
+      await supertest(app)
+        .post("/stripe/checkout-session/southwark")
+        .send(validBody)
+        .expect(422);
+
+      expect(mockCreate).not.toHaveBeenCalled();
+    });
+
+    it.each(["requires_payment_method", "canceled"])(
+      "creates a new Checkout Session when a previous delayed payment has failed (%s), so the payer can pay again",
+      async (paymentIntentStatus) => {
+        mockPreviousSessions([
+          {
+            id: "cs_test_failed",
+            status: "complete",
+            payment_intent: {
+              id: "pi_test_failed",
+              status: paymentIntentStatus,
+            },
+          },
+        ]);
+
+        await supertest(app)
+          .post("/stripe/checkout-session/southwark")
+          .send(validBody)
+          .expect(200);
+
+        expect(mockExpire).not.toHaveBeenCalled();
+        expect(mockCreate).toHaveBeenCalledTimes(1);
+      },
+    );
 
     it("still expires other open Checkout Sessions if a previous one has been paid", async () => {
       mockPreviousSessions([
