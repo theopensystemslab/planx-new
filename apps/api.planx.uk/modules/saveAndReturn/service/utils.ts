@@ -99,6 +99,7 @@ const validateSingleSessionRequest = async (
           created_at
           submitted_at
           has_user_saved
+          delayed_payment_started_at
           flow {
             slug
             name
@@ -174,7 +175,9 @@ export const getSessionDetails = (session: LowCalSession): SessionDetails => {
     address: addressLine || "Address not submitted",
     projectType: projectTypes || "Project type not submitted",
     id: session.id,
-    expiryDate: calculateExpiryDate(session.created_at),
+    expiryDate: calculateExpiryDate(
+      session.delayed_payment_started_at ?? session.created_at,
+    ),
     hasUserSaved: session.has_user_saved,
     submittedAt: session.submitted_at,
   };

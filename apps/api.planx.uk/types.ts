@@ -92,6 +92,7 @@ export interface LowCalSession {
   submitted_at: string | null;
   deleted_at: string | null;
   has_user_saved: boolean;
+  delayed_payment_started_at?: string | null;
   flow: {
     slug: string;
     name: string;

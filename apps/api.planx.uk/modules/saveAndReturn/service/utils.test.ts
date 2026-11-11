@@ -74,6 +74,31 @@ describe("getSessionDetails() util function", () => {
 
     expect(result.address).toEqual("Address title");
   });
+
+  it("expires 28 days after the session was created", () => {
+    const result = getSessionDetails({
+      data: { id: "flowId", passport: { data: {} }, breadcrumbs: {} },
+      id: "abc123",
+      created_at: "2026-10-01T12:00:00Z",
+      submitted_at: null,
+      has_user_saved: true,
+    } as LowCalSession);
+
+    expect(result.expiryDate).toEqual("29 October 2026");
+  });
+
+  it("expires 28 days after the first delayed payment (e.g. Bacs) was started, if there was one", () => {
+    const result = getSessionDetails({
+      data: { id: "flowId", passport: { data: {} }, breadcrumbs: {} },
+      id: "abc123",
+      created_at: "2026-10-01T12:00:00Z",
+      delayed_payment_started_at: "2026-10-20T12:00:00Z",
+      submitted_at: null,
+      has_user_saved: true,
+    } as LowCalSession);
+
+    expect(result.expiryDate).toEqual("17 November 2026");
+  });
 });
 
 describe("setupEmailEventTriggers util function", () => {
