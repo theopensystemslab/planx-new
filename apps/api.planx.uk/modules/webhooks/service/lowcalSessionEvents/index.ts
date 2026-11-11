@@ -58,17 +58,24 @@ export const createSessionExpiryEvent = async ({
 
 /**
  * Create a "delete" event for a lowcal_sessions record
+ *  - INSERT: 28 days after the session was created
+ *  - UPDATE (locked): 28 days after it was locked - or, for a delayed payment (e.g. Bacs),
+ *    28 days after the first one was started, so paying again after a failure can't extend the window
+ *  - UPDATE (unlocked): no change - the session stays resumable until the existing event
  */
 export const createSessionDeleteEvent = async ({
   operation,
   createdAt,
   lockedAt,
+  delayedPaymentStartedAt,
   payload,
 }: CreateSessionDeleteEvent) => {
   let dt;
   if (operation == "UPDATE") {
+    if (!lockedAt) return [];
+
     // in this case we expect an event already exists, and delete it before creating a new one
-    dt = lockedAt as Date;
+    dt = delayedPaymentStartedAt ?? lockedAt;
     await deleteSessionDeleteEvent(payload.sessionId);
   } else if (operation == "INSERT") {
     dt = createdAt as Date;
