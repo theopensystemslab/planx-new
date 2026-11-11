@@ -153,6 +153,7 @@ insert_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
