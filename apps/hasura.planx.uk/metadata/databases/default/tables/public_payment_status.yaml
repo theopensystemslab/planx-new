@@ -76,7 +76,8 @@ event_triggers:
           {
             "payload": {
               "stripePaymentId": {{$body.event.data.new.stripe_payment_id}},
-              "stripeStatus": {{$body.event.data.new.stripe_status}}
+              "stripeStatus": {{$body.event.data.new.stripe_status}},
+              "paymentMethod": {{$body.event.data.new.payment_method}}
             },
             "deliveryInfo": {
               "currentRetry": {{$body.delivery_info.current_retry}},

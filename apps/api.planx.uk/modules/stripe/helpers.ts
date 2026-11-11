@@ -45,3 +45,16 @@ export async function postStripePaymentNotificationToSlack(
     console.log("Not production, skipping Slack payment notification");
   }
 }
+
+const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  card: "Card",
+  pay_by_bank: "Pay by bank",
+  bacs_debit: "Bacs Direct Debit",
+};
+
+export const formatPaymentMethod = (paymentMethod: string | null): string => {
+  if (!paymentMethod) return "Unknown";
+  return (
+    PAYMENT_METHOD_LABELS[paymentMethod] ?? paymentMethod.replaceAll("_", " ")
+  );
+};
