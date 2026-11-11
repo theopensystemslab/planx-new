@@ -1,7 +1,10 @@
 import supertest from "supertest";
 
 import app from "../../../server.js";
-import { mockRetrieve } from "./test/mocks.js";
+import { queryMock } from "../../../tests/graphqlQueryMock.js";
+import { mockRetrieve, validBody } from "./test/mocks.js";
+
+const SESSION_ID = validBody.sessionId;
 
 vi.mock(
   "stripe",
@@ -11,6 +14,7 @@ vi.mock(
 describe("retrieving a Stripe Checkout Session status", () => {
   beforeEach(() => {
     mockRetrieve.mockReset();
+    queryMock.reset();
   });
 
   it("returns the status, payment status and PaymentIntent id", async () => {
@@ -53,6 +57,38 @@ describe("retrieving a Stripe Checkout Session status", () => {
           paymentIntentId: null,
         });
       });
+  });
+
+  it("locks the PlanX session while a delayed payment (e.g. Bacs) is processing", async () => {
+    queryMock.mockQuery({
+      name: "MarkDelayedPaymentPending",
+      matchOnVariables: false,
+      data: { started: { affectedRows: 1 }, locked: { affectedRows: 1 } },
+    });
+    mockRetrieve.mockResolvedValue({
+      id: "cs_test_bacs",
+      status: "complete",
+      payment_status: "unpaid",
+      payment_intent: "pi_test_bacs",
+      metadata: { sessionId: SESSION_ID, origin: process.env.API_URL_EXT },
+    });
+
+    await supertest(app)
+      .get(`/stripe/checkout-session/southwark/cs_test_bacs`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          status: "complete",
+          paymentStatus: "unpaid",
+          paymentIntentId: "pi_test_bacs",
+        });
+      });
+
+    expect(
+      queryMock
+        .getCalls()
+        .filter((call) => call.id === "MarkDelayedPaymentPending"),
+    ).toHaveLength(1);
   });
 
   it("returns a 500 when Stripe rejects the request", async () => {
