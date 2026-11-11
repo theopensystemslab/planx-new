@@ -145,14 +145,15 @@ describe("renderVatInvoiceHtml", () => {
     const html = renderVatInvoiceHtml(invoice());
 
     expect(html).toContain('<img src="https://example.com/logo.png"');
-    expect(html).toContain("background: #2E3192");
+    // Logo is inverted for a white page rather than shown on the primary colour
+    expect(html).toContain("filter: invert(1) grayscale(1)");
+    expect(html).not.toContain("#2E3192");
   });
 
   it("renders without branding", () => {
     const html = renderVatInvoiceHtml(invoice({ branding: null }));
 
     expect(html).not.toContain("<img");
-    expect(html).not.toContain("background:");
   });
 
   it("escapes user-controlled values", () => {
@@ -172,18 +173,14 @@ describe("renderVatInvoiceHtml", () => {
     expect(html).toContain("&lt;script&gt;");
   });
 
-  it("ignores unsafe branding values", () => {
+  it("ignores unsafe logo values", () => {
     const html = renderVatInvoiceHtml(
       invoice({
-        branding: {
-          logo: "javascript:alert(1)",
-          primaryColour: "red; } body { display: none",
-        },
+        branding: { logo: "javascript:alert(1)", primaryColour: "#2E3192" },
       }),
     );
 
     expect(html).not.toContain("<img");
-    expect(html).not.toContain("display: none");
-    expect(html).toContain("background: #0010A4");
+    expect(html).not.toContain("javascript:");
   });
 });
