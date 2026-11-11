@@ -4,7 +4,6 @@ import supertest from "supertest";
 import app from "../../../../server.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import * as payHelpers from "../../../pay/helpers.js";
-import * as stripeHelpers from "../../helpers.js";
 import { STRIPE_WEBHOOK_ENDPOINT } from "../../routes.js";
 import { sign } from "../test/utils.js";
 import {
@@ -202,7 +201,6 @@ describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
     queryMock.reset();
     mockSession();
     mockMarkAsPaid();
-    vi.spyOn(stripeHelpers, "alertPlanX").mockResolvedValue();
     vi.spyOn(payHelpers, "reportError");
   });
 
@@ -223,7 +221,7 @@ describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
         },
       },
     });
-    expect(stripeHelpers.alertPlanX).not.toHaveBeenCalled();
+    expect(payHelpers.reportError).not.toHaveBeenCalled();
   });
 
   it("does nothing when the session has already been paid (e.g. a redelivered event)", async () => {
@@ -234,25 +232,29 @@ describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
     expect(markAsPaidCalls()).toHaveLength(0);
   });
 
-  it("alerts PlanX, without submitting, when the session expired while the payment was processing", async () => {
+  it("reports an error, without submitting, when the session expired while the payment was processing", async () => {
     mockSession({ deletedAt: "2026-11-11T09:00:00Z" });
 
     await post(succeededEvent()).expect(200);
 
     expect(markAsPaidCalls()).toHaveLength(0);
-    expect(stripeHelpers.alertPlanX).toHaveBeenCalledWith(
-      expect.stringContaining("has expired"),
+    expect(payHelpers.reportError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: expect.stringContaining("has expired"),
+      }),
     );
   });
 
-  it("alerts PlanX when the session has already been submitted, as the applicant may have paid twice", async () => {
+  it("reports an error when the session has already been submitted, as the applicant may have paid twice", async () => {
     mockSession({ submittedAt: "2026-11-11T09:00:00Z" });
 
     await post(succeededEvent()).expect(200);
 
     expect(markAsPaidCalls()).toHaveLength(0);
-    expect(stripeHelpers.alertPlanX).toHaveBeenCalledWith(
-      expect.stringContaining("may have paid twice"),
+    expect(payHelpers.reportError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: expect.stringContaining("may have paid twice"),
+      }),
     );
   });
 

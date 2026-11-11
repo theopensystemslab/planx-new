@@ -6,7 +6,7 @@ import { z } from "zod";
 import { $api } from "../../../../client/index.js";
 import { reportError } from "../../../pay/helpers.js";
 import { STRIPE_PASSPORT_KEY } from "../../fulfilment/types.js";
-import { alertPlanX, getStripeId } from "../../helpers.js";
+import { getStripeId } from "../../helpers.js";
 
 /**
  * Reserved metadata set by PlanX on a self-pay Checkout Session (no paymentRequestId)
@@ -236,21 +236,23 @@ export async function fulfilDelayedPayment(
     );
   }
 
-  const payment = `Stripe payment *${stripePaymentId}*`;
+  const payment = `Stripe payment ${stripePaymentId}`;
   const team = session.flow.team.slug;
 
   // The 28-day window to pay ran out while the payment was processing
   if (session.deletedAt) {
-    return alertPlanX(
-      `:warning: ${payment} succeeded, but session ${sessionId} has expired [${team}]. The application has not been submitted - needs following up manually.`,
-    );
+    return reportError({
+      error: `${payment} succeeded, but session ${sessionId} has expired [${team}]. The application has not been submitted - needs following up manually.`,
+      context: { stripePaymentId, sessionId },
+    });
   }
 
   // Should not happen - the session is locked while the payment is processing
   if (session.submittedAt) {
-    return alertPlanX(
-      `:warning: ${payment} succeeded, but session ${sessionId} was already submitted [${team}]. The applicant may have paid twice - needs following up manually.`,
-    );
+    return reportError({
+      error: `${payment} succeeded, but session ${sessionId} was already submitted [${team}]. The applicant may have paid twice - needs following up manually.`,
+      context: { stripePaymentId, sessionId },
+    });
   }
 
   const affectedRows = await markSessionAsPaid({
