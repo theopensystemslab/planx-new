@@ -1,4 +1,4 @@
-import { addDays } from "date-fns";
+import { addDays, subDays } from "date-fns";
 import supertest from "supertest";
 import type { MockedFunction } from "vitest";
 
@@ -421,6 +421,55 @@ describe("Create delete event webhook", () => {
         expect(mockedCreateScheduledEvent).toHaveBeenCalledWith(create_args);
         expect(response.body).toStrictEqual([mockCreateScheduledEventResponse]);
       });
+  });
+
+  it("schedules the delete event from when the first delayed payment was started, so paying again can't extend the window", async () => {
+    const delayedPaymentStartedAt = subDays(CREATED_AT_TIME, 10);
+    const body = {
+      lockedAt: CREATED_AT_TIME,
+      delayedPaymentStartedAt,
+      operation: "UPDATE",
+      payload: { sessionId: MOCK_UUID },
+    };
+    mockedCreateScheduledEvent.mockResolvedValue(
+      mockCreateScheduledEventResponse,
+    );
+    mockedGetScheduledEvents.mockResolvedValue(mockGetScheduledEventsResponse);
+    mockedDeleteScheduledEvent.mockResolvedValue(
+      mockDeleteScheduledEventResponse,
+    );
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send(body)
+      .expect(200);
+
+    expect(mockedDeleteScheduledEvent).toHaveBeenCalled();
+    expect(mockedCreateScheduledEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        schedule_at: addDays(delayedPaymentStartedAt, DAYS_UNTIL_EXPIRY),
+      }),
+    );
+  });
+
+  it("leaves the existing delete event in place when the session is unlocked", async () => {
+    const body = {
+      lockedAt: null,
+      delayedPaymentStartedAt: CREATED_AT_TIME,
+      operation: "UPDATE",
+      payload: { sessionId: MOCK_UUID },
+    };
+
+    await post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send(body)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toStrictEqual([]);
+      });
+
+    expect(mockedDeleteScheduledEvent).not.toHaveBeenCalled();
+    expect(mockedCreateScheduledEvent).not.toHaveBeenCalled();
   });
 
   it("returns a 500 on event setup failure", async () => {
