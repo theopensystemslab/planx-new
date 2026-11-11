@@ -7,6 +7,7 @@ import {
   createStripeCheckoutSession,
   getStripeCheckoutSessionStatus,
 } from "lib/api/stripe/requests";
+import type { StripeCheckoutSessionStatus } from "lib/api/stripe/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 import { useErrorBoundary } from "react-error-boundary";
@@ -19,7 +20,11 @@ import type { Props } from "../Pay";
 import type { StripeAction } from "../types";
 import { Action } from "../types";
 import { getStripeCheckoutURL, isNoPaymentMethodError } from "./stripeCheckout";
-import { STRIPE_PASSPORT_KEY, type UsePaymentProviderResult } from "./types";
+import {
+  PAYMENT_PROCESSING_PASSPORT_KEY,
+  STRIPE_PASSPORT_KEY,
+  type UsePaymentProviderResult,
+} from "./types";
 
 // Payments are only taken on published services - never on /draft or /preview test links
 const TEST_ENVIRONMENT_ROUTE_IDS = new Set<string>([
@@ -47,6 +52,18 @@ const STRIPE_NOT_CONFIGURED_ERRORS = [
 const isStripeNotConfiguredError = ({ statusCode, data }: StripeAPIError) =>
   statusCode === 409 &&
   STRIPE_NOT_CONFIGURED_ERRORS.some((pattern) => pattern.test(data.error));
+
+/**
+ * Checkout is complete, but the bank takes the payment later (e.g. Bacs Direct Debit)
+ * The checkout status endpoint does not return the PaymentIntent status, so infer it from the session
+ */
+const isPaymentProcessing = (checkoutStatus?: StripeCheckoutSessionStatus) =>
+  checkoutStatus?.status === "complete" &&
+  checkoutStatus.paymentStatus === "unpaid";
+
+const hasPaymentOutcome = (checkoutStatus?: StripeCheckoutSessionStatus) =>
+  checkoutStatus?.paymentStatus === "paid" ||
+  isPaymentProcessing(checkoutStatus);
 
 export function useStripePay(
   props: Props,
@@ -96,16 +113,29 @@ export function useStripePay(
       Boolean(stripeSessionId) &&
       !wasCancelled,
     refetchInterval: (query) =>
-      query.state.data?.paymentStatus === "paid" ? false : 3000,
+      hasPaymentOutcome(query.state.data) ? false : 3000,
   });
+
+  const getPaymentData = () => {
+    // TODO: Store full payload - do we need anything more than this?
+    const paymentData = makeData(
+      props,
+      checkoutStatus?.paymentIntentId,
+      STRIPE_PASSPORT_KEY,
+    );
+
+    if (isPaymentProcessing(checkoutStatus)) {
+      return {
+        data: { ...paymentData.data, [PAYMENT_PROCESSING_PASSPORT_KEY]: true },
+      };
+    }
+
+    return paymentData;
+  };
 
   const handleSuccess = () => {
     dispatch(Action.Success);
-    // TODO: Store full payload
-    props.handleSubmit &&
-      props.handleSubmit(
-        makeData(props, checkoutStatus?.paymentIntentId, STRIPE_PASSPORT_KEY),
-      );
+    props.handleSubmit && props.handleSubmit(getPaymentData());
   };
 
   const startNewPayment = async () => {
@@ -172,13 +202,12 @@ export function useStripePay(
   useEffect(() => {
     if (!checkoutStatus) return;
 
-    if (checkoutStatus.paymentStatus === "paid") {
+    if (hasPaymentOutcome(checkoutStatus)) {
       handleSuccess();
       return;
     }
 
     // A session that expired without payment — let the applicant try again
-    // TODO: Account for "pending" status (e.g. Bacs) once fully migrated from GovPay
     if (checkoutStatus.status === "expired") {
       dispatch(Action.PaymentCancelled);
     }
