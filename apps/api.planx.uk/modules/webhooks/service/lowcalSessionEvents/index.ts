@@ -140,3 +140,40 @@ const deleteSessionDeleteEvent = async (
     ),
   );
 };
+
+const isSessionEmailEvent = (sessionId: string, comment?: string | null) =>
+  comment === `expiry_${sessionId}` ||
+  Boolean(comment?.startsWith(`reminder_${sessionId}_`));
+
+/**
+ * Move a session's "reminder" and "expiry" emails, so they count down to a new expiry date
+ *
+ * e.g. a session unlocked after a delayed payment (e.g. Bacs) failed can be resumed for 28 days from when the
+ * first delayed payment started, not from when it was created
+ */
+export const rescheduleSessionEmailEvents = async ({
+  from,
+  payload,
+}: {
+  from: Date;
+  payload: CreateSessionEmailEvent["payload"];
+}) => {
+  const scheduledEvents = await getScheduledEvents({
+    type: "one_off",
+    status: ["scheduled"],
+    get_rows_count: true,
+  });
+  const eventsToDelete = scheduledEvents.events.filter((event) =>
+    isSessionEmailEvent(payload.sessionId, event.comment),
+  );
+  await Promise.all(
+    eventsToDelete.map((event) =>
+      deleteScheduledEvent({ type: "one_off", event_id: event.id }),
+    ),
+  );
+
+  return [
+    ...(await createSessionReminderEvent({ createdAt: from, payload })),
+    ...(await createSessionExpiryEvent({ createdAt: from, payload })),
+  ];
+};
