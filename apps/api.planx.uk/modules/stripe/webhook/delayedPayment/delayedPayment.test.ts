@@ -3,6 +3,8 @@ import supertest from "supertest";
 
 import app from "../../../../server.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
+import * as payHelpers from "../../../pay/helpers.js";
+import * as stripeHelpers from "../../helpers.js";
 import { STRIPE_WEBHOOK_ENDPOINT } from "../../routes.js";
 import { sign } from "../test/utils.js";
 import {
@@ -34,6 +36,13 @@ const mockMarkPending = ({ started = 1, locked = 1 } = {}) =>
       locked: { affectedRows: locked },
     },
   });
+
+const post = ({ payload, signature }: ReturnType<typeof sign>) =>
+  supertest(app)
+    .post(STRIPE_WEBHOOK_ENDPOINT)
+    .set("Content-Type", "application/json")
+    .set("stripe-signature", signature)
+    .send(payload);
 
 const markPendingCalls = () =>
   queryMock
@@ -126,13 +135,6 @@ describe("marking a delayed payment (e.g. Bacs) as pending", () => {
         data: { object: checkoutSession(overrides) },
       });
 
-    const post = ({ payload, signature }: ReturnType<typeof sign>) =>
-      supertest(app)
-        .post(STRIPE_WEBHOOK_ENDPOINT)
-        .set("Content-Type", "application/json")
-        .set("stripe-signature", signature)
-        .send(payload);
-
     it("locks a self-pay session on checkout.session.completed, in case the applicant doesn't return to PlanX", async () => {
       await post(completedEvent()).expect(200);
 
@@ -155,5 +157,146 @@ describe("marking a delayed payment (e.g. Bacs) as pending", () => {
 
       await post(completedEvent()).expect(500);
     });
+  });
+});
+
+describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
+  const PASSPORT = { data: { "application.type": ["ldc"] } };
+
+  const succeededEvent = (overrides: Partial<Stripe.Checkout.Session> = {}) =>
+    sign({
+      id: "evt_async_payment_succeeded",
+      type: "checkout.session.async_payment_succeeded",
+      data: {
+        object: checkoutSession({ payment_status: "paid", ...overrides }),
+      },
+    });
+
+  const mockSession = (overrides: Record<string, unknown> = {}) =>
+    queryMock.mockQuery({
+      name: "GetDelayedPaymentSession",
+      matchOnVariables: false,
+      data: {
+        session: {
+          passport: PASSPORT,
+          paidAt: null,
+          submittedAt: null,
+          deletedAt: null,
+          flow: { team: { slug: "southwark" } },
+          ...overrides,
+        },
+      },
+    });
+
+  const mockMarkAsPaid = (affectedRows = 1) =>
+    queryMock.mockQuery({
+      name: "MarkSessionAsPaid",
+      matchOnVariables: false,
+      data: { session: { affectedRows } },
+    });
+
+  const markAsPaidCalls = () =>
+    queryMock.getCalls().filter((call) => call.id === "MarkSessionAsPaid");
+
+  beforeEach(() => {
+    queryMock.reset();
+    mockSession();
+    mockMarkAsPaid();
+    vi.spyOn(stripeHelpers, "alertPlanX").mockResolvedValue();
+    vi.spyOn(payHelpers, "reportError");
+  });
+
+  afterEach(() => vi.restoreAllMocks());
+
+  it("sets paid_at and writes the payment reference into the passport, which submits the application", async () => {
+    await post(succeededEvent()).expect(200);
+
+    expect(markAsPaidCalls()).toHaveLength(1);
+    expect(markAsPaidCalls()[0].variables).toEqual({
+      sessionId: SESSION_ID,
+      sessionData: {
+        passport: {
+          data: {
+            ...PASSPORT.data,
+            "application.fee.reference.stripe": "pi_test_bacs",
+          },
+        },
+      },
+    });
+    expect(stripeHelpers.alertPlanX).not.toHaveBeenCalled();
+  });
+
+  it("does nothing when the session has already been paid (e.g. a redelivered event)", async () => {
+    mockSession({ paidAt: "2026-11-11T09:00:00Z" });
+
+    await post(succeededEvent()).expect(200);
+
+    expect(markAsPaidCalls()).toHaveLength(0);
+  });
+
+  it("alerts PlanX, without submitting, when the session expired while the payment was processing", async () => {
+    mockSession({ deletedAt: "2026-11-11T09:00:00Z" });
+
+    await post(succeededEvent()).expect(200);
+
+    expect(markAsPaidCalls()).toHaveLength(0);
+    expect(stripeHelpers.alertPlanX).toHaveBeenCalledWith(
+      expect.stringContaining("has expired"),
+    );
+  });
+
+  it("alerts PlanX when the session has already been submitted, as the applicant may have paid twice", async () => {
+    mockSession({ submittedAt: "2026-11-11T09:00:00Z" });
+
+    await post(succeededEvent()).expect(200);
+
+    expect(markAsPaidCalls()).toHaveLength(0);
+    expect(stripeHelpers.alertPlanX).toHaveBeenCalledWith(
+      expect.stringContaining("may have paid twice"),
+    );
+  });
+
+  it("does nothing when the session isn't in this environment", async () => {
+    queryMock.mockQuery({
+      name: "GetDelayedPaymentSession",
+      matchOnVariables: false,
+      data: { session: null },
+    });
+
+    await post(succeededEvent()).expect(200);
+
+    expect(markAsPaidCalls()).toHaveLength(0);
+  });
+
+  it("does nothing for a Checkout Session created by another environment", async () => {
+    await post(
+      succeededEvent({
+        metadata: { sessionId: SESSION_ID, origin: "https://api.other.env" },
+      }),
+    ).expect(200);
+
+    expect(
+      queryMock
+        .getCalls()
+        .filter((call) => call.id === "GetDelayedPaymentSession"),
+    ).toHaveLength(0);
+  });
+
+  it("reports an error, without submitting, when the Checkout Session isn't paid", async () => {
+    await post(succeededEvent({ payment_status: "unpaid" })).expect(200);
+
+    expect(markAsPaidCalls()).toHaveLength(0);
+    expect(payHelpers.reportError).toHaveBeenCalled();
+  });
+
+  it("returns 500 when the update fails, so Stripe redelivers the event", async () => {
+    queryMock.mockQuery({
+      name: "MarkSessionAsPaid",
+      matchOnVariables: false,
+      data: {},
+      graphqlErrors: [{ message: "Hasura is down" }],
+    });
+
+    await post(succeededEvent()).expect(500);
   });
 });
