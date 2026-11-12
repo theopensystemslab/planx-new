@@ -37,8 +37,8 @@ catalogs:
       specifier: ^9.39.5
       version: 9.39.5
     globals:
-      specifier: ^16.5.0
-      version: 16.5.0
+      specifier: ^17.12.0
+      version: 17.14.0
     jsdom:
       specifier: ~30.0.1
       version: 30.0.1
@@ -383,7 +383,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
       graphql-query-test-mock:
         specifier: ^0.12.1
         version: 0.12.1(nock@13.5.6)
@@ -838,7 +838,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
 
   apps/localplanning.services:
     dependencies:
@@ -938,7 +938,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@24.19.2)(typescript@5.9.3)
@@ -998,7 +998,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.10
@@ -1133,7 +1133,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
       mime:
         specifier: ^4.1.2
         version: 4.1.2
@@ -1176,7 +1176,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.10
@@ -1210,7 +1210,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.10
@@ -1247,7 +1247,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.10
@@ -1281,7 +1281,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.10
@@ -1318,7 +1318,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.10
@@ -1388,7 +1388,7 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.14.0
       prettier:
         specifier: 'catalog:'
         version: 3.9.10
@@ -7032,10 +7032,6 @@ packages:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
 
-  globals@16.5.0:
-    resolution: {integrity: sha512-c/c15i26VrJ4IRt5Z89DnIzCGDn9EcebibhAOjw5ibqEHsE1wLUgkPn9RDmNcUKyU87GeaL633nyJ+pplFR2ZQ==}
-    engines: {node: '>=18'}
-
   globals@17.14.0:
     resolution: {integrity: sha512-UtdkTVyAJePQv0J2M9Xe4L0ruNSDV314XiIJsADI2Zf40bcdAonE/D/OhAU8AT99oij9mhLByb+NvA3QWZYgCg==}
     engines: {node: '>=18'}
@@ -10377,6 +10373,7 @@ packages:
 
   tldts-core@7.4.20:
     resolution: {integrity: sha512-C630TWXZCZmLq0F2bW4QqwnaaxCQ/svpAqvJwnC4JvgEM5ohhBnGsEzTLSOXcN+xjz+kEaHS5uoWIw2klnqd0A==}
+    deprecated: Partial release, see https://github.com/remusao/tldts/issues/2735. Use >=7.4.22.
 
   tldts@7.4.19:
     resolution: {integrity: sha512-48dH6aSpQnpbzDUc4vIQZ1VjB8tkK+e8c1yx05/SZK+rkssgjEOlxDd/yU8/a4vGYQ9vRgJr9dwMq9TJ0b3X2Q==}
@@ -17653,8 +17650,6 @@ snapshots:
       ini: 4.1.1
 
   globals@14.0.0: {}
-
-  globals@16.5.0: {}
 
   globals@17.14.0: {}
 
