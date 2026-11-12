@@ -7,7 +7,9 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import mime from "mime";
 import { customAlphabet } from "nanoid";
 
+import { ServerError } from "../../../errors/index.js";
 import { isLiveEnv } from "../../../helpers.js";
+import { MAX_FILENAME_LENGTH } from "../constants.js";
 import { SCAN_EXEMPT_METADATA_KEY } from "./scanStatus.js";
 import { s3Factory } from "./utils.js";
 
@@ -57,6 +59,8 @@ export const uploadPrivateFile = async (
   }: { dangerouslySkipMalwareScan?: boolean } = {},
   bucket?: BucketTypes,
 ) => {
+  validateFileNameLength(filename);
+
   const s3 = s3Factory();
 
   // Private files are uploaded to user-data by default, but can be configured to any known BucketType
@@ -79,6 +83,15 @@ export const uploadPrivateFile = async (
     fileType,
     fileUrl,
   };
+};
+
+const validateFileNameLength = (filename: string) => {
+  if (filename.length >= MAX_FILENAME_LENGTH) {
+    throw new ServerError({
+      message: "File name too long",
+      status: 400,
+    });
+  }
 };
 
 // Construct an API URL for the uploaded file

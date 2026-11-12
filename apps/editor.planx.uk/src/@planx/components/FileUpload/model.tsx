@@ -8,6 +8,8 @@ import type { FileWithPath } from "react-dropzone";
 import type { SchemaOf } from "yup";
 import { array, boolean, number, object, string } from "yup";
 
+import { MAX_FILENAME_LENGTH } from "../shared/constants";
+
 export interface FileUpload extends BaseNodeData {
   title: string;
   fn: string;
@@ -71,6 +73,18 @@ export const slotsSchema = array()
         slots &&
         slots.length > 0 &&
         !slots.some((slot) => slot.status === "error"),
+      );
+    },
+  })
+  .test({
+    name: "fileLength",
+    message: `Please ensure your file name is under ${MAX_FILENAME_LENGTH} characters long`,
+    test: (slots?: Array<FileUploadSlot>) => {
+      return Boolean(
+        slots &&
+        slots.every(
+          (slot) => (slot.file?.path?.length ?? 0) < MAX_FILENAME_LENGTH,
+        ),
       );
     },
   });

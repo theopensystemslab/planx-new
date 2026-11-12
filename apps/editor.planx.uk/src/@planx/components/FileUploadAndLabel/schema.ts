@@ -7,6 +7,7 @@ import type { TestContext } from "vitest";
 import type { SchemaOf } from "yup";
 import { array, boolean, mixed, object, string, ValidationError } from "yup";
 
+import { MAX_FILENAME_LENGTH } from "../shared/constants";
 import type { Rule } from "../shared/RuleBuilder/types";
 import { Condition, Operator } from "../shared/RuleBuilder/types";
 import { checkIfConditionalRule } from "../shared/RuleBuilder/utils";
@@ -146,6 +147,18 @@ export const slotsSchema = array()
       return ctx.createError({
         message: `Upload and label files containing: ${missingRequiredNames.join(", ")}`,
       });
+    },
+  })
+  .test({
+    name: "fileLength",
+    message: `Please ensure all file names are under ${MAX_FILENAME_LENGTH} characters long`,
+    test: (slots?: Array<FileUploadAndLabelSlot>) => {
+      return Boolean(
+        slots &&
+        slots.every(
+          (slot) => (slot.file?.path?.length ?? 0) < MAX_FILENAME_LENGTH,
+        ),
+      );
     },
   });
 
