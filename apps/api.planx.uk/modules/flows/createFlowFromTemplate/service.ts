@@ -34,6 +34,7 @@ const createFlowFromTemplate = async (
     settings: sourceTemplate.settings?.elements?.privacy
       ? { elements: { privacy: sourceTemplate.settings.elements.privacy } }
       : undefined,
+    submissionEmailId: null,
     // INSERT using the API client to bypass redundant input validation
     // The source data is already pre-validated and comes directly from the DB
     $apiClient: $api.client,
