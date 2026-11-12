@@ -12,22 +12,21 @@ catalog:
   '@opensystemslab/map': 1.0.0-alpha.17
   '@opensystemslab/planx-core': github:theopensystemslab/planx-core#f09ec1f3e38d225975d9d193e7883b6f50013000
   '@types/jsdom': ^30.0.0
-  '@types/node': ~24.10.15
-  axios: ^1.20.0
-  csv-stringify: ^6.8.3
+  '@types/node': ~24.19.2
+  axios: ^1.21.0
+  csv-stringify: ^6.9.0
   date-fns: ^4.4.0
   dompurify: ^3.4.17
-  dotenv: ^18.0.1
+  dotenv: ^18.0.9
   eslint: ^9.39.5
   globals: ^16.5.0
-  # Pinned to 30.0.x: jsdom 30.1 breaks Blob/FormData in Vitest 4 (vitest-dev/vitest#11336), fixed in Vitest 5.0.3
   jsdom: ~30.0.1
-  nanoid: ^6.0.1
-  prettier: ^3.9.6
-  stripe: ^22.1.1
-  uuid: ^14.0.2
-  vite: ^6.4.3
-  vitest: ^4.1.11
+  nanoid: ^6.0.2
+  prettier: ^3.9.10
+  stripe: ^22.6.2
+  uuid: ^14.0.3
+  vite: ^6.4.5
+  vitest: ^4.1.12
   zod: ^4.6.7
 
 catalogs:
@@ -36,26 +35,27 @@ catalogs:
     graphql-request: 4.3.0
     graphql-tag: ^2.12.7
   infrastructure:
-    '@pulumi/aws': ^7.43.0
-    '@pulumi/awsx': ^3.9.0
-    '@pulumi/cloudflare': ^6.20.0
-    '@pulumi/postgresql': ^3.18.0
-    '@pulumi/pulumi': ^3.259.0
+    '@pulumi/aws': ^7.53.0
+    '@pulumi/awsx': ^3.12.0
+    '@pulumi/cloudflare': ^6.23.2
+    '@pulumi/postgresql': ^3.18.3
+    '@pulumi/pulumi': ^3.273.0
   jwt:
     '@types/jsonwebtoken': ^9.0.10
     jsonwebtoken: ^9.0.3
   lodash:
-    '@types/lodash': ^4.17.25
+    '@types/lodash': ^4.17.27
     lodash: ^4.18.1
   sharedb:
     '@types/sharedb': ^6.0.1
-    sharedb: ^6.0.2
+    sharedb: ^6.0.5
   typescript:
     typescript: ~5.9.3
 
 minimumReleaseAge: 10080
 
-minimumReleaseAgeExclude:
-  - 'body-parser@2.4.0'
-  - 'fast-uri@4.2.3'
-  - 'multer@2.5.0'
+overrides:
+  compression@<1.8.2: ^1.8.2
+  glob@>=9.0.0: ^14.0.2
+  minimatch@>=7.0.0: ^11.0.1
+  zod: ^4.6.6

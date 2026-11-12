@@ -25,7 +25,7 @@
     "@types/tldjs": "^2.3.4",
     "eslint": "catalog:",
     "globals": "catalog:",
-    "mime": "^4.1.0",
+    "mime": "^4.1.2",
     "prettier": "catalog:",
     "typescript": "catalog:typescript"
   },
