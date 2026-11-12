@@ -13,16 +13,6 @@ const LABEL_COLOUR = "#505A5F";
 
 const escape = (value: string) => he.escape(value);
 
-export const DEFAULT_PRIMARY_COLOUR = "#0010A4";
-
-/**
- * Only allow hex colours, falling back to the default colour if invalid
- */
-export const getPrimaryColour = (colour: string | null | undefined) => {
-  if (!colour) return null;
-  return /^#[0-9a-f]{3,8}$/i.test(colour) ? colour : DEFAULT_PRIMARY_COLOUR;
-};
-
 const getLogoUrl = (logo: string | null | undefined) => {
   if (!logo) return null;
   if (logo.startsWith("data:image/")) return logo;
@@ -61,7 +51,6 @@ const getTitle = ({ isTest }: VatInvoiceData) =>
 export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
   const { seller, branding, lineItems, totals, vatSummary } = invoice;
   const title = getTitle(invoice);
-  const primaryColour = getPrimaryColour(branding?.primaryColour);
   const logoUrl = getLogoUrl(branding?.logo);
 
   const rows = lineItems
@@ -107,15 +96,15 @@ export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        ${
-          primaryColour
-            ? // Council logos are designed to sit on their primary colour, as in the public service header
-              `padding: 6mm 8mm; background: ${primaryColour}; color: #FFFFFF;`
-            : `padding-bottom: 6mm; border-bottom: 2mm solid ${TEXT_COLOUR};`
-        }
       }
-      header img { max-height: 15mm; max-width: 60mm; }
-      h1 { margin: 0; font-size: 22pt; }
+      header img {
+        max-width: 60mm;
+        max-height: 15mm;
+        object-fit: contain;
+        /* Council logos are designed for a dark primary colour - invert for a white page, as in the public interface print styles, and remove any colour */
+        filter: invert(1) grayscale(1);
+      }
+      h1 { margin: 0 0 0 auto; font-size: 22pt; }
       h2 { margin: 0 0 2mm; font-size: 12pt; }
       section { margin-top: 8mm; }
       .details { display: flex; justify-content: space-between; gap: 10mm; }
@@ -126,8 +115,6 @@ export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
         margin: 0 0 0.5mm;
         font-size: 9pt;
         font-weight: normal;
-        font-variant-caps: all-small-caps;
-        letter-spacing: 0.05em;
         color: ${LABEL_COLOUR};
       }
       table { width: 100%; border-collapse: collapse; }
@@ -152,8 +139,8 @@ export const renderVatInvoiceHtml = (invoice: VatInvoiceData): string => {
         : ""
     }
     <header>
-      <h1>${title}</h1>
       ${logoUrl ? `<img src="${escape(logoUrl)}" alt="${escape(seller.name)}" />` : ""}
+      <h1>${title}</h1>
     </header>
 
     <section class="details">
