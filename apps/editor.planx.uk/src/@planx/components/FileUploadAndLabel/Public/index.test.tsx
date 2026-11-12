@@ -1,3 +1,4 @@
+import { MAX_FILENAME_LENGTH } from "@planx/components/shared/constants";
 import { act, screen, waitFor, within } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import type { UserEvent } from "@testing-library/user-event";
@@ -607,7 +608,9 @@ describe("Error handling", () => {
     await user.click(screen.getByTestId("continue-button"));
     expect(
       screen.getByText(
-        /Please ensure all file names are under 75 characters long/,
+        new RegExp(
+          `Please ensure all file names are under ${MAX_FILENAME_LENGTH} characters long`,
+        ),
       ),
     ).toBeInTheDocument();
     expect(handleSubmit).toHaveBeenCalledTimes(0);
