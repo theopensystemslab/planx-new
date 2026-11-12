@@ -306,8 +306,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(express@4.22.3)
       type-fest:
-        specifier: ^4.41.0
-        version: 4.41.0
+        specifier: ^5.8.0
+        version: 5.10.0
       zod:
         specifier: ^4.6.6
         version: 4.6.7
@@ -664,8 +664,8 @@ importers:
         specifier: ^6.3.7
         version: 6.3.7
       type-fest:
-        specifier: ^4.41.0
-        version: 4.41.0
+        specifier: ^5.8.0
+        version: 5.10.0
       uuid:
         specifier: 'catalog:'
         version: 14.0.3
@@ -10377,6 +10377,7 @@ packages:
 
   tldts-core@7.4.20:
     resolution: {integrity: sha512-C630TWXZCZmLq0F2bW4QqwnaaxCQ/svpAqvJwnC4JvgEM5ohhBnGsEzTLSOXcN+xjz+kEaHS5uoWIw2klnqd0A==}
+    deprecated: Partial release, see https://github.com/remusao/tldts/issues/2735. Use >=7.4.22.
 
   tldts@7.4.19:
     resolution: {integrity: sha512-48dH6aSpQnpbzDUc4vIQZ1VjB8tkK+e8c1yx05/SZK+rkssgjEOlxDd/yU8/a4vGYQ9vRgJr9dwMq9TJ0b3X2Q==}
