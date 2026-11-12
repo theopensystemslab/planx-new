@@ -58,7 +58,7 @@ const invalidTypeMessage = expect.stringContaining(
   "File must be one of the following types",
 );
 const invalidLengthMessage = expect.stringContaining(
-  `Please ensure your file name is under ${MAX_FILENAME_LENGTH} characters long`,
+  `File name must be under ${MAX_FILENAME_LENGTH} characters long`,
 );
 
 describe("files we do not accept", () => {
