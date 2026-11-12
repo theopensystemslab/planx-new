@@ -568,8 +568,8 @@ importers:
         specifier: ^8.0.4
         version: 8.0.4
       immer:
-        specifier: ^9.0.21
-        version: 9.0.21
+        specifier: ^11.2.9
+        version: 11.2.9
       js-cookie:
         specifier: ^3.0.8
         version: 3.0.8
@@ -683,7 +683,7 @@ importers:
         version: 4.6.7
       zustand:
         specifier: ^4.5.7
-        version: 4.5.7(@types/react@19.3.0)(immer@9.0.21)(react@19.3.1)
+        version: 4.5.7(@types/react@19.3.0)(immer@11.2.9)(react@19.3.1)
     devDependencies:
       '@emotion/cache':
         specifier: ^11.14.0
@@ -7315,8 +7315,8 @@ packages:
     resolution: {integrity: sha512-wCBiZ77u1tuWde6G/nfOtLaCTYcFDU5yCzARzK10y+rLhzYoL7a7yEemcopcc2Mzow7gZOIjnV2ym1NYmdiJOQ==}
     engines: {node: '>= 4'}
 
-  immer@9.0.21:
-    resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
+  immer@11.2.9:
+    resolution: {integrity: sha512-IQ4UEtXjZjyefyWjtLEDXUSrF6T2hwjKPi6BIJl3bY/2XXW24d6cNGdXJSBOA/+KNnuiXkZY6DR0C3efolhitA==}
 
   immutable@5.1.9:
     resolution: {integrity: sha512-m8nVez3rwrgmWxtLMt1ZYXB2Lv7OKYn/disyxAlSDYAlKSlFoPPfIAmAM/M5xqL4m4C/wAPw7S2/CNaUii1Hxg==}
@@ -10377,6 +10377,7 @@ packages:
 
   tldts-core@7.4.20:
     resolution: {integrity: sha512-C630TWXZCZmLq0F2bW4QqwnaaxCQ/svpAqvJwnC4JvgEM5ohhBnGsEzTLSOXcN+xjz+kEaHS5uoWIw2klnqd0A==}
+    deprecated: Partial release, see https://github.com/remusao/tldts/issues/2735. Use >=7.4.22.
 
   tldts@7.4.19:
     resolution: {integrity: sha512-48dH6aSpQnpbzDUc4vIQZ1VjB8tkK+e8c1yx05/SZK+rkssgjEOlxDd/yU8/a4vGYQ9vRgJr9dwMq9TJ0b3X2Q==}
@@ -18036,7 +18037,7 @@ snapshots:
 
   ignore@7.0.14: {}
 
-  immer@9.0.21: {}
+  immer@11.2.9: {}
 
   immutable@5.1.9: {}
 
@@ -22746,12 +22747,12 @@ snapshots:
 
   zstddec@0.2.0: {}
 
-  zustand@4.5.7(@types/react@19.3.0)(immer@9.0.21)(react@19.3.1):
+  zustand@4.5.7(@types/react@19.3.0)(immer@11.2.9)(react@19.3.1):
     dependencies:
       use-sync-external-store: 1.7.0(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
-      immer: 9.0.21
+      immer: 11.2.9
       react: 19.3.1
 
   zwitch@2.0.4: {}
