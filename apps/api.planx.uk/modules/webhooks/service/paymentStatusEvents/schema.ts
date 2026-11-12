@@ -10,6 +10,7 @@ export const paymentStatusEventSchema = z.object({
     payload: z.object({
       stripePaymentId: z.string().nullable(),
       stripeStatus: z.string().nullable(),
+      paymentMethod: z.string().nullable(),
     }),
     // Hasura's delivery attempt - current_retry starts at 0
     deliveryInfo: z.object({

@@ -357,7 +357,7 @@ export const reconcilePaymentsController: ReconcilePaymentsController = async (
 export const paymentStatusEventsController: PaymentStatusEventsController =
   async (_req, res, next) => {
     const { payload, deliveryInfo } = res.locals.parsedReq.body;
-    const { stripePaymentId, stripeStatus } = payload;
+    const { stripePaymentId, stripeStatus, paymentMethod } = payload;
 
     if (stripeStatus !== "succeeded" || !stripePaymentId) {
       return res.status(200).send({
@@ -366,7 +366,7 @@ export const paymentStatusEventsController: PaymentStatusEventsController =
     }
 
     try {
-      await handlePaymentSucceeded(stripePaymentId);
+      await handlePaymentSucceeded(stripePaymentId, paymentMethod);
       return res.status(200).send({
         message: `Processed succeeded payment for PaymentIntent ${stripePaymentId}`,
       });

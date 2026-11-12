@@ -10,9 +10,8 @@ import {
   sendEmail,
 } from "../../../../lib/resend/index.js";
 import { reportError } from "../../../pay/helpers.js";
-import { formatPence } from "../../helpers.js";
+import { formatPaymentMethod, formatPence } from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
-import { getPaymentMethodType } from "../paymentStatus/service.js";
 import { getCheckoutSession, getSucceededAt } from "../vatInvoice/service.js";
 import type { StoredInvoice } from "../vatInvoice/storage.js";
 import { getInvoicePdf, getStoredInvoices } from "../vatInvoice/storage.js";
@@ -67,21 +66,6 @@ export async function getCouncilEmailDetails(
   };
 }
 
-const PAYMENT_METHOD_LABELS: Partial<
-  Record<Stripe.PaymentMethod.Type, string>
-> = {
-  card: "Card",
-  pay_by_bank: "Pay by bank",
-  bacs_debit: "Bacs Direct Debit",
-};
-
-export const formatPaymentMethod = (
-  type: Stripe.PaymentMethod.Type | null,
-): string => {
-  if (!type) return "Unknown";
-  return PAYMENT_METHOD_LABELS[type] ?? type.replaceAll("_", " ");
-};
-
 export const formatSiteAddress = (
   passportData: PaymentSession["passportData"],
 ): string => {
@@ -109,6 +93,7 @@ const toAttachment = async ({
  *  - payer: payment confirmation, with their VAT receipt attached if there is one
  *    Sent from the Local Planning Services domain in the council's name, replying to the council
  *  - council: payment confirmation, with all of the payment's VAT documents attached
+ *    The same for every payment method - a delayed payment (e.g. Bacs) is only submitted once it has succeeded
  *
  * Runs after createInvoices(), so the documents are already stored
  * Throws errors to make Hasura retry the event - idempotency keys stop a retry sending duplicates
@@ -116,6 +101,7 @@ const toAttachment = async ({
 export async function sendPaymentConfirmationEmails(
   paymentIntent: Stripe.PaymentIntent,
   recorded: PaymentSession,
+  paymentMethod: string | null,
 ): Promise<void> {
   const context = {
     paymentIntentId: paymentIntent.id,
@@ -172,8 +158,6 @@ export async function sendPaymentConfirmationEmails(
       context: { ...context, teamSlug: recorded.teamSlug },
     });
   }
-
-  const paymentMethod = await getPaymentMethodType(paymentIntent);
 
   await sendEmail(
     "payment-confirmed-council",

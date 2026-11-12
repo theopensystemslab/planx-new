@@ -15,6 +15,7 @@ import { createInvoices } from "../../../stripe/webhook/vatInvoice/service.js";
  */
 export const handlePaymentSucceeded = async (
   paymentIntentId: string,
+  paymentMethod: string | null,
 ): Promise<void> => {
   const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
@@ -22,7 +23,11 @@ export const handlePaymentSucceeded = async (
   if (!paymentSession) return;
 
   await createInvoices(paymentIntent, paymentSession);
-  await sendPaymentConfirmationEmails(paymentIntent, paymentSession);
+  await sendPaymentConfirmationEmails(
+    paymentIntent,
+    paymentSession,
+    paymentMethod,
+  );
 };
 
 /**

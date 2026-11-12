@@ -91,7 +91,7 @@ const isForeignKeyViolation = (error: unknown): boolean => {
   );
 };
 
-export async function getPaymentMethodType(
+async function getPaymentMethodType(
   paymentIntent: Stripe.PaymentIntent,
 ): Promise<Stripe.PaymentMethod.Type | null> {
   const paymentMethodId = getStripeId(paymentIntent.payment_method);

@@ -41,12 +41,14 @@ const event = (
   payload: Partial<{
     stripePaymentId: string | null;
     stripeStatus: string | null;
+    paymentMethod: string | null;
   }> = {},
   currentRetry = 0,
 ) => ({
   payload: {
     stripePaymentId: paymentIntent.id,
     stripeStatus: "succeeded",
+    paymentMethod: "card",
     ...payload,
   },
   deliveryInfo: { currentRetry, maxRetries: 10 },
@@ -153,6 +155,7 @@ describe("Payment status events endpoint", () => {
       expect(sendPaymentConfirmationEmails).toHaveBeenCalledWith(
         paymentIntent,
         RECORDED_SESSION,
+        "card",
       );
       expect(
         vi.mocked(createInvoices).mock.invocationCallOrder[0],

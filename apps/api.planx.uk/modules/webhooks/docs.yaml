@@ -204,6 +204,9 @@ components:
             stripeStatus:
               type: string
               nullable: true
+            paymentMethod:
+              type: string
+              nullable: true
         deliveryInfo:
           required: true
           type: object

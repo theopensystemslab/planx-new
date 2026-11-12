@@ -4,7 +4,7 @@ import type * as resend from "../../../../lib/resend/index.js";
 import { sendEmail } from "../../../../lib/resend/index.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import * as payHelpers from "../../../pay/helpers.js";
-import { stripe } from "../../client.js";
+import { formatPaymentMethod } from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
 import {
   FLOW_ID,
@@ -17,11 +17,7 @@ import {
 import { getCheckoutSession, getSucceededAt } from "../vatInvoice/service.js";
 import type { StoredInvoice } from "../vatInvoice/storage.js";
 import { getInvoicePdf, getStoredInvoices } from "../vatInvoice/storage.js";
-import {
-  formatPaymentMethod,
-  formatSiteAddress,
-  sendPaymentConfirmationEmails,
-} from "./service.js";
+import { formatSiteAddress, sendPaymentConfirmationEmails } from "./service.js";
 
 vi.mock("../../../../lib/resend/index.js", async (importOriginal) => ({
   ...(await importOriginal<typeof resend>()),
@@ -46,6 +42,7 @@ const recorded: PaymentSession = {
   flowName: FLOW_NAME,
   teamSlug: TEAM_SLUG,
   teamName: TEAM_NAME,
+  passportData: { _address: { title: "1 High Street, London" } },
 };
 
 const storedInvoice = (
@@ -98,10 +95,11 @@ const mockCouncilEmailDetails = ({
 const sentEmail = (template: string) =>
   vi.mocked(sendEmail).mock.calls.find(([name]) => name === template);
 
-const send = () =>
+const send = (paymentMethod: string | null = "card") =>
   sendPaymentConfirmationEmails(
     paymentIntent as unknown as Stripe.PaymentIntent,
     recorded,
+    paymentMethod,
   );
 
 describe("sendPaymentConfirmationEmails", () => {
@@ -193,7 +191,16 @@ describe("sendPaymentConfirmationEmails", () => {
       expect(sendEmail).toHaveBeenCalledWith(
         "payment-confirmed-council",
         "finance@southwark.gov.uk",
-        expect.objectContaining({ paymentReference: paymentIntent.id }),
+        {
+          serviceName: FLOW_NAME,
+          councilName: TEAM_NAME,
+          sessionId: recorded.sessionId,
+          address: "1 High Street, London",
+          paymentReference: paymentIntent.id,
+          paymentMethod: "Card",
+          amount: "£145.00",
+          paymentDate: "12 October 2026",
+        },
         {
           idempotencyKey: `payment-confirmed-council-${paymentIntent.id}`,
           attachments: [
@@ -211,26 +218,17 @@ describe("sendPaymentConfirmationEmails", () => {
     });
 
     it("includes the site address and the payment method used", async () => {
-      vi.spyOn(stripe.paymentMethods, "retrieve").mockResolvedValue({
-        type: "pay_by_bank",
-      } as Stripe.Response<Stripe.PaymentMethod>);
-
       await sendPaymentConfirmationEmails(
-        {
-          ...paymentIntent,
-          payment_method: "pm_test_123",
-        } as unknown as Stripe.PaymentIntent,
+        paymentIntent as unknown as Stripe.PaymentIntent,
         {
           ...recorded,
           passportData: {
             _address: { single_line_address: "1 High Street, London" },
           },
         },
+        "pay_by_bank",
       );
 
-      expect(stripe.paymentMethods.retrieve).toHaveBeenCalledWith(
-        "pm_test_123",
-      );
       expect(sentEmail("payment-confirmed-council")?.[2]).toEqual(
         expect.objectContaining({
           address: "1 High Street, London",
@@ -240,7 +238,11 @@ describe("sendPaymentConfirmationEmails", () => {
     });
 
     it("falls back to placeholders when the address and payment method are unknown", async () => {
-      await send();
+      await sendPaymentConfirmationEmails(
+        paymentIntent as unknown as Stripe.PaymentIntent,
+        { ...recorded, passportData: {} },
+        null,
+      );
 
       expect(sentEmail("payment-confirmed-council")?.[2]).toEqual(
         expect.objectContaining({
@@ -273,6 +275,14 @@ describe("sendPaymentConfirmationEmails", () => {
         }),
       );
       expect(sentEmail("payment-confirmed-council")).toBeUndefined();
+    });
+
+    it("sends the same confirmation for a delayed payment (Bacs), as it's only submitted once paid", async () => {
+      await send("bacs_debit");
+
+      expect(sentEmail("payment-confirmed-council")?.[2]).toEqual(
+        expect.objectContaining({ paymentMethod: "Bacs Direct Debit" }),
+      );
     });
   });
 
