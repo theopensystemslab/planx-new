@@ -5,6 +5,7 @@ import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
+import { MAX_FILENAME_LENGTH } from "../shared/constants";
 import FileUpload from "./Public";
 
 test("renders correctly", async () => {
@@ -182,7 +183,9 @@ test("errors if filename is too long", async () => {
   await user.click(screen.getByTestId("continue-button"));
   expect(
     screen.getByText(
-      /Please ensure your file name is under 75 characters long/,
+      new RegExp(
+        `Please ensure all file names are under ${MAX_FILENAME_LENGTH} characters long`,
+      ),
     ),
   ).toBeInTheDocument();
   expect(handleSubmit).toHaveBeenCalledTimes(0);
