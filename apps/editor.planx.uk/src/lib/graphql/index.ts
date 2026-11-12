@@ -28,5 +28,10 @@ const trafficRouter = split(
 
 export const client = new ApolloClient({
   link: from([retryLink, errorLink, trafficRouter]),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      // Table has no "id" column - normalise by primary key so that mutations update cached queries
+      downtime_banner: { keyFields: ["name"] },
+    },
+  }),
 });

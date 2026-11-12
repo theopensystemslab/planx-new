@@ -2,11 +2,42 @@ table:
   name: downtime_banner
   schema: public
 select_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - description
+        - is_visible
+        - name
+        - title
+        - updated_at
+      filter: {}
+    comment: ""
   - role: public
     permission:
       columns:
+        - description
         - is_visible
         - name
+        - title
         - updated_at
       filter: {}
+    comment: ""
+update_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - description
+        - is_visible
+        - title
+      filter: {}
+      check: {}
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
     comment: ""

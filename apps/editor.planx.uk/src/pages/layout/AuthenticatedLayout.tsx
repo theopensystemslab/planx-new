@@ -13,6 +13,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
+import ActiveDowntimeBanner from "../../components/DowntimeBanner/ActiveDowntimeBanner";
 import Header from "../../components/Header/Header";
 
 const DashboardWrap = styled(Box)(({ theme }) => ({
@@ -54,6 +55,7 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <LoadingOverlay />
+      <ActiveDowntimeBanner variant="editor" />
       <Header />
       <DashboardWrap>
         <EditorNavMenu />
