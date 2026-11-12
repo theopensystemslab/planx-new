@@ -5,6 +5,7 @@ import { setup } from "test/utils";
 import type { Mock } from "vitest";
 import { vi } from "vitest";
 
+import { MAX_FILENAME_LENGTH } from "../constants";
 import { Dropzone } from "./Dropzone";
 
 const UPLOAD_ENDPOINT = `${import.meta.env.VITE_APP_API_URL}/file/private/upload`;
@@ -55,6 +56,9 @@ const dropFile = async (file: File, createSlot?: () => FileUploadSlot) => {
 const alertMock = vi.mocked(window.alert);
 const invalidTypeMessage = expect.stringContaining(
   "File must be one of the following types",
+);
+const invalidLengthMessage = expect.stringContaining(
+  `Please ensure your file name is under ${MAX_FILENAME_LENGTH} characters long`,
 );
 
 describe("files we do not accept", () => {
@@ -144,5 +148,18 @@ describe("files we do accept", () => {
 
     expect(alertMock).not.toHaveBeenCalled();
     expect(slots()).toHaveLength(1);
+  });
+
+  it("does not accept an extremely long filename", async () => {
+    const { slots } = await dropFile(
+      new File(
+        ["x"],
+        "longfilenamelongfilenamelongfilenamelongfilenamelongfilenamelongfilenamelongfilename.pdf",
+        { type: "application/pdf" },
+      ),
+    );
+
+    expect(alertMock).toHaveBeenCalledWith(invalidLengthMessage);
+    expect(slots()).toHaveLength(0);
   });
 });
