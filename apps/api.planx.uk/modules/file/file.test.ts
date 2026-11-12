@@ -9,6 +9,7 @@ import type { Mocked } from "vitest";
 
 import app from "../../server.js";
 import { authHeader } from "../../tests/mockJWT.js";
+import { MAX_FILENAME_LENGTH } from "./constants.js";
 import { deleteFilesByURL } from "./service/deleteFile.js";
 
 let mockPutObject: Mocked<() => void>;
@@ -269,7 +270,7 @@ describe("File upload", () => {
         });
     });
 
-    it("should not upload when filename exceeds 75 characters", async () => {
+    it(`should not upload when filename exceeds ${MAX_FILENAME_LENGTH} characters`, async () => {
       await supertest(app)
         .post(PRIVATE_ENDPOINT)
         .field(

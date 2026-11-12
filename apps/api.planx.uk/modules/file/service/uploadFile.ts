@@ -9,6 +9,7 @@ import { customAlphabet } from "nanoid";
 
 import { ServerError } from "../../../errors/index.js";
 import { isLiveEnv } from "../../../helpers.js";
+import { MAX_FILENAME_LENGTH } from "../constants.js";
 import { SCAN_EXEMPT_METADATA_KEY } from "./scanStatus.js";
 import { s3Factory } from "./utils.js";
 
@@ -85,7 +86,7 @@ export const uploadPrivateFile = async (
 };
 
 const validateFileNameLength = (filename: string) => {
-  if (filename.length >= 75) {
+  if (filename.length >= MAX_FILENAME_LENGTH) {
     throw new ServerError({
       message: "File name too long",
       status: 400,
