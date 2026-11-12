@@ -11,7 +11,7 @@
   "dependencies": {
     "@opensystemslab/planx-core": "catalog:",
     "tsx": "^4.23.15",
-    "typescript": "~5.9.3"
+    "typescript": "~7.0.2"
   },
   "author": "",
   "license": "ISC"
