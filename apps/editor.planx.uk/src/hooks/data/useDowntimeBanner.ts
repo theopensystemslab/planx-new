@@ -15,9 +15,18 @@ export const FETCH_DOWNTIME_BANNER = gql`
 `;
 
 export interface DowntimeBannerData {
+  name: DowntimeBannerVariant;
   isVisible: boolean;
   title: string | null;
   description: string | null;
+}
+
+export interface FetchDowntimeBannerData {
+  downtimeBanner: DowntimeBannerData | null;
+}
+
+export interface FetchDowntimeBannerVariables {
+  name: DowntimeBannerVariant;
 }
 
 /**
@@ -25,10 +34,10 @@ export interface DowntimeBannerData {
  * Managed by platform admins via Global settings > Downtime banner
  */
 export const useDowntimeBanner = (variant: DowntimeBannerVariant) =>
-  useQuery<
-    { downtimeBanner: DowntimeBannerData | null },
-    { name: DowntimeBannerVariant }
-  >(FETCH_DOWNTIME_BANNER, {
-    variables: { name: variant },
-    context: publicContext,
-  });
+  useQuery<FetchDowntimeBannerData, FetchDowntimeBannerVariables>(
+    FETCH_DOWNTIME_BANNER,
+    {
+      variables: { name: variant },
+      context: publicContext,
+    },
+  );

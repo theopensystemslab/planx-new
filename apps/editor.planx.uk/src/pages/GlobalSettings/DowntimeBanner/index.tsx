@@ -1,21 +1,21 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import DowntimeBanner from "components/DowntimeBanner/DowntimeBanner";
-import { type DowntimeBannerVariant } from "hooks/data/useDowntimeBanner";
+import {
+  type DowntimeBannerVariant,
+  FETCH_DOWNTIME_BANNER,
+  type FetchDowntimeBannerData,
+} from "hooks/data/useDowntimeBanner";
 import SettingsFormContainer from "pages/FlowEditor/components/Settings/shared/SettingsForm";
 import InputLabel from "ui/editor/InputLabel";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import { Switch } from "ui/shared/Switch";
 
-import {
-  GET_DOWNTIME_BANNER_SETTINGS,
-  UPDATE_DOWNTIME_BANNER_SETTINGS,
-} from "./queries";
+import { UPDATE_DOWNTIME_BANNER_SETTINGS } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
 import type {
   DowntimeBannerFormValues,
-  GetDowntimeBannerSettingsData,
   UpdateDowntimeBannerSettingsVariables,
 } from "./types";
 
@@ -45,11 +45,11 @@ const DowntimeBannerForm: React.FC<{ variant: DowntimeBannerVariant }> = ({
 
   return (
     <SettingsFormContainer<
-      GetDowntimeBannerSettingsData,
+      FetchDowntimeBannerData,
       UpdateDowntimeBannerSettingsVariables,
       DowntimeBannerFormValues
     >
-      query={GET_DOWNTIME_BANNER_SETTINGS}
+      query={FETCH_DOWNTIME_BANNER}
       queryVariables={{ name: variant }}
       mutation={UPDATE_DOWNTIME_BANNER_SETTINGS}
       getInitialValues={({ downtimeBanner }) => ({

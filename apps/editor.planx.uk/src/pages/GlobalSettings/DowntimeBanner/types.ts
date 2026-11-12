@@ -1,16 +1,9 @@
-import type {
-  DowntimeBannerData,
-  DowntimeBannerVariant,
-} from "hooks/data/useDowntimeBanner";
+import type { DowntimeBannerVariant } from "hooks/data/useDowntimeBanner";
 
 export interface DowntimeBannerFormValues {
   isVisible: boolean;
   title: string;
   description: string;
-}
-
-export interface GetDowntimeBannerSettingsData {
-  downtimeBanner: (DowntimeBannerData & { name: DowntimeBannerVariant }) | null;
 }
 
 export interface UpdateDowntimeBannerSettingsVariables {
