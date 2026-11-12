@@ -39,7 +39,7 @@ catalogs:
     '@pulumi/awsx': ^3.12.0
     '@pulumi/cloudflare': ^6.23.2
     '@pulumi/postgresql': ^3.18.3
-    '@pulumi/pulumi': ^3.273.0
+    '@pulumi/pulumi': ^3.274.0
   jwt:
     '@types/jsonwebtoken': ^9.0.10
     jsonwebtoken: ^9.0.3
