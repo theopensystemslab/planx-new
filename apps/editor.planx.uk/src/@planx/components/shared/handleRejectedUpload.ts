@@ -2,6 +2,8 @@ import { ALLOWED_EXTENSIONS, MAX_UPLOAD_SIZE_MB } from "@planx/file-upload";
 import type { FileRejection } from "react-dropzone";
 import { ErrorCode } from "react-dropzone";
 
+import { MAX_FILENAME_LENGTH } from "./constants";
+
 /**
  * Builds a user-facing alert for a rejection by react-dropzone.
  *
@@ -17,6 +19,8 @@ export const getRejectionMessage = (
   const { code, message } = fileRejections[0].errors[0];
 
   switch (code) {
+    case "file-name-too-long": // The other error codes are from the React dropzone package, this one is custom which is why it's not in the imported ErrorCode
+      return `File name must be under ${MAX_FILENAME_LENGTH} characters long`;
     case ErrorCode.FileTooLarge:
       return `File must be smaller than ${MAX_UPLOAD_SIZE_MB}MB`;
     case ErrorCode.FileInvalidType:

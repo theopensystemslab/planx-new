@@ -2,6 +2,8 @@ import { getFileExtension, isAllowedExtension } from "@planx/file-upload";
 import type { FileError } from "react-dropzone";
 import { ErrorCode } from "react-dropzone";
 
+import { MAX_FILENAME_LENGTH } from "./constants";
+
 /**
  * Extension checks for react-dropzone's `validator` option.
  * See: https://react-dropzone.js.org/examples/validator#custom-validation
@@ -20,8 +22,21 @@ const invalidType = (file: File): FileError => ({
   message: `File extension not allowed: ${file.name}`,
 });
 
-export const validateExtension = (file: File): FileError | null =>
-  isAllowedExtension(file.name) ? null : invalidType(file);
+const fileNameTooLong = (): FileError => ({
+  code: "file-name-too-long",
+  message: `File name over ${MAX_FILENAME_LENGTH} characters long`,
+});
+
+const validateFileNameLength = (file: File): FileError | null =>
+  file.name.length < MAX_FILENAME_LENGTH ? null : fileNameTooLong();
+
+export const validateExtension = (file: File): FileError[] | null => {
+  const errors = [
+    validateFileNameLength(file),
+    isAllowedExtension(file.name) ? null : invalidType(file),
+  ].filter((e): e is FileError => e !== null);
+  return errors.length ? errors : null;
+};
 
 /**
  * As above, but for dropzones accepting a narrower list than the full allowlist (e.g. images only).
