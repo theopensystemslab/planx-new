@@ -682,8 +682,8 @@ importers:
         specifier: ^4.6.6
         version: 4.6.7
       zustand:
-        specifier: ^4.5.7
-        version: 4.5.7(@types/react@19.3.0)(immer@9.0.21)(react@19.3.1)
+        specifier: ^5.0.16
+        version: 5.0.16(@types/react@19.3.0)(immer@9.0.21)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
     devDependencies:
       '@emotion/cache':
         specifier: ^11.14.0
@@ -10377,6 +10377,7 @@ packages:
 
   tldts-core@7.4.20:
     resolution: {integrity: sha512-C630TWXZCZmLq0F2bW4QqwnaaxCQ/svpAqvJwnC4JvgEM5ohhBnGsEzTLSOXcN+xjz+kEaHS5uoWIw2klnqd0A==}
+    deprecated: Partial release, see https://github.com/remusao/tldts/issues/2735. Use >=7.4.22.
 
   tldts@7.4.19:
     resolution: {integrity: sha512-48dH6aSpQnpbzDUc4vIQZ1VjB8tkK+e8c1yx05/SZK+rkssgjEOlxDd/yU8/a4vGYQ9vRgJr9dwMq9TJ0b3X2Q==}
@@ -11396,19 +11397,22 @@ packages:
   zstddec@0.2.0:
     resolution: {integrity: sha512-oyPnDa1X5c13+Y7mA/FDMNJrn4S8UNBe0KCqtDmor40Re7ALrPN6npFwyYVRRh+PqozZQdeg23QtbcamZnG5rA==}
 
-  zustand@4.5.7:
-    resolution: {integrity: sha512-CHOUy7mu3lbD6o6LJLfllpjkzhHXSBlX8B9+qPddUsIfeF5S/UZ5q0kmCsnRqT1UHFQZchNFDDzMbQsuesHWlw==}
-    engines: {node: '>=12.7.0'}
+  zustand@5.0.16:
+    resolution: {integrity: sha512-Uv7e327ihlCfayfja3hDc0M64Upev1LWBKpRobdK4NyovDDPeeX4imWXc/wzC1yc6fkYPoAY/ncKVPAs2jrtQw==}
+    engines: {node: '>=12.20.0'}
     peerDependencies:
-      '@types/react': '>=16.8'
+      '@types/react': '>=18.0.0'
       immer: '>=9.0.6'
-      react: '>=16.8'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
     peerDependenciesMeta:
       '@types/react':
         optional: true
       immer:
         optional: true
       react:
+        optional: true
+      use-sync-external-store:
         optional: true
 
   zwitch@2.0.4:
@@ -22746,12 +22750,11 @@ snapshots:
 
   zstddec@0.2.0: {}
 
-  zustand@4.5.7(@types/react@19.3.0)(immer@9.0.21)(react@19.3.1):
-    dependencies:
-      use-sync-external-store: 1.7.0(react@19.3.1)
+  zustand@5.0.16(@types/react@19.3.0)(immer@9.0.21)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1)):
     optionalDependencies:
       '@types/react': 19.3.0
       immer: 9.0.21
       react: 19.3.1
+      use-sync-external-store: 1.7.0(react@19.3.1)
 
   zwitch@2.0.4: {}

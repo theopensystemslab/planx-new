@@ -90,7 +90,7 @@
     "wkt": "^0.1.1",
     "yup": "^0.32.11",
     "zod": "catalog:",
-    "zustand": "^4.5.7"
+    "zustand": "^5.0.16"
   },
   "devDependencies": {
     "@emotion/cache": "^11.14.0",
