@@ -5,6 +5,7 @@ import type { SyntheticEvent } from "react";
 import { focusStyle } from "theme";
 
 const Root = styled("a")(({ theme }) => ({
+  display: "block",
   width: "100vw",
   cursor: "pointer",
   backgroundColor: theme.palette.background.dark,
@@ -17,6 +18,8 @@ const Root = styled("a")(({ theme }) => ({
     // bring it into view when accessed by tab
     transform: "translateY(0%)",
     position: "relative",
+    // Keep focus style visible above the downtime banner (which uses zIndex.appBar)
+    zIndex: theme.zIndex.appBar + 1,
     ...focusStyle,
   },
 }));
