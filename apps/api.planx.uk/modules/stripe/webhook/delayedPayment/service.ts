@@ -5,8 +5,8 @@ import { z } from "zod";
 
 import { $api } from "../../../../client/index.js";
 import { reportError } from "../../../pay/helpers.js";
+import { createPaymentSendEventsForSession } from "../../../pay/service/inviteToPay/createPaymentSendEvents.js";
 import { STRIPE_PASSPORT_KEY } from "../../fulfilment/types.js";
-import { getStripeId } from "../../helpers.js";
 
 /**
  * Reserved metadata set by PlanX on a self-pay Checkout Session (no paymentRequestId)
@@ -108,11 +108,18 @@ export async function markDelayedPaymentPending(
   }
 }
 
+/**
+ * Payment methods which complete Checkout before the payment has succeeded
+ * The application is submitted once the payment succeeds
+ * Stored in payment_status.payment_method
+ */
+export const DELAYED_PAYMENT_METHODS: readonly string[] = ["bacs_debit"];
+
 interface DelayedPaymentSession {
   passport: Passport | null;
-  paidAt: string | null;
   submittedAt: string | null;
   deletedAt: string | null;
+  paymentRequests: { id: string }[];
   flow: { team: { slug: string } };
 }
 
@@ -126,9 +133,11 @@ const getDelayedPaymentSession = async (
       query GetDelayedPaymentSession($sessionId: uuid!) {
         session: lowcal_sessions_by_pk(id: $sessionId) {
           passport: data(path: "passport")
-          paidAt: paid_at
           submittedAt: submitted_at
           deletedAt: deleted_at
+          paymentRequests: payment_requests(limit: 1) {
+            id
+          }
           flow {
             team {
               slug
@@ -144,10 +153,9 @@ const getDelayedPaymentSession = async (
 };
 
 /**
- * Set paid_at and write the payment reference into the session in one transaction,
- * so the reference is in place before the paid_at trigger submits the application
+ * Write the payment reference into the session so it's in place before the application is submitted
  */
-const markSessionAsPaid = async ({
+const writePaymentReference = async ({
   sessionId,
   stripePaymentId,
   passport,
@@ -160,15 +168,12 @@ const markSessionAsPaid = async ({
     session: { affectedRows: number };
   }>(
     gql`
-      mutation MarkSessionAsPaid($sessionId: uuid!, $sessionData: jsonb!) {
+      mutation WriteDelayedPaymentReference(
+        $sessionId: uuid!
+        $sessionData: jsonb!
+      ) {
         session: update_lowcal_sessions(
-          where: {
-            id: { _eq: $sessionId }
-            paid_at: { _is_null: true }
-            submitted_at: { _is_null: true }
-            deleted_at: { _is_null: true }
-          }
-          _set: { paid_at: "now()" }
+          where: { id: { _eq: $sessionId }, deleted_at: { _is_null: true } }
           _append: { data: $sessionData }
         ) {
           affectedRows: affected_rows
@@ -189,82 +194,85 @@ const markSessionAsPaid = async ({
   return session.affectedRows;
 };
 
+export type SubmitDelayedPaymentResult =
+  | "submitted"
+  | "notSucceeded"
+  | "notDelayed"
+  | "inviteToPay"
+  | "notSubmittable";
+
 /**
  * Submit a self-pay application once its delayed payment (e.g. Bacs) has succeeded
- *
- * Writes the payment reference and sets paid_at - the `setup_session_payment_send_events` trigger on paid_at
- * then submits the application, the same as invite to pay. paid_at always means paid
- *
- * Called from the checkout.session.async_payment_succeeded webhook, so it must be idempotent
+ * Called by the `delayed_payment_send_events` trigger on every payment_status insert
+ * Throws errors to make Hasura retry the event
  */
-export async function fulfilDelayedPayment(
-  checkoutSession: Pick<
-    Stripe.Checkout.Session,
-    "id" | "metadata" | "payment_status" | "payment_intent"
-  >,
-): Promise<void> {
-  const sessionId = getSelfPaySessionId(checkoutSession);
-  if (!sessionId) return;
-
-  // Should not happen - Stripe only sends async_payment_succeeded for a paid Checkout Session
-  if (checkoutSession.payment_status !== "paid") {
-    return reportError({
-      error: `Delayed payment succeeded, but Checkout Session ${checkoutSession.id} is ${checkoutSession.payment_status}`,
-      context: { checkoutSessionId: checkoutSession.id, sessionId },
-    });
-  }
-
-  const stripePaymentId = getStripeId(checkoutSession.payment_intent);
-  // Should not happen - a completed Checkout Session in "payment" mode always has a PaymentIntent
-  if (!stripePaymentId) {
-    throw new Error(
-      `Paid Checkout Session ${checkoutSession.id} has no PaymentIntent`,
-    );
+export async function submitDelayedPayment({
+  sessionId,
+  stripePaymentId,
+  stripeStatus,
+  paymentMethod,
+  isRetry,
+}: {
+  sessionId: string;
+  stripePaymentId: string;
+  stripeStatus: string;
+  paymentMethod: string | null;
+  isRetry: boolean;
+}): Promise<SubmitDelayedPaymentResult> {
+  if (stripeStatus !== "succeeded") return "notSucceeded";
+  if (!paymentMethod || !DELAYED_PAYMENT_METHODS.includes(paymentMethod)) {
+    return "notDelayed";
   }
 
   const session = await getDelayedPaymentSession(sessionId);
-  // Local environments share a single origin, so a matching origin alone can't prove the session is ours
+  // Should not happen - payment_status rows are only recorded for sessions in this environment
   if (!session) {
-    return console.info(
-      `Ignoring delayed payment ${stripePaymentId}: session ${sessionId} not found`,
-    );
+    reportError({
+      error: `Delayed payment ${stripePaymentId} succeeded, but session ${sessionId} was not found. The application has not been submitted - needs following up manually.`,
+      context: { stripePaymentId, sessionId },
+    });
+    return "notSubmittable";
   }
 
-  if (session.paidAt) {
-    return console.info(
-      `Ignoring delayed payment ${stripePaymentId}: session ${sessionId} has already been paid`,
-    );
-  }
+  if (session.paymentRequests.length) return "inviteToPay";
 
   const payment = `Stripe payment ${stripePaymentId}`;
   const team = session.flow.team.slug;
 
   // The 28-day window to pay ran out while the payment was processing
   if (session.deletedAt) {
-    return reportError({
+    reportError({
       error: `${payment} succeeded, but session ${sessionId} has expired [${team}]. The application has not been submitted - needs following up manually.`,
       context: { stripePaymentId, sessionId },
     });
+    return "notSubmittable";
   }
 
-  // Should not happen - the session is locked while the payment is processing
-  if (session.submittedAt) {
-    return reportError({
+  // Should not happen on the first attempt - the session is locked while the payment is processing
+  if (session.submittedAt && !isRetry) {
+    reportError({
       error: `${payment} succeeded, but session ${sessionId} was already submitted [${team}]. The applicant may have paid twice - needs following up manually.`,
       context: { stripePaymentId, sessionId },
     });
+    return "notSubmittable";
   }
 
-  const affectedRows = await markSessionAsPaid({
+  const affectedRows = await writePaymentReference({
     sessionId,
     stripePaymentId,
     passport: session.passport,
   });
+  // Expired since we read the session - retry, to report it
+  if (!affectedRows) {
+    throw new Error(
+      `Could not write payment reference ${stripePaymentId} to session ${sessionId} - it has been deleted`,
+    );
+  }
 
-  // A concurrent call got there first
-  if (!affectedRows) return;
+  await createPaymentSendEventsForSession(sessionId);
 
   console.info(
     `Delayed payment ${stripePaymentId} succeeded: submitting session ${sessionId}`,
   );
+  return "submitted";
 }

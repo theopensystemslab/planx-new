@@ -4,7 +4,6 @@ import { z } from "zod";
 import { reportError } from "../../pay/helpers.js";
 import { fulfilPaymentRequest } from "../fulfilment/service.js";
 import {
-  fulfilDelayedPayment,
   isDelayedPaymentPending,
   markDelayedPaymentPending,
 } from "./delayedPayment/service.js";
@@ -19,7 +18,8 @@ const inviteToPayMetadataSchema = z.object({ paymentRequestId: z.string() });
  *  - Invite to pay: fulfil the payment request once paid, which submits the application
  *  - Self-pay, paid at checkout (card, Pay by bank): submitted by the applicant's browser, no action required
  *  - Self-pay, delayed payment (e.g. Bacs) processing: lock the session, in case the applicant doesn't return to PlanX
- *  - Self-pay, delayed payment succeeded: submit the application
+ *  - Self-pay, delayed payment succeeded: no action required, submitted once payment_status records the
+ *    succeeded PaymentIntent (see submitDelayedPayment)
  *
  * @docs https://docs.stripe.com/checkout/fulfillment
  */
@@ -30,10 +30,6 @@ const handleCheckoutSession = async (
   const { id } = checkoutSession;
 
   if (!inviteToPayMetadataSchema.safeParse(checkoutSession.metadata).success) {
-    if (eventType === "checkout.session.async_payment_succeeded") {
-      return fulfilDelayedPayment(checkoutSession);
-    }
-
     if (isDelayedPaymentPending(checkoutSession)) {
       await markDelayedPaymentPending(checkoutSession);
     }

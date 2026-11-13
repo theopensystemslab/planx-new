@@ -4,6 +4,7 @@ import supertest from "supertest";
 import app from "../../../../server.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import * as payHelpers from "../../../pay/helpers.js";
+import * as sendEvents from "../../../pay/service/inviteToPay/createPaymentSendEvents.js";
 import { STRIPE_WEBHOOK_ENDPOINT } from "../../routes.js";
 import { sign } from "../test/utils.js";
 import {
@@ -160,16 +161,29 @@ describe("marking a delayed payment (e.g. Bacs) as pending", () => {
 });
 
 describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
+  const ENDPOINT = "/webhooks/hasura/create-delayed-payment-send-events";
   const PASSPORT = { data: { "application.type": ["ldc"] } };
 
-  const succeededEvent = (overrides: Partial<Stripe.Checkout.Session> = {}) =>
-    sign({
-      id: "evt_async_payment_succeeded",
-      type: "checkout.session.async_payment_succeeded",
-      data: {
-        object: checkoutSession({ payment_status: "paid", ...overrides }),
-      },
-    });
+  const postEvent = ({
+    payload = {},
+    currentRetry = 0,
+  }: {
+    payload?: Record<string, unknown>;
+    currentRetry?: number;
+  } = {}) =>
+    supertest(app)
+      .post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send({
+        payload: {
+          sessionId: SESSION_ID,
+          stripePaymentId: "pi_test_bacs",
+          stripeStatus: "succeeded",
+          paymentMethod: "bacs_debit",
+          ...payload,
+        },
+        deliveryInfo: { currentRetry, maxRetries: 5 },
+      });
 
   const mockSession = (overrides: Record<string, unknown> = {}) =>
     queryMock.mockQuery({
@@ -178,39 +192,51 @@ describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
       data: {
         session: {
           passport: PASSPORT,
-          paidAt: null,
           submittedAt: null,
           deletedAt: null,
+          paymentRequests: [],
           flow: { team: { slug: "southwark" } },
           ...overrides,
         },
       },
     });
 
-  const mockMarkAsPaid = (affectedRows = 1) =>
+  const mockWriteReference = (affectedRows = 1) =>
     queryMock.mockQuery({
-      name: "MarkSessionAsPaid",
+      name: "WriteDelayedPaymentReference",
       matchOnVariables: false,
       data: { session: { affectedRows } },
     });
 
-  const markAsPaidCalls = () =>
-    queryMock.getCalls().filter((call) => call.id === "MarkSessionAsPaid");
+  const writeReferenceCalls = () =>
+    queryMock
+      .getCalls()
+      .filter((call) => call.id === "WriteDelayedPaymentReference");
+
+  const getSessionCalls = () =>
+    queryMock
+      .getCalls()
+      .filter((call) => call.id === "GetDelayedPaymentSession");
 
   beforeEach(() => {
     queryMock.reset();
     mockSession();
-    mockMarkAsPaid();
+    mockWriteReference();
     vi.spyOn(payHelpers, "reportError");
+    vi.spyOn(sendEvents, "createPaymentSendEventsForSession").mockResolvedValue(
+      {},
+    );
   });
 
   afterEach(() => vi.restoreAllMocks());
 
-  it("sets paid_at and writes the payment reference into the passport, which submits the application", async () => {
-    await post(succeededEvent()).expect(200);
+  it("writes the payment reference into the passport, then submits the application", async () => {
+    await postEvent()
+      .expect(200)
+      .then((res) => expect(res.body.message).toMatch(/submitted/));
 
-    expect(markAsPaidCalls()).toHaveLength(1);
-    expect(markAsPaidCalls()[0].variables).toEqual({
+    expect(writeReferenceCalls()).toHaveLength(1);
+    expect(writeReferenceCalls()[0].variables).toEqual({
       sessionId: SESSION_ID,
       sessionData: {
         passport: {
@@ -221,23 +247,62 @@ describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
         },
       },
     });
+    expect(sendEvents.createPaymentSendEventsForSession).toHaveBeenCalledWith(
+      SESSION_ID,
+    );
     expect(payHelpers.reportError).not.toHaveBeenCalled();
   });
 
-  it("does nothing when the session has already been paid (e.g. a redelivered event)", async () => {
-    mockSession({ paidAt: "2026-11-11T09:00:00Z" });
+  it.each([
+    ["processing", { stripeStatus: "processing" }],
+    ["payment_failed", { stripeStatus: "payment_failed" }],
+  ])("does nothing for a %s payment", async (_, payload) => {
+    await postEvent({ payload }).expect(200);
 
-    await post(succeededEvent()).expect(200);
+    expect(getSessionCalls()).toHaveLength(0);
+    expect(sendEvents.createPaymentSendEventsForSession).not.toHaveBeenCalled();
+  });
 
-    expect(markAsPaidCalls()).toHaveLength(0);
+  it.each([
+    ["card", { paymentMethod: "card" }],
+    ["unknown payment method", { paymentMethod: null }],
+  ])(
+    "does nothing for a payment made at checkout (%s), which the applicant's browser submits",
+    async (_, payload) => {
+      await postEvent({ payload }).expect(200);
+
+      expect(getSessionCalls()).toHaveLength(0);
+      expect(
+        sendEvents.createPaymentSendEventsForSession,
+      ).not.toHaveBeenCalled();
+    },
+  );
+
+  it("does nothing for a row without a Stripe payment (e.g. GOV.UK Pay)", async () => {
+    await postEvent({
+      payload: { stripePaymentId: null, stripeStatus: null },
+    }).expect(200);
+
+    expect(getSessionCalls()).toHaveLength(0);
+  });
+
+  it("does nothing for invite to pay, which is submitted when the payment request is paid", async () => {
+    mockSession({ paymentRequests: [{ id: "payment-request-id" }] });
+
+    await postEvent()
+      .expect(200)
+      .then((res) => expect(res.body.message).toMatch(/inviteToPay/));
+
+    expect(writeReferenceCalls()).toHaveLength(0);
+    expect(sendEvents.createPaymentSendEventsForSession).not.toHaveBeenCalled();
   });
 
   it("reports an error, without submitting, when the session expired while the payment was processing", async () => {
     mockSession({ deletedAt: "2026-11-11T09:00:00Z" });
 
-    await post(succeededEvent()).expect(200);
+    await postEvent().expect(200);
 
-    expect(markAsPaidCalls()).toHaveLength(0);
+    expect(sendEvents.createPaymentSendEventsForSession).not.toHaveBeenCalled();
     expect(payHelpers.reportError).toHaveBeenCalledWith(
       expect.objectContaining({
         error: expect.stringContaining("has expired"),
@@ -245,12 +310,12 @@ describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
     );
   });
 
-  it("reports an error when the session has already been submitted, as the applicant may have paid twice", async () => {
+  it("reports an error, without submitting, when the session was already submitted, as the applicant may have paid twice", async () => {
     mockSession({ submittedAt: "2026-11-11T09:00:00Z" });
 
-    await post(succeededEvent()).expect(200);
+    await postEvent().expect(200);
 
-    expect(markAsPaidCalls()).toHaveLength(0);
+    expect(sendEvents.createPaymentSendEventsForSession).not.toHaveBeenCalled();
     expect(payHelpers.reportError).toHaveBeenCalledWith(
       expect.objectContaining({
         error: expect.stringContaining("may have paid twice"),
@@ -258,47 +323,72 @@ describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
     );
   });
 
-  it("does nothing when the session isn't in this environment", async () => {
+  it("carries on submitting on a retry, when a previous attempt has already submitted to some destinations", async () => {
+    mockSession({ submittedAt: "2026-11-11T09:00:00Z" });
+
+    await postEvent({ currentRetry: 1 }).expect(200);
+
+    expect(sendEvents.createPaymentSendEventsForSession).toHaveBeenCalledWith(
+      SESSION_ID,
+    );
+    expect(payHelpers.reportError).not.toHaveBeenCalled();
+  });
+
+  it("reports an error when the session can't be found", async () => {
     queryMock.mockQuery({
       name: "GetDelayedPaymentSession",
       matchOnVariables: false,
       data: { session: null },
     });
 
-    await post(succeededEvent()).expect(200);
+    await postEvent().expect(200);
 
-    expect(markAsPaidCalls()).toHaveLength(0);
+    expect(sendEvents.createPaymentSendEventsForSession).not.toHaveBeenCalled();
+    expect(payHelpers.reportError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: expect.stringContaining("was not found"),
+      }),
+    );
   });
 
-  it("does nothing for a Checkout Session created by another environment", async () => {
+  it("returns 500, without submitting, when the session was deleted before the reference was written, so Hasura retries", async () => {
+    mockWriteReference(0);
+
+    await postEvent().expect(500);
+
+    expect(sendEvents.createPaymentSendEventsForSession).not.toHaveBeenCalled();
+  });
+
+  it("returns 500 when the send events can't be created, so Hasura retries", async () => {
+    vi.mocked(sendEvents.createPaymentSendEventsForSession).mockRejectedValue(
+      new Error("Hasura is down"),
+    );
+
+    await postEvent()
+      .expect(500)
+      .then((res) =>
+        expect(res.body.error).toMatch(/needs following up manually/),
+      );
+  });
+
+  it("returns 400 for an invalid payload", async () => {
+    await supertest(app)
+      .post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send({ payload: { sessionId: "not-a-uuid" } })
+      .expect(400);
+  });
+
+  it("does nothing when Stripe sends checkout.session.async_payment_succeeded for a self-pay session", async () => {
     await post(
-      succeededEvent({
-        metadata: { sessionId: SESSION_ID, origin: "https://api.other.env" },
+      sign({
+        id: "evt_async_payment_succeeded",
+        type: "checkout.session.async_payment_succeeded",
+        data: { object: checkoutSession({ payment_status: "paid" }) },
       }),
     ).expect(200);
 
-    expect(
-      queryMock
-        .getCalls()
-        .filter((call) => call.id === "GetDelayedPaymentSession"),
-    ).toHaveLength(0);
-  });
-
-  it("reports an error, without submitting, when the Checkout Session isn't paid", async () => {
-    await post(succeededEvent({ payment_status: "unpaid" })).expect(200);
-
-    expect(markAsPaidCalls()).toHaveLength(0);
-    expect(payHelpers.reportError).toHaveBeenCalled();
-  });
-
-  it("returns 500 when the update fails, so Stripe redelivers the event", async () => {
-    queryMock.mockQuery({
-      name: "MarkSessionAsPaid",
-      matchOnVariables: false,
-      data: {},
-      graphqlErrors: [{ message: "Hasura is down" }],
-    });
-
-    await post(succeededEvent()).expect(500);
+    expect(queryMock.getCalls()).toHaveLength(0);
+    expect(sendEvents.createPaymentSendEventsForSession).not.toHaveBeenCalled();
   });
 });

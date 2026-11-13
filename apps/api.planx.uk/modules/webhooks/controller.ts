@@ -2,6 +2,7 @@ import isNull from "lodash/isNull.js";
 
 import { ServerError } from ".././../errors/index.js";
 import { sendSlackMessage } from "../slack/utils.js";
+import { submitDelayedPayment } from "../stripe/webhook/delayedPayment/service.js";
 import { analyzeSessions } from "./service/analyzeSessions/index.js";
 import type { AnalyzeSessions } from "./service/analyzeSessions/types.js";
 import { getDailyFailedSubmissions } from "./service/dailyFailedSubmissions/index.js";
@@ -27,7 +28,10 @@ import {
   alertPaymentSucceededFailed,
   handlePaymentSucceeded,
 } from "./service/paymentStatusEvents/index.js";
-import type { PaymentStatusEventsController } from "./service/paymentStatusEvents/schema.js";
+import type {
+  DelayedPaymentSendEventsController,
+  PaymentStatusEventsController,
+} from "./service/paymentStatusEvents/schema.js";
 import { reconcilePayments } from "./service/reconcilePayments/index.js";
 import type { ReconcilePaymentsController } from "./service/reconcilePayments/types.js";
 import { sanitiseApplicationData } from "./service/sanitiseApplicationData/index.js";
@@ -382,6 +386,38 @@ export const paymentStatusEventsController: PaymentStatusEventsController =
       return next(
         new ServerError({
           message: `Failed to process succeeded payment for PaymentIntent ${stripePaymentId}`,
+          cause: error,
+        }),
+      );
+    }
+  };
+
+export const delayedPaymentSendEventsController: DelayedPaymentSendEventsController =
+  async (_req, res, next) => {
+    const { payload, deliveryInfo } = res.locals.parsedReq.body;
+    const { sessionId, stripePaymentId, stripeStatus, paymentMethod } = payload;
+
+    if (!stripePaymentId || !stripeStatus) {
+      return res.status(200).send({
+        message: "Not a Stripe payment, skipping",
+      });
+    }
+
+    try {
+      const result = await submitDelayedPayment({
+        sessionId,
+        stripePaymentId,
+        stripeStatus,
+        paymentMethod,
+        isRetry: deliveryInfo.currentRetry > 0,
+      });
+      return res.status(200).send({
+        message: `Delayed payment send events for PaymentIntent ${stripePaymentId}: ${result}`,
+      });
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: `Failed to submit session ${sessionId} for delayed payment ${stripePaymentId} - if Hasura has stopped retrying, needs following up manually`,
           cause: error,
         }),
       );
