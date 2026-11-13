@@ -28,7 +28,6 @@ import { useStore } from "../../pages/FlowEditor/lib/store";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { SectionNavBar } from "./Sections/NavBar";
-import SkipLink from "./SkipLink";
 
 export const HEADER_HEIGHT_PUBLIC = 74;
 
@@ -212,7 +211,6 @@ const PublicToolbar: React.FC<{
 
   return (
     <>
-      <SkipLink />
       <PublicHeader disableGutters>
         <Container maxWidth="contentWrap">
           <InnerContainer>
