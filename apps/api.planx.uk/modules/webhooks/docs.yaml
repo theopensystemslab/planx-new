@@ -222,6 +222,33 @@ components:
               type: number
             maxRetries:
               type: number
+    DelayedPaymentSendEvent:
+      type: object
+      properties:
+        payload:
+          required: true
+          type: object
+          properties:
+            sessionId:
+              type: string
+              format: uuid
+            stripePaymentId:
+              type: string
+              nullable: true
+            stripeStatus:
+              type: string
+              nullable: true
+            paymentMethod:
+              type: string
+              nullable: true
+        deliveryInfo:
+          required: true
+          type: object
+          properties:
+            currentRetry:
+              type: number
+            maxRetries:
+              type: number
   requests:
     ValidateInputRequest:
       description: |
@@ -572,6 +599,26 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PaymentStatusEvent"
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/create-delayed-payment-send-events:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth: []
+      summary: Submit an application once its delayed payment (e.g. Bacs) has succeeded
+      description: Triggered by a `payment_status` insert. When a self-pay Stripe payment made with a delayed payment method (e.g. `bacs_debit`) has succeeded, writes the payment reference into the session and creates the session's send events. Skips all other rows, and invite to pay (submitted when the payment request is paid). Reports an error, without submitting, if the session has expired or (on the first attempt) has already been submitted
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DelayedPaymentSendEvent"
       responses:
         "200":
           $ref: "#/components/responses/SuccessMessage"
