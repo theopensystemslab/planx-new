@@ -5,6 +5,7 @@ import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
 import app from "../../../../server.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import { flowWithInviteToPay } from "../../../../tests/mocks/inviteToPayData.js";
+import type { Flow } from "../../../../types.js";
 
 vi.mock("../../../../lib/hasura/metadata");
 const mockedCreateScheduledEvent = createScheduledEvent as MockedFunction<
@@ -134,6 +135,29 @@ describe("Create payment send events webhook", () => {
     );
     expect(mockArgs.payload).toMatchObject(body.payload);
     expect(mockArgs.comment).toBe(`email_submission_${body.payload.sessionId}`);
+  });
+
+  const mockPublishedFlow = (data: Flow["data"]) =>
+    queryMock.mockQuery({
+      name: "GetMostRecentPublishedFlow",
+      matchOnVariables: false,
+      data: { flow: { publishedFlows: [{ data, createdAt: "2024-12-31" }] } },
+    });
+
+  it("returns a 400 when the flow has no Send component", async () => {
+    const { Send: _send, ...flowWithoutSend } = flowWithInviteToPay;
+    mockPublishedFlow(flowWithoutSend);
+
+    await supertest(app)
+      .post(ENDPOINT)
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send({ payload: { sessionId: "123" } })
+      .expect(400)
+      .then((response) =>
+        expect(response.body.error).toMatch(/has no Send component/),
+      );
+
+    expect(mockedCreateScheduledEvent).not.toHaveBeenCalled();
   });
 
   it("returns a 500 on event setup failure", async () => {

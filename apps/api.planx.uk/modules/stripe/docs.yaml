@@ -480,9 +480,9 @@ paths:
       responses:
         "200":
           description: |
-            The payment request has been paid (or authorised).
-            - `paid`: Stripe has confirmed the payment
-            - `pending`: a delayed payment method (e.g. Bacs Direct Debit) has been authorised, and will confirm or fail later. The application is submitted at authorisation
+            The payment request's payment status.
+            - `paid`: Stripe has confirmed the payment, and the request is paid
+            - `pending`: a delayed payment method (e.g. Bacs Direct Debit) is processing. The request is not paid yet - it's paid (and the application submitted) once the payment succeeds
           content:
             application/json:
               schema:
@@ -507,7 +507,7 @@ paths:
         "404":
           description: The payment request, its session, or the Checkout Session was not found.
         "409":
-          description: The Checkout Session has not been paid or authorised (e.g. Checkout was not completed).
+          description: Checkout has not been completed.
         "500":
           description: Failed to retrieve the Checkout Session from Stripe, or to update the payment request.
   /stripe/checkout-session/{localAuthority}/{checkoutSessionId}:
@@ -542,8 +542,12 @@ paths:
         PaymentIntent metadata onto the connected account's destination payment
         (`transfer.created` events).
 
-        Fulfils invite to pay requests once their Checkout Session is paid
-        (`checkout.session.completed` events with a `paymentRequestId` in their metadata). Self-pay Checkout Sessions are ignored.
+        Handles completed Checkout Sessions (`checkout.session.completed`) and delayed payments which
+        have succeeded (`checkout.session.async_payment_succeeded`):
+        - Invite to pay (a `paymentRequestId` in the metadata): fulfils the payment request once paid
+        - Self-pay, paid at checkout: ignored, the applicant's browser submits the application
+        - Self-pay, delayed payment (e.g. Bacs) processing: locks the session
+        - Self-pay, delayed payment succeeded: ignored, the application is submitted once `payment_status` records the succeeded PaymentIntent (`/webhooks/hasura/create-delayed-payment-send-events`)
 
         Docs: [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
       tags:

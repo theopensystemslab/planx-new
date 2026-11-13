@@ -11,6 +11,7 @@ import {
   createSessionDeleteEventController,
   createSessionExpiryEventController,
   createSessionReminderEventController,
+  delayedPaymentSendEventsController,
   deleteSessionController,
   failedSubmissionsController,
   isCleanJSONBController,
@@ -27,7 +28,10 @@ import {
   createSessionEmailEventSchema,
 } from "./service/lowcalSessionEvents/schema.js";
 import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema.js";
-import { paymentStatusEventSchema } from "./service/paymentStatusEvents/schema.js";
+import {
+  delayedPaymentSendEventSchema,
+  paymentStatusEventSchema,
+} from "./service/paymentStatusEvents/schema.js";
 import { sendSlackNotificationSchema } from "./service/sendNotification/schema.js";
 import { sendSlackMessageSchema } from "./service/sendSlackMessage/schema.js";
 import { updateTemplatedFlowEditsEventSchema } from "./service/updateTemplatedFlowEdits/schema.js";
@@ -102,6 +106,11 @@ router.post(
   "/webhooks/hasura/payment-status-events",
   validate(paymentStatusEventSchema),
   paymentStatusEventsController,
+);
+router.post(
+  "/webhooks/hasura/create-delayed-payment-send-events",
+  validate(delayedPaymentSendEventSchema),
+  delayedPaymentSendEventsController,
 );
 
 // TODO: Convert to the new API module structure
