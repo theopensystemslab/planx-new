@@ -101,8 +101,11 @@ const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={teamMUITheme}>
         <RootContainer data-testid="document-start">
-          <ActiveDowntimeBanner variant="public" />
-          <Header />
+          {/* Banner and header share the first ("auto") grid row */}
+          <Box>
+            <ActiveDowntimeBanner variant="public" />
+            <Header />
+          </Box>
           <MainContainer>
             <AppErrorBoundary>{children}</AppErrorBoundary>
           </MainContainer>
