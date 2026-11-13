@@ -15,7 +15,6 @@ import { ROOT_NODE_KEY } from "@planx/graph";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import type { FormikProps } from "formik";
-import { type FeatureFlag, hasFeatureFlag } from "lib/featureFlags";
 import { selectIndexedNode } from "pages/FlowEditor/lib/store/selectors";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -58,18 +57,15 @@ const TabList = styled(Box)(() => ({
 
 type ModalTab = "edit" | "history" | "resources";
 
-// TODO remove featureFlag properties when no longer feature-flagged
 const MODAL_TABS: {
   label: string;
   value: ModalTab;
-  featureFlag?: FeatureFlag;
 }[] = [
   { label: "Edit", value: "edit" },
   { label: "History", value: "history" },
   {
     label: "About this component",
     value: "resources",
-    featureFlag: "COMPONENT_RESOURCES",
   },
 ];
 
@@ -319,9 +315,7 @@ const FormModal: React.FC<FormModalProps> = ({
             value={activeTab}
             aria-label="Component editor tabs"
           >
-            {MODAL_TABS.filter(
-              ({ featureFlag }) => !featureFlag || hasFeatureFlag(featureFlag),
-            ).map(({ label, value }) => (
+            {MODAL_TABS.map(({ label, value }) => (
               <StyledTab key={value} value={value} label={label} />
             ))}
           </Tabs>
