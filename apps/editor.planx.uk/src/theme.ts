@@ -1,7 +1,11 @@
 import { buttonClasses } from "@mui/material/Button";
 import { common } from "@mui/material/colors";
 import { radioClasses } from "@mui/material/Radio";
-import type { Theme as MUITheme, ThemeOptions } from "@mui/material/styles";
+import type {
+  PaletteMode,
+  Theme as MUITheme,
+  ThemeOptions,
+} from "@mui/material/styles";
 import type { PaletteOptions } from "@mui/material/styles";
 import {
   createTheme,
@@ -18,7 +22,7 @@ import { deepmerge } from "@mui/utils";
 import { gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import type { TeamTheme } from "@opensystemslab/planx-core/types";
-import { getContrastTextColor } from "styleUtils";
+import { ensureContrastOnDark, getContrastTextColor } from "styleUtils";
 
 export const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_TONAL_OFFSET = 0.1;
@@ -127,6 +131,73 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   contrastThreshold: DEFAULT_CONTRAST_THRESHOLD,
 };
 
+export const DARK_BACKGROUND_COLOR = "#151617";
+// Dark mode equivalent of DEFAULT_PRIMARY_COLOR
+export const DARK_PRIMARY_COLOR = "#94C0FF";
+
+type DeepPartial<T> = { [K in keyof T]?: DeepPartial<T[K]> };
+
+// Overrides applied on top of DEFAULT_PALETTE when generating a dark theme
+// Only values which differ from DEFAULT_PALETTE are declared, as these are merged on top of it
+const DARK_PALETTE: DeepPartial<PaletteOptions> = {
+  mode: "dark",
+  primary: {
+    main: DARK_PRIMARY_COLOR,
+  },
+  background: {
+    default: DARK_BACKGROUND_COLOR,
+    paper: "#1F2122",
+    dark: "#3B3F41",
+    disabled: "#2B2E30",
+    data: "#26292B",
+    note: "#4A4519",
+  },
+  secondary: {
+    main: "#2B2E30",
+    dark: "#3B3F41",
+  },
+  text: {
+    primary: "#F3F2F1",
+    secondary: "#B1B4B6",
+    placeholder: "#8E979B",
+    disabled: "#8E979B",
+  },
+  action: {
+    selected: "#26292B",
+    disabled: "#8E979B",
+  },
+  error: {
+    main: "#ED8474",
+  },
+  success: {
+    light: "#1C2B1C",
+  },
+  warning: {
+    dark: "#FFB547",
+    light: "#33270F",
+  },
+  info: {
+    light: "#16283A",
+  },
+  border: {
+    main: "#6F777B",
+    input: "#F3F2F1",
+    light: "#2F3234",
+  },
+  template: {
+    main: "#553E7C",
+    light: "#3A2A55",
+    dark: "#6647A4",
+    icon: "#C9A8FF",
+  },
+  pattern: {
+    main: "#2C3519",
+    light: "#262E16",
+    dark: "#3A4620",
+    icon: "#A6D65A",
+  },
+};
+
 // GOVUK Focus style
 // https://design-system.service.gov.uk/get-started/focus-states/
 // https://github.com/alphagov/govuk-frontend/blob/main/src/govuk/helpers/_focused.scss
@@ -171,14 +242,30 @@ export const linkStyle = (linkColour: string) => ({
   "&:focus-visible": focusStyle,
 });
 
-const getThemeOptions = ({
-  primaryColour,
-  linkColour,
-  actionColour,
-}: TeamTheme): ThemeOptions => {
+// Use the specified dark mode colour for the PlanX default, otherwise adjust the team's colour for contrast
+const getDarkModeTeamColour = (colour: string): string =>
+  colour.toUpperCase() === DEFAULT_PRIMARY_COLOR
+    ? DARK_PRIMARY_COLOR
+    : ensureContrastOnDark(colour, DARK_BACKGROUND_COLOR);
+
+const getThemeOptions = (
+  { primaryColour, linkColour, actionColour }: TeamTheme,
+  mode: PaletteMode,
+): ThemeOptions => {
+  // Team colours are chosen against a white background - lighten them if required in dark mode
+  if (mode === "dark") {
+    primaryColour = getDarkModeTeamColour(primaryColour);
+    linkColour = getDarkModeTeamColour(linkColour);
+    actionColour = getDarkModeTeamColour(actionColour);
+  }
+
   const teamPalette: Partial<PaletteOptions> = {
     primary: {
       main: primaryColour,
+      // Light mode always uses white text on the team's primary colour
+      ...(mode === "dark" && {
+        contrastText: getContrastTextColor(primaryColour, common.white)!,
+      }),
     },
     link: {
       main: linkColour,
@@ -190,8 +277,12 @@ const getThemeOptions = ({
       contrastText: getContrastTextColor(actionColour, common.white)!,
     },
   };
+  const basePalette =
+    mode === "dark"
+      ? deepmerge(DEFAULT_PALETTE, DARK_PALETTE)
+      : DEFAULT_PALETTE;
   const palette = createTheme({
-    palette: deepmerge(DEFAULT_PALETTE, teamPalette),
+    palette: deepmerge(basePalette, teamPalette),
   }).palette;
 
   const themeOptions: ThemeOptions = {
@@ -944,13 +1035,15 @@ const generateTeamTheme = (
     logo: null,
     favicon: null,
   },
+  mode: PaletteMode = "light",
 ): MUITheme => {
-  const themeOptions = getThemeOptions(teamTheme);
+  const themeOptions = getThemeOptions(teamTheme, mode);
   const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });
   return theme;
 };
 
-// A static MUI theme based on PlanX's default palette
+// Static MUI themes based on PlanX's default palette
 const defaultTheme = generateTeamTheme();
+const defaultDarkTheme = generateTeamTheme(undefined, "dark");
 
-export { defaultTheme, generateTeamTheme };
+export { defaultDarkTheme, defaultTheme, generateTeamTheme };
