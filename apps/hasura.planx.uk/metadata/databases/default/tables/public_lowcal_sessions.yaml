@@ -59,6 +59,7 @@ select_permissions:
         - created_at
         - deleted_at
         - locked_at
+        - delayed_payment_started_at
         - submitted_at
         - updated_at
         - flow_id
@@ -78,6 +79,7 @@ select_permissions:
         - created_at
         - deleted_at
         - locked_at
+        - delayed_payment_started_at
         - submitted_at
         - updated_at
         - flow_id
@@ -122,6 +124,7 @@ select_permissions:
         - created_at
         - deleted_at
         - locked_at
+        - delayed_payment_started_at
         - submitted_at
         - updated_at
         - flow_id
@@ -147,6 +150,7 @@ update_permissions:
         - allow_list_answers
         - created_at
         - data
+        - delayed_payment_started_at
         - deleted_at
         - email
         - flow_id
@@ -228,6 +232,7 @@ event_triggers:
           {
             "operation": {{$body.event.op}},
             "lockedAt": {{$body.event.data.new.locked_at}},
+            "delayedPaymentStartedAt": {{$body.event.data.new.delayed_payment_started_at}},
             "payload": {
               "sessionId": {{$body.event.data.new.id}}
             }

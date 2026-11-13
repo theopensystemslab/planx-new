@@ -3,6 +3,10 @@ import { z } from "zod";
 
 import { reportError } from "../../pay/helpers.js";
 import { fulfilPaymentRequest } from "../fulfilment/service.js";
+import {
+  isDelayedPaymentPending,
+  markDelayedPaymentPending,
+} from "./delayedPayment/service.js";
 import { propagateMetadataToDestinationPayment } from "./destinationPayment/service.js";
 import { recordStripePaymentIntentStatus } from "./paymentStatus/service.js";
 import type { StripeWebhookController } from "./types.js";
@@ -18,9 +22,12 @@ const handleCheckoutSessionPaid = async (
 ): Promise<void> => {
   const { id } = checkoutSession;
 
-  // Non-ITP Checkout Sessions (no paymentRequestId)
-  // These are submitted by the applicant's browser, no action required
+  // Self-pay Checkout Sessions (no paymentRequestId) are submitted by the applicant's browser once paid
   if (!inviteToPayMetadataSchema.safeParse(checkoutSession.metadata).success) {
+    // A delayed payment (e.g. Bacs) is submitted once it succeeds - until then, lock the session in case the applicant doesn't return
+    if (isDelayedPaymentPending(checkoutSession)) {
+      await markDelayedPaymentPending(checkoutSession);
+    }
     return;
   }
 

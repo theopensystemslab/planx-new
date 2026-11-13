@@ -26,6 +26,16 @@ export const singleApplicationEmailController: SingleApplicationEmail = async (
   const { template } = res.locals.parsedReq.params;
 
   try {
+    // A locked session is waiting on a payment, which will submit it - it can't be resumed, so "your application will expire" doesn't apply
+    if (LOCK_SKIPPED_TEMPLATES.includes(template)) {
+      const { isLocked } = await getSessionLock(sessionId);
+      if (isLocked) {
+        return res.json({
+          message: `Skipping "${template}" email: session ${sessionId} is locked awaiting payment`,
+        });
+      }
+    }
+
     const response = await sendSingleApplicationEmail({
       template,
       email,
@@ -66,8 +76,10 @@ export const confirmationEmailController: ConfirmationEmail = async (
   const { template } = res.locals.parsedReq.params;
 
   try {
-    // if the session is locked we can infer that a payment request has been initiated
-    const paymentRequestInitiated = Boolean(lockedAt);
+    // A locked session has an invite to pay request, or was paid by a delayed payment method (e.g. Bacs)
+    // only the itp ones have a payee to email
+    const paymentRequestInitiated =
+      Boolean(lockedAt) && (await getSessionLock(sessionId)).hasPaymentRequest;
     if (paymentRequestInitiated) {
       const response = await sendAgentAndPayeeConfirmationEmail(sessionId);
       return res.json(response);
@@ -127,6 +139,44 @@ const getTeamIsTrial = async (teamId: number | null): Promise<boolean> => {
   );
 
   return teamSettings[0]?.isTrial ?? false;
+};
+
+const LOCK_SKIPPED_TEMPLATES: readonly string[] = [
+  "reminder",
+  "expiry",
+  "general-reminder",
+  "general-expiry",
+];
+
+/**
+ * A session is locked while an invite to pay request is open, or while a delayed payment (e.g. Bacs) is processing
+ */
+const getSessionLock = async (
+  sessionId: string,
+): Promise<{ isLocked: boolean; hasPaymentRequest: boolean }> => {
+  const { session } = await $api.client.request<{
+    session: {
+      lockedAt: string | null;
+      paymentRequests: { id: string }[];
+    } | null;
+  }>(
+    gql`
+      query GetSessionLock($sessionId: uuid!) {
+        session: lowcal_sessions_by_pk(id: $sessionId) {
+          lockedAt: locked_at
+          paymentRequests: payment_requests(limit: 1) {
+            id
+          }
+        }
+      }
+    `,
+    { sessionId },
+  );
+
+  return {
+    isLocked: Boolean(session?.lockedAt),
+    hasPaymentRequest: Boolean(session?.paymentRequests.length),
+  };
 };
 
 const emailErrorHandler = (

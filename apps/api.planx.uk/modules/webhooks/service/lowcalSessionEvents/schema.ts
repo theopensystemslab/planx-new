@@ -27,14 +27,17 @@ export const createSessionDeleteEventSchema = z.object({
     .object({
       operation: z.enum(["INSERT", "UPDATE"]),
       createdAt: z.string().pipe(z.coerce.date()).optional(),
-      lockedAt: z.string().pipe(z.coerce.date()).optional(),
+      /** Null when the session has been unlocked (e.g. a delayed payment failed) */
+      lockedAt: z.string().pipe(z.coerce.date()).nullish(),
+      /** When the applicant first started a delayed payment (e.g. Bacs) - the window to pay runs from here */
+      delayedPaymentStartedAt: z.string().pipe(z.coerce.date()).nullish(),
       payload: z.object({
         sessionId: z.uuid(),
       }),
     })
     .refine(
-      (data) => data.createdAt || data.lockedAt,
-      "Either createdAt or lockedAt must be provided",
+      (data) => data.createdAt || data.operation === "UPDATE",
+      "createdAt must be provided for an INSERT",
     ),
 });
 

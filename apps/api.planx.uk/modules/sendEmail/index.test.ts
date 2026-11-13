@@ -18,11 +18,25 @@ vi.mock("../../lib/resend/index.js", () => ({
 
 const SAVE_ENDPOINT = "/send-email/save";
 
+const mockSessionLock = ({
+  lockedAt = null,
+  paymentRequests = [],
+}: {
+  lockedAt?: string | null;
+  paymentRequests?: { id: string }[];
+} = {}) =>
+  queryMock.mockQuery({
+    name: "GetSessionLock",
+    matchOnVariables: false,
+    data: { session: { lockedAt, paymentRequests } },
+  });
+
 describe("Send Email endpoint", () => {
   beforeEach(() => {
     queryMock.reset();
     queryMock.mockQuery(mockValidateSingleSessionRequest);
     queryMock.mockQuery(mockSetupEmailNotifications);
+    mockSessionLock();
   });
 
   describe("'Save' template", () => {
@@ -264,6 +278,42 @@ describe("Send Email endpoint", () => {
         });
       });
     }
+  });
+
+  describe("Locked sessions (awaiting payment)", () => {
+    const authorised = (template: string, lockedAt: string | null = null) =>
+      supertest(app)
+        .post(`/send-email/${template}`)
+        .set("Authorization", "testtesttest")
+        .send({
+          payload: { sessionId: "123", email: NOTIFY_TEST_EMAIL, lockedAt },
+        });
+
+    for (const template of ["reminder", "expiry"]) {
+      it(`skips the "${template}" email, as the session can't be resumed`, async () => {
+        mockSessionLock({ lockedAt: "2026-11-01T12:00:00Z" });
+
+        const response = await authorised(template).expect(200);
+
+        expect(response.body.message).toMatch(/Skipping .* locked/);
+        expect(
+          queryMock
+            .getCalls()
+            .some((call) => call.id === "ValidateSingleSessionRequest"),
+        ).toBe(false);
+      });
+    }
+
+    it("sends the applicant's usual confirmation when a delayed payment (e.g. Bacs) submitted the session", async () => {
+      const lockedAt = "2026-11-01T12:00:00Z";
+      mockSessionLock({ lockedAt });
+
+      await authorised("confirmation", lockedAt).expect(200);
+
+      const calls = queryMock.getCalls().map((call) => call.id);
+      expect(calls).toContain("ValidateSingleSessionRequest");
+      expect(calls).not.toContain("GetDataForPayeeAndAgentEmails");
+    });
   });
 
   describe("Setting up send email events", () => {
