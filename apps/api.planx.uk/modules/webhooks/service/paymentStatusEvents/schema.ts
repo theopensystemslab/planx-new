@@ -32,3 +32,26 @@ export type PaymentStatusEventsController = ValidatedRequestHandler<
   typeof paymentStatusEventSchema,
   PaymentStatusEventResponse
 >;
+
+/**
+ * Fired by Hasura on every payment_status insert (delayed_payment_send_events trigger)
+ */
+export const delayedPaymentSendEventSchema = z.object({
+  body: z.object({
+    payload: z.object({
+      sessionId: z.uuid(),
+      stripePaymentId: z.string().nullable(),
+      stripeStatus: z.string().nullable(),
+      paymentMethod: z.string().nullable(),
+    }),
+    deliveryInfo: z.object({
+      currentRetry: z.number(),
+      maxRetries: z.number(),
+    }),
+  }),
+});
+
+export type DelayedPaymentSendEventsController = ValidatedRequestHandler<
+  typeof delayedPaymentSendEventSchema,
+  PaymentStatusEventResponse
+>;
