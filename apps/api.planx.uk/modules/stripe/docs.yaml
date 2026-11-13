@@ -547,7 +547,7 @@ paths:
         - Invite to pay (a `paymentRequestId` in the metadata): fulfils the payment request once paid
         - Self-pay, paid at checkout: ignored, the applicant's browser submits the application
         - Self-pay, delayed payment (e.g. Bacs) processing: locks the session
-        - Self-pay, delayed payment succeeded: sets `paid_at`, which submits the application
+        - Self-pay, delayed payment succeeded: ignored, the application is submitted once `payment_status` records the succeeded PaymentIntent (`/webhooks/hasura/create-delayed-payment-send-events`)
 
         Docs: [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
       tags:
