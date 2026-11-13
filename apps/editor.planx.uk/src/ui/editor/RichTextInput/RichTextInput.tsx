@@ -1,34 +1,23 @@
-import Check from "@mui/icons-material/Check";
-import Close from "@mui/icons-material/Close";
-import Delete from "@mui/icons-material/Delete";
-import LinkIcon from "@mui/icons-material/Link";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import type { EditorOptions } from "@tiptap/core";
 import { type Editor } from "@tiptap/core";
 import Mention from "@tiptap/extension-mention";
 import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
-import type { ChangeEvent } from "react";
-import { type FC, useCallback, useEffect, useRef, useState } from "react";
+import type { ChangeEvent, MouseEvent } from "react";
+import { type FC, useCallback, useEffect, useRef } from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
-import Input from "../../shared/Input/Input";
-import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
-import { H1Button, H2Button } from "./components/HeadingButtons";
-import {
-  BoldButton,
-  BulletListButton,
-  ItalicButton,
-  OrderedListButton,
-} from "./components/RichTextInputButtons";
+import { RichTextToolbar } from "./components/RichTextToolbar";
 import { suggestion } from "./components/suggestion";
-import { RichContentContainer, StyledBubbleMenu } from "./styles";
+import { RichContentContainer, RichTextMarker } from "./styles";
 import { commonExtensions, passportClassName } from "./tiptapExtensions";
 import type { Props } from "./types";
-import { fromHtml, initialUrlValue, toHtml, trimUrlValue } from "./utils";
+import { fromHtml, toHtml } from "./utils";
 
 const LINE_HEIGHT_REM = 1.5;
+
+const INTERACTIVE_ELEMENTS = "a[href], button, input, select, textarea";
 
 const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
@@ -81,11 +70,6 @@ const RichTextInput: FC<Props> = (props) => {
     editable: !props.disabled,
   });
 
-  const [addingLink, setAddingLink] = useState<{
-    draft: string;
-    selectionHtml: string | null;
-  } | null>(null);
-
   // Cache internal string value
   const internalValue = useRef<string | null>(null);
 
@@ -114,19 +98,13 @@ const RichTextInput: FC<Props> = (props) => {
     [props.onChange, variant],
   );
 
-  const handleSelectionUpdate = useCallback(() => {
-    setAddingLink(null);
-  }, [setAddingLink]);
-
   useEffect(() => {
     if (!editor) {
       return;
     }
     editor.on("update", handleUpdate);
-    editor.on("selectionUpdate", handleSelectionUpdate);
     return () => {
       editor.off("update", handleUpdate);
-      editor.off("selectionUpdate", handleSelectionUpdate);
     };
   }, [editor, handleUpdate]);
 
@@ -144,158 +122,44 @@ const RichTextInput: FC<Props> = (props) => {
     editor.commands.setContent(doc);
   }, [stringValue, variant]);
 
-  // Returns the HTML snippet under the current selection, typically wrapped in a <p> tag, e.g. '<p>selected text</p>'
-  const getSelectionHtml = () => {
-    if (!editor) {
-      return null;
-    }
-    try {
-      const selectionDocument = {
-        type: "doc",
-        content: [editor.state.selection.content().toJSON().content[0]],
-      };
-      return toHtml(selectionDocument);
-    } catch (err) {
-      return null;
-    }
+  const isEditable = Boolean(editor) && !props.disabled;
+
+  // Fields are often wrapped in a <label> (e.g. ui/editor/InputLabel). Clicking non-interactive
+  // content within a label forwards the click to its first labelable descendant - here, a toolbar
+  // button - which would apply formatting. Cancel this activation for any click not on a control.
+  const preventLabelActivation = (ev: MouseEvent<HTMLDivElement>) => {
+    const target = ev.target as Element;
+    if (!target.closest(INTERACTIVE_ELEMENTS)) ev.preventDefault();
   };
-
-  const urlInputRef = useRef<HTMLInputElement>(null);
-
-  const isAddingLink = Boolean(addingLink);
-
-  // Focus/select the URL input field value when it appears in the UI
-  useEffect(() => {
-    if (!isAddingLink) {
-      return;
-    }
-    urlInputRef.current?.focus();
-    const href = editor?.getAttributes("link")?.href || initialUrlValue;
-    if (href !== initialUrlValue) {
-      urlInputRef.current?.select();
-    }
-  }, [isAddingLink]);
 
   return (
     <ErrorWrapper id={props.name} error={props.errorMessage}>
-      <RichContentContainer className="rich-text-editor">
-        {editor && (
-          <StyledBubbleMenu editor={editor}>
-            <Box
-              sx={{
-                display: isAddingLink ? "flex" : "none",
-                alignItems: "center",
-              }}
-            >
-              <Input
-                sx={{ width: 300 }}
-                aria-label="URL"
-                ref={urlInputRef}
-                onKeyDown={(ev) => {
-                  if (ev.key === "Enter") {
-                    editor
-                      .chain()
-                      .focus()
-                      .toggleLink({
-                        href: addingLink?.draft || "",
-                      })
-                      .run();
-                    setAddingLink(null);
-                  }
-                }}
-                value={addingLink?.draft || ""}
-                onChange={(ev) => {
-                  setAddingLink(
-                    (prev) =>
-                      prev && {
-                        ...prev,
-                        draft: trimUrlValue(ev.target.value),
-                      },
-                  );
-                }}
-              />
-              <IconButton
-                size="small"
-                onClick={() => {
-                  editor
-                    .chain()
-                    .focus()
-                    .toggleLink({
-                      href: addingLink?.draft || "",
-                    })
-                    .run();
-                  setAddingLink(null);
-                }}
-              >
-                <Check />
-              </IconButton>
-              <IconButton
-                size="small"
-                disabled={!editor.isActive("link")}
-                onClick={() => {
-                  editor.chain().focus().unsetLink().run();
-                  setAddingLink(null);
-                }}
-              >
-                <Delete />
-              </IconButton>
-              <IconButton
-                size="small"
-                onClick={() => {
-                  setAddingLink(null);
-                }}
-              >
-                <Close />
-              </IconButton>
-            </Box>
-            <Box
-              sx={{
-                display: isAddingLink ? "none" : "flex",
-                alignItems: "center",
-              }}
-            >
-              {!isParagraph && (
-                <>
-                  <H1Button editor={editor} label={<strong>H2</strong>} />
-                  <H2Button editor={editor} label={<strong>H3</strong>} />
-                </>
-              )}
-              <BoldButton editor={editor} />
-              <ItalicButton editor={editor} />
-              <BulletListButton editor={editor} />
-              <OrderedListButton editor={editor} />
-              <PublicFileUploadButton
-                variant="tooltip"
-                aria-label="Insert image"
-                onChange={(src) =>
-                  editor?.chain().focus().setImage({ src }).run()
-                }
-              />
-              <IconButton
-                size="small"
-                color={editor.isActive("link") ? "primary" : undefined}
-                onClick={() => {
-                  if (editor.isActive("link")) {
-                    const href =
-                      editor.getAttributes("link")?.href || initialUrlValue;
-                    setAddingLink({
-                      selectionHtml: getSelectionHtml(),
-                      draft: href,
-                    });
-                  } else {
-                    setAddingLink({
-                      selectionHtml: getSelectionHtml(),
-                      draft: initialUrlValue,
-                    });
-                  }
-                }}
-              >
-                <LinkIcon />
-              </IconButton>
-            </Box>
-          </StyledBubbleMenu>
+      <RichContentContainer
+        className="rich-text-editor"
+        onClick={preventLabelActivation}
+      >
+        {editor && isEditable && (
+          <RichTextToolbar editor={editor} showHeadings={!isParagraph} />
         )}
-        <EditorContent editor={editor} />
+        <div className="rte-field">
+          <EditorContent editor={editor} className="rte-content" />
+          {isEditable && (
+            <Tooltip title="Rich text" placement="top">
+              <RichTextMarker
+                className="rte-marker"
+                aria-hidden
+                // Clicking the marker should behave like clicking into the field
+                onMouseDown={(ev) => {
+                  ev.preventDefault();
+                  editor?.commands.focus("end");
+                }}
+              >
+                <span className="rte-marker-bold">A</span>
+                <span className="rte-marker-italic">a</span>
+              </RichTextMarker>
+            </Tooltip>
+          )}
+        </div>
       </RichContentContainer>
     </ErrorWrapper>
   );
