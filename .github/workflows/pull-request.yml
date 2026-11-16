@@ -225,7 +225,7 @@ jobs:
         run: |
           for mapfile in build/assets/*.map; do
             jsname=$(basename "${mapfile%.map}")
-            curl -sS --fail -X POST \
+            curl -sS --fail-with-body -X POST \
               "https://api.airbrake.io/api/v4/projects/${AB_PROJECT_ID}/sourcemaps" \
               -H "Authorization: Bearer ${AB_PROJECT_KEY}" \
               -F "file=@${mapfile}" \
