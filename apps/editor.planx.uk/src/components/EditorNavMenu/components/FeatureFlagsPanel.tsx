@@ -20,6 +20,11 @@ interface Props {
   onClose: () => void;
 }
 
+// Typed as `string` (not `FeatureFlag`) so this still compiles when
+// AVAILABLE_FEATURE_FLAGS is empty
+const formatFlagLabel = (flag: string) =>
+  flag.charAt(0) + flag.slice(1).toLowerCase();
+
 const FeatureFlagsPanel = ({ anchorEl, onClose }: Props) => {
   const open = Boolean(anchorEl);
 
@@ -107,7 +112,7 @@ const FeatureFlagsPanel = ({ anchorEl, onClose }: Props) => {
             {AVAILABLE_FEATURE_FLAGS.map((flag) => (
               <Switch
                 key={flag}
-                label={flag.charAt(0) + flag.slice(1).toLowerCase()}
+                label={formatFlagLabel(flag)}
                 name={flag}
                 variant="editorPage"
                 capitalize

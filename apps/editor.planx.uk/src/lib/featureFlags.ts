@@ -1,5 +1,5 @@
 // add/edit/remove feature flags in array below
-export const AVAILABLE_FEATURE_FLAGS = ["COMPONENT_RESOURCES"] as const;
+export const AVAILABLE_FEATURE_FLAGS = [] as const;
 
 export type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 
