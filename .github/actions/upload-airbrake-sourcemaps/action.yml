@@ -1,0 +1,37 @@
+name: Upload sourcemaps to Airbrake
+description: Upload each sourcemap in a build's assets directory to Airbrake, named by the public URL of its JS file
+
+inputs:
+  project-id:
+    description: Airbrake project ID
+    required: true
+  project-key:
+    description: Airbrake project key
+    required: true
+  app-url:
+    description: Public base URL the assets are served from, without a trailing slash (e.g. https://editor.planx.uk)
+    required: true
+  assets-directory:
+    description: Directory containing the built JS and .map files
+    required: false
+    default: apps/editor.planx.uk/build/assets
+
+runs:
+  using: composite
+  steps:
+    - name: Upload sourcemaps
+      shell: bash
+      env:
+        AIRBRAKE_PROJECT_ID: ${{ inputs.project-id }}
+        AIRBRAKE_PROJECT_KEY: ${{ inputs.project-key }}
+        APP_URL: ${{ inputs.app-url }}
+        ASSETS_DIRECTORY: ${{ inputs.assets-directory }}
+      run: |
+        for mapfile in "${ASSETS_DIRECTORY}"/*.map; do
+          jsname=$(basename "${mapfile%.map}")
+          curl -sS --fail-with-body -X POST \
+            "https://api.airbrake.io/api/v4/projects/${AIRBRAKE_PROJECT_ID}/sourcemaps" \
+            -H "Authorization: Bearer ${AIRBRAKE_PROJECT_KEY}" \
+            -F "file=@${mapfile}" \
+            -F "name=${APP_URL}/assets/${jsname}"
+        done
