@@ -65,6 +65,8 @@ jobs:
           VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           VITE_APP_SHAREDB_URL: ${{ inputs.vite-sharedb-url }}
       - name: Upload source maps to Airbrake
+        # TODO: remove once Airbrake stop 403'ing sourcemap uploads (possibly due to WAF on their ELB)
+        continue-on-error: true
         working-directory: ${{ inputs.editor-directory }}
         env:
           AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
@@ -72,7 +74,7 @@ jobs:
         run: |
           for mapfile in build/assets/*.map; do
             jsname=$(basename "${mapfile%.map}")
-            curl -sS --fail -X POST \
+            curl -sS --fail-with-body -X POST \
               "https://api.airbrake.io/api/v4/projects/${AIRBRAKE_PROJECT_ID}/sourcemaps" \
               -H "Authorization: Bearer ${AIRBRAKE_PROJECT_KEY}" \
               -F "file=@${mapfile}" \

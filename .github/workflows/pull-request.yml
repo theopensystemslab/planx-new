@@ -218,6 +218,8 @@ jobs:
           VITE_APP_MICROSOFT_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_ENV: pizza
       - name: Upload source maps to Airbrake
+        # TODO: remove once Airbrake stop 403'ing sourcemap uploads (possibly due to WAF on their ELB)
+        continue-on-error: true
         working-directory: ${{ env.EDITOR_DIRECTORY }}
         env:
           AB_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
@@ -225,7 +227,7 @@ jobs:
         run: |
           for mapfile in build/assets/*.map; do
             jsname=$(basename "${mapfile%.map}")
-            curl -sS --fail -X POST \
+            curl -sS --fail-with-body -X POST \
               "https://api.airbrake.io/api/v4/projects/${AB_PROJECT_ID}/sourcemaps" \
               -H "Authorization: Bearer ${AB_PROJECT_KEY}" \
               -F "file=@${mapfile}" \
@@ -409,8 +411,8 @@ jobs:
           host: ${{ env.FULL_DOMAIN }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./${{ env.EDITOR_DIRECTORY }}/build"
-          target: "planx-new/"
+          source: './${{ env.EDITOR_DIRECTORY }}/build'
+          target: 'planx-new/'
           overwrite: true
 
       - name: Download localplanning.services build artifact
@@ -426,8 +428,8 @@ jobs:
           host: ${{ env.FULL_DOMAIN }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist"
-          target: "planx-new/"
+          source: './${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist'
+          target: 'planx-new/'
           overwrite: true
 
       - uses: marocchino/sticky-pull-request-comment@v3
