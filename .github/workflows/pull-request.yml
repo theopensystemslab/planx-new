@@ -220,19 +220,12 @@ jobs:
       - name: Upload source maps to Airbrake
         # TODO: remove once Airbrake stop 403'ing sourcemap uploads (possibly due to WAF on their ELB)
         continue-on-error: true
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-        env:
-          AB_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
-          AB_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-        run: |
-          for mapfile in build/assets/*.map; do
-            jsname=$(basename "${mapfile%.map}")
-            curl -sS --fail-with-body -X POST \
-              "https://api.airbrake.io/api/v4/projects/${AB_PROJECT_ID}/sourcemaps" \
-              -H "Authorization: Bearer ${AB_PROJECT_KEY}" \
-              -F "file=@${mapfile}" \
-              -F "name=https://${{ env.FULL_DOMAIN }}/assets/${jsname}"
-          done
+        uses: ./.github/actions/upload-airbrake-sourcemaps
+        with:
+          project-id: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+          project-key: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+          app-url: https://${{ env.FULL_DOMAIN }}
+          assets-directory: ${{ env.EDITOR_DIRECTORY }}/build/assets
       - name: Upload PlanX frontend build artifact
         uses: actions/upload-artifact@v7
         with:
