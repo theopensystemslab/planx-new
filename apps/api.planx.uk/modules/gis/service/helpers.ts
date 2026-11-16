@@ -20,6 +20,7 @@ import * as horsham from "./local_authorities/metadata/horsham.js";
 import * as kensingtonAndChelsea from "./local_authorities/metadata/kensingtonAndChelsea.js";
 import * as lambeth from "./local_authorities/metadata/lambeth.js";
 import * as liverpool from "./local_authorities/metadata/liverpool.js";
+import * as maidstone from "./local_authorities/metadata/maidstone.js";
 import * as medway from "./local_authorities/metadata/medway.js";
 import * as newcastle from "./local_authorities/metadata/newcastle.js";
 import * as northumberland from "./local_authorities/metadata/northumberland.js";
@@ -71,6 +72,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "kensington-and-chelsea": kensingtonAndChelsea,
   lambeth,
   liverpool,
+  maidstone,
   medway,
   newcastle,
   northumberland,
