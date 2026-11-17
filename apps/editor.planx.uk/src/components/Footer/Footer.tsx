@@ -4,6 +4,7 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { usePublicRouteContext } from "hooks/usePublicRouteContext";
+import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatServiceLastUpdated } from "pages/FlowEditor/utils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -24,7 +25,6 @@ const Root = styled("footer")(({ theme }) => ({
 
 const ButtonGroup = styled(Box)(({ theme }) => ({
   columnGap: theme.spacing(3),
-  textTransform: "capitalize",
   display: "flex",
   flexWrap: "wrap",
   [theme.breakpoints.up("xs")]: {
@@ -91,7 +91,7 @@ function FooterItem(props: {
       variant="body2"
       sx={{ fontWeight: props.bold ? FONT_WEIGHT_SEMI_BOLD : "regular" }}
     >
-      {props.title.toLowerCase()}
+      {capitalize(props.title)}
     </Typography>
   );
   return props.param ? (

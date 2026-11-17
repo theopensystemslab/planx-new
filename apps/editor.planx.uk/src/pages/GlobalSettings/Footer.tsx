@@ -1,3 +1,4 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -115,7 +116,16 @@ const FooterItem: React.FC<FooterItemProps> = ({ item, onSave, onDelete }) => (
                     Reset changes
                   </Button>
                 </Box>
-                <Button onClick={onDelete} color="error">
+                <Button
+                  onClick={onDelete}
+                  variant="contained"
+                  color="secondary"
+                  sx={{ gap: 1 }}
+                >
+                  <DeleteIcon
+                    sx={{ color: "warning.dark" }}
+                    fontSize="medium"
+                  />
                   Delete
                 </Button>
               </Box>
