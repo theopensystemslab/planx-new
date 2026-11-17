@@ -155,8 +155,6 @@ paths:
                   $ref: "#/components/schemas/EventSchema"
                 fme:
                   $ref: "#/components/schemas/EventSchema"
-                idox:
-                  $ref: "#/components/schemas/EventSchema"
               required:
                 - email
                 - bops
