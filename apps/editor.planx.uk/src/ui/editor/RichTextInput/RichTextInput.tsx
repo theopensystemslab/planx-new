@@ -10,13 +10,10 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { RichTextToolbar } from "./components/RichTextToolbar";
 import { suggestion } from "./components/suggestion";
-import {
-  RichContentContainer,
-  RichTextMarker,
-  StyledBubbleMenu,
-} from "./styles";
+import { RichContentContainer, RichTextMarker } from "./styles";
 import { commonExtensions, passportClassName } from "./tiptapExtensions";
 import type { Props } from "./types";
+import { useHoldOpenWhilePressed } from "./useHoldOpenWhilePressed";
 import { fromHtml, toHtml } from "./utils";
 
 const LINE_HEIGHT_REM = 1.5;
@@ -128,6 +125,9 @@ const RichTextInput: FC<Props> = (props) => {
 
   const isEditable = Boolean(editor) && !props.disabled;
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isHeldOpen = useHoldOpenWhilePressed(containerRef, isEditable);
+
   // Fields are often wrapped in a <label> (e.g. ui/editor/InputLabel). Clicking non-interactive
   // content within a label forwards the click to its first labelable descendant - here, a toolbar
   // button - which would apply formatting. Cancel this activation for any click not on a control.
@@ -139,16 +139,16 @@ const RichTextInput: FC<Props> = (props) => {
   return (
     <ErrorWrapper id={props.name} error={props.errorMessage}>
       <RichContentContainer
+        ref={containerRef}
         className="rich-text-editor"
+        data-held-open={isHeldOpen || undefined}
         onClick={preventLabelActivation}
       >
-        {editor && (
-          <StyledBubbleMenu editor={editor}>
-            <RichTextToolbar editor={editor} showHeadings={!isParagraph} />
-          </StyledBubbleMenu>
+        {editor && isEditable && (
+          <RichTextToolbar editor={editor} showHeadings={!isParagraph} />
         )}
         <div className="rich-text-input">
-          <EditorContent editor={editor} />
+          <EditorContent editor={editor} className="rich-text-content" />
           {isEditable && (
             <Tooltip title="Rich text" placement="top">
               <RichTextMarker
