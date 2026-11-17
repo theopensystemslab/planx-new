@@ -6,6 +6,17 @@ import { BubbleMenu } from "@tiptap/react/menus";
 import { getInputFocusStyle } from "theme";
 
 export const RichContentContainer = styled(Box)(({ theme }) => ({
+  // The "rich text" marker is hidden whilst the field (or its toolbar) has focus
+  "&:focus-within .rich-text-marker": {
+    display: "none",
+  },
+  "& .rich-text-input": {
+    position: "relative",
+  },
+  // Leave space for the "rich text" marker, which is only shown on editable fields
+  "& .rich-text-input:has(.rich-text-marker) .ProseMirror": {
+    paddingRight: "45px",
+  },
   "& .ProseMirror": {
     padding: "12px 15px",
     backgroundColor: theme.palette.background.default,
@@ -82,6 +93,32 @@ export const StyledBubbleMenu = styled(BubbleMenu)(({ theme }) => ({
   alignItems: "center",
   padding: theme.spacing(0.25),
   zIndex: theme.zIndex.tooltip,
+}));
+
+/** Indicates that a field supports rich text, shown whilst the field is not focused */
+export const RichTextMarker = styled("span")(({ theme }) => ({
+  position: "absolute",
+  // Align with the first line of text (.ProseMirror padding + border)
+  top: "13px",
+  right: "13px",
+  zIndex: 1,
+  height: "1lh",
+  display: "flex",
+  alignItems: "center",
+  gap: "1px",
+  color: theme.palette.text.placeholder,
+  cursor: "text",
+  userSelect: "none",
+  letterSpacing: "-0.05em",
+  "& > span": {
+    lineHeight: 1,
+  },
+  "& .rich-text-marker-bold": {
+    fontWeight: "bold",
+  },
+  "& .rich-text-marker-italic": {
+    fontStyle: "italic",
+  },
 }));
 
 export const MentionItems = styled(Box)(({ theme }) => ({
