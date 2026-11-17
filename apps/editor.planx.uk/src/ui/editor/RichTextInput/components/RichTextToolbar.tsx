@@ -1,0 +1,183 @@
+import Check from "@mui/icons-material/Check";
+import Close from "@mui/icons-material/Close";
+import Delete from "@mui/icons-material/Delete";
+import LinkIcon from "@mui/icons-material/Link";
+import Box from "@mui/material/Box";
+import { type Editor } from "@tiptap/core";
+import { useEditorState } from "@tiptap/react";
+import { type FC, useEffect, useRef, useState } from "react";
+
+import Input from "../../../shared/Input/Input";
+import PublicFileUploadButton from "../../../shared/PublicFileUploadButton";
+import { initialUrlValue, trimUrlValue } from "../utils";
+import { H1Button, H2Button } from "./HeadingButtons";
+import {
+  BoldButton,
+  BulletListButton,
+  ItalicButton,
+  OrderedListButton,
+  ToolbarButton,
+} from "./RichTextInputButtons";
+
+interface Props {
+  editor: Editor;
+  showHeadings: boolean;
+}
+
+/**
+ * Formatting controls for a rich text field
+ */
+export const RichTextToolbar: FC<Props> = ({ editor, showHeadings }) => {
+  // Track "active" formatting at the cursor position, updating on every transaction
+  // These values must be passed down as props - calling editor.isActive() during render is unsafe
+  // as `editor` is a stable reference, so the React Compiler will memoise the first result
+  const active = useEditorState({
+    editor,
+    selector: ({ editor }) => ({
+      bold: Boolean(editor?.isActive("bold")),
+      italic: Boolean(editor?.isActive("italic")),
+      bulletList: Boolean(editor?.isActive("bulletList")),
+      orderedList: Boolean(editor?.isActive("orderedList")),
+      h1: Boolean(editor?.isActive("heading", { level: 1 })),
+      h2: Boolean(editor?.isActive("heading", { level: 2 })),
+      // Any heading level, including those from pasted content
+      heading: Boolean(editor?.isActive("heading")),
+      link: Boolean(editor?.isActive("link")),
+    }),
+  });
+
+  const [linkDraft, setLinkDraft] = useState<string | null>(null);
+  const isAddingLink = linkDraft !== null;
+  const urlInputRef = useRef<HTMLInputElement>(null);
+
+  // Close the link form if the user moves the cursor within the editor
+  useEffect(() => {
+    const handleSelectionUpdate = () => setLinkDraft(null);
+    editor.on("selectionUpdate", handleSelectionUpdate);
+    return () => {
+      editor.off("selectionUpdate", handleSelectionUpdate);
+    };
+  }, [editor]);
+
+  // Focus/select the URL input field value when it appears in the UI
+  useEffect(() => {
+    if (!isAddingLink) return;
+    const input = urlInputRef.current;
+    input?.focus();
+    // Select existing URLs so they can be replaced, but leave the cursor after a bare "https://"
+    if (input && input.value !== initialUrlValue) input.select();
+  }, [isAddingLink]);
+
+  const openLinkForm = () => {
+    const href = editor.getAttributes("link")?.href || initialUrlValue;
+    setLinkDraft(href);
+  };
+
+  const closeLinkForm = () => {
+    setLinkDraft(null);
+    editor.commands.focus();
+  };
+
+  const submitLink = () => {
+    const href = linkDraft?.trim() ?? "";
+    if (!href || href === initialUrlValue) return closeLinkForm();
+
+    const chain = editor.chain().focus();
+    if (editor.isActive("link")) {
+      // Update the whole existing link, not just the text under the cursor
+      chain.extendMarkRange("link").setLink({ href }).run();
+    } else {
+      chain.setLink({ href }).run();
+    }
+    setLinkDraft(null);
+  };
+
+  const removeLink = () => {
+    editor.chain().focus().extendMarkRange("link").unsetLink().run();
+    setLinkDraft(null);
+  };
+
+  return (
+    <Box
+      className="rte-toolbar"
+      role="toolbar"
+      aria-label="Text formatting"
+      sx={{ display: "flex", alignItems: "center" }}
+    >
+      {isAddingLink ? (
+        <>
+          <Input
+            sx={{ width: 300 }}
+            aria-label="URL"
+            ref={urlInputRef}
+            value={linkDraft}
+            onChange={(ev) => setLinkDraft(trimUrlValue(ev.target.value))}
+            onKeyDown={(ev) => {
+              if (ev.key === "Enter") {
+                ev.preventDefault();
+                submitLink();
+              }
+              if (ev.key === "Escape") {
+                ev.preventDefault();
+                ev.stopPropagation();
+                closeLinkForm();
+              }
+            }}
+          />
+          <ToolbarButton label="Save link" onClick={submitLink}>
+            <Check />
+          </ToolbarButton>
+          <ToolbarButton
+            label="Remove link"
+            disabled={!active.link}
+            onClick={removeLink}
+          >
+            <Delete />
+          </ToolbarButton>
+          <ToolbarButton label="Cancel" onClick={closeLinkForm}>
+            <Close />
+          </ToolbarButton>
+        </>
+      ) : (
+        <>
+          {showHeadings && (
+            <>
+              <H1Button
+                editor={editor}
+                isActive={active.h1}
+                label={<strong>H2</strong>}
+              />
+              <H2Button
+                editor={editor}
+                isActive={active.h2}
+                label={<strong>H3</strong>}
+              />
+            </>
+          )}
+          {/* Headings are already bold */}
+          <BoldButton
+            editor={editor}
+            isActive={active.bold}
+            disabled={active.heading}
+          />
+          <ItalicButton editor={editor} isActive={active.italic} />
+          <BulletListButton editor={editor} isActive={active.bulletList} />
+          <OrderedListButton editor={editor} isActive={active.orderedList} />
+          <PublicFileUploadButton
+            variant="tooltip"
+            aria-label="Insert image"
+            tooltipTitle="Insert image"
+            onChange={(src) => editor.chain().focus().setImage({ src }).run()}
+          />
+          <ToolbarButton
+            label={active.link ? "Edit link" : "Add link"}
+            isActive={active.link}
+            onClick={openLinkForm}
+          >
+            <LinkIcon />
+          </ToolbarButton>
+        </>
+      )}
+    </Box>
+  );
+};
