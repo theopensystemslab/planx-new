@@ -56,6 +56,7 @@ export const ALLOW_LIST = [
   "application.fee.serviceCharge",
   "application.information.harmful",
   "application.information.sensitive",
+  "application.resultOverride",
   "application.type",
   "drawBoundary.action",
   "findProperty.action",
