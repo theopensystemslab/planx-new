@@ -1,3 +1,4 @@
+import Tooltip from "@mui/material/Tooltip";
 import type { EditorOptions } from "@tiptap/core";
 import { type Editor } from "@tiptap/core";
 import Mention from "@tiptap/extension-mention";
@@ -9,7 +10,11 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { RichTextToolbar } from "./components/RichTextToolbar";
 import { suggestion } from "./components/suggestion";
-import { RichContentContainer, StyledBubbleMenu } from "./styles";
+import {
+  RichContentContainer,
+  RichTextMarker,
+  StyledBubbleMenu,
+} from "./styles";
 import { commonExtensions, passportClassName } from "./tiptapExtensions";
 import type { Props } from "./types";
 import { fromHtml, toHtml } from "./utils";
@@ -121,6 +126,8 @@ const RichTextInput: FC<Props> = (props) => {
     editor.commands.setContent(doc);
   }, [stringValue, variant]);
 
+  const isEditable = Boolean(editor) && !props.disabled;
+
   // Fields are often wrapped in a <label> (e.g. ui/editor/InputLabel). Clicking non-interactive
   // content within a label forwards the click to its first labelable descendant - here, a toolbar
   // button - which would apply formatting. Cancel this activation for any click not on a control.
@@ -140,7 +147,25 @@ const RichTextInput: FC<Props> = (props) => {
             <RichTextToolbar editor={editor} showHeadings={!isParagraph} />
           </StyledBubbleMenu>
         )}
-        <EditorContent editor={editor} />
+        <div className="rich-text-input">
+          <EditorContent editor={editor} />
+          {isEditable && (
+            <Tooltip title="Rich text" placement="top">
+              <RichTextMarker
+                className="rich-text-marker"
+                aria-hidden
+                // Clicking the marker should behave like clicking into the field
+                onMouseDown={(ev) => {
+                  ev.preventDefault();
+                  editor?.commands.focus("end");
+                }}
+              >
+                <span className="rich-text-marker-bold">A</span>
+                <span className="rich-text-marker-italic">a</span>
+              </RichTextMarker>
+            </Tooltip>
+          )}
+        </div>
       </RichContentContainer>
     </ErrorWrapper>
   );

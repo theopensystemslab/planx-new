@@ -1,4 +1,4 @@
-import { act, screen, within } from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import type { Editor } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { setup } from "test/utils";
@@ -248,6 +248,39 @@ describe("link form", () => {
     await user.click(screen.getByRole("button", { name: "Save link" }));
 
     expect(editor.getHTML()).not.toContain("<a");
+  });
+});
+
+describe("rich text marker", () => {
+  it("is only displayed on editable fields", async () => {
+    const { container } = await setup(
+      <>
+        <div data-testid="editable">
+          <RichTextInput value="" errorMessage={undefined} />
+        </div>
+        <div data-testid="disabled">
+          <RichTextInput value="" errorMessage={undefined} disabled />
+        </div>
+      </>,
+    );
+    const marker = (testId: string) =>
+      container.querySelector(`[data-testid="${testId}"] .rich-text-marker`);
+
+    expect(marker("editable")).toBeInTheDocument();
+    expect(marker("disabled")).not.toBeInTheDocument();
+  });
+
+  it("focuses the field when clicked", async () => {
+    const { user, container } = await setup(
+      <RichTextInput value="<p>Hello world</p>" errorMessage={undefined} />,
+    );
+    const field = container.querySelector(".ProseMirror");
+    expect(field).not.toHaveFocus();
+
+    await user.click(container.querySelector(".rich-text-marker")!);
+
+    // Tiptap defers focus to the next animation frame
+    await waitFor(() => expect(field).toHaveFocus());
   });
 });
 
