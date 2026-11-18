@@ -1,4 +1,8 @@
-import { getFileExtension, isAllowedExtension } from "@planx/file-upload";
+import {
+  getFileExtension,
+  isAllowedExtension,
+  MAX_FILENAME_LENGTH,
+} from "@planx/file-upload";
 import assert from "assert";
 import { z } from "zod";
 
@@ -25,26 +29,50 @@ interface UploadFileResponse {
   fileUrl: string;
 }
 
-export const uploadFileSchema = z.object({
+const filenameSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .refine(isAllowedExtension, {
+    error: (issue) =>
+      `Unsupported file type for given filename: ${getFileExtension(String(issue.input))}`,
+  });
+
+const encodeFilename = (filename: string) => encodeURIComponent(filename);
+
+export const uploadPublicFileSchema = z.object({
   body: z.object({
-    filename: z
-      .string()
-      .trim()
-      .min(1)
-      .refine(isAllowedExtension, {
-        error: (issue) =>
-          `Unsupported file type for given filename: ${getFileExtension(String(issue.input))}`,
-      })
-      .transform((filename) => encodeURIComponent(filename)),
+    filename: filenameSchema.transform(encodeFilename),
   }),
 });
 
-export type UploadController = ValidatedRequestHandler<
-  typeof uploadFileSchema,
+/**
+ * For applicant uploaded files, the %-encoded filename ends up on council filesystems as `${nanoid}-${filename}`.
+ * We cap this at 255, the usual filesystem limit for a filename, also accounting for the nanoid and hyphen.
+ */
+const MAX_ENCODED_FILENAME_LENGTH = 255 - 8 - 1;
+
+export const uploadPrivateFileSchema = z.object({
+  body: z.object({
+    filename: filenameSchema
+      .max(MAX_FILENAME_LENGTH - 1, {
+        error: `File name must be under ${MAX_FILENAME_LENGTH} characters long`,
+      })
+      .transform(encodeFilename),
+  }),
+});
+
+export type PublicUploadController = ValidatedRequestHandler<
+  typeof uploadPublicFileSchema,
   UploadFileResponse
 >;
 
-export const privateUploadController: UploadController = async (
+export type PrivateUploadController = ValidatedRequestHandler<
+  typeof uploadPrivateFileSchema,
+  UploadFileResponse
+>;
+
+export const privateUploadController: PrivateUploadController = async (
   req,
   res,
   next,
@@ -52,6 +80,21 @@ export const privateUploadController: UploadController = async (
   try {
     if (!req.file) throw Error("Missing file");
     const { filename } = res.locals.parsedReq.body;
+
+    // MAX_FILENAME_LENGTH assumes encoding at most triples chars, which holds for ASCII, but can stretch to x12 at most.
+    // This isn't very legible to users, and should be rare, so we throw an error rather than validating client-side.
+    if (filename.length > MAX_ENCODED_FILENAME_LENGTH) {
+      throw new ServerError({
+        message: `Encoded file name exceeds ${MAX_ENCODED_FILENAME_LENGTH} characters`,
+        status: 400,
+        // reported to Airbrake as context, so we can see which characters caused this
+        cause: {
+          filename: safeDecode(filename),
+          encodedLength: filename.length,
+        },
+      });
+    }
+
     const fileResponse = await uploadPrivateFile(req.file, filename);
     res.json(fileResponse);
   } catch (error) {
@@ -63,7 +106,7 @@ export const privateUploadController: UploadController = async (
   }
 };
 
-export const publicUploadController: UploadController = async (
+export const publicUploadController: PublicUploadController = async (
   req,
   res,
   next,

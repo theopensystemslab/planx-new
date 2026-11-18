@@ -1,11 +1,11 @@
 import type { FileUploadSlot } from "@planx/components/FileUpload/model";
+import { MAX_FILENAME_LENGTH } from "@planx/file-upload";
 import { http, HttpResponse } from "msw";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import type { Mock } from "vitest";
 import { vi } from "vitest";
 
-import { MAX_FILENAME_LENGTH } from "../constants";
 import { Dropzone } from "./Dropzone";
 
 const UPLOAD_ENDPOINT = `${import.meta.env.VITE_APP_API_URL}/file/private/upload`;

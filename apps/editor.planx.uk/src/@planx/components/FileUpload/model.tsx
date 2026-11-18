@@ -3,12 +3,11 @@ import {
   baseNodeDataValidationSchema,
   parseBaseNodeData,
 } from "@planx/components/shared";
+import { MAX_FILENAME_LENGTH } from "@planx/file-upload";
 import { richText } from "lib/yupExtensions";
 import type { FileWithPath } from "react-dropzone";
 import type { SchemaOf } from "yup";
 import { array, boolean, number, object, string } from "yup";
-
-import { MAX_FILENAME_LENGTH } from "../shared/constants";
 
 export interface FileUpload extends BaseNodeData {
   title: string;

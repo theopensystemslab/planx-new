@@ -1,8 +1,10 @@
-import { getFileExtension, isAllowedExtension } from "@planx/file-upload";
+import {
+  getFileExtension,
+  isAllowedExtension,
+  MAX_FILENAME_LENGTH,
+} from "@planx/file-upload";
 import type { FileError } from "react-dropzone";
 import { ErrorCode } from "react-dropzone";
-
-import { MAX_FILENAME_LENGTH } from "./constants";
 
 /**
  * Extension checks for react-dropzone's `validator` option.

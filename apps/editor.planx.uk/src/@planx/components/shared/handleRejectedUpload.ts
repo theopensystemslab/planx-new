@@ -1,8 +1,10 @@
-import { ALLOWED_EXTENSIONS, MAX_UPLOAD_SIZE_MB } from "@planx/file-upload";
+import {
+  ALLOWED_EXTENSIONS,
+  MAX_FILENAME_LENGTH,
+  MAX_UPLOAD_SIZE_MB,
+} from "@planx/file-upload";
 import type { FileRejection } from "react-dropzone";
 import { ErrorCode } from "react-dropzone";
-
-import { MAX_FILENAME_LENGTH } from "./constants";
 
 /**
  * Builds a user-facing alert for a rejection by react-dropzone.

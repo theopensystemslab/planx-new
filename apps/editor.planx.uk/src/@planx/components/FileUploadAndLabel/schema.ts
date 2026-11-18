@@ -2,12 +2,12 @@ import {
   baseNodeDataValidationSchema,
   moreInformationSchema,
 } from "@planx/components/shared";
+import { MAX_FILENAME_LENGTH } from "@planx/file-upload";
 import { richText } from "lib/yupExtensions";
 import type { TestContext } from "vitest";
 import type { SchemaOf } from "yup";
 import { array, boolean, mixed, object, string, ValidationError } from "yup";
 
-import { MAX_FILENAME_LENGTH } from "../shared/constants";
 import type { Rule } from "../shared/RuleBuilder/types";
 import { Condition, Operator } from "../shared/RuleBuilder/types";
 import { checkIfConditionalRule } from "../shared/RuleBuilder/utils";
