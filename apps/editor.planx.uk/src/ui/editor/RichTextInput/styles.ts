@@ -15,15 +15,17 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
   // Toolbar and "rich text" marker are swapped via :focus-within, rather than React state
   // This guarantees only the focused input shows a toolbar, and the toolbar stays visible
   // whilst interacting with its own controls (e.g. the link URL input)
-  // Also held open whilst a press outside the input is in progress - see useHoldOpenWhilePressed
-  "&:focus-within, &[data-held-open]": {
-    "& .rich-text-toolbar": {
-      display: "flex",
+  // Also held open whilst a press outside the input is in progress (see useHoldOpenWhilePressed),
+  // or whilst the native file dialog is open (see RichTextToolbar)
+  "&:focus-within, &[data-held-open], &:has(> .rich-text-toolbar[data-held-open])":
+    {
+      "& .rich-text-toolbar": {
+        display: "flex",
+      },
+      "& .rich-text-marker": {
+        display: "none",
+      },
     },
-    "& .rich-text-marker": {
-      display: "none",
-    },
-  },
   // Focus ring wraps both the toolbar and the editable area, so they read as one control
   "&:focus-within::after": {
     content: '""',

@@ -269,6 +269,53 @@ describe("pressing a control outside the focused field", () => {
 });
 
 describe("image upload", () => {
+  it("is unavailable whilst text is selected, as the image would replace it", async () => {
+    const { container } = await renderField("<p>Hello world</p>");
+    const editor = getEditor(container);
+
+    act(() => {
+      editor.commands.setTextSelection({ from: 1, to: 6 });
+    });
+    expect(
+      screen.getByRole("button", {
+        name: "Insert image (not available when text is selected)",
+      }),
+    ).toBeDisabled();
+
+    act(() => {
+      editor.commands.setTextSelection(6);
+    });
+    expect(screen.getByRole("button", { name: "Insert image" })).toBeEnabled();
+  });
+
+  it("keeps the toolbar visible whilst the file dialog is open", async () => {
+    const { user } = await renderField("<p>Hello</p>");
+
+    await user.click(screen.getByRole("button", { name: "Insert image" }));
+
+    // Opening the native file dialog blurs the window, and with it the focused element
+    act(() => {
+      (document.activeElement as HTMLElement).blur();
+    });
+    expect(screen.getByRole("toolbar")).toBeInTheDocument();
+
+    // Closing the dialog focuses the window again, releasing the toolbar
+    fireEvent.focus(window);
+    expect(screen.queryByRole("toolbar")).not.toBeInTheDocument();
+  });
+
+  it("does not hold the toolbar open if the file dialog never blurs the window", async () => {
+    const { user } = await renderField("<p>Hello</p>");
+
+    await user.click(screen.getByRole("button", { name: "Insert image" }));
+    // Any later interaction with the page means the (modal) dialog has closed
+    await user.click(document.body);
+
+    await waitFor(() =>
+      expect(screen.queryByRole("toolbar")).not.toBeInTheDocument(),
+    );
+  });
+
   it("keeps the toolbar visible whilst uploading", async () => {
     // Hold the upload open, so the button stays in its loading state
     server.use(
