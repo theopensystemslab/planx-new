@@ -83,6 +83,34 @@ describe("File upload", () => {
           });
       });
 
+      it("should return 400 when file is empty", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .set(authHeader({ role: "teamEditor" }))
+          .field("filename", "empty_file.pdf")
+          .attach("file", Buffer.alloc(0), "empty_file.pdf")
+          .expect(400)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(/File is empty/);
+          });
+      });
+
+      it("should not report a malformed request as an unsupported file type", async () => {
+        // multipart body which ends before its closing boundary
+        await supertest(app)
+          .post(ENDPOINT)
+          .set("Content-Type", "multipart/form-data; boundary=boundary")
+          .send(
+            '--boundary\r\nContent-Disposition: form-data; name="file"; filename="some_file.pdf"\r\n\r\nsome data',
+          )
+          .expect(500)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).not.toMatch(/Unsupported file type/);
+          });
+      });
+
       it("should return 400 when file is attached to an unexpected field", async () => {
         await supertest(app)
           .post(ENDPOINT)

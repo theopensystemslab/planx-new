@@ -105,6 +105,15 @@ describe("files we do not accept", () => {
     expect(slots()).toHaveLength(0);
   });
 
+  it("rejects an empty file", async () => {
+    const { slots } = await dropFile(
+      new File([], "plan.pdf", { type: "application/pdf" }),
+    );
+
+    expect(alertMock).toHaveBeenCalledWith("File is empty");
+    expect(slots()).toHaveLength(0);
+  });
+
   it("does not create a slot for a rejected file", async () => {
     const createSlot = vi.fn();
 
