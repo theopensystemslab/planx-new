@@ -6,7 +6,7 @@ import {
   within,
 } from "@testing-library/react";
 import type { Editor } from "@tiptap/core";
-import { delay, http } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import InputLabel from "ui/editor/InputLabel";
@@ -223,33 +223,9 @@ describe("toolbar active state", () => {
   });
 });
 
-describe("pressing a control outside the focused field", () => {
-  // Hiding the toolbar on mousedown would shift the control out from under the pointer before
-  // mouseup, so the click would be lost - layout must not change until the press is released
-  it("holds the toolbar open until the press is released", async () => {
-    const onSave = vi.fn();
-    const { user, container } = await setup(
-      <>
-        <RichTextInput value="" errorMessage={undefined} />
-        <button onClick={onSave}>Save</button>
-      </>,
-    );
-    focusField(container);
-    const save = screen.getByRole("button", { name: "Save" });
-
-    await user.pointer({ keys: "[MouseLeft>]", target: save });
-    expect(save).toHaveFocus();
-    expect(screen.getByRole("toolbar")).toBeInTheDocument();
-
-    await user.pointer({ keys: "[/MouseLeft]", target: save });
-    expect(onSave).toHaveBeenCalledTimes(1);
-    await waitFor(() =>
-      expect(screen.queryByRole("toolbar")).not.toBeInTheDocument(),
-    );
-  });
-
-  it("hides the toolbar immediately when focus leaves by keyboard", async () => {
-    const { user, container } = await setup(
+describe("leaving the field", () => {
+  it("hides the toolbar when focus leaves the field", async () => {
+    const { container } = await setup(
       <>
         <RichTextInput value="" errorMessage={undefined} />
         <button>Save</button>
@@ -262,30 +238,36 @@ describe("pressing a control outside the focused field", () => {
     });
 
     expect(screen.queryByRole("toolbar")).not.toBeInTheDocument();
-    // No press in progress, so no stale listeners hold the toolbar open later
-    await user.click(screen.getByRole("button", { name: "Save" }));
-    expect(screen.queryByRole("toolbar")).not.toBeInTheDocument();
   });
 });
 
 describe("image upload", () => {
-  it("is unavailable whilst text is selected, as the image would replace it", async () => {
-    const { container } = await renderField("<p>Hello world</p>");
+  it("inserts the image after selected text, rather than replacing it", async () => {
+    const fileUrl = `${import.meta.env.VITE_APP_API_URL}/file/public/abc123/image.png`;
+    server.use(
+      http.post(`${import.meta.env.VITE_APP_API_URL}/file/public/upload`, () =>
+        HttpResponse.json({ fileType: "image/png", fileUrl }),
+      ),
+      http.get(fileUrl, () => new HttpResponse("image-bytes", { status: 200 })),
+    );
+    const { user, container, getByTestId } =
+      await renderField("<p>Hello world</p>");
     const editor = getEditor(container);
 
+    // Select "Hello"
     act(() => {
       editor.commands.setTextSelection({ from: 1, to: 6 });
     });
-    expect(
-      screen.getByRole("button", {
-        name: "Insert image (not available when text is selected)",
-      }),
-    ).toBeDisabled();
-
-    act(() => {
-      editor.commands.setTextSelection(6);
+    await user.click(screen.getByRole("button", { name: "Insert image" }));
+    fireEvent.change(getByTestId("upload-file-input"), {
+      target: { files: [new File(["x"], "image.png", { type: "image/png" })] },
     });
-    expect(screen.getByRole("button", { name: "Insert image" })).toBeEnabled();
+
+    await waitFor(() => expect(editor.getHTML()).toContain(fileUrl));
+    const html = editor.getHTML();
+    expect(html).toContain("Hello");
+    expect(html).toContain("world");
+    expect(html.indexOf(fileUrl)).toBeGreaterThan(html.indexOf("Hello"));
   });
 
   it("keeps the toolbar visible whilst the file dialog is open", async () => {

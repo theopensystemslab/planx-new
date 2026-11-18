@@ -4,28 +4,18 @@ import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { getInputFocusStyle } from "theme";
 
-/**
- * Maximum height of the editable area before it scrolls internally
- * Keeps the formatting toolbar in view when editing long content, even within tall modals
- */
-export const RICH_TEXT_MAX_HEIGHT = "50vh";
-
 export const RichContentContainer = styled(Box)(({ theme }) => ({
   position: "relative",
   // Toolbar and "rich text" marker are swapped via :focus-within, rather than React state
-  // This guarantees only the focused input shows a toolbar, and the toolbar stays visible
-  // whilst interacting with its own controls (e.g. the link URL input)
-  // Also held open whilst a press outside the input is in progress (see useHoldOpenWhilePressed),
-  // or whilst the native file dialog is open (see RichTextToolbar)
-  "&:focus-within, &[data-held-open], &:has(> .rich-text-toolbar[data-held-open])":
-    {
-      "& .rich-text-toolbar": {
-        display: "flex",
-      },
-      "& .rich-text-marker": {
-        display: "none",
-      },
+  // Also held open whilst the native file dialog is open (see RichTextToolbar)
+  "&:focus-within, &:has(> .rich-text-toolbar[data-held-open])": {
+    "& .rich-text-toolbar": {
+      display: "flex",
     },
+    "& .rich-text-marker": {
+      display: "none",
+    },
+  },
   // Focus ring wraps both the toolbar and the editable area, so they read as one control
   "&:focus-within::after": {
     content: '""',
@@ -35,9 +25,45 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
     ...getInputFocusStyle(theme),
     zIndex: 3,
   },
+  // Matches getInputFocusStyle(), which shows a 3px focus band
+  "&:focus-within .rich-text-toolbar": {
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: -3,
+      left: -3,
+      right: -3,
+      bottom: -1,
+      border: `3px solid ${theme.palette.action.focus}`,
+      borderBottom: 0,
+      // Create a visual border inside the focus right
+      boxShadow: [
+        `inset 1px 0 0 ${theme.palette.border.input}`,
+        `inset -1px 0 0 ${theme.palette.border.input}`,
+        `inset 0 1px 0 ${theme.palette.border.input}`,
+      ].join(", "),
+      pointerEvents: "none",
+    },
+    // Cover the input's ring along the edge shared with the toolbar
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      top: "calc(100% + 1px)",
+      left: 0,
+      right: 0,
+      height: 2,
+      backgroundColor: theme.palette.background.default,
+      boxShadow: [
+        `inset 1px 0 0 ${theme.palette.border.input}`,
+        `inset -1px 0 0 ${theme.palette.border.input}`,
+      ].join(", "),
+      pointerEvents: "none",
+    },
+  },
   // Scroll container for the editable area
+  // Max-height so the toolbar stays close to the cursor when editing long content
   "& .rich-text-content": {
-    maxHeight: RICH_TEXT_MAX_HEIGHT,
+    maxHeight: "50vh",
     overflowY: "auto",
     backgroundColor: theme.palette.background.default,
     border: `1px solid ${theme.palette.border.main}`,
@@ -120,16 +146,23 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
 export const Toolbar = styled(Box)(({ theme }) => ({
   display: "none",
   alignItems: "center",
+  justifyContent: "flex-end",
   flexWrap: "wrap",
   gap: theme.spacing(0.25),
   padding: theme.spacing(0.25, 0.5),
-  // Stay in view when scrolling through long content within a modal
-  position: "sticky",
-  top: 0,
-  zIndex: 2,
+  position: "absolute",
+  bottom: "100%",
+  right: 0,
+  width: "max-content",
+  maxWidth: "100%",
+  "&[data-link-form]": {
+    // Room for the URL input to grow
+    width: "600px",
+  },
+  zIndex: 4,
   backgroundColor: theme.palette.background.default,
   border: `1px solid ${theme.palette.border.main}`,
-  borderBottom: 0,
+  borderBottom: `1px solid ${theme.palette.border.light}`,
 }));
 
 export const ToolbarDivider = styled("span")(({ theme }) => ({

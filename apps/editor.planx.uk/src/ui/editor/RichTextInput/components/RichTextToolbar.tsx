@@ -3,7 +3,6 @@ import Close from "@mui/icons-material/Close";
 import Delete from "@mui/icons-material/Delete";
 import LinkIcon from "@mui/icons-material/Link";
 import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
 import { type Editor } from "@tiptap/core";
 import { useEditorState } from "@tiptap/react";
 import { type FC, type MouseEvent, useEffect, useRef, useState } from "react";
@@ -38,9 +37,6 @@ const Divider = () => (
   <ToolbarDivider role="separator" aria-orientation="vertical" />
 );
 
-const IMAGE_UNAVAILABLE_LABEL =
-  "Insert image (not available when text is selected)";
-
 interface Props {
   editor: Editor;
   showHeadings: boolean;
@@ -67,7 +63,6 @@ export const RichTextToolbar: FC<Props> = ({ editor, showHeadings }) => {
       // Any heading level, including those from pasted content
       heading: Boolean(editor?.isActive("heading")),
       link: Boolean(editor?.isActive("link")),
-      hasSelection: Boolean(editor && !editor.state.selection.empty),
     }),
   });
 
@@ -173,6 +168,7 @@ export const RichTextToolbar: FC<Props> = ({ editor, showHeadings }) => {
       aria-label="Text formatting"
       onMouseDown={keepFocusWithinField}
       data-held-open={isPickingFile || undefined}
+      data-link-form={isAddingLink || undefined}
     >
       {isAddingLink ? (
         <Box sx={{ display: "flex", alignItems: "center", flex: 1, gap: 0.5 }}>
@@ -236,41 +232,28 @@ export const RichTextToolbar: FC<Props> = ({ editor, showHeadings }) => {
           <BulletListButton editor={editor} isActive={active.bulletList} />
           <OrderedListButton editor={editor} isActive={active.orderedList} />
           <Divider />
-          {/* Inserting an image would replace the selected text */}
-          {/* PublicFileUploadButton hides its own tooltip when disabled, so explain why here */}
-          <Tooltip
-            title={active.hasSelection ? IMAGE_UNAVAILABLE_LABEL : ""}
-            placement="top"
+          {/* Choosing a file swaps the button for a loading state, so hand focus to the editor first */}
+          <span
+            onClickCapture={openFilePicker}
+            onKeyDownCapture={(ev) => {
+              if (ev.key === "Enter" || ev.key === " ") openFilePicker();
+            }}
           >
-            {/* Choosing a file swaps the button for a loading state, so hand focus to the editor first */}
-            <span
-              onClickCapture={() => {
-                if (!active.hasSelection) openFilePicker();
-              }}
-              onKeyDownCapture={(ev) => {
-                if (active.hasSelection) return;
-                if (ev.key === "Enter" || ev.key === " ") openFilePicker();
-              }}
-            >
-              <PublicFileUploadButton
-                variant="tooltip"
-                aria-label={
-                  active.hasSelection ? IMAGE_UNAVAILABLE_LABEL : "Insert image"
-                }
-                tooltipTitle="Insert image"
-                disabled={active.hasSelection}
-                onChange={(src) =>
-                  editor
-                    .chain()
-                    .focus()
-                    // Text may have been selected whilst uploading - insert after it, don't replace it
-                    .setTextSelection(editor.state.selection.to)
-                    .setImage({ src })
-                    .run()
-                }
-              />
-            </span>
-          </Tooltip>
+            <PublicFileUploadButton
+              variant="tooltip"
+              aria-label="Insert image"
+              tooltipTitle="Insert image"
+              onChange={(src) =>
+                editor
+                  .chain()
+                  .focus()
+                  // Insert after any selected text, rather than replacing it
+                  .setTextSelection(editor.state.selection.to)
+                  .setImage({ src })
+                  .run()
+              }
+            />
+          </span>
           <ToolbarButton
             label={active.link ? "Edit link" : "Add link"}
             isActive={active.link}
