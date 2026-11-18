@@ -1,0 +1,3 @@
+table:
+  name: stripe_daily_remittance
+  schema: public
