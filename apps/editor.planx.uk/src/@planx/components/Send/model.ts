@@ -59,8 +59,9 @@ export const validateSchema = (existingEmails: string[]) =>
       }),
       newEmail: string()
         .email("Please enter a valid email address.")
-        .when("submissionEmailId", {
-          is: (submissionEmailId: string) => submissionEmailId === "new-email",
+        .when(["destinations", "submissionEmailId"], {
+          is: (destinations: SendIntegration[], submissionEmailId: string) =>
+            destinations.includes("email") && submissionEmailId === "new-email",
           then: string()
             .required("Please enter a new submission email.")
             .test(

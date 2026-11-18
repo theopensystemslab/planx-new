@@ -56,6 +56,8 @@ const SendComponent: React.FC<Props> = (props) => {
     existingEmailId: string | undefined,
     insertNewDefaultEmail: boolean,
   ): Promise<string | undefined> => {
+    if (!newValues.destinations.includes("email")) return;
+
     const selectedEmailId = newValues.submissionEmailId;
     const newEmail = newValues.newEmail;
 
