@@ -28,7 +28,15 @@ export const ToolbarButton = ({
         size="small"
         aria-label={label}
         aria-pressed={isActive}
-        color={isActive ? "primary" : undefined}
+        sx={
+          isActive
+            ? (theme) => ({
+                color: theme.palette.text.primary,
+                backgroundColor: theme.palette.info.light,
+                "&:hover": { backgroundColor: theme.palette.info.light },
+              })
+            : undefined
+        }
         {...props}
       >
         {children}
@@ -52,7 +60,7 @@ export const BoldButton = ({
   disabled,
 }: FormatButtonProps & { disabled?: boolean }) => (
   <ToolbarButton
-    label={disabled ? "Bold (not available in headings)" : "Bold"}
+    label={disabled ? "(Headings are bold)" : "Bold"}
     isActive={isActive && !disabled}
     disabled={disabled}
     onClick={() => editor.chain().focus().toggleBold().run()}

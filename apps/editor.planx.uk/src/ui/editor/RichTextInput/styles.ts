@@ -150,6 +150,13 @@ export const Toolbar = styled(Box)(({ theme }) => ({
   flexWrap: "wrap",
   gap: theme.spacing(0.25),
   padding: theme.spacing(0.25, 0.5),
+  "& > span": {
+    display: "flex",
+  },
+  "& .rich-text-image-upload button": {
+    width: 34,
+    height: 34,
+  },
   position: "absolute",
   bottom: "100%",
   right: 0,

@@ -234,6 +234,7 @@ export const RichTextToolbar: FC<Props> = ({ editor, showHeadings }) => {
           <Divider />
           {/* Choosing a file swaps the button for a loading state, so hand focus to the editor first */}
           <span
+            className="rich-text-image-upload"
             onClickCapture={openFilePicker}
             onKeyDownCapture={(ev) => {
               if (ev.key === "Enter" || ev.key === " ") openFilePicker();
