@@ -9,6 +9,7 @@ import type { Mocked } from "vitest";
 
 import app from "../../server.js";
 import { authHeader } from "../../tests/mockJWT.js";
+import { MAX_FILENAME_LENGTH } from "./constants.js";
 import { deleteFilesByURL } from "./service/deleteFile.js";
 
 let mockPutObject: Mocked<() => void>;
@@ -266,6 +267,25 @@ describe("File upload", () => {
               code: "too_small",
             }),
           );
+        });
+    });
+
+    it(`should not upload when filename exceeds ${MAX_FILENAME_LENGTH} characters`, async () => {
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field(
+          "filename",
+          "hereisanextremelylongfilenamehereisanextremelylongfilenamehereisanextremelylongfilename.jpg",
+        )
+        .attach(
+          "file",
+          Buffer.from("some data"),
+          "hereisanextremelylongfilenamehereisanextremelylongfilenamehereisanextremelylongfilename.jpg",
+        )
+        .expect(400)
+        .then((res) => {
+          expect(mockPutObject).not.toHaveBeenCalled();
+          expect(res.body.error).toMatch(/File name too long/);
         });
     });
 

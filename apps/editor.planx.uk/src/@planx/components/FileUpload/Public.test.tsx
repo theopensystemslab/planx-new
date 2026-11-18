@@ -5,6 +5,7 @@ import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
+import { MAX_FILENAME_LENGTH } from "../shared/constants";
 import FileUpload from "./Public";
 
 test("renders correctly", async () => {
@@ -68,7 +69,6 @@ test("recovers previously submitted files when clicking the back button", async 
   );
 
   await user.click(screen.getByTestId("continue-button"));
-
   expect(handleSubmit).toHaveBeenCalledWith(uploadedFile);
 });
 
