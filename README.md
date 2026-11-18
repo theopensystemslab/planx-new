@@ -6,7 +6,7 @@ Learn more about how it's currently being used here: https://opendigitalplanning
 
 Explore our component library and design system here: https://storybook.planx.uk/
 
-## Status pages
+## Status pages       
 
 - Production: https://status.planx.uk
 - Staging: https://status.planx.dev
