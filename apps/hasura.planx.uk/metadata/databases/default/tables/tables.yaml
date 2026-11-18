@@ -57,6 +57,7 @@
 - "!include public_service_charge_flow_exceptions.yaml"
 - "!include public_service_charges.yaml"
 - "!include public_sessions.yaml"
+- "!include public_stripe_daily_remittance.yaml"
 - "!include public_stripe_payment_status_enum.yaml"
 - "!include public_submission_emails.yaml"
 - "!include public_submission_services_log.yaml"

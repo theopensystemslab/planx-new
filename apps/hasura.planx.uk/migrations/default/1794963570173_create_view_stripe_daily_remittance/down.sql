@@ -1,0 +1,1 @@
+drop view if exists "public"."stripe_daily_remittance";
