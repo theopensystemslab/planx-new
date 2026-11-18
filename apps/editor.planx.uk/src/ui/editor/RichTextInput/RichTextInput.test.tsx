@@ -208,18 +208,17 @@ describe("toolbar active state", () => {
   it("disables the bold button within headings", async () => {
     const { container } = await renderField("<h1>Title</h1><p>Body</p>");
     const editor = getEditor(container);
-    const boldButton = () =>
-      container.querySelector('button[aria-label^="Bold"]');
-
     act(() => {
       editor.commands.setTextSelection(2);
     });
-    expect(boldButton()).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "(Headings are bold)" }),
+    ).toBeDisabled();
 
     act(() => {
       editor.commands.setTextSelection(10);
     });
-    expect(boldButton()).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Bold" })).toBeEnabled();
   });
 });
 
@@ -317,6 +316,25 @@ describe("image upload", () => {
       await screen.findByRole("button", { name: "Insert image", busy: true }),
     ).toBeInTheDocument();
     expect(screen.getByRole("toolbar")).toBeInTheDocument();
+  });
+});
+
+describe("headings", () => {
+  it("removes bold text when a heading is applied, as headings are already bold", async () => {
+    const { container, user } = await renderField(
+      "<p><strong>Bold</strong> and plain</p><p><strong>Untouched</strong></p>",
+    );
+    const editor = getEditor(container);
+
+    // Cursor within the plain text - bold elsewhere in the block should still be removed
+    act(() => {
+      editor.commands.setTextSelection(8);
+    });
+    await user.click(screen.getByRole("button", { name: "Heading" }));
+
+    expect(editor.getHTML()).toBe(
+      "<h1>Bold and plain</h1><p><strong>Untouched</strong></p>",
+    );
   });
 });
 
