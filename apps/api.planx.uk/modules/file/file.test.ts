@@ -96,7 +96,7 @@ describe("File upload", () => {
           });
       });
 
-      it("should not report a malformed request as an unsupported file type", async () => {
+      it("should return 400 for a malformed request", async () => {
         // multipart body which ends before its closing boundary
         await supertest(app)
           .post(ENDPOINT)
@@ -104,10 +104,10 @@ describe("File upload", () => {
           .send(
             '--boundary\r\nContent-Disposition: form-data; name="file"; filename="some_file.pdf"\r\n\r\nsome data',
           )
-          .expect(500)
+          .expect(400)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
-            expect(res.body.error).not.toMatch(/Unsupported file type/);
+            expect(res.body.error).toMatch(/File upload failed/);
           });
       });
 

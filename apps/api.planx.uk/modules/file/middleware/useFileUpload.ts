@@ -51,8 +51,18 @@ export const useFileUpload: RequestHandler = (req, res, next) => {
     if (err instanceof UnsupportedFileTypeError) {
       return res.status(415).json({ error: err.message });
     }
-    // genuine unhandled error - log to Airbrake, return 5XX to user
-    if (err) return next(err);
+    // There is no server-side work which could reasonably fail here, so we don't submit to Airtable.
+    // An error suggests the request didn't arrive intact, e.g. client disconnected mid-upload, or sent a malformed body.
+    if (err) {
+      console.warn({
+        message: "File upload request failed",
+        error: err instanceof Error ? err.message : err,
+        path: req.path,
+      });
+      return res
+        .status(400)
+        .json({ error: "File upload failed, please try again" });
+    }
     // multer has no built-in minimum size check, so we enforce it manually
     if (req.file && req.file.size < MIN_UPLOAD_SIZE_BYTES) {
       return res.status(400).json({ error: "File is empty" });
