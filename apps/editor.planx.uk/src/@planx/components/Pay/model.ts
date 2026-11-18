@@ -13,6 +13,8 @@ import { array, boolean, mixed, object, string } from "yup";
 import { type BaseNodeData, parseBaseNodeData } from "../shared";
 
 export const PAY_FN = "application.fee.payable" as const;
+export const EXTERNAL_PAY_PASSPORT_KEY =
+  "application.fee.reference.external" as const;
 
 export interface Pay extends BaseNodeData {
   title: string;
@@ -23,6 +25,7 @@ export interface Pay extends BaseNodeData {
   instructionsTitle?: string;
   instructionsDescription?: string;
   hidePay?: boolean;
+  externalPay?: boolean;
   allowInviteToPay?: boolean;
   govPayMetadata: PaymentMetadata[];
 }
@@ -192,7 +195,16 @@ export const validationSchema = object({
   fn: string().oneOf([PAY_FN]).default(PAY_FN).required(),
   instructionsTitle: string().trim().required(),
   instructionsDescription: richText().required(),
-  hidePay: boolean(),
+  hidePay: boolean().test({
+    name: "notHidePayAndExternalPay",
+    message: "Cannot hide the pay buttons when collecting external payments",
+    test: (value, { parent }) => !(value && parent.externalPay),
+  }),
+  externalPay: boolean().test({
+    name: "notExternalPayAndITP",
+    message: "Cannot collect external payment using invite to pay",
+    test: (value, { parent }) => !(value && parent.allowInviteToPay),
+  }),
   allowInviteToPay: boolean().test({
     name: "notInviteToPayAndHidePay",
     message: "Cannot both allow invite to pay and hide the pay buttons",
@@ -212,6 +224,7 @@ export const getDefaultContent = (): Pay => ({
     <p>Your form will be sent after you have paid the fee. \
     Wait until you see a form sent message before closing your browser.</p>`,
   hidePay: false,
+  externalPay: false,
   allowInviteToPay: true,
   govPayMetadata: [
     {

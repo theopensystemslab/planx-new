@@ -26,7 +26,7 @@ export function useNoPaymentProvider(
     dispatch(Action.StartNewPayment);
 
     // Skip the redirect when viewing in the Editor or using Pay in info-only mode
-    if (environment !== "standalone" || props.hidePay) {
+    if (environment !== "standalone" || props.hidePay || props.externalPay) {
       handleSuccess();
       return;
     }

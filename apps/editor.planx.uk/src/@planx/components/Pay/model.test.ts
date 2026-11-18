@@ -218,6 +218,29 @@ describe("Editor validation", () => {
       "Cannot both allow invite to pay and hide the pay buttons",
     );
   });
+
+  test("both 'allowInviteToPay' and 'externalPay' cannot be toggled on together", async () => {
+    await expect(() =>
+      validationSchema.validate({
+        ...getDefaultContent(),
+        allowInviteToPay: true,
+        externalPay: true,
+      }),
+    ).rejects.toThrow("Cannot collect external payment using invite to pay");
+  });
+
+  test("both 'externalPay' and 'hidePay' cannot be toggled on together", async () => {
+    await expect(() =>
+      validationSchema.validate({
+        ...getDefaultContent(),
+        externalPay: true,
+        hidePay: true,
+        allowInviteToPay: false, // override default `true` to get errors in order
+      }),
+    ).rejects.toThrow(
+      "Cannot hide the pay buttons when collecting external payments",
+    );
+  });
 });
 
 describe("parsePay() helper function", () => {

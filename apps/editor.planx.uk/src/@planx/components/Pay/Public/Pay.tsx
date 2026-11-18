@@ -1,4 +1,5 @@
 import type { PublicProps } from "@planx/components/shared/types";
+import { makeData } from "@planx/components/shared/utils";
 import { logger } from "airbrake";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { usePaymentProvider } from "hooks/usePaymentProvider";
@@ -6,7 +7,7 @@ import type { PaymentProvider } from "pages/FlowEditor/components/Settings/Team/
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect, useReducer } from "react";
 
-import type { Pay } from "../model";
+import { EXTERNAL_PAY_PASSPORT_KEY, type Pay } from "../model";
 import Confirm from "./Confirm";
 import { usePaymentFlow } from "./hooks/usePaymentFlow";
 import { Action } from "./types";
@@ -116,7 +117,8 @@ function PayWithProvider({
   const canInviteToPay =
     state.status !== "unsupported_team" && state.status !== "no_payment_method";
 
-  const showPayOptions = props.allowInviteToPay && !props.hidePay;
+  const showPayOptions =
+    props.allowInviteToPay && !props.hidePay && !props.externalPay;
 
   useEffect(() => {
     // Skip component when fee is negative
@@ -151,12 +153,27 @@ function PayWithProvider({
   }, []);
 
   const continueWithoutPaying = () => {
-    props.handleSubmit && props.handleSubmit({ auto: false });
+    if (props.externalPay) {
+      // TODO insert payment_status record / or insert to new external payments table?
+      //   Something we can query in submissions log & service charges views!
+
+      props.handleSubmit &&
+        props.handleSubmit({
+          ...makeData(props, "External payment", EXTERNAL_PAY_PASSPORT_KEY),
+          auto: false,
+        });
+    } else {
+      // Pay in info-only mode only sets breadcrumb, no associated passport data
+      props.handleSubmit && props.handleSubmit({ auto: false });
+    }
   };
 
   const onConfirm = () => {
     const shouldContinueWithoutPaying =
-      fee === 0 || props.hidePay || state.status === "unsupported_team";
+      fee === 0 ||
+      props.hidePay ||
+      props.externalPay ||
+      state.status === "unsupported_team";
 
     if (shouldContinueWithoutPaying) continueWithoutPaying();
     if (

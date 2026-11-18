@@ -186,7 +186,7 @@ const ZeroFee: React.FC<Props> = (props) => (
 
 const getInitialState = (props: Props): ComponentState => {
   if (props.error) return "error";
-  if (props.hidePay) return "informationOnly";
+  if (props.hidePay || props.externalPay) return "informationOnly";
   if (props.fee === 0) return "zeroFee";
 
   return "pay";

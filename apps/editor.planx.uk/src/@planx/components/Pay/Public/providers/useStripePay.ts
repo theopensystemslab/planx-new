@@ -111,8 +111,8 @@ export function useStripePay(
   const startNewPayment = async () => {
     dispatch(Action.StartNewPayment);
 
-    // Skip the redirect when viewing in the Editor or using Pay in info-only mode
-    if (environment !== "standalone" || props.hidePay) {
+    // Skip the redirect when viewing in the Editor or using Pay in info-only or external pay mode
+    if (environment !== "standalone" || props.hidePay || props.externalPay) {
       handleSuccess();
       return;
     }
