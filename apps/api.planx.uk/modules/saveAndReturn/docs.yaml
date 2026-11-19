@@ -70,6 +70,8 @@ components:
             - Session locked
         paymentRequest:
           type: object
+          nullable: true
+          description: The invite to pay request which locked the session. Null when the session is locked while a delayed payment (e.g. Bacs) is processing
           properties:
             id:
               type: string
