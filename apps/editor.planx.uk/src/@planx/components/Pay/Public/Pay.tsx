@@ -154,8 +154,8 @@ function PayWithProvider({
 
   const continueWithoutPaying = () => {
     if (props.externalPay) {
-      // TODO insert payment_status record / or insert to new external payments table?
-      //   Something we can query in submissions log & service charges views!
+      // TODO also insert payment_status record / or insert to new external payments table?
+      //   Something we can query in submissions log & service charges views & retain longer than passport!
 
       props.handleSubmit &&
         props.handleSubmit({
