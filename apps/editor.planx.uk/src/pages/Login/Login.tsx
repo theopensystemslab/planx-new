@@ -3,9 +3,9 @@ import MicrosoftIcon from "@mui/icons-material/Microsoft";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import { styled } from "@mui/material/styles";
+import { styled, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { DEFAULT_PRIMARY_COLOR } from "theme";
+import { DEFAULT_PRIMARY_COLOR, defaultTheme } from "theme";
 import { getEnvironmentLogo } from "ui/icons/logos";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
@@ -64,62 +64,65 @@ const LoginButton = styled(Button)(({ theme }) => ({
 
 const Login: React.FC = () => {
   return (
-    <Wrapper>
-      <WatermarkBackground variant="light" opacity={0.1} />
-      <LoginContainer>
-        <LoginPanel>
-          <Typography
-            variant="inherit"
-            component="h1"
-            sx={{
-              m: 0.75,
-              ml: 0.25,
-              fontSize: "2em",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}
-          >
-            <Box
-              component="img"
-              src={getEnvironmentLogo(DEFAULT_PRIMARY_COLOR)}
-              alt=""
-              sx={{ height: "0.85em", width: "0.85em" }}
-            />
-            <span>
-              Plan✕
-              <PhaseText>beta</PhaseText>
-            </span>
-          </Typography>
-          <LoginButton
-            variant="contained"
-            color="secondary"
-            href={`${
-              import.meta.env.VITE_APP_GOOGLE_OAUTH_OVERRIDE ??
-              import.meta.env.VITE_APP_API_URL
-            }/auth/google`}
-          >
-            <Box component="span">
-              <GoogleIcon />
-              Continue with Google
-            </Box>
-          </LoginButton>
-          <LoginButton
-            variant="contained"
-            color="secondary"
-            href={`${
-              import.meta.env.VITE_APP_MICROSOFT_OAUTH_OVERRIDE ??
-              import.meta.env.VITE_APP_API_URL
-            }/auth/microsoft`}
-          >
-            <Box component="span">
-              <MicrosoftIcon />
-              Continue with Microsoft
-            </Box>
-          </LoginButton>
-        </LoginPanel>
-      </LoginContainer>
-    </Wrapper>
+    // The login page is already dark, so always use the light palette regardless of the user's palette mode
+    <ThemeProvider theme={defaultTheme}>
+      <Wrapper>
+        <WatermarkBackground variant="light" opacity={0.1} />
+        <LoginContainer>
+          <LoginPanel>
+            <Typography
+              variant="inherit"
+              component="h1"
+              sx={{
+                m: 0.75,
+                ml: 0.25,
+                fontSize: "2em",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              <Box
+                component="img"
+                src={getEnvironmentLogo(DEFAULT_PRIMARY_COLOR)}
+                alt=""
+                sx={{ height: "0.85em", width: "0.85em" }}
+              />
+              <span>
+                Plan✕
+                <PhaseText>beta</PhaseText>
+              </span>
+            </Typography>
+            <LoginButton
+              variant="contained"
+              color="secondary"
+              href={`${
+                import.meta.env.VITE_APP_GOOGLE_OAUTH_OVERRIDE ??
+                import.meta.env.VITE_APP_API_URL
+              }/auth/google`}
+            >
+              <Box component="span">
+                <GoogleIcon />
+                Continue with Google
+              </Box>
+            </LoginButton>
+            <LoginButton
+              variant="contained"
+              color="secondary"
+              href={`${
+                import.meta.env.VITE_APP_MICROSOFT_OAUTH_OVERRIDE ??
+                import.meta.env.VITE_APP_API_URL
+              }/auth/microsoft`}
+            >
+              <Box component="span">
+                <MicrosoftIcon />
+                Continue with Microsoft
+              </Box>
+            </LoginButton>
+          </LoginPanel>
+        </LoginContainer>
+      </Wrapper>
+    </ThemeProvider>
   );
 };
 
