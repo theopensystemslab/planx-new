@@ -114,6 +114,21 @@ describe("files we do not accept", () => {
     expect(slots()).toHaveLength(0);
   });
 
+  it("rejects a file whose name is too long once encoded", async () => {
+    // short enough as typed, but curly apostrophe %-encodes to 9 chars
+    const filename = `${"’".repeat(30)}.pdf`;
+    expect(filename.length).toBeLessThan(MAX_FILENAME_LENGTH);
+
+    const { slots } = await dropFile(
+      new File(["x"], filename, { type: "application/pdf" }),
+    );
+
+    expect(alertMock).toHaveBeenCalledWith(
+      "Please reduce the length of the file name and try again",
+    );
+    expect(slots()).toHaveLength(0);
+  });
+
   it("does not create a slot for a rejected file", async () => {
     const createSlot = vi.fn();
 

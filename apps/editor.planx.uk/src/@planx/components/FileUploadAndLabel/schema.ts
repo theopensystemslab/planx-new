@@ -2,7 +2,11 @@ import {
   baseNodeDataValidationSchema,
   moreInformationSchema,
 } from "@planx/components/shared";
-import { MAX_FILENAME_LENGTH } from "@planx/file-upload";
+import {
+  isEncodedFilenameTooLong,
+  isFilenameTooLong,
+  MAX_FILENAME_LENGTH,
+} from "@planx/file-upload";
 import { richText } from "lib/yupExtensions";
 import type { TestContext } from "vitest";
 import type { SchemaOf } from "yup";
@@ -155,9 +159,17 @@ export const slotsSchema = array()
     test: (slots?: Array<FileUploadAndLabelSlot>) => {
       return Boolean(
         slots &&
-        slots.every(
-          (slot) => (slot.file?.path?.length ?? 0) < MAX_FILENAME_LENGTH,
-        ),
+        slots.every((slot) => !isFilenameTooLong(slot.file?.path ?? "")),
+      );
+    },
+  })
+  .test({
+    name: "encodedFileLength",
+    message: "Please reduce the length of the file name and try again",
+    test: (slots?: Array<FileUploadAndLabelSlot>) => {
+      return Boolean(
+        slots &&
+        slots.every((slot) => !isEncodedFilenameTooLong(slot.file?.path ?? "")),
       );
     },
   });

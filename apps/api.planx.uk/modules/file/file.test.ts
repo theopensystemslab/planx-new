@@ -360,7 +360,15 @@ describe("File upload", () => {
         .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toMatch(/Encoded file name exceeds/);
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "filename"],
+              code: "custom",
+              message: expect.stringMatching(
+                /Encoded file name must not exceed/,
+              ),
+            }),
+          );
         });
     });
 

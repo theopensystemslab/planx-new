@@ -23,6 +23,8 @@ export const getRejectionMessage = (
   switch (code) {
     case "file-name-too-long": // The other error codes are from the React dropzone package, this one is custom which is why it's not in the imported ErrorCode
       return `File name must be under ${MAX_FILENAME_LENGTH} characters long`;
+    case "file-name-too-long-encoded": // also custom, see extensionValidator
+      return "Please reduce the length of the file name and try again";
     case ErrorCode.FileTooSmall:
       return "File is empty";
     case ErrorCode.FileTooLarge:

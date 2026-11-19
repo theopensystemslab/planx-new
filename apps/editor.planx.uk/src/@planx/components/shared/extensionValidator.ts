@@ -1,6 +1,9 @@
 import {
   getFileExtension,
   isAllowedExtension,
+  isEncodedFilenameTooLong,
+  isFilenameTooLong,
+  MAX_ENCODED_FILENAME_LENGTH,
   MAX_FILENAME_LENGTH,
 } from "@planx/file-upload";
 import type { FileError } from "react-dropzone";
@@ -29,12 +32,22 @@ const fileNameTooLong = (): FileError => ({
   message: `File name over ${MAX_FILENAME_LENGTH} characters long`,
 });
 
+// we check this separately because given filename may be under above limit, but too long once %-encoded
+const encodedFileNameTooLong = (): FileError => ({
+  code: "file-name-too-long-encoded",
+  message: `File name over ${MAX_ENCODED_FILENAME_LENGTH} characters long once encoded`,
+});
+
 const validateFileNameLength = (file: File): FileError | null =>
-  file.name.length < MAX_FILENAME_LENGTH ? null : fileNameTooLong();
+  isFilenameTooLong(file.name) ? fileNameTooLong() : null;
+
+const validateEncodedFileNameLength = (file: File): FileError | null =>
+  isEncodedFilenameTooLong(file.name) ? encodedFileNameTooLong() : null;
 
 export const validateExtension = (file: File): FileError[] | null => {
   const errors = [
     validateFileNameLength(file),
+    validateEncodedFileNameLength(file),
     isAllowedExtension(file.name) ? null : invalidType(file),
   ].filter((e): e is FileError => e !== null);
   return errors.length ? errors : null;

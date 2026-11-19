@@ -1,6 +1,8 @@
 import {
   getFileExtension,
   isAllowedExtension,
+  isEncodedFilenameTooLong,
+  MAX_ENCODED_FILENAME_LENGTH,
   MAX_FILENAME_LENGTH,
 } from "@planx/file-upload";
 import assert from "assert";
@@ -46,17 +48,14 @@ export const uploadPublicFileSchema = z.object({
   }),
 });
 
-/**
- * For applicant uploaded files, the %-encoded filename ends up on council filesystems as `${nanoid}-${filename}`.
- * We cap this at 255, the usual filesystem limit for a filename, also accounting for the nanoid and hyphen.
- */
-const MAX_ENCODED_FILENAME_LENGTH = 255 - 8 - 1;
-
 export const uploadPrivateFileSchema = z.object({
   body: z.object({
     filename: filenameSchema
       .max(MAX_FILENAME_LENGTH - 1, {
         error: `File name must be under ${MAX_FILENAME_LENGTH} characters long`,
+      })
+      .refine((filename) => !isEncodedFilenameTooLong(filename), {
+        error: `Encoded file name must not exceed ${MAX_ENCODED_FILENAME_LENGTH} characters`,
       })
       .transform(encodeFilename),
   }),
@@ -80,21 +79,6 @@ export const privateUploadController: PrivateUploadController = async (
   try {
     if (!req.file) throw Error("Missing file");
     const { filename } = res.locals.parsedReq.body;
-
-    // MAX_FILENAME_LENGTH assumes encoding at most triples chars, which holds for ASCII, but can stretch to x12 at most.
-    // This isn't very legible to users, and should be rare, so we throw an error rather than validating client-side.
-    if (filename.length > MAX_ENCODED_FILENAME_LENGTH) {
-      throw new ServerError({
-        message: `Encoded file name exceeds ${MAX_ENCODED_FILENAME_LENGTH} characters`,
-        status: 400,
-        // reported to Airbrake as context, so we can see which characters caused this
-        cause: {
-          filename: safeDecode(filename),
-          encodedLength: filename.length,
-        },
-      });
-    }
-
     const fileResponse = await uploadPrivateFile(req.file, filename);
     res.json(fileResponse);
   } catch (error) {
