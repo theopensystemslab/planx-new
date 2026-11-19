@@ -3,12 +3,15 @@ import {
   baseNodeDataValidationSchema,
   parseBaseNodeData,
 } from "@planx/components/shared";
+import {
+  isEncodedFilenameTooLong,
+  isFilenameTooLong,
+  MAX_FILENAME_LENGTH,
+} from "@planx/file-upload";
 import { richText } from "lib/yupExtensions";
 import type { FileWithPath } from "react-dropzone";
 import type { SchemaOf } from "yup";
 import { array, boolean, number, object, string } from "yup";
-
-import { MAX_FILENAME_LENGTH } from "../shared/constants";
 
 export interface FileUpload extends BaseNodeData {
   title: string;
@@ -82,9 +85,17 @@ export const slotsSchema = array()
     test: (slots?: Array<FileUploadSlot>) => {
       return Boolean(
         slots &&
-        slots.every(
-          (slot) => (slot.file?.path?.length ?? 0) < MAX_FILENAME_LENGTH,
-        ),
+        slots.every((slot) => !isFilenameTooLong(slot.file?.path ?? "")),
+      );
+    },
+  })
+  .test({
+    name: "encodedFileLength",
+    message: "Please reduce the length of the file name and try again",
+    test: (slots?: Array<FileUploadSlot>) => {
+      return Boolean(
+        slots &&
+        slots.every((slot) => !isEncodedFilenameTooLong(slot.file?.path ?? "")),
       );
     },
   });

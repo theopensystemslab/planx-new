@@ -1,4 +1,3 @@
-import { MAX_FILENAME_LENGTH } from "@planx/components/shared/constants";
 import { act, screen, waitFor, within } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import type { UserEvent } from "@testing-library/user-event";
