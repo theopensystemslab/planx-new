@@ -330,7 +330,7 @@ describe("sanitiseNotes() function", () => {
 /**
  * Draft parent flow data which includes 3 nested flow nodes (2 unique flows) and 1 folder
  */
-const draftParentFlow: FlowGraph = {
+export const draftParentFlow: FlowGraph = {
   _root: {
     edges: ["DQRnJfTvkq", "JtWhixLQQD", "r6ZeA1GFpU", "n0t3"],
   },
@@ -438,7 +438,7 @@ const draftParentFlow: FlowGraph = {
  *  - External portals (aka nested flows) have been converted to internal portals (folders)
  *  - Repeated references to the same nested flow are de-duplicated (eg each unique flow is only flattened once)
  */
-const flattenedParentFlow: FlowGraph = {
+export const flattenedParentFlow: FlowGraph = {
   _root: {
     edges: ["DQRnJfTvkq", "JtWhixLQQD", "r6ZeA1GFpU", "n0t3"],
   },
@@ -563,7 +563,7 @@ const flattenedParentFlow: FlowGraph = {
  * Flattened parent flow
  *  - Draft flows all the way down, otherwise same as above
  */
-const flattenedParentFlowDraftOnly: FlowGraph = {
+export const flattenedParentFlowDraftOnly: FlowGraph = {
   _root: {
     edges: ["DQRnJfTvkq", "JtWhixLQQD", "r6ZeA1GFpU", "n0t3"],
   },

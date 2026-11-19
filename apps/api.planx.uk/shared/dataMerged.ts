@@ -6,7 +6,7 @@ import { getFlowData, getMostRecentPublishedFlowVersion } from "../helpers.js";
 import type { Node } from "../types.js";
 
 type Stack = Array<{ flowId: string; isPortal: boolean }>;
-type MergedGraph = { [key: string]: Node }; // *not* `FlowGraph` because we can't guarantee `_root` node while merge-in-progress
+export type MergedGraph = { [key: string]: Node }; // *not* `FlowGraph` because we can't guarantee `_root` node while merge-in-progress
 
 /**
  * Flatten flows to create a single JSON representation of the main flow data and any external portals
