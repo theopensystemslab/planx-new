@@ -34,25 +34,13 @@ type Props = PublicPaymentRequest & {
   cancelled?: boolean;
 };
 
-/**
- * The payment request only records that it was fulfilled (paid_at), not whether the payment is paid or pending
- */
-const getPaymentFromRequest = (props: Props): PaymentRequestState => ({
-  status: "paid",
-  reference: props.govPayPaymentId ?? props.stripePaymentId,
-});
-
 export default function MakePayment(props: Props) {
-  const isFulfilled = Boolean(props.paidAt);
-  const hasReturnedFromStripeCheckout = Boolean(props.stripeSessionId);
+  // paid_at is only set once the payment has been taken - a delayed payment is "pending" until then
+  if (props.paidAt) {
+    const reference = props.govPayPaymentId ?? props.stripePaymentId;
 
-  if (isFulfilled && hasReturnedFromStripeCheckout) {
-    return <CheckStripePaymentStatus {...props} />;
-  }
-
-  if (isFulfilled) {
     return (
-      <PaymentRequestPage {...props} payment={getPaymentFromRequest(props)} />
+      <PaymentRequestPage {...props} payment={{ status: "paid", reference }} />
     );
   }
 
@@ -97,27 +85,6 @@ function PayWithStripe(props: Props) {
   return <PaymentRequestPage {...props} payment={payment} />;
 }
 
-/**
- * Fulfilment is idempotent, so for a fulfilled request it only reads the payment status from Stripe
- */
-function CheckStripePaymentStatus(props: Props) {
-  const stripePayment = useStripePayRequest({
-    paymentRequestId: props.id,
-    stripeSessionId: props.stripeSessionId,
-  });
-
-  const isStripeStatusAvailable =
-    stripePayment.status === "loading" ||
-    stripePayment.status === "paid" ||
-    stripePayment.status === "pending";
-
-  const payment = isStripeStatusAvailable
-    ? stripePayment
-    : getPaymentFromRequest(props);
-
-  return <PaymentRequestPage {...props} payment={payment} />;
-}
-
 const FULFILLED_PAYMENT_CONTENT = {
   paid: {
     heading: "Payment received",
@@ -125,7 +92,7 @@ const FULFILLED_PAYMENT_CONTENT = {
   },
   pending: {
     heading: "Payment processing",
-    text: "Your payment is being processed. This can take several working days. We'll send you a confirmation email.",
+    text: "Your payment can take up to 7 working days to be taken. The application will be sent once it has been. We'll email you when your payment has been taken, or if it fails.",
   },
 };
 
@@ -154,7 +121,8 @@ function PaymentRequestPage({
     "Property address": address,
     "Project type":
       formatRawProjectTypes(rawProjectTypes) || "Project type not submitted",
-    "Valid until": isFulfilled
+    // A delayed payment (e.g. Bacs) can still fail - the payer can pay again until the request expires
+    "Valid until": isPaid
       ? undefined
       : getExpiryDateForPaymentRequest(createdAt),
     "Paid at": isPaid ? format(paidDate, "dd MMMM yyyy") : undefined,

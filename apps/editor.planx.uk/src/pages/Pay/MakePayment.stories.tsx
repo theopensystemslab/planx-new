@@ -90,6 +90,11 @@ export const Paid = {
 export const StripePaymentProcessing = {
   beforeEach({ msw }) {
     msw.use(
+      graphql.query("GetPaymentProvider", () =>
+        HttpResponse.json({
+          data: { teamSettings: [{ paymentProvider: "stripe" }] },
+        }),
+      ),
       http.post("*/stripe/payment-request/:paymentRequestId/fulfil", () =>
         HttpResponse.json({
           paymentStatus: "pending",
@@ -102,14 +107,12 @@ export const StripePaymentProcessing = {
     docs: {
       description: {
         story:
-          "The nominee has returned from Stripe Checkout after setting up a Bacs Direct Debit. The bank takes the payment later, so the page does not say the payment has been received.",
+          "The nominee has returned from Stripe Checkout after setting up a Bacs Direct Debit. The bank takes the payment later, so the request isn't paid (`paidAt` is null) and the application isn't sent until it is.",
       },
     },
   },
   args: {
     ...Unpaid.args,
-    paidAt: "2025-12-12",
-    stripePaymentId: "pi_3QxYz2AbCdEfGh1234567890",
     stripeSessionId: "cs_test_123",
   },
 } satisfies Story;
