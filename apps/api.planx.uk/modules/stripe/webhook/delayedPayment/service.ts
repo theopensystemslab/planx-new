@@ -195,35 +195,22 @@ const writePaymentReference = async ({
 };
 
 export type SubmitDelayedPaymentResult =
-  | "submitted"
-  | "notSucceeded"
-  | "notDelayed"
-  | "inviteToPay"
-  | "notSubmittable";
+  "submitted" | "inviteToPay" | "notSubmittable";
 
 /**
  * Submit a self-pay application once its delayed payment (e.g. Bacs) has succeeded
- * Called by the `delayed_payment_send_events` trigger on every payment_status insert
+ * Called by the `delayed_payment_send_events` trigger, for a succeeded payment made with a DELAYED_PAYMENT_METHODS method
  * Throws errors to make Hasura retry the event
  */
 export async function submitDelayedPayment({
   sessionId,
   stripePaymentId,
-  stripeStatus,
-  paymentMethod,
   isRetry,
 }: {
   sessionId: string;
   stripePaymentId: string;
-  stripeStatus: string;
-  paymentMethod: string | null;
   isRetry: boolean;
 }): Promise<SubmitDelayedPaymentResult> {
-  if (stripeStatus !== "succeeded") return "notSucceeded";
-  if (!paymentMethod || !DELAYED_PAYMENT_METHODS.includes(paymentMethod)) {
-    return "notDelayed";
-  }
-
   const session = await getDelayedPaymentSession(sessionId);
   // Should not happen - payment_status rows are only recorded for sessions in this environment
   if (!session) {

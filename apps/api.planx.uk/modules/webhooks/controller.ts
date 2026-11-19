@@ -2,7 +2,10 @@ import isNull from "lodash/isNull.js";
 
 import { ServerError } from ".././../errors/index.js";
 import { sendSlackMessage } from "../slack/utils.js";
-import { submitDelayedPayment } from "../stripe/webhook/delayedPayment/service.js";
+import {
+  DELAYED_PAYMENT_METHODS,
+  submitDelayedPayment,
+} from "../stripe/webhook/delayedPayment/service.js";
 import { analyzeSessions } from "./service/analyzeSessions/index.js";
 import type { AnalyzeSessions } from "./service/analyzeSessions/types.js";
 import { getDailyFailedSubmissions } from "./service/dailyFailedSubmissions/index.js";
@@ -397,9 +400,15 @@ export const delayedPaymentSendEventsController: DelayedPaymentSendEventsControl
     const { payload, deliveryInfo } = res.locals.parsedReq.body;
     const { sessionId, stripePaymentId, stripeStatus, paymentMethod } = payload;
 
-    if (!stripePaymentId || !stripeStatus) {
+    // Payments made at checkout (e.g. card) are submitted by the applicant's browser
+    if (
+      !stripePaymentId ||
+      stripeStatus !== "succeeded" ||
+      !paymentMethod ||
+      !DELAYED_PAYMENT_METHODS.includes(paymentMethod)
+    ) {
       return res.status(200).send({
-        message: "Not a Stripe payment, skipping",
+        message: "Not a succeeded delayed Stripe payment, skipping",
       });
     }
 
@@ -407,8 +416,6 @@ export const delayedPaymentSendEventsController: DelayedPaymentSendEventsControl
       const result = await submitDelayedPayment({
         sessionId,
         stripePaymentId,
-        stripeStatus,
-        paymentMethod,
         isRetry: deliveryInfo.currentRetry > 0,
       });
       return res.status(200).send({
