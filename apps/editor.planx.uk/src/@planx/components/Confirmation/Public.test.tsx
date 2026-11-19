@@ -146,4 +146,79 @@ describe("Confirmation component", () => {
     expect(screen.getByText("Payment reference")).toBeInTheDocument();
     expect(screen.getByText("pi_test_123")).toBeInTheDocument();
   });
+
+  describe("payment processing notice", () => {
+    const flowWithPay = {
+      _root: { edges: ["Pay", "Send", "Confirmation"] },
+      Pay: { type: TYPES.Pay },
+      Send: { type: TYPES.Send },
+      Confirmation: { type: TYPES.Confirmation },
+    };
+
+    const defaultDescription =
+      "<p>A payment receipt has been emailed to you.</p>";
+
+    it("replaces the council description when the bank takes the payment later", async () => {
+      act(() =>
+        setState({
+          flow: flowWithPay,
+          breadcrumbs: {
+            Pay: {
+              auto: false,
+              data: {
+                "application.fee.reference.stripe": "pi_test_123",
+                _paymentProcessing: true,
+              },
+            },
+            Send: { auto: false },
+          },
+        }),
+      );
+
+      await setup(
+        <ConfirmationComponent
+          heading="heading"
+          description={defaultDescription}
+          nextSteps={[]}
+        />,
+      );
+
+      expect(
+        screen.getByText(/Your payment is being processed/),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText("A payment receipt has been emailed to you."),
+      ).not.toBeInTheDocument();
+    });
+
+    it("shows the council description, and no notice, for a paid payment", async () => {
+      act(() =>
+        setState({
+          flow: flowWithPay,
+          breadcrumbs: {
+            Pay: {
+              auto: false,
+              data: { "application.fee.reference.stripe": "pi_test_123" },
+            },
+            Send: { auto: false },
+          },
+        }),
+      );
+
+      await setup(
+        <ConfirmationComponent
+          heading="heading"
+          description={defaultDescription}
+          nextSteps={[]}
+        />,
+      );
+
+      expect(
+        screen.getByText("A payment receipt has been emailed to you."),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText(/Your payment is being processed/),
+      ).not.toBeInTheDocument();
+    });
+  });
 });

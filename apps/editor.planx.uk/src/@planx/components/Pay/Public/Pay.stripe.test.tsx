@@ -716,11 +716,55 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
       );
     });
 
-    it("stays in a confirming state and does not submit while unpaid", async () => {
+    it("submits and marks the payment as processing when the bank takes it later", async () => {
+      vi.mocked(useSearch).mockReturnValue({ stripeSessionId: "cs_test_123" });
+      // Bacs Direct Debit - the mandate is agreed, but the payment is not taken yet
+      server.use(
+        http.get(checkoutStatusUrl, () =>
+          HttpResponse.json({
+            status: "complete",
+            paymentStatus: "unpaid",
+            paymentIntentId: "pi_test_123",
+          }),
+        ),
+      );
+
+      const handleSubmit = vi.fn();
+
+      act(() =>
+        setState({
+          flow: flowWithFee,
+          breadcrumbs: feeBreadcrumbs,
+          previewEnvironment: "standalone",
+          teamSlug: "test-team",
+        }),
+      );
+
+      await setup(
+        <AppErrorBoundary>
+          <Pay
+            title="Pay"
+            fn="application.fee.payable"
+            handleSubmit={handleSubmit}
+            govPayMetadata={[]}
+          />
+        </AppErrorBoundary>,
+      );
+
+      await waitFor(() => expect(handleSubmit).toHaveBeenCalledTimes(1));
+      expect(handleSubmit).toHaveBeenCalledWith({
+        data: {
+          "application.fee.reference.stripe": "pi_test_123",
+          _paymentProcessing: true,
+        },
+      });
+    });
+
+    it("stays in a confirming state and does not submit while Checkout is open", async () => {
       vi.mocked(useSearch).mockReturnValue({ stripeSessionId: "cs_test_123" });
       server.use(
         http.get(checkoutStatusUrl, () =>
-          HttpResponse.json({ status: "complete", paymentStatus: "unpaid" }),
+          HttpResponse.json({ status: "open", paymentStatus: "unpaid" }),
         ),
       );
 
