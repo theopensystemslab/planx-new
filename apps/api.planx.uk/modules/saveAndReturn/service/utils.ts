@@ -22,7 +22,7 @@ const getResumeLink = (
   session: {
     id: string;
   },
-  team: Team,
+  team: Parameters<typeof getServiceLink>[0],
   flowSlug: string,
 ) => {
   const serviceLink = getServiceLink(team, flowSlug);
