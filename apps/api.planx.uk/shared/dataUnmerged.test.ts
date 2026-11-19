@@ -3,13 +3,13 @@ import {
   type FlowGraph,
 } from "@opensystemslab/planx-core/types";
 
-import { type MergedGraph,sanitiseNotes } from "./dataMerged.js";
+import { type MergedGraph, sanitiseNotes } from "./dataMerged.js";
+import { dataUnmerged } from "./dataUnmerged.js";
 import {
   draftParentFlow,
   flattenedParentFlow,
   flattenedParentFlowDraftOnly,
-} from "./dataMerged.test.js";
-import { dataUnmerged } from "./dataUnmerged.js";
+} from "./mocks/mergedFlowData.js";
 
 describe("dataUnmerged() function", () => {
   // Original draft parent flow, without notes and with simplified nested flow metadata (as neither can be recovered)
@@ -83,5 +83,9 @@ describe("dataUnmerged() function", () => {
         data: { flowId: "nested-a" },
       },
     });
+  });
+
+  it("doesn't change an already flattened flow", () => {
+    expect(dataUnmerged(draftParentFlow)).toEqual(draftParentFlow);
   });
 });
