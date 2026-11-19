@@ -19,6 +19,15 @@ describe("lowcal_sessions", () => {
     test("can INSERT records", () => {
       expect(i.mutations).toContain("insert_lowcal_sessions_one");
     });
+
+    test("cannot query when a delayed payment was started", () => {
+      const lowcalSessions = i.types.find(
+        (type) => type.name === "lowcal_sessions",
+      );
+      expect(lowcalSessions.fields.map((field) => field.name)).not.toContain(
+        "delayed_payment_started_at",
+      );
+    });
   });
 
   describe("public role queries and mutations", () => {
@@ -598,6 +607,15 @@ describe("lowcal_sessions", () => {
 
     test("cannot delete lowcal_sessions", () => {
       expect(i.mutations).not.toContain("delete_lowcal_sessions");
+    });
+
+    test("can query when a delayed payment was started, which starts the window to pay again", () => {
+      const lowcalSessions = i.types.find(
+        (type) => type.name === "lowcal_sessions",
+      );
+      expect(lowcalSessions.fields.map((field) => field.name)).toContain(
+        "delayed_payment_started_at",
+      );
     });
   });
 });

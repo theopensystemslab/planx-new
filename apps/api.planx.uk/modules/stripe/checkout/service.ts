@@ -13,6 +13,10 @@ import { ServerError } from "../../../errors/index.js";
 import { reportError } from "../../pay/helpers.js";
 import { stripe } from "../client.js";
 import { getStripeId } from "../helpers.js";
+import {
+  isDelayedPaymentPending,
+  markDelayedPaymentPending,
+} from "../webhook/delayedPayment/service.js";
 import { insertStripePaymentStatus } from "../webhook/paymentStatus/service.js";
 import { buildLineItems } from "./lineItems.js";
 import { getPaymentMethodTypes } from "./paymentMethods.js";
@@ -326,6 +330,12 @@ export const getStripeCheckoutSessionStatus = async (
   checkoutSessionId: string,
 ): Promise<CheckoutSessionStatusResponse> => {
   const session = await stripe.checkout.sessions.retrieve(checkoutSessionId);
+
+  // Lock the session as soon as the applicant returns, so it can't be edited while a delayed payment (e.g. Bacs) is processing
+  // The checkout.session.completed webhook does the same, in case the applicant doesn't return
+  if (isDelayedPaymentPending(session)) {
+    await markDelayedPaymentPending(session);
+  }
 
   const paymentIntentId = getStripeId(session.payment_intent) ?? null;
 
