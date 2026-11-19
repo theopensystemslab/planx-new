@@ -102,6 +102,7 @@ describe("Validate Session endpoint", () => {
       .expect(403)
       .then((response) => {
         expect(response.body.message).toMatch(/Session locked/);
+        expect(response.body.paymentRequest).toBeNull();
       });
   });
 
