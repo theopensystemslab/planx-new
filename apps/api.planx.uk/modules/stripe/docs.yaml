@@ -549,6 +549,9 @@ paths:
         - Self-pay, delayed payment (e.g. Bacs) processing: locks the session
         - Self-pay, delayed payment succeeded: ignored, the application is submitted once `payment_status` records the succeeded PaymentIntent (`/webhooks/hasura/create-delayed-payment-send-events`)
 
+        Handles failed delayed payments (`checkout.session.async_payment_failed`): nothing is submitted, and
+        the payer is emailed a link to pay again. A self-pay session is unlocked so the applicant can resume it.
+
         Docs: [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
       tags:
         - stripe

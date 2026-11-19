@@ -15,7 +15,10 @@ import type {
 import app from "../../../../server.js";
 import { MOCK_UUID } from "../../../../tests/mocks/lowcalSessionMocks.js";
 import { DAYS_UNTIL_EXPIRY } from "../../../saveAndReturn/service/utils.js";
-import { DELETE_EVENT_COMMENT_TEMPLATE } from "./index.js";
+import {
+  DELETE_EVENT_COMMENT_TEMPLATE,
+  rescheduleSessionEmailEvents,
+} from "./index.js";
 
 const { post } = supertest(app);
 
@@ -489,5 +492,78 @@ describe("Create delete event webhook", () => {
           /Failed to create session delete event/,
         );
       });
+  });
+});
+
+describe("rescheduling a session's reminder and expiry emails", () => {
+  const OTHER_SESSION_ID = "0d6b1a4e-58a6-4b3e-9f0a-3c2d1b0a9e8f";
+  const scheduledEvent = (id: string, comment: string) => ({
+    ...mockGetScheduledEventsResponse.events[0],
+    id,
+    comment,
+  });
+
+  beforeEach(() => {
+    mockedGetScheduledEvents.mockResolvedValue({
+      count: 5,
+      events: [
+        scheduledEvent("reminder-7", `reminder_${MOCK_UUID}_7day`),
+        scheduledEvent("reminder-1", `reminder_${MOCK_UUID}_1day`),
+        scheduledEvent("expiry", `expiry_${MOCK_UUID}`),
+        scheduledEvent("delete", DELETE_EVENT_COMMENT_TEMPLATE(MOCK_UUID)),
+        scheduledEvent("other", `expiry_${OTHER_SESSION_ID}`),
+      ],
+    });
+    mockedDeleteScheduledEvent.mockResolvedValue(
+      mockDeleteScheduledEventResponse,
+    );
+    mockedCreateScheduledEvent.mockResolvedValue(
+      mockCreateScheduledEventResponse,
+    );
+  });
+
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("replaces only this session's reminder and expiry events, leaving its delete event alone", async () => {
+    await rescheduleSessionEmailEvents({
+      from: CREATED_AT_TIME,
+      payload: { sessionId: MOCK_UUID, email: "test@example.com" },
+    });
+
+    expect(
+      mockedDeleteScheduledEvent.mock.calls.map(([args]) => args.event_id),
+    ).toEqual(["reminder-7", "reminder-1", "expiry"]);
+  });
+
+  it("counts down to 28 days from the new date", async () => {
+    const from = subDays(CREATED_AT_TIME, 10);
+    const payload = { sessionId: MOCK_UUID, email: "test@example.com" };
+
+    await rescheduleSessionEmailEvents({ from, payload });
+
+    const scheduled = mockedCreateScheduledEvent.mock.calls.map(([args]) => ({
+      comment: args.comment,
+      scheduleAt: args.schedule_at,
+      payload: args.payload,
+    }));
+    expect(scheduled).toEqual([
+      {
+        comment: `reminder_${MOCK_UUID}_7day`,
+        scheduleAt: addDays(from, DAYS_UNTIL_EXPIRY - 7),
+        payload,
+      },
+      {
+        comment: `reminder_${MOCK_UUID}_1day`,
+        scheduleAt: addDays(from, DAYS_UNTIL_EXPIRY - 1),
+        payload,
+      },
+      {
+        comment: `expiry_${MOCK_UUID}`,
+        scheduleAt: addDays(from, DAYS_UNTIL_EXPIRY),
+        payload,
+      },
+    ]);
   });
 });

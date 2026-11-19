@@ -92,10 +92,32 @@ const getInitiatedCheckoutSessionIds = async (
 };
 
 /**
+ * PaymentIntent statuses after a delayed payment (e.g. Bacs) has failed - the payment can be made again with a new Checkout Session
+ *
+ * @docs https://docs.stripe.com/payments/paymentintents/lifecycle
+ */
+const FAILED_PAYMENT_INTENT_STATUSES: readonly Stripe.PaymentIntent.Status[] = [
+  "requires_payment_method",
+  "canceled",
+];
+
+/**
+ * Checkout completed, but the delayed payment (e.g. Bacs) it started has since failed
+ */
+const hasPaymentFailed = ({
+  payment_intent,
+}: Stripe.Checkout.Session): boolean =>
+  typeof payment_intent === "object" &&
+  payment_intent !== null &&
+  FAILED_PAYMENT_INTENT_STATUSES.includes(payment_intent.status);
+
+/**
  * Ensure a PlanX session only ever has one payable Checkout Session
  *
  * Cancelling or abandoning the Stripe Checkout leaves the session open (for 24h)
  * Without this check an applicant could pay for an earlier session in another tab
+ *
+ * A completed Checkout Session blocks a new one unless its delayed payment has failed, when the payer can pay again
  */
 export const expirePreviousCheckoutSessions = async (
   sessionId: string,
@@ -103,7 +125,9 @@ export const expirePreviousCheckoutSessions = async (
   const checkoutSessionIds = await getInitiatedCheckoutSessionIds(sessionId);
 
   const checkoutSessions = await Promise.all(
-    checkoutSessionIds.map((id) => stripe.checkout.sessions.retrieve(id)),
+    checkoutSessionIds.map((id) =>
+      stripe.checkout.sessions.retrieve(id, { expand: ["payment_intent"] }),
+    ),
   );
 
   await Promise.all(
@@ -113,7 +137,9 @@ export const expirePreviousCheckoutSessions = async (
   );
 
   const completedSession = checkoutSessions.find(
-    ({ status }) => status === "complete",
+    (checkoutSession) =>
+      checkoutSession.status === "complete" &&
+      !hasPaymentFailed(checkoutSession),
   );
 
   if (completedSession) {

@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { reportError } from "../../pay/helpers.js";
 import { fulfilPaymentRequest } from "../fulfilment/service.js";
+import { handleDelayedPaymentFailed } from "./delayedPayment/failed.js";
 import {
   isDelayedPaymentPending,
   markDelayedPaymentPending,
@@ -109,6 +110,9 @@ export const handleStripeWebhook: StripeWebhookController = async (
       case "checkout.session.completed":
       case "checkout.session.async_payment_succeeded":
         await handleCheckoutSession(event.data.object, event.type);
+        break;
+      case "checkout.session.async_payment_failed":
+        await handleDelayedPaymentFailed(event.data.object);
         break;
       default:
         console.log(

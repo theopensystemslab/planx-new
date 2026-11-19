@@ -90,9 +90,10 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
     case "submit":
     case "lps-login":
       return next();
-    // Only sent internally (payment_status event trigger) - never via /send-email
+    // Only sent internally (payment_status event trigger / Stripe webhook) - never via /send-email
     case "payment-confirmed-payer":
     case "payment-confirmed-council":
+    case "payment-failed-payer":
       return handleInvalidTemplate();
     default: {
       return handleInvalidTemplate(template);
