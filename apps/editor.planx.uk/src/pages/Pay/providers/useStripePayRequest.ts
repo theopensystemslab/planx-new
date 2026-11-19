@@ -81,7 +81,7 @@ export function useStripePayRequest({
   if (stripeSessionId) {
     if (fulfilment.isSuccess) {
       return {
-        status: "paid",
+        status: fulfilment.data.paymentStatus,
         reference: fulfilment.data.paymentIntentId,
       };
     }

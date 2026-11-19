@@ -201,6 +201,96 @@ describe("MakePayment with Stripe", () => {
       expect(body).toEqual({ checkoutSessionId: "cs_test_123" });
     });
 
+    it("shows a processing payment, without saying it has been paid", async () => {
+      // Bacs Direct Debit: the mandate is agreed, but the bank has not taken the payment yet
+      server.use(
+        http.post(fulfilUrl, () =>
+          HttpResponse.json({
+            paymentStatus: "pending",
+            paymentIntentId: "pi_test_123",
+          }),
+        ),
+      );
+
+      await setup(
+        <MakePayment {...mockPaymentRequest} stripeSessionId="cs_test_123" />,
+      );
+
+      expect(await screen.findByText("Payment processing")).toBeVisible();
+      expect(screen.getByText(/Your payment is being processed/)).toBeVisible();
+      expect(screen.getByText("pi_test_123")).toBeVisible();
+      expect(screen.queryByText("Payment received")).not.toBeInTheDocument();
+      expect(screen.queryByText("Paid at")).not.toBeInTheDocument();
+      expect(screen.queryByText("Valid until")).not.toBeInTheDocument();
+    });
+
+    describe("when the webhook has already fulfilled the request", () => {
+      const fulfilledRequest: PublicPaymentRequest = {
+        ...mockPaymentRequest,
+        paidAt: "2026-10-02T12:00:00.000Z",
+        stripePaymentId: "pi_test_123",
+      };
+
+      // The payment was made on Stripe, so the team's current provider must not matter
+      beforeEach(() => server.use(mockPaymentProvider("govpay")));
+
+      it("asks Stripe for the status of a pending payment", async () => {
+        server.use(
+          http.post(fulfilUrl, () =>
+            HttpResponse.json({
+              paymentStatus: "pending",
+              paymentIntentId: "pi_test_123",
+            }),
+          ),
+        );
+
+        await setup(
+          <MakePayment {...fulfilledRequest} stripeSessionId="cs_test_123" />,
+        );
+
+        expect(await screen.findByText("Payment processing")).toBeVisible();
+        expect(screen.queryByText("Payment received")).not.toBeInTheDocument();
+      });
+
+      it("shows a paid payment with its stored payment date", async () => {
+        server.use(
+          http.post(fulfilUrl, () =>
+            HttpResponse.json({
+              paymentStatus: "paid",
+              paymentIntentId: "pi_test_123",
+            }),
+          ),
+        );
+
+        await setup(
+          <MakePayment {...fulfilledRequest} stripeSessionId="cs_test_123" />,
+        );
+
+        expect(await screen.findByText("Payment received")).toBeVisible();
+        expect(screen.getByText("Paid at")).toBeVisible();
+        expect(screen.getByText("02 October 2026")).toBeVisible();
+      });
+
+      it.each([400, 500])(
+        "shows the stored payment if Stripe cannot confirm its status (%i)",
+        async (status) => {
+          server.use(
+            http.post(fulfilUrl, () =>
+              HttpResponse.json({ error: "Cannot confirm" }, { status }),
+            ),
+          );
+
+          await setup(
+            <MakePayment {...fulfilledRequest} stripeSessionId="cs_test_123" />,
+          );
+
+          expect(await screen.findByText("Payment received")).toBeVisible();
+          expect(screen.getByText("pi_test_123")).toBeVisible();
+          expect(screen.queryByRole("button")).not.toBeInTheDocument();
+        },
+      );
+    });
+
     it.each([400, 404, 409])(
       "lets the payer try again if Checkout was not completed (%i)",
       async (status) => {

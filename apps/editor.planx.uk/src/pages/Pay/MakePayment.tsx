@@ -34,12 +34,25 @@ type Props = PublicPaymentRequest & {
   cancelled?: boolean;
 };
 
-export default function MakePayment(props: Props) {
-  if (props.paidAt) {
-    const reference = props.govPayPaymentId ?? props.stripePaymentId;
+/**
+ * The payment request only records that it was fulfilled (paid_at), not whether the payment is paid or pending
+ */
+const getPaymentFromRequest = (props: Props): PaymentRequestState => ({
+  status: "paid",
+  reference: props.govPayPaymentId ?? props.stripePaymentId,
+});
 
+export default function MakePayment(props: Props) {
+  const isFulfilled = Boolean(props.paidAt);
+  const hasReturnedFromStripeCheckout = Boolean(props.stripeSessionId);
+
+  if (isFulfilled && hasReturnedFromStripeCheckout) {
+    return <CheckStripePaymentStatus {...props} />;
+  }
+
+  if (isFulfilled) {
     return (
-      <PaymentRequestPage {...props} payment={{ status: "paid", reference }} />
+      <PaymentRequestPage {...props} payment={getPaymentFromRequest(props)} />
     );
   }
 
@@ -84,6 +97,38 @@ function PayWithStripe(props: Props) {
   return <PaymentRequestPage {...props} payment={payment} />;
 }
 
+/**
+ * Fulfilment is idempotent, so for a fulfilled request it only reads the payment status from Stripe
+ */
+function CheckStripePaymentStatus(props: Props) {
+  const stripePayment = useStripePayRequest({
+    paymentRequestId: props.id,
+    stripeSessionId: props.stripeSessionId,
+  });
+
+  const isStripeStatusAvailable =
+    stripePayment.status === "loading" ||
+    stripePayment.status === "paid" ||
+    stripePayment.status === "pending";
+
+  const payment = isStripeStatusAvailable
+    ? stripePayment
+    : getPaymentFromRequest(props);
+
+  return <PaymentRequestPage {...props} payment={payment} />;
+}
+
+const FULFILLED_PAYMENT_CONTENT = {
+  paid: {
+    heading: "Payment received",
+    text: "Thanks for making your payment. We'll send you a confirmation email.",
+  },
+  pending: {
+    heading: "Payment processing",
+    text: "Your payment is being processed. This can take several working days. We'll send you a confirmation email.",
+  },
+};
+
 function PaymentRequestPage({
   sessionPreviewData,
   createdAt,
@@ -98,6 +143,7 @@ function PaymentRequestPage({
   const theme = useTheme();
 
   const isPaid = payment.status === "paid";
+  const isFulfilled = payment.status === "paid" || payment.status === "pending";
   const paidDate = paidAt ? Date.parse(paidAt) : Date.now();
 
   const details = objectWithoutNullishValues({
@@ -108,11 +154,11 @@ function PaymentRequestPage({
     "Property address": address,
     "Project type":
       formatRawProjectTypes(rawProjectTypes) || "Project type not submitted",
-    "Valid until": isPaid
+    "Valid until": isFulfilled
       ? undefined
       : getExpiryDateForPaymentRequest(createdAt),
     "Paid at": isPaid ? format(paidDate, "dd MMMM yyyy") : undefined,
-    "Payment reference": isPaid ? payment.reference : undefined,
+    "Payment reference": isFulfilled ? payment.reference : undefined,
   }) as Record<string, string>;
 
   const paymentDetails = Object.entries(details).map(([term, details]) => ({
@@ -124,18 +170,18 @@ function PaymentRequestPage({
     <DelayedLoadingIndicator text={payment.text} />
   ) : (
     <>
-      {isPaid ? (
+      {isFulfilled ? (
         <Banner
           Icon={Check}
           iconTitle={"Success"}
-          heading="Payment received"
+          heading={FULFILLED_PAYMENT_CONTENT[payment.status].heading}
           color={{
             background: theme.palette.success.light,
             text: theme.palette.text.primary,
           }}
         >
           <Typography variant="body2" sx={{ pt: 2, maxWidth: "formWrap" }}>
-            Thanks for making your payment. We'll send you a confirmation email.
+            {FULFILLED_PAYMENT_CONTENT[payment.status].text}
           </Typography>
         </Banner>
       ) : (
