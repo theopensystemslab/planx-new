@@ -25,7 +25,13 @@ export const fulfilPaymentRequestController: FulfilPaymentRequestController =
         case "fulfilled":
         case "alreadyFulfilled":
           return res.json({
-            paymentStatus: result.paymentStatus,
+            paymentStatus: "paid",
+            paymentIntentId: result.stripePaymentId,
+          });
+        // A delayed payment (e.g. Bacs) - the payer sees "payment processing" until it succeeds
+        case "pending":
+          return res.json({
+            paymentStatus: "pending",
             paymentIntentId: result.stripePaymentId,
           });
         case "unpaid":
