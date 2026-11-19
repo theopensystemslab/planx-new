@@ -10,11 +10,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { RichTextToolbar } from "./components/RichTextToolbar";
 import { suggestion } from "./components/suggestion";
-import {
-  RichContentContainer,
-  RichTextMarker,
-  StyledBubbleMenu,
-} from "./styles";
+import { RichContentContainer, RichTextMarker } from "./styles";
 import { commonExtensions, passportClassName } from "./tiptapExtensions";
 import type { Props } from "./types";
 import { fromHtml, toHtml } from "./utils";
@@ -142,13 +138,11 @@ const RichTextInput: FC<Props> = (props) => {
         className="rich-text-editor"
         onClick={preventLabelActivation}
       >
-        {editor && (
-          <StyledBubbleMenu editor={editor}>
-            <RichTextToolbar editor={editor} showHeadings={!isParagraph} />
-          </StyledBubbleMenu>
+        {editor && isEditable && (
+          <RichTextToolbar editor={editor} showHeadings={!isParagraph} />
         )}
         <div className="rich-text-input">
-          <EditorContent editor={editor} />
+          <EditorContent editor={editor} className="rich-text-content" />
           {isEditable && (
             <Tooltip title="Rich text" placement="top">
               <RichTextMarker

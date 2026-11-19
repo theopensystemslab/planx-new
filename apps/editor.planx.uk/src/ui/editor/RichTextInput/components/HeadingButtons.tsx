@@ -18,7 +18,21 @@ const HeadingButton = ({
   <ToolbarButton
     label={tooltip}
     isActive={isActive}
-    onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
+    onClick={() =>
+      editor
+        .chain()
+        .focus()
+        .toggleHeading({ level })
+        // Headings are already bold, so remove any bold text within them
+        // Applied to the whole of each block, not just the selected text
+        .command(({ tr, state }) => {
+          if (isActive) return true;
+          const { $from, $to } = state.selection;
+          tr.removeMark($from.start(), $to.end(), state.schema.marks.bold);
+          return true;
+        })
+        .run()
+    }
   >
     {label}
   </ToolbarButton>
