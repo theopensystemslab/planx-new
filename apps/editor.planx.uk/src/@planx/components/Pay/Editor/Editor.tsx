@@ -7,6 +7,7 @@ import {
 } from "@planx/components/Pay/model";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikProvider } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
@@ -121,8 +122,27 @@ const Component: React.FC<Props> = (props: Props) => {
                 }
                 label="Hide the pay buttons and show fee for information only"
                 disabled={props.disabled}
+                error={formik.errors.hidePay}
               />
             </InputRow>
+            {hasFeatureFlag("EXTERNAL_PAY") ? (
+              <InputRow>
+                <Switch
+                  checked={formik.values.externalPay}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "externalPay",
+                      !formik.values.externalPay,
+                    )
+                  }
+                  label="Collect payments outside of Plan✕"
+                  disabled={props.disabled}
+                  error={formik.errors.externalPay}
+                />
+              </InputRow>
+            ) : (
+              <></>
+            )}
             <InputRow>
               <Switch
                 checked={formik.values.allowInviteToPay}
