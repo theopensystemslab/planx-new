@@ -100,12 +100,12 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
 
       webhookResponse = await axios(webhookRequest).catch((error) => {
         // surface Power Automate's response body (e.g. error code)
+        // NB. we avoid attaching raw AxiosError as `cause`, to avoid needlessly logging secrets
         const detail = isAxiosError(error)
           ? `${error.message}: ${JSON.stringify(error.response?.data)}`
           : (error as Error).message;
         throw new Error(
           `Failed to send submission notification to ${localAuthority}'s Power Automate Webhook (${sessionId}): ${detail}`,
-          { cause: error },
         );
       });
     } else {
