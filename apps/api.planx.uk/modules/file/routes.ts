@@ -14,7 +14,8 @@ import {
   publicDeleteController,
   publicDownloadController,
   publicUploadController,
-  uploadFileSchema,
+  uploadPrivateFileSchema,
+  uploadPublicFileSchema,
 } from "./controller.js";
 import { useFileContentValidation } from "./middleware/useFileContentValidation.js";
 import { useFileUpload } from "./middleware/useFileUpload.js";
@@ -25,7 +26,7 @@ router.post(
   "/file/public/upload",
   useFileUpload,
   useTeamEditorAuth,
-  validate(uploadFileSchema),
+  validate(uploadPublicFileSchema),
   useFileContentValidation,
   publicUploadController,
 );
@@ -33,7 +34,7 @@ router.post(
 router.post(
   "/file/private/upload",
   useFileUpload,
-  validate(uploadFileSchema),
+  validate(uploadPrivateFileSchema),
   useFileContentValidation,
   privateUploadController,
 );

@@ -8,6 +8,7 @@ import { getRejectionMessage } from "@planx/components/shared/handleRejectedUplo
 import {
   getAllowedExtensions,
   MAX_UPLOAD_SIZE_BYTES,
+  MIN_UPLOAD_SIZE_BYTES,
 } from "@planx/file-upload";
 import {
   uploadPublicFile,
@@ -166,6 +167,7 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
     onDrop,
     accept,
     validator: createExtensionValidator(allowedExtensions),
+    minSize: MIN_UPLOAD_SIZE_BYTES,
     maxSize: MAX_UPLOAD_SIZE_BYTES,
     disabled,
     onDropRejected,

@@ -1,11 +1,11 @@
 import type { FileUploadSlot } from "@planx/components/FileUpload/model";
+import { MAX_FILENAME_LENGTH } from "@planx/file-upload";
 import { http, HttpResponse } from "msw";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import type { Mock } from "vitest";
 import { vi } from "vitest";
 
-import { MAX_FILENAME_LENGTH } from "../constants";
 import { Dropzone } from "./Dropzone";
 
 const UPLOAD_ENDPOINT = `${import.meta.env.VITE_APP_API_URL}/file/private/upload`;
@@ -102,6 +102,30 @@ describe("files we do not accept", () => {
     );
 
     expect(alertMock).toHaveBeenCalledWith(invalidTypeMessage);
+    expect(slots()).toHaveLength(0);
+  });
+
+  it("rejects an empty file", async () => {
+    const { slots } = await dropFile(
+      new File([], "plan.pdf", { type: "application/pdf" }),
+    );
+
+    expect(alertMock).toHaveBeenCalledWith("File is empty");
+    expect(slots()).toHaveLength(0);
+  });
+
+  it("rejects a file whose name is too long once encoded", async () => {
+    // short enough as typed, but curly apostrophe %-encodes to 9 chars
+    const filename = `${"’".repeat(30)}.pdf`;
+    expect(filename.length).toBeLessThan(MAX_FILENAME_LENGTH);
+
+    const { slots } = await dropFile(
+      new File(["x"], filename, { type: "application/pdf" }),
+    );
+
+    expect(alertMock).toHaveBeenCalledWith(
+      "Please reduce the length of the file name and try again",
+    );
     expect(slots()).toHaveLength(0);
   });
 

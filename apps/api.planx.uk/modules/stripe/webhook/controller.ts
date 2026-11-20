@@ -3,6 +3,10 @@ import { z } from "zod";
 
 import { reportError } from "../../pay/helpers.js";
 import { fulfilPaymentRequest } from "../fulfilment/service.js";
+import {
+  isDelayedPaymentPending,
+  markDelayedPaymentPending,
+} from "./delayedPayment/service.js";
 import { propagateMetadataToDestinationPayment } from "./destinationPayment/service.js";
 import { recordStripePaymentIntentStatus } from "./paymentStatus/service.js";
 import type { StripeWebhookController } from "./types.js";
@@ -10,29 +14,35 @@ import type { StripeWebhookController } from "./types.js";
 const inviteToPayMetadataSchema = z.object({ paymentRequestId: z.string() });
 
 /**
- * Fulfil an ITP request once its Checkout Session is paid, or authorised by a delayed payment method
+ * Checkout has completed (checkout.session.completed), or a delayed payment has succeeded (checkout.session.async_payment_succeeded)
+ *  - Invite to pay: fulfil the payment request once paid, which submits the application
+ *  - Self-pay, paid at checkout (card, Pay by bank): submitted by the applicant's browser, no action required
+ *  - Self-pay, delayed payment (e.g. Bacs) processing: lock the session, in case the applicant doesn't return to PlanX
+ *  - Self-pay, delayed payment succeeded: no action required, submitted once payment_status records the
+ *    succeeded PaymentIntent (see submitDelayedPayment)
+ *
+ * @docs https://docs.stripe.com/checkout/fulfillment
  */
-const handleCheckoutSessionPaid = async (
+const handleCheckoutSession = async (
   checkoutSession: Stripe.Checkout.Session,
   eventType: Stripe.Event.Type,
 ): Promise<void> => {
   const { id } = checkoutSession;
 
-  // Non-ITP Checkout Sessions (no paymentRequestId)
-  // These are submitted by the applicant's browser, no action required
   if (!inviteToPayMetadataSchema.safeParse(checkoutSession.metadata).success) {
+    if (isDelayedPaymentPending(checkoutSession)) {
+      await markDelayedPaymentPending(checkoutSession);
+    }
     return;
   }
 
   const result = await fulfilPaymentRequest(id);
 
   switch (result.status) {
-    // A pending payment (e.g. Bacs Direct Debit) is fulfilled at authorisation - its result arrives later
+    // A delayed payment (e.g. Bacs) is "pending" at checkout, and fulfilled by checkout.session.async_payment_succeeded
     case "fulfilled":
     case "alreadyFulfilled":
-      return console.info(
-        `Stripe Checkout Session ${id} (${eventType}): ${result.status} (${result.paymentStatus})`,
-      );
+    case "pending":
     case "foreign":
       return console.info(
         `Stripe Checkout Session ${id} (${eventType}): ${result.status}`,
@@ -97,7 +107,8 @@ export const handleStripeWebhook: StripeWebhookController = async (
         await propagateMetadataToDestinationPayment(event.data.object);
         break;
       case "checkout.session.completed":
-        await handleCheckoutSessionPaid(event.data.object, event.type);
+      case "checkout.session.async_payment_succeeded":
+        await handleCheckoutSession(event.data.object, event.type);
         break;
       default:
         console.log(

@@ -30,9 +30,12 @@ function Layout(props: {
           <ArrowBackIcon fontSize="small" />
           Back
         </BackButton>
-        <Container
-          maxWidth="formWrap"
-          sx={{ margin: 0, padding: "0 !important" }}
+        <Box
+          sx={(theme) => ({
+            maxWidth: theme.breakpoints.values.formWrap,
+            pt: theme.spacing(3),
+            pb: theme.spacing(5),
+          })}
         >
           <Typography variant="h2" component="h1">
             {props.heading}
@@ -41,7 +44,7 @@ function Layout(props: {
             source={props.content}
             openLinksOnNewTab={props.openLinksOnNewTab}
           />
-        </Container>
+        </Box>
       </Container>
     </Root>
   );

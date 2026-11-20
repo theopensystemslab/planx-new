@@ -153,29 +153,27 @@ function PayWithProvider({
   }, []);
 
   const continueWithoutPaying = () => {
-    if (props.externalPay) {
-      // TODO also insert payment_status record / or insert to new external payments table?
-      //   Something we can query in submissions log & service charges views & retain longer than passport!
+    props.handleSubmit && props.handleSubmit({ auto: false });
+  };
 
-      props.handleSubmit &&
-        props.handleSubmit({
-          ...makeData(props, "External payment", EXTERNAL_PAY_PASSPORT_KEY),
-          auto: false,
-        });
-    } else {
-      // Pay in info-only mode only sets breadcrumb, no associated passport data
-      props.handleSubmit && props.handleSubmit({ auto: false });
-    }
+  const continueWithExternalPayment = () => {
+    // TODO also insert payment_status record / or insert to new external payments table?
+    //   Something we can query in submissions log & service charges views & retain longer than passport!
+
+    props.handleSubmit &&
+      props.handleSubmit({
+        ...makeData(props, "External payment", EXTERNAL_PAY_PASSPORT_KEY),
+        auto: false,
+      });
   };
 
   const onConfirm = () => {
     const shouldContinueWithoutPaying =
-      fee === 0 ||
-      props.hidePay ||
-      props.externalPay ||
-      state.status === "unsupported_team";
+      fee === 0 || props.hidePay || state.status === "unsupported_team";
+    const shouldContinueWithExternalPayment = props.externalPay && fee > 0;
 
     if (shouldContinueWithoutPaying) continueWithoutPaying();
+    if (shouldContinueWithExternalPayment) continueWithExternalPayment();
     if (
       ["no_payment_found", "init", "payment_cancelled"].includes(state.status)
     )

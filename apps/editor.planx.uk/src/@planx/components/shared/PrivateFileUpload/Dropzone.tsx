@@ -11,6 +11,7 @@ import {
   ALLOWED_EXTENSIONS_BY_MIME_TYPE,
   MAX_UPLOAD_SIZE_BYTES,
   MAX_UPLOAD_SIZE_MB,
+  MIN_UPLOAD_SIZE_BYTES,
 } from "@planx/file-upload";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { nanoid } from "nanoid";
@@ -169,6 +170,7 @@ export function Dropzone<T extends FileUploadSlot>({
     accept: ALLOWED_EXTENSIONS_BY_MIME_TYPE,
     // `accept` alone is not enough - see extensionValidator.ts
     validator: validateExtension,
+    minSize: MIN_UPLOAD_SIZE_BYTES,
     maxSize: MAX_UPLOAD_SIZE_BYTES,
     multiple: maxFiles !== 1,
     disabled: Boolean(maxFiles && slots.length >= maxFiles),

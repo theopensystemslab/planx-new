@@ -140,7 +140,7 @@ export function useGovUkPay(
     dispatch(Action.StartNewPayment);
 
     // Skip the redirect process if viewing this within the Editor or using Pay in info-only mode
-    if (environment !== "standalone" || props.hidePay || props.externalPay) {
+    if (environment !== "standalone" || props.hidePay) {
       handleSuccess();
       return;
     }

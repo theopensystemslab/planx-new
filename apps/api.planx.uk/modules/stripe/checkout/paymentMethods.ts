@@ -16,11 +16,11 @@ type PaymentCapabilities = Pick<
 export const CARD_LIMIT = 60_000;
 
 /**
- * Stripe's default Pay by Bank limit (£10k in pence)
+ * Pay by Bank limit agreed with Stripe (£25k in pence)
  *
  * @docs https://docs.stripe.com/payments/pay-by-bank
  */
-export const PAY_BY_BANK_LIMIT = 1_000_000;
+export const PAY_BY_BANK_LIMIT = 2_500_000;
 
 const CAPABILITY_FOR_METHOD: Record<
   PaymentMethodType,

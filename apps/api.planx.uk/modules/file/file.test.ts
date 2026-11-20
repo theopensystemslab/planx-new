@@ -1,6 +1,7 @@
 import type * as s3Client from "@aws-sdk/client-s3";
 import { NoSuchKey, NotFound } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { MAX_FILENAME_LENGTH } from "@planx/file-upload";
 import fs from "fs";
 import path from "path";
 import supertest from "supertest";
@@ -9,7 +10,6 @@ import type { Mocked } from "vitest";
 
 import app from "../../server.js";
 import { authHeader } from "../../tests/mockJWT.js";
-import { MAX_FILENAME_LENGTH } from "./constants.js";
 import { deleteFilesByURL } from "./service/deleteFile.js";
 
 let mockPutObject: Mocked<() => void>;
@@ -80,6 +80,34 @@ describe("File upload", () => {
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/File too large/);
+          });
+      });
+
+      it("should return 400 when file is empty", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .set(authHeader({ role: "teamEditor" }))
+          .field("filename", "empty_file.pdf")
+          .attach("file", Buffer.alloc(0), "empty_file.pdf")
+          .expect(400)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(/File is empty/);
+          });
+      });
+
+      it("should return 400 for a malformed request", async () => {
+        // multipart body which ends before its closing boundary
+        await supertest(app)
+          .post(ENDPOINT)
+          .set("Content-Type", "multipart/form-data; boundary=boundary")
+          .send(
+            '--boundary\r\nContent-Disposition: form-data; name="file"; filename="some_file.pdf"\r\n\r\nsome data',
+          )
+          .expect(400)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(/File upload failed/);
           });
       });
 
@@ -285,7 +313,62 @@ describe("File upload", () => {
         .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toMatch(/File name too long/);
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "filename"],
+              code: "too_big",
+            }),
+          );
+        });
+    });
+
+    it("checks filename length before encoding", async () => {
+      // under the limit as typed, but over it once spaces are %-encoded (as expected)
+      const filename = `${"a b ".repeat(15)}.pdf`;
+      expect(filename.length).toBeLessThan(MAX_FILENAME_LENGTH);
+      expect(encodeURIComponent(filename).length).toBeGreaterThanOrEqual(
+        MAX_FILENAME_LENGTH,
+      );
+
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", filename)
+        .attach(
+          "file",
+          Buffer.from("%PDF-1.4\n%some minimal content"),
+          filename,
+        )
+        .expect(200)
+        .then(() => {
+          expect(mockPutObject).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    it("should not upload when the encoded filename is too long", async () => {
+      // short enough as typed, but curly apostrophe %-encodes to 9 chars, pushing it over 2nd limit
+      const filename = `${"’".repeat(30)}.pdf`;
+      expect(filename.length).toBeLessThan(MAX_FILENAME_LENGTH);
+
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", filename)
+        .attach(
+          "file",
+          Buffer.from("%PDF-1.4\n%some minimal content"),
+          "some_file.pdf",
+        )
+        .expect(400)
+        .then((res) => {
+          expect(mockPutObject).not.toHaveBeenCalled();
+          expect(res.body.issues).toContainEqual(
+            expect.objectContaining({
+              path: ["body", "filename"],
+              code: "custom",
+              message: expect.stringMatching(
+                /Encoded file name must not exceed/,
+              ),
+            }),
+          );
         });
     });
 

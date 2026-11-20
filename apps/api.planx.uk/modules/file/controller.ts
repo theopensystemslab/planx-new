@@ -1,4 +1,10 @@
-import { getFileExtension, isAllowedExtension } from "@planx/file-upload";
+import {
+  getFileExtension,
+  isAllowedExtension,
+  isEncodedFilenameTooLong,
+  MAX_ENCODED_FILENAME_LENGTH,
+  MAX_FILENAME_LENGTH,
+} from "@planx/file-upload";
 import assert from "assert";
 import { z } from "zod";
 
@@ -25,26 +31,47 @@ interface UploadFileResponse {
   fileUrl: string;
 }
 
-export const uploadFileSchema = z.object({
+const filenameSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .refine(isAllowedExtension, {
+    error: (issue) =>
+      `Unsupported file type for given filename: ${getFileExtension(String(issue.input))}`,
+  });
+
+const encodeFilename = (filename: string) => encodeURIComponent(filename);
+
+export const uploadPublicFileSchema = z.object({
   body: z.object({
-    filename: z
-      .string()
-      .trim()
-      .min(1)
-      .refine(isAllowedExtension, {
-        error: (issue) =>
-          `Unsupported file type for given filename: ${getFileExtension(String(issue.input))}`,
-      })
-      .transform((filename) => encodeURIComponent(filename)),
+    filename: filenameSchema.transform(encodeFilename),
   }),
 });
 
-export type UploadController = ValidatedRequestHandler<
-  typeof uploadFileSchema,
+export const uploadPrivateFileSchema = z.object({
+  body: z.object({
+    filename: filenameSchema
+      .max(MAX_FILENAME_LENGTH - 1, {
+        error: `File name must be under ${MAX_FILENAME_LENGTH} characters long`,
+      })
+      .refine((filename) => !isEncodedFilenameTooLong(filename), {
+        error: `Encoded file name must not exceed ${MAX_ENCODED_FILENAME_LENGTH} characters`,
+      })
+      .transform(encodeFilename),
+  }),
+});
+
+export type PublicUploadController = ValidatedRequestHandler<
+  typeof uploadPublicFileSchema,
   UploadFileResponse
 >;
 
-export const privateUploadController: UploadController = async (
+export type PrivateUploadController = ValidatedRequestHandler<
+  typeof uploadPrivateFileSchema,
+  UploadFileResponse
+>;
+
+export const privateUploadController: PrivateUploadController = async (
   req,
   res,
   next,
@@ -63,7 +90,7 @@ export const privateUploadController: UploadController = async (
   }
 };
 
-export const publicUploadController: UploadController = async (
+export const publicUploadController: PublicUploadController = async (
   req,
   res,
   next,
