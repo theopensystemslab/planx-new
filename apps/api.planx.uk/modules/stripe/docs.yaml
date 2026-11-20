@@ -549,6 +549,8 @@ paths:
         - Self-pay, delayed payment (e.g. Bacs) processing: locks the session
         - Self-pay, delayed payment succeeded: ignored, the application is submitted once `payment_status` records the succeeded PaymentIntent (`/webhooks/hasura/create-delayed-payment-send-events`)
 
+        Alerts PlanX on Slack when a payment is disputed (`charge.dispute.created` events), for every payment method.
+
         Docs: [https://docs.stripe.com/webhooks](https://docs.stripe.com/webhooks)
       tags:
         - stripe
