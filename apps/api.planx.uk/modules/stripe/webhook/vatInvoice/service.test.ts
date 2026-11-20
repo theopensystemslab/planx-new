@@ -3,6 +3,7 @@ import type Stripe from "stripe";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import * as payHelpers from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
+import * as stripeHelpers from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
 import {
   FLOW_ID,
@@ -295,8 +296,9 @@ describe("createInvoices", () => {
     expect(reserveInvoice).not.toHaveBeenCalled();
   });
 
-  it("uses the team name, and reports an error, when the council has no invoice details", async () => {
+  it("uses the team name, and alerts PlanX, when the council has no invoice details", async () => {
     vi.spyOn(payHelpers, "reportError");
+    vi.spyOn(stripeHelpers, "alertPlanX").mockResolvedValue(undefined);
     mockCouncilInvoiceDetails({ invoiceDetails: null });
 
     await createInvoices(succeededPaymentIntent(), recorded);
@@ -311,11 +313,12 @@ describe("createInvoices", () => {
       ["Open Systems Lab", TEAM_NAME],
     ]);
     expect(storedKinds()).toEqual(["payer_invoice", "council_invoice"]);
-    expect(payHelpers.reportError).toHaveBeenCalledWith(
-      expect.objectContaining({
-        context: expect.objectContaining({ teamSlug: TEAM_SLUG }),
-      }),
+    expect(stripeHelpers.alertPlanX).toHaveBeenCalledWith(
+      expect.stringContaining(
+        `*Council has no invoice details configured* [${TEAM_SLUG}]`,
+      ),
     );
+    expect(payHelpers.reportError).not.toHaveBeenCalled();
   });
 
   it("includes VAT on a discretionary application fee", async () => {

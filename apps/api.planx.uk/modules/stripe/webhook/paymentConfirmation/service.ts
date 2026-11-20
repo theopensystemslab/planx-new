@@ -10,7 +10,7 @@ import {
   sendEmail,
 } from "../../../../lib/resend/index.js";
 import { reportError } from "../../../pay/helpers.js";
-import { formatPaymentMethod, formatPence } from "../../helpers.js";
+import { alertPlanX, formatPaymentMethod, formatPence } from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
 import { getCheckoutSession, getSucceededAt } from "../vatInvoice/service.js";
 import type { StoredInvoice } from "../vatInvoice/storage.js";
@@ -152,11 +152,14 @@ export async function sendPaymentConfirmationEmails(
   }
 
   if (!council.invoiceEmail) {
-    return reportError({
-      error:
-        "Could not send payment confirmation to the council: no invoice email address configured",
-      context: { ...context, teamSlug: recorded.teamSlug },
-    });
+    return alertPlanX(
+      [
+        `:warning: *Council has no invoice email address configured* [${recorded.teamSlug}]`,
+        "The council has not been sent the payment confirmation - add an invoice email in team settings, then send it manually.",
+        `Session: ${recorded.sessionId}`,
+        `Payment: ${paymentIntent.id}`,
+      ].join("\n"),
+    );
   }
 
   await sendEmail(

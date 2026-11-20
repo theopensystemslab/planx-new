@@ -5,6 +5,7 @@ import app from "../../../../server.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import * as payHelpers from "../../../pay/helpers.js";
 import * as sendEvents from "../../../pay/service/inviteToPay/createPaymentSendEvents.js";
+import * as stripeHelpers from "../../helpers.js";
 import { STRIPE_WEBHOOK_ENDPOINT } from "../../routes.js";
 import { sign } from "../test/utils.js";
 import {
@@ -223,6 +224,7 @@ describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
     mockSession();
     mockWriteReference();
     vi.spyOn(payHelpers, "reportError");
+    vi.spyOn(stripeHelpers, "alertPlanX").mockResolvedValue(undefined);
     vi.spyOn(sendEvents, "createPaymentSendEventsForSession").mockResolvedValue(
       {},
     );
@@ -297,30 +299,31 @@ describe("submitting once a delayed payment (e.g. Bacs) succeeds", () => {
     expect(sendEvents.createPaymentSendEventsForSession).not.toHaveBeenCalled();
   });
 
-  it("reports an error, without submitting, when the session expired while the payment was processing", async () => {
+  it("alerts PlanX, without submitting, when the session expired while the payment was processing", async () => {
     mockSession({ deletedAt: "2026-11-11T09:00:00Z" });
 
     await postEvent().expect(200);
 
     expect(sendEvents.createPaymentSendEventsForSession).not.toHaveBeenCalled();
-    expect(payHelpers.reportError).toHaveBeenCalledWith(
-      expect.objectContaining({
-        error: expect.stringContaining("has expired"),
-      }),
+    expect(stripeHelpers.alertPlanX).toHaveBeenCalledWith(
+      expect.stringContaining("expired session"),
     );
+    expect(stripeHelpers.alertPlanX).toHaveBeenCalledWith(
+      expect.stringContaining(SESSION_ID),
+    );
+    expect(payHelpers.reportError).not.toHaveBeenCalled();
   });
 
-  it("reports an error, without submitting, when the session was already submitted, as the applicant may have paid twice", async () => {
+  it("alerts PlanX, without submitting, when the session was already submitted, as the applicant may have paid twice", async () => {
     mockSession({ submittedAt: "2026-11-11T09:00:00Z" });
 
     await postEvent().expect(200);
 
     expect(sendEvents.createPaymentSendEventsForSession).not.toHaveBeenCalled();
-    expect(payHelpers.reportError).toHaveBeenCalledWith(
-      expect.objectContaining({
-        error: expect.stringContaining("may have paid twice"),
-      }),
+    expect(stripeHelpers.alertPlanX).toHaveBeenCalledWith(
+      expect.stringContaining("may have paid twice"),
     );
+    expect(payHelpers.reportError).not.toHaveBeenCalled();
   });
 
   it("carries on submitting on a retry, when a previous attempt has already submitted to some destinations", async () => {
