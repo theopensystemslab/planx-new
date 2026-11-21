@@ -12,6 +12,8 @@ CREATE TABLE "public"."team_stripe_accounts" (
   CONSTRAINT "team_stripe_accounts_team_id_name_key" UNIQUE ("team_id", "name")
 );
 
+CREATE UNIQUE INDEX "team_stripe_accounts_team_id_lower_name_key" ON "public"."team_stripe_accounts" ("team_id", lower("name"));
+
 COMMENT ON TABLE "public"."team_stripe_accounts" IS E'Stripe Connect accounts linked to a team. A team with a single account always uses it - a team with multiple accounts must specify which to use for each payment';
 COMMENT ON COLUMN "public"."team_stripe_accounts"."name" IS E'Identifies the account within its team, defaults to the team name';
 COMMENT ON COLUMN "public"."team_stripe_accounts"."production_stripe_account_id" IS E'Stripe Connect account id (acct_...) linked via OAuth for production payments';
@@ -40,6 +42,26 @@ BEFORE INSERT ON "public"."team_stripe_accounts"
 FOR EACH ROW
 EXECUTE PROCEDURE "public"."set_team_stripe_account_default_name" ();
 COMMENT ON TRIGGER "set_public_team_stripe_accounts_default_name" ON "public"."team_stripe_accounts" IS 'trigger to default "name" to the team name';
+
+-- Keep the team's main (team-named) account named after the team when the team is renamed
+-- Fails the rename if the new name is already used by one of the team's additional accounts
+CREATE OR REPLACE FUNCTION "public"."rename_team_stripe_account"()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE "public"."team_stripe_accounts"
+  SET "name" = NEW."name"
+  WHERE "team_id" = NEW."id"
+    AND "name" = OLD."name";
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER "rename_public_teams_stripe_account"
+AFTER UPDATE OF "name" ON "public"."teams"
+FOR EACH ROW
+WHEN (OLD."name" IS DISTINCT FROM NEW."name")
+EXECUTE PROCEDURE "public"."rename_team_stripe_account" ();
+COMMENT ON TRIGGER "rename_public_teams_stripe_account" ON "public"."teams" IS 'trigger to rename the team''s main Stripe account along with the team';
 
 -- Move existing connected accounts across, named after their team
 INSERT INTO "public"."team_stripe_accounts" ("team_id", "production_stripe_account_id", "staging_stripe_account_id")

@@ -70,6 +70,10 @@ FROM (
 ) tsa
 WHERE tsa."team_id" = ti."team_id";
 
+DROP TRIGGER "rename_public_teams_stripe_account" ON "public"."teams";
+
+DROP FUNCTION "public"."rename_team_stripe_account"();
+
 DROP TABLE "public"."team_stripe_accounts";
 
 DROP FUNCTION "public"."set_team_stripe_account_default_name"();
