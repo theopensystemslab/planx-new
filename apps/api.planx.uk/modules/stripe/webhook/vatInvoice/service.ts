@@ -7,6 +7,7 @@ import { $api } from "../../../../client/index.js";
 import { reportError } from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
 import { getFeeLines } from "../../feeLines.js";
+import { alertPlanX } from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
 import {
   buildVatInvoiceData,
@@ -176,11 +177,14 @@ export async function createInvoices(
 
   const council = await getCouncilInvoiceDetails(recorded.teamSlug);
   if (!council.hasInvoiceDetails) {
-    reportError({
-      error:
-        "Council has no invoice details configured - invoicing under the team name",
-      context: { ...context, teamSlug: recorded.teamSlug },
-    });
+    await alertPlanX(
+      [
+        `:warning: *Council has no invoice details configured* [${recorded.teamSlug}]`,
+        "VAT documents have been issued under the team name - add the council's invoice details in team settings.",
+        `Session: ${recorded.sessionId}`,
+        `Payment: ${paymentIntent.id}`,
+      ].join("\n"),
+    );
   }
 
   const issuedAt = await getSucceededAt(paymentIntent);

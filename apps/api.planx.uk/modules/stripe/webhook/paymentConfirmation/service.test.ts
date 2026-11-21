@@ -4,6 +4,7 @@ import type * as resend from "../../../../lib/resend/index.js";
 import { sendEmail } from "../../../../lib/resend/index.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import * as payHelpers from "../../../pay/helpers.js";
+import * as stripeHelpers from "../../helpers.js";
 import { formatPaymentMethod } from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
 import {
@@ -262,18 +263,19 @@ describe("sendPaymentConfirmationEmails", () => {
       );
     });
 
-    it("reports an error without throwing when the council has no invoice email address", async () => {
+    it("alerts PlanX without throwing when the council has no invoice email address", async () => {
       vi.spyOn(payHelpers, "reportError");
+      vi.spyOn(stripeHelpers, "alertPlanX").mockResolvedValue(undefined);
       mockCouncilEmailDetails({ invoiceEmail: null });
 
       await expect(send()).resolves.toBeUndefined();
 
-      expect(payHelpers.reportError).toHaveBeenCalledWith(
-        expect.objectContaining({
-          error: expect.stringContaining("no invoice email address"),
-          context: expect.objectContaining({ teamSlug: TEAM_SLUG }),
-        }),
+      expect(stripeHelpers.alertPlanX).toHaveBeenCalledWith(
+        expect.stringContaining(
+          `*Council has no invoice email address configured* [${TEAM_SLUG}]`,
+        ),
       );
+      expect(payHelpers.reportError).not.toHaveBeenCalled();
       expect(sentEmail("payment-confirmed-council")).toBeUndefined();
     });
 
