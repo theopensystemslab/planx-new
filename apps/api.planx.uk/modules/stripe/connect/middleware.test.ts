@@ -7,6 +7,7 @@ import {
   consumeConnectState,
   generateNonce,
   getPendingOnboarding,
+  requireNamedStripeAccountsEnabled,
   requireStripeConnectTeamAuth,
   setConnectState,
   setPendingOnboarding,
@@ -14,8 +15,11 @@ import {
 } from "./middleware.js";
 
 const mockGetTeamBySlug = vi.fn();
+const mockIsMultipleStripeAccountsEnabled = vi.fn();
 vi.mock("./service.js", () => ({
   getTeamBySlug: (...args: unknown[]) => mockGetTeamBySlug(...args),
+  isMultipleStripeAccountsEnabled: (...args: unknown[]) =>
+    mockIsMultipleStripeAccountsEnabled(...args),
 }));
 
 const mockAssertTeamEditPermission = vi.fn();
@@ -157,6 +161,70 @@ describe("requireStripeConnectTeamAuth", () => {
   });
 });
 
+describe("requireNamedStripeAccountsEnabled", () => {
+  const lambeth = { id: 1, slug: "lambeth" };
+  const adurWorthing = { id: 2, slug: "adur-worthing" };
+
+  type TestTeam = typeof lambeth;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const buildArgs = (team: TestTeam, account?: string): any => {
+    const req = {};
+    const res = {
+      locals: {
+        team,
+        parsedReq: {
+          params: { teamSlug: team.slug },
+          query: { account },
+        },
+      },
+    };
+    const next = vi.fn();
+    return { req, res, next };
+  };
+
+  beforeEach(() => {
+    mockIsMultipleStripeAccountsEnabled.mockReset();
+  });
+
+  it("skips the check for a request without an account name, e.g. from a team with a single account", async () => {
+    const { req, res, next } = buildArgs(lambeth);
+    await requireNamedStripeAccountsEnabled(req, res, next);
+
+    expect(mockIsMultipleStripeAccountsEnabled).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("allows a named account when the team has multiple accounts enabled", async () => {
+    mockIsMultipleStripeAccountsEnabled.mockResolvedValue(true);
+
+    const { req, res, next } = buildArgs(adurWorthing, "Worthing");
+    await requireNamedStripeAccountsEnabled(req, res, next);
+
+    expect(mockIsMultipleStripeAccountsEnabled).toHaveBeenCalledWith(2);
+    expect(next).toHaveBeenCalledWith();
+  });
+
+  it("responds with a 404 for a named account when the team doesn't have multiple accounts enabled", async () => {
+    mockIsMultipleStripeAccountsEnabled.mockResolvedValue(false);
+
+    const { req, res, next } = buildArgs(adurWorthing, "Worthing");
+    await requireNamedStripeAccountsEnabled(req, res, next);
+
+    expect(next).toHaveBeenCalledWith(expect.objectContaining({ status: 404 }));
+  });
+
+  it("forwards the error when the setting can't be read", async () => {
+    const error = new Error("db down");
+    mockIsMultipleStripeAccountsEnabled.mockRejectedValue(error);
+
+    const { req, res, next } = buildArgs(adurWorthing, "Worthing");
+    await requireNamedStripeAccountsEnabled(req, res, next);
+
+    expect(next).toHaveBeenCalledWith(error);
+  });
+});
+
 describe("setPendingOnboarding / getPendingOnboarding / clearPendingOnboarding", () => {
   it("returns the pending account for the same team", () => {
     const req = buildRequest();
@@ -181,6 +249,31 @@ describe("setPendingOnboarding / getPendingOnboarding / clearPendingOnboarding",
     const req = buildRequest();
     setPendingOnboarding(req, { teamId: 1, accountId: "acct_pending" });
 
+    expect(getPendingOnboarding(req, 2)).toBeUndefined();
+  });
+
+  it("returns the pending account for the same named account", () => {
+    const req = buildRequest();
+    setPendingOnboarding(req, {
+      teamId: 2,
+      accountId: "acct_pending",
+      accountName: "Worthing",
+    });
+
+    expect(getPendingOnboarding(req, 2, "Worthing")?.accountId).toBe(
+      "acct_pending",
+    );
+  });
+
+  it("ignores a pending account belonging to a different account of the same team", () => {
+    const req = buildRequest();
+    setPendingOnboarding(req, {
+      teamId: 2,
+      accountId: "acct_pending",
+      accountName: "Worthing",
+    });
+
+    expect(getPendingOnboarding(req, 2, "Adur")).toBeUndefined();
     expect(getPendingOnboarding(req, 2)).toBeUndefined();
   });
 

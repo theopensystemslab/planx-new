@@ -19,8 +19,15 @@ import {
   getCheckoutSessionStatusSchema,
 } from "./checkout/types.js";
 import * as Controller from "./connect/controller.js";
-import { requireStripeConnectTeamAuth } from "./connect/middleware.js";
-import { connectCallbackSchema, connectSchema } from "./connect/types.js";
+import {
+  requireNamedStripeAccountsEnabled,
+  requireStripeConnectTeamAuth,
+} from "./connect/middleware.js";
+import {
+  connectCallbackSchema,
+  connectSchema,
+  connectStatusSchema,
+} from "./connect/types.js";
 import { fulfilPaymentRequestController } from "./fulfilment/controller.js";
 import { fulfilPaymentRequestSchema } from "./fulfilment/types.js";
 import { migrate, revert } from "./migration/controller.js";
@@ -42,7 +49,7 @@ router.get(
 router.get(
   "/stripe/connect/:teamSlug/status",
   useTeamEditorAuth,
-  validate(connectSchema),
+  validate(connectStatusSchema),
   requireStripeConnectTeamAuth,
   Controller.getConnectStatus,
 );
@@ -53,6 +60,7 @@ router.get(
   useTeamEditorAuth,
   validate(connectSchema),
   requireStripeConnectTeamAuth,
+  requireNamedStripeAccountsEnabled,
   Controller.handleOnboardingReturn,
 );
 
@@ -61,6 +69,7 @@ router.get(
   useTeamEditorAuth,
   validate(connectSchema),
   requireStripeConnectTeamAuth,
+  requireNamedStripeAccountsEnabled,
   Controller.initiateConnect,
 );
 
