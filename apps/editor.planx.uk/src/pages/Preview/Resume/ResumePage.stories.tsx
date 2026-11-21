@@ -39,6 +39,10 @@ export const OnLockedSession = {
   render: () => <LockedSession paymentRequest={paymentRequestMock} />,
 } satisfies Story;
 
+export const OnLockedSessionPaymentProcessing = {
+  render: () => <LockedSession paymentRequest={null} />,
+} satisfies Story;
+
 const reconciliationMock = {
   message: "No content changes since last save point",
   changesFound: false,

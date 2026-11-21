@@ -26,7 +26,7 @@ type MinPaymentRequest = Pick<
 >;
 
 export interface LockedSessionResponse {
-  paymentRequest: MinPaymentRequest;
+  paymentRequest: MinPaymentRequest | null;
   status: number;
   message: string;
 }
@@ -55,7 +55,7 @@ export const InvalidSession: React.FC<{
 );
 
 export const LockedSession: React.FC<{
-  paymentRequest?: MinPaymentRequest;
+  paymentRequest?: MinPaymentRequest | null;
 }> = ({ paymentRequest }) => {
   const from = usePublicRouteContext();
 
@@ -64,7 +64,7 @@ export const LockedSession: React.FC<{
       bannerHeading="Sorry, you can't make changes to this form"
       additionalOption="startNewApplication"
     >
-      {paymentRequest && (
+      {paymentRequest?.id ? (
         <Typography variant="body1">
           This is because you've invited {paymentRequest?.payeeName} (
           <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
@@ -81,6 +81,16 @@ export const LockedSession: React.FC<{
           >
             pay yourself on the payment page
           </CustomLink>
+        </Typography>
+      ) : (
+        <Typography variant="body1">
+          This is because your payment is being processed. Your application will
+          be sent automatically once your payment has been taken, which can take
+          up to 7 working days.
+          <br />
+          <br />
+          You will receive an email when your payment has been taken, or if it
+          fails. If it fails, the email will include a link to pay again.
         </Typography>
       )}
     </StatusPage>

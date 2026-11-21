@@ -24,9 +24,7 @@ export const validateSessionController: ValidateSessionController = async (
     if (fetchedSession.lockedAt) {
       return res.status(403).send({
         message: "Session locked",
-        paymentRequest: {
-          ...fetchedSession.paymentRequests?.[0],
-        },
+        paymentRequest: fetchedSession.paymentRequests?.[0] ?? null,
       });
     }
     const responseData = await validateSession(sessionId, fetchedSession);

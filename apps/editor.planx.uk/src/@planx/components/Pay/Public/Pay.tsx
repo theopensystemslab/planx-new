@@ -9,6 +9,7 @@ import { useEffect, useReducer } from "react";
 import type { Pay } from "../model";
 import Confirm from "./Confirm";
 import { usePaymentFlow } from "./hooks/usePaymentFlow";
+import PaymentProcessing from "./PaymentProcessing";
 import { Action } from "./types";
 
 export default Component;
@@ -27,6 +28,7 @@ type ComponentState =
   | { status: "undefined_fee" }
   | { status: "zero_fee" }
   | { status: "payment_pending"; displayText?: string }
+  | { status: "payment_processing" }
   | { status: "payment_cancelled" }
   | { status: "no_payment_method" };
 
@@ -74,6 +76,8 @@ const reducer = (_state: ComponentState, action: Action): ComponentState => {
         status: "payment_pending",
         displayText: "Confirming your payment",
       };
+    case Action.PaymentProcessing:
+      return { status: "payment_processing" };
     case Action.PaymentCancelled:
       return { status: "payment_cancelled" };
     case Action.NoPaymentMethod:
@@ -177,6 +181,9 @@ function PayWithProvider({
         return "Pay now";
     }
   };
+
+  // A delayed payment (e.g. Bacs) - the application is submitted by the API once the payment has been taken
+  if (state.status === "payment_processing") return <PaymentProcessing />;
 
   return (
     <>
