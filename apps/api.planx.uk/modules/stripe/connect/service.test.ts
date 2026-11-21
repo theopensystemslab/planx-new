@@ -8,9 +8,11 @@ import {
   getAccountStatus,
   getPaymentCapabilities,
   getStripeAccountId,
+  getStripeAccounts,
   getStripeMode,
   getTeamBySlug,
   isInvalidRequestError,
+  isMultipleStripeAccountsEnabled,
   isOnboardingComplete,
   postStripeConnectedToSlack,
   saveStripeAccountId,
@@ -142,6 +144,13 @@ describe("createPrefilledTestAccount", () => {
     settings: { homepage: "https://www.lambeth.gov.uk" },
   } as Team;
 
+  const adurWorthing = {
+    id: 2,
+    slug: "adur-worthing",
+    name: "Adur & Worthing",
+    settings: { homepage: "https://www.adur-worthing.gov.uk" },
+  } as Team;
+
   const attestation = { ip: "203.0.113.1", userAgent: "Mozilla/5.0 (test)" };
 
   beforeEach(() => {
@@ -185,6 +194,34 @@ describe("createPrefilledTestAccount", () => {
           routing_number: "108800",
           account_number: "00012345",
         }),
+      }),
+    );
+  });
+
+  it("tags the account with its team", async () => {
+    await createPrefilledTestAccount(team, attestation);
+
+    expect(mockAccountsCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        metadata: { planxTeamId: "1", planxTeamSlug: "lambeth" },
+      }),
+    );
+  });
+
+  it("names the account after its account name rather than the team, and tags it with the name", async () => {
+    await createPrefilledTestAccount(adurWorthing, attestation, "Worthing");
+
+    expect(mockAccountsCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        business_profile: expect.objectContaining({
+          name: "Worthing (test mode)",
+        }),
+        company: expect.objectContaining({ name: "Worthing (test mode)" }),
+        metadata: {
+          planxTeamId: "2",
+          planxTeamSlug: "adur-worthing",
+          planxStripeAccountName: "Worthing",
+        },
       }),
     );
   });
@@ -277,6 +314,23 @@ describe("createOnboardingLink", () => {
       refresh_url: "https://api.example.com/stripe/connect/lambeth",
       return_url: "https://api.example.com/stripe/connect/lambeth/return",
     });
+  });
+
+  it("carries a named account's name on both URLs", async () => {
+    mockAccountLinksCreate.mockResolvedValue({
+      url: "https://connect.stripe.com/setup/abc",
+    });
+
+    await createOnboardingLink("acct_new", "adur-worthing", "Worthing");
+
+    expect(mockAccountLinksCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        refresh_url:
+          "https://api.example.com/stripe/connect/adur-worthing?account=Worthing",
+        return_url:
+          "https://api.example.com/stripe/connect/adur-worthing/return?account=Worthing",
+      }),
+    );
   });
 });
 
@@ -571,11 +625,11 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
   it("saves a named account", async () => {
     mockRequest.mockResolvedValue({});
 
-    await saveStripeAccountId(42, "acct_abc", "Worthing");
+    await saveStripeAccountId(2, "acct_abc", "Worthing");
 
     const [, variables] = mockRequest.mock.calls[0];
     expect(variables).toEqual({
-      teamId: 42,
+      teamId: 2,
       accountId: "acct_abc",
       name: "Worthing",
     });
@@ -593,10 +647,10 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
   it("reads a named account", async () => {
     mockRequest.mockResolvedValue({ stripeAccounts: [] });
 
-    await getStripeAccountId(42, "Worthing");
+    await getStripeAccountId(2, "Worthing");
 
     const [, variables] = mockRequest.mock.calls[0];
-    expect(variables).toEqual({ teamId: 42, name: { _eq: "Worthing" } });
+    expect(variables).toEqual({ teamId: 2, name: { _eq: "Worthing" } });
   });
 
   it("reads back the account id for the current environment", async () => {
@@ -626,6 +680,84 @@ describe("saveStripeAccountId / getStripeAccountId", () => {
     const accountId = await getStripeAccountId(42);
 
     expect(accountId).toBeNull();
+  });
+});
+
+describe("isMultipleStripeAccountsEnabled", () => {
+  afterEach(() => {
+    mockRequest.mockReset();
+  });
+
+  it.each([true, false])(
+    "returns the team's setting (%s)",
+    async (multipleStripeAccountsEnabled) => {
+      mockRequest.mockResolvedValue({
+        teamSettings: [{ multipleStripeAccountsEnabled }],
+      });
+
+      await expect(isMultipleStripeAccountsEnabled(42)).resolves.toBe(
+        multipleStripeAccountsEnabled,
+      );
+      expect(mockRequest.mock.calls[0][1]).toEqual({ teamId: 42 });
+    },
+  );
+
+  it("returns false when the team has no settings", async () => {
+    mockRequest.mockResolvedValue({ teamSettings: [] });
+
+    await expect(isMultipleStripeAccountsEnabled(42)).resolves.toBe(false);
+  });
+});
+
+describe("getStripeAccounts", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    mockRequest.mockReset();
+  });
+
+  it("returns all of the team's accounts", async () => {
+    mockRequest.mockResolvedValue({
+      stripeAccounts: [
+        { name: "Adur", accountId: "acct_adur" },
+        { name: "Worthing", accountId: null },
+      ],
+    });
+
+    await expect(getStripeAccounts(2)).resolves.toEqual([
+      { name: "Adur", accountId: "acct_adur" },
+      { name: "Worthing", accountId: null },
+    ]);
+  });
+
+  it("reads every account of the team, sorted by name", async () => {
+    mockRequest.mockResolvedValue({ stripeAccounts: [] });
+
+    await getStripeAccounts(2);
+
+    const [query, variables] = mockRequest.mock.calls[0];
+    expect(String(query)).toMatch(/where: { team_id: { _eq: \$teamId } }/);
+    expect(String(query)).toMatch(/order_by: { name: asc }/);
+    expect(variables).toEqual({ teamId: 2 });
+  });
+
+  it("reads the staging account id outside of production", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "staging");
+    mockRequest.mockResolvedValue({ stripeAccounts: [] });
+
+    await getStripeAccounts(2);
+
+    const [query] = mockRequest.mock.calls[0];
+    expect(String(query)).toContain("accountId: staging_stripe_account_id");
+  });
+
+  it("reads the production account id in production", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+    mockRequest.mockResolvedValue({ stripeAccounts: [] });
+
+    await getStripeAccounts(2);
+
+    const [query] = mockRequest.mock.calls[0];
+    expect(String(query)).toContain("accountId: production_stripe_account_id");
   });
 });
 
@@ -659,6 +791,17 @@ describe("postStripeConnectedToSlack", () => {
 
     expect(mockSendSlackMessage).toHaveBeenCalledWith(
       ":link: *lambeth* has connected their Stripe account in *test* mode and completed onboarding - `acct_123`",
+    );
+  });
+
+  it("names the account, when it has a name", async () => {
+    vi.stubEnv("APP_ENVIRONMENT", "production");
+    mockSendSlackMessage.mockResolvedValue(undefined);
+
+    await postStripeConnectedToSlack("adur-worthing", "acct_123", "Worthing");
+
+    expect(mockSendSlackMessage).toHaveBeenCalledWith(
+      ":link: *adur-worthing* has connected their *Worthing* Stripe account in *live* mode and completed onboarding - `acct_123`",
     );
   });
 
