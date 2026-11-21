@@ -1,6 +1,6 @@
 import { reportError } from "../../../pay/helpers.js";
-import { sendSlackMessage } from "../../../slack/utils.js";
 import { stripe } from "../../../stripe/client.js";
+import { alertPlanX } from "../../../stripe/helpers.js";
 import { getSessionForPayment } from "../../../stripe/webhook/ownership/service.js";
 import { sendPaymentConfirmationEmails } from "../../../stripe/webhook/paymentConfirmation/service.js";
 import { createInvoices } from "../../../stripe/webhook/vatInvoice/service.js";
@@ -39,16 +39,7 @@ export const alertPaymentSucceededFailed = async (
 ): Promise<void> => {
   reportError({ error, context: { paymentIntentId } });
 
-  const text = `:warning: Could not create VAT documents or send payment emails for Stripe payment *${paymentIntentId}* - Hasura has stopped retrying. Needs following up manually.`;
-
-  if (process.env.APP_ENVIRONMENT !== "production") {
-    console.log(`Skipping Slack notification on non-production:\n${text}`);
-    return;
-  }
-
-  await sendSlackMessage({
-    channel: "#planx-notifications-internal",
-    text,
-    username: "Stripe payment events",
-  });
+  await alertPlanX(
+    `:warning: Could not create VAT documents or send payment emails for Stripe payment *${paymentIntentId}* - Hasura has stopped retrying. Needs following up manually.`,
+  );
 };
