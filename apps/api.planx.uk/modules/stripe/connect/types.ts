@@ -23,7 +23,7 @@ export type StripeConnectSessionState = z.infer<
 
 /**
  * Staging only - an account created for the team which hasn't finished Stripe onboarding yet
- * Only saved to `team_integrations` once onboarding is complete
+ * Only saved to `team_stripe_accounts` once onboarding is complete
  */
 export const stripeOnboardingSessionStateSchema = z.object({
   teamId: z.number(),

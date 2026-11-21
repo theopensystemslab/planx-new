@@ -125,4 +125,4 @@ const introspectAs = async (role, userId = undefined) => {
   };
 };
 
-export { buildJWTForRole, gqlAdmin, gqlPublic, introspectAs };
+export { buildJWTForRole, gqlAdmin, gqlPublic, gqlWithRole, introspectAs };

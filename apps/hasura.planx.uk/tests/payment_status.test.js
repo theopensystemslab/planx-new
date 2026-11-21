@@ -1,4 +1,4 @@
-import { introspectAs } from "./utils.js";
+import { gqlWithRole, introspectAs } from "./utils.js";
 
 describe("payment_status", () => {
   describe("public", () => {
@@ -90,6 +90,17 @@ describe("payment_status", () => {
 
     test("can query payment_status", () => {
       expect(i.queries).toContain("payment_status");
+    });
+
+    test("can see which Stripe account a payment was made to", async () => {
+      const res = await gqlWithRole("api")(`
+        query {
+          payment_status {
+            stripe_account_id
+          }
+        }
+      `);
+      expect(res).not.toHaveProperty("errors");
     });
 
     test("can insert payment_status", () => {
