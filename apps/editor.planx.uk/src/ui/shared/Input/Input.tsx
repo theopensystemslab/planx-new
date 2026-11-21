@@ -69,7 +69,11 @@ const StyledInputBase = styled(InputBase, {
     },
   }),
   ...(format === "note" && {
-    backgroundColor: lighten(theme.palette.background.note, 0.6),
+    // Lightening the dark mode note colour washes it out against light text, so use it as-is
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? theme.palette.background.note
+        : lighten(theme.palette.background.note, 0.6),
   }),
   ...(format === "bold" && {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
