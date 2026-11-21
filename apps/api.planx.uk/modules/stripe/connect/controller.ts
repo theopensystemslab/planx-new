@@ -25,22 +25,28 @@ export const initiateConnect: InitiateConnectController = async (
 ) => {
   try {
     const { team } = res.locals;
+    const { account: accountName } = res.locals.parsedReq.query;
 
     // Staging creates a prefilled test account and sends the user through Stripe-hosted onboarding
     if (Service.getStripeMode() === "test") {
-      const pending = getPendingOnboarding(req, team.id);
+      const pending = getPendingOnboarding(req, team.id, accountName);
       const accountId =
         pending?.accountId ??
-        (await Service.createPrefilledTestAccount(team, {
-          ip: req.ip ?? "0.0.0.0",
-          userAgent: req.get("user-agent"),
-        }));
-      setPendingOnboarding(req, { teamId: team.id, accountId });
+        (await Service.createPrefilledTestAccount(
+          team,
+          {
+            ip: req.ip ?? "0.0.0.0",
+            userAgent: req.get("user-agent"),
+          },
+          accountName,
+        ));
+      setPendingOnboarding(req, { teamId: team.id, accountId, accountName });
 
       try {
         const onboardingUrl = await Service.createOnboardingLink(
           accountId,
           team.slug,
+          accountName,
         );
         return res.redirect(onboardingUrl);
       } catch (error) {
@@ -54,7 +60,12 @@ export const initiateConnect: InitiateConnectController = async (
 
     // Production uses OAuth to connect a new or existing live account
     const nonce = generateNonce();
-    setConnectState(req, { teamId: team.id, teamSlug: team.slug, nonce });
+    setConnectState(req, {
+      teamId: team.id,
+      teamSlug: team.slug,
+      nonce,
+      accountName,
+    });
 
     const authoriseUrl = Service.buildAuthoriseUrl(nonce);
     return res.redirect(authoriseUrl);
@@ -74,7 +85,8 @@ export const handleOnboardingReturn: OnboardingReturnController = async (
   res,
 ) => {
   const { team } = res.locals;
-  const pending = getPendingOnboarding(req, team.id);
+  const { account: accountName } = res.locals.parsedReq.query;
+  const pending = getPendingOnboarding(req, team.id, accountName);
 
   if (!pending) {
     return res.redirect(
@@ -90,9 +102,13 @@ export const handleOnboardingReturn: OnboardingReturnController = async (
       );
     }
 
-    await Service.saveStripeAccountId(team.id, pending.accountId);
+    await Service.saveStripeAccountId(team.id, pending.accountId, accountName);
     clearPendingOnboarding(req);
-    await Service.postStripeConnectedToSlack(team.slug, pending.accountId);
+    await Service.postStripeConnectedToSlack(
+      team.slug,
+      pending.accountId,
+      accountName,
+    );
     return res.redirect(`${editorPaymentsUrl(team.slug)}?stripeConnected=true`);
   } catch (err) {
     console.error("Stripe onboarding return failed", err);
@@ -109,20 +125,37 @@ export const getConnectStatus: ConnectStatusController = async (
 ) => {
   try {
     const { team } = res.locals;
-    const [accountId, govPayConfigured] = await Promise.all([
-      Service.getStripeAccountId(team.id),
-      Service.hasGovPayConfigured(team.id),
-    ]);
-    const accountStatus = accountId
-      ? await Service.getAccountStatus(accountId)
-      : null;
+    const [stripeAccounts, multipleAccountsEnabled, govPayConfigured] =
+      await Promise.all([
+        Service.getStripeAccounts(team.id),
+        Service.isMultipleStripeAccountsEnabled(team.id),
+        Service.hasGovPayConfigured(team.id),
+      ]);
+
+    // A team with multiple accounts gets the status of every account
+    // Other teams just have the account named after the team
+    const listedAccounts = multipleAccountsEnabled
+      ? stripeAccounts
+      : stripeAccounts.filter(({ name }) => name === team.name);
+
+    const accounts = await Promise.all(
+      listedAccounts.map(async ({ name, accountId }) => ({
+        name,
+        accountId,
+        accountStatus: accountId
+          ? await Service.getAccountStatus(accountId)
+          : null,
+      })),
+    );
+    const teamAccount = accounts.find(({ name }) => name === team.name);
 
     return res.send({
-      connected: Boolean(accountId),
-      accountId,
-      accountStatus,
+      connected: accounts.some(({ accountId }) => accountId),
+      accountId: teamAccount?.accountId ?? null,
+      accountStatus: teamAccount?.accountStatus ?? null,
       mode: Service.getStripeMode(),
       govPayConfigured,
+      ...(multipleAccountsEnabled && { accounts }),
     });
   } catch (error) {
     return next(
@@ -157,12 +190,12 @@ export const handleCallback: ConnectCallbackController = async (req, res) => {
   }
 
   try {
+    const { teamId, teamSlug, accountName } = savedState;
+
     const accountId = await Service.exchangeCodeForAccountId(code);
-    await Service.saveStripeAccountId(savedState.teamId, accountId);
-    await Service.postStripeConnectedToSlack(savedState.teamSlug, accountId);
-    return res.redirect(
-      `${editorPaymentsUrl(savedState.teamSlug)}?stripeConnected=true`,
-    );
+    await Service.saveStripeAccountId(teamId, accountId, accountName);
+    await Service.postStripeConnectedToSlack(teamSlug, accountId, accountName);
+    return res.redirect(`${editorPaymentsUrl(teamSlug)}?stripeConnected=true`);
   } catch (err) {
     console.error("Stripe Connect callback failed", err);
     return res.redirect(
