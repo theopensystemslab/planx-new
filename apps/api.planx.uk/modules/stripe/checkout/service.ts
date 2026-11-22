@@ -29,9 +29,9 @@ import type {
   CreatePaymentRequestCheckoutSessionInput,
 } from "./types.js";
 
-const getFeeBreakdownForSession = async (
+export const getSessionPassportData = async (
   sessionId: string,
-): Promise<FeeBreakdown> => {
+): Promise<Session["data"]["passport"]["data"] | undefined> => {
   const response = await $api.client.request<{
     session: Partial<{
       passportData: Session["data"]["passport"]["data"];
@@ -47,7 +47,13 @@ const getFeeBreakdownForSession = async (
     { id: sessionId },
   );
 
-  const passportData = response?.session?.passportData;
+  return response?.session?.passportData;
+};
+
+const getFeeBreakdownForSession = async (
+  sessionId: string,
+): Promise<FeeBreakdown> => {
+  const passportData = await getSessionPassportData(sessionId);
 
   if (!passportData) {
     throw new ServerError({

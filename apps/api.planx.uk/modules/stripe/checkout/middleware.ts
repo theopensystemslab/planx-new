@@ -1,9 +1,10 @@
+import type { Session } from "@opensystemslab/planx-core/types";
 import { isBefore } from "date-fns";
 import type Stripe from "stripe";
 
 import {
   getPaymentCapabilities,
-  getStripeAccountId,
+  getStripeAccounts,
   getTeamBySlug,
 } from "../connect/service.js";
 import { isStripePaymentsEnabled } from "../helpers.js";
@@ -13,6 +14,11 @@ import {
   getPaymentRequestExpiry,
 } from "./paymentRequest.js";
 import { buildReturnURL, getReturnURLContext } from "./returnURL.js";
+import { getSessionPassportData } from "./service.js";
+import {
+  getLocalAuthorityDistricts,
+  selectStripeAccount,
+} from "./stripeAccount.js";
 import type {
   FetchPaymentRequestMiddleware,
   ResolvePaymentRequestConnectedAccountMiddleware,
@@ -24,11 +30,17 @@ type ConnectedAccountResult =
   | { connectedAccountId: string; capabilities: Stripe.Account.Capabilities }
   | { refusal: { status: number; message: string } };
 
+type PassportData = Session["data"]["passport"]["data"];
+
 /**
  * The team must be on Stripe, with a connected account which is ready to take payments
+ *
+ * A team with multiple accounts is paid into the account for the site's local authority district
+ * The passport is only needed (and fetched) for these teams
  */
 const getConnectedAccount = async (
   teamSlug: string,
+  getPassportData: () => Promise<PassportData | undefined>,
 ): Promise<ConnectedAccountResult> => {
   if (!isStripePaymentsEnabled(teamSlug)) {
     return {
@@ -48,12 +60,47 @@ const getConnectedAccount = async (
     };
   }
 
-  const stripeAccountId = await getStripeAccountId(team.id);
-  if (!stripeAccountId) {
+  const accounts = await getStripeAccounts(team.id);
+  const hasMultipleAccounts = accounts.length > 1;
+
+  const districts = hasMultipleAccounts
+    ? getLocalAuthorityDistricts(await getPassportData())
+    : [];
+  const selection = selectStripeAccount(accounts, districts);
+
+  const notConnected = {
+    refusal: {
+      status: 409,
+      message: `This local authority (${teamSlug}) has not connected a Stripe account`,
+    },
+  };
+
+  if ("refusal" in selection) {
+    if (selection.refusal === "noAccount") return notConnected;
+
+    const reason =
+      selection.refusal === "multipleMatchingAccounts"
+        ? "the site is in the area of more than one of its Stripe accounts"
+        : "the site's local authority district doesn't match any of its Stripe accounts";
+
     return {
       refusal: {
         status: 409,
-        message: `This local authority (${teamSlug}) has not connected a Stripe account`,
+        message: `Could not choose a Stripe account for this local authority (${teamSlug}) - ${reason}`,
+      },
+    };
+  }
+
+  const { name, accountId: stripeAccountId } = selection.account;
+  const accountLabel = hasMultipleAccounts ? ` (${name})` : "";
+
+  if (!stripeAccountId) {
+    if (!hasMultipleAccounts) return notConnected;
+
+    return {
+      refusal: {
+        status: 409,
+        message: `This local authority (${teamSlug}) has not connected its Stripe account${accountLabel}`,
       },
     };
   }
@@ -64,7 +111,7 @@ const getConnectedAccount = async (
     return {
       refusal: {
         status: 409,
-        message: `The Stripe account for this local authority (${teamSlug}) is not connected or cannot take payments`,
+        message: `The Stripe account${accountLabel} for this local authority (${teamSlug}) is not connected or cannot take payments`,
       },
     };
   }
@@ -75,9 +122,12 @@ const getConnectedAccount = async (
 export const resolveTeamPaymentProvider: ResolveTeamPaymentProviderMiddleware =
   async (_req, res, next) => {
     const { localAuthority } = res.locals.parsedReq.params;
+    const { sessionId } = res.locals.parsedReq.body;
 
     try {
-      const result = await getConnectedAccount(localAuthority);
+      const result = await getConnectedAccount(localAuthority, () =>
+        getSessionPassportData(sessionId),
+      );
       if ("refusal" in result) return next(result.refusal);
 
       res.locals.connectedAccountId = result.connectedAccountId;
@@ -209,10 +259,12 @@ export const fetchPaymentRequest: FetchPaymentRequestMiddleware = async (
 
 export const resolvePaymentRequestConnectedAccount: ResolvePaymentRequestConnectedAccountMiddleware =
   async (_req, res, next) => {
-    const { slug } = res.locals.paymentRequest.session.flow.team;
+    const { session } = res.locals.paymentRequest;
 
     try {
-      const result = await getConnectedAccount(slug);
+      const result = await getConnectedAccount(session.flow.team.slug, () =>
+        Promise.resolve(session.passport?.data),
+      );
       if ("refusal" in result) return next(result.refusal);
 
       res.locals.connectedAccountId = result.connectedAccountId;

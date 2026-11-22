@@ -21,12 +21,12 @@ export const mockStripeModule = {
 };
 
 export const mockGetTeamBySlug = vi.fn();
-export const mockGetStripeAccountId = vi.fn();
+export const mockGetStripeAccounts = vi.fn();
 export const mockGetPaymentCapabilities = vi.fn();
 
 export const mockConnectServiceModule = {
   getTeamBySlug: (...args: unknown[]) => mockGetTeamBySlug(...args),
-  getStripeAccountId: (...args: unknown[]) => mockGetStripeAccountId(...args),
+  getStripeAccounts: (...args: unknown[]) => mockGetStripeAccounts(...args),
   getPaymentCapabilities: (...args: unknown[]) =>
     mockGetPaymentCapabilities(...args),
 };
@@ -126,7 +126,9 @@ export const mockCreateCheckoutSessionDefaults = () => {
   mockRetrieve.mockReset();
   mockExpire.mockReset().mockResolvedValue({ status: "expired" });
   mockGetTeamBySlug.mockReset().mockResolvedValue(stripeTeam);
-  mockGetStripeAccountId.mockReset().mockResolvedValue(STRIPE_ACCOUNT_ID);
+  mockGetStripeAccounts
+    .mockReset()
+    .mockResolvedValue([{ name: "Southwark", accountId: STRIPE_ACCOUNT_ID }]);
   mockGetPaymentCapabilities.mockReset().mockResolvedValue(activeCapabilities);
   mockPassportLookup(feeBreakdownPassport);
   mockReturnURLContext();
