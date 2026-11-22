@@ -85,15 +85,18 @@ export const getMigrationBlockers = async (
 ): Promise<MigrateResponse> => {
   const blockers: MigrationBlocker[] = [];
 
-  const [accountId, activeSessions] = await Promise.all([
-    connectionService.getStripeAccountId(teamId),
+  const [accounts, activeSessions] = await Promise.all([
+    connectionService.getStripeAccounts(teamId),
     migrationService.getActiveGovPaySessions(teamSlug),
   ]);
 
   if (!isStripePaymentsEnabled(teamSlug)) {
     blockers.push({ reason: "stripePaymentsNotEnabled" });
   }
-  if (!accountId) blockers.push({ reason: "stripeNotConnected" });
+  // Every account must be connected - checkout refuses payments for an unconnected account
+  const isConnected =
+    accounts.length > 0 && accounts.every(({ accountId }) => accountId);
+  if (!isConnected) blockers.push({ reason: "stripeNotConnected" });
   if (activeSessions > 0) {
     blockers.push({ reason: "activeGovpaySessions", count: activeSessions });
   }

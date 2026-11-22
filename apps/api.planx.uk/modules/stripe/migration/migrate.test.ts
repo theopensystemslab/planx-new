@@ -25,9 +25,9 @@ const mockTeamAndPlatformAdmin = () => {
 
 const mockMigrationChecks = (accountId: string | null) => {
   queryMock.mockQuery({
-    name: "GetStripeAccountId",
+    name: "GetStripeAccounts",
     matchOnVariables: false,
-    data: { stripeAccounts: [{ accountId }] },
+    data: { stripeAccounts: [{ name: "Southwark", accountId }] },
   });
   queryMock.mockQuery({
     name: "GetActiveGovPaySessions",
@@ -49,7 +49,7 @@ const READ_ONLY_OPERATIONS = [
   "IsTokenRevoked",
   "GetTeamBySlug",
   "GetUserById",
-  "GetStripeAccountId",
+  "GetStripeAccounts",
   "GetActiveGovPaySessions",
 ];
 

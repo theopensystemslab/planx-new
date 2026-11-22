@@ -95,9 +95,9 @@ describe("getMigrationBlockers", () => {
   });
 
   it("allows migration when all conditions satisfied", async () => {
-    vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(
-      "acct_abc",
-    );
+    vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
+      { name: "Lambeth", accountId: "acct_abc" },
+    ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
 
     const result = await getMigrationBlockers(1, "team");
@@ -106,7 +106,7 @@ describe("getMigrationBlockers", () => {
   });
 
   it("blocks migration when stripe isn't connected", async () => {
-    vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(null);
+    vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
 
     const result = await getMigrationBlockers(1, "team");
@@ -116,9 +116,9 @@ describe("getMigrationBlockers", () => {
   });
 
   it("blocks migration when active govpay sessions are found", async () => {
-    vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(
-      "acct_abc",
-    );
+    vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
+      { name: "Lambeth", accountId: "acct_abc" },
+    ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(2);
 
     const result = await getMigrationBlockers(1, "team");
@@ -130,7 +130,7 @@ describe("getMigrationBlockers", () => {
   });
 
   it("returns multiple blockers when they exist", async () => {
-    vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(null);
+    vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(1);
 
     const result = await getMigrationBlockers(1, "team");
@@ -145,8 +145,45 @@ describe("getMigrationBlockers", () => {
     expect(result.blockers).toHaveLength(2);
   });
 
+  it("blocks migration when the team's only account isn't connected in this environment", async () => {
+    vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
+      { name: "Lambeth", accountId: null },
+    ]);
+    vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
+
+    const result = await getMigrationBlockers(1, "lambeth");
+
+    expect(result.blockers).toEqual([{ reason: "stripeNotConnected" }]);
+  });
+
+  it("allows migration for a team with multiple accounts once they're all connected", async () => {
+    vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
+      { name: "Adur", accountId: "acct_adur" },
+      { name: "Worthing", accountId: "acct_worthing" },
+    ]);
+    vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
+
+    const result = await getMigrationBlockers(2, "adur-worthing");
+
+    expect(result).toEqual({ canMigrate: true, blockers: [] });
+  });
+
+  it("blocks migration for a team with multiple accounts while any of them isn't connected", async () => {
+    vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
+      { name: "Adur", accountId: "acct_adur" },
+      { name: "Worthing", accountId: null },
+    ]);
+    vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
+
+    const result = await getMigrationBlockers(2, "adur-worthing");
+
+    expect(result.blockers).toEqual([{ reason: "stripeNotConnected" }]);
+  });
+
   it("returns no blockers when migration can proceed", async () => {
-    vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue("111222");
+    vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
+      { name: "Lambeth", accountId: "111222" },
+    ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
 
     const result = await getMigrationBlockers(1, "team");
@@ -163,9 +200,9 @@ describe("migrateToStripe", () => {
   });
 
   it("returns no blockers when migration succeeds", async () => {
-    vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(
-      "acct_abc",
-    );
+    vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
+      { name: "Lambeth", accountId: "acct_abc" },
+    ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
     mockRequest.mockResolvedValueOnce({
       updateTeamPaymentProvider: { affectedRows: 1 },
@@ -177,7 +214,7 @@ describe("migrateToStripe", () => {
   });
 
   it("returns blockers when migration cannot proceed", async () => {
-    vi.spyOn(connectService, "getStripeAccountId").mockResolvedValue(null);
+    vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
 
     const result = await migrateToStripe(1, "team");
