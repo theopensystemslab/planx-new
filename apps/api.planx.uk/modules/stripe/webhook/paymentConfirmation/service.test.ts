@@ -7,12 +7,16 @@ import * as payHelpers from "../../../pay/helpers.js";
 import { formatPaymentMethod } from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
 import {
+  ADUR_WORTHING,
   FLOW_ID,
   FLOW_NAME,
+  mockStripeAccountForPayment,
   paymentIntent,
   TEAM_ID,
   TEAM_NAME,
   TEAM_SLUG,
+  WORTHING_ACCOUNT_ID,
+  WORTHING_INVOICE_DETAILS,
 } from "../test/mocks.js";
 import { getCheckoutSession, getSucceededAt } from "../vatInvoice/service.js";
 import type { StoredInvoice } from "../vatInvoice/storage.js";
@@ -100,6 +104,21 @@ const send = (paymentMethod: string | null = "card") =>
     paymentIntent as unknown as Stripe.PaymentIntent,
     recorded,
     paymentMethod,
+  );
+
+// A payment to the "Worthing" account of Adur & Worthing
+const sendForWorthing = () =>
+  sendPaymentConfirmationEmails(
+    {
+      ...paymentIntent,
+      transfer_data: { destination: WORTHING_ACCOUNT_ID },
+    } as unknown as Stripe.PaymentIntent,
+    {
+      ...recorded,
+      teamSlug: ADUR_WORTHING.slug,
+      teamName: ADUR_WORTHING.name,
+    },
+    "card",
   );
 
 describe("sendPaymentConfirmationEmails", () => {
@@ -330,5 +349,68 @@ describe("sendPaymentConfirmationEmails", () => {
     await expect(send()).rejects.toThrow(
       "Invoice PX-2026-INV-SWK-00003 has no PDF stored",
     );
+  });
+
+  describe("for a team with multiple accounts", () => {
+    beforeEach(() => {
+      // An earlier test leaves sendEmail rejecting
+      vi.mocked(sendEmail).mockReset();
+      mockCouncilEmailDetails({ invoiceEmail: "finance@adur-worthing.gov.uk" });
+    });
+
+    it("sends the payer's email in the name of the account the payment was made to", async () => {
+      mockStripeAccountForPayment({
+        name: "Worthing",
+        teamName: ADUR_WORTHING.name,
+        invoiceDetails: WORTHING_INVOICE_DETAILS,
+      });
+
+      await sendForWorthing();
+
+      expect(sentEmail("payment-confirmed-payer")?.[2]).toEqual(
+        expect.objectContaining({ councilName: "Worthing Borough Council" }),
+      );
+      expect(sentEmail("payment-confirmed-payer")?.[3]).toEqual(
+        expect.objectContaining({
+          from: "Worthing Borough Council <noreply@notifications.localplanning.services>",
+        }),
+      );
+    });
+
+    it("emails the council at the account's invoice email address, not the team's", async () => {
+      mockStripeAccountForPayment({
+        name: "Worthing",
+        teamName: ADUR_WORTHING.name,
+        invoiceDetails: WORTHING_INVOICE_DETAILS,
+      });
+
+      await sendForWorthing();
+
+      expect(sentEmail("payment-confirmed-council")?.[1]).toBe(
+        "finance@worthing.gov.uk",
+      );
+    });
+
+    it("uses the account name, and doesn't email the council, when the account has no invoice details", async () => {
+      vi.spyOn(payHelpers, "reportError");
+      mockStripeAccountForPayment({
+        name: "Worthing",
+        teamName: ADUR_WORTHING.name,
+      });
+
+      await sendForWorthing();
+
+      expect(sentEmail("payment-confirmed-payer")?.[2]).toEqual(
+        expect.objectContaining({ councilName: "Worthing" }),
+      );
+      expect(sentEmail("payment-confirmed-council")).toBeUndefined();
+      expect(payHelpers.reportError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          context: expect.objectContaining({
+            stripeAccountId: WORTHING_ACCOUNT_ID,
+          }),
+        }),
+      );
+    });
   });
 });

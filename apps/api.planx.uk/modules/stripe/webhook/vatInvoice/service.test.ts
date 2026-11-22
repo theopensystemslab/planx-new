@@ -5,15 +5,20 @@ import * as payHelpers from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
 import type { PaymentSession } from "../ownership/service.js";
 import {
+  ADUR_WORTHING,
+  CONNECTED_ACCOUNT_ID,
   FLOW_ID,
   FLOW_NAME,
   mockChargedFeeBreakdown,
   mockCouncilInvoiceDetails,
   mockFeeBreakdown,
+  mockStripeAccountForPayment,
   paymentIntent,
   TEAM_ID,
   TEAM_NAME,
   TEAM_SLUG,
+  WORTHING_ACCOUNT_ID,
+  WORTHING_INVOICE_DETAILS,
 } from "../test/mocks.js";
 import { generateVatInvoicePdf } from "./pdf.js";
 import { createInvoices } from "./service.js";
@@ -441,6 +446,90 @@ describe("createInvoices", () => {
       }),
     );
     expect(reserveInvoice).not.toHaveBeenCalled();
+  });
+
+  it("uses the team's invoice details for a payment to the account named after the team", async () => {
+    mockStripeAccountForPayment({ name: TEAM_NAME, teamName: TEAM_NAME });
+
+    await createInvoices(
+      succeededPaymentIntent({
+        transfer_data: { destination: CONNECTED_ACCOUNT_ID },
+      }),
+      recorded,
+    );
+
+    expect(renderedInvoices().map(({ seller }) => seller.name)).toEqual([
+      "London Borough of Southwark",
+      "Open Systems Lab",
+    ]);
+  });
+
+  describe("for a team with multiple accounts", () => {
+    const adurWorthingRecorded: PaymentSession = {
+      ...recorded,
+      teamSlug: ADUR_WORTHING.slug,
+      teamName: ADUR_WORTHING.name,
+    };
+
+    const worthingPayment = () =>
+      succeededPaymentIntent({
+        transfer_data: { destination: WORTHING_ACCOUNT_ID },
+      });
+
+    beforeEach(() => {
+      mockCouncilInvoiceDetails({
+        team: { id: ADUR_WORTHING.id, name: ADUR_WORTHING.name },
+        invoiceDetails: null,
+      });
+    });
+
+    it("uses the invoice details of the account the payment was made to", async () => {
+      mockStripeAccountForPayment({
+        name: "Worthing",
+        teamName: ADUR_WORTHING.name,
+        invoiceDetails: WORTHING_INVOICE_DETAILS,
+      });
+
+      await createInvoices(worthingPayment(), adurWorthingRecorded);
+
+      expect(
+        renderedInvoices().map(({ seller, customer }) => [
+          seller.name,
+          customer.name,
+        ]),
+      ).toEqual([
+        ["Worthing Borough Council", null],
+        ["Open Systems Lab", "Worthing Borough Council"],
+      ]);
+      expect(renderedInvoices()[0].seller).toEqual(
+        expect.objectContaining({
+          vatNumber: "GB987654321",
+          addressLines: ["Town Hall", "Chapel Rd", "Worthing", "BN11 1HA"],
+        }),
+      );
+    });
+
+    it("uses the account name, and reports an error, when the account has no invoice details", async () => {
+      vi.spyOn(payHelpers, "reportError");
+      mockStripeAccountForPayment({
+        name: "Worthing",
+        teamName: ADUR_WORTHING.name,
+      });
+
+      await createInvoices(worthingPayment(), adurWorthingRecorded);
+
+      expect(renderedInvoices().map(({ seller }) => seller.name)).toEqual([
+        "Worthing",
+        "Open Systems Lab",
+      ]);
+      expect(payHelpers.reportError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          context: expect.objectContaining({
+            stripeAccountId: WORTHING_ACCOUNT_ID,
+          }),
+        }),
+      );
+    });
   });
 
   it("reports an error without throwing when no Checkout Session is found", async () => {

@@ -155,9 +155,11 @@ const COUNCIL_THEME = {
 };
 
 export const mockCouncilInvoiceDetails = ({
+  team = { id: TEAM_ID, name: TEAM_NAME },
   invoiceDetails = COUNCIL_INVOICE_DETAILS,
   theme = COUNCIL_THEME,
 }: {
+  team?: { id: number; name: string };
   invoiceDetails?: typeof COUNCIL_INVOICE_DETAILS | null;
   theme?: typeof COUNCIL_THEME | null;
 } = {}) =>
@@ -165,14 +167,48 @@ export const mockCouncilInvoiceDetails = ({
     name: "GetCouncilInvoiceDetails",
     matchOnVariables: false,
     data: {
-      teams: [
-        {
-          id: TEAM_ID,
-          name: TEAM_NAME,
-          invoiceDetails,
-          theme,
-        },
-      ],
+      teams: [{ ...team, invoiceDetails, theme }],
+    },
+  });
+
+// A team with multiple Stripe accounts enabled (accounts "Adur" and "Worthing")
+export const ADUR_WORTHING = {
+  id: 2,
+  slug: "adur-worthing",
+  name: "Adur & Worthing",
+};
+
+export const WORTHING_ACCOUNT_ID = "acct_test_worthing";
+
+export const WORTHING_INVOICE_DETAILS = {
+  organisationName: "Worthing Borough Council",
+  addressLine1: "Town Hall",
+  addressLine2: "Chapel Rd",
+  townCity: "Worthing",
+  county: null,
+  postcode: "BN11 1HA",
+  vatNumber: "GB987654321",
+  companyRegistration: null,
+  emailAddress: "finance@worthing.gov.uk",
+};
+
+/**
+ * The team's Stripe account a payment was made to (by its account id)
+ */
+export const mockStripeAccountForPayment = ({
+  name,
+  teamName,
+  invoiceDetails = null,
+}: {
+  name: string;
+  teamName: string;
+  invoiceDetails?: typeof WORTHING_INVOICE_DETAILS | null;
+}) =>
+  queryMock.mockQuery({
+    name: "GetNamedStripeAccount",
+    matchOnVariables: false,
+    data: {
+      stripeAccounts: [{ name, team: { name: teamName }, invoiceDetails }],
     },
   });
 

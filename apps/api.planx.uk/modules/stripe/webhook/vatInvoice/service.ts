@@ -7,6 +7,7 @@ import { $api } from "../../../../client/index.js";
 import { reportError } from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
 import { getFeeLines } from "../../feeLines.js";
+import { getDestinationAccountId } from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
 import {
   buildVatInvoiceData,
@@ -174,12 +175,17 @@ export async function createInvoices(
     });
   }
 
-  const council = await getCouncilInvoiceDetails(recorded.teamSlug);
+  const stripeAccountId = getDestinationAccountId(paymentIntent);
+
+  const council = await getCouncilInvoiceDetails(
+    recorded.teamSlug,
+    stripeAccountId,
+  );
   if (!council.hasInvoiceDetails) {
     reportError({
       error:
         "Council has no invoice details configured - invoicing under the team name",
-      context: { ...context, teamSlug: recorded.teamSlug },
+      context: { ...context, teamSlug: recorded.teamSlug, stripeAccountId },
     });
   }
 
