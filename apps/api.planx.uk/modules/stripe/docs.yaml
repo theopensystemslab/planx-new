@@ -437,8 +437,8 @@ paths:
             - Stripe payments are not yet enabled for this team (blocked on prod until go-live, except for internal teams)
             - this LPA's payment provider is not Stripe
             - this LPA has not connected a Stripe account
-            - this LPA's connected account is no longer connected to our platform
-            - this LPA's connected account cannot take payments
+            - this LPA has multiple Stripe accounts, and the site's local authority district matches none, or more than one of them
+            - this LPA's connected account (for an LPA with multiple accounts, the site's account) has not been connected, is no longer connected to our platform, or cannot take payments
             - the session is locked, awaiting payment via invite to pay
         "422":
           description: |
@@ -482,8 +482,8 @@ paths:
             - a GOV.UK Pay payment has already been started for this request
             - this LPA's payment provider is not Stripe
             - this LPA has not connected a Stripe account
-            - this LPA's connected account is no longer connected to our platform
-            - this LPA's connected account cannot take payments
+            - this LPA has multiple Stripe accounts, and the site's local authority district matches none, or more than one of them
+            - this LPA's connected account (for an LPA with multiple accounts, the site's account) has not been connected, is no longer connected to our platform, or cannot take payments
         "410":
           description: |
             The payment request can no longer be paid, because either:
