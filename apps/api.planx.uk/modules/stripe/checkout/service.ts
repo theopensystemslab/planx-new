@@ -206,6 +206,7 @@ const createDestinationChargeCheckoutSession = async ({
     flowId,
     sessionId,
     teamSlug,
+    stripeAccountId: connectedAccountId,
     amount: session.amount_total ?? split.amount,
     feeBreakdown,
     metadata,
@@ -297,6 +298,7 @@ const recordInitiatedPayment = async ({
   flowId: string;
   sessionId: string;
   teamSlug: string;
+  stripeAccountId: string;
   amount: number;
   feeBreakdown: FeeBreakdown;
   metadata: Record<string, string>;

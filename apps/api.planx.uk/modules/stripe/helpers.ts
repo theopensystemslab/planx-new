@@ -1,3 +1,5 @@
+import type Stripe from "stripe";
+
 import type { StripePaymentStatus } from "../../types.js";
 import { sendSlackMessage } from "../slack/utils.js";
 
@@ -7,6 +9,14 @@ import { sendSlackMessage } from "../slack/utils.js";
  */
 export const getStripeId = (ref: string | { id: string } | null | undefined) =>
   typeof ref === "string" ? ref : ref?.id;
+
+/**
+ * The connected account a destination charge was transferred to
+ */
+export const getDestinationAccountId = (
+  paymentIntent: Pick<Stripe.PaymentIntent, "transfer_data">,
+): string | null =>
+  getStripeId(paymentIntent.transfer_data?.destination) ?? null;
 
 export const formatPence = (pence: number) =>
   (pence / 100).toLocaleString("en-GB", { style: "currency", currency: "GBP" });

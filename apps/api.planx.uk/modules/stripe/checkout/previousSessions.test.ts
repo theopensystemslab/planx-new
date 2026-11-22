@@ -13,6 +13,7 @@ import {
   mockExpire,
   mockInitiatedCheckoutSessions,
   mockRetrieve,
+  STRIPE_ACCOUNT_ID,
   validBody,
 } from "./test/mocks.js";
 
@@ -47,6 +48,7 @@ describe("tracking Checkout Sessions for a PlanX session", () => {
         sessionId: validBody.sessionId,
         flowId: validBody.flowId,
         teamSlug: "southwark",
+        stripeAccountId: STRIPE_ACCOUNT_ID,
         stripePaymentId: "cs_test_a1b2c3",
         stripeStatus: "initiated",
         amount: 14500,

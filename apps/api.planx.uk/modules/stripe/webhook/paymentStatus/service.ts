@@ -8,6 +8,7 @@ import type { StripePaymentStatus } from "../../../../types.js";
 import { reportError } from "../../../pay/helpers.js";
 import { stripe } from "../../client.js";
 import {
+  getDestinationAccountId,
   getStripeId,
   postStripePaymentNotificationToSlack,
 } from "../../helpers.js";
@@ -18,6 +19,7 @@ interface InsertStripePaymentStatusArgs {
   flowId: string;
   sessionId: string;
   teamSlug: string;
+  stripeAccountId: string | null;
   stripePaymentId: string;
   stripeStatus: StripePaymentStatus;
   stripeEventId?: string;
@@ -49,6 +51,7 @@ export async function recordStripePaymentIntentStatus(
       flowId,
       sessionId,
       teamSlug,
+      stripeAccountId: getDestinationAccountId(paymentIntent),
       stripePaymentId: id,
       stripeStatus,
       stripeEventId,
@@ -134,6 +137,7 @@ export async function insertStripePaymentStatus({
   flowId,
   sessionId,
   teamSlug,
+  stripeAccountId,
   stripePaymentId,
   stripeStatus,
   stripeEventId,
@@ -152,6 +156,7 @@ export async function insertStripePaymentStatus({
         $flowId: uuid!
         $sessionId: uuid!
         $teamSlug: String!
+        $stripeAccountId: String
         $stripePaymentId: String!
         $stripeStatus: stripe_payment_status_enum_enum!
         $stripeEventId: String
@@ -165,6 +170,7 @@ export async function insertStripePaymentStatus({
             flow_id: $flowId
             session_id: $sessionId
             team_slug: $teamSlug
+            stripe_account_id: $stripeAccountId
             stripe_payment_id: $stripePaymentId
             stripe_status: $stripeStatus
             stripe_event_id: $stripeEventId
@@ -186,6 +192,7 @@ export async function insertStripePaymentStatus({
       flowId,
       sessionId,
       teamSlug,
+      stripeAccountId,
       stripePaymentId,
       stripeStatus,
       stripeEventId,

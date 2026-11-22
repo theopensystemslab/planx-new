@@ -243,6 +243,7 @@ describe("creating a Stripe Checkout Session for an invite to pay request", () =
       sessionId: validBody.sessionId,
       flowId: validBody.flowId,
       teamSlug: "southwark",
+      stripeAccountId: STRIPE_ACCOUNT_ID,
       stripePaymentId: "cs_test_a1b2c3",
       stripeStatus: "initiated",
       amount: 14500,

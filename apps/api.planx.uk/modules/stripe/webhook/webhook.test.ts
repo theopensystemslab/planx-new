@@ -189,6 +189,7 @@ describe("receiving a Stripe webhook", () => {
         sessionId: paymentIntent.metadata.sessionId,
         flowId: FLOW_ID,
         teamSlug: TEAM_SLUG,
+        stripeAccountId: null,
         stripePaymentId: "pi_test_123",
         stripeStatus: "succeeded",
         stripeEventId: "evt_succeeded",
@@ -197,6 +198,18 @@ describe("receiving a Stripe webhook", () => {
         metadata: paymentIntent.metadata,
         paymentMethod: null,
       });
+    });
+
+    it("records the connected account the payment was transferred to", async () => {
+      const { payload, signature } = succeededEvent({
+        transfer_data: { destination: CONNECTED_ACCOUNT_ID },
+      });
+
+      await post(payload, signature).expect(200);
+
+      expect(insertCall()?.variables).toEqual(
+        expect.objectContaining({ stripeAccountId: CONNECTED_ACCOUNT_ID }),
+      );
     });
 
     it("derives the flow and team from the session, not the PaymentIntent metadata", async () => {
