@@ -2,6 +2,7 @@ import type {
   PaymentConfirmedCouncilTemplate,
   PaymentConfirmedPayerTemplate,
 } from "./paymentConfirmation.js";
+import type { PaymentFailedPayerTemplate } from "./paymentFailed.js";
 import type { SubmitTemplate } from "./submit.js";
 import type { WelcomeTemplate } from "./welcome.js";
 
@@ -18,6 +19,7 @@ export interface TemplateRegistry {
   submit: SubmitTemplate;
   "payment-confirmed-payer": PaymentConfirmedPayerTemplate;
   "payment-confirmed-council": PaymentConfirmedCouncilTemplate;
+  "payment-failed-payer": PaymentFailedPayerTemplate;
 }
 
 export type ResendTemplate = keyof TemplateRegistry;
