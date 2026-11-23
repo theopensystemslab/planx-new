@@ -61,6 +61,7 @@ export const PaymentMenu = ({ sessionId, paymentEvent }: Props) => {
         aria-haspopup="menu"
         aria-controls={isMenuOpen ? "payment-menu" : undefined}
         aria-expanded={isMenuOpen ? "true" : undefined}
+        data-testid="payment-menu-button"
       >
         Payment
       </Button>
