@@ -79,13 +79,22 @@ select_permissions:
         - town_city
         - vat_number
       filter:
-        team:
-          members:
-            _and:
-              - user_id:
-                  _eq: X-Hasura-User-Id
-              - role:
-                  _eq: teamEditor
+        _or:
+          - team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role:
+                      _eq: teamEditor
+          - team_stripe_account:
+              team:
+                members:
+                  _and:
+                    - user_id:
+                        _eq: X-Hasura-User-Id
+                    - role:
+                        _eq: teamEditor
     comment: ""
 update_permissions:
   - role: platformAdmin
@@ -120,12 +129,21 @@ update_permissions:
         - town_city
         - vat_number
       filter:
-        team:
-          members:
-            _and:
-              - user_id:
-                  _eq: X-Hasura-User-Id
-              - role:
-                  _eq: teamEditor
+        _or:
+          - team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role:
+                      _eq: teamEditor
+          - team_stripe_account:
+              team:
+                members:
+                  _and:
+                    - user_id:
+                        _eq: X-Hasura-User-Id
+                    - role:
+                        _eq: teamEditor
       check: null
     comment: ""

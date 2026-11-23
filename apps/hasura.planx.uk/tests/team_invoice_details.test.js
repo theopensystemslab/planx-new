@@ -16,6 +16,16 @@ const queryReferenceCode = `
   }
 `;
 
+const queryStripeAccountRelationship = `
+  query {
+    team_invoice_details {
+      team_stripe_account {
+        id
+      }
+    }
+  }
+`;
+
 describe("team_invoice_details", () => {
   describe("public", () => {
     let i;
@@ -91,6 +101,14 @@ describe("team_invoice_details", () => {
     test("can query a named Stripe account's reference code", async () => {
       const res = await gqlWithRole("teamEditor")(queryReferenceCode);
       expect(res).not.toHaveProperty("errors");
+    });
+
+    // Its permissions filter through this relationship, to include its team's named Stripe accounts' invoice details
+    test("cannot query invoice details' Stripe account", async () => {
+      const res = await gqlWithRole("teamEditor")(
+        queryStripeAccountRelationship,
+      );
+      expect(res).toHaveProperty("errors");
     });
 
     test("can update team_invoice_details", () => {
