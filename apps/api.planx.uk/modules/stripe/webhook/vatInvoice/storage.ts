@@ -51,7 +51,7 @@ const INVOICE_BUCKET = "payment-data";
 const getInvoiceFolder = (teamSlug: string, stripePaymentIntentId: string) =>
   `${teamSlug}/${stripePaymentIntentId}`;
 
-const STORED_INVOICE_FIELDS = `
+export const STORED_INVOICE_FIELDS = `
   id
   kind
   stripePaymentIntentId: stripe_payment_intent_id

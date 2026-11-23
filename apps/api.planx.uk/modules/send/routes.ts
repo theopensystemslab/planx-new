@@ -10,6 +10,11 @@ import {
 import { sendToBOPS } from "./bops/bops.js";
 import { createSendEvents } from "./createSendEvents/controller.js";
 import { combinedEventsPayloadSchema } from "./createSendEvents/types.js";
+import {
+  downloadCouncilInvoice,
+  downloadPayerInvoice,
+  getActiveInvoices,
+} from "./downloadInvoice/controller.js";
 import { downloadSubmission } from "./downloadSubmission/controller.js";
 import { useAccessTokenAuth } from "./downloadSubmission/middleware.js";
 import { useAccessTokenAuthSchema } from "./downloadSubmission/types.js";
@@ -82,11 +87,33 @@ router.get(
   validate(submissionSchema),
   submissionHTMLController,
 );
+
 router.get(
   "/submission/:sessionId/zip",
   useTeamEditorAuth,
   validate(submissionSchema),
   submissionZipController,
+);
+
+router.get(
+  "/submission/:sessionId/invoice/council",
+  useTeamEditorAuth,
+  validate(submissionSchema),
+  downloadCouncilInvoice,
+);
+
+router.get(
+  "/submission/:sessionId/invoice/payer",
+  useTeamEditorAuth,
+  validate(submissionSchema),
+  downloadPayerInvoice,
+);
+
+router.get(
+  "/submission/:sessionId/active-invoices",
+  useTeamEditorAuth,
+  validate(submissionSchema),
+  getActiveInvoices,
 );
 
 export default router;
