@@ -1,3 +1,4 @@
+import type { StripeConnectAccount } from "lib/api/stripe/types";
 import { useSlackMessage } from "pages/FlowEditor/components/Settings/hooks/useSlackMessage";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { ChangeEvent } from "react";
@@ -6,17 +7,24 @@ import Input from "ui/shared/Input/Input";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import {
+  GET_INVOICE_DETAILS_BY_ID,
   GET_TEAM_INVOICE_DETAILS,
+  UPDATE_INVOICE_DETAILS_BY_ID,
   UPDATE_TEAM_INVOICE_DETAILS,
 } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
 import type {
   GetTeamInvoiceDetailsData,
   InvoiceDetailsFormValues,
+  InvoiceDetailsTarget,
   UpdateTeamInvoiceDetailsVariables,
 } from "./types";
 
-const Details: React.FC = () => {
+interface DetailsProps {
+  account?: Pick<StripeConnectAccount, "name" | "invoiceDetailsId">;
+}
+
+const Details: React.FC<DetailsProps> = ({ account }) => {
   const [teamId, teamSlug] = useStore((state) => [
     state.teamId,
     state.teamSlug,
@@ -24,16 +32,27 @@ const Details: React.FC = () => {
 
   const { mutate: sendSlackMessage } = useSlackMessage();
 
+  const invoiceDetailsId = account?.invoiceDetailsId;
+  const target: InvoiceDetailsTarget = invoiceDetailsId
+    ? { id: invoiceDetailsId }
+    : { teamId };
+
   return (
     <SettingsFormContainer<
       GetTeamInvoiceDetailsData,
       UpdateTeamInvoiceDetailsVariables,
       InvoiceDetailsFormValues
     >
-      query={GET_TEAM_INVOICE_DETAILS}
+      query={
+        invoiceDetailsId ? GET_INVOICE_DETAILS_BY_ID : GET_TEAM_INVOICE_DETAILS
+      }
       defaultValues={defaultValues}
-      queryVariables={{ teamId }}
-      mutation={UPDATE_TEAM_INVOICE_DETAILS}
+      queryVariables={target}
+      mutation={
+        invoiceDetailsId
+          ? UPDATE_INVOICE_DETAILS_BY_ID
+          : UPDATE_TEAM_INVOICE_DETAILS
+      }
       getInitialValues={({ teamInvoiceDetails: [teamInvoiceDetails] }) => ({
         organisationName: teamInvoiceDetails?.organisationName ?? "",
         emailAddress: teamInvoiceDetails?.emailAddress ?? "",
@@ -41,7 +60,7 @@ const Details: React.FC = () => {
         vatNumber: teamInvoiceDetails?.vatNumber ?? "",
       })}
       getMutationVariables={(values) => ({
-        teamId,
+        ...target,
         teamInvoiceDetails: {
           organisation_name: values.organisationName,
           email_address: values.emailAddress,
@@ -50,7 +69,7 @@ const Details: React.FC = () => {
         },
       })}
       validationSchema={validationSchema}
-      legend="Invoice details"
+      legend={account ? `Invoice details: ${account.name}` : "Invoice details"}
       description={
         <>
           These details will appear on invoices Plan✕ issues to applicants on
@@ -61,7 +80,8 @@ const Details: React.FC = () => {
         const oldEmail = data?.teamInvoiceDetails[0].emailAddress;
         const hasEmailUpdated = oldEmail && values.emailAddress !== oldEmail;
         if (hasEmailUpdated) {
-          const message = `:e-mail: *${teamSlug}* updated their invoice destination email to *${values.emailAddress}*.`; // TODO: copied this from Contact page--will we send invoices programmatically or is this notification of use?
+          const forAccount = account ? ` for *${account.name}*` : "";
+          const message = `:e-mail: *${teamSlug}* updated their invoice destination email${forAccount} to *${values.emailAddress}*.`; // TODO: copied this from Contact page--will we send invoices programmatically or is this notification of use?
           sendSlackMessage(message);
         }
       }}

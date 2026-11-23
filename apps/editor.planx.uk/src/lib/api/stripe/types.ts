@@ -7,13 +7,30 @@
 export type StripeAccountStatus =
   "active" | "incomplete" | "pending" | "unavailable";
 
+/**
+ * One of the accounts of a team with multiple Stripe accounts enabled
+ * This can include an account named after the team (e.g. one connected before multiple accounts were enabled)
+ */
+export interface StripeConnectAccount {
+  name: string;
+  /** null if the account hasn't been connected in this environment */
+  accountId: string | null;
+  accountStatus: StripeAccountStatus | null;
+  /** invoice details for the named account - null if using team-level invoice details  */
+  invoiceDetailsId: number | null;
+}
+
 export interface StripeConnectStatus {
+  /** Whether the team has a connected account - for a team with multiple accounts, whether any of them is connected */
   connected: boolean;
+  /** The account named after the team (a team's only account, unless it has multiple accounts) */
   accountId: string | null;
   /** null if no account is connected */
   accountStatus: StripeAccountStatus | null;
   mode: "test" | "live";
   govPayConfigured: boolean;
+  /** Every named account - only used for a team with multiple Stripe accounts enabled */
+  accounts?: StripeConnectAccount[];
 }
 
 export interface CreateStripeCheckoutSession {

@@ -1,3 +1,4 @@
+import type { StripeConnectAccount } from "lib/api/stripe/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
@@ -5,18 +6,30 @@ import Input from "ui/shared/Input/Input";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import {
+  GET_INVOICE_ADDRESS_BY_ID,
   GET_TEAM_INVOICE_ADDRESS,
+  UPDATE_INVOICE_ADDRESS_BY_ID,
   UPDATE_TEAM_INVOICE_ADDRESS,
 } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
 import type {
   GetTeamInvoiceAddressData,
   InvoiceAddressFormValues,
+  InvoiceAddressTarget,
   UpdateTeamInvoiceAddressVariables,
 } from "./types";
 
-const Address: React.FC = () => {
+interface AddressProps {
+  account?: Pick<StripeConnectAccount, "name" | "invoiceDetailsId">;
+}
+
+const Address: React.FC<AddressProps> = ({ account }) => {
   const [teamId] = useStore((state) => [state.teamId]);
+
+  const invoiceDetailsId = account?.invoiceDetailsId;
+  const target: InvoiceAddressTarget = invoiceDetailsId
+    ? { id: invoiceDetailsId }
+    : { teamId };
 
   return (
     <SettingsFormContainer<
@@ -24,10 +37,16 @@ const Address: React.FC = () => {
       UpdateTeamInvoiceAddressVariables,
       InvoiceAddressFormValues
     >
-      query={GET_TEAM_INVOICE_ADDRESS}
+      query={
+        invoiceDetailsId ? GET_INVOICE_ADDRESS_BY_ID : GET_TEAM_INVOICE_ADDRESS
+      }
       defaultValues={defaultValues}
-      queryVariables={{ teamId }}
-      mutation={UPDATE_TEAM_INVOICE_ADDRESS}
+      queryVariables={target}
+      mutation={
+        invoiceDetailsId
+          ? UPDATE_INVOICE_ADDRESS_BY_ID
+          : UPDATE_TEAM_INVOICE_ADDRESS
+      }
       getInitialValues={({ teamInvoiceAddress: [teamInvoiceAddress] }) => ({
         addressLine1: teamInvoiceAddress?.addressLine1 ?? "",
         addressLine2: teamInvoiceAddress?.addressLine2 ?? "",
@@ -36,7 +55,7 @@ const Address: React.FC = () => {
         postcode: teamInvoiceAddress?.postcode ?? "",
       })}
       getMutationVariables={(values) => ({
-        teamId,
+        ...target,
         teamInvoiceAddress: {
           address_line1: values.addressLine1,
           address_line2: values.addressLine2,
@@ -46,7 +65,9 @@ const Address: React.FC = () => {
         },
       })}
       validationSchema={validationSchema}
-      legend="Address information"
+      legend={
+        account ? `Address information: ${account.name}` : "Address information"
+      }
       description={
         <>
           This address will appear on invoices Plan✕ issues to applicants on

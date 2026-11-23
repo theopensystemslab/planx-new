@@ -10,8 +10,9 @@ export interface GetTeamInvoiceAddressData {
   teamInvoiceAddress: InvoiceAddressFormValues[];
 }
 
-export interface UpdateTeamInvoiceAddressVariables {
-  teamId: number;
+export type InvoiceAddressTarget = { teamId: number } | { id: number };
+
+export type UpdateTeamInvoiceAddressVariables = InvoiceAddressTarget & {
   teamInvoiceAddress: {
     address_line1: string;
     address_line2?: string;
@@ -19,4 +20,4 @@ export interface UpdateTeamInvoiceAddressVariables {
     county?: string;
     postcode: string;
   };
-}
+};
