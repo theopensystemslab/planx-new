@@ -5,19 +5,15 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "@tanstack/react-router";
-import { useToast } from "hooks/useToast";
-import type {
-  StripeConnectResult,
-  StripeConnectStatus,
-} from "lib/api/stripe/types";
+import type { StripeConnectStatus } from "lib/api/stripe/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
 import { ACCOUNT_STATUS_DISPLAY } from "./constants";
+import { useRedirectToStripe } from "./hooks/useRedirectToStripe";
 import { useStripeConnectStatus } from "./hooks/useStripeConnectStatus";
 
 const getStripeDashboardUrl = (
@@ -30,56 +26,15 @@ const getStripeDashboardUrl = (
   return mode === "test" ? `${base}/test/dashboard` : `${base}/dashboard`;
 };
 
-interface OnboardingProps {
-  stripeResult?: StripeConnectResult;
-}
-
-export const Onboarding: React.FC<OnboardingProps> = ({ stripeResult }) => {
+export const Onboarding: React.FC = () => {
   const teamSlug = useStore((state) => state.teamSlug);
-  const toast = useToast();
-  const navigate = useNavigate();
 
-  const { data, isLoading, refetch } = useStripeConnectStatus(teamSlug);
-  const [isRedirecting, setIsRedirecting] = useState(false);
+  const { data, isLoading } = useStripeConnectStatus(teamSlug);
+  const { isRedirecting, redirectToStripe } = useRedirectToStripe();
   const accountStatus =
     data?.accountStatus && ACCOUNT_STATUS_DISPLAY[data.accountStatus];
 
-  // if browser uses bfcache'd page, clear the isRedirecting boolean
-  useEffect(() => {
-    const resetOnRestore = (event: PageTransitionEvent) => {
-      if (event.persisted) setIsRedirecting(false);
-    };
-    window.addEventListener("pageshow", resetOnRestore);
-    return () => window.removeEventListener("pageshow", resetOnRestore);
-  }, []);
-
-  useEffect(() => {
-    if (!stripeResult) return;
-
-    if (stripeResult.type === "success") {
-      toast.success("Stripe account connected successfully");
-      refetch();
-    } else {
-      toast.error(stripeResult.message);
-    }
-
-    navigate({
-      to: ".",
-      search: (prev) => ({
-        ...prev,
-        stripeConnected: undefined,
-        stripeError: undefined,
-      }),
-      replace: true,
-    });
-    // Only run once, on mount, to consume the redirect params from the URL
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleConnect = () => {
-    setIsRedirecting(true);
-    window.location.href = `${import.meta.env.VITE_APP_API_URL}/stripe/connect/${teamSlug}`;
-  };
+  const handleConnect = () => redirectToStripe();
 
   return (
     <NewSettingsSection>

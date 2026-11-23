@@ -13,16 +13,6 @@ const API_URL = import.meta.env.VITE_APP_API_URL;
 const { getState, setState } = useStore;
 let initialState: FullStore;
 
-const mockNavigate = vi.fn();
-
-vi.mock("@tanstack/react-router", async () => {
-  const actual = await vi.importActual("@tanstack/react-router");
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
-
 const statusHandler = (status: MockStatus) =>
   http.get(`${API_URL}/stripe/connect/:teamSlug/status`, () =>
     HttpResponse.json(status),
@@ -33,7 +23,6 @@ describe("Onboarding", () => {
 
   beforeEach(() => {
     setState({ teamSlug: "lambeth" });
-    mockNavigate.mockClear();
   });
 
   afterEach(() => {
@@ -377,71 +366,5 @@ describe("Onboarding", () => {
     expect(
       screen.queryByRole("link", { name: /Stripe dashboard/ }),
     ).not.toBeInTheDocument();
-  });
-
-  it("shows a success toast and clears the redirect params after a successful connect", async () => {
-    server.use(
-      statusHandler({
-        connected: true,
-        accountId: "acct_123",
-        accountStatus: "active",
-        mode: "test",
-        govPayConfigured: false,
-      }),
-    );
-
-    await setup(<Onboarding stripeResult={{ type: "success" }} />);
-
-    expect(
-      await screen.findByText("Stripe account connected successfully"),
-    ).toBeInTheDocument();
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({ to: ".", replace: true }),
-    );
-  });
-
-  it("shows the toast message when passed a Stripe error", async () => {
-    server.use(
-      statusHandler({
-        connected: false,
-        accountId: null,
-        accountStatus: null,
-        mode: "test",
-        govPayConfigured: false,
-      }),
-    );
-
-    await setup(
-      <Onboarding
-        stripeResult={{
-          type: "error",
-          message: "Stripe connection was cancelled",
-        }}
-      />,
-    );
-
-    expect(
-      await screen.findByText("Stripe connection was cancelled"),
-    ).toBeInTheDocument();
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({ to: ".", replace: true }),
-    );
-  });
-
-  it("does not toast or clear params when there is no Stripe result", async () => {
-    server.use(
-      statusHandler({
-        connected: false,
-        accountId: null,
-        accountStatus: null,
-        mode: "test",
-        govPayConfigured: false,
-      }),
-    );
-
-    await setup(<Onboarding />);
-    await screen.findByRole("button", { name: "Connect Stripe account" });
-
-    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });
