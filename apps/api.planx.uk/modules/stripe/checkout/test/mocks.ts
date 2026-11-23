@@ -5,6 +5,12 @@ import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import { mockPaymentStatusInsert } from "../../webhook/test/mocks.js";
 
 export const mockCreate = vi.fn();
+
+/**
+ * The payment methods Stripe was asked to offer on the (first) Checkout Session created
+ */
+export const getOfferedPaymentMethods = (): string[] =>
+  mockCreate.mock.calls[0][0].payment_method_types;
 export const mockRetrieve = vi.fn();
 export const mockExpire = vi.fn();
 
@@ -36,6 +42,7 @@ export const STRIPE_ACCOUNT_ID = "acct_test_southwark";
 export const activeCapabilities = {
   card_payments: "active",
   pay_by_bank_payments: "active",
+  bacs_debit_payments: "active",
 };
 
 export const stripeTeam = {

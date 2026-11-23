@@ -4,7 +4,9 @@ import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import { getPaymentStatusInsert } from "../webhook/test/mocks.js";
 import {
+  activeCapabilities,
   defaultMetadata,
+  getOfferedPaymentMethods,
   largeFeeBreakdownPassport,
   mockCreate,
   mockCreateCheckoutSessionDefaults,
@@ -55,7 +57,6 @@ describe("creating a Stripe Checkout Session", () => {
     expect(mockCreate).toHaveBeenCalledWith(
       expect.objectContaining({
         mode: "payment",
-        payment_method_types: ["card", "pay_by_bank"],
         line_items: [
           {
             price_data: {
@@ -370,7 +371,16 @@ describe("choosing the payment methods for a Stripe Checkout Session", () => {
     mockCreateCheckoutSessionDefaults();
   });
 
-  it("offers Pay by Bank only for a total above £600", async () => {
+  it("offers card for a total below £600", async () => {
+    await supertest(app)
+      .post("/stripe/checkout-session/southwark")
+      .send(validBody)
+      .expect(200);
+
+    expect(getOfferedPaymentMethods()).toContain("card");
+  });
+
+  it("does not offer card for a total above £600", async () => {
     mockPassportLookup(largeFeeBreakdownPassport);
 
     await supertest(app)
@@ -378,15 +388,13 @@ describe("choosing the payment methods for a Stripe Checkout Session", () => {
       .send(validBody)
       .expect(200);
 
-    expect(mockCreate).toHaveBeenCalledWith(
-      expect.objectContaining({ payment_method_types: ["pay_by_bank"] }),
-    );
+    expect(getOfferedPaymentMethods()).not.toContain("card");
   });
 
-  it("offers card only when the council account cannot take Pay by Bank", async () => {
+  it("does not offer a method the council account cannot take", async () => {
     mockGetPaymentCapabilities.mockResolvedValue({
-      card_payments: "active",
-      pay_by_bank_payments: "inactive",
+      ...activeCapabilities,
+      bacs_debit_payments: "inactive",
     });
 
     await supertest(app)
@@ -394,16 +402,15 @@ describe("choosing the payment methods for a Stripe Checkout Session", () => {
       .send(validBody)
       .expect(200);
 
-    expect(mockCreate).toHaveBeenCalledWith(
-      expect.objectContaining({ payment_method_types: ["card"] }),
-    );
+    expect(getOfferedPaymentMethods()).not.toContain("bacs_debit");
   });
 
-  it("refuses a total above £600 when the council account cannot take Pay by Bank, never falling back to card", async () => {
+  it("refuses a total above £600 when the council account can only take card", async () => {
     mockPassportLookup(largeFeeBreakdownPassport);
     mockGetPaymentCapabilities.mockResolvedValue({
-      card_payments: "active",
+      ...activeCapabilities,
       pay_by_bank_payments: "inactive",
+      bacs_debit_payments: "inactive",
     });
     mockInitiatedCheckoutSessions(["cs_test_previous"]);
     mockRetrieve.mockResolvedValue({ id: "cs_test_previous", status: "open" });
