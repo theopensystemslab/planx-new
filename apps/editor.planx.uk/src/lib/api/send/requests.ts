@@ -1,6 +1,10 @@
 import apiClient from "lib/api/client";
 
-import type { CombinedEventsPayload, SendResponse } from "./types";
+import type {
+  ActiveInvoices,
+  CombinedEventsPayload,
+  SendResponse,
+} from "./types";
 
 /**
  * Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc
@@ -27,4 +31,11 @@ export const downloadSubmission = async (token: string) => {
   const disposition = response.headers["content-disposition"];
   const filename = disposition?.match(/filename=(.+)/)?.[1] ?? "submission.zip";
   return { blob, filename };
+};
+
+export const getActiveInvoices = async (sessionId: string) => {
+  const { data } = await apiClient.get<ActiveInvoices>(
+    `/submission/${sessionId}/active-invoices`,
+  );
+  return data;
 };

@@ -17,3 +17,7 @@ export interface DownloadSubmissionResponse {
   error:
     "INVALID_ACCESS_TOKEN" | "REVOKED_ACCESS_TOKEN" | "EXPIRED_ACCESS_TOKEN";
 }
+
+export type InvoiceKind = "payer_invoice" | "council_invoice";
+
+export type ActiveInvoices = Record<InvoiceKind, boolean>;
