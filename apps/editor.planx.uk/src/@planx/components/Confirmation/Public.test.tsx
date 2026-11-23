@@ -147,6 +147,39 @@ describe("Confirmation component", () => {
     expect(screen.getByText("pi_test_123")).toBeInTheDocument();
   });
 
+  it("shows the external payment reference from the passport", async () => {
+    act(() =>
+      setState({
+        flow: {
+          _root: { edges: ["Pay", "Send", "Confirmation"] },
+          Pay: { type: TYPES.Pay },
+          Send: { type: TYPES.Send },
+          Confirmation: { type: TYPES.Confirmation },
+        },
+        breadcrumbs: {
+          Pay: {
+            auto: false,
+            data: { "application.fee.reference.external": "External payment" },
+          },
+          Send: { auto: false },
+        },
+      }),
+    );
+
+    await setup(
+      <ConfirmationComponent
+        heading="heading"
+        description="description"
+        nextSteps={[]}
+        moreInfo="more info"
+        contactInfo="contact info"
+      />,
+    );
+
+    expect(screen.getByText("Payment reference")).toBeInTheDocument();
+    expect(screen.getByText("External payment")).toBeInTheDocument();
+  });
+
   describe("payment processing notice", () => {
     const flowWithPay = {
       _root: { edges: ["Pay", "Send", "Confirmation"] },
