@@ -20,11 +20,7 @@ import type { Props } from "../Pay";
 import type { StripeAction } from "../types";
 import { Action } from "../types";
 import { getStripeCheckoutURL, isNoPaymentMethodError } from "./stripeCheckout";
-import {
-  PAYMENT_PROCESSING_PASSPORT_KEY,
-  STRIPE_PASSPORT_KEY,
-  type UsePaymentProviderResult,
-} from "./types";
+import { STRIPE_PASSPORT_KEY, type UsePaymentProviderResult } from "./types";
 
 // Payments are only taken on published services - never on /draft or /preview test links
 const TEST_ENVIRONMENT_ROUTE_IDS = new Set<string>([
@@ -60,10 +56,6 @@ const isStripeNotConfiguredError = ({ statusCode, data }: StripeAPIError) =>
 const isPaymentProcessing = (checkoutStatus?: StripeCheckoutSessionStatus) =>
   checkoutStatus?.status === "complete" &&
   checkoutStatus.paymentStatus === "unpaid";
-
-const hasPaymentOutcome = (checkoutStatus?: StripeCheckoutSessionStatus) =>
-  checkoutStatus?.paymentStatus === "paid" ||
-  isPaymentProcessing(checkoutStatus);
 
 export function useStripePay(
   props: Props,
@@ -112,30 +104,20 @@ export function useStripePay(
       !isTestEnvironment &&
       Boolean(stripeSessionId) &&
       !wasCancelled,
-    refetchInterval: (query) =>
-      hasPaymentOutcome(query.state.data) ? false : 3000,
+    // Poll until Checkout has finished - a delayed payment (e.g. Bacs) is complete but unpaid for days, so stop there too
+    refetchInterval: (query) => {
+      const status = query.state.data?.status;
+      return status === "complete" || status === "expired" ? false : 3000;
+    },
   });
-
-  const getPaymentData = () => {
-    // TODO: Store full payload - do we need anything more than this?
-    const paymentData = makeData(
-      props,
-      checkoutStatus?.paymentIntentId,
-      STRIPE_PASSPORT_KEY,
-    );
-
-    if (isPaymentProcessing(checkoutStatus)) {
-      return {
-        data: { ...paymentData.data, [PAYMENT_PROCESSING_PASSPORT_KEY]: true },
-      };
-    }
-
-    return paymentData;
-  };
 
   const handleSuccess = () => {
     dispatch(Action.Success);
-    props.handleSubmit && props.handleSubmit(getPaymentData());
+    // TODO: Store full payload - do we need anything more than this?
+    props.handleSubmit &&
+      props.handleSubmit(
+        makeData(props, checkoutStatus?.paymentIntentId, STRIPE_PASSPORT_KEY),
+      );
   };
 
   const startNewPayment = async () => {
@@ -202,8 +184,15 @@ export function useStripePay(
   useEffect(() => {
     if (!checkoutStatus) return;
 
-    if (hasPaymentOutcome(checkoutStatus)) {
+    if (checkoutStatus.paymentStatus === "paid") {
       handleSuccess();
+      return;
+    }
+
+    // A delayed payment (e.g. Bacs) - the API has locked the session, and submits it once the payment has been taken
+    // The browser must not submit
+    if (isPaymentProcessing(checkoutStatus)) {
+      dispatch(Action.PaymentProcessing);
       return;
     }
 

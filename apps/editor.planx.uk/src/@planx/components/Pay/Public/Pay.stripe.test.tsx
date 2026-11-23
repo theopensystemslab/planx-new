@@ -716,17 +716,12 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
       );
     });
 
-    it("submits and marks the payment as processing when the bank takes it later", async () => {
+    const renderReturnFromCheckout = async (
+      checkoutStatus: Record<string, unknown>,
+    ) => {
       vi.mocked(useSearch).mockReturnValue({ stripeSessionId: "cs_test_123" });
-      // Bacs Direct Debit - the mandate is agreed, but the payment is not taken yet
       server.use(
-        http.get(checkoutStatusUrl, () =>
-          HttpResponse.json({
-            status: "complete",
-            paymentStatus: "unpaid",
-            paymentIntentId: "pi_test_123",
-          }),
-        ),
+        http.get(checkoutStatusUrl, () => HttpResponse.json(checkoutStatus)),
       );
 
       const handleSubmit = vi.fn();
@@ -737,6 +732,7 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
           breadcrumbs: feeBreadcrumbs,
           previewEnvironment: "standalone",
           teamSlug: "test-team",
+          teamName: "Test Council",
         }),
       );
 
@@ -751,48 +747,37 @@ describe("Pay component with Stripe provider (team on Stripe)", () => {
         </AppErrorBoundary>,
       );
 
-      await waitFor(() => expect(handleSubmit).toHaveBeenCalledTimes(1));
-      expect(handleSubmit).toHaveBeenCalledWith({
-        data: {
-          "application.fee.reference.stripe": "pi_test_123",
-          _paymentProcessing: true,
-        },
+      return { handleSubmit };
+    };
+
+    it("stays in a confirming state and does not submit while Checkout is still open", async () => {
+      const { handleSubmit } = await renderReturnFromCheckout({
+        status: "open",
+        paymentStatus: "unpaid",
       });
-    });
-
-    it("stays in a confirming state and does not submit while Checkout is open", async () => {
-      vi.mocked(useSearch).mockReturnValue({ stripeSessionId: "cs_test_123" });
-      server.use(
-        http.get(checkoutStatusUrl, () =>
-          HttpResponse.json({ status: "open", paymentStatus: "unpaid" }),
-        ),
-      );
-
-      const handleSubmit = vi.fn();
-
-      act(() =>
-        setState({
-          flow: flowWithFee,
-          breadcrumbs: feeBreadcrumbs,
-          previewEnvironment: "standalone",
-          teamSlug: "test-team",
-        }),
-      );
-
-      await setup(
-        <AppErrorBoundary>
-          <Pay
-            title="Pay"
-            fn="application.fee.payable"
-            handleSubmit={handleSubmit}
-            govPayMetadata={[]}
-          />
-        </AppErrorBoundary>,
-      );
 
       expect(
         await screen.findByText("Confirming your payment"),
       ).toBeInTheDocument();
+      expect(handleSubmit).not.toHaveBeenCalled();
+    });
+
+    it("shows 'payment processing', and does not submit, while a delayed payment (e.g. Bacs) is being taken", async () => {
+      const { handleSubmit } = await renderReturnFromCheckout({
+        status: "complete",
+        paymentStatus: "unpaid",
+        paymentIntentId: "pi_test_bacs",
+      });
+
+      expect(
+        await screen.findByRole("heading", { name: "Payment processing" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /will be sent to Test Council once your payment has been taken/,
+        ),
+      ).toBeInTheDocument();
+      expect(screen.queryByText("Pay now")).not.toBeInTheDocument();
       expect(handleSubmit).not.toHaveBeenCalled();
     });
 
