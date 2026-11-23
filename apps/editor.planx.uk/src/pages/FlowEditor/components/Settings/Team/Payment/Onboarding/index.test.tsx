@@ -1,5 +1,8 @@
 import { act, screen, waitFor } from "@testing-library/react";
-import type { StripeConnectStatus as MockStatus } from "lib/api/stripe/types";
+import type {
+  StripeConnectAccount as MockAccount,
+  StripeConnectStatus as MockStatus,
+} from "lib/api/stripe/types";
 import { http, HttpResponse } from "msw";
 import type { FullStore } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -366,5 +369,94 @@ describe("Onboarding", () => {
     expect(
       screen.queryByRole("link", { name: /Stripe dashboard/ }),
     ).not.toBeInTheDocument();
+  });
+
+  describe("for one of the accounts of a team with multiple accounts", () => {
+    const multipleAccountsStatus = (
+      worthing: Partial<MockAccount> = {},
+    ): MockStatus => ({
+      connected: true,
+      accountId: null,
+      accountStatus: null,
+      mode: "live",
+      govPayConfigured: false,
+      accounts: [
+        {
+          name: "Adur",
+          accountId: "acct_adur",
+          accountStatus: "active",
+          invoiceDetailsId: 11,
+        },
+        {
+          name: "Worthing",
+          accountId: "acct_worthing",
+          accountStatus: "active",
+          invoiceDetailsId: 12,
+          ...worthing,
+        },
+      ],
+    });
+
+    beforeEach(() => {
+      setState({ teamSlug: "adur-worthing" });
+    });
+
+    it("shows the named account's status", async () => {
+      server.use(statusHandler(multipleAccountsStatus()));
+
+      await setup(<Onboarding account="Worthing" />);
+
+      expect(
+        await screen.findByText("Stripe account: Worthing"),
+      ).toBeInTheDocument();
+      expect(await screen.findByText("acct_worthing")).toBeInTheDocument();
+      expect(screen.queryByText("acct_adur")).not.toBeInTheDocument();
+      expect(screen.getByText("Live")).toBeInTheDocument();
+    });
+
+    it("prompts to connect the account when it isn't connected, even if another account is", async () => {
+      server.use(
+        statusHandler(
+          multipleAccountsStatus({ accountId: null, accountStatus: null }),
+        ),
+      );
+
+      await setup(<Onboarding account="Worthing" />);
+
+      expect(
+        await screen.findByText(/No Stripe account connected/),
+      ).toBeInTheDocument();
+    });
+
+    it("connects the account by name", async () => {
+      server.use(
+        statusHandler(
+          multipleAccountsStatus({ accountId: null, accountStatus: null }),
+        ),
+      );
+      const { user } = await setup(<Onboarding account="Worthing" />);
+      const button = await screen.findByRole("button", {
+        name: "Connect Stripe account",
+      });
+
+      const originalLocation = window.location;
+      Object.defineProperty(window, "location", {
+        value: { ...originalLocation, href: "" },
+        writable: true,
+        configurable: true,
+      });
+
+      await user.click(button);
+
+      expect(window.location.href).toBe(
+        `${API_URL}/stripe/connect/adur-worthing?account=Worthing`,
+      );
+
+      Object.defineProperty(window, "location", {
+        value: originalLocation,
+        writable: true,
+        configurable: true,
+      });
+    });
   });
 });

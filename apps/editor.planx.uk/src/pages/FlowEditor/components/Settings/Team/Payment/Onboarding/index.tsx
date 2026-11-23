@@ -26,22 +26,38 @@ const getStripeDashboardUrl = (
   return mode === "test" ? `${base}/test/dashboard` : `${base}/dashboard`;
 };
 
-export const Onboarding: React.FC = () => {
+interface OnboardingProps {
+  account?: string;
+}
+
+export const Onboarding: React.FC<OnboardingProps> = ({ account }) => {
   const teamSlug = useStore((state) => state.teamSlug);
 
   const { data, isLoading } = useStripeConnectStatus(teamSlug);
   const { isRedirecting, redirectToStripe } = useRedirectToStripe();
-  const accountStatus =
-    data?.accountStatus && ACCOUNT_STATUS_DISPLAY[data.accountStatus];
 
-  const handleConnect = () => redirectToStripe();
+  const namedAccount = account
+    ? data?.accounts?.find(({ name }) => name === account)
+    : undefined;
+  const { accountId = null, accountStatus: status = null } =
+    (account ? namedAccount : data) ?? {};
+  const connected = account ? Boolean(accountId) : data?.connected;
+  const mode = data?.mode;
+  const accountStatus = status && ACCOUNT_STATUS_DISPLAY[status];
+
+  const handleConnect = () => redirectToStripe(account);
 
   return (
     <NewSettingsSection>
       <Grid container spacing={4}>
         <Grid size={{ xs: 12, md: 4 }}>
-          <InputLegend gutterBottom>Stripe onboarding</InputLegend>
+          <InputLegend gutterBottom>
+            {account ? `Stripe account: ${account}` : "Stripe onboarding"}
+          </InputLegend>
           <SettingsDescription>
+            {account && (
+              <p>Payments for sites in {account} are paid into this account.</p>
+            )}
             <p>
               To process payments through Stripe, your team needs to connect a
               Stripe account. This uses{" "}
@@ -78,14 +94,14 @@ export const Onboarding: React.FC = () => {
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                 <CircularProgress size={20} />
                 <Typography variant="body2">
-                  {data?.mode === "test"
+                  {mode === "test"
                     ? "Setting up your test Stripe account..."
                     : "Redirecting to Stripe..."}
                 </Typography>
               </Box>
             )}
 
-            {!isLoading && !isRedirecting && !data?.connected && (
+            {!isLoading && !isRedirecting && !connected && (
               <>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   No Stripe account connected. Click below to start the
@@ -99,7 +115,7 @@ export const Onboarding: React.FC = () => {
               </>
             )}
 
-            {!isLoading && data?.connected && accountStatus && (
+            {!isLoading && connected && mode && accountStatus && (
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                   <Typography variant="body1">Status:</Typography>
@@ -119,15 +135,15 @@ export const Onboarding: React.FC = () => {
                     Account ID
                   </Typography>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body1">{data.accountId}</Typography>
+                    <Typography variant="body1">{accountId}</Typography>
                     <Chip
-                      label={data.mode === "live" ? "Live" : "Test"}
-                      color={data.mode === "live" ? "success" : "warning"}
+                      label={mode === "live" ? "Live" : "Test"}
+                      color={mode === "live" ? "success" : "warning"}
                       size="small"
                     />
                   </Box>
                 </Box>
-                {data.accountStatus === "unavailable" ? (
+                {status === "unavailable" ? (
                   !isRedirecting && (
                     <Box>
                       <Button onClick={handleConnect} variant="contained">
@@ -138,11 +154,11 @@ export const Onboarding: React.FC = () => {
                 ) : (
                   <Box>
                     <Link
-                      href={getStripeDashboardUrl(data.accountId, data.mode)}
+                      href={getStripeDashboardUrl(accountId, mode)}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {data.accountStatus === "incomplete"
+                      {status === "incomplete"
                         ? "Finish setup in the Stripe dashboard (opens in a new tab)"
                         : "Open Stripe dashboard (opens in a new tab)"}
                     </Link>
