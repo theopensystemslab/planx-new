@@ -1,5 +1,6 @@
 import ContractType from "./ContractType";
 import GuidanceOnly from "./GuidanceOnly";
+import MultipleStripeAccounts from "./MultipleStripeAccounts";
 import TeamCategory from "./TeamCategory";
 import TrialAccount from "./TrialAccount";
 
@@ -9,6 +10,7 @@ const AdvancedSettings: React.FC = () => (
     <ContractType />
     <TrialAccount />
     <GuidanceOnly />
+    <MultipleStripeAccounts />
   </>
 );
 
