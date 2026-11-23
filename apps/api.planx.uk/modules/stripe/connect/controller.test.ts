@@ -525,8 +525,8 @@ describe("getConnectStatus", () => {
 
     it("returns every account's status, and is connected if any account is", async () => {
       mockGetStripeAccounts.mockResolvedValue([
-        { name: "Adur", accountId: "acct_adur" },
-        { name: "Worthing", accountId: null },
+        { name: "Adur", accountId: "acct_adur", invoiceDetailsId: 11 },
+        { name: "Worthing", accountId: null, invoiceDetailsId: 12 },
       ]);
       mockGetAccountStatus.mockResolvedValue("active");
       mockGetStripeMode.mockReturnValue("live");
@@ -545,8 +545,18 @@ describe("getConnectStatus", () => {
         mode: "live",
         govPayConfigured: false,
         accounts: [
-          { name: "Adur", accountId: "acct_adur", accountStatus: "active" },
-          { name: "Worthing", accountId: null, accountStatus: null },
+          {
+            name: "Adur",
+            accountId: "acct_adur",
+            accountStatus: "active",
+            invoiceDetailsId: 11,
+          },
+          {
+            name: "Worthing",
+            accountId: null,
+            accountStatus: null,
+            invoiceDetailsId: 12,
+          },
         ],
       };
       expect(res.send).toHaveBeenCalledWith(expected);

@@ -715,17 +715,29 @@ describe("getStripeAccounts", () => {
     mockRequest.mockReset();
   });
 
-  it("returns all of the team's accounts", async () => {
+  it("returns all of the team's accounts, with their invoice details", async () => {
     mockRequest.mockResolvedValue({
       stripeAccounts: [
-        { name: "Adur", accountId: "acct_adur" },
-        { name: "Worthing", accountId: null },
+        { name: "Adur", accountId: "acct_adur", invoiceDetails: { id: 11 } },
+        { name: "Worthing", accountId: null, invoiceDetails: { id: 12 } },
       ],
     });
 
     await expect(getStripeAccounts(2)).resolves.toEqual([
-      { name: "Adur", accountId: "acct_adur" },
-      { name: "Worthing", accountId: null },
+      { name: "Adur", accountId: "acct_adur", invoiceDetailsId: 11 },
+      { name: "Worthing", accountId: null, invoiceDetailsId: 12 },
+    ]);
+  });
+
+  it("returns no invoice details for an account which uses the team's", async () => {
+    mockRequest.mockResolvedValue({
+      stripeAccounts: [
+        { name: "Lambeth", accountId: "acct_lambeth", invoiceDetails: null },
+      ],
+    });
+
+    await expect(getStripeAccounts(1)).resolves.toEqual([
+      { name: "Lambeth", accountId: "acct_lambeth", invoiceDetailsId: null },
     ]);
   });
 

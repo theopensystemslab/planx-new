@@ -96,7 +96,7 @@ describe("getMigrationBlockers", () => {
 
   it("allows migration when all conditions satisfied", async () => {
     vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
-      { name: "Lambeth", accountId: "acct_abc" },
+      { name: "Lambeth", accountId: "acct_abc", invoiceDetailsId: null },
     ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
 
@@ -117,7 +117,7 @@ describe("getMigrationBlockers", () => {
 
   it("blocks migration when active govpay sessions are found", async () => {
     vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
-      { name: "Lambeth", accountId: "acct_abc" },
+      { name: "Lambeth", accountId: "acct_abc", invoiceDetailsId: null },
     ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(2);
 
@@ -147,7 +147,7 @@ describe("getMigrationBlockers", () => {
 
   it("blocks migration when the team's only account isn't connected in this environment", async () => {
     vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
-      { name: "Lambeth", accountId: null },
+      { name: "Lambeth", accountId: null, invoiceDetailsId: null },
     ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
 
@@ -158,8 +158,8 @@ describe("getMigrationBlockers", () => {
 
   it("allows migration for a team with multiple accounts once they're all connected", async () => {
     vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
-      { name: "Adur", accountId: "acct_adur" },
-      { name: "Worthing", accountId: "acct_worthing" },
+      { name: "Adur", accountId: "acct_adur", invoiceDetailsId: 11 },
+      { name: "Worthing", accountId: "acct_worthing", invoiceDetailsId: 12 },
     ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
 
@@ -170,8 +170,8 @@ describe("getMigrationBlockers", () => {
 
   it("blocks migration for a team with multiple accounts while any of them isn't connected", async () => {
     vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
-      { name: "Adur", accountId: "acct_adur" },
-      { name: "Worthing", accountId: null },
+      { name: "Adur", accountId: "acct_adur", invoiceDetailsId: 11 },
+      { name: "Worthing", accountId: null, invoiceDetailsId: 12 },
     ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
 
@@ -182,7 +182,7 @@ describe("getMigrationBlockers", () => {
 
   it("returns no blockers when migration can proceed", async () => {
     vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
-      { name: "Lambeth", accountId: "111222" },
+      { name: "Lambeth", accountId: "111222", invoiceDetailsId: null },
     ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
 
@@ -201,7 +201,7 @@ describe("migrateToStripe", () => {
 
   it("returns no blockers when migration succeeds", async () => {
     vi.spyOn(connectService, "getStripeAccounts").mockResolvedValue([
-      { name: "Lambeth", accountId: "acct_abc" },
+      { name: "Lambeth", accountId: "acct_abc", invoiceDetailsId: null },
     ]);
     vi.spyOn(migrationService, "getActiveGovPaySessions").mockResolvedValue(0);
     mockRequest.mockResolvedValueOnce({

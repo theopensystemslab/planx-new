@@ -167,6 +167,7 @@ components:
                     - name
                     - accountId
                     - accountStatus
+                    - invoiceDetailsId
                   properties:
                     name:
                       type: string
@@ -182,6 +183,13 @@ components:
                       enum: [active, incomplete, pending, unavailable]
                       description: As `accountStatus` above; null if the account isn't connected in this environment
                       example: active
+                    invoiceDetailsId:
+                      type: integer
+                      nullable: true
+                      description: >-
+                        The account's invoice details (team_invoice_details id), which the editor reads and
+                        updates. null for an account named after the team, which uses the team's invoice details.
+                      example: 12
     MigrateResponse:
       description: >-
         Result of attempting to migrate a team's payment provider to Stripe.

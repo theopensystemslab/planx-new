@@ -419,16 +419,23 @@ export interface StripeAccount {
   accountId: string | null;
 }
 
+export interface StripeAccountWithInvoiceDetails extends StripeAccount {
+  /** only set when using named accounts, null if team invoice details are used */
+  invoiceDetailsId: number | null;
+}
+
 /**
  * All of the team's accounts, sorted by name, with their account id for the current environment
  */
 export const getStripeAccounts = async (
   teamId: number,
-): Promise<StripeAccount[]> => {
+): Promise<StripeAccountWithInvoiceDetails[]> => {
   const column = stripeAccountIdColumn();
 
   const { stripeAccounts } = await $api.client.request<{
-    stripeAccounts: StripeAccount[];
+    stripeAccounts: (StripeAccount & {
+      invoiceDetails: { id: number } | null;
+    })[];
   }>(
     gql`
       query GetStripeAccounts($teamId: Int!) {
@@ -438,13 +445,20 @@ export const getStripeAccounts = async (
         ) {
           name
           accountId: ${column}
+          invoiceDetails: invoice_details {
+            id
+          }
         }
       }
     `,
     { teamId },
   );
 
-  return stripeAccounts;
+  return stripeAccounts.map(({ name, accountId, invoiceDetails }) => ({
+    name,
+    accountId,
+    invoiceDetailsId: invoiceDetails?.id ?? null,
+  }));
 };
 
 const govPaySecretColumn = () =>

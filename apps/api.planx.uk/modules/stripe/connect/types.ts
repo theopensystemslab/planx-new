@@ -75,6 +75,8 @@ export interface ConnectStatusAccount {
   /** null if the account hasn't been connected in this environment */
   accountId: string | null;
   accountStatus: StripeAccountStatus | null;
+  /** only set when using named accounts, null if team invoice details are used */
+  invoiceDetailsId: number | null;
 }
 
 export interface ConnectStatusResponse {

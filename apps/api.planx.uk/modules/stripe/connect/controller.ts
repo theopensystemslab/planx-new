@@ -139,9 +139,10 @@ export const getConnectStatus: ConnectStatusController = async (
       : stripeAccounts.filter(({ name }) => name === team.name);
 
     const accounts = await Promise.all(
-      listedAccounts.map(async ({ name, accountId }) => ({
+      listedAccounts.map(async ({ name, accountId, invoiceDetailsId }) => ({
         name,
         accountId,
+        invoiceDetailsId,
         accountStatus: accountId
           ? await Service.getAccountStatus(accountId)
           : null,
