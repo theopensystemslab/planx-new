@@ -126,7 +126,7 @@ describe("downloading the council invoice", () => {
       .set(authHeader({ role: "teamEditor" }))
       .expect(500)
       .then((res) => {
-        expect(res.body.error).toMatch(/Failed to download council invoice/);
+        expect(res.body.error).toMatch(/Failed to download council_invoice/);
       });
   });
 
@@ -169,7 +169,7 @@ describe("downloading the payer invoice", () => {
       .set(authHeader({ role: "teamEditor" }))
       .expect(500)
       .then((res) => {
-        expect(res.body.error).toMatch(/Failed to download payer invoice/);
+        expect(res.body.error).toMatch(/Failed to download payer_invoice/);
       });
   });
 

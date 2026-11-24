@@ -273,12 +273,12 @@ paths:
             $ref: "#/components/responses/ErrorMessage"
         "400":
           $ref: "#/components/responses/ValidationError"
-  /submission/{sessionId}/invoice/payer:
+  /submission/{sessionId}/invoice/{invoiceKind}:
     get:
-      summary: Download the payer's VAT invoice for a submission
+      summary: Download an invoice for a submission
       description: |
-        Get the PDF VAT invoice issued to the payer for this submission's payment, if one was generated.
-        Invoices are only generated when the payment had any VAT or a service charge.
+        Get the PDF invoice, if one was generated.
+        Invoices are only generated when the payment had any VAT (payer invoice) or a service charge (council invoice).
       tags:
         - send
       parameters:
@@ -288,41 +288,17 @@ paths:
           schema:
             format: uuid
             type: string
-      security:
-        - bearerAuth: []
-      responses:
-        "200":
-          description: The payer invoice PDF.
-          content:
-            application/pdf:
-              schema:
-                type: string
-                format: binary
-        "400":
-          $ref: "#/components/responses/ValidationError"
-        "500":
-          description: Failed to download the payer invoice - either none exists for this submission, or the lookup/fetch itself failed.
-          $ref: "#/components/responses/ErrorMessage"
-  /submission/{sessionId}/invoice/council:
-    get:
-      summary: Download OSL's invoice to the council for a submission
-      description: |
-        Get the PDF invoice OSL issued to the council for the service charge on this submission's
-        payment, if one was generated. Invoices are only generated when the payment had a service charge.
-      tags:
-        - send
-      parameters:
         - in: path
-          name: sessionId
+          name: invoiceKind
           required: true
           schema:
-            format: uuid
             type: string
+            enum: ["council", "payer"]
       security:
         - bearerAuth: []
       responses:
         "200":
-          description: The council invoice PDF.
+          description: The invoice PDF.
           content:
             application/pdf:
               schema:
@@ -331,7 +307,7 @@ paths:
         "400":
           $ref: "#/components/responses/ValidationError"
         "500":
-          description: Failed to download the council invoice - either none exists for this submission, or the lookup/fetch itself failed.
+          description: Failed to download the invoice - either none exists for this submission, or the lookup/fetch itself failed.
           $ref: "#/components/responses/ErrorMessage"
   /submission/{sessionId}/active-invoices:
     get:

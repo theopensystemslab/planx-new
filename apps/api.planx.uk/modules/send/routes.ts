@@ -11,10 +11,10 @@ import { sendToBOPS } from "./bops/bops.js";
 import { createSendEvents } from "./createSendEvents/controller.js";
 import { combinedEventsPayloadSchema } from "./createSendEvents/types.js";
 import {
-  downloadCouncilInvoice,
-  downloadPayerInvoice,
+  downloadInvoice,
   getActiveInvoices,
 } from "./downloadInvoice/controller.js";
+import { downloadInvoiceSchema } from "./downloadInvoice/types.js";
 import { downloadSubmission } from "./downloadSubmission/controller.js";
 import { useAccessTokenAuth } from "./downloadSubmission/middleware.js";
 import { useAccessTokenAuthSchema } from "./downloadSubmission/types.js";
@@ -96,17 +96,10 @@ router.get(
 );
 
 router.get(
-  "/submission/:sessionId/invoice/council",
+  "/submission/:sessionId/invoice/:invoiceKind",
   useTeamEditorAuth,
-  validate(submissionSchema),
-  downloadCouncilInvoice,
-);
-
-router.get(
-  "/submission/:sessionId/invoice/payer",
-  useTeamEditorAuth,
-  validate(submissionSchema),
-  downloadPayerInvoice,
+  validate(downloadInvoiceSchema),
+  downloadInvoice,
 );
 
 router.get(

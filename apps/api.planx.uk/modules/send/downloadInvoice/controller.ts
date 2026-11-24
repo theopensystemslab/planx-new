@@ -1,25 +1,25 @@
 import { ServerError } from "../../../errors/index.js";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import type { InvoiceKind } from "../../stripe/webhook/vatInvoice/storage.js";
-import type { submissionSchema } from "../submission/schema.js";
 import { getInvoiceBySessionId, getSessionActiveInvoices } from "./service.js";
+import type { downloadInvoiceSchema } from "./types.js";
 
 type DownloadInvoiceController = ValidatedRequestHandler<
-  typeof submissionSchema,
+  typeof downloadInvoiceSchema,
   Buffer
 >;
 
-export const downloadCouncilInvoice: DownloadInvoiceController = async (
+export const downloadInvoice: DownloadInvoiceController = async (
   _req,
   res,
   next,
 ) => {
-  const { sessionId } = res.locals.parsedReq.params;
+  const { sessionId, invoiceKind } = res.locals.parsedReq.params;
 
   try {
     const { pdf, invoiceNumber } = await getInvoiceBySessionId(
       sessionId,
-      "council_invoice",
+      invoiceKind,
     );
     res.set("Content-Type", "application/pdf");
     res.set("Content-Disposition", `attachment; filename=${invoiceNumber}.pdf`);
@@ -28,33 +28,7 @@ export const downloadCouncilInvoice: DownloadInvoiceController = async (
   } catch (error) {
     return next(
       new ServerError({
-        message: `Failed to download council invoice for session ${sessionId}. ${error}`,
-        cause: error,
-      }),
-    );
-  }
-};
-
-export const downloadPayerInvoice: DownloadInvoiceController = async (
-  _req,
-  res,
-  next,
-) => {
-  const { sessionId } = res.locals.parsedReq.params;
-
-  try {
-    const { pdf, invoiceNumber } = await getInvoiceBySessionId(
-      sessionId,
-      "payer_invoice",
-    );
-    res.set("Content-Type", "application/pdf");
-    res.set("Content-Disposition", `attachment; filename=${invoiceNumber}.pdf`);
-    res.set("Content-Length", pdf.length.toString());
-    res.status(200).send(pdf);
-  } catch (error) {
-    return next(
-      new ServerError({
-        message: `Failed to download payer invoice for session ${sessionId}. ${error}`,
+        message: `Failed to download ${invoiceKind} for session ${sessionId}. ${error}`,
         cause: error,
       }),
     );
@@ -62,7 +36,7 @@ export const downloadPayerInvoice: DownloadInvoiceController = async (
 };
 
 type ActiveInvoiceController = ValidatedRequestHandler<
-  typeof submissionSchema,
+  typeof downloadInvoiceSchema,
   Record<InvoiceKind, boolean>
 >;
 
