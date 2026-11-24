@@ -12,6 +12,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider as TanStackRouterProvider } from "@tanstack/react-router";
 import { ToastContextProvider } from "contexts/ToastContext";
 import usePageTitleFromHeading from "hooks/usePageTitleFromHeading";
+import { usePaletteMode } from "hooks/usePaletteMode";
 import { initFeatureFlags } from "lib/featureFlags";
 import { queryClient } from "lib/queryClient";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
@@ -25,7 +26,7 @@ import { setFavicon } from "utils/favicon";
 // init airbrake before everything else
 import * as airbrake from "./airbrake";
 import { client } from "./lib/graphql";
-import { DEFAULT_PRIMARY_COLOR, defaultTheme } from "./theme";
+import { DEFAULT_PRIMARY_COLOR, defaultDarkTheme, defaultTheme } from "./theme";
 
 if (import.meta.env.VITE_APP_ENV !== "production") {
   console.log(`ENV: ${import.meta.env.VITE_APP_ENV}`);
@@ -53,10 +54,12 @@ const Layout: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   usePageTitleFromHeading();
+  const paletteMode = usePaletteMode();
+  const theme = paletteMode === "dark" ? defaultDarkTheme : defaultTheme;
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </StyledEngineProvider>
   );
 };
@@ -67,7 +70,7 @@ root.render(
       <ApolloProvider client={client}>
         <AnalyticsProvider>
           <Layout>
-            <CssBaseline />
+            <CssBaseline enableColorScheme />
             <Suspense fallback={null}>
               <TanStackRouterProvider router={router} />
             </Suspense>
