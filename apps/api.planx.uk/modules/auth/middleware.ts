@@ -80,6 +80,7 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
     case "general-payment-expiry-agent":
     case "general-confirmation-agent":
     case "general-confirmation-payee":
+    case "remittance":
     case "welcome":
       return useHasuraAuth(req, res, next);
     // Public access

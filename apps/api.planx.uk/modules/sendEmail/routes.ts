@@ -2,10 +2,11 @@ import { Router } from "express";
 
 import { sendEmailLimiter } from "../../rateLimit.js";
 import { validate } from "../../shared/middleware/validate.js";
-import { useHasuraAuth, useSendEmailAuth } from "../auth/middleware.js";
+import { useSendEmailAuth } from "../auth/middleware.js";
 import {
   confirmationEmailController,
   paymentEmailController,
+  remittanceEmailController,
   singleApplicationEmailController,
   welcomeEmailController,
 } from "./controller.js";
@@ -13,6 +14,7 @@ import { useWelcomeEmailGuard } from "./middleware.js";
 import {
   confirmationEmailSchema,
   paymentEmailSchema,
+  remittanceEmailSchema,
   singleApplicationEmailSchema,
   welcomeEmailSchema,
 } from "./types.js";
@@ -41,6 +43,13 @@ router.post(
   useWelcomeEmailGuard,
   validate(welcomeEmailSchema),
   welcomeEmailController,
+);
+
+router.post(
+  "/send-email/:template(remittance)",
+  useSendEmailAuth,
+  validate(remittanceEmailSchema),
+  remittanceEmailController,
 );
 
 router.post(

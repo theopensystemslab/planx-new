@@ -94,3 +94,18 @@ export type WelcomeEmail = ValidatedRequestHandler<
   typeof welcomeEmailSchema,
   SendEmailResponse
 >;
+
+export const remittanceEmailSchema = z.object({
+  body: z.object({
+    payload: z.object({
+      team: z.string(),
+      date: z.string(),
+      email: z.email(),
+    }),
+  }),
+});
+
+export type RemittanceEmail = ValidatedRequestHandler<
+  typeof remittanceEmailSchema,
+  SendEmailResponse
+>;

@@ -1,3 +1,4 @@
+import { subDays } from "date-fns";
 import supertest from "supertest";
 
 import { NOTIFY_TEST_EMAIL } from "../../lib/notify/utils.js";
@@ -378,6 +379,61 @@ describe("Send Email endpoint", () => {
 
       await supertest(app).post(SAVE_ENDPOINT).send(data).expect(200);
       expect(callsToSetupEventsMutation()).toBe(0);
+    });
+  });
+
+  describe("'remittance' template (Resend)", () => {
+    const REMITTANCE_ENDPOINT = "/send-email/remittance";
+    const date = subDays(new Date(), 1);
+    const formattedDate = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`;
+
+    const validPayload = {
+      payload: {
+        team: "Example team",
+        date: formattedDate,
+        email: NOTIFY_TEST_EMAIL,
+      },
+    };
+
+    beforeEach(() => {
+      vi.mocked(sendEmail).mockClear();
+      vi.mocked(sendEmail).mockResolvedValue({
+        message: "remittance email sent successfully",
+      });
+      queryMock.reset();
+      queryMock.mockQuery({
+        // TODO
+        name: "GetTeamIsTrial",
+        data: { teamSettings: [{ isTrial: false }] },
+        matchOnVariables: false,
+      });
+    });
+
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it("returns 401 if no auth header is provided", async () => {
+      await supertest(app)
+        .post(REMITTANCE_ENDPOINT)
+        .send(validPayload)
+        .expect(401);
+
+      expect(sendEmail).not.toHaveBeenCalled();
+    });
+
+    it("sends a remittance email when authorised", async () => {
+      await supertest(app)
+        .post(REMITTANCE_ENDPOINT)
+        .set("Authorization", "testtesttest")
+        .send(validPayload)
+        .expect(200);
+
+      expect(sendEmail).toHaveBeenCalledWith("remittance", NOTIFY_TEST_EMAIL, {
+        team: "Example team",
+        date: formattedDate,
+      });
+      // TODO: test for attachment?
     });
   });
 });
