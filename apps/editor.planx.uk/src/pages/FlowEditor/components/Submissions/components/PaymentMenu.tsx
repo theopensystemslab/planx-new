@@ -3,6 +3,9 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { useQuery } from "@tanstack/react-query";
+import { getActiveInvoices } from "lib/api/send/requests";
+import type { InvoiceKind } from "lib/api/send/types";
 import { useState } from "react";
 
 import type { Submission } from "../types";
@@ -21,6 +24,13 @@ export const PaymentMenu = ({ sessionId, paymentEvent }: Props) => {
   const [isRefundDialogOpen, setIsRefundDialogOpen] = useState(false);
   const isMenuOpen = Boolean(anchorEl);
 
+  const { data: activeInvoices } = useQuery({
+    queryKey: ["activeInvoices", sessionId],
+    queryFn: () => getActiveInvoices(sessionId),
+  });
+
+  const invoiceUrl = `${import.meta.env.VITE_APP_API_URL}/submission/${sessionId}/invoice`;
+
   const handleCloseMenu = () => setAnchorEl(null);
 
   /**
@@ -32,11 +42,11 @@ export const PaymentMenu = ({ sessionId, paymentEvent }: Props) => {
     handleCloseMenu();
   };
 
-  /**
-   * TODO: Wire up download invoice workflow
-   */
-  const handleDownloadInvoice = () => {
-    console.log("Download invoice", { sessionId, paymentEvent });
+  const handleDownloadInvoice = (kind: InvoiceKind) => {
+    const relevantInvoiceUrl = invoiceUrl.concat(
+      `/${kind === "payer_invoice" ? "payer" : "council"}`,
+    );
+    window.open(relevantInvoiceUrl, "_blank");
     handleCloseMenu();
   };
 
@@ -51,6 +61,7 @@ export const PaymentMenu = ({ sessionId, paymentEvent }: Props) => {
         aria-haspopup="menu"
         aria-controls={isMenuOpen ? "payment-menu" : undefined}
         aria-expanded={isMenuOpen ? "true" : undefined}
+        data-testid="payment-menu-button"
       >
         Payment
       </Button>
@@ -61,7 +72,18 @@ export const PaymentMenu = ({ sessionId, paymentEvent }: Props) => {
         onClose={handleCloseMenu}
       >
         <MenuItem onClick={handleInitiateRefund}>Initiate refund</MenuItem>
-        <MenuItem onClick={handleDownloadInvoice}>Download invoice</MenuItem>
+        <MenuItem
+          onClick={() => handleDownloadInvoice("council_invoice")}
+          disabled={!activeInvoices?.council_invoice}
+        >
+          Download council invoice
+        </MenuItem>
+        <MenuItem
+          onClick={() => handleDownloadInvoice("payer_invoice")}
+          disabled={!activeInvoices?.payer_invoice}
+        >
+          Download payer invoice
+        </MenuItem>
       </Menu>
       <InitiateRefundDialog
         open={isRefundDialogOpen}

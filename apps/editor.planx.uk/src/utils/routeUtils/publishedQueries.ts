@@ -65,6 +65,7 @@ const GET_SETTINGS_FOR_PUBLISHED_VIEW = gql`
           emailReplyToId: email_reply_to_id
           boundaryBBox: boundary_bbox
           paymentProvider: payment_provider
+          contract
         }
         slug
       }
