@@ -12,6 +12,7 @@ export type PaymentFailedPayerTemplate = EmailTemplate<
     address: string;
     paymentReference: string;
     amount: string;
+    paymentMethod: string;
     councilLogo: string;
     councilPrimaryColour: string;
     payLink: string;

@@ -12,6 +12,7 @@ import {
   mockPaymentRequest,
   PAYMENT_REQUEST_ID,
 } from "../../checkout/test/mocks.js";
+import { stripe } from "../../client.js";
 import { STRIPE_WEBHOOK_ENDPOINT } from "../../routes.js";
 import { sign } from "../test/utils.js";
 
@@ -47,6 +48,18 @@ const failedEvent = (overrides: Partial<Stripe.Checkout.Session> = {}) =>
     type: "checkout.session.async_payment_failed",
     data: { object: checkoutSession(overrides) },
   });
+
+// A failed PaymentIntent goes back to requires_payment_method - the failed method is on its last error
+const mockPaymentIntent = () =>
+  vi.spyOn(stripe.paymentIntents, "retrieve").mockResolvedValue({
+    id: "pi_test_bacs",
+    status: "requires_payment_method",
+    payment_method: null,
+    last_payment_error: {
+      code: "debit_not_authorized",
+      payment_method: { id: "pm_test_bacs", type: "bacs_debit" },
+    },
+  } as unknown as Stripe.Response<Stripe.PaymentIntent>);
 
 const post = ({ payload, signature }: ReturnType<typeof sign>) =>
   supertest(app)
@@ -119,6 +132,7 @@ describe("a delayed payment (e.g. Bacs) failing", () => {
     mockSession();
     mockCouncilEmailDetails();
     mockUnlock();
+    mockPaymentIntent();
     vi.spyOn(payHelpers, "reportError");
   });
 
@@ -148,6 +162,7 @@ describe("a delayed payment (e.g. Bacs) failing", () => {
           address: "1 High Street, London",
           paymentReference: "pi_test_bacs",
           amount: "£145.00",
+          paymentMethod: "Bacs Direct Debit",
           councilLogo: "https://example.com/logo.png",
           councilPrimaryColour: "#000",
           payLink: `https://www.example.com/southwark/apply/published?sessionId=${SESSION_ID}`,
@@ -268,6 +283,16 @@ describe("a delayed payment (e.g. Bacs) failing", () => {
         error: expect.stringContaining("no payer email"),
       }),
     );
+  });
+
+  it("returns 500 without emailing when the payment method can't be read from Stripe, so Stripe redelivers the event", async () => {
+    vi.spyOn(stripe.paymentIntents, "retrieve").mockRejectedValue(
+      new Error("Stripe is unreachable"),
+    );
+
+    await post(failedEvent()).expect(500);
+
+    expect(sendEmail).not.toHaveBeenCalled();
   });
 
   it("returns 500 when the email fails to send, so Stripe redelivers the event", async () => {
