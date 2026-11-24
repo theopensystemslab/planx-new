@@ -213,6 +213,40 @@ export const validationSchema = object({
   govPayMetadata: paymentMetadataSchema,
 });
 
+export type PayMode = "planx" | "external" | "informationOnly";
+
+export const PAY_MODE_OPTIONS: {
+  value: PayMode;
+  title: string;
+  description: string;
+}[] = [
+  {
+    value: "planx",
+    title: "Within Plan✕",
+    description: "Applicants pay before sending their form",
+  },
+  {
+    value: "external",
+    title: "Through your own payment system",
+    description:
+      "Applicants are sent to your payment page. Manual payment reconciliation applies",
+  },
+  {
+    value: "informationOnly",
+    title: "Show fee only",
+    description: "Applicants see the fee breakdown but aren't asked to pay",
+  },
+];
+
+export const getPayMode = ({
+  hidePay,
+  externalPay,
+}: Pick<Pay, "hidePay" | "externalPay">): PayMode => {
+  if (hidePay) return "informationOnly";
+  if (externalPay) return "external";
+  return "planx";
+};
+
 export const getDefaultContent = (): Pay => ({
   title: "Pay",
   bannerTitle: "The fee is",
