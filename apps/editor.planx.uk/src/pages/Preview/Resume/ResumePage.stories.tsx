@@ -1,3 +1,4 @@
+import PaymentProcessing from "@planx/components/Pay/Public/PaymentProcessing";
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import ResumePage, { EmailRequired } from ".";
@@ -40,7 +41,7 @@ export const OnLockedSession = {
 } satisfies Story;
 
 export const OnLockedSessionPaymentProcessing = {
-  render: () => <LockedSession paymentRequest={null} />,
+  render: () => <PaymentProcessing showViewApplicationLink={false} />,
 } satisfies Story;
 
 const reconciliationMock = {

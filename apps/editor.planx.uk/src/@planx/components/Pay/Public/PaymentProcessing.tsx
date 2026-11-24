@@ -25,8 +25,13 @@ const FormInner = styled(Box)(({ theme }) => ({
  * Shown when the applicant returns from Stripe Checkout having paid by a delayed payment method (e.g. Bacs Direct Debit)
  *
  * The application isn't submitted yet - the API submits it once the payment succeeds, and the session is locked until then
+ *
+ * Also shown when resuming the locked session (including the redirect back from Checkout for save & return services),
+ * where the session's answers aren't loaded so there's no application to view
  */
-const PaymentProcessing: React.FC = () => {
+const PaymentProcessing: React.FC<{ showViewApplicationLink?: boolean }> = ({
+  showViewApplicationLink = true,
+}) => {
   const theme = useTheme();
   const [teamName, { helpEmail, helpOpeningHours, helpPhone }] = useStore(
     (state) => [state.teamName, state.teamSettings],
@@ -91,8 +96,12 @@ const PaymentProcessing: React.FC = () => {
               We aim to respond within 2 working days.
             </Typography>
           </Box>
-          <Divider sx={{ my: 4 }} />
-          <ViewApplicationLink />
+          {showViewApplicationLink && (
+            <>
+              <Divider sx={{ my: 4 }} />
+              <ViewApplicationLink />
+            </>
+          )}
         </FormInner>
       </Container>
     </Box>
