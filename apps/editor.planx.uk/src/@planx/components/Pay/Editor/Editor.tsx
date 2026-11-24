@@ -1,10 +1,15 @@
+import RadioGroup from "@mui/material/RadioGroup";
+import Stack from "@mui/material/Stack";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import type { Pay } from "@planx/components/Pay/model";
+import type { Pay, PayMode } from "@planx/components/Pay/model";
 import {
+  getPayMode,
   parsePay,
   PAY_FN,
+  PAY_MODE_OPTIONS,
   validationSchema,
 } from "@planx/components/Pay/model";
+import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikProvider } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
@@ -41,6 +46,28 @@ const Component: React.FC<Props> = (props: Props) => {
     },
     props.formikRef,
   );
+
+  const payMode = getPayMode(formik.values);
+
+  const payModeOptions = PAY_MODE_OPTIONS.filter(
+    ({ value }) => value !== "external" || hasFeatureFlag("EXTERNAL_PAY"),
+  );
+
+  const handlePayModeChange: React.ComponentProps<
+    typeof BasicRadio
+  >["onChange"] = (e) => {
+    const newMode = (e.target as HTMLInputElement).value as PayMode;
+    if (newMode === payMode) return;
+
+    formik.setValues({
+      ...formik.values,
+      hidePay: newMode === "informationOnly",
+      externalPay: newMode === "external",
+      // Invite to pay is only supported when paying within PlanX
+      allowInviteToPay:
+        newMode === "planx" ? formik.values.allowInviteToPay : false,
+    });
+  };
 
   return (
     <FormikProvider value={formik}>
@@ -91,6 +118,44 @@ const Component: React.FC<Props> = (props: Props) => {
               <Input format="data" name="fn" value={PAY_FN} disabled />
             </InputRow>
           </ModalSectionContent>
+        </ModalSection>
+        <ModalSection>
+          <ModalSectionContent title="How will the fee be paid?">
+            <Stack spacing={1}>
+              <RadioGroup
+                value={payMode}
+                aria-label="How will the fee be paid?"
+              >
+                {payModeOptions.map((option) => (
+                  <BasicRadio
+                    key={option.value}
+                    id={option.value}
+                    label={option.title}
+                    description={option.description}
+                    variant="inline"
+                    onChange={handlePayModeChange}
+                    disabled={props.disabled}
+                  />
+                ))}
+              </RadioGroup>
+              {payMode === "planx" && (
+                <InputRow>
+                  <Switch
+                    checked={formik.values.allowInviteToPay}
+                    onChange={() =>
+                      formik.setFieldValue(
+                        "allowInviteToPay",
+                        !formik.values.allowInviteToPay,
+                      )
+                    }
+                    label="Allow applicants to invite someone else to pay"
+                    disabled={props.disabled}
+                    error={formik.errors.allowInviteToPay}
+                  />
+                </InputRow>
+              )}
+            </Stack>
+          </ModalSectionContent>
           <ModalSectionContent>
             <InputRow>
               <Input
@@ -114,52 +179,11 @@ const Component: React.FC<Props> = (props: Props) => {
                 errorMessage={formik.errors.instructionsDescription}
               />
             </InputRow>
-            <InputRow>
-              <Switch
-                checked={formik.values.hidePay}
-                onChange={() =>
-                  formik.setFieldValue("hidePay", !formik.values.hidePay)
-                }
-                label="Hide the pay buttons and show fee for information only"
-                disabled={props.disabled}
-                error={formik.errors.hidePay}
-              />
-            </InputRow>
-            {hasFeatureFlag("EXTERNAL_PAY") ? (
-              <InputRow>
-                <Switch
-                  checked={formik.values.externalPay}
-                  onChange={() =>
-                    formik.setFieldValue(
-                      "externalPay",
-                      !formik.values.externalPay,
-                    )
-                  }
-                  label="Collect payments outside of Plan✕"
-                  disabled={props.disabled}
-                  error={formik.errors.externalPay}
-                />
-              </InputRow>
-            ) : (
-              <></>
-            )}
-            <InputRow>
-              <Switch
-                checked={formik.values.allowInviteToPay}
-                onChange={() =>
-                  formik.setFieldValue(
-                    "allowInviteToPay",
-                    !formik.values.allowInviteToPay,
-                  )
-                }
-                label="Allow applicants to invite someone else to pay"
-                disabled={props.disabled}
-                error={formik.errors.allowInviteToPay}
-              />
-            </InputRow>
           </ModalSectionContent>
         </ModalSection>
-        <PaymentMetadataSection disabled={props.disabled} />
+        {payMode !== "informationOnly" && (
+          <PaymentMetadataSection disabled={props.disabled} />
+        )}
         <MoreInformation formik={formik} disabled={props.disabled} />
         <ComponentTagSelect
           onChange={(value) => formik.setFieldValue("tags", value)}
