@@ -19,12 +19,18 @@ import {
   getPaymentRequestExpiry,
 } from "../../checkout/paymentRequest.js";
 import { buildPaymentRequestReturnURL } from "../../checkout/returnURL.js";
-import { formatPence, getStripeId } from "../../helpers.js";
+import { stripe } from "../../client.js";
+import {
+  formatPaymentMethod,
+  formatPence,
+  getStripeId,
+} from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
 import {
   formatSiteAddress,
   getCouncilEmailDetails,
 } from "../paymentConfirmation/service.js";
+import { getPaymentMethodType } from "../paymentStatus/service.js";
 
 /**
  * Reserved metadata set by PlanX on every Checkout Session - paymentRequestId only for invite to pay
@@ -82,6 +88,18 @@ const getFailedPaymentSession = async (
   );
 
   return session;
+};
+
+/**
+ * The method of the failed payment (e.g. "Bacs Direct Debit"), for the payer's email
+ */
+const getFailedPaymentMethod = async (
+  stripePaymentId: string | null,
+): Promise<string> => {
+  if (!stripePaymentId) return formatPaymentMethod(null);
+
+  const paymentIntent = await stripe.paymentIntents.retrieve(stripePaymentId);
+  return formatPaymentMethod(await getPaymentMethodType(paymentIntent));
 };
 
 /**
@@ -205,6 +223,7 @@ export async function handleDelayedPaymentFailed(
   }
 
   const council = await getCouncilEmailDetails(session.flow.team.slug);
+  const paymentMethod = await getFailedPaymentMethod(stripePaymentId);
 
   await sendEmail(
     "payment-failed-payer",
@@ -216,6 +235,7 @@ export async function handleDelayedPaymentFailed(
       address: formatSiteAddress(session.passportData),
       paymentReference: stripePaymentId,
       amount: formatPence(checkoutSession.amount_total ?? 0),
+      paymentMethod,
       councilLogo: council.logo ?? "",
       councilPrimaryColour: council.primaryColour ?? "",
       payLink: payAgain.payLink,
