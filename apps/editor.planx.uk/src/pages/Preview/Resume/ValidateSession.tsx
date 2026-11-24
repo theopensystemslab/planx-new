@@ -1,6 +1,7 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
+import PaymentProcessing from "@planx/components/Pay/Public/PaymentProcessing";
 import { useMutation } from "@tanstack/react-query";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { usePublicRouteContext } from "hooks/usePublicRouteContext";
@@ -55,7 +56,7 @@ export const InvalidSession: React.FC<{
 );
 
 export const LockedSession: React.FC<{
-  paymentRequest?: MinPaymentRequest | null;
+  paymentRequest: MinPaymentRequest;
 }> = ({ paymentRequest }) => {
   const from = usePublicRouteContext();
 
@@ -64,35 +65,23 @@ export const LockedSession: React.FC<{
       bannerHeading="Sorry, you can't make changes to this form"
       additionalOption="startNewApplication"
     >
-      {paymentRequest?.id ? (
-        <Typography variant="body1">
-          This is because you've invited {paymentRequest?.payeeName} (
-          <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
-            {paymentRequest?.payeeEmail}
-          </Link>
-          ) to pay and changes might affect the fee.
-          <br />
-          <br />
-          You can{" "}
-          <CustomLink
-            to={from === "/$flow" ? "/$flow/pay" : "/$team/$flow/pay"}
-            from={from}
-            search={{ paymentRequestId: paymentRequest.id }}
-          >
-            pay yourself on the payment page
-          </CustomLink>
-        </Typography>
-      ) : (
-        <Typography variant="body1">
-          This is because your payment is being processed. Your application will
-          be sent automatically once your payment has been taken, which can take
-          up to 7 working days.
-          <br />
-          <br />
-          You will receive an email when your payment has been taken, or if it
-          fails. If it fails, the email will include a link to pay again.
-        </Typography>
-      )}
+      <Typography variant="body1">
+        This is because you've invited {paymentRequest.payeeName} (
+        <Link href={`mailto:${paymentRequest.payeeEmail}`}>
+          {paymentRequest.payeeEmail}
+        </Link>
+        ) to pay and changes might affect the fee.
+        <br />
+        <br />
+        You can{" "}
+        <CustomLink
+          to={from === "/$flow" ? "/$flow/pay" : "/$team/$flow/pay"}
+          from={from}
+          search={{ paymentRequestId: paymentRequest.id }}
+        >
+          pay yourself on the payment page
+        </CustomLink>
+      </Typography>
     </StatusPage>
   );
 };
@@ -165,8 +154,15 @@ const ValidateSession: React.FC<{
   if (isPending) return <DelayedLoadingIndicator text="Validating..." />;
 
   if (isError) {
-    if (error.statusCode === 403)
-      return <LockedSession paymentRequest={error.data.paymentRequest} />;
+    if (error.statusCode === 403) {
+      const { paymentRequest } = error.data;
+      if (paymentRequest?.id)
+        return <LockedSession paymentRequest={paymentRequest} />;
+
+      // No invite to pay - locked while a delayed payment is processing
+      // This is also where applicants land when returning from Checkout, as the return URL resumes the session
+      return <PaymentProcessing showViewApplicationLink={false} />;
+    }
 
     return <InvalidSession retry={retryWithNewEmailAddress} />;
   }

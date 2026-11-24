@@ -16,11 +16,14 @@ export const sendSaveEmail = async (body: SessionAuthPayload) => {
 
 /**
  * Query DB to validate that sessionID & email match
+ *
+ * A locked session responds 403, which is handled as an expected outcome (not a toast)
  */
 export const validateSession = async (body: SessionAuthPayload) => {
   const { data } = await apiClient.post<ReconciliationResponse>(
     "/validate-session",
     body,
+    { hideErrorToast: true },
   );
   return data;
 };
