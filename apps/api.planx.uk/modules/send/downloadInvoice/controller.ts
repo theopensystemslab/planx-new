@@ -26,6 +26,10 @@ export const downloadInvoice: DownloadInvoiceController = async (
     res.set("Content-Length", pdf.length.toString());
     res.status(200).send(pdf);
   } catch (error) {
+    if (error instanceof ServerError) {
+      return next(error);
+    }
+
     return next(
       new ServerError({
         message: `Failed to download ${invoiceKind} for session ${sessionId}. ${error}`,

@@ -124,9 +124,9 @@ describe("downloading the council invoice", () => {
     await supertest(app)
       .get(`/submission/${SESSION_ID}/invoice/council`)
       .set(authHeader({ role: "teamEditor" }))
-      .expect(500)
+      .expect(404)
       .then((res) => {
-        expect(res.body.error).toMatch(/Failed to download council_invoice/);
+        expect(res.body.error).toMatch(/No stored council_invoice found/);
       });
   });
 
@@ -134,6 +134,21 @@ describe("downloading the council invoice", () => {
     await supertest(app)
       .get(`/submission/${SESSION_ID}/invoice/council`)
       .expect(401);
+  });
+
+  it("returns a 500 when the PDF cannot be fetched from S3", async () => {
+    mockGetInvoiceBySessionId(STORED_COUNCIL_INVOICE);
+    vi.mocked(getFileFromS3).mockResolvedValue({
+      outcome: "not-found",
+    });
+
+    await supertest(app)
+      .get(`/submission/${SESSION_ID}/invoice/council`)
+      .set(authHeader({ role: "teamEditor" }))
+      .expect(500)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Failed to download council_invoice/);
+      });
   });
 });
 
@@ -167,9 +182,9 @@ describe("downloading the payer invoice", () => {
     await supertest(app)
       .get(`/submission/${SESSION_ID}/invoice/payer`)
       .set(authHeader({ role: "teamEditor" }))
-      .expect(500)
+      .expect(404)
       .then((res) => {
-        expect(res.body.error).toMatch(/Failed to download payer_invoice/);
+        expect(res.body.error).toMatch(/No stored payer_invoice found/);
       });
   });
 
@@ -177,5 +192,20 @@ describe("downloading the payer invoice", () => {
     await supertest(app)
       .get(`/submission/${SESSION_ID}/invoice/payer`)
       .expect(401);
+  });
+
+  it("returns a 500 when the PDF cannot be fetched from S3", async () => {
+    mockGetInvoiceBySessionId(STORED_PAYER_INVOICE);
+    vi.mocked(getFileFromS3).mockResolvedValue({
+      outcome: "not-found",
+    });
+
+    await supertest(app)
+      .get(`/submission/${SESSION_ID}/invoice/payer`)
+      .set(authHeader({ role: "teamEditor" }))
+      .expect(500)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Failed to download payer_invoice/);
+      });
   });
 });
