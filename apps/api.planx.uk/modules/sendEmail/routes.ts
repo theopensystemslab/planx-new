@@ -6,15 +6,15 @@ import { useHasuraAuth, useSendEmailAuth } from "../auth/middleware.js";
 import {
   confirmationEmailController,
   paymentEmailController,
-  resendEmailController,
   singleApplicationEmailController,
+  welcomeEmailController,
 } from "./controller.js";
 import { useWelcomeEmailGuard } from "./middleware.js";
 import {
   confirmationEmailSchema,
   paymentEmailSchema,
-  resendEmailSchema,
   singleApplicationEmailSchema,
+  welcomeEmailSchema,
 } from "./types.js";
 
 const router = Router();
@@ -39,8 +39,8 @@ router.post(
   "/send-email/:template(welcome)",
   useSendEmailAuth,
   useWelcomeEmailGuard,
-  validate(resendEmailSchema),
-  resendEmailController,
+  validate(welcomeEmailSchema),
+  welcomeEmailController,
 );
 
 router.post(

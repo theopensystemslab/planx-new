@@ -13,8 +13,8 @@ import { sendSingleApplicationEmail } from "../saveAndReturn/service/utils.js";
 import type {
   ConfirmationEmail,
   PaymentEmail,
-  ResendEmail,
   SingleApplicationEmail,
+  WelcomeEmail,
 } from "./types.js";
 
 export const singleApplicationEmailController: SingleApplicationEmail = async (
@@ -96,7 +96,7 @@ export const confirmationEmailController: ConfirmationEmail = async (
   }
 };
 
-export const resendEmailController: ResendEmail = async (_req, res, next) => {
+export const welcomeEmailController: WelcomeEmail = async (_req, res, next) => {
   const { payload } = res.locals.parsedReq.body;
 
   try {
