@@ -29,7 +29,8 @@ const getLabel = (
           display: "flex",
           flexWrap: "wrap",
           alignItems: "flex-start",
-          gap: 1,
+          rowGap: 0.5,
+          columnGap: 1,
         }}
       >
         <Box sx={{ fontWeight: "bold" }}>{label}</Box>

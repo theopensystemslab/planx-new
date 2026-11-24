@@ -222,18 +222,19 @@ export const PAY_MODE_OPTIONS: {
 }[] = [
   {
     value: "planx",
-    title: "Pay within Plan✕",
-    description: "Applicants pay online before sending their form",
+    title: "Within Plan✕",
+    description: "Applicants pay before sending their form",
   },
   {
     value: "external",
-    title: "Pay outside of Plan✕",
-    description: "Applicants follow instructions to pay separately",
+    title: "Through your own payment system",
+    description:
+      "Applicants are sent to your payment page. Manual payment reconciliation applies",
   },
   {
     value: "informationOnly",
     title: "Show fee only",
-    description: "Display the fee without asking applicants to pay",
+    description: "Applicants see the fee breakdown but aren't asked to pay",
   },
 ];
 

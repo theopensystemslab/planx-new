@@ -53,7 +53,7 @@ const BLOCKER_MESSAGES: Record<
     `${props.count} active GOV.UK Pay session${props.count === 1 ? " is" : "s are"} in progress`,
 };
 
-const PROVIDER_LABELS: Record<NonNullable<PaymentProvider>, string> = {
+export const PROVIDER_LABELS: Record<NonNullable<PaymentProvider>, string> = {
   govpay: "GOV.UK Pay",
   stripe: "Stripe",
 };

@@ -13,6 +13,7 @@ import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikProvider } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { PROVIDER_LABELS } from "pages/FlowEditor/components/Settings/Team/Payment/Provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
@@ -26,6 +27,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
+import { usePaymentProvider } from "../../../../hooks/usePaymentProvider";
 import type { EditorProps } from "../../shared/types";
 import { PaymentMetadataSection } from "./PaymentMetadataSection";
 
@@ -49,8 +51,17 @@ const Component: React.FC<Props> = (props: Props) => {
 
   const payMode = getPayMode(formik.values);
 
+  const { paymentProvider } = usePaymentProvider();
+
   const payModeOptions = PAY_MODE_OPTIONS.filter(
     ({ value }) => value !== "external" || hasFeatureFlag("EXTERNAL_PAY"),
+  ).map((option) =>
+    option.value === "planx" && paymentProvider
+      ? {
+          ...option,
+          title: `${option.title} via ${PROVIDER_LABELS[paymentProvider]}`,
+        }
+      : option,
   );
 
   const handlePayModeChange: React.ComponentProps<
@@ -120,11 +131,11 @@ const Component: React.FC<Props> = (props: Props) => {
           </ModalSectionContent>
         </ModalSection>
         <ModalSection>
-          <ModalSectionContent title="How will the fee be paid?">
+          <ModalSectionContent title="How do you want to collect the fee?">
             <Stack spacing={1}>
               <RadioGroup
                 value={payMode}
-                aria-label="How will the fee be paid?"
+                aria-label="How do you want to collect the fee?"
               >
                 {payModeOptions.map((option) => (
                   <BasicRadio
