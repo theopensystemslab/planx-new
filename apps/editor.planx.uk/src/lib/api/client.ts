@@ -2,6 +2,12 @@ import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
 
+declare module "axios" {
+  interface AxiosRequestConfig {
+    hideErrorToast?: boolean;
+  }
+}
+
 export interface APIError<T> {
   message: string;
   statusCode: number;
@@ -81,7 +87,7 @@ apiClient.interceptors.response.use(
         break;
     }
 
-    if (toastId) {
+    if (toastId && !error.config?.hideErrorToast) {
       toast.error(`[API error]: ${message}`, {
         toastId,
         hideProgressBar: false,
