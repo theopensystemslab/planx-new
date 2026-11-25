@@ -28,7 +28,7 @@ export interface Submission {
     | "Initiated" // Stripe Payment status enum codes (excluding "Created")
     | "Processing"
     | "Succeeded"
-    | "Payment_failed"
+    | "Payment_Failed"
     | "Error"
     | "Unknown";
   retry: boolean;
@@ -36,6 +36,8 @@ export interface Submission {
   createdAt: string;
   flowName: string;
   address: string | null;
+  paymentMethod?: string | null;
+  payBy?: string | null;
 }
 
 export interface GroupedEvent {
@@ -50,6 +52,8 @@ export type Attempt = {
   retry: Submission["retry"];
   response: Submission["response"];
   status: Submission["status"];
+  paymentMethod?: Submission["paymentMethod"];
+  payBy?: Submission["payBy"];
 };
 
 export type SessionEvent = "Invited to pay" | "Started session";
@@ -62,6 +66,7 @@ export interface SubmissionSummary {
   eventCreatedAt: string;
   eventType: Submission["eventType"];
   status: Submission["status"];
+  payBy?: Submission["payBy"];
   consolidatedStatus?: string;
 }
 

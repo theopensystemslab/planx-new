@@ -10,6 +10,7 @@ export const GET_SUBMISSIONS = gql`
       address: address
       eventCreatedAt: created_at
       flowName: flow_name
+      payBy: pay_by
     }
   }
 `;
@@ -30,6 +31,8 @@ export const GET_SUBMISSION_EVENTS = gql`
       address: address
       createdAt: created_at
       flowName: flow_name
+      paymentMethod: payment_method
+      payBy: pay_by
     }
   }
 `;

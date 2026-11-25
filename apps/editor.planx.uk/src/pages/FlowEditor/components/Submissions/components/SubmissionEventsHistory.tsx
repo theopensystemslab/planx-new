@@ -1,10 +1,15 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { format } from "date-fns";
 import { cardBoxShadow, FONT_WEIGHT_BOLD } from "theme";
 import Permission from "ui/editor/Permission";
 
 import type { Attempt, GroupedEvent, SessionEvent, Submission } from "../types";
-import { canResubmit } from "../utils";
+import {
+  canResubmit,
+  formatPaymentMethod,
+  isAwaitingPaymentRetry,
+} from "../utils";
 import { OpenResponseButton } from "./OpenResponseButton";
 import { ResubmitButton } from "./ResubmitButton";
 import { StatusChip } from "./StatusChip";
@@ -33,6 +38,8 @@ const groupEvents = (submissions: Submission[]): GroupedEvent[] => {
         retry: event.retry,
         response: event.response,
         status: event.status,
+        paymentMethod: event.paymentMethod,
+        payBy: event.payBy,
       })),
     };
 
@@ -131,9 +138,11 @@ const SubmissionEvent: React.FC<{
   isMostRecent,
   isSubmissionAvailable,
 }) => {
-  const { eventType, createdAt, status } = attempts[0];
+  const { eventType, createdAt, status, payBy } = attempts[0];
   const hideResponse =
     eventType === "Invited to pay" || eventType === "Started session";
+  // Only the latest payment attempt decides whether the applicant can still pay
+  const isAwaitingRetry = isAwaitingPaymentRetry(status, payBy);
 
   return (
     <Box
@@ -147,7 +156,7 @@ const SubmissionEvent: React.FC<{
       <Box
         sx={{ display: "flex", alignItems: "center", height: TITLE_ROW_HEIGHT }}
       >
-        <StatusIcon status={status} />
+        <StatusIcon status={status} isAwaitingRetry={isAwaitingRetry} />
       </Box>
 
       <Box
@@ -189,14 +198,18 @@ const SubmissionEvent: React.FC<{
         </Permission.IsPlatformAdmin>
 
         {attempts.length === 1 ? (
-          <Typography variant="body2">
-            {new Date(createdAt).toLocaleString()}
-          </Typography>
+          <>
+            <Typography variant="body2">
+              {new Date(createdAt).toLocaleString()}
+            </Typography>
+            {isAwaitingRetry && payBy && <PayByMessage payBy={payBy} />}
+          </>
         ) : (
           <SubmissionAttempts
             attempts={attempts}
             sessionId={sessionId}
             eventType={eventType}
+            isAwaitingRetry={isAwaitingRetry}
           />
         )}
       </Box>
@@ -204,38 +217,60 @@ const SubmissionEvent: React.FC<{
   );
 };
 
+const PayByMessage: React.FC<{ payBy: string }> = ({ payBy }) => (
+  <Typography variant="body2" sx={{ fontWeight: FONT_WEIGHT_BOLD }}>
+    Retry by {format(new Date(payBy), "d MMMM yyyy")}
+  </Typography>
+);
+
+const formatPayAttempt = ({ status, paymentMethod }: Attempt): string => {
+  const label = status === "Payment_Failed" ? "Payment failed" : status;
+  return paymentMethod
+    ? `${label} (${formatPaymentMethod(paymentMethod)})`
+    : `${label}`;
+};
+
 const SubmissionAttempts: React.FC<{
   attempts: Attempt[];
   sessionId: string;
   eventType: Submission["eventType"] | SessionEvent;
-}> = ({ attempts, sessionId, eventType }) => {
+  isAwaitingRetry: boolean;
+}> = ({ attempts, sessionId, eventType, isAwaitingRetry }) => {
   const numberAttempts = attempts.length;
 
   return (
     <Box>
-      {attempts.map((attempt, index) => (
-        <>
+      {attempts.map((attempt, index) => {
+        const isLatest = index === 0;
+
+        return (
           <Box key={`${index}`} sx={{ display: "flex", gap: 2, my: 1 }}>
-            <Box sx={{ width: 100 }}>
-              <StatusChip status={attempt.status} />
+            <Box sx={{ width: 100, flexShrink: 0 }}>
+              <StatusChip
+                status={attempt.status}
+                isAwaitingRetry={isLatest && isAwaitingRetry}
+              />
             </Box>
             <Box>
               {eventType === "Pay" && attempt.status ? (
-                <Typography>{attempt.status}</Typography>
+                <Typography>{formatPayAttempt(attempt)}</Typography>
               ) : (
                 <Typography>Attempt {numberAttempts - index}</Typography>
               )}
               <Typography>
                 {new Date(attempt.createdAt).toLocaleString()}
               </Typography>
+              {isLatest && isAwaitingRetry && attempt.payBy && (
+                <PayByMessage payBy={attempt.payBy} />
+              )}
             </Box>
 
             <Box sx={{ marginLeft: "auto" }}>
               <OpenResponseButton attempt={attempt} sessionId={sessionId} />
             </Box>
           </Box>
-        </>
-      ))}
+        );
+      })}
     </Box>
   );
 };
