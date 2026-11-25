@@ -1,7 +1,8 @@
 import type { AutocompleteProps } from "@mui/material/Autocomplete";
 import Autocomplete from "@mui/material/Autocomplete";
 import FormControl from "@mui/material/FormControl";
-import { styled } from "@mui/material/styles";
+import { inputLabelClasses } from "@mui/material/InputLabel";
+import { styled, type Theme } from "@mui/material/styles";
 
 import { StyledTextField } from "./Autocomplete/styles";
 import { PopupIcon } from "./PopUpIcon";
@@ -51,6 +52,19 @@ export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
 })) as typeof Autocomplete;
 
+const SelectMultipleTextField = styled(StyledTextField)(({ theme }) => ({
+  [`&& .${inputLabelClasses.root}[data-shrink]`]: {
+    ...theme.typography.body2,
+    transform: "translateY(calc(-100% - 5px))",
+    maxWidth: "100%",
+  },
+}));
+
+// Height of a single line of body2 text plus the 5px gap
+const labelSpacing = (theme: Theme) => ({
+  mt: `calc(${theme.typography.body2.fontSize} * ${theme.typography.body2.lineHeight ?? 1.5} + 5px)`,
+});
+
 export function SelectMultiple<T>(props: Props<T>) {
   // MUI doesn't pass the Autocomplete value along to the TextField automatically
   const isSelectEmpty = !props.value?.length;
@@ -60,14 +74,14 @@ export function SelectMultiple<T>(props: Props<T>) {
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
       <StyledAutocomplete<T, true, true, false, "div">
-        sx={{ mt: props.label ? 2 : 0 }}
+        sx={props.label ? labelSpacing : undefined}
         disableClearable
         disableCloseOnSelect
         multiple
         disabled={props.disabled}
         popupIcon={PopupIcon}
         renderInput={(params) => (
-          <StyledTextField
+          <SelectMultipleTextField
             {...params}
             slotProps={{
               ...params.slotProps,
