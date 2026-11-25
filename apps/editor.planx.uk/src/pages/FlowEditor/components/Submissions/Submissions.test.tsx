@@ -52,6 +52,8 @@ describe("When the submissions log renders", () => {
       "1a2b3c4d-6666-4aaa-8aaa-666666666666", // submitToIdoxFailureSummary
       "1a2b3c4d-7777-4aaa-8aaa-777777777777", // sanitisedApplicationSummary
       "aaaaaaaa-4444-4aaa-8aaa-444444444444", // noAddressSendToEmailSummary
+      "1a2b3c4d-8888-4aaa-8aaa-888888888888", // bacsAwaitingRetrySummary
+      "1a2b3c4d-9999-4aaa-8aaa-999999999999", // bacsRetryExpiredSummary
     ];
 
     expectedSessionIds.forEach((sessionId) => {
@@ -70,6 +72,8 @@ describe("When the submissions log renders", () => {
       "Send to email failed": 1,
       "Upload to AWS S3 failed": 1,
       "Submit to Idox Nexus failed": 1,
+      "Awaiting payment retry": 1, // bacsAwaitingRetrySummary
+      "Pay failed": 1, // bacsRetryExpiredSummary
     };
 
     Object.entries(expectedStatusCounts).forEach(([status, count]) => {
@@ -82,7 +86,7 @@ describe("When the submissions log renders", () => {
   it("correctly renders flow names", () => {
     const expectedFlowNameCounts: Record<string, number> = {
       "Dsn impact metrics": 1,
-      "Apply for planning permission": 4, // invitedToPay, paymentInProgress, sending, sanitised
+      "Apply for planning permission": 6, // invitedToPay, paymentInProgress, sending, sanitised, both Bacs
       "Apply for a lawful development certificate": 3, // BOPS, AWS, Idox failures
       "Report a breach": 2, // Uniform + email failures
       "Attend a Public Inquiry": 1,
