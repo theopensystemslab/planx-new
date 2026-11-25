@@ -396,11 +396,14 @@ export function formatEntityName(
   } else if (entity["flood-risk-level"] && metadata?.name) {
     // Flood zones don't publish "name", so rely on dataset name plus risk level
     return `${metadata.name} - Level ${entity["flood-risk-level"]}`;
+  } else if (entity.name) {
+    // Use entity "name" as published by dataset publisher
+    return entity.name;
   } else if (metadata?.name) {
-    // Use metadata name when entity name is not available
+    // Use standard metadata name only when entity name is not available
     return metadata.name;
   } else {
-    // Default to entity name or generic fallback
-    return entity.name || `Entity #${entity.entity}`;
+    // Default to generic fallback
+    return `Entity #${entity.entity}`;
   }
 }
