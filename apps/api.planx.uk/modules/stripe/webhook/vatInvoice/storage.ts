@@ -25,6 +25,7 @@ export interface StoredInvoice {
   sessionId: string;
   flowId: string;
   teamId: number;
+  stripeAccountId: string | null;
   invoiceNumber: string;
   issuedAt: string;
   net: number;
@@ -58,6 +59,7 @@ const STORED_INVOICE_FIELDS = `
   sessionId: session_id
   flowId: flow_id
   teamId: team_id
+  stripeAccountId: stripe_account_id
   invoiceNumber: invoice_number
   issuedAt: issued_at
   net
@@ -151,6 +153,7 @@ export async function reserveInvoice({
         session_id: invoice.sessionId,
         flow_id: invoice.flowId,
         team_id: invoice.teamId,
+        stripe_account_id: invoice.stripeAccountId,
         issued_at: issuedAt.toISOString(),
         net: invoice.net,
         vat: invoice.vat,

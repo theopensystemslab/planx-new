@@ -10,13 +10,23 @@ import {
   sendEmail,
 } from "../../../../lib/resend/index.js";
 import { reportError } from "../../../pay/helpers.js";
-import { formatPaymentMethod, formatPence } from "../../helpers.js";
+import {
+  formatPaymentMethod,
+  formatPence,
+  getDestinationAccountId,
+} from "../../helpers.js";
 import type { PaymentSession } from "../ownership/service.js";
+import { getNamedStripeAccount } from "../vatInvoice/seller.js";
 import { getCheckoutSession, getSucceededAt } from "../vatInvoice/service.js";
 import type { StoredInvoice } from "../vatInvoice/storage.js";
 import { getInvoicePdf, getStoredInvoices } from "../vatInvoice/storage.js";
 
 interface CouncilEmailDetails {
+  /**
+   * The name of the named Stripe account the payment was made to (e.g. "Worthing")
+   * null for payments to the single account named after the team
+   */
+  accountName: string | null;
   /** Reply-to address for emails to the payer */
   helpEmail: string | null;
   /** Where the council receives VAT documents */
@@ -27,40 +37,54 @@ interface CouncilEmailDetails {
 
 export async function getCouncilEmailDetails(
   teamSlug: string,
+  stripeAccountId: string | null,
 ): Promise<CouncilEmailDetails> {
-  const {
-    teams: [team],
-  } = await $api.client.request<{
-    teams: {
-      teamSettings: { helpEmail: string | null } | null;
-      invoiceDetails: { emailAddress: string | null } | null;
-      theme: { logo: string | null; primaryColour: string | null } | null;
-    }[];
-  }>(
-    gql`
-      query GetCouncilEmailDetails($teamSlug: String!) {
-        teams(where: { slug: { _eq: $teamSlug } }) {
-          teamSettings: team_settings {
-            helpEmail: help_email
-          }
-          invoiceDetails: invoice_details {
-            emailAddress: email_address
-          }
-          theme {
-            logo
-            primaryColour: primary_colour
+  const [
+    {
+      teams: [team],
+    },
+    namedAccount,
+  ] = await Promise.all([
+    $api.client.request<{
+      teams: {
+        teamSettings: { helpEmail: string | null } | null;
+        invoiceDetails: { emailAddress: string | null } | null;
+        theme: { logo: string | null; primaryColour: string | null } | null;
+      }[];
+    }>(
+      gql`
+        query GetCouncilEmailDetails($teamSlug: String!) {
+          teams(where: { slug: { _eq: $teamSlug } }) {
+            teamSettings: team_settings {
+              helpEmail: help_email
+            }
+            invoiceDetails: invoice_details {
+              emailAddress: email_address
+            }
+            theme {
+              logo
+              primaryColour: primary_colour
+            }
           }
         }
-      }
-    `,
-    { teamSlug },
-  );
+      `,
+      { teamSlug },
+    ),
+    getNamedStripeAccount(teamSlug, stripeAccountId),
+  ]);
 
   if (!team) throw new Error(`Team ${teamSlug} not found`);
 
+  const invoiceDetails = namedAccount
+    ? namedAccount.invoiceDetails
+    : team.invoiceDetails;
+
   return {
+    accountName: namedAccount
+      ? namedAccount.invoiceDetails?.organisationName || namedAccount.name
+      : null,
     helpEmail: team.teamSettings?.helpEmail || null,
-    invoiceEmail: team.invoiceDetails?.emailAddress || null,
+    invoiceEmail: invoiceDetails?.emailAddress || null,
     logo: team.theme?.logo || null,
     primaryColour: team.theme?.primaryColour || null,
   };
@@ -108,16 +132,20 @@ export async function sendPaymentConfirmationEmails(
     sessionId: recorded.sessionId,
   };
 
+  const stripeAccountId = getDestinationAccountId(paymentIntent);
+
   const [checkoutSession, council, invoices, succeededAt] = await Promise.all([
     getCheckoutSession(paymentIntent.id),
-    getCouncilEmailDetails(recorded.teamSlug),
+    getCouncilEmailDetails(recorded.teamSlug, stripeAccountId),
     getStoredInvoices(paymentIntent.id),
     getSucceededAt(paymentIntent),
   ]);
 
+  const councilName = council.accountName ?? recorded.teamName;
+
   const variables = {
     serviceName: recorded.flowName,
-    councilName: recorded.teamName,
+    councilName,
     sessionId: recorded.sessionId,
     paymentReference: paymentIntent.id,
     amount: formatPence(paymentIntent.amount),
@@ -144,7 +172,7 @@ export async function sendPaymentConfirmationEmails(
       },
       {
         idempotencyKey: `payment-confirmed-payer-${paymentIntent.id}`,
-        from: getCouncilFromAddress(recorded.teamName),
+        from: getCouncilFromAddress(councilName),
         replyTo: council.helpEmail ?? undefined,
         attachments: receipt ? [await toAttachment(receipt)] : undefined,
       },
@@ -155,7 +183,7 @@ export async function sendPaymentConfirmationEmails(
     return reportError({
       error:
         "Could not send payment confirmation to the council: no invoice email address configured",
-      context: { ...context, teamSlug: recorded.teamSlug },
+      context: { ...context, teamSlug: recorded.teamSlug, stripeAccountId },
     });
   }
 
