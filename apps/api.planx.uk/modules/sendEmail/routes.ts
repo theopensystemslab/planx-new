@@ -6,7 +6,6 @@ import { useSendEmailAuth } from "../auth/middleware.js";
 import {
   confirmationEmailController,
   paymentEmailController,
-  remittanceEmailController,
   singleApplicationEmailController,
   welcomeEmailController,
 } from "./controller.js";
@@ -14,7 +13,6 @@ import { useWelcomeEmailGuard } from "./middleware.js";
 import {
   confirmationEmailSchema,
   paymentEmailSchema,
-  remittanceEmailSchema,
   singleApplicationEmailSchema,
   welcomeEmailSchema,
 } from "./types.js";
@@ -43,13 +41,6 @@ router.post(
   useWelcomeEmailGuard,
   validate(welcomeEmailSchema),
   welcomeEmailController,
-);
-
-router.post(
-  "/send-email/:template(remittance)",
-  useSendEmailAuth,
-  validate(remittanceEmailSchema),
-  remittanceEmailController,
 );
 
 router.post(

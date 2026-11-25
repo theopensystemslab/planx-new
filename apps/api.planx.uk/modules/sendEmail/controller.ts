@@ -13,7 +13,6 @@ import { sendSingleApplicationEmail } from "../saveAndReturn/service/utils.js";
 import type {
   ConfirmationEmail,
   PaymentEmail,
-  RemittanceEmail,
   SingleApplicationEmail,
   WelcomeEmail,
 } from "./types.js";
@@ -113,31 +112,6 @@ export const welcomeEmailController: WelcomeEmail = async (_req, res, next) => {
     return next(
       new ServerError({
         message: `Failed to send "welcome" email. ${(error as Error).message}`,
-        cause: error,
-      }),
-    );
-  }
-};
-
-export const remittanceEmailController: RemittanceEmail = async (
-  _req,
-  res,
-  next,
-) => {
-  const { payload } = res.locals.parsedReq.body;
-
-  try {
-    const variables: TemplateRegistry["remittance"]["variables"] = {
-      team: payload.team,
-      date: payload.date,
-    };
-
-    const response = await sendEmail("remittance", payload.email, variables);
-    return res.status(200).send(response);
-  } catch (error) {
-    return next(
-      new ServerError({
-        message: `Failed to send "remittance" email. ${(error as Error).message}`,
         cause: error,
       }),
     );

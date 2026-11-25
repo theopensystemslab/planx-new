@@ -39,13 +39,14 @@ import { reconcilePayments } from "./service/reconcilePayments/index.js";
 import type { ReconcilePaymentsController } from "./service/reconcilePayments/types.js";
 import { sanitiseApplicationData } from "./service/sanitiseApplicationData/index.js";
 import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/types.js";
+import { sendRemittanceEmailPerCouncil } from "./service/sendDailyRemittanceEmail/index.js";
+import type { DailyRemittanceController } from "./service/sendDailyRemittanceEmail/types.js";
 import { sendSlackNotification } from "./service/sendNotification/index.js";
 import type { SendSlackNotification } from "./service/sendNotification/types.js";
 import type { SendSlackMessageController } from "./service/sendSlackMessage/schema.js";
 import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
 import type { UpdateTemplatedFlowEditsController } from "./service/updateTemplatedFlowEdits/schema.js";
 import type { IsCleanJSONBController } from "./service/validateInput/schema.js";
-
 export const sendSlackNotificationController: SendSlackNotification = async (
   _req,
   res,
@@ -430,3 +431,34 @@ export const delayedPaymentSendEventsController: DelayedPaymentSendEventsControl
       );
     }
   };
+
+export const sendDailyRemittanceController: DailyRemittanceController = async (
+  _req,
+  res,
+  next,
+) => {
+  const isProduction = process.env.APP_ENVIRONMENT === "production"; // we only want to send remittance emails on prod
+  if (!isProduction)
+    return res.status(200).send({
+      message: "Not production, no daily remittance emails to send",
+      results: [],
+    });
+
+  try {
+    const results = await sendRemittanceEmailPerCouncil();
+    const failures = results.filter((r) => r.status === "failed");
+    return res.status(200).send({
+      message: failures.length
+        ? `Sent daily remittance with ${failures.length} failure(s)`
+        : "Sent daily remittance emails",
+      results,
+    });
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: "Failed to send daily remittance emails",
+        cause: error,
+      }),
+    );
+  }
+};
