@@ -9,8 +9,9 @@ import Typography from "@mui/material/Typography";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
 import Feedback from "components/Feedback";
 import ServiceToolbar from "components/ServiceToolbar";
+import { usePaletteMode } from "hooks/usePaletteMode";
 import { useStore } from "pages/FlowEditor/lib/store";
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren, useMemo } from "react";
 import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 import Main from "ui/shared/Main";
@@ -96,7 +97,11 @@ const PublicFooter: React.FC = () => {
 
 const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const teamTheme = useStore((state) => state.teamTheme);
-  const teamMUITheme = generateTeamTheme(teamTheme);
+  const paletteMode = usePaletteMode();
+  const teamMUITheme = useMemo(
+    () => generateTeamTheme(teamTheme, paletteMode),
+    [teamTheme, paletteMode],
+  );
 
   return (
     <StyledEngineProvider injectFirst>
