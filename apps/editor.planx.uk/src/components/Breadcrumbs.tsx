@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import { useParams } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -19,7 +19,7 @@ const BreadcrumbsContainer = styled(Box)(({ theme }) => ({
   top: 0,
   left: 0,
   zIndex: theme.zIndex.appBar,
-  backgroundColor: `rgba(255, 255, 255, 0.2)`,
+  backgroundColor: alpha(theme.palette.background.default, 0.2),
   padding: theme.spacing(1.2, 1.25, 1.2, 2),
   borderRadius: "0 50px 50px 0",
   backdropFilter: "blur(20px)",

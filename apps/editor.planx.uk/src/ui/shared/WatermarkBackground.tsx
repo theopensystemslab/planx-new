@@ -40,11 +40,13 @@ const Background = styled(Box, {
   height: "200%",
   transform: "rotate(-45deg)",
   transformOrigin: "center",
+  // Variants describe the light palette - invert them in dark mode so the watermark stays visible
   backgroundColor:
-    variant === "light"
+    (variant === "light") !== (theme.palette.mode === "dark")
       ? theme.palette.common.white
       : theme.palette.common.black,
-  opacity,
+  // A white watermark reads more strongly on a dark background, so reduce its opacity in dark mode
+  opacity: theme.palette.mode === "dark" ? opacity / 2 : opacity,
   maskImage: `url("${svgDataUri}")`,
   maskRepeat: "repeat",
   maskSize: "10% auto",
