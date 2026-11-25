@@ -78,9 +78,10 @@ const PaymentProcessing: React.FC<{ showViewApplicationLink?: boolean }> = ({
           <Typography variant="h2" sx={{ mt: 4 }}>
             Contact us
           </Typography>
-          <List>
-            <li>if you have any questions</li>
-          </List>
+          <Typography variant="body2">
+            Contact us if you have any questions about your application or
+            payment.
+          </Typography>
           <Box>
             <Typography variant="body2">
               <strong>Telephone</strong> {helpPhone}
