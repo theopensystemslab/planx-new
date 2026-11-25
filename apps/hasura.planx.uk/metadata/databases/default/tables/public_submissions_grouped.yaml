@@ -23,6 +23,8 @@ select_permissions:
         - created_at
         - flow_id
         - session_id
+        - payment_method
+        - pay_by
       filter: {}
     comment: ""
   - role: teamEditor
@@ -36,6 +38,8 @@ select_permissions:
         - created_at
         - flow_id
         - session_id
+        - payment_method
+        - pay_by
       filter:
         team:
           members:

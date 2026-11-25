@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import { useStore } from "../../../lib/store";
 import {
+  mockBacsAwaitingRetryEvents,
   mockInvitedToPayEvents,
   mockSanitisedSuccessEvents,
   mockStripeSubmissionEvents,
@@ -79,6 +80,17 @@ const mocks = [
       },
     },
   },
+  {
+    request: {
+      query: GET_SUBMISSION_EVENTS,
+      variables: { sessionId: "bacs-awaiting-retry-0000-0000-00000000" },
+    },
+    result: {
+      data: {
+        submissions: mockBacsAwaitingRetryEvents,
+      },
+    },
+  },
 ];
 
 const meta = {
@@ -130,5 +142,11 @@ export const SanitisedSuccess = {
 export const SanitisedSuccessStripePayment = {
   args: {
     sessionId: "sanitised-stripe-success-0000-0000-0000000",
+  },
+} satisfies Story;
+
+export const BacsAwaitingPaymentRetry = {
+  args: {
+    sessionId: "bacs-awaiting-retry-0000-0000-00000000",
   },
 } satisfies Story;

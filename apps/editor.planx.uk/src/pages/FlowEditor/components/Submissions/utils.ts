@@ -1,12 +1,38 @@
+import { isFuture } from "date-fns";
 import { RETENTION_PERIOD_MONTHS } from "ui/shared/constants";
 
 import type { SessionEvent, Submission } from "./types";
 
+export const AWAITING_PAYMENT_RETRY = "Awaiting payment retry";
+
+/**
+ * A failed delayed payment which the applicant has been emailed about, and can still pay again
+ * payBy is only set by the view if this is possible
+ */
+export const isAwaitingPaymentRetry = (
+  status: string | undefined,
+  payBy: string | null | undefined,
+): boolean =>
+  status === "Payment_Failed" && !!payBy && isFuture(new Date(payBy));
+
+const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  card: "Card",
+  pay_by_bank: "Pay by bank",
+  bacs_debit: "Bacs Direct Debit",
+};
+
+// Matches formatPaymentMethod() in api.planx.uk
+export const formatPaymentMethod = (paymentMethod: string): string =>
+  PAYMENT_METHOD_LABELS[paymentMethod] ?? paymentMethod.replaceAll("_", " ");
+
 export const getConsolidatedStatus = (
   status: string | undefined,
   eventType: string,
+  payBy?: string | null,
 ): string => {
-  if (eventType === "Invited to pay" && status === "Success") {
+  if (isAwaitingPaymentRetry(status, payBy)) {
+    return AWAITING_PAYMENT_RETRY;
+  } else if (eventType === "Invited to pay" && status === "Success") {
     return eventType;
   } else if (
     status === "Started" ||

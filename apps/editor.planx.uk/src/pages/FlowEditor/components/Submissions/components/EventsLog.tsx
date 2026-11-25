@@ -51,6 +51,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
     consolidatedStatus: getConsolidatedStatus(
       submission.status,
       submission.eventType,
+      submission.payBy,
     ),
   }));
 

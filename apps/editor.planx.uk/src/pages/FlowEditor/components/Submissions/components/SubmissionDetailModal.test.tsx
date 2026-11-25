@@ -1,4 +1,5 @@
 import { screen, waitFor } from "@testing-library/react";
+import { subDays } from "date-fns";
 import { graphql, http, HttpResponse } from "msw";
 import { getUserRoleForTeam } from "pages/FlowEditor/lib/store/user";
 import server from "test/mockServer";
@@ -7,12 +8,14 @@ import { setup } from "test/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
+  mockBacsAwaitingRetryEvents,
   mockPay,
   mockStripePaySuccess,
   mockSubmissionEvents,
   mockSubmissionFailureEvents,
   teamData,
 } from "../mockSubmissions";
+import type { Submission } from "../types";
 import SubmissionDetailModal from "./SubmissionDetailModal";
 
 const mockTeamSlug = "test-council";
@@ -188,6 +191,44 @@ describe("SubmissionDetailModal", () => {
       await waitFor(() => {
         expect(screen.getByText(/Response for/i)).toBeInTheDocument();
       });
+    });
+  });
+
+  describe("Bacs payment awaiting retry", () => {
+    const renderWithEvents = async (submissions: Submission[]) => {
+      server.use(
+        graphql.query("GetSubmissionEvents", () =>
+          HttpResponse.json({ data: { submissions } }),
+        ),
+      );
+      await setup(
+        <SubmissionDetailModal sessionId="bacs-awaiting-retry-0000-0000-00000000" />,
+      );
+    };
+
+    it("shows the payment method and the date to retry by", async () => {
+      await renderWithEvents(mockBacsAwaitingRetryEvents);
+
+      expect(
+        await screen.findByText("Payment failed (Bacs Direct Debit)"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Processing (Bacs Direct Debit)"),
+      ).toBeInTheDocument();
+      expect(screen.getByText(/Retry by/)).toBeInTheDocument();
+    });
+
+    it("does not show a date to retry by once the window has passed", async () => {
+      const [failed, ...rest] = mockBacsAwaitingRetryEvents;
+      await renderWithEvents([
+        { ...failed, payBy: subDays(new Date(), 1).toISOString() },
+        ...rest,
+      ]);
+
+      expect(
+        await screen.findByText("Payment failed (Bacs Direct Debit)"),
+      ).toBeInTheDocument();
+      expect(screen.queryByText(/Retry by/)).not.toBeInTheDocument();
     });
   });
 

@@ -2,6 +2,7 @@ export const submissionStatusOptions = [
   "Success",
   "Invited to pay",
   "Payment in progress",
+  "Awaiting payment retry",
   "Sending",
   "Send to BOPS failed",
   "Send to Uniform failed",

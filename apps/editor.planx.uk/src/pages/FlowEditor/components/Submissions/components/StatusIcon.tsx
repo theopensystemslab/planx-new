@@ -1,4 +1,5 @@
 import CancelIcon from "@mui/icons-material/Cancel";
+import ErrorIcon from "@mui/icons-material/Error";
 import PendingIcon from "@mui/icons-material/Pending";
 import CheckCircleIcon from "ui/icons/CheckCircle";
 
@@ -6,6 +7,7 @@ import type { Submission } from "../types";
 
 interface Props {
   status: Submission["status"];
+  isAwaitingRetry?: boolean;
 }
 
 export const STATUS_ICON_SIZE = 28;
@@ -33,12 +35,13 @@ const StatusIconMap: Record<
   // Stripe
   Initiated: <PendingIcon color="info" sx={iconSx} />,
   Processing: <PendingIcon color="warning" sx={iconSx} />,
-  Payment_failed: <CancelIcon color="disabled" sx={iconSx} />,
+  Payment_Failed: <CancelIcon color="error" sx={iconSx} />,
   Error: <CancelIcon color="error" sx={iconSx} />,
   Unknown: <CancelIcon color="error" sx={iconSx} />,
 };
 
-export const StatusIcon: React.FC<Props> = ({ status }) => {
+export const StatusIcon: React.FC<Props> = ({ status, isAwaitingRetry }) => {
   if (!status) return null;
+  if (isAwaitingRetry) return <ErrorIcon color="warning" sx={iconSx} />;
   return StatusIconMap[status] || null;
 };

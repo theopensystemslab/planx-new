@@ -1,9 +1,10 @@
-import { addMinutes, subDays, subMonths } from "date-fns";
+import { addDays, addMinutes, subDays, subMonths } from "date-fns";
 
 import type { Submission, SubmissionSummary } from "./types";
 
 const daysAgo = (n: number): string => subDays(new Date(), n).toISOString();
 const monthsAgo = (n: number): string => subMonths(new Date(), n).toISOString();
+const daysFromNow = (n: number): string => addDays(new Date(), n).toISOString();
 
 // Anchor the event sequence to relative time so it never ages past the 28-day submission expiry window
 const submissionBase = subDays(new Date(), 1);
@@ -242,6 +243,31 @@ const sanitisedApplicationSummary: SubmissionSummary = {
   consolidatedStatus: "Success",
 };
 
+// Stripe Bacs Direct Debit
+const bacsAwaitingRetrySummary: SubmissionSummary = {
+  id: "1a2b3c4d-8888-4aaa-8aaa-888888888888",
+  flowId: "d0744118-f902-4538-b439-573f4b42a727",
+  flowName: "Apply for planning permission",
+  address: "6, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
+  eventCreatedAt: daysAgo(3),
+  eventType: "Pay",
+  status: "Payment_Failed",
+  payBy: daysFromNow(20),
+  consolidatedStatus: "Awaiting payment retry",
+};
+
+const bacsRetryExpiredSummary: SubmissionSummary = {
+  id: "1a2b3c4d-9999-4aaa-8aaa-999999999999",
+  flowId: "d0744118-f902-4538-b439-573f4b42a727",
+  flowName: "Apply for planning permission",
+  address: "7, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
+  eventCreatedAt: daysAgo(30),
+  eventType: "Pay",
+  status: "Payment_Failed",
+  payBy: daysAgo(1),
+  consolidatedStatus: "Pay failed",
+};
+
 export const mockSubmissionsAllStatuses: SubmissionSummary[] = [
   sendToEmailSuccessSummary,
   invitedToPaySummary,
@@ -254,6 +280,8 @@ export const mockSubmissionsAllStatuses: SubmissionSummary[] = [
   submitToIdoxFailureSummary,
   sanitisedApplicationSummary,
   noAddressSendToEmailSummary,
+  bacsAwaitingRetrySummary,
+  bacsRetryExpiredSummary,
 ];
 
 export const mockSubmissionsPartialStatuses: SubmissionSummary[] = [
@@ -395,3 +423,53 @@ export const mockStripePaySuccess: Submission = {
   flowName: "Report a planning breach",
   address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
+
+const bacsEvent = {
+  flowId: "d0744118-f902-4538-b439-573f4b42a727",
+  sessionId: "bacs-awaiting-retry-0000-0000-00000000",
+  retry: false,
+  flowName: "Apply for planning permission",
+  address: "6, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
+};
+
+// Newest first, matching GET_SUBMISSION_EVENTS
+export const mockBacsAwaitingRetryEvents: Submission[] = [
+  {
+    ...bacsEvent,
+    eventId: "pi_bacs_failed",
+    eventType: "Pay",
+    status: "Payment_Failed",
+    response: { status: "payment_failed", stripe_reference: "pi_bacs_failed" },
+    createdAt: daysAgo(3),
+    paymentMethod: "bacs_debit",
+    payBy: daysFromNow(20),
+  },
+  {
+    ...bacsEvent,
+    eventId: "pi_bacs_processing",
+    eventType: "Pay",
+    status: "Processing",
+    response: { status: "processing", stripe_reference: "pi_bacs_processing" },
+    createdAt: daysAgo(8),
+    paymentMethod: "bacs_debit",
+    payBy: null,
+  },
+  {
+    ...bacsEvent,
+    eventId: "cs_bacs_initiated",
+    eventType: "Pay",
+    status: "Initiated",
+    response: { status: "initiated", stripe_reference: "cs_bacs_initiated" },
+    createdAt: daysAgo(8),
+    paymentMethod: null,
+    payBy: null,
+  },
+  {
+    ...bacsEvent,
+    eventId: "bacs-awaiting-retry-0000-0000-00000000",
+    eventType: "Started session",
+    status: "Success",
+    response: {},
+    createdAt: daysAgo(9),
+  },
+];
