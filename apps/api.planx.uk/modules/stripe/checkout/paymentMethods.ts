@@ -23,11 +23,11 @@ export const CARD_LIMIT = 600_00;
 export const PAY_BY_BANK_LIMIT = 25_000_00;
 
 /**
- * Stripe's default Bacs Direct Debit limit per payment (£10k in pence)
+ * Stripe's default Bacs Direct Debit limit per payment (£25k in pence)
  *
  * @docs https://docs.stripe.com/payments/bacs-debit
  */
-export const BACS_DEBIT_LIMIT = 10_000_00;
+export const BACS_DEBIT_LIMIT = 25_000_00;
 
 const CAPABILITY_FOR_METHOD: Record<
   PaymentMethodType,
