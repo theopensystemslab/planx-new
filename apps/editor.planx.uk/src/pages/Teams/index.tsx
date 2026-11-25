@@ -3,7 +3,6 @@ import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { usePermission } from "hooks/usePermission";
 import type { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React from "react";
 import { focusStyle } from "theme";
@@ -41,8 +40,6 @@ const TeamColourBand = styled(Box)(({ theme }) => ({
 }));
 
 const Teams: React.FC<Props> = ({ teams }) => {
-  const isPlatformAdmin = usePermission(["platformAdmin"]);
-
   const renderTeams = (teamsToRender: Array<TeamSummary>) =>
     teamsToRender.map((team) => {
       return (
@@ -60,7 +57,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
             </Box>
             <Box sx={{ display: "flex", gap: 1 }}>
               {team.settings?.isTrial && <InfoChip label="Trial account" />}
-              {isPlatformAdmin && team.settings?.isGuidanceOnly && (
+              {team.settings?.isGuidanceOnly && (
                 <InfoChip
                   label="Guidance only"
                   sx={{
