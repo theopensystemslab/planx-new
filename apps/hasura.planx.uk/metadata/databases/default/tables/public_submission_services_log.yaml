@@ -21,6 +21,8 @@ select_permissions:
         - event_type
         - flow_id
         - flow_name
+        - pay_by
+        - payment_method
         - response
         - retry
         - session_id
@@ -37,6 +39,8 @@ select_permissions:
         - event_type
         - flow_id
         - flow_name
+        - pay_by
+        - payment_method
         - response
         - retry
         - session_id
