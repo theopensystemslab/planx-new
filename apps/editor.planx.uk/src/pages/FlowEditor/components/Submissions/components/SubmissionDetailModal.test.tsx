@@ -404,10 +404,10 @@ describe("SubmissionDetailModal", () => {
       const paymentMenu = await screen.findByTestId("payment-menu-button");
       await user.click(paymentMenu);
       const councilInvoiceButton = await screen.findByText(
-        /Download council invoice/i,
+        /Download service charge receipt/i,
       );
       const payerInvoiceButton = await screen.findByText(
-        /Download payer invoice/i,
+        /Download payer receipt/i,
       );
 
       await waitFor(() => {
@@ -443,10 +443,10 @@ describe("SubmissionDetailModal", () => {
       const paymentMenu = await screen.findByTestId("payment-menu-button");
       await user.click(paymentMenu);
       const councilInvoiceButton = await screen.findByText(
-        /Download council invoice/i,
+        /Download service charge receipt/i,
       );
       const payerInvoiceButton = await screen.findByText(
-        /Download payer invoice/i,
+        /Download payer receipt/i,
       );
       await waitFor(() => {
         expect(councilInvoiceButton.closest("li")).toHaveAttribute(
