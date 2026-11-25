@@ -45,11 +45,70 @@ CREATE OR REPLACE VIEW "public"."teams_summary" AS
   WHERE t.category = 'lpa'
   ORDER BY t.name;
 
+-- Restore the team-only invoice numbering
+CREATE OR REPLACE FUNCTION "public"."set_payment_invoice_number"() RETURNS TRIGGER
+LANGUAGE plpgsql AS $$
+DECLARE
+  _reference TEXT;
+  _prefix TEXT;
+  _number INTEGER;
+  _existing_invoice_number TEXT;
+BEGIN
+  -- Fall back to the team slug if the team has no reference code
+  SELECT COALESCE(NULLIF(TRIM(ts.reference_code), ''), UPPER(t.slug))
+  INTO _reference
+  FROM "public"."teams" t
+  LEFT JOIN "public"."team_settings" ts ON ts.team_id = t.id
+  WHERE t.id = NEW.team_id;
+
+  _prefix := CASE NEW.kind WHEN 'payer_invoice' THEN 'PX' ELSE 'OSL' END
+    || '-' || EXTRACT(YEAR FROM NEW.issued_at AT TIME ZONE 'Europe/London')::TEXT
+    || '-INV-' || _reference;
+
+  -- Lock this prefix's sequence, so concurrent inserts are numbered one at a time
+  INSERT INTO "public"."invoice_number_sequences" ("prefix") VALUES (_prefix)
+  ON CONFLICT ("prefix") DO NOTHING;
+
+  SELECT last_number INTO _number
+  FROM "public"."invoice_number_sequences"
+  WHERE prefix = _prefix
+  FOR UPDATE;
+
+  -- Already invoiced - this insert will hit the (stripe_payment_intent_id, kind) unique constraint,
+  -- so reuse the existing number rather than using up a new one
+  SELECT invoice_number INTO _existing_invoice_number
+  FROM "public"."payment_invoices"
+  WHERE stripe_payment_intent_id = NEW.stripe_payment_intent_id
+    AND kind = NEW.kind;
+
+  IF _existing_invoice_number IS NOT NULL THEN
+    NEW.invoice_number := _existing_invoice_number;
+    RETURN NEW;
+  END IF;
+
+  _number := _number + 1;
+
+  UPDATE "public"."invoice_number_sequences"
+  SET last_number = _number
+  WHERE prefix = _prefix;
+
+  NEW.invoice_number := _prefix || '-' || LPAD(_number::TEXT, GREATEST(5, LENGTH(_number::TEXT)), '0');
+
+  RETURN NEW;
+END;
+$$;
+
+ALTER TABLE "public"."payment_invoices" DROP COLUMN "stripe_account_id";
+
 ALTER TABLE "public"."payment_status" DROP COLUMN "stripe_account_id";
 
 ALTER TABLE "public"."team_settings" DROP COLUMN "multiple_stripe_accounts_enabled";
 
 DELETE FROM "public"."team_invoice_details" WHERE "team_stripe_account_id" IS NOT NULL;
+
+ALTER TABLE "public"."team_invoice_details" DROP CONSTRAINT "team_invoice_details_reference_code_check";
+
+ALTER TABLE "public"."team_invoice_details" DROP COLUMN "reference_code";
 
 ALTER TABLE "public"."team_invoice_details" DROP CONSTRAINT "team_invoice_details_owner_check";
 

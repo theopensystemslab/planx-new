@@ -22,6 +22,7 @@ insert_permissions:
         - county
         - email_address
         - postcode
+        - reference_code
         - town_city
         - vat_number
     comment: ""
@@ -38,6 +39,7 @@ select_permissions:
         - county
         - email_address
         - postcode
+        - reference_code
         - team_stripe_account_id
         - town_city
         - vat_number
@@ -55,6 +57,7 @@ select_permissions:
         - county
         - email_address
         - postcode
+        - reference_code
         - team_stripe_account_id
         - town_city
         - vat_number
@@ -72,6 +75,7 @@ select_permissions:
         - county
         - email_address
         - postcode
+        - reference_code
         - town_city
         - vat_number
       filter:
@@ -94,6 +98,7 @@ update_permissions:
         - county
         - email_address
         - postcode
+        - reference_code
         - team_id
         - town_city
         - vat_number
@@ -110,6 +115,7 @@ update_permissions:
         - county
         - email_address
         - postcode
+        - reference_code
         - team_id
         - town_city
         - vat_number

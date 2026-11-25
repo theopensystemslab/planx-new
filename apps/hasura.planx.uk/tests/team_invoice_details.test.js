@@ -8,6 +8,14 @@ const queryStripeAccountLink = `
   }
 `;
 
+const queryReferenceCode = `
+  query {
+    team_invoice_details {
+      reference_code
+    }
+  }
+`;
+
 describe("team_invoice_details", () => {
   describe("public", () => {
     let i;
@@ -79,6 +87,12 @@ describe("team_invoice_details", () => {
       expect(res).toHaveProperty("errors");
     });
 
+    // Set in the invoice details form for a named Stripe account
+    test("can query a named Stripe account's reference code", async () => {
+      const res = await gqlWithRole("teamEditor")(queryReferenceCode);
+      expect(res).not.toHaveProperty("errors");
+    });
+
     test("can update team_invoice_details", () => {
       expect(i.mutations).toContain("update_team_invoice_details");
       expect(i.mutations).toContain("update_team_invoice_details_by_pk");
@@ -126,6 +140,11 @@ describe("team_invoice_details", () => {
 
     test("can see which Stripe account invoice details belong to", async () => {
       const res = await gqlWithRole("api")(queryStripeAccountLink);
+      expect(res).not.toHaveProperty("errors");
+    });
+
+    test("can query a named Stripe account's reference code", async () => {
+      const res = await gqlWithRole("api")(queryReferenceCode);
       expect(res).not.toHaveProperty("errors");
     });
 

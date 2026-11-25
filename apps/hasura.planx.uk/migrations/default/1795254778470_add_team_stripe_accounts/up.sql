@@ -86,6 +86,16 @@ ALTER TABLE "public"."team_invoice_details"
 
 COMMENT ON COLUMN "public"."team_invoice_details"."team_stripe_account_id" IS E'Set for an additional Stripe account\'s invoice details, in place of team_id';
 
+-- A named Stripe account is a separate seller, so its invoices are numbered under its own reference code
+-- Team invoice details keep using team_settings.reference_code
+ALTER TABLE "public"."team_invoice_details" ADD COLUMN "reference_code" TEXT NULL UNIQUE;
+
+ALTER TABLE "public"."team_invoice_details"
+  ADD CONSTRAINT "team_invoice_details_reference_code_check"
+  CHECK ("reference_code" IS NULL OR "team_stripe_account_id" IS NOT NULL);
+
+COMMENT ON COLUMN "public"."team_invoice_details"."reference_code" IS E'Short code for a named Stripe account, used in its invoice numbers in place of the team reference code (e.g. PX-2026-INV-WOR-00001)';
+
 -- Platform admins can control whether a team is allowed to connect multiple stripe accounts
 ALTER TABLE "public"."team_settings" ADD COLUMN "multiple_stripe_accounts_enabled" BOOLEAN NOT NULL DEFAULT FALSE;
 
@@ -96,6 +106,77 @@ COMMENT ON COLUMN "public"."team_settings"."multiple_stripe_accounts_enabled" IS
 ALTER TABLE "public"."payment_status" ADD COLUMN "stripe_account_id" text NULL;
 
 COMMENT ON COLUMN "public"."payment_status"."stripe_account_id" IS E'Stripe Connect account id (acct_...) the payment was made to';
+
+-- The account a payment was made to, so its invoices can be numbered under that account's reference code
+-- An account without one (e.g. the account named after its team) is numbered under the team reference code
+ALTER TABLE "public"."payment_invoices" ADD COLUMN "stripe_account_id" TEXT NULL;
+
+COMMENT ON COLUMN "public"."payment_invoices"."stripe_account_id" IS E'Stripe Connect account id (acct_...) the payment was made to';
+
+-- Invoice numbering as before, but uses the named Stripe account's reference code when it has one
+--   <PX|OSL>-<year>-INV-<account or team reference code>-<5+ digit number>
+CREATE OR REPLACE FUNCTION "public"."set_payment_invoice_number"() RETURNS TRIGGER
+LANGUAGE plpgsql AS $$
+DECLARE
+  _reference TEXT;
+  _prefix TEXT;
+  _number INTEGER;
+  _existing_invoice_number TEXT;
+BEGIN
+  IF NEW.stripe_account_id IS NOT NULL THEN
+    SELECT NULLIF(TRIM(tid.reference_code), '')
+    INTO _reference
+    FROM "public"."team_stripe_accounts" tsa
+    JOIN "public"."team_invoice_details" tid ON tid.team_stripe_account_id = tsa.id
+    WHERE tsa.team_id = NEW.team_id
+      AND NEW.stripe_account_id IN (tsa.production_stripe_account_id, tsa.staging_stripe_account_id);
+  END IF;
+
+  -- Fall back to the team reference code, then the team slug
+  IF _reference IS NULL THEN
+    SELECT COALESCE(NULLIF(TRIM(ts.reference_code), ''), UPPER(t.slug))
+    INTO _reference
+    FROM "public"."teams" t
+    LEFT JOIN "public"."team_settings" ts ON ts.team_id = t.id
+    WHERE t.id = NEW.team_id;
+  END IF;
+
+  _prefix := CASE NEW.kind WHEN 'payer_invoice' THEN 'PX' ELSE 'OSL' END
+    || '-' || EXTRACT(YEAR FROM NEW.issued_at AT TIME ZONE 'Europe/London')::TEXT
+    || '-INV-' || _reference;
+
+  -- Lock this prefix's sequence, so concurrent inserts are numbered one at a time
+  INSERT INTO "public"."invoice_number_sequences" ("prefix") VALUES (_prefix)
+  ON CONFLICT ("prefix") DO NOTHING;
+
+  SELECT last_number INTO _number
+  FROM "public"."invoice_number_sequences"
+  WHERE prefix = _prefix
+  FOR UPDATE;
+
+  -- Already invoiced - this insert will hit the (stripe_payment_intent_id, kind) unique constraint,
+  -- so reuse the existing number rather than using up a new one
+  SELECT invoice_number INTO _existing_invoice_number
+  FROM "public"."payment_invoices"
+  WHERE stripe_payment_intent_id = NEW.stripe_payment_intent_id
+    AND kind = NEW.kind;
+
+  IF _existing_invoice_number IS NOT NULL THEN
+    NEW.invoice_number := _existing_invoice_number;
+    RETURN NEW;
+  END IF;
+
+  _number := _number + 1;
+
+  UPDATE "public"."invoice_number_sequences"
+  SET last_number = _number
+  WHERE prefix = _prefix;
+
+  NEW.invoice_number := _prefix || '-' || LPAD(_number::TEXT, GREATEST(5, LENGTH(_number::TEXT)), '0');
+
+  RETURN NEW;
+END;
+$$;
 
 -- Update the summary view
 CREATE OR REPLACE VIEW "public"."teams_summary" AS
