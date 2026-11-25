@@ -45,29 +45,33 @@ const testApolloClient = new ApolloClient({
 });
 
 export const decorators: Decorator[] = [
-  (Story, context) => (
-    <ApolloProvider client={testApolloClient}>
-      <QueryClientProvider client={testQueryClient}>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider
-            theme={
-              context.globals.theme === "dark" ? defaultDarkTheme : defaultTheme
-            }
-          >
-            <CssBaseline enableColorScheme />
-            <DndProvider backend={HTML5Backend} key={context.id}>
-              {/* Docs pages render stories on a fixed white background, so apply the theme background explicitly */}
-              <Box
-                sx={{ bgcolor: "background.default", color: "text.primary" }}
-              >
-                <Story />
-              </Box>
-            </DndProvider>
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </QueryClientProvider>
-    </ApolloProvider>
-  ),
+  (Story, context) => {
+    const mode = context.globals.theme === "dark" ? "dark" : "light";
+    // Mirror palette mode for plain CSS (e.g. floweditor.scss), as useSyncPaletteModeAttribute does in the app
+    document.documentElement.dataset.theme = mode;
+
+    return (
+      <ApolloProvider client={testApolloClient}>
+        <QueryClientProvider client={testQueryClient}>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider
+              theme={mode === "dark" ? defaultDarkTheme : defaultTheme}
+            >
+              <CssBaseline enableColorScheme />
+              <DndProvider backend={HTML5Backend} key={context.id}>
+                {/* Docs pages render stories on a fixed white background, so apply the theme background explicitly */}
+                <Box
+                  sx={{ bgcolor: "background.default", color: "text.primary" }}
+                >
+                  <Story />
+                </Box>
+              </DndProvider>
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </QueryClientProvider>
+      </ApolloProvider>
+    );
+  },
 ];
 
 // Toolbar toggle to preview components in light and dark palette modes
