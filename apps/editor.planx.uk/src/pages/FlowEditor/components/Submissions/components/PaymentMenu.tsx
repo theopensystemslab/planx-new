@@ -76,13 +76,13 @@ export const PaymentMenu = ({ sessionId, paymentEvent }: Props) => {
           onClick={() => handleDownloadInvoice("council_invoice")}
           disabled={!activeInvoices?.council_invoice}
         >
-          Download council invoice
+          Download service charge receipt
         </MenuItem>
         <MenuItem
           onClick={() => handleDownloadInvoice("payer_invoice")}
           disabled={!activeInvoices?.payer_invoice}
         >
-          Download payer invoice
+          Download payer receipt
         </MenuItem>
       </Menu>
       <InitiateRefundDialog
