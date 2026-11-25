@@ -42,6 +42,7 @@ export const GET_INVOICE_DETAILS_BY_ID = gql`
       emailAddress: email_address
       companyRegistration: company_registration
       vatNumber: vat_number
+      referenceCode: reference_code
     }
   }
 `;
@@ -61,6 +62,7 @@ export const UPDATE_INVOICE_DETAILS_BY_ID = gql`
         emailAddress: email_address
         companyRegistration: company_registration
         vatNumber: vat_number
+        referenceCode: reference_code
       }
     }
   }

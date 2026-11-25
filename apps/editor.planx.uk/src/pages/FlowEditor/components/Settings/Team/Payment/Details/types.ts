@@ -3,6 +3,8 @@ export interface InvoiceDetailsFormValues {
   emailAddress: string;
   companyRegistration?: string;
   vatNumber: string;
+  /** Only for a named Stripe account - the team's invoices use its own reference code */
+  referenceCode?: string;
 }
 
 export interface GetTeamInvoiceDetailsData {
@@ -17,5 +19,6 @@ export type UpdateTeamInvoiceDetailsVariables = InvoiceDetailsTarget & {
     email_address: string;
     company_registration?: string;
     vat_number: string;
+    reference_code?: string;
   };
 };

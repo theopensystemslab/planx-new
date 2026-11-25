@@ -14,6 +14,20 @@ export const validationSchema: SchemaOf<InvoiceDetailsFormValues> =
       .required("Enter an email address for invoices to be sent to"),
     companyRegistration: string().optional(),
     vatNumber: string().required("Enter your VAT number"),
+    referenceCode: string().optional(),
+  });
+
+/**
+ * A named Stripe account is a separate seller, so needs its own reference code for its invoice numbers
+ */
+export const namedAccountValidationSchema: SchemaOf<InvoiceDetailsFormValues> =
+  validationSchema.shape({
+    referenceCode: string()
+      .required("Enter a reference code")
+      .matches(
+        /^[A-Z]{3,5}$/,
+        "Reference code must be between 3 and 5 letters long",
+      ),
   });
 
 export const defaultValues: InvoiceDetailsFormValues = {
@@ -21,4 +35,5 @@ export const defaultValues: InvoiceDetailsFormValues = {
   emailAddress: "",
   companyRegistration: "",
   vatNumber: "",
+  referenceCode: "",
 };

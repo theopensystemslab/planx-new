@@ -12,7 +12,11 @@ import {
   UPDATE_INVOICE_DETAILS_BY_ID,
   UPDATE_TEAM_INVOICE_DETAILS,
 } from "./queries";
-import { defaultValues, validationSchema } from "./schema";
+import {
+  defaultValues,
+  namedAccountValidationSchema,
+  validationSchema,
+} from "./schema";
 import type {
   GetTeamInvoiceDetailsData,
   InvoiceDetailsFormValues,
@@ -33,6 +37,7 @@ const Details: React.FC<DetailsProps> = ({ account }) => {
   const { mutate: sendSlackMessage } = useSlackMessage();
 
   const invoiceDetailsId = account?.invoiceDetailsId;
+  const isNamedAccount = Boolean(invoiceDetailsId);
   const target: InvoiceDetailsTarget = invoiceDetailsId
     ? { id: invoiceDetailsId }
     : { teamId };
@@ -58,6 +63,7 @@ const Details: React.FC<DetailsProps> = ({ account }) => {
         emailAddress: teamInvoiceDetails?.emailAddress ?? "",
         companyRegistration: teamInvoiceDetails?.companyRegistration ?? "",
         vatNumber: teamInvoiceDetails?.vatNumber ?? "",
+        referenceCode: teamInvoiceDetails?.referenceCode ?? "",
       })}
       getMutationVariables={(values) => ({
         ...target,
@@ -66,14 +72,25 @@ const Details: React.FC<DetailsProps> = ({ account }) => {
           email_address: values.emailAddress,
           company_registration: values.companyRegistration || undefined,
           vat_number: values.vatNumber,
+          // Team invoice details use the team's reference code
+          ...(isNamedAccount && { reference_code: values.referenceCode }),
         },
       })}
-      validationSchema={validationSchema}
+      validationSchema={
+        isNamedAccount ? namedAccountValidationSchema : validationSchema
+      }
       legend={account ? `Invoice details: ${account.name}` : "Invoice details"}
       description={
         <>
           These details will appear on invoices Plan✕ issues to applicants on
           your behalf.
+          {isNamedAccount && (
+            <>
+              {" "}
+              The reference code is a unique three to five-letter code for this
+              account, used in its invoice numbers (e.g. PX-2026-INV-ABC-00001).
+            </>
+          )}
         </>
       }
       onSuccess={(data, _formikHelpers, values) => {
@@ -138,6 +155,23 @@ const Details: React.FC<DetailsProps> = ({ account }) => {
               id="vatNumber"
             />
           </InputLabel>
+
+          {isNamedAccount && (
+            <InputLabel label="Reference code" htmlFor="referenceCode">
+              <Input
+                name="referenceCode"
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  formik.setFieldValue(
+                    "referenceCode",
+                    e.target.value.toUpperCase(),
+                  )
+                }
+                value={formik.values.referenceCode}
+                errorMessage={formik.errors.referenceCode}
+                id="referenceCode"
+              />
+            </InputLabel>
+          )}
         </>
       )}
     </SettingsFormContainer>
