@@ -13,6 +13,8 @@ import { array, boolean, mixed, object, string } from "yup";
 import { type BaseNodeData, parseBaseNodeData } from "../shared";
 
 export const PAY_FN = "application.fee.payable" as const;
+export const EXTERNAL_PAY_PASSPORT_KEY =
+  "application.fee.reference.external" as const;
 
 export interface Pay extends BaseNodeData {
   title: string;
@@ -23,6 +25,7 @@ export interface Pay extends BaseNodeData {
   instructionsTitle?: string;
   instructionsDescription?: string;
   hidePay?: boolean;
+  externalPay?: boolean;
   allowInviteToPay?: boolean;
   govPayMetadata: PaymentMetadata[];
 }
@@ -192,7 +195,16 @@ export const validationSchema = object({
   fn: string().oneOf([PAY_FN]).default(PAY_FN).required(),
   instructionsTitle: string().trim().required(),
   instructionsDescription: richText().required(),
-  hidePay: boolean(),
+  hidePay: boolean().test({
+    name: "notHidePayAndExternalPay",
+    message: "Cannot hide the pay buttons when collecting external payments",
+    test: (value, { parent }) => !(value && parent.externalPay),
+  }),
+  externalPay: boolean().test({
+    name: "notExternalPayAndITP",
+    message: "Cannot collect external payment using invite to pay",
+    test: (value, { parent }) => !(value && parent.allowInviteToPay),
+  }),
   allowInviteToPay: boolean().test({
     name: "notInviteToPayAndHidePay",
     message: "Cannot both allow invite to pay and hide the pay buttons",
@@ -200,6 +212,40 @@ export const validationSchema = object({
   }),
   govPayMetadata: paymentMetadataSchema,
 });
+
+export type PayMode = "planx" | "external" | "informationOnly";
+
+export const PAY_MODE_OPTIONS: {
+  value: PayMode;
+  title: string;
+  description: string;
+}[] = [
+  {
+    value: "planx",
+    title: "Within Plan✕",
+    description: "Applicants pay before sending their form",
+  },
+  {
+    value: "external",
+    title: "Through your own payment system",
+    description:
+      "Applicants are sent to your payment page. Manual payment reconciliation applies",
+  },
+  {
+    value: "informationOnly",
+    title: "Show fee only",
+    description: "Applicants see the fee breakdown but aren't asked to pay",
+  },
+];
+
+export const getPayMode = ({
+  hidePay,
+  externalPay,
+}: Pick<Pay, "hidePay" | "externalPay">): PayMode => {
+  if (hidePay) return "informationOnly";
+  if (externalPay) return "external";
+  return "planx";
+};
 
 export const getDefaultContent = (): Pay => ({
   title: "Pay",
@@ -212,6 +258,7 @@ export const getDefaultContent = (): Pay => ({
     <p>Your form will be sent after you have paid the fee. \
     Wait until you see a form sent message before closing your browser.</p>`,
   hidePay: false,
+  externalPay: false,
   allowInviteToPay: true,
   govPayMetadata: [
     {

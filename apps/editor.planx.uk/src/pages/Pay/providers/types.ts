@@ -6,5 +6,6 @@ export type PaymentRequestState =
       onPay: () => void;
       warning?: string;
     }
-  | { status: "paid" | "pending"; reference: string | null }
+  | { status: "paid"; reference: string | null }
+  | { status: "pending"; reference: string | null }
   | { status: "no_payment_method" };

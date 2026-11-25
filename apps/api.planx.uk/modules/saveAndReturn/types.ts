@@ -13,9 +13,9 @@ export interface ValidationResponse {
 
 interface LockedSessionResponse {
   message: "Session locked";
-  paymentRequest?: Partial<
+  paymentRequest: Partial<
     Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">
-  >;
+  > | null;
 }
 
 export const validateSessionSchema = z.object({

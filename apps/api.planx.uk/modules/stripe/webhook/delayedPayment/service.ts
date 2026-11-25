@@ -7,6 +7,7 @@ import { $api } from "../../../../client/index.js";
 import { reportError } from "../../../pay/helpers.js";
 import { createPaymentSendEventsForSession } from "../../../pay/service/inviteToPay/createPaymentSendEvents.js";
 import { STRIPE_PASSPORT_KEY } from "../../fulfilment/types.js";
+import { alertPlanX } from "../../helpers.js";
 
 /**
  * Reserved metadata set by PlanX on a self-pay Checkout Session (no paymentRequestId)
@@ -223,24 +224,30 @@ export async function submitDelayedPayment({
 
   if (session.paymentRequests.length) return "inviteToPay";
 
-  const payment = `Stripe payment ${stripePaymentId}`;
   const team = session.flow.team.slug;
+  const details = [`Session: ${sessionId}`, `Payment: ${stripePaymentId}`];
 
   // The 28-day window to pay ran out while the payment was processing
   if (session.deletedAt) {
-    reportError({
-      error: `${payment} succeeded, but session ${sessionId} has expired [${team}]. The application has not been submitted - needs following up manually.`,
-      context: { stripePaymentId, sessionId },
-    });
+    await alertPlanX(
+      [
+        `:warning: *Delayed payment succeeded for an expired session* [${team}]`,
+        "The application has not been submitted - needs following up manually.",
+        ...details,
+      ].join("\n"),
+    );
     return "notSubmittable";
   }
 
   // Should not happen on the first attempt - the session is locked while the payment is processing
   if (session.submittedAt && !isRetry) {
-    reportError({
-      error: `${payment} succeeded, but session ${sessionId} was already submitted [${team}]. The applicant may have paid twice - needs following up manually.`,
-      context: { stripePaymentId, sessionId },
-    });
+    await alertPlanX(
+      [
+        `:warning: *Delayed payment succeeded for an already submitted session* [${team}]`,
+        "The applicant may have paid twice - needs following up manually.",
+        ...details,
+      ].join("\n"),
+    );
     return "notSubmittable";
   }
 

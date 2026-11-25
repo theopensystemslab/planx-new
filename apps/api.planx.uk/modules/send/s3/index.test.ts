@@ -1,4 +1,5 @@
-import axios, { type AxiosRequestConfig } from "axios";
+import type * as AxiosModule from "axios";
+import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import supertest from "supertest";
 
 import { $api } from "../../../client/index.js";
@@ -24,9 +25,10 @@ vi.mock("../../file/service/uploadFile.js", () => ({
 
 vi.mock("../../client/index.js");
 
-vi.mock("axios", () => ({
-  default: vi.fn(),
-}));
+vi.mock("axios", async (importOriginal) => {
+  const actual = await importOriginal<typeof AxiosModule>();
+  return { ...actual, default: vi.fn() };
+});
 const mockedAxios = vi.mocked(axios, true);
 
 describe("uploading an application to S3", () => {
@@ -243,6 +245,44 @@ describe("uploading an application to S3", () => {
   });
 
   describe("error handling", () => {
+    it("includes the Power Automate response body in the error if the webhook rejects the request", async () => {
+      mockedAxios.mockRejectedValueOnce(
+        new AxiosError(
+          "Request failed with status code 400",
+          "ERR_BAD_REQUEST",
+          undefined,
+          undefined,
+          {
+            status: 400,
+            statusText: "Bad Request",
+            headers: {},
+            config: {} as never,
+            data: {
+              error: {
+                code: "TriggerInputSchemaMismatch",
+                message: "The input body for trigger 'manual' did not match",
+              },
+            },
+          },
+        ),
+      );
+
+      await supertest(app)
+        .post("/upload-submission/barnet")
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+        .send({
+          payload: { sessionId },
+        })
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(
+            /Failed to send submission notification/,
+          );
+          expect(res.body.error).toMatch(/status code 400/);
+          expect(res.body.error).toMatch(/TriggerInputSchemaMismatch/);
+        });
+    });
+
     it("throws an error if the webhook request fails", async () => {
       mockedAxios.mockRejectedValueOnce(
         new Error(

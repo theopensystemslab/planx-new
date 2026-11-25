@@ -13,6 +13,8 @@ export enum Action {
   ResumePayment,
   /** Confirming the payment against Stripe after returning from Checkout */
   PaymentPending,
+  /** Checkout is complete, but a delayed payment method (e.g. Bacs Direct Debit) hasn't been taken yet - the API submits once it has */
+  PaymentProcessing,
   /** Applicant cancelled, or the Checkout Session expired */
   PaymentCancelled,
   /** The council cannot take any payment method allowed for this fee */
@@ -37,6 +39,7 @@ export type GovPayAction =
 export type StripeAction =
   | SharedAction
   | Action.PaymentPending
+  | Action.PaymentProcessing
   | Action.PaymentCancelled
   | Action.NoPaymentMethod;
 

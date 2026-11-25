@@ -130,13 +130,15 @@ const miningCert =
 let customDomainsCertArn: pulumi.Output<string> | undefined;
 
 if (validatedCustomDomains.length > 0) {
+  // common name (CN) is owned by us, rather than an arbitrary council (browsers only check SANs, but councils may read the CN)
+  // NB. this hostname needn't resolve to anything - it exists only to be validated and appear on the cert
+  const customDomainsCommonName = `planningservices.${config.require("domain")}`;
+
   const customDomainsCert = new aws.acm.Certificate(
     "sslCert-custom-domains",
     {
-      domainName: validatedCustomDomains[0].domain,
-      subjectAlternativeNames: validatedCustomDomains
-        .slice(1)
-        .map((d) => d.domain),
+      domainName: customDomainsCommonName,
+      subjectAlternativeNames: validatedCustomDomains.map((d) => d.domain),
       validationMethod: "DNS",
     },
     {
@@ -148,6 +150,32 @@ if (validatedCustomDomains.length > 0) {
     },
   );
 
+  // council domains are validated by CNAMEs in their own DNS, but we must provide validation for the CN ourselves
+  // (find by name rather than index, since the order of domainValidationOptions is not guaranteed)
+  const commonNameValidationOption =
+    customDomainsCert.domainValidationOptions.apply((options) => {
+      const option = options.find(
+        (opt) => opt.domainName === customDomainsCommonName,
+      );
+      if (!option)
+        throw new Error(
+          `No validation option found for ${customDomainsCommonName}`,
+        );
+      return option;
+    });
+
+  const commonNameValidationRecord = new cloudflare.DnsRecord(
+    "sslCertValidationRecord-custom-domains",
+    {
+      name: commonNameValidationOption.resourceRecordName,
+      type: commonNameValidationOption.resourceRecordType,
+      content: commonNameValidationOption.resourceRecordValue,
+      zoneId: config.require("cloudflare-zone-id"),
+      ttl: 3600,
+      proxied: false,
+    },
+  );
+
   const customDomainsCertValidation = new aws.acm.CertificateValidation(
     "sslCertValidation-custom-domains",
     {
@@ -156,7 +184,7 @@ if (validatedCustomDomains.length > 0) {
         (options) => options.map((opt) => opt.resourceRecordName),
       ),
     },
-    { provider: usEast1 },
+    { provider: usEast1, dependsOn: [commonNameValidationRecord] },
   );
 
   customDomainsCertArn = customDomainsCertValidation.certificateArn;

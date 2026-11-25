@@ -2,7 +2,6 @@ import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { PAYMENT_PROCESSING_PASSPORT_KEY } from "@planx/components/Pay/Public/providers/types";
 import Card from "@planx/components/shared/Preview/Card";
 import type { PublicProps } from "@planx/components/shared/types";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -16,20 +15,8 @@ import type { Confirmation } from "./model";
 
 export type Props = PublicProps<Confirmation>;
 
-const PaymentProcessingNotice = () => (
-  <Box sx={{ mt: 2, maxWidth: "formWrap" }}>
-    <Typography variant="body1">
-      Your payment is being processed. This can take several working days. You
-      will receive an email to confirm when your form has been received.
-    </Typography>
-  </Box>
-);
-
 export default function ConfirmationComponent(props: Props) {
   const isFinalCard = useStore().isFinalCard();
-  const isPaymentProcessing = useStore((state) =>
-    Boolean(state.computePassport().data?.[PAYMENT_PROCESSING_PASSPORT_KEY]),
-  );
   const theme = useTheme();
   const headingId = "confirmation-heading";
   return (
@@ -44,17 +31,10 @@ export default function ConfirmationComponent(props: Props) {
         Icon={Check}
         iconTitle={"Success"}
       >
-        {isPaymentProcessing ? (
-          <PaymentProcessingNotice />
-        ) : (
-          props.description && (
-            <Box sx={{ mt: 2, maxWidth: "formWrap" }}>
-              <ReactMarkdownOrHtml
-                source={props.description}
-                openLinksOnNewTab
-              />
-            </Box>
-          )
+        {props.description && (
+          <Box sx={{ mt: 2, maxWidth: "formWrap" }}>
+            <ReactMarkdownOrHtml source={props.description} openLinksOnNewTab />
+          </Box>
         )}
       </Banner>
       <Card handleSubmit={isFinalCard ? undefined : props.handleSubmit}>

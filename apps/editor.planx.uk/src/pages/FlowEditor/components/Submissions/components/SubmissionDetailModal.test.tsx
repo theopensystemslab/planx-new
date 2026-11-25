@@ -1,5 +1,5 @@
 import { screen, waitFor } from "@testing-library/react";
-import { graphql, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 import { getUserRoleForTeam } from "pages/FlowEditor/lib/store/user";
 import server from "test/mockServer";
 import { mockUserWithRole } from "test/mockUser";
@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   mockPay,
+  mockStripePaySuccess,
   mockSubmissionEvents,
   mockSubmissionFailureEvents,
   teamData,
@@ -18,11 +19,16 @@ const mockTeamSlug = "test-council";
 let mockUser = mockUserWithRole("teamEditor", mockTeamSlug);
 
 vi.mock("pages/FlowEditor/lib/store", () => ({
-  useStore: vi.fn((selector) =>
-    selector({
-      teamSlug: mockTeamSlug,
-      user: mockUser,
-    }),
+  useStore: Object.assign(
+    vi.fn((selector) =>
+      selector({
+        teamSlug: mockTeamSlug,
+        user: mockUser,
+      }),
+    ),
+    {
+      getState: vi.fn(() => ({ jwt: "mock-jwt-token" })),
+    },
   ),
 }));
 
@@ -320,6 +326,97 @@ describe("SubmissionDetailModal", () => {
 
       const resubmitButtons = await screen.findAllByText(/Resubmit/i);
       expect(resubmitButtons.length).toEqual(2);
+    });
+  });
+
+  describe("Payment menu", () => {
+    beforeEach(() => {
+      server.use(
+        graphql.query("GetSubmissionEvents", () =>
+          HttpResponse.json({
+            data: {
+              submissions: [...mockSubmissionEvents, mockStripePaySuccess],
+            },
+          }),
+        ),
+      );
+    });
+
+    it("renders active download invoice buttons when invoices are active", async () => {
+      mockUser = mockUserWithRole("teamEditor", mockTeamSlug);
+
+      server.use(
+        http.get(
+          `${import.meta.env.VITE_APP_API_URL}/submission/:sessionId/active-invoices`,
+          () =>
+            HttpResponse.json({
+              council_invoice: true,
+              payer_invoice: true,
+            }),
+        ),
+      );
+
+      const { user } = await setup(
+        <SubmissionDetailModal sessionId="6fcb873f-cc7f-4fc0-ad9d-b4148de7a3b5" />,
+      );
+
+      const paymentMenu = await screen.findByTestId("payment-menu-button");
+      await user.click(paymentMenu);
+      const councilInvoiceButton = await screen.findByText(
+        /Download council invoice/i,
+      );
+      const payerInvoiceButton = await screen.findByText(
+        /Download payer invoice/i,
+      );
+
+      await waitFor(() => {
+        expect(councilInvoiceButton.closest("li")).not.toHaveAttribute(
+          "aria-disabled",
+          "true",
+        );
+        expect(payerInvoiceButton.closest("li")).not.toHaveAttribute(
+          "aria-disabled",
+          "true",
+        );
+      });
+    });
+
+    it("disables download invoice buttons when invoices are not active", async () => {
+      mockUser = mockUserWithRole("teamEditor", mockTeamSlug);
+
+      server.use(
+        http.get(
+          `${import.meta.env.VITE_APP_API_URL}/submission/:sessionId/active-invoices`,
+          () =>
+            HttpResponse.json({
+              council_invoice: false,
+              payer_invoice: false,
+            }),
+        ),
+      );
+
+      const { user } = await setup(
+        <SubmissionDetailModal sessionId="6fcb873f-cc7f-4fc0-ad9d-b4148de7a3b5" />,
+      );
+
+      const paymentMenu = await screen.findByTestId("payment-menu-button");
+      await user.click(paymentMenu);
+      const councilInvoiceButton = await screen.findByText(
+        /Download council invoice/i,
+      );
+      const payerInvoiceButton = await screen.findByText(
+        /Download payer invoice/i,
+      );
+      await waitFor(() => {
+        expect(councilInvoiceButton.closest("li")).toHaveAttribute(
+          "aria-disabled",
+          "true",
+        );
+        expect(payerInvoiceButton.closest("li")).toHaveAttribute(
+          "aria-disabled",
+          "true",
+        );
+      });
     });
   });
 });

@@ -382,3 +382,16 @@ export const mockStripeSubmissionEvents: Submission[] = [
     address: "No longer retained",
   },
 ];
+
+export const mockStripePaySuccess: Submission = {
+  flowId: "d0744118-f902-4538-b439-573f4b42a727",
+  sessionId: "6fcb873f-cc7f-4fc0-ad9d-b4148de7a3b5",
+  eventId: "pay-456",
+  eventType: "Pay",
+  status: "Succeeded",
+  retry: false,
+  response: { data: { message: "Success!" } },
+  createdAt: daysAgo(1),
+  flowName: "Report a planning breach",
+  address: "3, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
+};

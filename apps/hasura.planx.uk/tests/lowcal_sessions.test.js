@@ -20,11 +20,11 @@ describe("lowcal_sessions", () => {
       expect(i.mutations).toContain("insert_lowcal_sessions_one");
     });
 
-    test("cannot query when a delayed payment was started", () => {
+    test("can query when a delayed payment was started, to show when the session expires", () => {
       const lowcalSessions = i.types.find(
         (type) => type.name === "lowcal_sessions",
       );
-      expect(lowcalSessions.fields.map((field) => field.name)).not.toContain(
+      expect(lowcalSessions.fields.map((field) => field.name)).toContain(
         "delayed_payment_started_at",
       );
     });

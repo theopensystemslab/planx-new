@@ -7,6 +7,7 @@ import type { PaymentStatus } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { propSatisfies } from "ramda";
 import React, { useState } from "react";
 import { ApplicationPath } from "types";
 import Banner from "ui/public/Banner";
@@ -26,7 +27,12 @@ import {
 } from "./Pay";
 
 type ComponentState =
-  "error" | "informationOnly" | "inviteToPay" | "zeroFee" | "pay";
+  | "error"
+  | "informationOnly"
+  | "externalPay"
+  | "inviteToPay"
+  | "zeroFee"
+  | "pay";
 
 export interface Props extends Omit<Pay, "title" | "fn" | "govPayMetadata"> {
   title?: string;
@@ -170,6 +176,36 @@ const InformationOnly: React.FC<Props> = (props) => {
 };
 
 /**
+ * Displays external payment links to collect payment outside of PlanX
+ *   Unlike InformationOnly which only sets a breadcrumb, sets a payment reference passport value on "Continue" which officers can reconcile on submission
+ */
+const ExternalPay: React.FC<Props> = (props) => {
+  const defaults = getDefaultContent();
+
+  return (
+    <>
+      <Typography variant="h2" component={props.hideFeeBanner ? "h2" : "h3"}>
+        {props.instructionsTitle || defaults.instructionsTitle}
+      </Typography>
+      <ReactMarkdownOrHtml
+        source={
+          props.instructionsDescription || defaults.instructionsDescription
+        }
+        openLinksOnNewTab
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        onClick={props.onConfirm}
+      >
+        Continue
+      </Button>
+    </>
+  );
+};
+
+/**
  * Displayed if the fee is calculated as £0
  * Still displays component and fee breakdown, but allows user to continue without making a payment
  */
@@ -188,6 +224,7 @@ const getInitialState = (props: Props): ComponentState => {
   if (props.error) return "error";
   if (props.hidePay) return "informationOnly";
   if (props.fee === 0) return "zeroFee";
+  if (props.externalPay) return "externalPay"; // intentionally _after_ 0 fee condition
 
   return "pay";
 };
@@ -271,6 +308,7 @@ export default function Confirm(props: Props) {
             {
               pay: <PayBody {...props} changePage={toggleToInviteToPayPage} />,
               informationOnly: <InformationOnly {...props} />,
+              externalPay: <ExternalPay {...props} />,
               inviteToPay: <InviteToPayForm {...inviteToPayFormProps} />,
               error: <Error {...props} />,
               zeroFee: <ZeroFee {...props} />,

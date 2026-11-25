@@ -1,5 +1,6 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog, { dialogClasses } from "@mui/material/Dialog";
@@ -25,6 +26,7 @@ import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_fl
 import StyledTab from "ui/editor/StyledTab";
 import { CloseButton } from "ui/shared/CloseButton";
 import { Switch } from "ui/shared/Switch";
+import { WarningContainer } from "ui/shared/WarningContainer/WarningContainer";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
 import { SLUGS } from "../../../data/types";
@@ -155,6 +157,7 @@ const FormModal: React.FC<FormModalProps> = ({
   }>(() => ({ current: null, onDirtyChange: setIsFormDirty }), []);
 
   const [activeTab, setActiveTab] = useState<ModalTab>("edit");
+  const isStaging = import.meta.env.VITE_APP_ENV === "staging";
   const { team: teamSlug, flow: flowSlug } = useParams({
     from: "/_authenticated/app/$team/$flow",
   });
@@ -325,6 +328,17 @@ const FormModal: React.FC<FormModalProps> = ({
           sx={{ p: 0, position: "relative", flexGrow: 1, overflowY: "auto" }}
         >
           <Box sx={{ display: activeTab === "edit" ? "block" : "none" }}>
+            {isStaging && (
+              <Box sx={{ px: 2, pt: 2 }}>
+                <WarningContainer
+                  sx={{ m: 0, mb: -2 }}
+                  icon={ErrorOutlineOutlined}
+                >
+                  Changes you make here will be lost overnight. Edit on
+                  production to keep your changes.
+                </WarningContainer>
+              </Box>
+            )}
             {!handleDelete && (
               <TextInputToggle type={type} parent={parent} before={before} />
             )}

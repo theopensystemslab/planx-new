@@ -4,16 +4,17 @@ import {
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
+import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import { StyledEngineProvider,ThemeProvider } from "@mui/material/styles";
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
-import type { Decorator } from "@storybook/tanstack-react"
+import type { Decorator } from "@storybook/tanstack-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { mswLoader } from "msw-storybook-addon/csf3";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { defaultTheme } from "../src/theme";
+import { defaultDarkTheme, defaultTheme } from "../src/theme";
 
 if (!window.customElements.get("my-map")) {
   window.customElements.define("my-map", MyMap);
@@ -48,10 +49,19 @@ export const decorators: Decorator[] = [
     <ApolloProvider client={testApolloClient}>
       <QueryClientProvider client={testQueryClient}>
         <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={defaultTheme}>
-            <CssBaseline />
+          <ThemeProvider
+            theme={
+              context.globals.theme === "dark" ? defaultDarkTheme : defaultTheme
+            }
+          >
+            <CssBaseline enableColorScheme />
             <DndProvider backend={HTML5Backend} key={context.id}>
-              <Story />
+              {/* Docs pages render stories on a fixed white background, so apply the theme background explicitly */}
+              <Box
+                sx={{ bgcolor: "background.default", color: "text.primary" }}
+              >
+                <Story />
+              </Box>
             </DndProvider>
           </ThemeProvider>
         </StyledEngineProvider>
@@ -59,6 +69,26 @@ export const decorators: Decorator[] = [
     </ApolloProvider>
   ),
 ];
+
+// Toolbar toggle to preview components in light and dark palette modes
+export const globalTypes = {
+  theme: {
+    description: "Palette mode",
+    toolbar: {
+      title: "Theme",
+      icon: "mirror",
+      items: [
+        { value: "light", title: "Light", icon: "sun" },
+        { value: "dark", title: "Dark", icon: "moon" },
+      ],
+      dynamicTitle: true,
+    },
+  },
+};
+
+export const initialGlobals = {
+  theme: "light",
+};
 
 export const tags = ["autodocs"];
 

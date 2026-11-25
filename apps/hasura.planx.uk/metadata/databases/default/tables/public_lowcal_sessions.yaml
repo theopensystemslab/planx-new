@@ -98,6 +98,7 @@ select_permissions:
       columns:
         - created_at
         - data
+        - delayed_payment_started_at
         - flow_id
         - has_user_saved
         - id

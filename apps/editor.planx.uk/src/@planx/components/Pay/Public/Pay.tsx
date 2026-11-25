@@ -1,4 +1,5 @@
 import type { PublicProps } from "@planx/components/shared/types";
+import { makeData } from "@planx/components/shared/utils";
 import { logger } from "airbrake";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { usePaymentProvider } from "hooks/usePaymentProvider";
@@ -6,9 +7,10 @@ import type { PaymentProvider } from "pages/FlowEditor/components/Settings/Team/
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect, useReducer } from "react";
 
-import type { Pay } from "../model";
+import { EXTERNAL_PAY_PASSPORT_KEY, type Pay } from "../model";
 import Confirm from "./Confirm";
 import { usePaymentFlow } from "./hooks/usePaymentFlow";
+import PaymentProcessing from "./PaymentProcessing";
 import { Action } from "./types";
 
 export default Component;
@@ -27,6 +29,7 @@ type ComponentState =
   | { status: "undefined_fee" }
   | { status: "zero_fee" }
   | { status: "payment_pending"; displayText?: string }
+  | { status: "payment_processing" }
   | { status: "payment_cancelled" }
   | { status: "no_payment_method" };
 
@@ -74,6 +77,8 @@ const reducer = (_state: ComponentState, action: Action): ComponentState => {
         status: "payment_pending",
         displayText: "Confirming your payment",
       };
+    case Action.PaymentProcessing:
+      return { status: "payment_processing" };
     case Action.PaymentCancelled:
       return { status: "payment_cancelled" };
     case Action.NoPaymentMethod:
@@ -116,7 +121,8 @@ function PayWithProvider({
   const canInviteToPay =
     state.status !== "unsupported_team" && state.status !== "no_payment_method";
 
-  const showPayOptions = props.allowInviteToPay && !props.hidePay;
+  const showPayOptions =
+    props.allowInviteToPay && !props.hidePay && !props.externalPay;
 
   useEffect(() => {
     // Skip component when fee is negative
@@ -154,11 +160,24 @@ function PayWithProvider({
     props.handleSubmit && props.handleSubmit({ auto: false });
   };
 
+  const continueWithExternalPayment = () => {
+    // TODO also insert payment_status record / or insert to new external payments table?
+    //   Something we can query in submissions log & service charges views & retain longer than passport!
+
+    props.handleSubmit &&
+      props.handleSubmit({
+        ...makeData(props, "External payment", EXTERNAL_PAY_PASSPORT_KEY),
+        auto: false,
+      });
+  };
+
   const onConfirm = () => {
     const shouldContinueWithoutPaying =
       fee === 0 || props.hidePay || state.status === "unsupported_team";
+    const shouldContinueWithExternalPayment = props.externalPay && fee > 0;
 
     if (shouldContinueWithoutPaying) continueWithoutPaying();
+    if (shouldContinueWithExternalPayment) continueWithExternalPayment();
     if (
       ["no_payment_found", "init", "payment_cancelled"].includes(state.status)
     )
@@ -177,6 +196,9 @@ function PayWithProvider({
         return "Pay now";
     }
   };
+
+  // A delayed payment (e.g. Bacs) - the application is submitted by the API once the payment has been taken
+  if (state.status === "payment_processing") return <PaymentProcessing />;
 
   return (
     <>
