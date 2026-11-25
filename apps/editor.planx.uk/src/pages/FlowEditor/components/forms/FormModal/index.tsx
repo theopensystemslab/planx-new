@@ -260,6 +260,9 @@ const FormModal: React.FC<FormModalProps> = ({
 
   const showDeleteButton = id && !isDisabledTemplatedNode;
 
+  const showTemplatedNodeInstructions =
+    isTemplatedFrom && Boolean(node?.data?.isTemplatedNode);
+
   const showMakeUniqueButton = id && isClone(id) && !isDisabledTemplatedNode;
 
   const disabled = isTemplatedFrom
@@ -331,7 +334,10 @@ const FormModal: React.FC<FormModalProps> = ({
             {isStaging && (
               <Box sx={{ px: 2, pt: 2 }}>
                 <WarningContainer
-                  sx={{ m: 0, mb: -2 }}
+                  sx={{
+                    m: 0,
+                    mb: showTemplatedNodeInstructions ? 2 : -2,
+                  }}
                   icon={ErrorOutlineOutlined}
                 >
                   Changes you make here will be lost overnight. Edit on
