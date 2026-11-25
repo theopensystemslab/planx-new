@@ -222,6 +222,7 @@ export async function createInvoices(
       sessionId: recorded.sessionId,
       flowId: recorded.flowId,
       teamId: council.teamId,
+      stripeAccountId,
       issuedAt,
       ...sumLineItems(lineItems),
     });

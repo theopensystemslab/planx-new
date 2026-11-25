@@ -59,6 +59,7 @@ const storedInvoice = (
   sessionId: recorded.sessionId,
   flowId: FLOW_ID,
   teamId: TEAM_ID,
+  stripeAccountId: null,
   invoiceNumber,
   issuedAt: "2026-10-12T09:30:00+00:00",
   net: 0,

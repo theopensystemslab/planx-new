@@ -139,6 +139,7 @@ describe("createInvoices", () => {
       sessionId: recorded.sessionId,
       flowId: FLOW_ID,
       teamId: TEAM_ID,
+      stripeAccountId: null,
       issuedAt: new Date(SUCCEEDED_AT),
       net: 14000,
       vat: 500,
@@ -507,6 +508,23 @@ describe("createInvoices", () => {
           addressLines: ["Town Hall", "Chapel Rd", "Worthing", "BN11 1HA"],
         }),
       );
+    });
+
+    // So its invoices are numbered under the account's reference code (see set_payment_invoice_number)
+    it("records the account the payment was made to on each invoice", async () => {
+      mockStripeAccountForPayment({
+        name: "Worthing",
+        teamName: ADUR_WORTHING.name,
+        invoiceDetails: WORTHING_INVOICE_DETAILS,
+      });
+
+      await createInvoices(worthingPayment(), adurWorthingRecorded);
+
+      expect(reserveInvoice).toHaveBeenCalledTimes(2);
+      expect(vi.mocked(reserveInvoice).mock.calls).toEqual([
+        [expect.objectContaining({ stripeAccountId: WORTHING_ACCOUNT_ID })],
+        [expect.objectContaining({ stripeAccountId: WORTHING_ACCOUNT_ID })],
+      ]);
     });
 
     it("uses the account name, and reports an error, when the account has no invoice details", async () => {
