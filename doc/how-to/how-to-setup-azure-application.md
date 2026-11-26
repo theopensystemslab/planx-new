@@ -14,6 +14,6 @@ We document the process here for posterity/future reproducibility.
     -  `https://api.editor.planx.uk/auth/microsoft/callback` (production)
     -  `https://api.editor.planx.dev/auth/microsoft/callback` (staging)
     -  `http://localhost/auth/microsoft/callback` (local development)
-3. Navigate to *Manage/Authentication*, and allow both access and ID tokens
-4. Go to *Manage/Certificates and secrets*, add a new client secret, and record the value - this is your `MICROSOFT_CLIENT_SECRET` environment variable
+3. Navigate to *Manage/Authentication*, and allow ID tokens (access tokens are not needed)
+4. No client secret is needed (so nothing needs adding under *Manage/Certificates and secrets*) - we use the `id_token` + `form_post` flow, where Microsoft posts a signed ID token straight to our callback and we never call the token endpoint
 5. Go to *Overview*, and copy the `Application (client) ID` - this is your `MICROSOFT_CLIENT_ID`

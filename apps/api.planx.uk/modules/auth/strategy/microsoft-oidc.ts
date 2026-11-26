@@ -17,9 +17,10 @@ export const getMicrosoftClientConfig = (): ClientMetadata => {
   if (typeof client_id !== "string") {
     throw new Error("No MICROSOFT_CLIENT_ID in the environment");
   }
+  // no client_secret needed: we use the id_token + form_post flow, so Microsoft posts a
+  // signed id_token straight to our callback, and we never call the token endpoint
   return {
     client_id,
-    client_secret: process.env.MICROSOFT_CLIENT_SECRET!,
     redirect_uris: [`${process.env.API_URL_EXT}/auth/microsoft/callback`],
     post_logout_redirect_uris: [process.env.EDITOR_URL_EXT!],
     response_types: ["id_token"],

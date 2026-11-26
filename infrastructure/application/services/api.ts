@@ -231,10 +231,6 @@ export const createApiService = async ({
           value: config.requireSecret("microsoft-client-id"),
         },
         {
-          name: "MICROSOFT_CLIENT_SECRET",
-          value: config.requireSecret("microsoft-client-secret"),
-        },
-        {
           name: "SESSION_SECRET",
           value: config.requireSecret("session-secret"),
         },
