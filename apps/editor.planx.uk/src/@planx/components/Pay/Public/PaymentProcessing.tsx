@@ -88,15 +88,10 @@ const PaymentProcessing: React.FC<{ showViewApplicationLink?: boolean }> = ({
             </Typography>
             <Typography variant="body2">{helpOpeningHours}</Typography>
           </Box>
-          <Box>
-            <Typography variant="body2">
-              <strong>Email</strong>{" "}
-              <Link href={`mailto:${helpEmail}`}>{helpEmail}</Link>
-            </Typography>
-            <Typography variant="body2">
-              We aim to respond within 2 working days.
-            </Typography>
-          </Box>
+          <Typography variant="body2">
+            <strong>Email</strong>{" "}
+            <Link href={`mailto:${helpEmail}`}>{helpEmail}</Link>
+          </Typography>
           {showViewApplicationLink && (
             <>
               <Divider sx={{ my: 4 }} />

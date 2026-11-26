@@ -74,24 +74,20 @@ const InviteToPay: React.FC<PublicPaymentRequest> = ({ createdAt, paidAt }) => {
           <Typography variant="h2" sx={{ mt: 4 }}>
             Contact us
           </Typography>
-          <List>
-            <li>if you have any questions</li>
-          </List>
+          <Typography variant="body2">
+            Contact us if you have any questions about your application or
+            payment.
+          </Typography>
           <Box>
             <Typography variant="body2">
               <strong>Telephone</strong> {helpPhone}
             </Typography>
             <Typography variant="body2">{helpOpeningHours}</Typography>
           </Box>
-          <Box>
-            <Typography variant="body2">
-              <strong>Email</strong>{" "}
-              <Link href={`mailto:${helpEmail}`}>{helpEmail}</Link>
-            </Typography>
-            <Typography variant="body2">
-              We aim to respond within 2 working days.
-            </Typography>
-          </Box>
+          <Typography variant="body2">
+            <strong>Email</strong>{" "}
+            <Link href={`mailto:${helpEmail}`}>{helpEmail}</Link>
+          </Typography>
           <Divider sx={{ my: 4 }} />
           <ViewApplicationLink />
           <Box>
