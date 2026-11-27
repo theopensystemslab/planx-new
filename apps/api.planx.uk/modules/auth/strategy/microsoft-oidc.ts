@@ -17,9 +17,10 @@ export const getMicrosoftClientConfig = (): ClientMetadata => {
   if (typeof client_id !== "string") {
     throw new Error("No MICROSOFT_CLIENT_ID in the environment");
   }
+  // no client_secret needed: we use the id_token + form_post flow, so Microsoft posts a
+  // signed id_token straight to our callback, and we never call the token endpoint
   return {
     client_id,
-    client_secret: process.env.MICROSOFT_CLIENT_SECRET!,
     redirect_uris: [`${process.env.API_URL_EXT}/auth/microsoft/callback`],
     post_logout_redirect_uris: [process.env.EDITOR_URL_EXT!],
     response_types: ["id_token"],
@@ -65,20 +66,23 @@ const verifyCallback: StrategyVerifyCallbackReq<Express.User> = async (
     );
   }
 
+  // done() isn't typed to accept an info object, but passport passes it through to our callback handler
+  const fail = done as unknown as (
+    err: null,
+    user: false,
+    info: { reason: "missing-email" | "user-not-found"; email?: string },
+  ) => void;
+
+  // Entra only includes the email claim if the account has a (verified) email address,
+  // so e.g. a work account with no email set will be unable to use Microsoft SSO until one is added
   const email = claims.email;
   if (!email) {
-    return done(new Error("Unable to authenticate without email"));
+    return fail(null, false, { reason: "missing-email" });
   }
 
   const jwt = await buildUserJWT(email);
   if (!jwt) {
-    return (
-      done as unknown as (
-        err: Error | null,
-        user: false,
-        info: { reason: string; email: string },
-      ) => void
-    )(null, false, { reason: "user-not-found", email });
+    return fail(null, false, { reason: "user-not-found", email });
   }
 
   return done(null, { jwt });

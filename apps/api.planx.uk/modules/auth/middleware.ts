@@ -194,6 +194,8 @@ const getCallbackAuthHandler =
             `${process.env.EDITOR_URL_EXT!}/error-user-not-found`,
           );
           if (info?.email) url.searchParams.set("email", info.email);
+          if (info?.reason === "missing-email")
+            url.searchParams.set("reason", info.reason);
           return res.redirect(303, url.toString());
         }
 

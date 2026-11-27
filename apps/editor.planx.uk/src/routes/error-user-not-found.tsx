@@ -4,6 +4,7 @@ import { z } from "zod";
 
 const searchSchema = z.object({
   email: z.email().optional().catch(undefined),
+  reason: z.enum(["missing-email"]).optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/error-user-not-found")({
@@ -12,7 +13,7 @@ export const Route = createFileRoute("/error-user-not-found")({
 });
 
 function RouteComponent() {
-  const { email } = Route.useSearch();
+  const { email, reason } = Route.useSearch();
 
-  return <UserNotFound emailAddress={email} />;
+  return <UserNotFound emailAddress={email} reason={reason} />;
 }

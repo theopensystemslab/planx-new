@@ -23,7 +23,7 @@ services:
     container_name: metabase
     # XXX: keep this image reference in sync with infrastructure/application/services/metabase.ts
     image: metabase/metabase:v0.58.24
-    profiles: ["analytics"]
+    profiles: [ "analytics" ]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
     depends_on:
@@ -31,14 +31,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test:
-        [
-          "CMD",
-          "wget",
-          "--spider",
-          "--quiet",
-          "http://localhost:3000/api/health",
-        ]
+      test: [ "CMD", "wget", "--spider", "--quiet", "http://localhost:3000/api/health" ]
       interval: 15s
       timeout: 3s
       retries: 10
@@ -61,7 +54,10 @@ services:
           "CMD",
           "bash",
           "-c",
-          "exec 5<>/dev/tcp/127.0.0.1/8080 && echo -e 'GET /healthz HTTP/1.1\n\n' >&5 && cat <&5 | head -n 1 | grep 200",
+          "exec 5<>/dev/tcp/127.0.0.1/8080 && echo -e 'GET /healthz HTTP/1.1
+
+
+            ' >&5 && cat <&5 | head -n 1 | grep 200"
         ]
       interval: 10s
       timeout: 5s
@@ -98,7 +94,7 @@ services:
       HASURA_PROXY_PORT: ${HASURA_PROXY_PORT}
       HASURA_NETWORK_LOCATION: "hasura"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_PROXY_PORT/healthz"]
+      test: [ "CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_PROXY_PORT/healthz" ]
       interval: 15s
       timeout: 3s
       retries: 3
@@ -116,8 +112,7 @@ services:
     ports:
       - "${API_PORT}:${API_PORT}"
     healthcheck:
-      test:
-        ["CMD", "wget", "--spider", "--quiet", "http://localhost:${API_PORT}"]
+      test: [ "CMD", "wget", "--spider", "--quiet", "http://localhost:${API_PORT}" ]
       interval: 30s
       timeout: 3s
       retries: 5
@@ -153,7 +148,6 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID}
-      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET}
       GOVUK_NOTIFY_API_KEY: ${GOVUK_NOTIFY_API_KEY}
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v1/graphql
@@ -204,7 +198,7 @@ services:
       STRIPE_FORWARD_TO: http://api:${API_PORT}/stripe/webhook
       STRIPE_WEBHOOK_SECRET_FILE: /stripe/webhook-secret
     healthcheck:
-      test: ["CMD", "test", "-s", "/stripe/webhook-secret"]
+      test: [ "CMD", "test", "-s", "/stripe/webhook-secret" ]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -233,7 +227,7 @@ services:
   s3-mock:
     container_name: s3-mock
     image: chrislusf/seaweedfs:4.47
-    profiles: ["mock-services"]
+    profiles: [ "mock-services" ]
     ports:
       - "${S3_MOCK_PORT:-8333}:${S3_MOCK_PORT:-8333}"
       - "${S3_MOCK_ADMIN_PORT:-23646}:23646"
@@ -244,10 +238,10 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_KEY}
       S3_BUCKET: ${AWS_S3_BUCKET}
       S3_BUCKET_PAY: ${AWS_S3_BUCKET_PAY}
-    command: ["mini", "-s3.port=${S3_MOCK_PORT:-8333}"]
+    command: [ "mini", "-s3.port=${S3_MOCK_PORT:-8333}" ]
     restart: on-failure
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${S3_MOCK_PORT:-8333}/healthz"]
+      test: [ "CMD", "curl", "-f", "http://localhost:${S3_MOCK_PORT:-8333}/healthz" ]
       interval: 10s
       timeout: 5s
       retries: 6

@@ -36,9 +36,10 @@ const ErrorCard = styled(Box)(({ theme }) => ({
 
 type Props = {
   emailAddress?: string;
+  reason?: "missing-email";
 };
 
-const UserNotFound: React.FC<Props> = ({ emailAddress }) => {
+const UserNotFound: React.FC<Props> = ({ emailAddress, reason }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -62,19 +63,37 @@ const UserNotFound: React.FC<Props> = ({ emailAddress }) => {
         <Container maxWidth="formWrap">
           <ErrorCard>
             <Stack spacing={1.5}>
-              <Typography variant="h3">
-                No user account found for{" "}
-                {emailAddress ? emailAddress : "this email address"}
-              </Typography>
-              <Typography>
-                We couldn't find a Plan✕ user account associated with the email
-                address you're using to log in, which means your account hasn't
-                been created yet.
-              </Typography>
-              <Typography>
-                Please contact your Plan✕ lead, or your team admin, to request
-                that they add you to your workspace.
-              </Typography>
+              {reason === "missing-email" ? (
+                <>
+                  <Typography variant="h3">
+                    No email address found for this account
+                  </Typography>
+                  <Typography>
+                    The account you signed in with didn't share an email address
+                    with Plan✕, so we can't match it to a Plan✕ user account.
+                  </Typography>
+                  <Typography>
+                    If you signed in with Microsoft, please ask your IT team to
+                    check that your account has an email address set.
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  <Typography variant="h3">
+                    No user account found for{" "}
+                    {emailAddress ? emailAddress : "this email address"}
+                  </Typography>
+                  <Typography>
+                    We couldn't find a Plan✕ user account associated with the
+                    email address you're using to log in, which means your
+                    account hasn't been created yet.
+                  </Typography>
+                  <Typography>
+                    Please contact your Plan✕ lead, or your team admin, to
+                    request that they add you to your workspace.
+                  </Typography>
+                </>
+              )}
               <Typography>
                 Still stuck? Message us on Slack in{" "}
                 <Link
