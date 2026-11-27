@@ -4,7 +4,7 @@ info:
   version: 0.1.0
 tags:
   - name: send email
-    description: Send templated emails via the GovNotify service
+    description: Send templated emails via GovNotify or Resend
 components:
   schemas:
     SendEmailRequest:
