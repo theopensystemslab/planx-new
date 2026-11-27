@@ -25,7 +25,7 @@
     "@tanstack/react-query": "^5.105.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "astro": "^7.4.5",
+    "astro": "^7.4.13",
     "astro-icon": "^1.2.0",
     "astro-seo": "^1.2.0",
     "graphql": "catalog:graphql",
