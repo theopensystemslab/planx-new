@@ -14,7 +14,10 @@ type DailyRemittance = {
   sessionId: string;
   paymentId: string;
   eventId: string;
-  amountInPence: number;
+  fee: number;
+  feeVat: number;
+  serviceCharge: number;
+  serviceChargeVat: number;
   paymentMethod: string;
   paidAt: string;
 };
@@ -28,12 +31,15 @@ const getDailyRemittance = async (): Promise<DailyRemittance[]> => {
     gql`
       query GetDailyRemittance {
         dailyRemittance: stripe_daily_remittance {
-          amountInPence: amount_in_pence
           eventId: event_id
+          fee
+          feeVat: fee_vat
           flowSlug: flow_slug
           paidAt: paid_at
           paymentId: payment_id
           paymentMethod: payment_method
+          serviceCharge: service_charge
+          serviceChargeVat: service_charge_vat
           sessionId: session_id
           teamSlug: team_slug
         }
@@ -87,7 +93,10 @@ const buildCsv = (transactions: DailyRemittance[]): string => {
     sessionId: t.sessionId,
     paymentId: t.paymentId,
     flowSlug: t.flowSlug,
-    amount: (t.amountInPence / 100).toFixed(2),
+    fee: t.fee.toFixed(2), // these figures are in pounds already
+    feeVat: t.feeVat.toFixed(2),
+    serviceCharge: t.serviceCharge.toFixed(2),
+    serviceChargeVat: t.serviceChargeVat.toFixed(2),
     paymentMethod: t.paymentMethod,
   }));
 
@@ -98,7 +107,10 @@ const buildCsv = (transactions: DailyRemittance[]): string => {
       { key: "sessionId", header: "Session ID" },
       { key: "paymentId", header: "Payment ID" },
       { key: "flowSlug", header: "Service" },
-      { key: "amount", header: "Amount (£)" },
+      { key: "fee", header: "Fee (£)" },
+      { key: "feeVat", header: "Fee VAT (£)" },
+      { key: "serviceCharge", header: "Service charge (£)" },
+      { key: "serviceChargeVat", header: "Service charge VAT (£)" },
       { key: "paymentMethod", header: "Payment method" },
     ],
   });
@@ -117,9 +129,7 @@ const sendRemittanceEmail = async (
   }
 
   const total = Number(
-    (transactions.reduce((sum, t) => sum + t.amountInPence, 0) / 100).toFixed(
-      2,
-    ),
+    transactions.reduce((sum, t) => sum + t.fee, 0).toFixed(2),
   );
   const csv = buildCsv(transactions);
   const variables: TemplateRegistry["remittance"]["variables"] = {

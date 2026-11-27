@@ -9,12 +9,15 @@ import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 
 const mockDailyRemittanceOne = [
   {
-    amountInPence: 10000,
+    fee: 100,
+    feeVat: 20,
     eventId: "evt_1UfMc7EAzmRwH26v1LTz1xYz",
     flowSlug: "apply-for-planning-permission",
     paidAt: subDays(new Date(), 1),
     paymentId: "pi_1UfMc7EAzmRwH26v1FTmrXYz",
     paymentMethod: "card",
+    serviceCharge: 40,
+    serviceChargeVat: 8,
     sessionId: "1b11b111-b580-43b1-b621-000f53c35647",
     teamSlug: "testing",
   },
@@ -45,32 +48,41 @@ const mockTeamInvoiceDetailsTwo = {
 const mockDailyRemittanceMultiple = [
   ...mockDailyRemittanceOne,
   {
-    amountInPence: 20000,
+    fee: 200,
+    feeVat: 0,
     eventId: "evt_2UfMc7EAzmRwH26v1LTz2xYz",
     flowSlug: "apply-for-planning-permission",
     paidAt: subDays(new Date(), 1),
     paymentId: "pi_2UfMc7EAzmRwH26v1FTmrXYz",
     paymentMethod: "card",
+    serviceCharge: 40,
+    serviceChargeVat: 8,
     sessionId: "2b22b222-b580-43b1-b621-000f53c35647",
     teamSlug: "testing",
   },
   {
-    amountInPence: 30000,
+    fee: 300,
+    feeVat: 0,
     eventId: "evt_3UfMc7EAzmRwH26v1LTz3xYz",
     flowSlug: "apply-for-planning-permission",
     paidAt: subDays(new Date(), 1),
     paymentId: "pi_2UfMc7EAzmRwH26v1FTmrXYz",
     paymentMethod: "card",
+    serviceCharge: 40,
+    serviceChargeVat: 8,
     sessionId: "3b33b333-b580-43b1-b621-000f53c35647",
     teamSlug: "testing",
   },
   {
-    amountInPence: 40000,
+    fee: 400,
+    feeVat: 0,
     eventId: "evt_4UfMc7EAzmRwH26v1LTz4xYz",
     flowSlug: "apply-for-planning-permission",
     paidAt: subDays(new Date(), 1),
     paymentId: "pi_2UfMc7EAzmRwH26v1FTmrXYz",
     paymentMethod: "card",
+    serviceCharge: 40,
+    serviceChargeVat: 8,
     sessionId: "4b44b444-b580-43b1-b621-000f53c35647",
     teamSlug: "another-council",
   },
@@ -144,10 +156,10 @@ describe("'remittance' template (Resend)", () => {
     const content = options?.attachments?.[0].content ?? "";
     const csv = content.toString();
     expect(csv).toContain(
-      "Paid at,Session ID,Payment ID,Service,Amount (£),Payment method",
+      "Paid at,Session ID,Payment ID,Service,Fee (£),Fee VAT (£),Service charge (£),Service charge VAT (£),Payment method",
     );
     expect(csv).toContain(
-      "1b11b111-b580-43b1-b621-000f53c35647,pi_1UfMc7EAzmRwH26v1FTmrXYz,apply-for-planning-permission,100.00,card",
+      "1b11b111-b580-43b1-b621-000f53c35647,pi_1UfMc7EAzmRwH26v1FTmrXYz,apply-for-planning-permission,100.00,20.00,40.00,8.00,card",
     );
     expect(csv).toContain(format(subDays(new Date(), 1), "yyyy-MM-dd"));
   });
