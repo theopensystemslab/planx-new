@@ -1,3 +1,23 @@
 table:
   name: stripe_daily_remittance
   schema: public
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - amount_in_pence
+        - fee
+        - fee_breakdown
+        - fee_vat
+        - metadata
+        - service_charge
+        - service_charge_vat
+        - event_id
+        - flow_slug
+        - payment_id
+        - payment_method
+        - team_slug
+        - paid_at
+        - session_id
+      filter: {}
+    comment: ""
