@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 
-interface SendEmailResponse {
+export interface SendEmailResponse {
   message: string;
   expiryDate?: string;
 }
@@ -78,7 +78,7 @@ export type ConfirmationEmail = ValidatedRequestHandler<
   SendEmailResponse
 >;
 
-export const resendEmailSchema = z.object({
+export const welcomeEmailSchema = z.object({
   body: z.object({
     payload: z.object({
       userId: z.number(),
@@ -90,7 +90,7 @@ export const resendEmailSchema = z.object({
   }),
 });
 
-export type ResendEmail = ValidatedRequestHandler<
-  typeof resendEmailSchema,
+export type WelcomeEmail = ValidatedRequestHandler<
+  typeof welcomeEmailSchema,
   SendEmailResponse
 >;

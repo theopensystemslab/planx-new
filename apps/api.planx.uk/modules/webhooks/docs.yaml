@@ -249,6 +249,32 @@ components:
               type: number
             maxRetries:
               type: number
+    DailyRemittanceResult:
+      type: object
+      properties:
+        teamSlug:
+          type: string
+        status:
+          type: string
+          enum:
+            - sent
+            - skipped
+            - failed
+        error:
+          type: string
+          required: false
+    DailyRemittanceSuccess:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              results:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DailyRemittanceResult"
   requests:
     ValidateInputRequest:
       description: |
@@ -624,5 +650,17 @@ paths:
           $ref: "#/components/responses/SuccessMessage"
         "400":
           $ref: "#/components/responses/ValidationError"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/send-daily-remittance-emails:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth: []
+      summary: Send daily remittance emails
+      description: Called by Hasura cron job on a daily basis. Groups the previous day's Stripe payments by council, and emails each council a CSV remittance summary (if an invoice email address is configured). Teams without a configured invoice email are skipped. Failures for individual teams do not block the remaining councils' emails from sending.
+      responses:
+        "200":
+          $ref: "#/components/responses/DailyRemittanceSuccess"
         "500":
           $ref: "#/components/responses/ErrorMessage"

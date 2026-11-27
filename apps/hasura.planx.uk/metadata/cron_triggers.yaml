@@ -34,3 +34,12 @@
     - name: authorization
       value_from_env: HASURA_PLANX_API_KEY
   comment: Sanitise application data on a nightly basis
+- name: send_daily_remittance_email
+  webhook: '{{HASURA_PLANX_API_URL}}/send-email/remittance'
+  schedule: 0 9 * * *
+  include_in_metadata: true
+  payload: {}
+  headers:
+    - name: authorization
+      value_from_env: HASURA_PLANX_API_KEY
+  comment: Emails councils with stripe_daily_remittance view data

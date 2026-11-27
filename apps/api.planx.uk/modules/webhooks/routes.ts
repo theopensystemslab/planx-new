@@ -18,6 +18,7 @@ import {
   paymentStatusEventsController,
   reconcilePaymentsController,
   sanitiseApplicationDataController,
+  sendDailyRemittanceController,
   sendSlackMessageController,
   sendSlackNotificationController,
   updateTemplatedFlowEditsController,
@@ -32,6 +33,7 @@ import {
   delayedPaymentSendEventSchema,
   paymentStatusEventSchema,
 } from "./service/paymentStatusEvents/schema.js";
+import { remittanceEmailSchema } from "./service/sendDailyRemittanceEmail/types.js";
 import { sendSlackNotificationSchema } from "./service/sendNotification/schema.js";
 import { sendSlackMessageSchema } from "./service/sendSlackMessage/schema.js";
 import { updateTemplatedFlowEditsEventSchema } from "./service/updateTemplatedFlowEdits/schema.js";
@@ -111,6 +113,10 @@ router.post(
   "/webhooks/hasura/create-delayed-payment-send-events",
   validate(delayedPaymentSendEventSchema),
   delayedPaymentSendEventsController,
+);
+router.post(
+  "/webhooks/hasura/send-daily-remittance-emails",
+  sendDailyRemittanceController,
 );
 
 // TODO: Convert to the new API module structure
