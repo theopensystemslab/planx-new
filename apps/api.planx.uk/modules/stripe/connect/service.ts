@@ -65,12 +65,15 @@ export interface TestAccountAttestation {
  * Prefill must happen before the first account link is created, as Stripe then locks identity information
  * Docs: https://docs.stripe.com/connect/hosted-onboarding
  * Test values: https://docs.stripe.com/connect/testing
+ *
+ * A custom name can be passed (e.g. Worthing) otherwise the team name will be used
  */
 export const createPrefilledTestAccount = async (
   team: Team,
   attestation: TestAccountAttestation,
+  accountName?: string,
 ): Promise<string> => {
-  const name = `${team.name} (test mode)`;
+  const name = `${accountName ?? team.name} (test mode)`;
   const url = team.settings?.homepage || "https://www.planx.uk";
   const phone = "+447400123456";
   const email = "stripe-test-representative@planx.uk";
@@ -125,7 +128,11 @@ export const createPrefilledTestAccount = async (
       routing_number: "108800",
       account_number: "00012345",
     },
-    metadata: { planxTeamId: String(team.id), planxTeamSlug: team.slug },
+    metadata: {
+      planxTeamId: String(team.id),
+      planxTeamSlug: team.slug,
+      ...(accountName && { planxStripeAccountName: accountName }),
+    },
   });
 
   await stripe.accounts.createPerson(account.id, {
@@ -169,17 +176,24 @@ export const createPrefilledTestAccount = async (
 /**
  * Single-use link to Stripe-hosted onboarding for an account
  * Link expiry sends the user to `refresh_url`, which starts the connect flow again and resumes the same account
+ * A named account's name is passed on the URL
  * Docs: https://docs.stripe.com/api/account_links/create
  */
 export const createOnboardingLink = async (
   accountId: string,
   teamSlug: string,
+  accountName?: string,
 ): Promise<string> => {
+  const connectUrl = `${process.env.API_URL_EXT}/stripe/connect/${teamSlug}`;
+  const query = accountName
+    ? `?${new URLSearchParams({ account: accountName })}`
+    : "";
+
   const { url } = await stripe.accountLinks.create({
     account: accountId,
     type: "account_onboarding",
-    refresh_url: `${process.env.API_URL_EXT}/stripe/connect/${teamSlug}`,
-    return_url: `${process.env.API_URL_EXT}/stripe/connect/${teamSlug}/return`,
+    refresh_url: `${connectUrl}${query}`,
+    return_url: `${connectUrl}/return${query}`,
   });
   return url;
 };
@@ -376,6 +390,62 @@ export const getStripeAccountId = async (
   return stripeAccounts[0].accountId;
 };
 
+/**
+ * Whether platform admins have allowed the team to connect multiple Stripe accounts
+ */
+export const isMultipleStripeAccountsEnabled = async (
+  teamId: number,
+): Promise<boolean> => {
+  const { teamSettings } = await $api.client.request<{
+    teamSettings: { multipleStripeAccountsEnabled: boolean }[];
+  }>(
+    gql`
+      query IsMultipleStripeAccountsEnabled($teamId: Int!) {
+        teamSettings: team_settings(where: { team_id: { _eq: $teamId } }) {
+          multipleStripeAccountsEnabled: multiple_stripe_accounts_enabled
+        }
+      }
+    `,
+    { teamId },
+  );
+
+  return Boolean(teamSettings[0]?.multipleStripeAccountsEnabled);
+};
+
+export interface StripeAccount {
+  name: string;
+  /** null if the account hasn't been connected in this environment */
+  accountId: string | null;
+}
+
+/**
+ * All of the team's accounts, sorted by name, with their account id for the current environment
+ */
+export const getStripeAccounts = async (
+  teamId: number,
+): Promise<StripeAccount[]> => {
+  const column = stripeAccountIdColumn();
+
+  const { stripeAccounts } = await $api.client.request<{
+    stripeAccounts: StripeAccount[];
+  }>(
+    gql`
+      query GetStripeAccounts($teamId: Int!) {
+        stripeAccounts: team_stripe_accounts(
+          where: { team_id: { _eq: $teamId } }
+          order_by: { name: asc }
+        ) {
+          name
+          accountId: ${column}
+        }
+      }
+    `,
+    { teamId },
+  );
+
+  return stripeAccounts;
+};
+
 const govPaySecretColumn = () =>
   getStripeMode() === "live"
     ? "production_govpay_secret"
@@ -411,6 +481,7 @@ export const hasGovPayConfigured = async (teamId: number): Promise<boolean> => {
 export const postStripeConnectedToSlack = async (
   teamSlug: string,
   accountId: string,
+  accountName?: string,
 ): Promise<void> => {
   const environment = process.env.APP_ENVIRONMENT;
   if (environment !== "production" && environment !== "staging") return;
@@ -423,8 +494,12 @@ export const postStripeConnectedToSlack = async (
         ? "started but not finished onboarding"
         : "completed onboarding";
 
+    const account = accountName
+      ? `*${accountName}* Stripe account`
+      : "Stripe account";
+
     await sendSlackMessage(
-      `:link: *${teamSlug}* has connected their Stripe account in *${getStripeMode()}* mode and ${progress} - \`${accountId}\``,
+      `:link: *${teamSlug}* has connected their ${account} in *${getStripeMode()}* mode and ${progress} - \`${accountId}\``,
     );
   } catch (error) {
     console.error(

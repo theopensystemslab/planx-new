@@ -3,9 +3,16 @@ import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
-export const connectSchema = z.object({
+export const connectStatusSchema = z.object({
   params: z.object({
     teamSlug: z.string(),
+  }),
+});
+
+export const connectSchema = connectStatusSchema.extend({
+  query: z.object({
+    // omitted if the team just has the regular single account
+    account: z.string().trim().min(1).max(100).optional(),
   }),
 });
 
@@ -15,6 +22,7 @@ export const stripeConnectSessionStateSchema = z.object({
   teamId: z.number(),
   teamSlug: z.string(),
   nonce: z.string(),
+  accountName: z.string().optional(),
 });
 
 export type StripeConnectSessionState = z.infer<
@@ -28,6 +36,7 @@ export type StripeConnectSessionState = z.infer<
 export const stripeOnboardingSessionStateSchema = z.object({
   teamId: z.number(),
   accountId: z.string(),
+  accountName: z.string().optional(),
 });
 
 export type StripeOnboardingSessionState = z.infer<
@@ -47,7 +56,7 @@ export type OnboardingReturnController = ValidatedRequestHandler<
 >;
 
 export type ConnectStatusController = ValidatedRequestHandler<
-  typeof connectSchema,
+  typeof connectStatusSchema,
   ConnectStatusResponse,
   TeamLocals
 >;
@@ -61,13 +70,24 @@ export type ConnectStatusController = ValidatedRequestHandler<
 export type StripeAccountStatus =
   "active" | "incomplete" | "pending" | "unavailable";
 
-export interface ConnectStatusResponse {
-  connected: boolean;
+export interface ConnectStatusAccount {
+  name: string;
+  /** null if the account hasn't been connected in this environment */
   accountId: string | null;
-  /** null if no account is connected */
+  accountStatus: StripeAccountStatus | null;
+}
+
+export interface ConnectStatusResponse {
+  /** Whether any of the team's accounts is connected */
+  connected: boolean;
+  /** The account named after the team - null if it isn't connected (or doesn't exist) */
+  accountId: string | null;
+  /** null if the account named after the team isn't connected */
   accountStatus: StripeAccountStatus | null;
   mode: "test" | "live";
   govPayConfigured: boolean;
+  /** Every account's status, sorted by name - undefined if team just has regular single account */
+  accounts?: ConnectStatusAccount[];
 }
 
 export const connectCallbackSchema = z.object({

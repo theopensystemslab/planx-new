@@ -1,8 +1,9 @@
 import crypto from "crypto";
 
+import { ServerError } from "../../../errors/index.js";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { assertTeamEditPermission } from "../../auth/requireTeamMembership.js";
-import { getTeamBySlug } from "./service.js";
+import { getTeamBySlug, isMultipleStripeAccountsEnabled } from "./service.js";
 import {
   type connectSchema,
   type StripeConnectSessionState,
@@ -34,6 +35,31 @@ export const requireStripeConnectTeamAuth: ValidatedRequestHandler<
     await assertTeamEditPermission(team.id, team.slug);
 
     res.locals.team = team;
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+};
+
+/**
+ * Named accounts are only available to teams with multiple Stripe accounts enabled
+ * Respond as though the route doesn't exist, so other teams can't tell the feature exists
+ *
+ * Requests without a name (for the account named after the team) skip the check
+ */
+export const requireNamedStripeAccountsEnabled: ValidatedRequestHandler<
+  typeof connectSchema,
+  never,
+  TeamLocals
+> = async (_, res, next) => {
+  const { account } = res.locals.parsedReq.query;
+  if (!account) return next();
+
+  try {
+    const enabled = await isMultipleStripeAccountsEnabled(res.locals.team.id);
+    if (!enabled) {
+      return next(new ServerError({ status: 404, message: "Not found" }));
+    }
     return next();
   } catch (error) {
     return next(error);
@@ -81,6 +107,7 @@ export const verifyState = (
 };
 
 // Staging only - remember the team's unfinished account, so repeat visits resume it rather than creating another
+// Only one is kept at a time, so starting onboarding for a different account replaces it
 export const setPendingOnboarding = (
   req: RequestWithSession,
   state: StripeOnboardingSessionState,
@@ -96,11 +123,13 @@ export const setPendingOnboarding = (
 export const getPendingOnboarding = (
   req: RequestWithSession,
   teamId: number,
+  accountName?: string,
 ): StripeOnboardingSessionState | undefined => {
   const state = stripeOnboardingSessionStateSchema.safeParse(
     req.session?.stripeOnboarding,
   ).data;
-  return state?.teamId === teamId ? state : undefined;
+  if (state?.teamId !== teamId || state.accountName !== accountName) return;
+  return state;
 };
 
 export const clearPendingOnboarding = (req: RequestWithSession): void => {

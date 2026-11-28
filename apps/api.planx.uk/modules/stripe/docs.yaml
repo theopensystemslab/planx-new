@@ -22,6 +22,19 @@ components:
       schema:
         type: string
       example: lambeth
+    stripeAccount:
+      in: query
+      name: account
+      required: false
+      description: >-
+        Name of the Stripe account. Only available to teams with multiple Stripe accounts enabled -
+        otherwise responds with a 404. Omit for the account named after the team (the only account of
+        a team without multiple accounts).
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 100
+      example: Worthing
   schemas:
     CreateCheckoutSessionRequest:
       description: |
@@ -114,12 +127,16 @@ components:
             properties:
               connected:
                 type: boolean
-                description: Whether the team has a connected Stripe account
+                description: >-
+                  Whether the team has a connected Stripe account. For teams with multiple Stripe
+                  accounts enabled, whether any of their accounts is connected.
                 example: true
               accountId:
                 type: string
                 nullable: true
-                description: The team's connected Stripe account id; null if not connected
+                description: >-
+                  The connected Stripe account id of the account named after the team (a team's only
+                  account, unless it has multiple Stripe accounts enabled); null if not connected
                 example: acct_1a2b3c
               accountStatus:
                 type: string
@@ -139,6 +156,32 @@ components:
                 type: boolean
                 description: Whether the team has GOV.UK Pay set up in this environment
                 example: false
+              accounts:
+                type: array
+                description: >-
+                  Every one of the team's Stripe accounts, sorted by name. Only included for teams
+                  with multiple Stripe accounts enabled.
+                items:
+                  type: object
+                  required:
+                    - name
+                    - accountId
+                    - accountStatus
+                  properties:
+                    name:
+                      type: string
+                      example: Worthing
+                    accountId:
+                      type: string
+                      nullable: true
+                      description: null if the account isn't connected in this environment
+                      example: acct_4d5e6f
+                    accountStatus:
+                      type: string
+                      nullable: true
+                      enum: [active, incomplete, pending, unavailable]
+                      description: As `accountStatus` above; null if the account isn't connected in this environment
+                      example: active
     MigrateResponse:
       description: >-
         Result of attempting to migrate a team's payment provider to Stripe.
@@ -183,7 +226,8 @@ paths:
       summary: Get a team's Stripe Connect status
       description: |
         Returns whether the team has connected a Stripe account, and the Stripe mode for
-        this environment.
+        this environment. Teams with multiple Stripe accounts enabled also get the status of
+        every one of their accounts (`accounts`).
       tags:
         - stripe
       parameters:
@@ -273,10 +317,14 @@ paths:
         **Production (live mode):** redirects to Stripe's OAuth screen to connect the
         council's own Stripe account. On completion, Stripe redirects back to
         `/stripe/connect/callback`.
+
+        Teams with multiple Stripe accounts enabled pass `account` to connect an account by name
+        (adding it if it's new).
       tags:
         - stripe
       parameters:
         - $ref: "#/components/parameters/teamSlug"
+        - $ref: "#/components/parameters/stripeAccount"
       security:
         - bearerAuth: []
       responses:
@@ -290,7 +338,7 @@ paths:
         "403":
           description: The user is not a teamEditor/teamAdmin of this team, or a platformAdmin.
         "404":
-          description: Team not found.
+          description: Team not found, or `account` was given and the team doesn't have multiple Stripe accounts enabled.
         "500":
           description: >-
             Failed to start Stripe Connect onboarding (including failing to create the
@@ -307,6 +355,7 @@ paths:
         - stripe
       parameters:
         - $ref: "#/components/parameters/teamSlug"
+        - $ref: "#/components/parameters/stripeAccount"
       security:
         - bearerAuth: []
       responses:
@@ -324,7 +373,7 @@ paths:
         "403":
           description: The user is not a teamEditor/teamAdmin of this team, or a platformAdmin.
         "404":
-          description: Team not found.
+          description: Team not found, or `account` was given and the team doesn't have multiple Stripe accounts enabled.
   /stripe/connect/callback:
     get:
       summary: Handle Stripe Connect OAuth callback

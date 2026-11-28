@@ -20,7 +20,6 @@ vi.mock("./middleware.js", () => ({
 }));
 
 const mockBuildAuthoriseUrl = vi.fn();
-const mockGetStripeAccountId = vi.fn();
 const mockGetStripeMode = vi.fn();
 const mockExchangeCodeForAccountId = vi.fn();
 const mockSaveStripeAccountId = vi.fn();
@@ -31,7 +30,12 @@ const mockIsInvalidRequestError = vi.fn();
 const mockGetAccountStatus = vi.fn();
 const mockHasGovPayConfigured = vi.fn();
 const mockPostStripeConnectedToSlack = vi.fn();
+const mockIsMultipleStripeAccountsEnabled = vi.fn();
+const mockGetStripeAccounts = vi.fn();
 vi.mock("./service.js", () => ({
+  isMultipleStripeAccountsEnabled: (...args: unknown[]) =>
+    mockIsMultipleStripeAccountsEnabled(...args),
+  getStripeAccounts: (...args: unknown[]) => mockGetStripeAccounts(...args),
   hasGovPayConfigured: (...args: unknown[]) => mockHasGovPayConfigured(...args),
   createPrefilledTestAccount: (...args: unknown[]) =>
     mockCreatePrefilledTestAccount(...args),
@@ -43,7 +47,6 @@ vi.mock("./service.js", () => ({
     mockIsInvalidRequestError(...args),
   getAccountStatus: (...args: unknown[]) => mockGetAccountStatus(...args),
   buildAuthoriseUrl: (...args: unknown[]) => mockBuildAuthoriseUrl(...args),
-  getStripeAccountId: (...args: unknown[]) => mockGetStripeAccountId(...args),
   getStripeMode: (...args: unknown[]) => mockGetStripeMode(...args),
   exchangeCodeForAccountId: (...args: unknown[]) =>
     mockExchangeCodeForAccountId(...args),
@@ -62,7 +65,7 @@ const buildReq = (): any => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const buildRes = (locals: Record<string, unknown>): any => ({
-  locals,
+  locals: { parsedReq: { query: {} }, ...locals },
   redirect: vi.fn(),
   send: vi.fn(),
 });
@@ -75,7 +78,6 @@ beforeEach(() => {
   mockSetConnectState.mockReset();
   mockVerifyState.mockReset();
   mockBuildAuthoriseUrl.mockReset();
-  mockGetStripeAccountId.mockReset();
   mockGetStripeMode.mockReset().mockReturnValue("test");
   mockExchangeCodeForAccountId.mockReset();
   mockSaveStripeAccountId.mockReset();
@@ -88,7 +90,15 @@ beforeEach(() => {
   mockPostStripeConnectedToSlack.mockReset().mockResolvedValue(undefined);
   mockIsOnboardingComplete.mockReset();
   mockGetAccountStatus.mockReset();
+  mockIsMultipleStripeAccountsEnabled.mockReset();
+  mockGetStripeAccounts.mockReset();
 });
+
+// A team with multiple Stripe accounts enabled (accounts "Adur" and "Worthing")
+const adurWorthing = { id: 2, slug: "adur-worthing", name: "Adur & Worthing" };
+
+// Named account requests carry the account name in the query
+const namedAccountQuery = { parsedReq: { query: { account: "Worthing" } } };
 
 afterEach(() => {
   process.env = { ...originalEnv };
@@ -124,12 +134,26 @@ describe("initiateConnect", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
+  it("saves the account name in the connect state for a named account", async () => {
+    const req = buildReq();
+    const res = buildRes({ team: adurWorthing, ...namedAccountQuery });
+
+    await Controller.initiateConnect(req, res, vi.fn());
+
+    expect(mockSetConnectState).toHaveBeenCalledWith(req, {
+      teamId: 2,
+      teamSlug: "adur-worthing",
+      nonce: "nonce-123",
+      accountName: "Worthing",
+    });
+  });
+
   it("forwards a ServerError if building the authorise URL fails", async () => {
     mockBuildAuthoriseUrl.mockImplementation(() => {
       throw new Error("invalid url");
     });
 
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
+    const res = buildRes({ team: { id: 1, slug: "lambeth", name: "Lambeth" } });
     const next = vi.fn();
 
     await Controller.initiateConnect(buildReq(), res, next);
@@ -163,10 +187,14 @@ describe("initiateConnect (staging onboarding)", () => {
 
     await Controller.initiateConnect(req, res, next);
 
-    expect(mockCreatePrefilledTestAccount).toHaveBeenCalledWith(team, {
-      ip: "203.0.113.1",
-      userAgent: "Mozilla/5.0 (test)",
-    });
+    expect(mockCreatePrefilledTestAccount).toHaveBeenCalledWith(
+      team,
+      {
+        ip: "203.0.113.1",
+        userAgent: "Mozilla/5.0 (test)",
+      },
+      undefined,
+    );
     expect(mockSetPendingOnboarding).toHaveBeenCalledWith(req, {
       teamId: 1,
       accountId: "acct_new",
@@ -174,12 +202,40 @@ describe("initiateConnect (staging onboarding)", () => {
     expect(mockCreateOnboardingLink).toHaveBeenCalledWith(
       "acct_new",
       "lambeth",
+      undefined,
     );
     expect(res.redirect).toHaveBeenCalledWith(
       "https://connect.stripe.com/setup/abc",
     );
     expect(mockBuildAuthoriseUrl).not.toHaveBeenCalled();
     expect(mockSaveStripeAccountId).not.toHaveBeenCalled();
+  });
+
+  it("creates, remembers and onboards a named account under its own name", async () => {
+    mockGetPendingOnboarding.mockReturnValue(undefined);
+    mockCreatePrefilledTestAccount.mockResolvedValue("acct_new");
+
+    const req = buildReq();
+    const res = buildRes({ team: adurWorthing, ...namedAccountQuery });
+
+    await Controller.initiateConnect(req, res, vi.fn());
+
+    expect(mockGetPendingOnboarding).toHaveBeenCalledWith(req, 2, "Worthing");
+    expect(mockCreatePrefilledTestAccount).toHaveBeenCalledWith(
+      adurWorthing,
+      expect.any(Object),
+      "Worthing",
+    );
+    expect(mockSetPendingOnboarding).toHaveBeenCalledWith(req, {
+      teamId: 2,
+      accountId: "acct_new",
+      accountName: "Worthing",
+    });
+    expect(mockCreateOnboardingLink).toHaveBeenCalledWith(
+      "acct_new",
+      "adur-worthing",
+      "Worthing",
+    );
   });
 
   it("resumes the pending account rather than creating another", async () => {
@@ -193,11 +249,12 @@ describe("initiateConnect (staging onboarding)", () => {
 
     await Controller.initiateConnect(req, res, vi.fn());
 
-    expect(mockGetPendingOnboarding).toHaveBeenCalledWith(req, 1);
+    expect(mockGetPendingOnboarding).toHaveBeenCalledWith(req, 1, undefined);
     expect(mockCreatePrefilledTestAccount).not.toHaveBeenCalled();
     expect(mockCreateOnboardingLink).toHaveBeenCalledWith(
       "acct_pending",
       "lambeth",
+      undefined,
     );
   });
 
@@ -298,14 +355,48 @@ describe("handleOnboardingReturn", () => {
 
     await Controller.handleOnboardingReturn(req, res, vi.fn());
 
-    expect(mockSaveStripeAccountId).toHaveBeenCalledWith(1, "acct_pending");
+    expect(mockSaveStripeAccountId).toHaveBeenCalledWith(
+      1,
+      "acct_pending",
+      undefined,
+    );
     expect(mockClearPendingOnboarding).toHaveBeenCalledWith(req);
     expect(mockPostStripeConnectedToSlack).toHaveBeenCalledWith(
       "lambeth",
       "acct_pending",
+      undefined,
     );
     expect(res.redirect).toHaveBeenCalledWith(
       "https://editor.example.com/app/lambeth/settings/payments?stripeConnected=true",
+    );
+  });
+
+  it("saves a named account under its name once onboarding is complete", async () => {
+    mockGetPendingOnboarding.mockReturnValue({
+      teamId: 2,
+      accountId: "acct_pending",
+      accountName: "Worthing",
+    });
+    mockIsOnboardingComplete.mockResolvedValue(true);
+
+    const req = buildReq();
+    const res = buildRes({ team: adurWorthing, ...namedAccountQuery });
+
+    await Controller.handleOnboardingReturn(req, res, vi.fn());
+
+    expect(mockGetPendingOnboarding).toHaveBeenCalledWith(req, 2, "Worthing");
+    expect(mockSaveStripeAccountId).toHaveBeenCalledWith(
+      2,
+      "acct_pending",
+      "Worthing",
+    );
+    expect(mockPostStripeConnectedToSlack).toHaveBeenCalledWith(
+      "adur-worthing",
+      "acct_pending",
+      "Worthing",
+    );
+    expect(res.redirect).toHaveBeenCalledWith(
+      "https://editor.example.com/app/adur-worthing/settings/payments?stripeConnected=true",
     );
   });
 
@@ -347,59 +438,155 @@ describe("handleOnboardingReturn", () => {
 });
 
 describe("getConnectStatus", () => {
-  it.each(["active", "incomplete", "pending", "unavailable"] as const)(
-    "returns connected status, account id, %s account status, and mode",
-    async (accountStatus) => {
-      mockGetStripeAccountId.mockResolvedValue("acct_123");
-      mockGetAccountStatus.mockResolvedValue(accountStatus);
-      mockGetStripeMode.mockReturnValue("test");
-      mockHasGovPayConfigured.mockResolvedValue(true);
+  const lambeth = { id: 1, slug: "lambeth", name: "Lambeth" };
 
-      const res = buildRes({ team: { id: 1, slug: "lambeth" } });
-      const next = vi.fn();
+  beforeEach(() => {
+    mockHasGovPayConfigured.mockResolvedValue(false);
+  });
 
-      await Controller.getConnectStatus(buildReq(), res, next);
+  describe("for a team with a single account", () => {
+    beforeEach(() => {
+      mockIsMultipleStripeAccountsEnabled.mockResolvedValue(false);
+    });
 
-      expect(mockGetStripeAccountId).toHaveBeenCalledWith(1);
-      expect(mockGetAccountStatus).toHaveBeenCalledWith("acct_123");
+    it.each(["active", "incomplete", "pending", "unavailable"] as const)(
+      "returns connected status, account id, %s account status, and mode",
+      async (accountStatus) => {
+        mockGetStripeAccounts.mockResolvedValue([
+          { name: "Lambeth", accountId: "acct_123" },
+        ]);
+        mockGetAccountStatus.mockResolvedValue(accountStatus);
+        mockGetStripeMode.mockReturnValue("test");
+        mockHasGovPayConfigured.mockResolvedValue(true);
+
+        const res = buildRes({ team: lambeth });
+        const next = vi.fn();
+
+        await Controller.getConnectStatus(buildReq(), res, next);
+
+        expect(mockGetStripeAccounts).toHaveBeenCalledWith(1);
+        expect(mockGetAccountStatus).toHaveBeenCalledWith("acct_123");
+        const expected: ConnectStatusResponse = {
+          connected: true,
+          accountId: "acct_123",
+          accountStatus,
+          mode: "test",
+          govPayConfigured: true,
+        };
+
+        expect(res.send).toHaveBeenCalledWith(expected);
+        expect(next).not.toHaveBeenCalled();
+      },
+    );
+
+    it("returns 'not connected' when the team has no account", async () => {
+      mockGetStripeAccounts.mockResolvedValue([]);
+      mockGetStripeMode.mockReturnValue("live");
+
+      const res = buildRes({ team: lambeth });
+
+      await Controller.getConnectStatus(buildReq(), res, vi.fn());
+
+      const expected: ConnectStatusResponse = {
+        connected: false,
+        accountId: null,
+        accountStatus: null,
+        mode: "live",
+        govPayConfigured: false,
+      };
+      expect(res.send).toHaveBeenCalledWith(expected);
+      expect(mockGetAccountStatus).not.toHaveBeenCalled();
+    });
+
+    it("returns 'not connected' when the account isn't connected in this environment", async () => {
+      mockGetStripeAccounts.mockResolvedValue([
+        { name: "Lambeth", accountId: null },
+      ]);
+
+      const res = buildRes({ team: lambeth });
+
+      await Controller.getConnectStatus(buildReq(), res, vi.fn());
+
+      expect(res.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          connected: false,
+          accountId: null,
+          accountStatus: null,
+        }),
+      );
+      expect(mockGetAccountStatus).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("for a team with multiple accounts", () => {
+    beforeEach(() => {
+      mockIsMultipleStripeAccountsEnabled.mockResolvedValue(true);
+    });
+
+    it("returns every account's status, and is connected if any account is", async () => {
+      mockGetStripeAccounts.mockResolvedValue([
+        { name: "Adur", accountId: "acct_adur" },
+        { name: "Worthing", accountId: null },
+      ]);
+      mockGetAccountStatus.mockResolvedValue("active");
+      mockGetStripeMode.mockReturnValue("live");
+
+      const res = buildRes({ team: adurWorthing });
+
+      await Controller.getConnectStatus(buildReq(), res, vi.fn());
+
+      expect(mockGetStripeAccounts).toHaveBeenCalledWith(2);
+      expect(mockGetAccountStatus).toHaveBeenCalledTimes(1);
+      expect(mockGetAccountStatus).toHaveBeenCalledWith("acct_adur");
       const expected: ConnectStatusResponse = {
         connected: true,
-        accountId: "acct_123",
-        accountStatus,
-        mode: "test",
-        govPayConfigured: true,
+        accountId: null,
+        accountStatus: null,
+        mode: "live",
+        govPayConfigured: false,
+        accounts: [
+          { name: "Adur", accountId: "acct_adur", accountStatus: "active" },
+          { name: "Worthing", accountId: null, accountStatus: null },
+        ],
       };
-
       expect(res.send).toHaveBeenCalledWith(expected);
-      expect(next).not.toHaveBeenCalled();
-    },
-  );
+    });
 
-  it("returns 'not connected' when no account id is stored", async () => {
-    mockGetStripeAccountId.mockResolvedValue(null);
-    mockGetStripeMode.mockReturnValue("live");
-    mockHasGovPayConfigured.mockResolvedValue(false);
+    it("returns an empty list when no accounts have been connected yet", async () => {
+      mockGetStripeAccounts.mockResolvedValue([]);
 
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
-    const next = vi.fn();
+      const res = buildRes({ team: adurWorthing });
 
-    await Controller.getConnectStatus(buildReq(), res, next);
+      await Controller.getConnectStatus(buildReq(), res, vi.fn());
 
-    const expected: ConnectStatusResponse = {
+      expect(res.send).toHaveBeenCalledWith(
+        expect.objectContaining({ connected: false, accounts: [] }),
+      );
+    });
+  });
+
+  it("ignores accounts not named after the team when multiple accounts aren't enabled", async () => {
+    mockIsMultipleStripeAccountsEnabled.mockResolvedValue(false);
+    mockGetStripeAccounts.mockResolvedValue([
+      { name: "Worthing", accountId: "acct_worthing" },
+    ]);
+
+    const res = buildRes({ team: adurWorthing });
+
+    await Controller.getConnectStatus(buildReq(), res, vi.fn());
+
+    expect(mockGetAccountStatus).not.toHaveBeenCalled();
+    expect(res.send.mock.calls[0][0]).toMatchObject({
       connected: false,
       accountId: null,
-      accountStatus: null,
-      mode: "live",
-      govPayConfigured: false,
-    };
-    expect(res.send).toHaveBeenCalledWith(expected);
-    expect(mockGetAccountStatus).not.toHaveBeenCalled();
+    });
+    expect(res.send.mock.calls[0][0]).not.toHaveProperty("accounts");
   });
 
   it("forwards a ServerError if the lookup fails", async () => {
-    mockGetStripeAccountId.mockRejectedValue(new Error("db down"));
+    mockGetStripeAccounts.mockRejectedValue(new Error("db down"));
 
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
+    const res = buildRes({ team: lambeth });
     const next = vi.fn();
 
     await Controller.getConnectStatus(buildReq(), res, next);
@@ -413,10 +600,13 @@ describe("getConnectStatus", () => {
   });
 
   it("forwards a ServerError if Stripe can't be reached", async () => {
-    mockGetStripeAccountId.mockResolvedValue("acct_123");
+    mockIsMultipleStripeAccountsEnabled.mockResolvedValue(false);
+    mockGetStripeAccounts.mockResolvedValue([
+      { name: "Lambeth", accountId: "acct_123" },
+    ]);
     mockGetAccountStatus.mockRejectedValue(new Error("Stripe is down"));
 
-    const res = buildRes({ team: { id: 1, slug: "lambeth" } });
+    const res = buildRes({ team: lambeth });
     const next = vi.fn();
 
     await Controller.getConnectStatus(buildReq(), res, next);
@@ -492,13 +682,45 @@ describe("handleCallback", () => {
     await Controller.handleCallback(req, res, vi.fn());
 
     expect(mockExchangeCodeForAccountId).toHaveBeenCalledWith("auth-code");
-    expect(mockSaveStripeAccountId).toHaveBeenCalledWith(1, "acct_123");
+    expect(mockSaveStripeAccountId).toHaveBeenCalledWith(
+      1,
+      "acct_123",
+      undefined,
+    );
     expect(mockPostStripeConnectedToSlack).toHaveBeenCalledWith(
       "lambeth",
       "acct_123",
+      undefined,
     );
     expect(res.redirect).toHaveBeenCalledWith(
       "https://editor.example.com/app/lambeth/settings/payments?stripeConnected=true",
+    );
+  });
+
+  it("saves a named account under its name", async () => {
+    mockVerifyState.mockReturnValue({
+      teamId: 2,
+      teamSlug: "adur-worthing",
+      nonce: "abc",
+      accountName: "Worthing",
+    });
+    mockExchangeCodeForAccountId.mockResolvedValue("acct_worthing");
+    const { req, res } = buildReqRes({ code: "auth-code", state: "abc" });
+
+    await Controller.handleCallback(req, res, vi.fn());
+
+    expect(mockSaveStripeAccountId).toHaveBeenCalledWith(
+      2,
+      "acct_worthing",
+      "Worthing",
+    );
+    expect(mockPostStripeConnectedToSlack).toHaveBeenCalledWith(
+      "adur-worthing",
+      "acct_worthing",
+      "Worthing",
+    );
+    expect(res.redirect).toHaveBeenCalledWith(
+      "https://editor.example.com/app/adur-worthing/settings/payments?stripeConnected=true",
     );
   });
 
