@@ -12,7 +12,10 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider as TanStackRouterProvider } from "@tanstack/react-router";
 import { ToastContextProvider } from "contexts/ToastContext";
 import usePageTitleFromHeading from "hooks/usePageTitleFromHeading";
-import { usePaletteMode } from "hooks/usePaletteMode";
+import {
+  usePaletteMode,
+  useSyncPaletteModeAttribute,
+} from "hooks/usePaletteMode";
 import { initFeatureFlags } from "lib/featureFlags";
 import { queryClient } from "lib/queryClient";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
@@ -55,6 +58,7 @@ const Layout: React.FC<{
 }> = ({ children }) => {
   usePageTitleFromHeading();
   const paletteMode = usePaletteMode();
+  useSyncPaletteModeAttribute(paletteMode);
   const theme = paletteMode === "dark" ? defaultDarkTheme : defaultTheme;
 
   return (

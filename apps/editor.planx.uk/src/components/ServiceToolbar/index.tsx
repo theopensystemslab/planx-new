@@ -5,7 +5,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
+import { styled, ThemeProvider } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { useQuery } from "@tanstack/react-query";
 import { useMatch } from "@tanstack/react-router";
@@ -13,7 +13,7 @@ import { getUser } from "lib/api/auth/requests";
 import { getCookie } from "lib/cookie";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { lazy, Suspense, useState } from "react";
-import { cardBoxShadow } from "theme";
+import { cardBoxShadow, defaultTheme } from "theme";
 import EditorIcon from "ui/icons/Editor";
 import { CloseButton } from "ui/shared/CloseButton";
 
@@ -105,44 +105,47 @@ const ServiceToolbarContent: React.FC = () => {
 
   return (
     <>
-      <Toolbar role="toolbar" aria-label="Service toolbar">
-        <Tooltip title="Open flow in editor">
-          <ToolbarButton
-            component="a"
-            href={flowURL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open flow in editor"
-          >
-            <EditorIcon fontSize="small" />
-          </ToolbarButton>
-        </Tooltip>
-        {isDraft && (
-          <Tooltip title="Open component in editor">
-            {/* Wrapper allows tooltip on a disabled button */}
-            <Box component="span" sx={{ display: "flex" }}>
-              <ToolbarButton
-                component="a"
-                href={componentURL ?? undefined}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Open component in editor"
-                disabled={!componentURL}
-              >
-                <EditOutlinedIcon fontSize="small" />
-              </ToolbarButton>
-            </Box>
+      {/* The toolbar is already dark, so always use the light palette regardless of the user's palette mode */}
+      <ThemeProvider theme={defaultTheme}>
+        <Toolbar role="toolbar" aria-label="Service toolbar">
+          <Tooltip title="Open flow in editor">
+            <ToolbarButton
+              component="a"
+              href={flowURL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open flow in editor"
+            >
+              <EditorIcon fontSize="small" />
+            </ToolbarButton>
           </Tooltip>
-        )}
-        <Tooltip title="View console">
-          <ToolbarButton
-            aria-label="View console"
-            onClick={() => setIsConsoleOpen(true)}
-          >
-            <TerminalIcon fontSize="small" />
-          </ToolbarButton>
-        </Tooltip>
-      </Toolbar>
+          {isDraft && (
+            <Tooltip title="Open component in editor">
+              {/* Wrapper allows tooltip on a disabled button */}
+              <Box component="span" sx={{ display: "flex" }}>
+                <ToolbarButton
+                  component="a"
+                  href={componentURL ?? undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open component in editor"
+                  disabled={!componentURL}
+                >
+                  <EditOutlinedIcon fontSize="small" />
+                </ToolbarButton>
+              </Box>
+            </Tooltip>
+          )}
+          <Tooltip title="View console">
+            <ToolbarButton
+              aria-label="View console"
+              onClick={() => setIsConsoleOpen(true)}
+            >
+              <TerminalIcon fontSize="small" />
+            </ToolbarButton>
+          </Tooltip>
+        </Toolbar>
+      </ThemeProvider>
       <Dialog
         open={isConsoleOpen}
         onClose={() => setIsConsoleOpen(false)}

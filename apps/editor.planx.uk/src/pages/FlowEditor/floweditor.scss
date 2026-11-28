@@ -27,6 +27,35 @@
   --flow-shadow: rgba(0, 0, 0, 0.1);
 }
 
+// Dark palette, applied when the MUI theme is in dark mode (see useSyncPaletteModeAttribute)
+// Values align with DARK_PALETTE in theme.ts
+:root[data-theme="dark"] {
+  --flow-text: #f3f2f1;
+  --flow-line: #505a5f;
+  --flow-surface: #1f2122;
+  --flow-inverse-background: #f3f2f1;
+  --flow-inverse-text: #0b0c0c;
+  --flow-inverse-muted: #b1b4b6;
+  --flow-option-border: #6f777b;
+  --flow-hanger-background: #2b2e30;
+  --flow-visited: #6fa868;
+  --flow-error: #ed8474;
+  --flow-locked-flow-background: rgba(255, 255, 255, 0.04);
+  --flow-locked-node-background: #2b2e30;
+  --flow-locked-border: #8e979b;
+  --flow-data-background: #26292b;
+  --flow-locked-data-background: #2f3234;
+  --flow-folder-background: #1e3a66;
+  --flow-folder-border: #6c9be0;
+  --flow-locked-folder-background: #1a2638;
+  --flow-note-background: #4a4519;
+  --flow-locked-note-background: #3a3719;
+  --flow-page-border: #6f777b;
+  --flow-page-background: rgba(255, 255, 255, 0.05);
+  --flow-category-background: #3b3f41;
+  --flow-shadow: rgba(0, 0, 0, 0.4);
+}
+
 $black: var(--flow-text);
 $nodeBorder: $black;
 $optionBorder: var(--flow-option-border);

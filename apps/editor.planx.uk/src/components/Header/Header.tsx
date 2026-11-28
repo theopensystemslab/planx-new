@@ -5,7 +5,7 @@ import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import type { Theme } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
+import { styled, ThemeProvider } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -15,6 +15,7 @@ import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { useRef, useState } from "react";
 import {
+  defaultTheme,
   FONT_WEIGHT_SEMI_BOLD,
   getBorderedFocusStyle,
   LINE_HEIGHT_BASE,
@@ -220,27 +221,30 @@ const PublicToolbar: React.FC<{
             {showCentredServiceTitle && <ServiceTitle />}
             <RightBox>
               {showResetButton && (
-                <IconButton
-                  color="secondary"
-                  onClick={openConfirmationDialog}
-                  aria-label="Restart Application"
-                  size="large"
-                  aria-describedby="restart-application-description"
-                  sx={{ "@media print": { color: "common.black" } }}
-                >
-                  <Reset color="inherit" />
-                  <Typography
-                    id="restart-application-description"
-                    variant="body2"
-                    sx={{
-                      pl: 0.5,
-                      fontSize: "small",
-                      fontWeight: FONT_WEIGHT_SEMI_BOLD,
-                    }}
+                // Sits on the header colour, so always use the light palette regardless of the user's palette mode
+                <ThemeProvider theme={defaultTheme}>
+                  <IconButton
+                    color="secondary"
+                    onClick={openConfirmationDialog}
+                    aria-label="Restart Application"
+                    size="large"
+                    aria-describedby="restart-application-description"
+                    sx={{ "@media print": { color: "common.black" } }}
                   >
-                    Restart
-                  </Typography>
-                </IconButton>
+                    <Reset color="inherit" />
+                    <Typography
+                      id="restart-application-description"
+                      variant="body2"
+                      sx={{
+                        pl: 0.5,
+                        fontSize: "small",
+                        fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                      }}
+                    >
+                      Restart
+                    </Typography>
+                  </IconButton>
+                </ThemeProvider>
               )}
             </RightBox>
           </InnerContainer>
@@ -276,17 +280,20 @@ const ServiceTitle: React.FC = () => {
   return (
     <ServiceTitleRoot data-testid="service-title">
       {(path === "preview" || path === "draft") && (
-        <Chip
-          label={capitalize(path)}
-          variant="notApplicableTag"
-          size="medium"
-          icon={
-            {
-              preview: <PlayArrowIcon fontSize="small" />,
-              draft: <PlayOutlineIcon fontSize="small" />,
-            }[path]
-          }
-        />
+        // Sits on the header colour, so always use the light palette regardless of the user's palette mode
+        <ThemeProvider theme={defaultTheme}>
+          <Chip
+            label={capitalize(path)}
+            variant="notApplicableTag"
+            size="medium"
+            icon={
+              {
+                preview: <PlayArrowIcon fontSize="small" />,
+                draft: <PlayOutlineIcon fontSize="small" />,
+              }[path]
+            }
+          />
+        </ThemeProvider>
       )}
       <Typography component="span" variant="h4">
         {flowName}
