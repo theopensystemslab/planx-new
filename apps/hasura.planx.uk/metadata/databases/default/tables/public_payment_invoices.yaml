@@ -12,6 +12,7 @@ insert_permissions:
       columns:
         - kind
         - stripe_payment_intent_id
+        - stripe_account_id
         - session_id
         - flow_id
         - team_id
@@ -26,6 +27,7 @@ select_permissions:
         - id
         - kind
         - stripe_payment_intent_id
+        - stripe_account_id
         - session_id
         - flow_id
         - team_id

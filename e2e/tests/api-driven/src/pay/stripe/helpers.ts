@@ -110,11 +110,17 @@ export async function connectStripeAccount(teamId: number) {
   await $admin.client.request(
     gql`
       mutation SetupStripeE2E($teamId: Int!, $stripeAccountId: String!) {
-        update_team_integrations(
-          where: { team_id: { _eq: $teamId } }
-          _set: { staging_stripe_account_id: $stripeAccountId }
+        insert_team_stripe_accounts_one(
+          object: {
+            team_id: $teamId
+            staging_stripe_account_id: $stripeAccountId
+          }
+          on_conflict: {
+            constraint: team_stripe_accounts_team_id_name_key
+            update_columns: [staging_stripe_account_id]
+          }
         ) {
-          affected_rows
+          id
         }
         update_team_settings(
           where: { team_id: { _eq: $teamId } }
